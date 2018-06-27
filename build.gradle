@@ -23,10 +23,11 @@ sourceCompatibility = 1.8
 repositories {
     mavenCentral()
     jcenter()
+    maven { url "https://jitpack.io" }
 }
 
 dependencies {
-    implementation 'io.github.wulkanowy:api:0.5.0'
+    implementation 'com.github.VLO-GDA:uonet-sdk:master-SNAPSHOT'
 
     implementation 'com.google.code.gson:gson:2.8.2'
     implementation 'com.squareup.retrofit2:retrofit:2.3.0'
@@ -35,6 +36,7 @@ dependencies {
     implementation 'io.reactivex:rxjava:1.1.6'
     implementation 'io.reactivex:rxandroid:1.2.1'
     implementation 'com.squareup.retrofit2:adapter-rxjava:2.1.0'
+    implementation 'com.squareup.okhttp3:logging-interceptor:3.8.0'
 
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
 
