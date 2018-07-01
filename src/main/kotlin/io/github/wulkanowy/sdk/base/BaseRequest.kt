@@ -1,6 +1,8 @@
-package io.github.wulkanowy.sdk
+package io.github.wulkanowy.sdk.base
 
 import com.google.gson.annotations.SerializedName
+import io.github.wulkanowy.sdk.REMOTE_MOBILE_APP_NAME
+import io.github.wulkanowy.sdk.REMOTE_MOBILE_APP_VERSION
 import java.time.Instant
 import java.util.*
 

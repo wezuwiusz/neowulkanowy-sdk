@@ -1,4 +1,4 @@
-package io.github.wulkanowy.sdk
+package io.github.wulkanowy.sdk.base
 
 import com.google.gson.annotations.SerializedName
 

@@ -2,7 +2,7 @@ package io.github.wulkanowy.sdk.register
 
 import com.google.gson.annotations.SerializedName
 import io.github.wulkanowy.sdk.APP_VERSION
-import io.github.wulkanowy.sdk.BaseRequest
+import io.github.wulkanowy.sdk.base.BaseRequest
 import io.github.wulkanowy.sdk.DEVICE_SYSTEM_TYPE
 import io.github.wulkanowy.sdk.DEVICE_SYSTEM_VERSION
 import java.util.*

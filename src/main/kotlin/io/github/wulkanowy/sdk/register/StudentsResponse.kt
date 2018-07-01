@@ -1,7 +1,7 @@
 package io.github.wulkanowy.sdk.register
 
 import com.google.gson.annotations.SerializedName
-import io.github.wulkanowy.sdk.BaseResponse
+import io.github.wulkanowy.sdk.base.BaseResponse
 
 data class StudentsResponse(
 
