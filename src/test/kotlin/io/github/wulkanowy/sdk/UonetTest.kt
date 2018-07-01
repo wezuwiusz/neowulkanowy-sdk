@@ -6,13 +6,14 @@ import io.github.wulkanowy.sdk.register.LogResponse
 import io.github.wulkanowy.sdk.register.StudentsResponse
 import io.github.wulkanowy.sdk.repository.MobileRepository
 import io.github.wulkanowy.sdk.repository.RegisterRepository
+import io.github.wulkanowy.sdk.timetable.TimetableResponse
 import junit.framework.TestCase.assertEquals
 import org.junit.Test
 import rx.observers.TestSubscriber
 
+const val DEVICE_NAME = "Wulkanowy#client"
 const val HOST = "https://api.fakelog.cf"
 const val SYMBOL = "Default"
-const val DEVICE_NAME = "Wulkanowy#client"
 const val TOKEN = "FK100000"
 const val PIN = "999999"
 
@@ -60,5 +61,12 @@ class UonetTest {
         dictionariesSubscriber.assertCompleted()
         dictionariesSubscriber.assertNoErrors()
         assertEquals("Ok", dictionariesSubscriber.onNextEvents[0].status)
+
+        val lessons = mobile.getTimetable("2018-04-23", "2018-04-24", student.classId, student.classificationPeriodId, student.Id)
+        val lessonsSubscriber = TestSubscriber<TimetableResponse>()
+        lessons.subscribe(lessonsSubscriber)
+        lessonsSubscriber.assertCompleted()
+        lessonsSubscriber.assertNoErrors()
+        assertEquals("Ok", lessonsSubscriber.onNextEvents[0].status)
     }
 }

@@ -6,6 +6,8 @@ import io.github.wulkanowy.sdk.dictionaries.DictionariesResponse
 import io.github.wulkanowy.sdk.interceptor.SignInterceptor
 import io.github.wulkanowy.sdk.interfaces.MobileApi
 import io.github.wulkanowy.sdk.register.LogResponse
+import io.github.wulkanowy.sdk.timetable.TimetableRequest
+import io.github.wulkanowy.sdk.timetable.TimetableResponse
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -22,6 +24,10 @@ class MobileRepository(private val host: String, private val symbol: String, pri
 
     fun getDictionaries(userId: Int, classificationPeriodId: Int, classId: Int): Observable<DictionariesResponse>
             = api.getDictionaries(DictionariesRequest(userId, classificationPeriodId, classId))
+
+    fun getTimetable(startDate: String, endDate: String, classId: Int, classificationPeriodId: Int, studentId: Int): Observable<TimetableResponse> {
+        return getMobileApi().getTimetable(TimetableRequest(startDate, endDate, classId, classificationPeriodId, studentId))
+    }
 
     private fun getMobileApi(): MobileApi {
         return Retrofit.Builder()
