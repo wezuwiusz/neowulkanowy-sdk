@@ -73,7 +73,7 @@ data class StudentsResponse(
         val userName: String,
 
         @SerializedName("Id")
-        val Id: Int,
+        val id: Int,
 
         @SerializedName("IdOddzial")
         val classId: Int,

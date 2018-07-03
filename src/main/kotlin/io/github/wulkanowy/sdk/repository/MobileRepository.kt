@@ -3,6 +3,8 @@ package io.github.wulkanowy.sdk.repository
 import io.github.wulkanowy.sdk.base.BaseRequest
 import io.github.wulkanowy.sdk.dictionaries.DictionariesRequest
 import io.github.wulkanowy.sdk.dictionaries.DictionariesResponse
+import io.github.wulkanowy.sdk.grades.GradesRequest
+import io.github.wulkanowy.sdk.grades.GradesResponse
 import io.github.wulkanowy.sdk.interceptor.SignInterceptor
 import io.github.wulkanowy.sdk.interfaces.MobileApi
 import io.github.wulkanowy.sdk.register.LogResponse
@@ -27,6 +29,10 @@ class MobileRepository(private val host: String, private val symbol: String, pri
 
     fun getTimetable(startDate: String, endDate: String, classId: Int, classificationPeriodId: Int, studentId: Int): Observable<TimetableResponse> {
         return getMobileApi().getTimetable(TimetableRequest(startDate, endDate, classId, classificationPeriodId, studentId))
+    }
+
+    fun getGrades(classId: Int, classificationPeriodId: Int, studentId: Int): Observable<GradesResponse> {
+        return getMobileApi().getGrades(GradesRequest(classId, classificationPeriodId, studentId))
     }
 
     private fun getMobileApi(): MobileApi {

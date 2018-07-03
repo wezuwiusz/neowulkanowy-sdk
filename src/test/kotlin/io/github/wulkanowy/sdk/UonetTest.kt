@@ -1,6 +1,7 @@
 package io.github.wulkanowy.sdk
 
 import io.github.wulkanowy.sdk.dictionaries.DictionariesResponse
+import io.github.wulkanowy.sdk.grades.GradesResponse
 import io.github.wulkanowy.sdk.register.CertificateResponse
 import io.github.wulkanowy.sdk.register.LogResponse
 import io.github.wulkanowy.sdk.register.StudentsResponse
@@ -62,11 +63,18 @@ class UonetTest {
         dictionariesSubscriber.assertNoErrors()
         assertEquals("Ok", dictionariesSubscriber.onNextEvents[0].status)
 
-        val lessons = mobile.getTimetable("2018-04-23", "2018-04-24", student.classId, student.classificationPeriodId, student.Id)
+        val lessons = mobile.getTimetable("2018-04-23", "2018-04-24", student.classId, student.classificationPeriodId, student.id)
         val lessonsSubscriber = TestSubscriber<TimetableResponse>()
         lessons.subscribe(lessonsSubscriber)
         lessonsSubscriber.assertCompleted()
         lessonsSubscriber.assertNoErrors()
         assertEquals("Ok", lessonsSubscriber.onNextEvents[0].status)
+
+        val grades = mobile.getGrades(student.classId, student.classificationPeriodId, student.id)
+        val gradesSubscriber = TestSubscriber<GradesResponse>()
+        grades.subscribe(gradesSubscriber)
+        gradesSubscriber.assertCompleted()
+        gradesSubscriber.assertNoErrors()
+        assertEquals("Ok", gradesSubscriber.onNextEvents[0].status)
     }
 }
