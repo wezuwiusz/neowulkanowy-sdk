@@ -9,7 +9,7 @@ import io.github.wulkanowy.sdk.exams.ExamsRequest
 import io.github.wulkanowy.sdk.grades.Grade
 import io.github.wulkanowy.sdk.grades.GradesRequest
 import io.github.wulkanowy.sdk.notes.Note
-import io.github.wulkanowy.sdk.notes.NotesReequest
+import io.github.wulkanowy.sdk.notes.NotesRequest
 import io.github.wulkanowy.sdk.timetable.Lesson
 import io.github.wulkanowy.sdk.timetable.TimetableRequest
 import retrofit2.http.Body
@@ -34,5 +34,5 @@ interface MobileApi {
     fun getExams(@Body examsRequest: ExamsRequest): Observable<ApiResponse<List<Exam>>>
 
     @POST("UwagiUcznia")
-    fun getNotes(@Body notesReequest: NotesReequest): Observable<ApiResponse<List<Note>>>
+    fun getNotes(@Body notesRequest: NotesRequest): Observable<ApiResponse<List<Note>>>
 }

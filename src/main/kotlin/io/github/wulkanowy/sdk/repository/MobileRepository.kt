@@ -11,7 +11,7 @@ import io.github.wulkanowy.sdk.grades.GradesRequest
 import io.github.wulkanowy.sdk.interceptor.SignInterceptor
 import io.github.wulkanowy.sdk.interfaces.MobileApi
 import io.github.wulkanowy.sdk.notes.Note
-import io.github.wulkanowy.sdk.notes.NotesReequest
+import io.github.wulkanowy.sdk.notes.NotesRequest
 import io.github.wulkanowy.sdk.timetable.Lesson
 import io.github.wulkanowy.sdk.timetable.TimetableRequest
 import okhttp3.OkHttpClient
@@ -44,7 +44,7 @@ class MobileRepository(private val host: String, private val symbol: String, pri
     }
 
     fun getNotes(classificationPeriodId: Int, studentId: Int): Observable<ApiResponse<List<Note>>> {
-        return getMobileApi().getNotes(NotesReequest(classificationPeriodId, studentId))
+        return getMobileApi().getNotes(NotesRequest(classificationPeriodId, studentId))
     }
 
     private fun getMobileApi(): MobileApi {
