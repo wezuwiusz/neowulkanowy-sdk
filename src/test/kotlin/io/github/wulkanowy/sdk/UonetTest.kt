@@ -4,6 +4,7 @@ import io.github.wulkanowy.sdk.base.ApiResponse
 import io.github.wulkanowy.sdk.dictionaries.Dictionaries
 import io.github.wulkanowy.sdk.exams.Exam
 import io.github.wulkanowy.sdk.grades.Grade
+import io.github.wulkanowy.sdk.notes.Note
 import io.github.wulkanowy.sdk.register.CertificateResponse
 import io.github.wulkanowy.sdk.register.Student
 import io.github.wulkanowy.sdk.repository.MobileRepository
@@ -84,5 +85,12 @@ class UonetTest {
         examsSubscriber.assertCompleted()
         examsSubscriber.assertNoErrors()
         assertEquals("Ok", examsSubscriber.onNextEvents[0].status)
+
+        val notes = mobile.getNotes(student.classificationPeriodId, student.id)
+        val notesSubscriber = TestSubscriber<ApiResponse<List<Note>>>()
+        notes.subscribe(notesSubscriber)
+        notesSubscriber.assertCompleted()
+        notesSubscriber.assertNoErrors()
+        assertEquals("Ok", notesSubscriber.onNextEvents[0].status)
     }
 }
