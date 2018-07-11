@@ -6,7 +6,7 @@ import io.github.wulkanowy.sdk.REMOTE_MOBILE_APP_VERSION
 import java.time.Instant
 import java.util.*
 
-abstract class BaseRequest(
+abstract class ApiRequest(
 
     @SerializedName("RemoteMobileTimeKey")
     val remoteMobileTimeKey: Long = Instant.now().epochSecond,

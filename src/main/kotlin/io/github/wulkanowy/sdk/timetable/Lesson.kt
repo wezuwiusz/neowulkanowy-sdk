@@ -1,66 +1,57 @@
 package io.github.wulkanowy.sdk.timetable
 
 import com.google.gson.annotations.SerializedName
-import io.github.wulkanowy.sdk.base.BaseResponse
 
-data class TimetableResponse(
-
-    @SerializedName("Data")
-    var lessons: List<Lesson>
-
-) : BaseResponse() {
-
-    data class Lesson(
+data class Lesson(
 
         @SerializedName("Dzien")
-        var day: Long,
+        val day: Long,
 
         @SerializedName("DzienTekst")
-        var dayText: String,
+        val dayText: String,
 
         @SerializedName("NumerLekcji")
-        var lessonNumber: Int,
+        val lessonNumber: Int,
 
         @SerializedName("IdPoraLekcji")
-        var lessonTimeId: Int,
+        val lessonTimeId: Int,
 
         @SerializedName("IdPrzedmiot")
-        var subjectId: Int,
+        val subjectId: Int,
 
         @SerializedName("PrzedmiotNazwa")
-        var subjectName: String,
+        val subjectName: String,
 
         @SerializedName("PodzialSkrot")
-        var divisionShort: String,
+        val divisionShort: String,
 
         @SerializedName("Sala")
-        var room: String,
+        val room: String,
 
         @SerializedName("IdPracownik")
-        var employeeId: Int,
+        val employeeId: Int,
 
         @SerializedName("IdPracownikWspomagajacy")
-        var employeeSupporterId: Int,
+        val employeeSupporterId: Int,
 
         @SerializedName("IdPracownikOld")
-        var employeeOldId: Int,
+        val employeeOldId: Int,
 
         @SerializedName("IdPracownikWspomagajacyOld")
-        var employeeSupporterOldId: Int,
+        val employeeSupporterOldId: Int,
 
         @SerializedName("IdPlanLekcji")
-        var timetableId: Int,
+        val timetableId: Int,
 
         @SerializedName("AdnotacjaOZmianie")
-        var annotationAboutChange: String,
+        val annotationAboutChange: String,
 
         @SerializedName("PrzekreslonaNazwa")
-        var overriddenName: Boolean,
+        val overriddenName: Boolean,
 
         @SerializedName("PogrubionaNazwa")
-        var boldName: Boolean,
+        val boldName: Boolean,
 
         @SerializedName("PlanUcznia")
-        var studentPlan: Boolean
-    )
-}
+        val studentPlan: Boolean
+)

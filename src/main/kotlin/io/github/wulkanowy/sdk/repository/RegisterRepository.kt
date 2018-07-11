@@ -1,11 +1,12 @@
 package io.github.wulkanowy.sdk.repository
 
-import io.github.wulkanowy.sdk.base.BaseRequest
+import io.github.wulkanowy.sdk.base.ApiRequest
+import io.github.wulkanowy.sdk.base.ApiResponse
 import io.github.wulkanowy.sdk.interceptor.SignInterceptor
 import io.github.wulkanowy.sdk.interfaces.RegisterApi
 import io.github.wulkanowy.sdk.register.CertificateRequest
 import io.github.wulkanowy.sdk.register.CertificateResponse
-import io.github.wulkanowy.sdk.register.StudentsResponse
+import io.github.wulkanowy.sdk.register.Student
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -19,7 +20,7 @@ class RegisterRepository(private val host: String, private val symbol: String, v
         return getRegisterApi().getCertificate(CertificateRequest(tokenKey = token, pin = pin, deviceName = deviceName))
     }
 
-    fun getPupils(): Observable<StudentsResponse> = getRegisterApi().getPupils(object: BaseRequest() {})
+    fun getPupils(): Observable<ApiResponse<List<Student>>> = getRegisterApi().getPupils(object: ApiRequest() {})
 
     private fun getRegisterApi(): RegisterApi {
         return Retrofit.Builder()

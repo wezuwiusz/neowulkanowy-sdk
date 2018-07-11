@@ -1,16 +1,8 @@
 package io.github.wulkanowy.sdk.register
 
 import com.google.gson.annotations.SerializedName
-import io.github.wulkanowy.sdk.base.BaseResponse
 
-data class StudentsResponse(
-
-    @SerializedName("Data")
-    var students: List<Student>
-
-) : BaseResponse() {
-
-    data class Student(
+data class Student(
 
         @SerializedName("IdOkresKlasyfikacyjny")
         val classificationPeriodId: Int,
@@ -98,5 +90,4 @@ data class StudentsResponse(
 
         @SerializedName("LoginId")
         val loginId: Int?
-    )
-}
+)

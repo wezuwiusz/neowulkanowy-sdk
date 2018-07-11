@@ -1,13 +1,13 @@
 package io.github.wulkanowy.sdk.interfaces
 
-import io.github.wulkanowy.sdk.base.BaseRequest
+import io.github.wulkanowy.sdk.base.ApiRequest
+import io.github.wulkanowy.sdk.base.ApiResponse
+import io.github.wulkanowy.sdk.dictionaries.Dictionaries
 import io.github.wulkanowy.sdk.dictionaries.DictionariesRequest
-import io.github.wulkanowy.sdk.dictionaries.DictionariesResponse
+import io.github.wulkanowy.sdk.grades.Grade
 import io.github.wulkanowy.sdk.grades.GradesRequest
-import io.github.wulkanowy.sdk.grades.GradesResponse
-import io.github.wulkanowy.sdk.register.LogResponse
+import io.github.wulkanowy.sdk.timetable.Lesson
 import io.github.wulkanowy.sdk.timetable.TimetableRequest
-import io.github.wulkanowy.sdk.timetable.TimetableResponse
 import retrofit2.http.Body
 import retrofit2.http.POST
 import rx.Observable
@@ -15,14 +15,14 @@ import rx.Observable
 interface MobileApi {
 
     @POST("LogAppStart")
-    fun logAppStart(@Body logAppStartRequest: BaseRequest): Observable<LogResponse>
+    fun logAppStart(@Body logAppStartRequest: ApiRequest): Observable<ApiResponse<String>>
 
     @POST("Slowniki")
-    fun getDictionaries(@Body dictionariesRequest: DictionariesRequest): Observable<DictionariesResponse>
+    fun getDictionaries(@Body dictionariesRequest: DictionariesRequest): Observable<ApiResponse<Dictionaries>>
 
     @POST("PlanLekcjiZeZmianami")
-    fun getTimetable(@Body timetableRequest: TimetableRequest): Observable<TimetableResponse>
+    fun getTimetable(@Body timetableRequest: TimetableRequest): Observable<ApiResponse<List<Lesson>>>
 
     @POST("Oceny")
-    fun getGrades(@Body gradesRequest: GradesRequest): Observable<GradesResponse>
+    fun getGrades(@Body gradesRequest: GradesRequest): Observable<ApiResponse<List<Grade>>>
 }

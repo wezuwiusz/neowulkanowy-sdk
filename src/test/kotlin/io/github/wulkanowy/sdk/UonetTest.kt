@@ -1,13 +1,13 @@
 package io.github.wulkanowy.sdk
 
-import io.github.wulkanowy.sdk.dictionaries.DictionariesResponse
-import io.github.wulkanowy.sdk.grades.GradesResponse
+import io.github.wulkanowy.sdk.base.ApiResponse
+import io.github.wulkanowy.sdk.dictionaries.Dictionaries
+import io.github.wulkanowy.sdk.grades.Grade
 import io.github.wulkanowy.sdk.register.CertificateResponse
-import io.github.wulkanowy.sdk.register.LogResponse
-import io.github.wulkanowy.sdk.register.StudentsResponse
+import io.github.wulkanowy.sdk.register.Student
 import io.github.wulkanowy.sdk.repository.MobileRepository
 import io.github.wulkanowy.sdk.repository.RegisterRepository
-import io.github.wulkanowy.sdk.timetable.TimetableResponse
+import io.github.wulkanowy.sdk.timetable.Lesson
 import junit.framework.TestCase.assertEquals
 import org.junit.Test
 import rx.observers.TestSubscriber
@@ -37,41 +37,41 @@ class UonetTest {
         register.certificate = tokenCrt.certificateKey
 
         val pupils = register.getPupils()
-        val pupilSubscriber = TestSubscriber<StudentsResponse>()
+        val pupilSubscriber = TestSubscriber<ApiResponse<List<Student>>>()
         pupils.subscribe(pupilSubscriber)
         pupilSubscriber.assertCompleted()
         pupilSubscriber.assertNoErrors()
         assertEquals("Ok", pupilSubscriber.onNextEvents[0].status)
-        assertEquals(1, pupilSubscriber.onNextEvents[0].students.size)
+        assertEquals(1, pupilSubscriber.onNextEvents[0].data!!.size)
 
-        val student = pupilSubscriber.onNextEvents[0].students[0]
+        val student = pupilSubscriber.onNextEvents[0].data!![0]
 
         // MobileRepository
         val mobile = MobileRepository(HOST, SYMBOL, register.signature, register.certificate, student.reportingUnitSymbol)
 
         val start = mobile.logStart()
-        val startSubscriber = TestSubscriber<LogResponse>()
+        val startSubscriber = TestSubscriber<ApiResponse<String>>()
         start.subscribe(startSubscriber)
         startSubscriber.assertCompleted()
         startSubscriber.assertNoErrors()
         assertEquals("Ok", startSubscriber.onNextEvents[0].status)
 
         val dictionaries = mobile.getDictionaries(student.userLoginId, student.classificationPeriodId, student.classId)
-        val dictionariesSubscriber = TestSubscriber<DictionariesResponse>()
+        val dictionariesSubscriber = TestSubscriber<ApiResponse<Dictionaries>>()
         dictionaries.subscribe(dictionariesSubscriber)
         dictionariesSubscriber.assertCompleted()
         dictionariesSubscriber.assertNoErrors()
         assertEquals("Ok", dictionariesSubscriber.onNextEvents[0].status)
 
         val lessons = mobile.getTimetable("2018-04-23", "2018-04-24", student.classId, student.classificationPeriodId, student.id)
-        val lessonsSubscriber = TestSubscriber<TimetableResponse>()
+        val lessonsSubscriber = TestSubscriber<ApiResponse<List<Lesson>>>()
         lessons.subscribe(lessonsSubscriber)
         lessonsSubscriber.assertCompleted()
         lessonsSubscriber.assertNoErrors()
         assertEquals("Ok", lessonsSubscriber.onNextEvents[0].status)
 
         val grades = mobile.getGrades(student.classId, student.classificationPeriodId, student.id)
-        val gradesSubscriber = TestSubscriber<GradesResponse>()
+        val gradesSubscriber = TestSubscriber<ApiResponse<List<Grade>>>()
         grades.subscribe(gradesSubscriber)
         gradesSubscriber.assertCompleted()
         gradesSubscriber.assertNoErrors()

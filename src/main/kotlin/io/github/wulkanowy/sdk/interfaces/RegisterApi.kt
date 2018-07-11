@@ -1,9 +1,10 @@
 package io.github.wulkanowy.sdk.interfaces
 
-import io.github.wulkanowy.sdk.base.BaseRequest
+import io.github.wulkanowy.sdk.base.ApiRequest
+import io.github.wulkanowy.sdk.base.ApiResponse
 import io.github.wulkanowy.sdk.register.CertificateRequest
 import io.github.wulkanowy.sdk.register.CertificateResponse
-import io.github.wulkanowy.sdk.register.StudentsResponse
+import io.github.wulkanowy.sdk.register.Student
 import retrofit2.http.Body
 import retrofit2.http.Headers
 import retrofit2.http.POST
@@ -16,5 +17,5 @@ interface RegisterApi {
     fun getCertificate(@Body certificateRequest: CertificateRequest): Observable<CertificateResponse>
 
     @POST("ListaUczniow")
-    fun getPupils(@Body pupilsListRequest: BaseRequest): Observable<StudentsResponse>
+    fun getPupils(@Body pupilsListRequest: ApiRequest): Observable<ApiResponse<List<Student>>>
 }

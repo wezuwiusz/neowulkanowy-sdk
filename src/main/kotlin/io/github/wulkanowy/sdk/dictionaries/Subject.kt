@@ -4,18 +4,18 @@ import com.google.gson.annotations.SerializedName
 
 data class Subject(
 
-    @SerializedName("Id")
-    var id: Int,
+        @SerializedName("Id")
+        val id: Int,
 
-    @SerializedName("Nazwa")
-    var name: String,
+        @SerializedName("Nazwa")
+        val name: String,
 
-    @SerializedName("Kod")
-    var code: String,
+        @SerializedName("Kod")
+        val code: String,
 
-    @SerializedName("Aktywny")
-    var active: Boolean,
+        @SerializedName("Aktywny")
+        val active: Boolean,
 
-    @SerializedName("Pozycja")
-    var position: Int
+        @SerializedName("Pozycja")
+        val position: Int
 )

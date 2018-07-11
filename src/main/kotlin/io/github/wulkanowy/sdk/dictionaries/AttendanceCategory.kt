@@ -4,30 +4,30 @@ import com.google.gson.annotations.SerializedName
 
 data class AttendanceCategory(
 
-    @SerializedName("Id")
-    var id: Int,
+        @SerializedName("Id")
+        val id: Int,
 
-    @SerializedName("Nazwa")
-    var name: String,
+        @SerializedName("Nazwa")
+        val name: String,
 
-    @SerializedName("Pozycja")
-    var position: Int,
+        @SerializedName("Pozycja")
+        val position: Int,
 
-    @SerializedName("Obecnosc")
-    var presence: Boolean,
+        @SerializedName("Obecnosc")
+        val presence: Boolean,
 
-    @SerializedName("Nieobecnosc")
-    var absence: Boolean,
+        @SerializedName("Nieobecnosc")
+        val absence: Boolean,
 
-    @SerializedName("Zwolnienie")
-    var exemption: Boolean,
+        @SerializedName("Zwolnienie")
+        val exemption: Boolean,
 
-    @SerializedName("Spoznienie")
-    var lateness: Boolean,
+        @SerializedName("Spoznienie")
+        val lateness: Boolean,
 
-    @SerializedName("Usprawiedliwione")
-    var excused: Boolean,
+        @SerializedName("Usprawiedliwione")
+        val excused: Boolean,
 
-    @SerializedName("Usuniete")
-    var deleted: Boolean
+        @SerializedName("Usuniete")
+        val deleted: Boolean
 )

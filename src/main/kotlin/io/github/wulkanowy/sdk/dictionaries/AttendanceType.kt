@@ -4,21 +4,21 @@ import com.google.gson.annotations.SerializedName
 
 data class AttendanceType(
 
-    @SerializedName("Id")
-    var id: Int,
+        @SerializedName("Id")
+        val id: Int,
 
-    @SerializedName("Symbol")
-    var symbol: String,
+        @SerializedName("Symbol")
+        val symbol: String,
 
-    @SerializedName("Nazwa")
-    var name: String,
+        @SerializedName("Nazwa")
+        val name: String,
 
-    @SerializedName("Aktywny")
-    var active: Boolean,
+        @SerializedName("Aktywny")
+        val active: Boolean,
 
-    @SerializedName("WpisDomyslny")
-    var defaultEntry: Boolean,
+        @SerializedName("WpisDomyslny")
+        val defaultEntry: Boolean,
 
-    @SerializedName("IdKategoriaFrek")
-    var categoryId: Int
+        @SerializedName("IdKategoriaFrek")
+        val categoryId: Int
 )

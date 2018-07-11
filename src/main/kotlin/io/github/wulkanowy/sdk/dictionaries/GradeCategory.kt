@@ -4,12 +4,12 @@ import com.google.gson.annotations.SerializedName
 
 data class GradeCategory(
 
-    @SerializedName("Id")
-    var id: Int,
+        @SerializedName("Id")
+        val id: Int,
 
-    @SerializedName("Kod")
-    var code: String,
+        @SerializedName("Kod")
+        val code: String,
 
-    @SerializedName("Nazwa")
-    var name: String
+        @SerializedName("Nazwa")
+        val name: String
 )

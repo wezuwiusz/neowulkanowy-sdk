@@ -4,24 +4,24 @@ import com.google.gson.annotations.SerializedName
 
 data class Teacher(
 
-    @SerializedName("Id")
-    var id: Int,
+        @SerializedName("Id")
+        val id: Int,
 
-    @SerializedName("Imie")
-    var name: String,
+        @SerializedName("Imie")
+        val name: String,
 
-    @SerializedName("Nazwisko")
-    var surname: String,
+        @SerializedName("Nazwisko")
+        val surname: String,
 
-    @SerializedName("Kod")
-    var code: String,
+        @SerializedName("Kod")
+        val code: String,
 
-    @SerializedName("Aktywny")
-    var active: Boolean,
+        @SerializedName("Aktywny")
+        val active: Boolean,
 
-    @SerializedName("Nauczyciel")
-    var teacher: Boolean,
+        @SerializedName("Nauczyciel")
+        val teacher: Boolean,
 
-    @SerializedName("LoginId")
-    var loginId: Int
+        @SerializedName("LoginId")
+        val loginId: Int
 )
