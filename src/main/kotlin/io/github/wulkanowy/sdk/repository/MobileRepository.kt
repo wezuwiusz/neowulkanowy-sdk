@@ -10,6 +10,8 @@ import io.github.wulkanowy.sdk.exams.Exam
 import io.github.wulkanowy.sdk.exams.ExamsRequest
 import io.github.wulkanowy.sdk.grades.Grade
 import io.github.wulkanowy.sdk.grades.GradesRequest
+import io.github.wulkanowy.sdk.homework.Homework
+import io.github.wulkanowy.sdk.homework.HomeworkRequest
 import io.github.wulkanowy.sdk.interceptor.SignInterceptor
 import io.github.wulkanowy.sdk.interfaces.MobileApi
 import io.github.wulkanowy.sdk.notes.Note
@@ -51,6 +53,10 @@ class MobileRepository(private val host: String, private val symbol: String, pri
 
     fun getAttendance(startDate: String, endDate: String, classId: Int, classificationPeriodId: Int, studentId: Int): Observable<ApiResponse<AttendanceResponse>> {
         return getMobileApi().getAttendance(AttendanceRequest(startDate, endDate, classId, classificationPeriodId, studentId))
+    }
+
+    fun getHomework(startDate: String, endDate: String, classId: Int, classificationPeriodId: Int, studentId: Int): Observable<ApiResponse<List<Homework>>> {
+        return getMobileApi().getHomework(HomeworkRequest(startDate, endDate, classId, classificationPeriodId, studentId))
     }
 
     private fun getMobileApi(): MobileApi {

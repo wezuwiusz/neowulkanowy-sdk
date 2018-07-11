@@ -5,6 +5,7 @@ import io.github.wulkanowy.sdk.base.ApiResponse
 import io.github.wulkanowy.sdk.dictionaries.Dictionaries
 import io.github.wulkanowy.sdk.exams.Exam
 import io.github.wulkanowy.sdk.grades.Grade
+import io.github.wulkanowy.sdk.homework.Homework
 import io.github.wulkanowy.sdk.notes.Note
 import io.github.wulkanowy.sdk.register.CertificateResponse
 import io.github.wulkanowy.sdk.register.Student
@@ -101,5 +102,12 @@ class UonetTest {
         attendanceSubscriber.assertNoErrors()
         assertEquals("Ok", attendanceSubscriber.onNextEvents[0].status)
         assertEquals("2018-04-23", attendanceSubscriber.onNextEvents[0].data!!.dateStartText)
+
+        val homework = mobile.getHomework("2017-10-23", "2017-10-27", student.classId, student.classificationPeriodId, student.id)
+        val homeworkSubscriber = TestSubscriber<ApiResponse<List<Homework>>>()
+        homework.subscribe(homeworkSubscriber)
+        homeworkSubscriber.assertCompleted()
+        homeworkSubscriber.assertNoErrors()
+        assertEquals("Ok", homeworkSubscriber.onNextEvents[0].status)
     }
 }

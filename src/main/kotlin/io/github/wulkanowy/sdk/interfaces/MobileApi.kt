@@ -10,6 +10,8 @@ import io.github.wulkanowy.sdk.exams.Exam
 import io.github.wulkanowy.sdk.exams.ExamsRequest
 import io.github.wulkanowy.sdk.grades.Grade
 import io.github.wulkanowy.sdk.grades.GradesRequest
+import io.github.wulkanowy.sdk.homework.Homework
+import io.github.wulkanowy.sdk.homework.HomeworkRequest
 import io.github.wulkanowy.sdk.notes.Note
 import io.github.wulkanowy.sdk.notes.NotesRequest
 import io.github.wulkanowy.sdk.timetable.Lesson
@@ -40,4 +42,7 @@ interface MobileApi {
 
     @POST("Frekwencje")
     fun getAttendance(@Body attendanceRequest: AttendanceRequest): Observable<ApiResponse<AttendanceResponse>>
+
+    @POST("ZadaniaDomowe")
+    fun getHomework(@Body homeworkRequest: HomeworkRequest): Observable<ApiResponse<List<Homework>>>
 }
