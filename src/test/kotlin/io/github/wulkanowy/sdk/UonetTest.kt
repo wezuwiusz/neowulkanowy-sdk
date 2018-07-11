@@ -2,6 +2,7 @@ package io.github.wulkanowy.sdk
 
 import io.github.wulkanowy.sdk.base.ApiResponse
 import io.github.wulkanowy.sdk.dictionaries.Dictionaries
+import io.github.wulkanowy.sdk.exams.Exam
 import io.github.wulkanowy.sdk.grades.Grade
 import io.github.wulkanowy.sdk.register.CertificateResponse
 import io.github.wulkanowy.sdk.register.Student
@@ -76,5 +77,12 @@ class UonetTest {
         gradesSubscriber.assertCompleted()
         gradesSubscriber.assertNoErrors()
         assertEquals("Ok", gradesSubscriber.onNextEvents[0].status)
+
+        val exams = mobile.getExams("2018-05-28", "2018-06-03", student.classId, student.classificationPeriodId, student.id)
+        val examsSubscriber = TestSubscriber<ApiResponse<List<Exam>>>()
+        exams.subscribe(examsSubscriber)
+        examsSubscriber.assertCompleted()
+        examsSubscriber.assertNoErrors()
+        assertEquals("Ok", examsSubscriber.onNextEvents[0].status)
     }
 }

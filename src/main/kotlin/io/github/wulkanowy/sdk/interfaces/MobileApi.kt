@@ -4,6 +4,8 @@ import io.github.wulkanowy.sdk.base.ApiRequest
 import io.github.wulkanowy.sdk.base.ApiResponse
 import io.github.wulkanowy.sdk.dictionaries.Dictionaries
 import io.github.wulkanowy.sdk.dictionaries.DictionariesRequest
+import io.github.wulkanowy.sdk.exams.Exam
+import io.github.wulkanowy.sdk.exams.ExamsRequest
 import io.github.wulkanowy.sdk.grades.Grade
 import io.github.wulkanowy.sdk.grades.GradesRequest
 import io.github.wulkanowy.sdk.timetable.Lesson
@@ -25,4 +27,7 @@ interface MobileApi {
 
     @POST("Oceny")
     fun getGrades(@Body gradesRequest: GradesRequest): Observable<ApiResponse<List<Grade>>>
+
+    @POST("Sprawdziany")
+    fun getExams(@Body examsRequest: ExamsRequest): Observable<ApiResponse<List<Exam>>>
 }
