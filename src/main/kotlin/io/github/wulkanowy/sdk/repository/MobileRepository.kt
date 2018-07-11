@@ -1,5 +1,7 @@
 package io.github.wulkanowy.sdk.repository
 
+import io.github.wulkanowy.sdk.attendance.AttendanceResponse
+import io.github.wulkanowy.sdk.attendance.AttendanceRequest
 import io.github.wulkanowy.sdk.base.ApiRequest
 import io.github.wulkanowy.sdk.base.ApiResponse
 import io.github.wulkanowy.sdk.dictionaries.Dictionaries
@@ -45,6 +47,10 @@ class MobileRepository(private val host: String, private val symbol: String, pri
 
     fun getNotes(classificationPeriodId: Int, studentId: Int): Observable<ApiResponse<List<Note>>> {
         return getMobileApi().getNotes(NotesRequest(classificationPeriodId, studentId))
+    }
+
+    fun getAttendance(startDate: String, endDate: String, classId: Int, classificationPeriodId: Int, studentId: Int): Observable<ApiResponse<AttendanceResponse>> {
+        return getMobileApi().getAttendance(AttendanceRequest(startDate, endDate, classId, classificationPeriodId, studentId))
     }
 
     private fun getMobileApi(): MobileApi {

@@ -1,5 +1,6 @@
 package io.github.wulkanowy.sdk
 
+import io.github.wulkanowy.sdk.attendance.AttendanceResponse
 import io.github.wulkanowy.sdk.base.ApiResponse
 import io.github.wulkanowy.sdk.dictionaries.Dictionaries
 import io.github.wulkanowy.sdk.exams.Exam
@@ -92,5 +93,13 @@ class UonetTest {
         notesSubscriber.assertCompleted()
         notesSubscriber.assertNoErrors()
         assertEquals("Ok", notesSubscriber.onNextEvents[0].status)
+
+        val attendance = mobile.getAttendance("2018-04-23", "2018-04-24", student.classId, student.classificationPeriodId, student.id)
+        val attendanceSubscriber = TestSubscriber<ApiResponse<AttendanceResponse>>()
+        attendance.subscribe(attendanceSubscriber)
+        attendanceSubscriber.assertCompleted()
+        attendanceSubscriber.assertNoErrors()
+        assertEquals("Ok", attendanceSubscriber.onNextEvents[0].status)
+        assertEquals("2018-04-23", attendanceSubscriber.onNextEvents[0].data!!.dateStartText)
     }
 }
