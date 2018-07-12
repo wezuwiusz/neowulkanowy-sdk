@@ -19,12 +19,15 @@ jobs:
             - ~/.gradle
           key: cache-{{ checksum "build.gradle" }}
 
-      - run: ./gradlew check --no-daemon --stacktrace --console=plain -PdisablePreDex
+      - run: ./gradlew check jacocoTestReport --no-daemon --stacktrace --console=plain -PdisablePreDex
 
       - run: bash <(curl -s https://codecov.io/bash)
 
       - store_test_results:
           path: ./build/test-results
+
+      - store_artifacts:
+          path: ./build/reports/jacoco/test
 
       - store_artifacts:
           path: ./build/libs/sdk-0.1.0-SNAPSHOT.jar
