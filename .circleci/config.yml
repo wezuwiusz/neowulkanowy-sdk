@@ -28,3 +28,10 @@ jobs:
 
       - store_artifacts:
           path: ./build/libs/sdk-0.1.0-SNAPSHOT.jar
+
+workflows:
+  version: 2
+
+  test:
+    jobs:
+      - test
