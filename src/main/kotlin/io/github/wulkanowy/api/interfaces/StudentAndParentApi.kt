@@ -3,20 +3,20 @@ package io.github.wulkanowy.api.interfaces
 import io.github.wulkanowy.api.attendance.AttendanceResponse
 import io.github.wulkanowy.api.grades.GradesResponse
 import io.github.wulkanowy.api.notes.NotesResponse
-import io.reactivex.Observable
+import io.reactivex.Single
 import retrofit2.http.GET
 import retrofit2.http.Query
 
 interface StudentAndParentApi {
 
     @GET("Frekwencja.mvc")
-    fun getAttendance(@Query("data") date: String): Observable<AttendanceResponse>
+    fun getAttendance(@Query("data") date: String): Single<AttendanceResponse>
 
     @GET("Sprawdziany.mvc/Terminarz?rodzajWidoku=2")
     fun getExams(@Query("date") date: String)
 
     @GET("Oceny/Wszystkie?details=2")
-    fun getGrades(@Query("okres") semester: Int): Observable<GradesResponse>
+    fun getGrades(@Query("okres") semester: Int): Single<GradesResponse>
 
     @GET("ZadaniaDomowe.mvc?rodzajWidoku=Dzien")
     fun getHomework(@Query("data") date: String)
@@ -25,7 +25,7 @@ interface StudentAndParentApi {
     fun getRegisteredDevices()
 
     @GET("UwagiOsiagniecia.mvc/Wszystkie")
-    fun getNotes(): Observable<NotesResponse>
+    fun getNotes(): Single<NotesResponse>
 
     @GET("Szkola.mvc/Nauczyciele")
     fun getTeachers()

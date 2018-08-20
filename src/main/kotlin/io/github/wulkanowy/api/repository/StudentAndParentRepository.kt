@@ -4,7 +4,7 @@ import io.github.wulkanowy.api.attendance.Attendance
 import io.github.wulkanowy.api.grades.Grade
 import io.github.wulkanowy.api.interfaces.StudentAndParentApi
 import io.github.wulkanowy.api.notes.Note
-import io.reactivex.Observable
+import io.reactivex.Single
 import okhttp3.OkHttpClient
 import pl.droidsonroids.retrofit2.JspoonConverterFactory
 import retrofit2.Retrofit
@@ -20,7 +20,7 @@ class StudentAndParentRepository(private val host: String,
 
     fun getTimetable(startDate: String) = api.getTimetable(startDate)
 
-    fun getGrades(classificationPeriodId: Int): Observable<List<Grade>> {
+    fun getGrades(classificationPeriodId: Int): Single<List<Grade>> {
         return api.getGrades(classificationPeriodId).map {
             it.grades.map { grade ->
                 grade.description = grade.description.replace("${grade.symbol}, ", "")
@@ -32,7 +32,7 @@ class StudentAndParentRepository(private val host: String,
 
     fun getExams(startDate: String) = api.getExams(startDate)
 
-    fun getNotes(): Observable<List<Note>> {
+    fun getNotes(): Single<List<Note>> {
         return api.getNotes().map {
             it.notes.mapIndexed { i, note ->
                 note.date = it.dates[i]
@@ -41,15 +41,15 @@ class StudentAndParentRepository(private val host: String,
         }
     }
 
-    fun getAttendance(startDate: String): Observable<List<Attendance>> {
+    fun getAttendance(startDate: String): Single<List<Attendance>> {
         return api.getAttendance(startDate).map { res ->
-            res.rows.map { row ->
+            res.rows.flatMap { row ->
                 row.lessons.mapIndexed { i, it ->
                     it.date = res.days[i]
                     it.number = row.number
                     it
                 }
-            }.flatten()
+            }
         }
     }
 
