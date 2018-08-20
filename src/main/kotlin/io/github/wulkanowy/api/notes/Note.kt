@@ -2,16 +2,15 @@ package io.github.wulkanowy.api.notes
 
 import pl.droidsonroids.jspoon.annotation.Selector
 
-data class Note(
+class Note {
+    lateinit var date: String
 
-        var date: String = "",
+    @Selector(".wartosc", index = 0)
+    lateinit var teacher: String
 
-        @Selector(".wartosc", index = 0)
-        var teacher: String = "",
+    @Selector(".wartosc", index = 1)
+    lateinit var category: String
 
-        @Selector(".wartosc", index = 1)
-        var category: String = "",
-
-        @Selector(".wartosc", index = 2)
-        var content: String = ""
-)
+    @Selector(".wartosc", index = 2)
+    lateinit var content: String
+}
