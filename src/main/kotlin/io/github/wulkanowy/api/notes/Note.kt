@@ -4,12 +4,14 @@ import pl.droidsonroids.jspoon.annotation.Selector
 
 data class Note(
 
-        @Selector(".daneWiersz:nth-child(1) .wartosc")
-        val teacher: String,
+        var date: String = "",
 
-        @Selector(".daneWiersz:nth-child(2) .wartosc")
-        val category: String,
+        @Selector(".wartosc", index = 0)
+        var teacher: String = "",
 
-        @Selector(".daneWiersz:nth-child(3) .wartosc")
-        val content: String
+        @Selector(".wartosc", index = 1)
+        var category: String = "",
+
+        @Selector(".wartosc", index = 2)
+        var content: String = ""
 )
