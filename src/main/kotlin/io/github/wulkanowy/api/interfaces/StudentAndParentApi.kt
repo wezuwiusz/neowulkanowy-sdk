@@ -1,8 +1,8 @@
 package io.github.wulkanowy.api.interfaces
 
+import io.github.wulkanowy.api.grades.GradesResponse
 import io.github.wulkanowy.api.notes.NotesResponse
 import io.reactivex.Observable
-import io.reactivex.Single
 import retrofit2.http.GET
 import retrofit2.http.Query
 
@@ -15,7 +15,7 @@ interface StudentAndParentApi {
     fun getExams(@Query("date") date: String)
 
     @GET("Oceny/Wszystkie?details=2")
-    fun getGrades(@Query("okres") semester: Int)
+    fun getGrades(@Query("okres") semester: Int): Observable<GradesResponse>
 
     @GET("ZadaniaDomowe.mvc?rodzajWidoku=Dzien")
     fun getHomework(@Query("data") date: String)

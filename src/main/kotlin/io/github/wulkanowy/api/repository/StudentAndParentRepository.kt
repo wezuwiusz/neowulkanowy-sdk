@@ -1,5 +1,6 @@
 package io.github.wulkanowy.api.repository
 
+import io.github.wulkanowy.api.grades.Grade
 import io.github.wulkanowy.api.interfaces.StudentAndParentApi
 import io.github.wulkanowy.api.notes.Note
 import io.reactivex.Observable
@@ -18,7 +19,15 @@ class StudentAndParentRepository(private val host: String,
 
     fun getTimetable(startDate: String) = api.getTimetable(startDate)
 
-    fun getGrades(classificationPeriodId: Int) = api.getGrades(classificationPeriodId)
+    fun getGrades(classificationPeriodId: Int): Observable<List<Grade>> {
+        return api.getGrades(classificationPeriodId).map {
+            it.grades.map { grade ->
+                grade.description = grade.description.replace("${grade.symbol}, ", "")
+                if (grade.description == grade.symbol) grade.description = ""
+                grade
+            }
+        }
+    }
 
     fun getExams(startDate: String) = api.getExams(startDate)
 
