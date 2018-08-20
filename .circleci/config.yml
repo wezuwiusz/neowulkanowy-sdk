@@ -1,0 +1,40 @@
+version: 2
+
+jobs:
+  test:
+    working_directory: ~/api
+    docker:
+      - image: circleci/openjdk:8-jdk-stretch
+
+    steps:
+      - checkout
+
+      - restore_cache:
+          key: cache-{{ checksum "build.gradle" }}
+
+      - run: ./gradlew build -x check --no-daemon --stacktrace --console=plain -PdisablePreDex
+
+      - save_cache:
+          paths:
+            - ~/.gradle
+          key: cache-{{ checksum "build.gradle" }}
+
+      - run: ./gradlew check jacocoTestReport --no-daemon --stacktrace --console=plain -PdisablePreDex
+
+      - run: bash <(curl -s https://codecov.io/bash)
+
+      - store_test_results:
+          path: ./build/test-results
+
+      - store_artifacts:
+          path: ./build/reports/jacoco/test
+
+      - store_artifacts:
+          path: ./build/libs/api-0.1.0-SNAPSHOT.jar
+
+workflows:
+  version: 2
+
+  test:
+    jobs:
+      - test
