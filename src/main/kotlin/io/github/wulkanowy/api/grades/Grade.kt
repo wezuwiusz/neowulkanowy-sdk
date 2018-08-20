@@ -19,7 +19,7 @@ class Grade {
     @Selector("td", index = 2, regex = "^(.+?),")
     lateinit var symbol: String
 
-    @Selector("td", index = 2)
+    @Selector("td", index = 2, regex = ".+, (.+)")
     lateinit var description: String
 
     @Selector("td", index = 3)

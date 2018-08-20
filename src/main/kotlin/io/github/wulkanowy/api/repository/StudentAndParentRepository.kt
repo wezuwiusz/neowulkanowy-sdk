@@ -25,7 +25,6 @@ class StudentAndParentRepository(private val host: String,
     fun getGrades(classificationPeriodId: Int): Single<List<Grade>> {
         return api.getGrades(classificationPeriodId).map {
             it.grades.map { grade ->
-                grade.description = grade.description.replace("${grade.symbol}, ", "")
                 if (grade.description == grade.symbol) grade.description = ""
                 grade
             }
