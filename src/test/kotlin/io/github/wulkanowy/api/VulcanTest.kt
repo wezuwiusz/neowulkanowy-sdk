@@ -1,5 +1,6 @@
 package io.github.wulkanowy.api
 
+import io.github.wulkanowy.api.attendance.Attendance
 import io.github.wulkanowy.api.grades.Grade
 import io.github.wulkanowy.api.interceptor.LoginInterceptor
 import io.github.wulkanowy.api.notes.Note
@@ -47,13 +48,37 @@ class VulcanTest {
         )
     }
 
+    @Test fun attendanceTest() {
+        val attendance = snp.getAttendance("636697786721570000")
+        val attendanceObserver = TestObserver<List<Attendance>>()
+        attendance.subscribe(attendanceObserver)
+        attendanceObserver.assertComplete()
+
+        val values = attendanceObserver.values()[0]
+
+        assertEquals(0, values[0].number)
+        assertEquals("Fizyka", values[0].subject)
+        assertEquals(getDate(2018, 8, 13), values[0].date)
+
+        assertEquals(Attendance.Types.PRESENCE, values[0].type)
+        assertEquals(Attendance.Types.ABSENCE_UNEXCUSED, values[1].type)
+        assertEquals(Attendance.Types.ABSENCE_EXCUSED, values[2].type)
+        assertEquals(Attendance.Types.ABSENCE_FOR_SCHOOL_REASONS, values[3].type)
+        assertEquals(Attendance.Types.UNEXCUSED_LATENESS, values[4].type)
+
+        assertEquals(Attendance.Types.EXCUSED_LATENESS, values[5].type)
+        assertEquals(Attendance.Types.EXEMPTION, values[6].type)
+
+        assertEquals(1, values[5].number)
+    }
+
     @Test fun notesTest() {
         val notes = snp.getNotes()
-        val notesSubscriber = TestObserver<List<Note>>()
-        notes.subscribe(notesSubscriber)
-        notesSubscriber.assertComplete()
+        val notesObserver = TestObserver<List<Note>>()
+        notes.subscribe(notesObserver)
+        notesObserver.assertComplete()
 
-        val values = notesSubscriber.values()[0]
+        val values = notesObserver.values()[0]
 
         assertEquals("Janusz Tracz", values[0].teacher)
         assertEquals("Udział w konkursie szkolnym +20 pkt", values[0].category)
@@ -62,11 +87,11 @@ class VulcanTest {
 
     @Test fun gradesTest() {
         val grades = snp.getGrades(123)
-        val gradesSubscriber = TestObserver<List<Grade>>()
-        grades.subscribe(gradesSubscriber)
-        gradesSubscriber.assertComplete()
+        val gradesObserver = TestObserver<List<Grade>>()
+        grades.subscribe(gradesObserver)
+        gradesObserver.assertComplete()
 
-        val values = gradesSubscriber.values()[0]
+        val values = gradesObserver.values()[0]
 
         assertEquals("Zajęcia z wychowawcą", values[0].subject)
         assertEquals("5", values[0].value)
@@ -74,12 +99,16 @@ class VulcanTest {
         assertEquals("A1", values[0].symbol)
         assertEquals("Dzień Kobiet w naszej klasie", values[0].description)
         assertEquals("1.00", values[0].weight)
-        assertEquals(Date.from(LocalDate.of(2017, 3, 21)
-                .atStartOfDay(ZoneId.systemDefault()).toInstant()), values[0].date)
+        assertEquals(getDate(2017, 3, 21), values[0].date)
         assertEquals("Patryk Maciejewski", values[0].teacher)
 
         assertEquals("STR", values[4].symbol)
         assertEquals("", values[4].description)
+    }
+
+    private fun getDate(year: Int, month: Int, day: Int): Date {
+        return Date.from(LocalDate.of(year, month, day)
+                .atStartOfDay(ZoneId.systemDefault()).toInstant())
     }
 
 }

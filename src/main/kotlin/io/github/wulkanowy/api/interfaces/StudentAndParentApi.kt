@@ -1,5 +1,6 @@
 package io.github.wulkanowy.api.interfaces
 
+import io.github.wulkanowy.api.attendance.AttendanceResponse
 import io.github.wulkanowy.api.grades.GradesResponse
 import io.github.wulkanowy.api.notes.NotesResponse
 import io.reactivex.Observable
@@ -9,7 +10,7 @@ import retrofit2.http.Query
 interface StudentAndParentApi {
 
     @GET("Frekwencja.mvc")
-    fun getAttendance(@Query("data") date: String)
+    fun getAttendance(@Query("data") date: String): Observable<AttendanceResponse>
 
     @GET("Sprawdziany.mvc/Terminarz?rodzajWidoku=2")
     fun getExams(@Query("date") date: String)

@@ -1,5 +1,6 @@
 package io.github.wulkanowy.api.repository
 
+import io.github.wulkanowy.api.attendance.Attendance
 import io.github.wulkanowy.api.grades.Grade
 import io.github.wulkanowy.api.interfaces.StudentAndParentApi
 import io.github.wulkanowy.api.notes.Note
@@ -40,7 +41,17 @@ class StudentAndParentRepository(private val host: String,
         }
     }
 
-    fun getAttendance(startDate: String) = api.getAttendance(startDate)
+    fun getAttendance(startDate: String): Observable<List<Attendance>> {
+        return api.getAttendance(startDate).map { res ->
+            res.rows.map { row ->
+                row.lessons.mapIndexed { i, it ->
+                    it.date = res.days[i]
+                    it.number = row.number
+                    it
+                }
+            }.flatten()
+        }
+    }
 
     fun getHomework(startDate: String) = api.getHomework(startDate)
 
