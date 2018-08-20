@@ -1,6 +1,7 @@
 package io.github.wulkanowy.api.interfaces
 
 import io.github.wulkanowy.api.attendance.AttendanceResponse
+import io.github.wulkanowy.api.exams.ExamResponse
 import io.github.wulkanowy.api.grades.GradesResponse
 import io.github.wulkanowy.api.notes.NotesResponse
 import io.reactivex.Single
@@ -13,7 +14,7 @@ interface StudentAndParentApi {
     fun getAttendance(@Query("data") date: String): Single<AttendanceResponse>
 
     @GET("Sprawdziany.mvc/Terminarz?rodzajWidoku=2")
-    fun getExams(@Query("date") date: String)
+    fun getExams(@Query("date") date: String): Single<ExamResponse>
 
     @GET("Oceny/Wszystkie?details=2")
     fun getGrades(@Query("okres") semester: Int): Single<GradesResponse>

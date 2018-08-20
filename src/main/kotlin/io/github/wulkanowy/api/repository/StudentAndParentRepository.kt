@@ -1,6 +1,8 @@
 package io.github.wulkanowy.api.repository
 
 import io.github.wulkanowy.api.attendance.Attendance
+import io.github.wulkanowy.api.exams.Exam
+import io.github.wulkanowy.api.exams.ExamResponse
 import io.github.wulkanowy.api.grades.Grade
 import io.github.wulkanowy.api.interfaces.StudentAndParentApi
 import io.github.wulkanowy.api.notes.Note
@@ -30,7 +32,16 @@ class StudentAndParentRepository(private val host: String,
         }
     }
 
-    fun getExams(startDate: String) = api.getExams(startDate)
+    fun getExams(startDate: String): Single<List<Exam>> {
+        return api.getExams(startDate).map { res ->
+            res.days.flatMap { day ->
+                day.exams.map { exam ->
+                    exam.date = day.date
+                    exam
+                }
+            }
+        }
+    }
 
     fun getNotes(): Single<List<Note>> {
         return api.getNotes().map {

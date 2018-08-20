@@ -1,6 +1,7 @@
 package io.github.wulkanowy.api
 
 import io.github.wulkanowy.api.attendance.Attendance
+import io.github.wulkanowy.api.exams.Exam
 import io.github.wulkanowy.api.grades.Grade
 import io.github.wulkanowy.api.interceptor.LoginInterceptor
 import io.github.wulkanowy.api.notes.Note
@@ -70,6 +71,21 @@ class VulcanTest {
         assertEquals(Attendance.Types.EXEMPTION, values[6].type)
 
         assertEquals(1, values[5].number)
+    }
+
+    @Test fun examsTest() {
+        val exams = snp.getExams("636703910653480000")
+        val examsObserver = TestObserver<List<Exam>>()
+        exams.subscribe(examsObserver)
+
+        val values = examsObserver.values()[0]
+
+        assertEquals(getDate(2018, 5, 9), values[0].date)
+        assertEquals(getDate(2018, 4, 1), values[0].entryDate)
+        assertEquals("Język angielski 1Ti|J1", values[0].subject)
+        assertEquals("Sprawdzian", values[0].type)
+        assertEquals("słownictwo(kultura)", values[0].description)
+        assertEquals("Anyż Zofia [AZ]", values[0].teacher)
     }
 
     @Test fun notesTest() {
