@@ -1,9 +1,11 @@
 package io.github.wulkanowy.api.notes
 
 import pl.droidsonroids.jspoon.annotation.Selector
+import java.util.*
 
 class Note {
-    lateinit var date: String
+
+    lateinit var date: Date
 
     @Selector(".wartosc", index = 0)
     lateinit var teacher: String

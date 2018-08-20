@@ -96,6 +96,7 @@ class VulcanTest {
 
         val values = notesObserver.values()[0]
 
+        assertEquals(getDate(2018, 3, 26), values[0].date)
         assertEquals("Janusz Tracz", values[0].teacher)
         assertEquals("Udział w konkursie szkolnym +20 pkt", values[0].category)
         assertEquals("+ 20p za udział w Konkursie Języka Angielskiego", values[0].content)
