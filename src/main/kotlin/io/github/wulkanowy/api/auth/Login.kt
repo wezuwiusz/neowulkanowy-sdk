@@ -1,4 +1,4 @@
-package io.github.wulkanowy.api.login
+package io.github.wulkanowy.api.auth
 
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
@@ -21,6 +21,7 @@ class Login(private val client: Client) {
         private val logger = LoggerFactory.getLogger(Login::class.java)
     }
 
+    //TODO: replace with request retry
     private var lastSuccessRequest: Date? = null
 
     fun isLoggedIn(): Boolean {
@@ -95,7 +96,7 @@ class Login(private val client: Client) {
         val targetDoc = sendCertData(doc)
         var title = targetDoc.title()
 
-        if ("Working..." == title) { // on adfs login
+        if ("Working..." == title) {
             logger.info("ADFS login")
             title = sendCertData(targetDoc).title()
         }

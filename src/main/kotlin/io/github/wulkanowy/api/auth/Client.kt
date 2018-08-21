@@ -1,4 +1,4 @@
-package io.github.wulkanowy.api.login
+package io.github.wulkanowy.api.auth
 
 import org.jsoup.nodes.Document
 import java.net.HttpCookie

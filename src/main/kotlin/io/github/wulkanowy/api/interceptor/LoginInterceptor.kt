@@ -1,7 +1,7 @@
 package io.github.wulkanowy.api.interceptor
 
-import io.github.wulkanowy.api.login.Client
-import io.github.wulkanowy.api.login.Login
+import io.github.wulkanowy.api.auth.Client
+import io.github.wulkanowy.api.auth.Login
 import okhttp3.*
 import okhttp3.logging.HttpLoggingInterceptor
 import org.jsoup.Jsoup

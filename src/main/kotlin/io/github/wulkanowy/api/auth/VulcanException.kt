@@ -1,4 +1,4 @@
-package io.github.wulkanowy.api.login
+package io.github.wulkanowy.api.auth
 
 open class VulcanException : Exception {
 
