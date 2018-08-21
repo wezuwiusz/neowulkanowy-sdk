@@ -19,38 +19,15 @@ class StudentAndParentRepository(
         private val client: OkHttpClient
 ) {
 
-    private val api by lazy { getMobileApi() }
-
-    fun getTimetable(startDate: String) = api.getTimetable(startDate)
-
-    fun getGrades(classificationPeriodId: Int): Single<List<Grade>> {
-        return api.getGrades(classificationPeriodId).map {
-            it.grades.mapNotNull { grade ->
-                if (grade.value == "Brak ocen") return@mapNotNull null
-                if (grade.description == grade.symbol) grade.description = ""
-                grade
-            }
-        }
-    }
-
-    fun getExams(startDate: String): Single<List<Exam>> {
-        return api.getExams(startDate).map { res ->
-            res.days.flatMap { day ->
-                day.exams.map { exam ->
-                    exam.date = day.date
-                    exam
-                }
-            }
-        }
-    }
-
-    fun getNotes(): Single<List<Note>> {
-        return api.getNotes().map {
-            it.notes.mapIndexed { i, note ->
-                note.date = it.dates[i]
-                note
-            }
-        }
+    private val api by lazy {
+        val schema = "http" + if (ssl) "s" else ""
+        Retrofit.Builder()
+                .baseUrl("$schema://uonetplus-opiekun.$host/$symbol/$schoolId/")
+                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+                .addConverterFactory(JspoonConverterFactory.create())
+                .client(client)
+                .build()
+                .create(StudentAndParentApi::class.java)
     }
 
     fun getAttendance(startDate: String): Single<List<Attendance>> {
@@ -66,16 +43,37 @@ class StudentAndParentRepository(
         }
     }
 
+    fun getExams(startDate: String): Single<List<Exam>> {
+        return api.getExams(startDate).map { res ->
+            res.days.flatMap { day ->
+                day.exams.map { exam ->
+                    exam.date = day.date
+                    exam
+                }
+            }
+        }
+    }
+
+    fun getGrades(classificationPeriodId: Int): Single<List<Grade>> {
+        return api.getGrades(classificationPeriodId).map {
+            it.grades.mapNotNull { grade ->
+                if (grade.value == "Brak ocen") return@mapNotNull null
+                if (grade.description == grade.symbol) grade.description = ""
+                grade
+            }
+        }
+    }
+
+    fun getNotes(): Single<List<Note>> {
+        return api.getNotes().map {
+            it.notes.mapIndexed { i, note ->
+                note.date = it.dates[i]
+                note
+            }
+        }
+    }
+
     fun getHomework(startDate: String) = api.getHomework(startDate)
 
-    private fun getMobileApi(): StudentAndParentApi {
-        val schema = "http" + if (ssl) "s" else ""
-        return Retrofit.Builder()
-                .baseUrl("$schema://uonetplus-opiekun.$host/$symbol/$schoolId/")
-                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-                .addConverterFactory(JspoonConverterFactory.create())
-                .client(client)
-                .build()
-                .create(StudentAndParentApi::class.java)
-    }
+    fun getTimetable(startDate: String) = api.getTimetable(startDate)
 }

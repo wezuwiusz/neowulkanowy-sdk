@@ -12,14 +12,14 @@ import java.net.CookieManager
 import java.net.HttpCookie
 import java.net.URI
 
-class Client(private val cookies: CookieManager, private val host: String) {
+class Client(private val cookies: CookieManager, private val host: String, private val logLvl: HttpLoggingInterceptor.Level) {
 
     private var symbol = "Default"
 
     private val client by lazy {
         OkHttpClient.Builder()
                 .cookieJar(JavaNetCookieJar(cookies))
-                .addInterceptor(HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY))
+                .addInterceptor(HttpLoggingInterceptor().setLevel(logLvl))
                 .build()
     }
 

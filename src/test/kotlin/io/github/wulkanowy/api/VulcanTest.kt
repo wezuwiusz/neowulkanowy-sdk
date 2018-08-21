@@ -5,6 +5,7 @@ import io.github.wulkanowy.api.exams.Exam
 import io.github.wulkanowy.api.grades.Grade
 import io.github.wulkanowy.api.notes.Note
 import io.reactivex.observers.TestObserver
+import okhttp3.logging.HttpLoggingInterceptor
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
@@ -14,18 +15,16 @@ import java.util.*
 
 class VulcanTest {
 
-    private lateinit var vulcan: Vulcan
+    private var vulcan =  Vulcan()
 
     @Before fun setUp() {
-        vulcan = Vulcan(
-                holdSession = false,
-                email = "admin",
-                password = "admin",
-                symbol = "Default",
-                schoolId = "123456",
-                studentId = "303",
-                diaryId = "420"
-        )
+        vulcan.apply {
+            email = "admin"
+            password = "admin"
+            schoolId = "123456"
+            studentId = "303"
+            diaryId = "420"
+        }
     }
 
     @Test fun attendanceTest() {
@@ -55,6 +54,7 @@ class VulcanTest {
         val exams = vulcan.getExams("636630624000000000")
         val examsObserver = TestObserver<List<Exam>>()
         exams.subscribe(examsObserver)
+        examsObserver.assertComplete()
 
         val values = examsObserver.values()[0]
 
