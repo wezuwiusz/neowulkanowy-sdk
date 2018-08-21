@@ -23,7 +23,8 @@ class StudentAndParentRepository(private val host: String,
 
     fun getGrades(classificationPeriodId: Int): Single<List<Grade>> {
         return api.getGrades(classificationPeriodId).map {
-            it.grades.map { grade ->
+            it.grades.mapNotNull { grade ->
+                if (grade.value == "Brak ocen") return@mapNotNull null
                 if (grade.description == grade.symbol) grade.description = ""
                 grade
             }

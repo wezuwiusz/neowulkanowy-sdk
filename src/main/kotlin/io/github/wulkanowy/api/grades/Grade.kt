@@ -19,13 +19,13 @@ class Grade {
     @Selector("td", index = 2, regex = "^(.+?),")
     lateinit var symbol: String
 
-    @Selector("td", index = 2, regex = ".+, (.+)")
+    @Selector("td", index = 2, regex = "[^,]+, (.+)")
     lateinit var description: String
 
     @Selector("td", index = 3)
     lateinit var weight: String
 
-    @Selector("td", index = 4)
+    @Selector("td:not(:empty)", index = 4, defValue = "01.01.1970")
     @Format(value = DATE_FORMAT)
     lateinit var date: Date
 
