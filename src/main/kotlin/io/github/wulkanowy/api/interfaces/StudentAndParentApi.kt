@@ -14,7 +14,7 @@ interface StudentAndParentApi {
     fun getAttendance(@Query("data") date: String): Single<AttendanceResponse>
 
     @GET("Sprawdziany.mvc/Terminarz?rodzajWidoku=2")
-    fun getExams(@Query("date") date: String): Single<ExamResponse>
+    fun getExams(@Query("data") date: String): Single<ExamResponse>
 
     @GET("Oceny/Wszystkie?details=2")
     fun getGrades(@Query("okres") semester: Int): Single<GradesResponse>
