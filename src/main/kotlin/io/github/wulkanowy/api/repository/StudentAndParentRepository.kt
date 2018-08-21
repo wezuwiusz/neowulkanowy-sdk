@@ -11,10 +11,12 @@ import pl.droidsonroids.retrofit2.JspoonConverterFactory
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 
-class StudentAndParentRepository(private val host: String,
-                                 private val symbol: String,
-                                 private val schoolId: String,
-                                 private val client: OkHttpClient
+class StudentAndParentRepository(
+        private val ssl: Boolean,
+        private val host: String,
+        private val symbol: String,
+        private val schoolId: String,
+        private val client: OkHttpClient
 ) {
 
     private val api by lazy { getMobileApi() }
@@ -67,8 +69,9 @@ class StudentAndParentRepository(private val host: String,
     fun getHomework(startDate: String) = api.getHomework(startDate)
 
     private fun getMobileApi(): StudentAndParentApi {
+        val schema = "http" + if (ssl) "s" else ""
         return Retrofit.Builder()
-                .baseUrl("$host/$symbol/$schoolId/")
+                .baseUrl("$schema://uonetplus-opiekun.$host/$symbol/$schoolId/")
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .addConverterFactory(JspoonConverterFactory.create())
                 .client(client)

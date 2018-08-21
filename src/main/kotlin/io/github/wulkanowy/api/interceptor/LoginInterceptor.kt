@@ -10,8 +10,6 @@ import java.io.IOException
 import java.net.CookieManager
 import java.net.HttpCookie
 import java.net.URI
-import java.util.*
-import java.util.concurrent.TimeUnit
 
 class LoginInterceptor(private val email: String,
                        private val password: String,
@@ -19,17 +17,14 @@ class LoginInterceptor(private val email: String,
                        private val host: String,
                        private val diaryId: String,
                        private val studentId: String,
-                       private val cookies: CookieManager) : Interceptor {
+                       private var cookies: CookieManager,
+                       private val holdSession: Boolean
+) : Interceptor {
 
     private val login = Login(ClientImpl(cookies, host))
 
-    private val lastSuccessRequest: Date? = null
-
     override fun intercept(chain: Interceptor.Chain?): Response {
-        val original = chain!!.request()
-        val request = original.newBuilder()
-
-        if (!isLoggedIn()) {
+        if (!login.isLoggedIn() || !holdSession) {
             login.login(email, password, symbol)
 
             arrayOf(
@@ -39,16 +34,11 @@ class LoginInterceptor(private val email: String,
                 val cookie = HttpCookie(it[0], it[1])
                 cookie.path = "/"
                 cookie.domain = "uonetplus-opiekun.$host"
-                cookies.cookieStore.add(URI("uonetplus-opiekun.$host"), cookie)
+                cookies.cookieStore.add(URI("${cookie.domain}.$host"), cookie)
             }
         }
 
-        return chain.proceed(request.build())
-    }
-
-    private fun isLoggedIn(): Boolean {
-        return lastSuccessRequest != null && 5 > TimeUnit.MILLISECONDS.toMinutes(Date().time - lastSuccessRequest.time)
-
+        return chain!!.proceed(chain.request().newBuilder().build())
     }
 
     class ClientImpl(private val cookies: CookieManager, private val host: String) : Client {
@@ -64,6 +54,10 @@ class LoginInterceptor(private val email: String,
 
         override fun clearCookies() {
             cookies.cookieStore.removeAll()
+        }
+
+        override fun getCookies(): MutableList<HttpCookie> {
+            return cookies.cookieStore.cookies
         }
 
         override fun getPageByUrl(url: String): Document {

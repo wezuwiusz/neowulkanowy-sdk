@@ -3,54 +3,33 @@ package io.github.wulkanowy.api
 import io.github.wulkanowy.api.attendance.Attendance
 import io.github.wulkanowy.api.exams.Exam
 import io.github.wulkanowy.api.grades.Grade
-import io.github.wulkanowy.api.interceptor.LoginInterceptor
 import io.github.wulkanowy.api.notes.Note
-import io.github.wulkanowy.api.repository.StudentAndParentRepository
 import io.reactivex.observers.TestObserver
-import okhttp3.JavaNetCookieJar
-import okhttp3.OkHttpClient
-import okhttp3.logging.HttpLoggingInterceptor
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
-import java.net.CookieManager
-import java.net.CookiePolicy
 import java.time.LocalDate
 import java.time.ZoneId
 import java.util.*
 
 class VulcanTest {
 
-    private lateinit var snp: StudentAndParentRepository
+    private lateinit var vulcan: Vulcan
 
     @Before fun setUp() {
-        val cookieManager = CookieManager()
-        cookieManager.setCookiePolicy(CookiePolicy.ACCEPT_ALL)
-
-        val loginInterceptor = LoginInterceptor(
-                "admin",
-                "admin",
-                "Default",
-                "fakelog.cf",
-                "303",
-                "420",
-                cookieManager
-        )
-
-        snp = StudentAndParentRepository(
-                "https://uonetplus-opiekun.fakelog.cf",
-                "Default",
-                "123456",
-                OkHttpClient().newBuilder()
-                        .cookieJar(JavaNetCookieJar(cookieManager))
-                        .addInterceptor(loginInterceptor)
-                        .addInterceptor(HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY))
-                        .build()
+        vulcan = Vulcan(
+                holdSession = false,
+                email = "admin",
+                password = "admin",
+                symbol = "Default",
+                schoolId = "123456",
+                studentId = "303",
+                diaryId = "420"
         )
     }
 
     @Test fun attendanceTest() {
-        val attendance = snp.getAttendance("636697786721570000")
+        val attendance = vulcan.getAttendance("636697786721570000")
         val attendanceObserver = TestObserver<List<Attendance>>()
         attendance.subscribe(attendanceObserver)
         attendanceObserver.assertComplete()
@@ -73,7 +52,7 @@ class VulcanTest {
     }
 
     @Test fun examsTest() {
-        val exams = snp.getExams("636703910653480000")
+        val exams = vulcan.getExams("636703910653480000")
         val examsObserver = TestObserver<List<Exam>>()
         exams.subscribe(examsObserver)
 
@@ -88,7 +67,7 @@ class VulcanTest {
     }
 
     @Test fun notesTest() {
-        val notes = snp.getNotes()
+        val notes = vulcan.getNotes()
         val notesObserver = TestObserver<List<Note>>()
         notes.subscribe(notesObserver)
         notesObserver.assertComplete()
@@ -102,7 +81,7 @@ class VulcanTest {
     }
 
     @Test fun gradesTest() {
-        val grades = snp.getGrades(123)
+        val grades = vulcan.getGrades(123)
         val gradesObserver = TestObserver<List<Grade>>()
         grades.subscribe(gradesObserver)
         gradesObserver.assertComplete()
@@ -126,5 +105,4 @@ class VulcanTest {
         return Date.from(LocalDate.of(year, month, day)
                 .atStartOfDay(ZoneId.systemDefault()).toInstant())
     }
-
 }

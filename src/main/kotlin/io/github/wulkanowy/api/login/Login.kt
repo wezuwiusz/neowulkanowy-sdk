@@ -5,7 +5,8 @@ import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
 import org.jsoup.parser.Parser
 import org.slf4j.LoggerFactory
-import java.io.IOException
+import java.util.*
+import java.util.concurrent.TimeUnit
 
 class Login(private val client: Client) {
 
@@ -20,7 +21,14 @@ class Login(private val client: Client) {
         private val logger = LoggerFactory.getLogger(Login::class.java)
     }
 
-    @Throws(VulcanException::class, IOException::class)
+    private var lastSuccessRequest: Date? = null
+
+    fun isLoggedIn(): Boolean {
+        return !client.getCookies().isEmpty() && lastSuccessRequest != null &&
+                5 > TimeUnit.MILLISECONDS.toMinutes(Date().time - lastSuccessRequest!!.time)
+    }
+
+    @Throws(VulcanException::class)
     fun login(email: String, password: String, symbol: String) {
         val certDoc = sendCredentials(email, password)
 
@@ -32,7 +40,7 @@ class Login(private val client: Client) {
         sendCertificate(certDoc, symbol)
     }
 
-    @Throws(IOException::class, VulcanException::class)
+    @Throws(VulcanException::class)
     private fun sendCredentials(email: String, password: String): Document {
         val credentials = arrayOf(arrayOf("LoginName", email), arrayOf("Password", password))
 
@@ -46,7 +54,7 @@ class Login(private val client: Client) {
         return nextDoc
     }
 
-    @Throws(IOException::class, VulcanException::class)
+    @Throws(VulcanException::class)
     private fun sendCredentialsData(credentials: Array<Array<String>>, nextUrl: String): Document {
         var next = nextUrl
         var creds = credentials
@@ -80,7 +88,7 @@ class Login(private val client: Client) {
         )
     }
 
-    @Throws(IOException::class, VulcanException::class)
+    @Throws(VulcanException::class)
     private fun sendCertificate(doc: Document, defaultSymbol: String) {
         client.setSymbol(findSymbol(defaultSymbol, doc.select("input[name=wresult]").`val`()))
 
@@ -104,7 +112,7 @@ class Login(private val client: Client) {
 //        client.setSchools(StartPage(client).getSchools(targetDoc))
     }
 
-    @Throws(IOException::class, VulcanException::class)
+    @Throws(VulcanException::class)
     private fun sendCertData(doc: Document): Document {
         val url = doc.select("form[name=hiddenform]").attr("action")
 
