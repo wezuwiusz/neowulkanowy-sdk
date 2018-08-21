@@ -62,15 +62,14 @@ class VulcanTest {
         assertEquals(getDate(2018, 8, 13), values[0].date)
 
         assertEquals(Attendance.Types.PRESENCE, values[0].type)
-        assertEquals(Attendance.Types.ABSENCE_UNEXCUSED, values[1].type)
-        assertEquals(Attendance.Types.ABSENCE_EXCUSED, values[2].type)
-        assertEquals(Attendance.Types.ABSENCE_FOR_SCHOOL_REASONS, values[3].type)
-        assertEquals(Attendance.Types.UNEXCUSED_LATENESS, values[4].type)
+        assertEquals(Attendance.Types.EXCUSED_LATENESS, values[1].type)
+        assertEquals(Attendance.Types.ABSENCE_UNEXCUSED, values[3].type)
+        assertEquals(Attendance.Types.EXEMPTION, values[4].type)
+        assertEquals(Attendance.Types.ABSENCE_EXCUSED, values[6].type)
+        assertEquals(Attendance.Types.ABSENCE_FOR_SCHOOL_REASONS, values[9].type)
+        assertEquals(Attendance.Types.UNEXCUSED_LATENESS, values[12].type)
 
-        assertEquals(Attendance.Types.EXCUSED_LATENESS, values[5].type)
-        assertEquals(Attendance.Types.EXEMPTION, values[6].type)
-
-        assertEquals(1, values[5].number)
+        assertEquals(1, values[1].number)
     }
 
     @Test fun examsTest() {

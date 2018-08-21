@@ -54,12 +54,13 @@ class StudentAndParentRepository(private val host: String,
     fun getAttendance(startDate: String): Single<List<Attendance>> {
         return api.getAttendance(startDate).map { res ->
             res.rows.flatMap { row ->
-                row.lessons.mapIndexed { i, it ->
+                row.lessons.mapIndexedNotNull { i, it ->
+                    if ("null" == it.subject) return@mapIndexedNotNull null
                     it.date = res.days[i]
                     it.number = row.number
                     it
                 }
-            }
+            }.sortedBy { it.date }
         }
     }
 
