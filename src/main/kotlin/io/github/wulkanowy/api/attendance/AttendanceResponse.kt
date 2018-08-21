@@ -9,10 +9,10 @@ class AttendanceResponse {
 
     @Selector(".presentData thead th:not(:first-of-type)", regex = "\\s(.*)")
     @Format(value = DATE_FORMAT)
-    lateinit var days: List<Date>
+    var days: List<Date> = emptyList()
 
     @Selector(".presentData tbody tr")
-    lateinit var rows: List<AttendanceRow>
+    var rows: List<AttendanceRow> = emptyList()
 
     class AttendanceRow {
 
@@ -20,6 +20,6 @@ class AttendanceResponse {
         var number: Int = 0
 
         @Selector("td:not(:first-of-type)")
-        lateinit var lessons: List<Attendance>
+        var lessons: List<Attendance> = emptyList()
     }
 }

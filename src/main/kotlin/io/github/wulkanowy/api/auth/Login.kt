@@ -8,7 +8,7 @@ import org.slf4j.LoggerFactory
 import java.util.*
 import java.util.concurrent.TimeUnit
 
-class Login(private val client: Client) {
+class Login(private val email: String, private val password: String, private var symbol: String, val client: Client) {
 
     companion object {
 
@@ -30,7 +30,7 @@ class Login(private val client: Client) {
     }
 
     @Throws(VulcanException::class)
-    fun login(email: String, password: String, symbol: String) {
+    fun login() {
         val certDoc = sendCredentials(email, password)
 
         if ("Błąd" == certDoc.title()) {
@@ -39,6 +39,8 @@ class Login(private val client: Client) {
         }
 
         sendCertificate(certDoc, symbol)
+
+        lastSuccessRequest = Date()
     }
 
     @Throws(VulcanException::class)

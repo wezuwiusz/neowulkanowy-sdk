@@ -29,7 +29,7 @@ class VulcanTest {
     }
 
     @Test fun attendanceTest() {
-        val attendance = vulcan.getAttendance("636697786721570000")
+        val attendance = vulcan.getAttendance("636648768000000000")
         val attendanceObserver = TestObserver<List<Attendance>>()
         attendance.subscribe(attendanceObserver)
         attendanceObserver.assertComplete()
@@ -38,7 +38,7 @@ class VulcanTest {
 
         assertEquals(0, values[0].number)
         assertEquals("Fizyka", values[0].subject)
-        assertEquals(getDate(2018, 8, 13), values[0].date)
+        assertEquals(getDate(2018, 6, 18), values[0].date)
 
         assertEquals(Attendance.Types.PRESENCE, values[0].type)
         assertEquals(Attendance.Types.EXCUSED_LATENESS, values[1].type)
@@ -52,7 +52,7 @@ class VulcanTest {
     }
 
     @Test fun examsTest() {
-        val exams = vulcan.getExams("636703910653480000")
+        val exams = vulcan.getExams("636630624000000000")
         val examsObserver = TestObserver<List<Exam>>()
         exams.subscribe(examsObserver)
 
@@ -81,7 +81,7 @@ class VulcanTest {
     }
 
     @Test fun gradesTest() {
-        val grades = vulcan.getGrades(123)
+        val grades = vulcan.getGrades(864)
         val gradesObserver = TestObserver<List<Grade>>()
         grades.subscribe(gradesObserver)
         gradesObserver.assertComplete()

@@ -1,26 +1,26 @@
 package io.github.wulkanowy.api
 
+import io.github.wulkanowy.api.auth.Client
+import io.github.wulkanowy.api.auth.Login
 import io.github.wulkanowy.api.interceptor.LoginInterceptor
 import io.github.wulkanowy.api.repository.StudentAndParentRepository
-import okhttp3.JavaNetCookieJar
-import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import java.net.CookieManager
 import java.net.CookiePolicy
 
 class Vulcan(
-        private val logLevel: HttpLoggingInterceptor.Level = HttpLoggingInterceptor.Level.BODY,
-        private val holdSession: Boolean = true,
-        private val ssl: Boolean = true,
-        private val host: String = "fakelog.cf",
-        private val symbol: String = "Default",
+        logLevel: HttpLoggingInterceptor.Level = HttpLoggingInterceptor.Level.BODY,
+        holdSession: Boolean = true,
+        ssl: Boolean = true,
+        host: String = "fakelog.cf",
+        symbol: String = "Default",
 
-        private val email: String,
-        private val password: String,
+        email: String,
+        password: String,
 
-        private val schoolId: String,
-        private val studentId: String,
-        private val diaryId: String
+        schoolId: String,
+        studentId: String,
+        diaryId: String
 ) {
 
     private val cookies by lazy {
@@ -29,16 +29,14 @@ class Vulcan(
         cookieManager
     }
 
-    private val client by lazy {
-        OkHttpClient().newBuilder()
-                .cookieJar(JavaNetCookieJar(cookies))
-                .addInterceptor(LoginInterceptor(email, password, symbol, host, diaryId, studentId, cookies, holdSession))
-                .addInterceptor(HttpLoggingInterceptor().setLevel(logLevel))
-                .build()
-    }
+    private val clientBuilder = ClientCreator(cookies).addInterceptor(HttpLoggingInterceptor().setLevel(logLevel))
+
+    private val login by lazy { Login(email, password, symbol, Client(cookies, host)) }
+
+    private val loginInterceptor by lazy { LoginInterceptor(host, diaryId, studentId, login, holdSession) }
 
     private val snp by lazy {
-        StudentAndParentRepository(ssl, host, symbol, schoolId, client)
+        StudentAndParentRepository(ssl, host, symbol, schoolId, clientBuilder.addInterceptor(loginInterceptor).getClient())
     }
 
     fun getAttendance(startDate: String) = snp.getAttendance(startDate)
