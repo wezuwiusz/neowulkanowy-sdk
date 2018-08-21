@@ -7,10 +7,10 @@ import java.util.*
 
 class NotesResponse {
 
-    @Selector(".mainContainer article")
+    @Selector(".mainContainer div:first-of-type article")
     var notes: List<Note> = listOf()
 
     @Format(DATE_FORMAT)
-    @Selector(".mainContainer h2")
+    @Selector(".mainContainer div:first-of-type h2:not(:contains(Brak))")
     var dates: List<Date> = listOf()
 }
