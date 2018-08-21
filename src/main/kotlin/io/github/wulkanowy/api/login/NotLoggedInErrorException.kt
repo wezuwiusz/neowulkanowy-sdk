@@ -1,5 +1,3 @@
 package io.github.wulkanowy.api.login
 
-class NotLoggedInErrorException(text: String?) : Throwable() {
-
-}
+open class NotLoggedInErrorException(message: String) : VulcanException(message)

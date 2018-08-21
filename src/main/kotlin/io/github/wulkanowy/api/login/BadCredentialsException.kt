@@ -1,5 +1,3 @@
 package io.github.wulkanowy.api.login
 
-class BadCredentialsException(text: String?) : Throwable() {
-
-}
+class BadCredentialsException internal constructor(message: String) : VulcanException(message)

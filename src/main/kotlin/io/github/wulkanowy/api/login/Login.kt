@@ -4,7 +4,7 @@ import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
 import org.jsoup.parser.Parser
-
+import org.slf4j.LoggerFactory
 import java.io.IOException
 
 class Login(private val client: Client) {
@@ -17,7 +17,7 @@ class Login(private val client: Client) {
                 "{schema}%253a%252f%252fuonetplus.{host}%252f{symbol}%252fLoginEndpoint.aspx%26wctx%3D" +
                 "{schema}%253a%252f%252fuonetplus.{host}%252f{symbol}%252fLoginEndpoint.aspx"
 
-//        private val logger = LoggerFactory.getLogger(Login::class.java)
+        private val logger = LoggerFactory.getLogger(Login::class.java)
     }
 
     @Throws(VulcanException::class, IOException::class)
@@ -88,7 +88,7 @@ class Login(private val client: Client) {
         var title = targetDoc.title()
 
         if ("Working..." == title) { // on adfs login
-//            logger.info("ADFS login")
+            logger.info("ADFS login")
             title = sendCertData(targetDoc).title()
         }
 
@@ -97,7 +97,7 @@ class Login(private val client: Client) {
         }
 
         if ("Uonet+" != title) {
-//            logger.debug("Login failed. Body: {}", targetDoc.body())
+            logger.debug("Login failed. Body: {}", targetDoc.body())
             throw LoginErrorException("Expected page title `UONET+`, got $title")
         }
 
@@ -118,26 +118,35 @@ class Login(private val client: Client) {
 
     @Throws(AccountPermissionException::class)
     private fun findSymbol(symbol: String, certificate: String): String {
+        val symbols = getSymbolsFromCertificate(certificate)
+//        client.setSymbols(symbols)
+
         return if ("Default" == symbol) {
-            findSymbolInCertificate(certificate)
+            getLastSymbol(symbols)
         } else symbol
 
     }
 
-    @Throws(AccountPermissionException::class)
-    private fun findSymbolInCertificate(certificate: String): String {
+    private fun getSymbolsFromCertificate(certificate: String): List<String> {
         val instances = Jsoup
-                .parse(certificate.replace(":", ""), "", Parser.xmlParser())
+                .parse(certificate.replace(":".toRegex(), ""), "", Parser.xmlParser())
                 .select("[AttributeName=\"UserInstance\"] samlAttributeValue")
 
-        if (instances.isEmpty()) { // on adfs login
+        return instances.map {
+            it.text()
+        }
+    }
+
+    @Throws(AccountPermissionException::class)
+    private fun getLastSymbol(symbols: List<String>): String {
+        if (symbols.isEmpty()) { // on adfs login
             return ""
         }
 
-        if (instances.size < 2) { // 1st index is always `Default`
+        if (symbols.size < 2) { // 1st index is always `Default`
             throw AccountPermissionException("First login detected, specify symbol")
         }
 
-        return instances[1].text()
+        return symbols[1]
     }
 }

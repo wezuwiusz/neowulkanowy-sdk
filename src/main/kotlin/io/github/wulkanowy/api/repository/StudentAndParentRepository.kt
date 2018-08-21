@@ -2,7 +2,6 @@ package io.github.wulkanowy.api.repository
 
 import io.github.wulkanowy.api.attendance.Attendance
 import io.github.wulkanowy.api.exams.Exam
-import io.github.wulkanowy.api.exams.ExamResponse
 import io.github.wulkanowy.api.grades.Grade
 import io.github.wulkanowy.api.interfaces.StudentAndParentApi
 import io.github.wulkanowy.api.notes.Note
