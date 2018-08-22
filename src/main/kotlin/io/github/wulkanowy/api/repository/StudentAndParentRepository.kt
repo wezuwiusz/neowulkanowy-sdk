@@ -4,6 +4,7 @@ import io.github.wulkanowy.api.attendance.Attendance
 import io.github.wulkanowy.api.exams.Exam
 import io.github.wulkanowy.api.grades.Grade
 import io.github.wulkanowy.api.grades.Summary
+import io.github.wulkanowy.api.homework.Homework
 import io.github.wulkanowy.api.interfaces.StudentAndParentApi
 import io.github.wulkanowy.api.notes.Note
 import io.reactivex.Single
@@ -71,6 +72,15 @@ class StudentAndParentRepository(
                 summary.predicted = getGradeShortValue(summary.predicted)
                 summary.final = getGradeShortValue(summary.final)
                 summary
+            }
+        }
+    }
+
+    fun getHomework(date: String): Single<List<Homework>> {
+        return api.getHomework(date).map {
+            it.items.map { item ->
+                item.date = it.date
+                item
             }
         }
     }

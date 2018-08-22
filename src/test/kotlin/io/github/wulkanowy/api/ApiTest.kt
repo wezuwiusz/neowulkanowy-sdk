@@ -4,6 +4,7 @@ import io.github.wulkanowy.api.attendance.Attendance
 import io.github.wulkanowy.api.exams.Exam
 import io.github.wulkanowy.api.grades.Grade
 import io.github.wulkanowy.api.grades.Summary
+import io.github.wulkanowy.api.homework.Homework
 import io.github.wulkanowy.api.notes.Note
 import io.reactivex.observers.TestObserver
 import org.junit.Assert.assertEquals
@@ -64,6 +65,21 @@ class ApiTest {
         assertEquals("Sprawdzian", values[0].type)
         assertEquals("słownictwo(kultura)", values[0].description)
         assertEquals("Anyż Zofia [AZ]", values[0].teacher)
+    }
+
+    @Test fun homeworkTest() {
+        val homework = vulcan.getHomework("636443136000000000")
+        val homeworkObserver = TestObserver<List<Homework>>()
+        homework.subscribe(homeworkObserver)
+        homeworkObserver.assertComplete()
+
+        val values = homeworkObserver.values()[0]
+
+        assertEquals(getDate(2017, 10, 23), values[0].date)
+        assertEquals(getDate(2017, 10, 18), values[0].entryDate)
+        assertEquals("Metodologia programowania", values[0].subject)
+        assertEquals("Wszystkie instrukcje warunkowe, pętle (budowa, zasada działania, schemat blokowy)", values[0].content)
+        assertEquals("Janusz Tracz", values[0].teacher)
     }
 
     @Test fun notesTest() {

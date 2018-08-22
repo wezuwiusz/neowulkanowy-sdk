@@ -4,6 +4,7 @@ import io.github.wulkanowy.api.attendance.AttendanceResponse
 import io.github.wulkanowy.api.exams.ExamResponse
 import io.github.wulkanowy.api.grades.GradesResponse
 import io.github.wulkanowy.api.grades.GradesSummaryResponse
+import io.github.wulkanowy.api.homework.HomeworkResponse
 import io.github.wulkanowy.api.notes.NotesResponse
 import io.reactivex.Single
 import retrofit2.http.GET
@@ -24,7 +25,7 @@ interface StudentAndParentApi {
     fun getGradesSummary(@Query("okres") semester: Int): Single<GradesSummaryResponse>
 
     @GET("ZadaniaDomowe.mvc?rodzajWidoku=Dzien")
-    fun getHomework(@Query("data") date: String)
+    fun getHomework(@Query("data") date: String): Single<HomeworkResponse>
 
     @GET("DostepMobilny.mvc")
     fun getRegisteredDevices()
