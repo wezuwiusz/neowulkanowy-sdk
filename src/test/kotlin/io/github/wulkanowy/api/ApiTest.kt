@@ -6,6 +6,7 @@ import io.github.wulkanowy.api.grades.Grade
 import io.github.wulkanowy.api.grades.Summary
 import io.github.wulkanowy.api.homework.Homework
 import io.github.wulkanowy.api.notes.Note
+import io.github.wulkanowy.api.student.StudentInfo
 import io.reactivex.observers.TestObserver
 import org.junit.Assert.assertEquals
 import org.junit.Before
@@ -20,8 +21,8 @@ class ApiTest {
 
     @Before fun setUp() {
         vulcan.apply {
-            email = "admin"
-            password = "admin"
+            email = "jan@fakelog.cf"
+            password = "jan123"
             schoolId = "123456"
             studentId = "303"
             diaryId = "420"
@@ -117,7 +118,7 @@ class ApiTest {
         assertEquals("", values[4].description)
     }
 
-    @Test fun getGradesSummaryTest() {
+    @Test fun gradesSummaryTest() {
         val summary = vulcan.getGradesSummary(864)
         val summaryObserver = TestObserver<List<Summary>>()
         summary.subscribe(summaryObserver)
@@ -135,6 +136,39 @@ class ApiTest {
         assertEquals("Wiedza o społeczeństwie", values[4].subject)
         assertEquals("", values[4].predicted)
         assertEquals("", values[4].final)
+    }
+
+    @Test fun studentInfoTest() {
+        val student = vulcan.getStudentInfo()
+        val studentObserver = TestObserver<StudentInfo>()
+        student.subscribe(studentObserver)
+        studentObserver.assertComplete()
+
+        val values = studentObserver.values()[0]
+
+        assertEquals("Jan Marek Kowalski", values.student.fullName)
+        assertEquals("Jan", values.student.firstName)
+        assertEquals("Marek", values.student.secondName)
+        assertEquals("Kowalski", values.student.surname)
+        assertEquals("Mon Jan 01 00:00:00 CET 1900", values.student.birthDate.toString())
+        assertEquals("Warszawa", values.student.birthPlace)
+        assertEquals("12345678900", values.student.pesel)
+        assertEquals("Mężczyzna", values.student.gender)
+        assertEquals("1", values.student.polishCitizenship)
+        assertEquals("Nowak", values.student.familyName)
+        assertEquals("Monika, Kamil", values.student.parentsNames)
+
+        assertEquals("", values.student.address)
+        assertEquals("", values.student.registeredAddress)
+        assertEquals("", values.student.correspondenceAddress)
+
+        assertEquals("", values.student.phoneNumber)
+        assertEquals("-", values.student.cellPhoneNumber)
+        assertEquals("jan@fakelog.cf", values.student.email)
+
+        assertEquals("Monika Nowak", values.family[0].fullName)
+        assertEquals("-", values.family[0].email)
+        assertEquals("-", values.family[1].email)
     }
 
     private fun getDate(year: Int, month: Int, day: Int): Date {

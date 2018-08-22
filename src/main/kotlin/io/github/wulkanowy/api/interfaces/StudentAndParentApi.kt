@@ -6,6 +6,7 @@ import io.github.wulkanowy.api.grades.GradesResponse
 import io.github.wulkanowy.api.grades.GradesSummaryResponse
 import io.github.wulkanowy.api.homework.HomeworkResponse
 import io.github.wulkanowy.api.notes.NotesResponse
+import io.github.wulkanowy.api.student.StudentInfo
 import io.reactivex.Single
 import retrofit2.http.GET
 import retrofit2.http.Query
@@ -40,5 +41,5 @@ interface StudentAndParentApi {
     fun getTimetable(@Query("data") date: String)
 
     @GET("Uczen.mvc/DanePodstawowe")
-    fun getUserInfo()
+    fun getStudentInfo(): Single<StudentInfo>
 }

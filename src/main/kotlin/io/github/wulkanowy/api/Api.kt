@@ -67,4 +67,6 @@ class Api {
     fun getHomework(date: String) = snp.getHomework(date)
 
     fun getNotes() = snp.getNotes()
+
+    fun getStudentInfo() = snp.getStudentInfo()
 }

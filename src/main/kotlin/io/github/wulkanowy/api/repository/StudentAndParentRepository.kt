@@ -7,6 +7,7 @@ import io.github.wulkanowy.api.grades.Summary
 import io.github.wulkanowy.api.homework.Homework
 import io.github.wulkanowy.api.interfaces.StudentAndParentApi
 import io.github.wulkanowy.api.notes.Note
+import io.github.wulkanowy.api.student.StudentInfo
 import io.reactivex.Single
 import okhttp3.OkHttpClient
 import pl.droidsonroids.retrofit2.JspoonConverterFactory
@@ -91,6 +92,13 @@ class StudentAndParentRepository(
                 note.date = it.dates[i]
                 note
             }
+        }
+    }
+
+    fun getStudentInfo(): Single<StudentInfo> {
+        return api.getStudentInfo().map {
+            it.student.polishCitizenship = if ("Tak" == it.student.polishCitizenship) "1" else "0"
+            it
         }
     }
 
