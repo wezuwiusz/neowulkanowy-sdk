@@ -150,7 +150,7 @@ class ApiTest {
         assertEquals("Jan", values.student.firstName)
         assertEquals("Marek", values.student.secondName)
         assertEquals("Kowalski", values.student.surname)
-        assertEquals("Mon Jan 01 00:00:00 CET 1900", values.student.birthDate.toString())
+        assertEquals(getDate(1970, 1, 1), values.student.birthDate)
         assertEquals("Warszawa", values.student.birthPlace)
         assertEquals("12345678900", values.student.pesel)
         assertEquals("Mężczyzna", values.student.gender)
