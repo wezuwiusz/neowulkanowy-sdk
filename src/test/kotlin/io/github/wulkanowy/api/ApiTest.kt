@@ -6,7 +6,6 @@ import io.github.wulkanowy.api.grades.Grade
 import io.github.wulkanowy.api.grades.Summary
 import io.github.wulkanowy.api.notes.Note
 import io.reactivex.observers.TestObserver
-import okhttp3.logging.HttpLoggingInterceptor
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
@@ -14,9 +13,9 @@ import java.time.LocalDate
 import java.time.ZoneId
 import java.util.*
 
-class VulcanTest {
+class ApiTest {
 
-    private var vulcan =  Vulcan()
+    private var vulcan =  Api()
 
     @Before fun setUp() {
         vulcan.apply {

@@ -84,10 +84,6 @@ class StudentAndParentRepository(
         }
     }
 
-    fun getHomework(startDate: String) = api.getHomework(startDate)
-
-    fun getTimetable(startDate: String) = api.getTimetable(startDate)
-
     private fun getGradeShortValue(value: String): String {
         return when (value) {
             "celujący" -> "6"
