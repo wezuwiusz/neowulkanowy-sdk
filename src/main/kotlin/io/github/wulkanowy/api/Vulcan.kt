@@ -62,5 +62,7 @@ class Vulcan {
 
     fun getGrades(semester: Int) = snp.getGrades(semester)
 
+    fun getGradesSummary(semester: Int) = snp.getGradesSummary(semester)
+
     fun getNotes() = snp.getNotes()
 }

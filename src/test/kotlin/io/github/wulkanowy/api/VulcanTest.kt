@@ -3,6 +3,7 @@ package io.github.wulkanowy.api
 import io.github.wulkanowy.api.attendance.Attendance
 import io.github.wulkanowy.api.exams.Exam
 import io.github.wulkanowy.api.grades.Grade
+import io.github.wulkanowy.api.grades.Summary
 import io.github.wulkanowy.api.notes.Note
 import io.reactivex.observers.TestObserver
 import okhttp3.logging.HttpLoggingInterceptor
@@ -99,6 +100,26 @@ class VulcanTest {
 
         assertEquals("STR", values[4].symbol)
         assertEquals("", values[4].description)
+    }
+
+    @Test fun getGradesSummaryTest() {
+        val summary = vulcan.getGradesSummary(864)
+        val summaryObserver = TestObserver<List<Summary>>()
+        summary.subscribe(summaryObserver)
+        summaryObserver.assertComplete()
+
+        val values = summaryObserver.values()[0]
+
+        assertEquals("Zachowanie", values[0].subject)
+        assertEquals("bardzo dobre", values[0].predicted)
+        assertEquals("bardzo dobre", values[0].final)
+        assertEquals("Język polski", values[1].subject)
+        assertEquals("", values[1].predicted)
+        assertEquals("4", values[1].final)
+
+        assertEquals("Wiedza o społeczeństwie", values[4].subject)
+        assertEquals("", values[4].predicted)
+        assertEquals("", values[4].final)
     }
 
     private fun getDate(year: Int, month: Int, day: Int): Date {

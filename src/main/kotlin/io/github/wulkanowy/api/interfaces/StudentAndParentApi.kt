@@ -3,6 +3,7 @@ package io.github.wulkanowy.api.interfaces
 import io.github.wulkanowy.api.attendance.AttendanceResponse
 import io.github.wulkanowy.api.exams.ExamResponse
 import io.github.wulkanowy.api.grades.GradesResponse
+import io.github.wulkanowy.api.grades.GradesSummaryResponse
 import io.github.wulkanowy.api.notes.NotesResponse
 import io.reactivex.Single
 import retrofit2.http.GET
@@ -18,6 +19,9 @@ interface StudentAndParentApi {
 
     @GET("Oceny/Wszystkie?details=2")
     fun getGrades(@Query("okres") semester: Int): Single<GradesResponse>
+
+    @GET("Oceny/Wszystkie?details=1")
+    fun getGradesSummary(@Query("okres") semester: Int): Single<GradesSummaryResponse>
 
     @GET("ZadaniaDomowe.mvc?rodzajWidoku=Dzien")
     fun getHomework(@Query("data") date: String)

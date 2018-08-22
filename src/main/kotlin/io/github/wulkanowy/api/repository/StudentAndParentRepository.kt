@@ -3,6 +3,7 @@ package io.github.wulkanowy.api.repository
 import io.github.wulkanowy.api.attendance.Attendance
 import io.github.wulkanowy.api.exams.Exam
 import io.github.wulkanowy.api.grades.Grade
+import io.github.wulkanowy.api.grades.Summary
 import io.github.wulkanowy.api.interfaces.StudentAndParentApi
 import io.github.wulkanowy.api.notes.Note
 import io.reactivex.Single
@@ -64,6 +65,16 @@ class StudentAndParentRepository(
         }
     }
 
+    fun getGradesSummary(classificationPeriodId: Int): Single<List<Summary>> {
+        return api.getGradesSummary(classificationPeriodId).map {
+            it.subjects.map { summary ->
+                summary.predicted = getGradeShortValue(summary.predicted)
+                summary.final = getGradeShortValue(summary.final)
+                summary
+            }
+        }
+    }
+
     fun getNotes(): Single<List<Note>> {
         return api.getNotes().map {
             it.notes.mapIndexed { i, note ->
@@ -76,4 +87,16 @@ class StudentAndParentRepository(
     fun getHomework(startDate: String) = api.getHomework(startDate)
 
     fun getTimetable(startDate: String) = api.getTimetable(startDate)
+
+    private fun getGradeShortValue(value: String): String {
+        return when (value) {
+            "celujący" -> "6"
+            "bardzo dobry" -> "5"
+            "dobry" -> "4"
+            "dostateczny" -> "3"
+            "dopuszczający" -> "2"
+            "niedostateczny" -> "1"
+            else -> value
+        }
+    }
 }

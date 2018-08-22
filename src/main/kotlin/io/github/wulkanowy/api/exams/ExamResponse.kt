@@ -8,7 +8,7 @@ import java.util.*
 class ExamResponse {
 
     @Selector(".mainContainer > div:has(h2)")
-    lateinit var days: List<ExamDay>
+    var days: List<ExamDay> = emptyList()
 
     class ExamDay {
 
