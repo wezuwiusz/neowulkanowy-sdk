@@ -6,6 +6,7 @@ import io.github.wulkanowy.api.grades.Grade
 import io.github.wulkanowy.api.grades.Summary
 import io.github.wulkanowy.api.homework.Homework
 import io.github.wulkanowy.api.notes.Note
+import io.github.wulkanowy.api.register.Pupil
 import io.github.wulkanowy.api.student.StudentInfo
 import io.reactivex.observers.TestObserver
 import org.junit.Assert.assertEquals
@@ -24,9 +25,26 @@ class ApiTest {
             email = "jan@fakelog.cf"
             password = "jan123"
             schoolId = "123456"
-            studentId = "303"
-            diaryId = "420"
+            studentId = "1"
+            diaryId = "101"
         }
+    }
+
+    @Test fun pupilsTest() {
+        val pupils = vulcan.getPupils()
+        val pupilsObserver = TestObserver<List<Pupil>>()
+        pupils.subscribe(pupilsObserver)
+        pupilsObserver.assertComplete()
+
+        val values = pupilsObserver.values()[0]
+
+        assertEquals("Default", values[0].symbol)
+        assertEquals("jan@fakelog.cf", values[0].email)
+        assertEquals("Jan Kowalski", values[0].studentName)
+        assertEquals("123456", values[0].schoolId)
+        assertEquals("101", values[0].diaryId)
+        assertEquals("1", values[0].studentId)
+        assertEquals("Publiczny dziennik Wulkanowego nr 1 w fakelog.cf", values[0].schoolName)
     }
 
     @Test fun attendanceTest() {

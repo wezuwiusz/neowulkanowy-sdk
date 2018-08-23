@@ -6,17 +6,17 @@ import io.github.wulkanowy.api.login.CertificateResponse
 import io.reactivex.Single
 import okhttp3.OkHttpClient
 import pl.droidsonroids.retrofit2.JspoonConverterFactory
+import retrofit2.Call
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import java.net.URLEncoder
 
-class LoginRepository(ssl: Boolean,
-        private val host: String,
+class LoginRepository(
+        val schema: String,
+        val host: String,
         private val symbol: String,
-        private val client: OkHttpClient
+        val client: OkHttpClient
 ) {
-
-    private val schema = "http" + if (ssl) "s" else ""
 
     private val firstEndpointUrl by lazy {
         val url = URLEncoder.encode("$schema://uonetplus.$host/$symbol/LoginEndpoint.aspx", "UTF-8")
@@ -37,8 +37,8 @@ class LoginRepository(ssl: Boolean,
         return api.sendCredentials(firstEndpointUrl, credentials)
     }
 
-    fun sendCertificate(certificate: CertificateResponse): Single<CertificateResponse> { // response for adfs
-        return api.sendCertificate(certificate.action, mapOf(
+    fun sendCertificate(certificate: CertificateResponse, url: String = certificate.action): Single<CertificateResponse> { // response for adfs
+        return api.sendCertificate(url, mapOf(
                 "wa" to certificate.wa,
                 "wresult" to certificate.wresult,
                 "wctx" to certificate.wctx
@@ -51,6 +51,7 @@ class LoginRepository(ssl: Boolean,
         return when(host) {
             "vulcan.net.pl" -> false
             "fakelog.cf" -> false
+            "fakelog.localhost:3000" -> false
             else -> true
         }
     }

@@ -7,6 +7,7 @@ import io.github.wulkanowy.api.grades.Summary
 import io.github.wulkanowy.api.homework.Homework
 import io.github.wulkanowy.api.interfaces.StudentAndParentApi
 import io.github.wulkanowy.api.notes.Note
+import io.github.wulkanowy.api.register.StudentAndParentResponse
 import io.github.wulkanowy.api.student.StudentInfo
 import io.reactivex.Single
 import okhttp3.OkHttpClient
@@ -15,7 +16,7 @@ import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 
 class StudentAndParentRepository(
-        private val ssl: Boolean,
+        private val schema: String,
         private val host: String,
         private val symbol: String,
         private val schoolId: String,
@@ -23,7 +24,6 @@ class StudentAndParentRepository(
 ) {
 
     private val api by lazy {
-        val schema = "http" + if (ssl) "s" else ""
         Retrofit.Builder()
                 .baseUrl("$schema://uonetplus-opiekun.$host/$symbol/$schoolId/")
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
@@ -31,6 +31,21 @@ class StudentAndParentRepository(
                 .client(client)
                 .build()
                 .create(StudentAndParentApi::class.java)
+    }
+
+    fun getInfo(): Single<List<StudentAndParentResponse.Pupil>> {
+        val snpInfo = api.getInfo().blockingGet()
+        val semesters = api.getGrades("").blockingGet()
+        return Single.just(snpInfo).map { info ->
+            info.students.map { it.apply { schoolName = info.schoolName } }
+            info.students[0].apply {
+                diaryId = snpInfo.diaryId
+                diaryName = snpInfo.diaryName
+                semesterId = semesters.semesterId
+                semesterNumber = semesters.semesterNumber
+            }
+            info.students
+        }
     }
 
     fun getAttendance(startDate: String): Single<List<Attendance>> {
@@ -58,7 +73,7 @@ class StudentAndParentRepository(
     }
 
     fun getGrades(classificationPeriodId: Int): Single<List<Grade>> {
-        return api.getGrades(classificationPeriodId).map {
+        return api.getGrades(classificationPeriodId.toString()).map {
             it.grades.mapNotNull { grade ->
                 if (grade.value == "Brak ocen") return@mapNotNull null
                 if (grade.description == grade.symbol) grade.description = ""

@@ -5,6 +5,7 @@ import io.github.wulkanowy.api.interceptor.ErrorInterceptor
 import io.github.wulkanowy.api.interceptor.LoginInterceptor
 import io.github.wulkanowy.api.interceptor.StudentAndParentInterceptor
 import io.github.wulkanowy.api.repository.LoginRepository
+import io.github.wulkanowy.api.repository.RegisterRepository
 import io.github.wulkanowy.api.repository.StudentAndParentRepository
 import okhttp3.logging.HttpLoggingInterceptor
 import java.net.CookieManager
@@ -32,6 +33,8 @@ class Api {
 
     lateinit var diaryId: String
 
+    private val schema by lazy { "http" + if (ssl) "s" else "" }
+
     private val cookies by lazy {
         val cookieManager = CookieManager()
         cookieManager.setCookiePolicy(CookiePolicy.ACCEPT_ALL)
@@ -45,26 +48,33 @@ class Api {
     }
 
     private val loginRepository by lazy {
-        LoginRepository(ssl, host, symbol, clientBuilder.getClient())
+        LoginRepository(schema, host, symbol, clientBuilder.getClient())
     }
 
     private val loginInterceptor by lazy {
         if (!::email.isInitialized || !::password.isInitialized) throw NotLoggedInException("Email or/and password are not set")
-        if (!::studentId.isInitialized || !::diaryId.isInitialized) throw NotLoggedInException("Student or/and diary id are not set")
         LoginInterceptor(loginRepository, holdSession, email, password)
     }
 
     private val studentAndParentInterceptor by lazy {
+        if (!::diaryId.isInitialized || !::studentId.isInitialized) throw NotLoggedInException("Student or/and diaryId id are not set")
         StudentAndParentInterceptor(cookies, host, diaryId, studentId)
     }
 
     private val snp by lazy {
         if (!::schoolId.isInitialized) throw NotLoggedInException("School ID is not set")
-        StudentAndParentRepository(ssl, host, symbol, schoolId, clientBuilder
+        StudentAndParentRepository(schema, host, symbol, schoolId, clientBuilder
                 .addInterceptor(loginInterceptor)
                 .addInterceptor(studentAndParentInterceptor)
                 .getClient())
     }
+
+    private val register by lazy {
+        if (!::email.isInitialized || !::password.isInitialized) throw NotLoggedInException("Email or/and password are not set")
+        RegisterRepository(symbol, email, password, loginRepository)
+    }
+
+    fun getPupils() = register.getPupils()
 
     fun getAttendance(startDate: String) = snp.getAttendance(startDate)
 
