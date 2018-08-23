@@ -1,9 +1,10 @@
 package io.github.wulkanowy.api
 
-import io.github.wulkanowy.api.auth.Client
-import io.github.wulkanowy.api.auth.Login
-import io.github.wulkanowy.api.auth.NotLoggedInErrorException
+import io.github.wulkanowy.api.auth.NotLoggedInException
+import io.github.wulkanowy.api.interceptor.ErrorInterceptor
 import io.github.wulkanowy.api.interceptor.LoginInterceptor
+import io.github.wulkanowy.api.interceptor.StudentAndParentInterceptor
+import io.github.wulkanowy.api.repository.LoginRepository
 import io.github.wulkanowy.api.repository.StudentAndParentRepository
 import okhttp3.logging.HttpLoggingInterceptor
 import java.net.CookieManager
@@ -38,22 +39,31 @@ class Api {
     }
 
     private val clientBuilder by lazy {
-        ClientCreator(cookies).addInterceptor(HttpLoggingInterceptor().setLevel(logLevel))
+        ClientCreator(cookies)
+                .addInterceptor(HttpLoggingInterceptor().setLevel(logLevel))
+                .addInterceptor(ErrorInterceptor())
     }
 
-    private val login by lazy {
-        if (!::email.isInitialized || !::password.isInitialized) throw NotLoggedInErrorException("Email or/and password are not set")
-        Login(email, password, symbol, Client(cookies, host, logLevel))
+    private val loginRepository by lazy {
+        LoginRepository(ssl, host, symbol, clientBuilder.getClient())
     }
 
     private val loginInterceptor by lazy {
-        if (!::studentId.isInitialized || !::diaryId.isInitialized) throw NotLoggedInErrorException("Student or/and diary id are not set")
-        LoginInterceptor(host, diaryId, studentId, login, holdSession)
+        if (!::email.isInitialized || !::password.isInitialized) throw NotLoggedInException("Email or/and password are not set")
+        if (!::studentId.isInitialized || !::diaryId.isInitialized) throw NotLoggedInException("Student or/and diary id are not set")
+        LoginInterceptor(loginRepository, holdSession, email, password)
+    }
+
+    private val studentAndParentInterceptor by lazy {
+        StudentAndParentInterceptor(cookies, host, diaryId, studentId)
     }
 
     private val snp by lazy {
-        if (!::schoolId.isInitialized) throw NotLoggedInErrorException("School ID is not set")
-        StudentAndParentRepository(ssl, host, symbol, schoolId, clientBuilder.addInterceptor(loginInterceptor).getClient())
+        if (!::schoolId.isInitialized) throw NotLoggedInException("School ID is not set")
+        StudentAndParentRepository(ssl, host, symbol, schoolId, clientBuilder
+                .addInterceptor(loginInterceptor)
+                .addInterceptor(studentAndParentInterceptor)
+                .getClient())
     }
 
     fun getAttendance(startDate: String) = snp.getAttendance(startDate)

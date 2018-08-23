@@ -1,3 +1,3 @@
 package io.github.wulkanowy.api.auth
 
-class BadCredentialsException internal constructor(message: String) : VulcanException(message)
+class BadCredentialsException internal constructor(message: String) : NotLoggedInException(message)
