@@ -10,7 +10,7 @@ jobs:
       - checkout
 
       - restore_cache:
-          key: {{ checksum "build.gradle" }}
+          key: cache-{{ checksum "build.gradle" }}
 
       - run: ./gradlew build -x check --no-daemon --stacktrace --console=plain -PdisablePreDex
 
@@ -19,7 +19,7 @@ jobs:
       - save_cache:
           paths:
           - ~/.gradle
-          key: {{ checksum "build.gradle" }}
+          key: cache-{{ checksum "build.gradle" }}
 
       - run: bash <(curl -s https://codecov.io/bash)
 
