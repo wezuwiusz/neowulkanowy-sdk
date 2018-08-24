@@ -49,7 +49,7 @@ class ApiTest {
         assertEquals("jan@fakelog.cf", values[0].email)
         assertEquals("Jan Kowalski", values[0].studentName)
         assertEquals("123456", values[0].schoolId)
-        assertEquals(1, values[0].studentId)
+        assertEquals("1", values[0].studentId)
         assertEquals("Publiczny dziennik Wulkanowego nr 1 w fakelog.cf", values[0].schoolName)
     }
 
@@ -61,20 +61,20 @@ class ApiTest {
 
         val values = semestersObserver.values()[0]
 
-        assertEquals(303, values[0].diaryId)
+        assertEquals("303", values[0].diaryId)
         assertEquals("III 2017", values[0].diaryName)
         assertEquals(1234567, values[0].semesterId)
         assertEquals(1, values[0].semesterNumber)
 
-        assertEquals(303, values[0].diaryId)
+        assertEquals("303", values[0].diaryId)
         assertEquals("III 2017", values[1].diaryName)
         assertEquals(1234568, values[1].semesterId)
         assertEquals(2, values[1].semesterNumber)
 
-        assertEquals(202, values[2].diaryId)
+        assertEquals("202", values[2].diaryId)
         assertEquals("II 2016", values[2].diaryName)
 
-        assertEquals(101, values[4].diaryId)
+        assertEquals("101", values[4].diaryId)
         assertEquals("1A 2015", values[4].diaryName)
     }
 

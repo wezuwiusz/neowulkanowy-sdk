@@ -21,7 +21,7 @@ class StudentAndParentStartRepository(
 ) {
 
     fun getSemesters(): Single<List<Semester>> {
-        return Single.just(getClient(0).getUserInfo(studentId).blockingGet().diaries.map { diary ->
+        return Single.just(getClient("").getUserInfo(studentId).blockingGet().diaries.map { diary ->
             val s = getClient(diary.id).getGrades(0).blockingGet()
             listOf(1, 2).map { it ->
                 Semester(diary.id, diary.name, if (it == s.semesterNumber) s.semesterId else {
@@ -31,12 +31,12 @@ class StudentAndParentStartRepository(
         }.flatten())
     }
 
-    private fun getClient(diaryId: Int): StudentAndParentApi {
+    private fun getClient(diaryId: String): StudentAndParentApi {
         return Retrofit.Builder()
                 .baseUrl("$schema://uonetplus-opiekun.$host/$symbol/$schoolId/")
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .addConverterFactory(JspoonConverterFactory.create())
-                .client(client.addInterceptor(StudentAndParentInterceptor(cookies, host, diaryId.toString(), studentId)).getClient())
+                .client(client.addInterceptor(StudentAndParentInterceptor(cookies, host, diaryId, studentId)).getClient())
                 .build()
                 .create(StudentAndParentApi::class.java)
     }
