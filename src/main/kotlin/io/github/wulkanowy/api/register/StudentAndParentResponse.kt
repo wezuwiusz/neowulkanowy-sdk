@@ -25,9 +25,6 @@ class StudentAndParentResponse {
          @Selector("option", attr = "value", regex = "\\=(.*)")
          var id: Int = 0
 
-         @Selector("option", attr = "selected", defValue = "false")
-         lateinit var selected: String
-
          @Selector("option")
          lateinit var name: String
      }

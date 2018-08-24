@@ -34,13 +34,7 @@ class StudentAndParentRepository(
     }
 
     fun getSchoolInfo(): Single<StudentAndParentResponse> {
-        return api.getInfo().map { res ->
-            res.diaries.map { diary ->
-                diary.selected = if ("selected" == diary.selected) "true" else "false"
-                diary
-            }
-            res
-        }
+        return api.getInfo()
     }
 
     fun getAttendance(startDate: String): Single<List<Attendance>> {
