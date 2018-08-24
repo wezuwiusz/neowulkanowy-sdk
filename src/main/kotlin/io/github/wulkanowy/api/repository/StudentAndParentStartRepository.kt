@@ -4,6 +4,7 @@ import io.github.wulkanowy.api.ClientCreator
 import io.github.wulkanowy.api.interceptor.StudentAndParentInterceptor
 import io.github.wulkanowy.api.interfaces.StudentAndParentApi
 import io.github.wulkanowy.api.register.Semester
+import io.reactivex.Observable
 import io.reactivex.Single
 import pl.droidsonroids.retrofit2.JspoonConverterFactory
 import retrofit2.Retrofit
@@ -21,14 +22,16 @@ class StudentAndParentStartRepository(
 ) {
 
     fun getSemesters(): Single<List<Semester>> {
-        return Single.just(getClient("").getUserInfo(studentId).blockingGet().diaries.map { diary ->
-            val s = getClient(diary.id).getGrades(0).blockingGet()
-            listOf(1, 2).map { it ->
-                Semester(diary.id, diary.name, if (it == s.semesterNumber) s.semesterId else {
-                    if (it < s.semesterNumber) s.semesterId - 1 else s.semesterId + 1
-                }, it)
-            }
-        }.flatten())
+        return getClient("0").getUserInfo(studentId).flatMapObservable { Observable.fromIterable(it.diaries) }
+                .flatMapSingle { diary ->
+                    getClient(diary.id).getGrades(0).map { res ->
+                        listOf(1, 2).map { it ->
+                            Semester(diary.id, diary.name, if (it == res.semesterNumber) res.semesterId else {
+                                if (it < res.semesterNumber) res.semesterId - 1 else res.semesterId + 1
+                            }, it)
+                        }
+                    }
+                }.toList().map { it.flatten() }
     }
 
     private fun getClient(diaryId: String): StudentAndParentApi {
