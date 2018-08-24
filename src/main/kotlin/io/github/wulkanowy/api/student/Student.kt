@@ -16,7 +16,7 @@ class Student {
     @Selector("article:nth-of-type(1) .wartosc", index = 0, regex = "\\s([^\\s]*)\\s", defValue = "")
     lateinit var secondName: String
 
-    @Selector("article:nth-of-type(1) .wartosc", index = 0, regex = "\\s(\\w+)\$")
+    @Selector("article:nth-of-type(1) .wartosc", index = 0, regex = "[^,]+ (.+)")
     lateinit var surname: String
 
     @Format(DATE_FORMAT)
