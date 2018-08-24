@@ -5,7 +5,7 @@ import pl.droidsonroids.jspoon.annotation.Selector
 class Summary {
 
     @Selector("td", index = 0)
-    lateinit var subject: String
+    lateinit var name: String
 
     @Selector("td:nth-last-of-type(2):not(:contains(-))")
     var predicted: String = ""

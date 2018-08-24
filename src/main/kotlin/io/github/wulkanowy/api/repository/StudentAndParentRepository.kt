@@ -63,7 +63,7 @@ class StudentAndParentRepository(
 
     fun getGrades(classificationPeriodId: Int): Single<List<Grade>> {
         return api.getGrades(classificationPeriodId).map {
-            it.grades.mapNotNull { grade ->
+            it.grades.map { grade ->
                 if (grade.description == grade.symbol) grade.description = ""
                 grade
             }

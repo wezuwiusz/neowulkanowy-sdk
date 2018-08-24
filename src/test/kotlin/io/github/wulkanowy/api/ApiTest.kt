@@ -14,9 +14,6 @@ import okhttp3.logging.HttpLoggingInterceptor
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
-import java.time.LocalDate
-import java.time.ZoneId
-import java.util.*
 
 class ApiTest : BaseTest() {
 
@@ -175,14 +172,14 @@ class ApiTest : BaseTest() {
 
         val values = summaryObserver.values()[0]
 
-        assertEquals("Zachowanie", values[0].subject)
+        assertEquals("Zachowanie", values[0].name)
         assertEquals("bardzo dobre", values[0].predicted)
         assertEquals("bardzo dobre", values[0].final)
-        assertEquals("Język polski", values[1].subject)
+        assertEquals("Język polski", values[1].name)
         assertEquals("", values[1].predicted)
         assertEquals("4", values[1].final)
 
-        assertEquals("Wiedza o społeczeństwie", values[4].subject)
+        assertEquals("Wiedza o społeczeństwie", values[4].name)
         assertEquals("", values[4].predicted)
         assertEquals("", values[4].final)
     }
