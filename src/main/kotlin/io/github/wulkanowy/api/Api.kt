@@ -76,6 +76,7 @@ class Api {
     }
 
     private val studentAndParentStartRepository by lazy {
+        if (!::schoolId.isInitialized || !::studentId.isInitialized) throw NotLoggedInException("School or/and student id are not set")
         StudentAndParentStartRepository(schema, host, symbol, schoolId, studentId, cookies, clientBuilder.addInterceptor(loginInterceptor))
     }
 
