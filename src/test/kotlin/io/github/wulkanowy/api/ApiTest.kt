@@ -18,7 +18,7 @@ import java.time.LocalDate
 import java.time.ZoneId
 import java.util.*
 
-class ApiTest {
+class ApiTest : BaseTest() {
 
     private var api =  Api()
 
@@ -218,10 +218,5 @@ class ApiTest {
         assertEquals("Monika Nowak", values.family[0].fullName)
         assertEquals("-", values.family[0].email)
         assertEquals("-", values.family[1].email)
-    }
-
-    private fun getDate(year: Int, month: Int, day: Int): Date {
-        return Date.from(LocalDate.of(year, month, day)
-                .atStartOfDay(ZoneId.systemDefault()).toInstant())
     }
 }

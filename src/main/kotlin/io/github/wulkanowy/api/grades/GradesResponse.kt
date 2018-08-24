@@ -10,6 +10,6 @@ class GradesResponse {
     @Selector("#okresyKlasyfikacyjneDropDownList option[selected]")
     var semesterNumber: Int = 0
 
-    @Selector(".ocenySzczegoly-table tbody tr")
+    @Selector(".ocenySzczegoly-table tbody tr:has(td:nth-of-type(2):not(:contains(Brak ocen)))")
     var grades: List<Grade> = emptyList()
 }

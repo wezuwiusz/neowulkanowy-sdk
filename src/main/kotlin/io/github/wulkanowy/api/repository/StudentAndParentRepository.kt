@@ -64,7 +64,6 @@ class StudentAndParentRepository(
     fun getGrades(classificationPeriodId: Int): Single<List<Grade>> {
         return api.getGrades(classificationPeriodId).map {
             it.grades.mapNotNull { grade ->
-                if (grade.value == "Brak ocen") return@mapNotNull null
                 if (grade.description == grade.symbol) grade.description = ""
                 grade
             }
