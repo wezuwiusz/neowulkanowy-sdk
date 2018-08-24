@@ -7,6 +7,7 @@ import io.github.wulkanowy.api.interceptor.StudentAndParentInterceptor
 import io.github.wulkanowy.api.repository.LoginRepository
 import io.github.wulkanowy.api.repository.RegisterRepository
 import io.github.wulkanowy.api.repository.StudentAndParentRepository
+import io.github.wulkanowy.api.repository.StudentAndParentStartRepository
 import okhttp3.logging.HttpLoggingInterceptor
 import java.net.CookieManager
 import java.net.CookiePolicy
@@ -74,7 +75,13 @@ class Api {
         RegisterRepository(symbol, email, password, loginRepository)
     }
 
+    private val studentAndParentStartRepository by lazy {
+        StudentAndParentStartRepository(schema, host, symbol, schoolId, studentId, cookies, clientBuilder.addInterceptor(loginInterceptor))
+    }
+
     fun getPupils() = register.getPupils()
+
+    fun getSemesters() = studentAndParentStartRepository.getSemesters()
 
     fun getAttendance(startDate: String) = snp.getAttendance(startDate)
 

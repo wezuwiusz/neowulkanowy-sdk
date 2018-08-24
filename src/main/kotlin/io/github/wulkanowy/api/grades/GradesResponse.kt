@@ -5,10 +5,10 @@ import pl.droidsonroids.jspoon.annotation.Selector
 class GradesResponse {
 
     @Selector("#okresyKlasyfikacyjneDropDownList option[selected]", attr = "value")
-    lateinit var semesterId: String
+    var semesterId: Int = 0
 
     @Selector("#okresyKlasyfikacyjneDropDownList option[selected]")
-    lateinit var semesterNumber: String
+    var semesterNumber: Int = 0
 
     @Selector(".ocenySzczegoly-table tbody tr")
     var grades: List<Grade> = emptyList()

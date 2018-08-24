@@ -17,6 +17,9 @@ interface StudentAndParentApi {
     @GET("Start/Index/")
     fun getInfo(): Single<StudentAndParentResponse>
 
+    @GET("Uczen/UczenOnChange")
+    fun getUserInfo(@Query("id") userId: String): Single<StudentAndParentResponse>
+
     @GET("Frekwencja.mvc")
     fun getAttendance(@Query("data") date: String): Single<AttendanceResponse>
 
@@ -24,7 +27,7 @@ interface StudentAndParentApi {
     fun getExams(@Query("data") date: String): Single<ExamResponse>
 
     @GET("Oceny/Wszystkie?details=2")
-    fun getGrades(@Query("okres") semester: String): Single<GradesResponse>
+    fun getGrades(@Query("okres") semester: Int): Single<GradesResponse>
 
     @GET("Oceny/Wszystkie?details=1")
     fun getGradesSummary(@Query("okres") semester: Int): Single<GradesSummaryResponse>

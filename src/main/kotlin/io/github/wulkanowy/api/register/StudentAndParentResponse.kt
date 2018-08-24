@@ -13,30 +13,20 @@ class StudentAndParentResponse {
     @Selector("#dziennikDropDownList option")
     lateinit var diaries: List<Diary>
 
-    @Selector("#dziennikDropDownList option[selected]", attr = "value", regex = "\\=(.*)")
-    lateinit var diaryId: String
-
-    @Selector("#dziennikDropDownList option[selected]")
-    lateinit var diaryName: String
-
     class Pupil {
         @Selector("option", attr = "value", regex = "\\=(.*)")
-        lateinit var id: String
+        var id: Int = 0
 
         @Selector("option")
         lateinit var name: String
-
-        lateinit var schoolName: String
-
-        var diaryId: String = ""
-        var diaryName: String = ""
-        var semesterId: String = ""
-        var semesterNumber: String = ""
     }
 
      class Diary {
          @Selector("option", attr = "value", regex = "\\=(.*)")
-         lateinit var id: String
+         var id: Int = 0
+
+         @Selector("option", attr = "selected", defValue = "false")
+         lateinit var selected: String
 
          @Selector("option")
          lateinit var name: String

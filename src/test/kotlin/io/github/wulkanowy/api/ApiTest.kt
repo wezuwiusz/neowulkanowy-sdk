@@ -7,6 +7,7 @@ import io.github.wulkanowy.api.grades.Summary
 import io.github.wulkanowy.api.homework.Homework
 import io.github.wulkanowy.api.notes.Note
 import io.github.wulkanowy.api.register.Pupil
+import io.github.wulkanowy.api.register.Semester
 import io.github.wulkanowy.api.student.StudentInfo
 import io.reactivex.observers.TestObserver
 import org.junit.Assert.assertEquals
@@ -18,10 +19,10 @@ import java.util.*
 
 class ApiTest {
 
-    private var vulcan =  Api()
+    private var api =  Api()
 
     @Before fun setUp() {
-        vulcan.apply {
+        api.apply {
             email = "jan@fakelog.cf"
             password = "jan123"
             schoolId = "123456"
@@ -31,7 +32,7 @@ class ApiTest {
     }
 
     @Test fun pupilsTest() {
-        val pupils = vulcan.getPupils()
+        val pupils = api.getPupils()
         val pupilsObserver = TestObserver<List<Pupil>>()
         pupils.subscribe(pupilsObserver)
         pupilsObserver.assertComplete()
@@ -42,13 +43,37 @@ class ApiTest {
         assertEquals("jan@fakelog.cf", values[0].email)
         assertEquals("Jan Kowalski", values[0].studentName)
         assertEquals("123456", values[0].schoolId)
-        assertEquals("101", values[0].diaryId)
-        assertEquals("1", values[0].studentId)
+        assertEquals(1, values[0].studentId)
         assertEquals("Publiczny dziennik Wulkanowego nr 1 w fakelog.cf", values[0].schoolName)
     }
 
+    @Test fun semestersTest() {
+        val semesters = api.getSemesters()
+        val semestersObserver = TestObserver<List<Semester>>()
+        semesters.subscribe(semestersObserver)
+        semestersObserver.assertComplete()
+
+        val values = semestersObserver.values()[0]
+
+        assertEquals(303, values[0].diaryId)
+        assertEquals("III 2017", values[0].diaryName)
+        assertEquals(1234567, values[0].semesterId)
+        assertEquals(1, values[0].semesterNumber)
+
+        assertEquals(303, values[0].diaryId)
+        assertEquals("III 2017", values[1].diaryName)
+        assertEquals(1234568, values[1].semesterId)
+        assertEquals(2, values[1].semesterNumber)
+
+        assertEquals(202, values[2].diaryId)
+        assertEquals("II 2016", values[2].diaryName)
+
+        assertEquals(101, values[4].diaryId)
+        assertEquals("1A 2015", values[4].diaryName)
+    }
+
     @Test fun attendanceTest() {
-        val attendance = vulcan.getAttendance("636648768000000000")
+        val attendance = api.getAttendance("636648768000000000")
         val attendanceObserver = TestObserver<List<Attendance>>()
         attendance.subscribe(attendanceObserver)
         attendanceObserver.assertComplete()
@@ -71,7 +96,7 @@ class ApiTest {
     }
 
     @Test fun examsTest() {
-        val exams = vulcan.getExams("636630624000000000")
+        val exams = api.getExams("636630624000000000")
         val examsObserver = TestObserver<List<Exam>>()
         exams.subscribe(examsObserver)
         examsObserver.assertComplete()
@@ -87,7 +112,7 @@ class ApiTest {
     }
 
     @Test fun homeworkTest() {
-        val homework = vulcan.getHomework("636443136000000000")
+        val homework = api.getHomework("636443136000000000")
         val homeworkObserver = TestObserver<List<Homework>>()
         homework.subscribe(homeworkObserver)
         homeworkObserver.assertComplete()
@@ -102,7 +127,7 @@ class ApiTest {
     }
 
     @Test fun notesTest() {
-        val notes = vulcan.getNotes()
+        val notes = api.getNotes()
         val notesObserver = TestObserver<List<Note>>()
         notes.subscribe(notesObserver)
         notesObserver.assertComplete()
@@ -116,7 +141,7 @@ class ApiTest {
     }
 
     @Test fun gradesTest() {
-        val grades = vulcan.getGrades(864)
+        val grades = api.getGrades(864)
         val gradesObserver = TestObserver<List<Grade>>()
         grades.subscribe(gradesObserver)
         gradesObserver.assertComplete()
@@ -137,7 +162,7 @@ class ApiTest {
     }
 
     @Test fun gradesSummaryTest() {
-        val summary = vulcan.getGradesSummary(864)
+        val summary = api.getGradesSummary(864)
         val summaryObserver = TestObserver<List<Summary>>()
         summary.subscribe(summaryObserver)
         summaryObserver.assertComplete()
@@ -157,7 +182,7 @@ class ApiTest {
     }
 
     @Test fun studentInfoTest() {
-        val student = vulcan.getStudentInfo()
+        val student = api.getStudentInfo()
         val studentObserver = TestObserver<StudentInfo>()
         student.subscribe(studentObserver)
         studentObserver.assertComplete()

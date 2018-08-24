@@ -33,18 +33,13 @@ class StudentAndParentRepository(
                 .create(StudentAndParentApi::class.java)
     }
 
-    fun getInfo(): Single<List<StudentAndParentResponse.Pupil>> {
-        val snpInfo = api.getInfo().blockingGet()
-        val semesters = api.getGrades("").blockingGet()
-        return Single.just(snpInfo).map { info ->
-            info.students.map { it.apply { schoolName = info.schoolName } }
-            info.students[0].apply {
-                diaryId = snpInfo.diaryId
-                diaryName = snpInfo.diaryName
-                semesterId = semesters.semesterId
-                semesterNumber = semesters.semesterNumber
+    fun getSchoolInfo(): Single<StudentAndParentResponse> {
+        return api.getInfo().map { res ->
+            res.diaries.map { diary ->
+                diary.selected = if ("selected" == diary.selected) "true" else "false"
+                diary
             }
-            info.students
+            res
         }
     }
 
@@ -73,7 +68,7 @@ class StudentAndParentRepository(
     }
 
     fun getGrades(classificationPeriodId: Int): Single<List<Grade>> {
-        return api.getGrades(classificationPeriodId.toString()).map {
+        return api.getGrades(classificationPeriodId).map {
             it.grades.mapNotNull { grade ->
                 if (grade.value == "Brak ocen") return@mapNotNull null
                 if (grade.description == grade.symbol) grade.description = ""

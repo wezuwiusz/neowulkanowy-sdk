@@ -6,7 +6,6 @@ import io.github.wulkanowy.api.register.Pupil
 import io.reactivex.Single
 import org.jsoup.Jsoup
 import org.jsoup.parser.Parser
-import retrofit2.HttpException
 
 class RegisterRepository(
         private val globalSymbol: String,
@@ -24,18 +23,15 @@ class RegisterRepository(
             try {
                 loginRepo.sendCertificate(symbol.second, symbol.second.action.replace(globalSymbol, symbol.first)).blockingGet()
                 homepageRepository.getStartInfo(symbol.first).blockingGet().map { schoolId ->
-                    getSnpRepo(symbol.first, schoolId).getInfo().blockingGet().map { pupil ->
+                    val snpInfo = getSnpRepo(symbol.first, schoolId).getSchoolInfo().blockingGet()
+                    snpInfo.students.map { pupil ->
                         Pupil(
                                 email = email,
                                 symbol = symbol.first,
                                 studentId = pupil.id,
                                 studentName = pupil.name,
                                 schoolId = schoolId,
-                                schoolName = pupil.schoolName,
-                                diaryId = pupil.diaryId,
-                                diaryName = pupil.diaryName,
-                                semesterId = pupil.semesterId,
-                                semesterNumber = pupil.semesterNumber
+                                schoolName = snpInfo.schoolName
                         )
                     }
                 }.flatten()
