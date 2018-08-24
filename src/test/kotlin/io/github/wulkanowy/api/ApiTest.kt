@@ -10,6 +10,7 @@ import io.github.wulkanowy.api.register.Pupil
 import io.github.wulkanowy.api.register.Semester
 import io.github.wulkanowy.api.student.StudentInfo
 import io.reactivex.observers.TestObserver
+import okhttp3.logging.HttpLoggingInterceptor
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
@@ -23,6 +24,11 @@ class ApiTest {
 
     @Before fun setUp() {
         api.apply {
+            logLevel = HttpLoggingInterceptor.Level.BASIC
+            holdSession = false
+            ssl = true
+            host = "fakelog.cf"
+            symbol = "Default"
             email = "jan@fakelog.cf"
             password = "jan123"
             schoolId = "123456"
