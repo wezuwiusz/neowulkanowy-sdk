@@ -1,3 +1,5 @@
 package io.github.wulkanowy.api.auth
 
-open class VulcanException(message: String) : Exception(message)
+import java.io.IOException
+
+open class VulcanException(message: String) : IOException(message)

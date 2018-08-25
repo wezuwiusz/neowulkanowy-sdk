@@ -32,6 +32,7 @@ class ApiTest : BaseTest() {
             studentId = "1"
             diaryId = "101"
         }
+        api.onConfigChange() // unnecessary in this case
     }
 
     @Test fun pupilsTest() {

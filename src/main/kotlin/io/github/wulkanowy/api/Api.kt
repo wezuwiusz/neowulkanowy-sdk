@@ -42,27 +42,31 @@ class Api {
         cookieManager
     }
 
-    private val clientBuilder by lazy {
+    private val onChangeManager = resettableManager()
+
+    fun onConfigChange() = onChangeManager.reset()
+
+    private val clientBuilder by resettableLazy(onChangeManager) {
         ClientCreator(cookies)
                 .addInterceptor(HttpLoggingInterceptor().setLevel(logLevel))
                 .addInterceptor(ErrorInterceptor())
     }
 
-    private val loginRepository by lazy {
+    private val loginRepository by resettableLazy(onChangeManager) {
         LoginRepository(schema, host, symbol, clientBuilder.getClient())
     }
 
-    private val loginInterceptor by lazy {
+    private val loginInterceptor by resettableLazy(onChangeManager) {
         if (!::email.isInitialized || !::password.isInitialized) throw NotLoggedInException("Email or/and password are not set")
         LoginInterceptor(loginRepository, holdSession, email, password)
     }
 
-    private val studentAndParentInterceptor by lazy {
+    private val studentAndParentInterceptor by resettableLazy(onChangeManager) {
         if (!::diaryId.isInitialized || !::studentId.isInitialized) throw NotLoggedInException("Student or/and diaryId id are not set")
         StudentAndParentInterceptor(cookies, host, diaryId, studentId)
     }
 
-    private val snp by lazy {
+    private val snp by resettableLazy(onChangeManager) {
         if (!::schoolId.isInitialized) throw NotLoggedInException("School ID is not set")
         StudentAndParentRepository(schema, host, symbol, schoolId, clientBuilder
                 .addInterceptor(loginInterceptor)
@@ -70,12 +74,12 @@ class Api {
                 .getClient())
     }
 
-    private val register by lazy {
+    private val register by resettableLazy(onChangeManager) {
         if (!::email.isInitialized || !::password.isInitialized) throw NotLoggedInException("Email or/and password are not set")
         RegisterRepository(symbol, email, password, loginRepository)
     }
 
-    private val studentAndParentStartRepository by lazy {
+    private val studentAndParentStartRepository by resettableLazy(onChangeManager) {
         if (!::schoolId.isInitialized || !::studentId.isInitialized) throw NotLoggedInException("School or/and student id are not set")
         StudentAndParentStartRepository(schema, host, symbol, schoolId, studentId, cookies, clientBuilder.addInterceptor(loginInterceptor))
     }
