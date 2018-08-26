@@ -25,19 +25,20 @@ class ErrorInterceptor : Interceptor {
             "Przerwa techniczna" -> throw ServiceUnavailableException(doc.title())
         }
 
-        val credentialsError = doc.select(".ErrorMessage, #ErrorTextLabel")
-        if (credentialsError.isNotEmpty()) {
-            throw BadCredentialsException(credentialsError.text())
+        doc.select(".ErrorMessage, #ErrorTextLabel").let {
+            if (it.isNotEmpty()) throw BadCredentialsException(it.text())
         }
 
-        val snpError = doc.select("#MainPage_ErrorDiv div")
-        if (snpError.isNotEmpty()) {
-            throw VulcanException(snpError[0].ownText())
+        doc.select(".ErrorMessage, #ErrorTextLabel").let {
+            if (it.isNotEmpty()) throw BadCredentialsException(it.text())
         }
 
-        val snpPermError = doc.select("h2.error")
-        if (snpPermError.isNotEmpty()) {
-            throw AccountPermissionException(snpPermError.text())
+        doc.select("#MainPage_ErrorDiv div").let {
+            if (it.isNotEmpty()) throw VulcanException(it[0].ownText())
+        }
+
+        doc.select("h2.error").let {
+            if (it.isNotEmpty()) throw AccountPermissionException(it.text())
         }
     }
 }
