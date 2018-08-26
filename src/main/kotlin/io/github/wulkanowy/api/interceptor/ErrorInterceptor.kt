@@ -17,6 +17,14 @@ class ErrorInterceptor : Interceptor {
     }
 
     private fun checkForError(doc: Document) {
+        when(doc.title()) {
+            "Błąd" -> throw VulcanException(doc.body().text())
+            "Błąd strony" -> throw VulcanException(doc.select(".errorMessage").text())
+            "Logowanie" -> throw AccountPermissionException(doc.select("div").last().html().split("<br>")[1].trim())
+            "Dziennik UONET+" -> throw NotLoggedInException(doc.select(".loginButton").text())
+            "Przerwa techniczna" -> throw ServiceUnavailableException(doc.title())
+        }
+
         val credentialsError = doc.select(".ErrorMessage, #ErrorTextLabel")
         if (credentialsError.isNotEmpty()) {
             throw BadCredentialsException(credentialsError.text())
@@ -30,13 +38,6 @@ class ErrorInterceptor : Interceptor {
         val snpPermError = doc.select("h2.error")
         if (snpPermError.isNotEmpty()) {
             throw AccountPermissionException(snpPermError.text())
-        }
-
-        when(doc.title()) {
-            "Błąd", "Błąd Strony" -> throw VulcanException(doc.body().text())
-            "Logowanie" -> throw AccountPermissionException(doc.select("div").last().html().split("<br>")[1].trim())
-            "Dziennik UONET+" -> throw NotLoggedInException(doc.select(".loginButton").text())
-            "Przerwa techniczna" -> throw ServiceUnavailableException(doc.title())
         }
     }
 }
