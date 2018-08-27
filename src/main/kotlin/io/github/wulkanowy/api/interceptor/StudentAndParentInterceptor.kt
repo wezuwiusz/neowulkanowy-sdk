@@ -21,8 +21,8 @@ class StudentAndParentInterceptor(
         ).forEach {
             val cookie = HttpCookie(it[0], it[1])
             cookie.path = "/"
-            cookie.domain = "$schema://uonetplus-opiekun.$host"
-            cookies.cookieStore.add(URI(cookie.domain), cookie)
+            cookie.domain = "uonetplus-opiekun.$host"
+            cookies.cookieStore.add(URI("$schema://${cookie.domain}"), cookie)
         }
 
         return chain.proceed(chain.request().newBuilder().build())
