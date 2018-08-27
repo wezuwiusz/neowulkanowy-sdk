@@ -1,7 +1,7 @@
 package io.github.wulkanowy.api.repository
 
 import io.github.wulkanowy.api.auth.VulcanException
-import io.github.wulkanowy.api.interfaces.HomepageApi
+import io.github.wulkanowy.api.service.HomepageService
 import io.reactivex.Single
 import okhttp3.OkHttpClient
 import pl.droidsonroids.retrofit2.JspoonConverterFactory
@@ -21,7 +21,7 @@ class HomepageRepository(
                 .addConverterFactory(JspoonConverterFactory.create())
                 .client(client)
                 .build()
-                .create(HomepageApi::class.java)
+                .create(HomepageService::class.java)
     }
 
     fun getStartInfo(symbol: String): Single<List<String>> {

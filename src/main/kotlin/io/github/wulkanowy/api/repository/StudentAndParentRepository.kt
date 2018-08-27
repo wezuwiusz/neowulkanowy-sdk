@@ -5,7 +5,7 @@ import io.github.wulkanowy.api.exams.Exam
 import io.github.wulkanowy.api.grades.Grade
 import io.github.wulkanowy.api.grades.Summary
 import io.github.wulkanowy.api.homework.Homework
-import io.github.wulkanowy.api.interfaces.StudentAndParentApi
+import io.github.wulkanowy.api.service.StudentAndParentService
 import io.github.wulkanowy.api.notes.Note
 import io.github.wulkanowy.api.register.StudentAndParentResponse
 import io.github.wulkanowy.api.student.StudentInfo
@@ -30,7 +30,7 @@ class StudentAndParentRepository(
                 .addConverterFactory(JspoonConverterFactory.create())
                 .client(client)
                 .build()
-                .create(StudentAndParentApi::class.java)
+                .create(StudentAndParentService::class.java)
     }
 
     fun getSchoolInfo(): Single<StudentAndParentResponse> {

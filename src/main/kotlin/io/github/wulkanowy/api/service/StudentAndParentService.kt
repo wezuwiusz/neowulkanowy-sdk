@@ -1,4 +1,4 @@
-package io.github.wulkanowy.api.interfaces
+package io.github.wulkanowy.api.service
 
 import io.github.wulkanowy.api.attendance.AttendanceResponse
 import io.github.wulkanowy.api.exams.ExamResponse
@@ -12,7 +12,7 @@ import io.reactivex.Single
 import retrofit2.http.GET
 import retrofit2.http.Query
 
-interface StudentAndParentApi {
+interface StudentAndParentService {
 
     @GET("Start/Index/")
     fun getInfo(): Single<StudentAndParentResponse>

@@ -2,7 +2,7 @@ package io.github.wulkanowy.api.repository
 
 import io.github.wulkanowy.api.ClientCreator
 import io.github.wulkanowy.api.interceptor.StudentAndParentInterceptor
-import io.github.wulkanowy.api.interfaces.StudentAndParentApi
+import io.github.wulkanowy.api.service.StudentAndParentService
 import io.github.wulkanowy.api.register.Semester
 import io.reactivex.Observable
 import io.reactivex.Single
@@ -34,13 +34,13 @@ class StudentAndParentStartRepository(
                 }.toList().map { it.flatten() }
     }
 
-    private fun getClient(diaryId: String): StudentAndParentApi {
+    private fun getClient(diaryId: String): StudentAndParentService {
         return Retrofit.Builder()
                 .baseUrl("$schema://uonetplus-opiekun.$host/$symbol/$schoolId/")
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .addConverterFactory(JspoonConverterFactory.create())
                 .client(client.addInterceptor(StudentAndParentInterceptor(cookies, schema, host, diaryId, studentId)).getClient())
                 .build()
-                .create(StudentAndParentApi::class.java)
+                .create(StudentAndParentService::class.java)
     }
 }

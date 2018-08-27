@@ -1,11 +1,11 @@
-package io.github.wulkanowy.api.interfaces
+package io.github.wulkanowy.api.service
 
 import io.github.wulkanowy.api.login.ADFSFormResponse
 import io.github.wulkanowy.api.login.CertificateResponse
 import io.reactivex.Single
 import retrofit2.http.*
 
-interface LoginApi {
+interface LoginService {
 
     @POST("Account/LogOn")
     @FormUrlEncoded

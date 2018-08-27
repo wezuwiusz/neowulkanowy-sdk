@@ -1,6 +1,6 @@
 package io.github.wulkanowy.api.repository
 
-import io.github.wulkanowy.api.interfaces.LoginApi
+import io.github.wulkanowy.api.service.LoginService
 import io.github.wulkanowy.api.login.ADFSFormResponse
 import io.github.wulkanowy.api.login.CertificateResponse
 import io.reactivex.Single
@@ -29,7 +29,7 @@ class LoginRepository(
                 .addConverterFactory(JspoonConverterFactory.create())
                 .client(client)
                 .build()
-                .create(LoginApi::class.java)
+                .create(LoginService::class.java)
     }
 
     fun sendCredentials(credentials: Map<String, String>): Single<CertificateResponse> {
