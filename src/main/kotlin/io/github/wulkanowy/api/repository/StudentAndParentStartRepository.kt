@@ -39,7 +39,7 @@ class StudentAndParentStartRepository(
                 .baseUrl("$schema://uonetplus-opiekun.$host/$symbol/$schoolId/")
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .addConverterFactory(JspoonConverterFactory.create())
-                .client(client.addInterceptor(StudentAndParentInterceptor(cookies, host, diaryId, studentId)).getClient())
+                .client(client.addInterceptor(StudentAndParentInterceptor(cookies, schema, host, diaryId, studentId)).getClient())
                 .build()
                 .create(StudentAndParentApi::class.java)
     }

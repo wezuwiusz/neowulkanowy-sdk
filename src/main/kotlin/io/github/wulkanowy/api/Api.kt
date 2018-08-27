@@ -63,7 +63,7 @@ class Api {
 
     private val studentAndParentInterceptor by resettableLazy(onChangeManager) {
         if (!::diaryId.isInitialized || !::studentId.isInitialized) throw NotLoggedInException("Student or/and diaryId id are not set")
-        StudentAndParentInterceptor(cookies, host, diaryId, studentId)
+        StudentAndParentInterceptor(cookies, schema, host, diaryId, studentId)
     }
 
     private val snp by resettableLazy(onChangeManager) {

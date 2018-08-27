@@ -8,6 +8,7 @@ import java.net.URI
 
 class StudentAndParentInterceptor(
         private val cookies: CookieManager,
+        private val schema: String,
         private val host: String,
         private val diaryId: String,
         private val studentId: String
@@ -20,7 +21,7 @@ class StudentAndParentInterceptor(
         ).forEach {
             val cookie = HttpCookie(it[0], it[1])
             cookie.path = "/"
-            cookie.domain = "uonetplus-opiekun.$host"
+            cookie.domain = "$schema://uonetplus-opiekun.$host"
             cookies.cookieStore.add(URI(cookie.domain), cookie)
         }
 
