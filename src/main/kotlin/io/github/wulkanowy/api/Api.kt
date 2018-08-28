@@ -88,6 +88,8 @@ class Api {
 
     fun getSemesters() = studentAndParentStartRepository.getSemesters()
 
+    fun getSchoolInfo() = snp.getSchoolInfo()
+
     fun getAttendance(startDate: String) = snp.getAttendance(startDate)
 
     fun getExams(startDate: String) = snp.getExams(startDate)

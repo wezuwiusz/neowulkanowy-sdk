@@ -15,7 +15,7 @@ import retrofit2.http.Query
 interface StudentAndParentService {
 
     @GET("Start/Index/")
-    fun getInfo(): Single<StudentAndParentResponse>
+    fun getSchoolInfo(): Single<StudentAndParentResponse>
 
     @GET("Uczen/UczenOnChange")
     fun getUserInfo(@Query("id") userId: String): Single<StudentAndParentResponse>

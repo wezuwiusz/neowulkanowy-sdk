@@ -1,11 +1,17 @@
 package io.github.wulkanowy.api.repository
 
-import io.github.wulkanowy.api.auth.AccountPermissionException
+import io.github.wulkanowy.api.auth.VulcanException
 import io.github.wulkanowy.api.login.CertificateResponse
+import io.github.wulkanowy.api.register.HomepageResponse
 import io.github.wulkanowy.api.register.Pupil
+import io.github.wulkanowy.api.service.StudentAndParentService
+import io.reactivex.Observable
 import io.reactivex.Single
 import org.jsoup.Jsoup
 import org.jsoup.parser.Parser
+import pl.droidsonroids.retrofit2.JspoonConverterFactory
+import retrofit2.Retrofit
+import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 
 class RegisterRepository(
         private val globalSymbol: String,
@@ -14,42 +20,60 @@ class RegisterRepository(
         private val loginRepo: LoginRepository
 ) {
 
-    private val homepageRepository by lazy { HomepageRepository(loginRepo.schema, loginRepo.host, loginRepo.client) }
-
     fun getPupils(): Single<List<Pupil>> {
         if (loginRepo.isADFS()) throw NotImplementedError()
 
-        return Single.just(getSymbols().mapNotNull { symbol ->
-            try {
-                loginRepo.sendCertificate(symbol.second, symbol.second.action.replace(globalSymbol, symbol.first)).blockingGet()
-                homepageRepository.getStartInfo(symbol.first).blockingGet().map { schoolId ->
-                    val snpInfo = getSnpRepo(symbol.first, schoolId).getSchoolInfo().blockingGet()
-                    snpInfo.students.map { pupil ->
-                        Pupil(
-                                email = email,
-                                symbol = symbol.first,
-                                studentId = pupil.id,
-                                studentName = pupil.name,
-                                schoolId = schoolId,
-                                schoolName = snpInfo.schoolName
-                        )
-                    }
-                }.flatten()
-            } catch (e: RuntimeException) {
-               if (e.cause !is AccountPermissionException) throw e
-                null
-            }
-        }.flatten())
+        return getSymbols()
+                .flatMapObservable { Observable.fromIterable(it) }
+                .flatMap { symbol ->
+                    loginRepo.sendCertificate(symbol.second, symbol.second.action.replace(globalSymbol, symbol.first))
+                            .onErrorReturnItem( HomepageResponse() )
+                            .flatMapObservable { Observable.fromIterable(it.schools) }
+                            .flatMapSingle { schoolUrl ->
+                                getSnpService(schoolUrl).getSchoolInfo().map {
+                                    it.students.map { pupil ->
+                                        Pupil(
+                                                email = email,
+                                                symbol = symbol.first,
+                                                studentId = pupil.id,
+                                                studentName = pupil.name,
+                                                schoolId = getExtractedIdFromUrl(schoolUrl),
+                                                schoolName = it.schoolName
+                                        )
+                                    }
+                                }
+                            }
+                }.toList().map { it.flatten() }
     }
 
-    private fun getSymbols(): List<Pair<String, CertificateResponse>> {
-        val cert = loginRepo.sendCredentials(mapOf("LoginName" to email, "Password" to password)).blockingGet()
-        return Jsoup.parse(cert.wresult.replace(":", ""), "", Parser.xmlParser())
-                .select("[AttributeName=\"UserInstance\"] samlAttributeValue")
-                .map { Pair(it.text(), cert) }
+    private fun getSymbols(): Single<List<Pair<String, CertificateResponse>>> {
+        return loginRepo.sendCredentials(mapOf("LoginName" to email, "Password" to password)).flatMap {
+            Single.just(it)
+        }.flatMap { cert ->
+            Single.just(Jsoup.parse(cert.wresult.replace(":", ""), "", Parser.xmlParser())
+                    .select("[AttributeName=\"UserInstance\"] samlAttributeValue")
+                    .map { Pair(it.text(), cert) }
+            )
+        }
     }
 
-    private fun getSnpRepo(symbol: String, schoolId: String): StudentAndParentRepository {
-        return StudentAndParentRepository(loginRepo.schema, loginRepo.host, symbol, schoolId, loginRepo.client)
+    private fun getSnpService(schoolUrl: String): StudentAndParentService {
+        return Retrofit.Builder()
+                .baseUrl(schoolUrl.removeSuffix("Start/Index/"))
+                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+                .addConverterFactory(JspoonConverterFactory.create())
+                .client(loginRepo.client)
+                .build()
+                .create(StudentAndParentService::class.java)
+    }
+
+    private fun getExtractedIdFromUrl(snpPageUrl: String): String {
+        val path = snpPageUrl.split(loginRepo.host).getOrNull(1)?.split("/")
+
+        if (6 != path?.size) {
+            throw VulcanException("Na pewno używasz konta z dostępem do Witryny ucznia i rodzica?")
+        }
+
+        return path[2]
     }
 }

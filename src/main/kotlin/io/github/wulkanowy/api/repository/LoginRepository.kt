@@ -3,6 +3,7 @@ package io.github.wulkanowy.api.repository
 import io.github.wulkanowy.api.service.LoginService
 import io.github.wulkanowy.api.login.ADFSFormResponse
 import io.github.wulkanowy.api.login.CertificateResponse
+import io.github.wulkanowy.api.register.HomepageResponse
 import io.reactivex.Single
 import okhttp3.OkHttpClient
 import pl.droidsonroids.retrofit2.JspoonConverterFactory
@@ -36,7 +37,7 @@ class LoginRepository(
         return api.sendCredentials(firstEndpointUrl, credentials)
     }
 
-    fun sendCertificate(certificate: CertificateResponse, url: String = certificate.action): Single<CertificateResponse> { // response for adfs
+    fun sendCertificate(certificate: CertificateResponse, url: String = certificate.action): Single<HomepageResponse> { // response for adfs
         return api.sendCertificate(url, mapOf(
                 "wa" to certificate.wa,
                 "wresult" to certificate.wresult,
@@ -65,5 +66,13 @@ class LoginRepository(
 
     fun sendADFSCredentials(url: String, credentials: Map<String, String>): Single<CertificateResponse> {
         return api.sendADFSCredentials("$schema://adfs.$host/$url", credentials)
+    }
+
+    fun sendADFSFirstCertificate(certificate: CertificateResponse, url: String = certificate.action): Single<CertificateResponse> {
+        return api.sendADFSFirstCertificate(url, mapOf(
+                "wa" to certificate.wa,
+                "wresult" to certificate.wresult,
+                "wctx" to certificate.wctx
+        ))
     }
 }

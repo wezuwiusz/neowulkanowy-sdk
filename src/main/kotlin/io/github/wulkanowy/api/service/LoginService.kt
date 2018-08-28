@@ -2,6 +2,7 @@ package io.github.wulkanowy.api.service
 
 import io.github.wulkanowy.api.login.ADFSFormResponse
 import io.github.wulkanowy.api.login.CertificateResponse
+import io.github.wulkanowy.api.register.HomepageResponse
 import io.reactivex.Single
 import retrofit2.http.*
 
@@ -13,7 +14,7 @@ interface LoginService {
 
     @POST
     @FormUrlEncoded
-    fun sendCertificate(@Url url: String, @FieldMap certificate: Map<String, String>): Single<CertificateResponse>
+    fun sendCertificate(@Url url: String, @FieldMap certificate: Map<String, String>): Single<HomepageResponse>
 
     // ADFS
 
@@ -27,4 +28,8 @@ interface LoginService {
     @POST
     @FormUrlEncoded
     fun sendADFSCredentials(@Url url: String, @FieldMap credentials: Map<String, String>): Single<CertificateResponse>
+
+    @POST
+    @FormUrlEncoded
+    fun sendADFSFirstCertificate(@Url url: String, @FieldMap certificate: Map<String, String>): Single<CertificateResponse>
 }

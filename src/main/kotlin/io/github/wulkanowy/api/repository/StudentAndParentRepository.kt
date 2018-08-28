@@ -34,7 +34,7 @@ class StudentAndParentRepository(
     }
 
     fun getSchoolInfo(): Single<StudentAndParentResponse> {
-        return api.getInfo()
+        return api.getSchoolInfo()
     }
 
     fun getAttendance(startDate: String): Single<List<Attendance>> {

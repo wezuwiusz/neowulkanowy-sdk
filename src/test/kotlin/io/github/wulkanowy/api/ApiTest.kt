@@ -8,6 +8,7 @@ import io.github.wulkanowy.api.homework.Homework
 import io.github.wulkanowy.api.notes.Note
 import io.github.wulkanowy.api.register.Pupil
 import io.github.wulkanowy.api.register.Semester
+import io.github.wulkanowy.api.register.StudentAndParentResponse
 import io.github.wulkanowy.api.student.StudentInfo
 import io.reactivex.observers.TestObserver
 import okhttp3.logging.HttpLoggingInterceptor
@@ -31,8 +32,21 @@ class ApiTest : BaseTest() {
             schoolId = "123456"
             studentId = "1"
             diaryId = "101"
+            onConfigChange() // unnecessary in this case
         }
-        api.onConfigChange() // unnecessary in this case
+    }
+
+    @Test fun schoolInfoTest() {
+        val info = api.getSchoolInfo()
+        val infoObserver = TestObserver<StudentAndParentResponse>()
+        info.subscribe(infoObserver)
+        infoObserver.assertComplete()
+
+        val values = infoObserver.values()[0]
+
+        assertEquals("Publiczny dziennik Wulkanowego nr 1 w fakelog.cf", values.schoolName)
+        assertEquals("III 2017", values.diaries[0].name)
+        assertEquals("Jan Kowalski", values.students[0].name)
     }
 
     @Test fun pupilsTest() {

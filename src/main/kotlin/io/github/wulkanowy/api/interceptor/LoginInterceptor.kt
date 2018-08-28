@@ -67,7 +67,7 @@ class LoginInterceptor(
                     "PasswordTextBox" to password
             ))
         }.flatMap {
-            loginRepo.sendCertificate(it)
+            loginRepo.sendADFSFirstCertificate(it)
         }.flatMap {
             loginRepo.sendCertificate(it)
         }.subscribe()
