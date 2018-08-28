@@ -32,7 +32,7 @@ class ApiTest : BaseTest() {
             schoolId = "123456"
             studentId = "1"
             diaryId = "101"
-            onConfigChange() // unnecessary in this case
+            notifyDataChanged() // unnecessary in this case
         }
     }
 
