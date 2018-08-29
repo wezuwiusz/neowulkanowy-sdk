@@ -20,6 +20,16 @@ class RegisterRepository(
         private val loginRepo: LoginRepository
 ) {
 
+    private val api by lazy {
+        Retrofit.Builder()
+                .baseUrl("${loginRepo.schema}://uonetplus-opiekun.${loginRepo.host}/$globalSymbol/000000/Start/Index/")
+                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+                .addConverterFactory(JspoonConverterFactory.create())
+                .client(loginRepo.client)
+                .build()
+                .create(StudentAndParentService::class.java)
+    }
+
     fun getPupils(): Single<List<Pupil>> {
         if (loginRepo.isADFS()) throw NotImplementedError()
 
@@ -30,7 +40,7 @@ class RegisterRepository(
                             .onErrorReturnItem( HomepageResponse() )
                             .flatMapObservable { Observable.fromIterable(it.schools) }
                             .flatMapSingle { schoolUrl ->
-                                getSnpService(schoolUrl).getSchoolInfo().map {
+                                api.getSchoolInfo(schoolUrl).map {
                                     it.students.map { pupil ->
                                         Pupil(
                                                 email = email,
@@ -56,17 +66,6 @@ class RegisterRepository(
             )
         }
     }
-
-    private fun getSnpService(schoolUrl: String): StudentAndParentService {
-        return Retrofit.Builder()
-                .baseUrl(schoolUrl.removeSuffix("Start/Index/"))
-                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-                .addConverterFactory(JspoonConverterFactory.create())
-                .client(loginRepo.client)
-                .build()
-                .create(StudentAndParentService::class.java)
-    }
-
     private fun getExtractedIdFromUrl(snpPageUrl: String): String {
         val path = snpPageUrl.split(loginRepo.host).getOrNull(1)?.split("/")
 
