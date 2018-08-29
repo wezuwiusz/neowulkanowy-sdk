@@ -29,10 +29,6 @@ class ErrorInterceptor : Interceptor {
             if (it.isNotEmpty()) throw BadCredentialsException(it.text())
         }
 
-        doc.select(".ErrorMessage, #ErrorTextLabel").let {
-            if (it.isNotEmpty()) throw BadCredentialsException(it.text())
-        }
-
         doc.select("#MainPage_ErrorDiv div").let {
             if (it.isNotEmpty()) throw VulcanException(it[0].ownText())
         }

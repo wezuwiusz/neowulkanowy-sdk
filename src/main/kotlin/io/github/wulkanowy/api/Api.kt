@@ -1,16 +1,12 @@
 package io.github.wulkanowy.api
 
 import io.github.wulkanowy.api.auth.NotLoggedInException
-import io.github.wulkanowy.api.interceptor.ErrorInterceptor
-import io.github.wulkanowy.api.interceptor.LoginInterceptor
-import io.github.wulkanowy.api.interceptor.StudentAndParentInterceptor
 import io.github.wulkanowy.api.repository.LoginRepository
 import io.github.wulkanowy.api.repository.RegisterRepository
 import io.github.wulkanowy.api.repository.StudentAndParentRepository
 import io.github.wulkanowy.api.repository.StudentAndParentStartRepository
+import io.github.wulkanowy.api.service.ServiceManager
 import okhttp3.logging.HttpLoggingInterceptor
-import java.net.CookieManager
-import java.net.CookiePolicy
 
 class Api {
 
@@ -24,75 +20,45 @@ class Api {
 
     var symbol: String = "Default"
 
-    lateinit var email: String
+    var email: String = ""
 
-    lateinit var password: String
+    var password: String = ""
 
-    lateinit var schoolId: String
+    var schoolId: String = ""
 
-    lateinit var studentId: String
+    var studentId: String = ""
 
-    lateinit var diaryId: String
+    var diaryId: String = ""
 
     private val schema by lazy { "http" + if (ssl) "s" else "" }
-
-    private val cookies by lazy {
-        val cookieManager = CookieManager()
-        cookieManager.setCookiePolicy(CookiePolicy.ACCEPT_ALL)
-        cookieManager
-    }
 
     private val applyChanges = resettableManager()
 
     fun notifyDataChanged() = applyChanges.reset()
 
-    @Deprecated("use Api.notifyDataChanged",
-            replaceWith = ReplaceWith("notifyDataChanged()", "io.github.wulkanowy.api.Api.onConfigChange"))
-    fun onConfigChange() = notifyDataChanged()
-
-    private val clientBuilder by resettableLazy(applyChanges) {
-        ClientCreator(cookies)
-                .addInterceptor(HttpLoggingInterceptor().setLevel(logLevel))
-                .addInterceptor(ErrorInterceptor())
-    }
-
-    private val loginRepository by resettableLazy(applyChanges) {
-        LoginRepository(schema, host, symbol, clientBuilder.getClient())
-    }
-
-    private val loginInterceptor by resettableLazy(applyChanges) {
-        if (!::email.isInitialized || !::password.isInitialized) throw NotLoggedInException("Email or/and password are not set")
-        LoginInterceptor(loginRepository, holdSession, email, password)
-    }
-
-    private val studentAndParentInterceptor by resettableLazy(applyChanges) {
-        if (!::diaryId.isInitialized || !::studentId.isInitialized) throw NotLoggedInException("Student or/and diaryId id are not set")
-        StudentAndParentInterceptor(cookies, schema, host, diaryId, studentId)
-    }
-
-    private val snp by resettableLazy(applyChanges) {
-        if (!::schoolId.isInitialized) throw NotLoggedInException("School ID is not set")
-        StudentAndParentRepository(schema, host, symbol, schoolId, clientBuilder
-                .addInterceptor(loginInterceptor)
-                .addInterceptor(studentAndParentInterceptor)
-                .getClient())
+    private val serviceManager by resettableLazy(applyChanges) {
+        ServiceManager(logLevel, holdSession, schema, host, symbol, email, password, schoolId, studentId, diaryId)
     }
 
     private val register by resettableLazy(applyChanges) {
-        if (!::email.isInitialized || !::password.isInitialized) throw NotLoggedInException("Email or/and password are not set")
-        RegisterRepository(symbol, email, password, loginRepository)
+        RegisterRepository(symbol, email, password,
+                LoginRepository(schema, host, symbol, serviceManager.getLoginService()),
+                serviceManager.getSnpService(false, false)
+        )
     }
 
-    private val studentAndParentStartRepository by resettableLazy(applyChanges) {
-        if (!::schoolId.isInitialized || !::studentId.isInitialized) throw NotLoggedInException("School or/and student id are not set")
-        StudentAndParentStartRepository(schema, host, symbol, schoolId, studentId, clientBuilder
-                .addInterceptor(loginInterceptor)
-                .getClient())
+    private val snpStart by resettableLazy(applyChanges) {
+        if (studentId.isBlank()) throw NotLoggedInException("Student id is not set")
+        StudentAndParentStartRepository(symbol, schoolId, studentId, serviceManager.getSnpService(true, false))
+    }
+
+    private val snp by resettableLazy(applyChanges) {
+        StudentAndParentRepository(serviceManager.getSnpService())
     }
 
     fun getPupils() = register.getPupils()
 
-    fun getSemesters() = studentAndParentStartRepository.getSemesters()
+    fun getSemesters() = snpStart.getSemesters()
 
     fun getSchoolInfo() = snp.getSchoolInfo()
 

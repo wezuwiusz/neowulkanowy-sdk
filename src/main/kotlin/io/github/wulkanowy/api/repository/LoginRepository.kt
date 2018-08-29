@@ -1,36 +1,22 @@
 package io.github.wulkanowy.api.repository
 
-import io.github.wulkanowy.api.service.LoginService
 import io.github.wulkanowy.api.login.ADFSFormResponse
 import io.github.wulkanowy.api.login.CertificateResponse
 import io.github.wulkanowy.api.register.HomepageResponse
+import io.github.wulkanowy.api.service.LoginService
 import io.reactivex.Single
-import okhttp3.OkHttpClient
-import pl.droidsonroids.retrofit2.JspoonConverterFactory
-import retrofit2.Retrofit
-import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import java.net.URLEncoder
 
 class LoginRepository(
-        val schema: String,
+        private val schema: String,
         val host: String,
         private val symbol: String,
-        val client: OkHttpClient
+        private val api: LoginService
 ) {
 
     private val firstEndpointUrl by lazy {
         val url = URLEncoder.encode("$schema://uonetplus.$host/$symbol/LoginEndpoint.aspx", "UTF-8")
         "/$symbol/FS/LS?wa=wsignin1.0&wtrealm=$url&wctx=$url"
-    }
-
-    private val api by lazy {
-        Retrofit.Builder()
-                .baseUrl("$schema://cufs.$host/$symbol/")
-                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-                .addConverterFactory(JspoonConverterFactory.create())
-                .client(client)
-                .build()
-                .create(LoginService::class.java)
     }
 
     fun sendCredentials(credentials: Map<String, String>): Single<CertificateResponse> {

@@ -5,33 +5,13 @@ import io.github.wulkanowy.api.exams.Exam
 import io.github.wulkanowy.api.grades.Grade
 import io.github.wulkanowy.api.grades.Summary
 import io.github.wulkanowy.api.homework.Homework
-import io.github.wulkanowy.api.service.StudentAndParentService
 import io.github.wulkanowy.api.notes.Note
 import io.github.wulkanowy.api.register.StudentAndParentResponse
+import io.github.wulkanowy.api.service.StudentAndParentService
 import io.github.wulkanowy.api.student.StudentInfo
 import io.reactivex.Single
-import okhttp3.OkHttpClient
-import pl.droidsonroids.retrofit2.JspoonConverterFactory
-import retrofit2.Retrofit
-import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 
-class StudentAndParentRepository(
-        private val schema: String,
-        private val host: String,
-        private val symbol: String,
-        private val schoolId: String,
-        private val client: OkHttpClient
-) {
-
-    private val api by lazy {
-        Retrofit.Builder()
-                .baseUrl("$schema://uonetplus-opiekun.$host/$symbol/$schoolId/")
-                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-                .addConverterFactory(JspoonConverterFactory.create())
-                .client(client)
-                .build()
-                .create(StudentAndParentService::class.java)
-    }
+class StudentAndParentRepository(private val api: StudentAndParentService) {
 
     fun getSchoolInfo(): Single<StudentAndParentResponse> {
         return api.getSchoolInfo()

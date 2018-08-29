@@ -9,26 +9,14 @@ import io.reactivex.Observable
 import io.reactivex.Single
 import org.jsoup.Jsoup
 import org.jsoup.parser.Parser
-import pl.droidsonroids.retrofit2.JspoonConverterFactory
-import retrofit2.Retrofit
-import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 
 class RegisterRepository(
         private val globalSymbol: String,
         private val email: String,
         private val password: String,
-        private val loginRepo: LoginRepository
+        private val loginRepo: LoginRepository,
+        private val api: StudentAndParentService
 ) {
-
-    private val api by lazy {
-        Retrofit.Builder()
-                .baseUrl("${loginRepo.schema}://uonetplus-opiekun.${loginRepo.host}/$globalSymbol/000000/Start/Index/")
-                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-                .addConverterFactory(JspoonConverterFactory.create())
-                .client(loginRepo.client)
-                .build()
-                .create(StudentAndParentService::class.java)
-    }
 
     fun getPupils(): Single<List<Pupil>> {
         if (loginRepo.isADFS()) throw NotImplementedError()
@@ -37,7 +25,7 @@ class RegisterRepository(
                 .flatMapObservable { Observable.fromIterable(it) }
                 .flatMap { symbol ->
                     loginRepo.sendCertificate(symbol.second, symbol.second.action.replace(globalSymbol, symbol.first))
-                            .onErrorReturnItem( HomepageResponse() )
+                            .onErrorReturnItem(HomepageResponse())
                             .flatMapObservable { Observable.fromIterable(it.schools) }
                             .flatMapSingle { schoolUrl ->
                                 api.getSchoolInfo(schoolUrl).map {
@@ -57,15 +45,14 @@ class RegisterRepository(
     }
 
     private fun getSymbols(): Single<List<Pair<String, CertificateResponse>>> {
-        return loginRepo.sendCredentials(mapOf("LoginName" to email, "Password" to password)).flatMap {
-            Single.just(it)
-        }.flatMap { cert ->
+        return loginRepo.sendCredentials(mapOf("LoginName" to email, "Password" to password)).flatMap { Single.just(it) }.flatMap { cert ->
             Single.just(Jsoup.parse(cert.wresult.replace(":", ""), "", Parser.xmlParser())
                     .select("[AttributeName=\"UserInstance\"] samlAttributeValue")
                     .map { Pair(it.text(), cert) }
             )
         }
     }
+
     private fun getExtractedIdFromUrl(snpPageUrl: String): String {
         val path = snpPageUrl.split(loginRepo.host).getOrNull(1)?.split("/")
 
