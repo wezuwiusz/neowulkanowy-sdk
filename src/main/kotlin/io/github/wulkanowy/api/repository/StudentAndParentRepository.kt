@@ -7,6 +7,7 @@ import io.github.wulkanowy.api.grades.Summary
 import io.github.wulkanowy.api.homework.Homework
 import io.github.wulkanowy.api.notes.Note
 import io.github.wulkanowy.api.register.StudentAndParentResponse
+import io.github.wulkanowy.api.school.Teacher
 import io.github.wulkanowy.api.service.StudentAndParentService
 import io.github.wulkanowy.api.student.StudentInfo
 import io.reactivex.Single
@@ -74,6 +75,16 @@ class StudentAndParentRepository(private val api: StudentAndParentService) {
             it.notes.mapIndexed { i, note ->
                 note.date = it.dates[i]
                 note
+            }
+        }
+    }
+
+    fun getTeachers(): Single<List<Teacher>> {
+        return api.getSchoolAndTeachers().map {
+            it.subjects.flatMap { subject ->
+                subject.teachers.split(", ").map { teacher ->
+                    Teacher(teacher, subject.name)
+                }
             }
         }
     }

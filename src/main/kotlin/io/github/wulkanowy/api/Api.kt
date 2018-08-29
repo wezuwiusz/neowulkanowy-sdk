@@ -74,5 +74,7 @@ class Api {
 
     fun getNotes() = snp.getNotes()
 
+    fun getTeachers() = snp.getTeachers()
+
     fun getStudentInfo() = snp.getStudentInfo()
 }

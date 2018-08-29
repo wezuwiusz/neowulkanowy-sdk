@@ -9,6 +9,7 @@ import io.github.wulkanowy.api.notes.Note
 import io.github.wulkanowy.api.register.Pupil
 import io.github.wulkanowy.api.register.Semester
 import io.github.wulkanowy.api.register.StudentAndParentResponse
+import io.github.wulkanowy.api.school.Teacher
 import io.github.wulkanowy.api.student.StudentInfo
 import io.reactivex.observers.TestObserver
 import okhttp3.logging.HttpLoggingInterceptor
@@ -197,6 +198,18 @@ class ApiTest : BaseTest() {
         assertEquals("Wiedza o społeczeństwie", values[4].name)
         assertEquals("", values[4].predicted)
         assertEquals("", values[4].final)
+    }
+
+    @Test fun teachersTest() {
+        val teachers = api.getTeachers()
+        val teachersObserver = TestObserver<List<Teacher>>()
+        teachers.subscribe(teachersObserver)
+        teachersObserver.assertComplete()
+
+        val values = teachersObserver.values()[0]
+
+        assertEquals("Religia", values[0].subject)
+        assertEquals("Janusz Tracz [TJ]", values[0].name)
     }
 
     @Test fun studentInfoTest() {
