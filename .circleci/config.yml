@@ -30,6 +30,9 @@ jobs:
           path: ./build/reports/jacoco/test
 
       - store_artifacts:
+          path: ./build/reports/tests/test
+
+      - store_artifacts:
           path: ./build/libs/api-0.1.0-SNAPSHOT.jar
 
 workflows:
