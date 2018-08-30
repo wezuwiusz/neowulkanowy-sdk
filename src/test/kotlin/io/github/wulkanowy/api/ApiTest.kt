@@ -124,10 +124,12 @@ class ApiTest : BaseTest() {
 
         assertEquals(getDate(2018, 5, 9), values[0].date)
         assertEquals(getDate(2018, 4, 1), values[0].entryDate)
-        assertEquals("Język angielski 1Ti|J1", values[0].subject)
+        assertEquals("Język angielski", values[0].subject)
+        assertEquals("J1", values[0].group)
         assertEquals("Sprawdzian", values[0].type)
         assertEquals("słownictwo(kultura)", values[0].description)
-        assertEquals("Anyż Zofia [AZ]", values[0].teacher)
+        assertEquals("Anyż Zofia", values[0].teacher)
+        assertEquals("AZ", values[0].teacherSymbol)
     }
 
     @Test fun homeworkTest() {
@@ -143,6 +145,7 @@ class ApiTest : BaseTest() {
         assertEquals("Metodologia programowania", values[0].subject)
         assertEquals("Wszystkie instrukcje warunkowe, pętle (budowa, zasada działania, schemat blokowy)", values[0].content)
         assertEquals("Janusz Tracz", values[0].teacher)
+        assertEquals("TJ", values[0].teacherSymbol)
     }
 
     @Test fun notesTest() {
@@ -209,7 +212,8 @@ class ApiTest : BaseTest() {
         val values = teachersObserver.values()[0]
 
         assertEquals("Religia", values[0].subject)
-        assertEquals("Janusz Tracz [TJ]", values[0].name)
+        assertEquals("Janusz Tracz", values[0].name)
+        assertEquals("TJ", values[0].short)
     }
 
     @Test fun studentInfoTest() {
