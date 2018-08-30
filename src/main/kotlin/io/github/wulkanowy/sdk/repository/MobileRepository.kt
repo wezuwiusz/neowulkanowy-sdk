@@ -13,9 +13,9 @@ import io.github.wulkanowy.sdk.grades.GradesRequest
 import io.github.wulkanowy.sdk.homework.Homework
 import io.github.wulkanowy.sdk.homework.HomeworkRequest
 import io.github.wulkanowy.sdk.interceptor.SignInterceptor
-import io.github.wulkanowy.sdk.interfaces.MobileApi
 import io.github.wulkanowy.sdk.notes.Note
 import io.github.wulkanowy.sdk.notes.NotesRequest
+import io.github.wulkanowy.sdk.service.MobileService
 import io.github.wulkanowy.sdk.timetable.Lesson
 import io.github.wulkanowy.sdk.timetable.TimetableRequest
 import io.reactivex.Single
@@ -52,16 +52,14 @@ class MobileRepository(private val host: String, private val symbol: String, pri
     }
 
     fun getAttendance(startDate: String, endDate: String, classId: Int, classificationPeriodId: Int, studentId: Int): Single<List<Attendance>> {
-        return getMobileApi().getAttendance(AttendanceRequest(startDate, endDate, classId, classificationPeriodId, studentId)).map {
-            it.data?.data
-        }
+        return getMobileApi().getAttendance(AttendanceRequest(startDate, endDate, classId, classificationPeriodId, studentId)).map { it.data?.data }
     }
 
     fun getHomework(startDate: String, endDate: String, classId: Int, classificationPeriodId: Int, studentId: Int): Single<List<Homework>> {
         return getMobileApi().getHomework(HomeworkRequest(startDate, endDate, classId, classificationPeriodId, studentId)).map { it.data }
     }
 
-    private fun getMobileApi(): MobileApi {
+    private fun getMobileApi(): MobileService {
         return Retrofit.Builder()
                 .baseUrl("$host/$symbol/$reportingUnitSymbol/mobile-api/Uczen.v3.Uczen/")
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
@@ -72,6 +70,6 @@ class MobileRepository(private val host: String, private val symbol: String, pri
                         .build()
                 )
                 .build()
-                .create(MobileApi::class.java)
+                .create(MobileService::class.java)
     }
 }

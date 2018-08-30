@@ -1,4 +1,4 @@
-package io.github.wulkanowy.sdk.interfaces
+package io.github.wulkanowy.sdk.service
 
 import io.github.wulkanowy.sdk.attendance.AttendanceRequest
 import io.github.wulkanowy.sdk.attendance.AttendanceResponse
@@ -20,7 +20,7 @@ import io.reactivex.Single
 import retrofit2.http.Body
 import retrofit2.http.POST
 
-interface MobileApi {
+interface MobileService {
 
     @POST("LogAppStart")
     fun logAppStart(@Body logAppStartRequest: ApiRequest): Single<ApiResponse<String>>

@@ -3,10 +3,10 @@ package io.github.wulkanowy.sdk.repository
 import io.github.wulkanowy.sdk.base.ApiRequest
 import io.github.wulkanowy.sdk.base.ApiResponse
 import io.github.wulkanowy.sdk.interceptor.SignInterceptor
-import io.github.wulkanowy.sdk.interfaces.RegisterApi
 import io.github.wulkanowy.sdk.register.CertificateRequest
 import io.github.wulkanowy.sdk.register.CertificateResponse
 import io.github.wulkanowy.sdk.register.Student
+import io.github.wulkanowy.sdk.service.RegisterService
 import io.reactivex.Observable
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -22,7 +22,7 @@ class RegisterRepository(private val host: String, private val symbol: String, v
 
     fun getPupils(): Observable<ApiResponse<List<Student>>> = getRegisterApi().getPupils(object: ApiRequest() {})
 
-    private fun getRegisterApi(): RegisterApi {
+    private fun getRegisterApi(): RegisterService {
         return Retrofit.Builder()
                 .baseUrl("$host/$symbol/mobile-api/Uczen.v3.UczenStart/")
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
@@ -33,6 +33,6 @@ class RegisterRepository(private val host: String, private val symbol: String, v
                         .build()
                 )
                 .build()
-                .create(RegisterApi::class.java)
+                .create(RegisterService::class.java)
     }
 }

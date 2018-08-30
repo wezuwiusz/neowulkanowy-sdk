@@ -1,4 +1,4 @@
-package io.github.wulkanowy.sdk.interfaces
+package io.github.wulkanowy.sdk.service
 
 import io.github.wulkanowy.sdk.base.ApiRequest
 import io.github.wulkanowy.sdk.base.ApiResponse
@@ -10,7 +10,7 @@ import retrofit2.http.Body
 import retrofit2.http.Headers
 import retrofit2.http.POST
 
-interface RegisterApi {
+interface RegisterService {
 
     @POST("Certyfikat")
     @Headers("RequestMobileType: RegisterDevice")
