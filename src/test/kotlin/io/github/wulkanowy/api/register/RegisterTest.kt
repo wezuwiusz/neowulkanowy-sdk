@@ -15,8 +15,8 @@ import org.junit.Test
 class RegisterTest : BaseTest() {
 
     private val login by lazy {
-        LoginRepository("http", "fakelog.localhost:3000", "default",
-                getService(LoginService::class.java, "http://fakelog.localhost:3000/"))
+        LoginRepository("http", "localhost:3000", "default",
+                getService(LoginService::class.java, "http://localhost:3000/"))
     }
 
     private val normal by lazy {

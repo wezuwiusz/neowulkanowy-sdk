@@ -9,6 +9,7 @@ import io.reactivex.Observable
 import io.reactivex.Single
 import org.jsoup.Jsoup
 import org.jsoup.parser.Parser
+import java.net.URL
 
 class RegisterRepository(
         private val globalSymbol: String,
@@ -50,10 +51,9 @@ class RegisterRepository(
     }
 
     private fun getExtractedIdFromUrl(snpPageUrl: String): String {
-        //TODO: rewrite using URL()
-        val path = snpPageUrl.split(loginRepo.host).getOrNull(1)?.split("/")
+        val path = URL(snpPageUrl).path.split("/")
 
-        if (6 != path?.size) {
+        if (6 != path.size) {
             throw VulcanException("Na pewno używasz konta z dostępem do Witryny ucznia i rodzica?")
         }
 

@@ -8,7 +8,7 @@ import java.net.URLEncoder
 
 class LoginRepository(
         private val schema: String,
-        val host: String,
+        private val host: String,
         private val symbol: String,
         private val api: LoginService
 ) {
@@ -23,6 +23,7 @@ class LoginRepository(
             "vulcan.net.pl" -> false
             "fakelog.cf" -> false
             "fakelog.localhost:3000" -> false
+            "localhost:3000" -> false
             else -> true
         }
     }
