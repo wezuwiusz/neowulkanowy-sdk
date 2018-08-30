@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Logowanie do systemu e-Szkoła</title>
+</head>
+
+<body>
+<form id="form1" name="form1" method="post" action="/adfs/ls/?wa=wsignin1.0&amp;wtrealm=http%3a%2f%2fcufs.fakelog.localhost:3000%2fdefault%2fAccount%2fLogOn&amp;wctx=rm%3d0%26id%3deSzkola%26ru%3d%252fdefault%252fFS%252fLS%253fwa%253dwsignin1.0%2526wtrealm%253dhttps%25253a%25252f%25252fuonetplus.fakelog.localhost:3000%25252fdefault%25252fLoginEndpoint.aspx%2526wctx%253dhttps%25253a%25252f%25252fuonetplus.fakelog.localhost:3000%25252fdefault%25252fLoginEndpoint.aspx&amp;wct=2018-01-01T18%3a26%3a33Z">
+    <input type="hidden" name="__VIEWSTATE" id="__VIEWSTATE" value="base64">
+    <input type="hidden" name="__VIEWSTATEGENERATOR" id="__VIEWSTATEGENERATOR" value="01234567">
+    <input type="hidden" name="__EVENTVALIDATION" id="__EVENTVALIDATION" value="base64">
+    <input type="hidden" name="__db" value="01">
+
+    <div class="mainDiv">
+        <table class="UsernamePasswordTable" id="tableUserCredentials">
+            <tr><td>Należy dokonać wyboru sposobu logowania użytkownika na tym komputerze</td></tr>
+            <tr><td><table><tr><td>&bull;</td><td>Logowanie standardowe</td></tr><tr><td>&bull;</td><td>Logowanie kartami</td></tr></table></td></tr>
+            <tr>
+                <td>
+                    <select name="PassiveIdentityProvidersDropDownList" id="PassiveIdentityProvidersDropDownList">
+                        <option value="">Logowanie standardowe</option>
+                        <option value="http://adfs2.fakelog.localhost:3000/adfs/services/trust">Logowanie kartami</option>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td><input type="image" name="PassiveSignInButton" id="PassiveSignInButton" src="/adfs/ls/Resources/g-zaloguj-1.png"></td>
+            </tr>
+        </table>
+    </div>
+</form>
+</body>
+</html>

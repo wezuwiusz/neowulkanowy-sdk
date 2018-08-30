@@ -21,7 +21,7 @@ class LoginInterceptor(
 
     override fun intercept(chain: Interceptor.Chain): Response {
         if (!isLoggedIn() || !holdSession) {
-            login()
+            loginRepo.login(email, password).subscribe()
             lastSuccessRequest = Date()
         }
 
@@ -30,46 +30,4 @@ class LoginInterceptor(
 
     private fun isLoggedIn() = lastSuccessRequest != null
             && MAX_SESSION_TIME > TimeUnit.MILLISECONDS.toMinutes(Date().time - lastSuccessRequest!!.time)
-
-    private fun login() {
-        if (loginRepo.isADFS()) loginADFS()
-        else loginNormal()
-    }
-
-    private fun loginNormal() {
-        loginRepo.sendCredentials(mapOf(
-                "LoginName" to email,
-                "Password" to password)
-        ).flatMap {
-            loginRepo.sendCertificate(it)
-        }.subscribe()
-    }
-
-    private fun loginADFS() {
-        loginRepo.getADFSFormState().flatMap {
-            loginRepo.sendADFSFormStandardChoice(it.formAction, mapOf(
-                    "__VIEWSTATE" to it.viewstate,
-                    "__VIEWSTATEGENERATOR" to it.viewstateGenerator,
-                    "__EVENTVALIDATION" to it.eventValidation,
-                    "__db" to it.db,
-                    "PassiveSignInButton.x" to "0",
-                    "PassiveSignInButton.y" to "0"
-            ))
-        }.flatMap {
-            loginRepo.sendADFSCredentials(it.formAction, mapOf(
-                    "__db" to it.db,
-                    "__EVENTVALIDATION" to it.eventValidation,
-                    "__VIEWSTATE" to it.viewstate,
-                    "__VIEWSTATEGENERATOR" to it.viewstateGenerator,
-                    "SubmitButton.x" to "0",
-                    "SubmitButton.y" to "0",
-                    "UsernameTextBox" to email,
-                    "PasswordTextBox" to password
-            ))
-        }.flatMap {
-            loginRepo.sendADFSFirstCertificate(it)
-        }.flatMap {
-            loginRepo.sendCertificate(it)
-        }.subscribe()
-    }
 }

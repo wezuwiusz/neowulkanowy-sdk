@@ -19,8 +19,6 @@ class RegisterRepository(
 ) {
 
     fun getPupils(): Single<List<Pupil>> {
-        if (loginRepo.isADFS()) throw NotImplementedError()
-
         return getSymbols()
                 .flatMapObservable { Observable.fromIterable(it) }
                 .flatMap { symbol ->
@@ -45,15 +43,16 @@ class RegisterRepository(
     }
 
     private fun getSymbols(): Single<List<Pair<String, CertificateResponse>>> {
-        return loginRepo.sendCredentials(mapOf("LoginName" to email, "Password" to password)).flatMap { Single.just(it) }.flatMap { cert ->
+        return loginRepo.sendCredentials(email, password).flatMap { Single.just(it) }.flatMap { cert ->
             Single.just(Jsoup.parse(cert.wresult.replace(":", ""), "", Parser.xmlParser())
-                    .select("[AttributeName=\"UserInstance\"] samlAttributeValue")
+                    .select("[AttributeName$=\"Instance\"] samlAttributeValue")
                     .map { Pair(it.text(), cert) }
             )
         }
     }
 
     private fun getExtractedIdFromUrl(snpPageUrl: String): String {
+        //TODO: rewrite using URL()
         val path = snpPageUrl.split(loginRepo.host).getOrNull(1)?.split("/")
 
         if (6 != path?.size) {

@@ -1,5 +1,6 @@
 package io.github.wulkanowy.api
 
+import io.github.wulkanowy.api.interceptor.ErrorInterceptor
 import io.github.wulkanowy.api.repository.StudentAndParentRepository
 import io.github.wulkanowy.api.service.StudentAndParentService
 import okhttp3.OkHttpClient
@@ -18,19 +19,19 @@ open class BaseTest {
     @JvmField @Rule
     val mockBackend = MockWebServer()
 
-    private fun <T> getService(service: Class<T>): T {
-        return Retrofit.Builder()
-                .client(OkHttpClient.Builder().build())
-                .addConverterFactory(JspoonConverterFactory.create())
-                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-                .baseUrl(mockBackend.url("/").toString())
-                .build()
-                .create(service)
-    }
-
     fun getSnpRepo(testClass: Class<*>, fixture: String): StudentAndParentRepository {
         mockBackend.enqueue(MockResponse().setBody(testClass.getResource(fixture).readText()))
         return StudentAndParentRepository(getService(StudentAndParentService::class.java))
+    }
+
+    fun <T> getService(service: Class<T>, url: String = mockBackend.url("/").toString()): T {
+        return Retrofit.Builder()
+                .client(OkHttpClient.Builder().addInterceptor(ErrorInterceptor()).build())
+                .addConverterFactory(JspoonConverterFactory.create())
+                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+                .baseUrl(url)
+                .build()
+                .create(service)
     }
 
     fun getDate(year: Int, month: Int, day: Int): Date {
