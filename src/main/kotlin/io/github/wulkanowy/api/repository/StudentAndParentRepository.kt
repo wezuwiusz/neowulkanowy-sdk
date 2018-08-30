@@ -36,6 +36,7 @@ class StudentAndParentRepository(private val api: StudentAndParentService) {
             res.days.flatMap { day ->
                 day.exams.map { exam ->
                     exam.date = day.date
+                    if (exam.group.contains(" ")) exam.group = ""
                     exam
                 }
             }
