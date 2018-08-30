@@ -46,6 +46,9 @@ jacocoTestReport {
         xml.enabled true
     }
 }
+test {
+    testLogging.showStandardStreams = true
+}
 
 task sourcesJar(type: Jar, dependsOn: classes) {
     classifier = 'sources'
