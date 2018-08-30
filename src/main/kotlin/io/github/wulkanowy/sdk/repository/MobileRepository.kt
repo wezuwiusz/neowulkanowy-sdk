@@ -1,6 +1,6 @@
 package io.github.wulkanowy.sdk.repository
 
-import io.github.wulkanowy.sdk.attendance.AttendanceResponse
+import io.github.wulkanowy.sdk.attendance.Attendance
 import io.github.wulkanowy.sdk.attendance.AttendanceRequest
 import io.github.wulkanowy.sdk.base.ApiRequest
 import io.github.wulkanowy.sdk.base.ApiResponse
@@ -18,7 +18,7 @@ import io.github.wulkanowy.sdk.notes.Note
 import io.github.wulkanowy.sdk.notes.NotesRequest
 import io.github.wulkanowy.sdk.timetable.Lesson
 import io.github.wulkanowy.sdk.timetable.TimetableRequest
-import io.reactivex.Observable
+import io.reactivex.Single
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -30,33 +30,35 @@ class MobileRepository(private val host: String, private val symbol: String, pri
 
     private val api by lazy { getMobileApi() }
 
-    fun logStart(): Observable<ApiResponse<String>> = api.logAppStart(object: ApiRequest() {})
+    fun logStart(): Single<ApiResponse<String>> = api.logAppStart(object: ApiRequest() {})
 
-    fun getDictionaries(userId: Int, classificationPeriodId: Int, classId: Int): Observable<ApiResponse<Dictionaries>>
-            = api.getDictionaries(DictionariesRequest(userId, classificationPeriodId, classId))
+    fun getDictionaries(userId: Int, classificationPeriodId: Int, classId: Int): Single<Dictionaries>
+            = api.getDictionaries(DictionariesRequest(userId, classificationPeriodId, classId)).map { it.data }
 
-    fun getTimetable(startDate: String, endDate: String, classId: Int, classificationPeriodId: Int, studentId: Int): Observable<ApiResponse<List<Lesson>>> {
-        return getMobileApi().getTimetable(TimetableRequest(startDate, endDate, classId, classificationPeriodId, studentId))
+    fun getTimetable(startDate: String, endDate: String, classId: Int, classificationPeriodId: Int, studentId: Int): Single<List<Lesson>> {
+        return getMobileApi().getTimetable(TimetableRequest(startDate, endDate, classId, classificationPeriodId, studentId)).map { it.data }
     }
 
-    fun getGrades(classId: Int, classificationPeriodId: Int, studentId: Int): Observable<ApiResponse<List<Grade>>> {
-        return getMobileApi().getGrades(GradesRequest(classId, classificationPeriodId, studentId))
+    fun getGrades(classId: Int, classificationPeriodId: Int, studentId: Int): Single<List<Grade>> {
+        return getMobileApi().getGrades(GradesRequest(classId, classificationPeriodId, studentId)).map { it.data }
     }
 
-    fun getExams(startDate: String, endDate: String, classId: Int, classificationPeriodId: Int, studentId: Int): Observable<ApiResponse<List<Exam>>> {
-        return getMobileApi().getExams(ExamsRequest(startDate, endDate, classId, classificationPeriodId, studentId))
+    fun getExams(startDate: String, endDate: String, classId: Int, classificationPeriodId: Int, studentId: Int): Single<List<Exam>> {
+        return getMobileApi().getExams(ExamsRequest(startDate, endDate, classId, classificationPeriodId, studentId)).map { it.data }
     }
 
-    fun getNotes(classificationPeriodId: Int, studentId: Int): Observable<ApiResponse<List<Note>>> {
-        return getMobileApi().getNotes(NotesRequest(classificationPeriodId, studentId))
+    fun getNotes(classificationPeriodId: Int, studentId: Int): Single<List<Note>> {
+        return getMobileApi().getNotes(NotesRequest(classificationPeriodId, studentId)).map { it.data }
     }
 
-    fun getAttendance(startDate: String, endDate: String, classId: Int, classificationPeriodId: Int, studentId: Int): Observable<ApiResponse<AttendanceResponse>> {
-        return getMobileApi().getAttendance(AttendanceRequest(startDate, endDate, classId, classificationPeriodId, studentId))
+    fun getAttendance(startDate: String, endDate: String, classId: Int, classificationPeriodId: Int, studentId: Int): Single<List<Attendance>> {
+        return getMobileApi().getAttendance(AttendanceRequest(startDate, endDate, classId, classificationPeriodId, studentId)).map {
+            it.data?.data
+        }
     }
 
-    fun getHomework(startDate: String, endDate: String, classId: Int, classificationPeriodId: Int, studentId: Int): Observable<ApiResponse<List<Homework>>> {
-        return getMobileApi().getHomework(HomeworkRequest(startDate, endDate, classId, classificationPeriodId, studentId))
+    fun getHomework(startDate: String, endDate: String, classId: Int, classificationPeriodId: Int, studentId: Int): Single<List<Homework>> {
+        return getMobileApi().getHomework(HomeworkRequest(startDate, endDate, classId, classificationPeriodId, studentId)).map { it.data }
     }
 
     private fun getMobileApi(): MobileApi {

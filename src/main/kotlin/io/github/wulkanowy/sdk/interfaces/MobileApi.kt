@@ -1,7 +1,7 @@
 package io.github.wulkanowy.sdk.interfaces
 
-import io.github.wulkanowy.sdk.attendance.AttendanceResponse
 import io.github.wulkanowy.sdk.attendance.AttendanceRequest
+import io.github.wulkanowy.sdk.attendance.AttendanceResponse
 import io.github.wulkanowy.sdk.base.ApiRequest
 import io.github.wulkanowy.sdk.base.ApiResponse
 import io.github.wulkanowy.sdk.dictionaries.Dictionaries
@@ -16,33 +16,33 @@ import io.github.wulkanowy.sdk.notes.Note
 import io.github.wulkanowy.sdk.notes.NotesRequest
 import io.github.wulkanowy.sdk.timetable.Lesson
 import io.github.wulkanowy.sdk.timetable.TimetableRequest
-import io.reactivex.Observable
+import io.reactivex.Single
 import retrofit2.http.Body
 import retrofit2.http.POST
 
 interface MobileApi {
 
     @POST("LogAppStart")
-    fun logAppStart(@Body logAppStartRequest: ApiRequest): Observable<ApiResponse<String>>
+    fun logAppStart(@Body logAppStartRequest: ApiRequest): Single<ApiResponse<String>>
 
     @POST("Slowniki")
-    fun getDictionaries(@Body dictionariesRequest: DictionariesRequest): Observable<ApiResponse<Dictionaries>>
+    fun getDictionaries(@Body dictionariesRequest: DictionariesRequest): Single<ApiResponse<Dictionaries>>
 
     @POST("PlanLekcjiZeZmianami")
-    fun getTimetable(@Body timetableRequest: TimetableRequest): Observable<ApiResponse<List<Lesson>>>
+    fun getTimetable(@Body timetableRequest: TimetableRequest): Single<ApiResponse<List<Lesson>>>
 
     @POST("Oceny")
-    fun getGrades(@Body gradesRequest: GradesRequest): Observable<ApiResponse<List<Grade>>>
+    fun getGrades(@Body gradesRequest: GradesRequest): Single<ApiResponse<List<Grade>>>
 
     @POST("Sprawdziany")
-    fun getExams(@Body examsRequest: ExamsRequest): Observable<ApiResponse<List<Exam>>>
+    fun getExams(@Body examsRequest: ExamsRequest): Single<ApiResponse<List<Exam>>>
 
     @POST("UwagiUcznia")
-    fun getNotes(@Body notesRequest: NotesRequest): Observable<ApiResponse<List<Note>>>
+    fun getNotes(@Body notesRequest: NotesRequest): Single<ApiResponse<List<Note>>>
 
     @POST("Frekwencje")
-    fun getAttendance(@Body attendanceRequest: AttendanceRequest): Observable<ApiResponse<AttendanceResponse>>
+    fun getAttendance(@Body attendanceRequest: AttendanceRequest): Single<ApiResponse<AttendanceResponse>>
 
     @POST("ZadaniaDomowe")
-    fun getHomework(@Body homeworkRequest: HomeworkRequest): Observable<ApiResponse<List<Homework>>>
+    fun getHomework(@Body homeworkRequest: HomeworkRequest): Single<ApiResponse<List<Homework>>>
 }
