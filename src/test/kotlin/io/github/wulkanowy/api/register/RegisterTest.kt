@@ -9,24 +9,22 @@ import io.github.wulkanowy.api.service.LoginService
 import io.github.wulkanowy.api.service.StudentAndParentService
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
+import org.junit.After
 import org.junit.Assert.assertEquals
+import org.junit.Before
 import org.junit.Test
 
 class RegisterTest : BaseTest() {
 
-    private val login by lazy {
-        LoginRepository("http", "localhost:3000", "default",
-                getService(LoginService::class.java, "http://localhost:3000/"))
-    }
+    private lateinit var server: MockWebServer
 
-    private val normal by lazy {
-        RegisterRepository("default", "jan@fakelog.localhost", "jan123", login,
-                getService(StudentAndParentService::class.java, "http://fakelog.localhost:3000/"))
+    @Before
+    fun setUp() {
+        server = MockWebServer()
     }
 
     @Test
     fun pupilsTest() {
-        val server = MockWebServer()
         server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("Logowanie-uonet.html").readText()))
         server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("Login-success.html").readText()))
         server.enqueue(MockResponse().setBody(RegisterTest::class.java.getResource("WitrynaUczniaIRodzica.html").readText()))
@@ -38,11 +36,20 @@ class RegisterTest : BaseTest() {
         server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("Logowanie-brak-dostepu.html").readText()))
         server.start(3000)
 
+        val url = server.url("/").toString()
+        val normal = RegisterRepository("default", "jan@fakelog.localhost", "jan123",
+                LoginRepository("http", url.removePrefix("http://").removeSuffix("/"), "default",
+                        getService(LoginService::class.java, url)),
+                getService(StudentAndParentService::class.java, url))
+
         val res = normal.getPupils().blockingGet()
 
         assertEquals(1, res.size)
         assertEquals("Jan Kowal", res[0].studentName)
+    }
 
+    @After
+    fun tearDown() {
         server.shutdown()
     }
 }
