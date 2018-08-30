@@ -15,8 +15,10 @@ import io.reactivex.observers.TestObserver
 import okhttp3.logging.HttpLoggingInterceptor
 import org.junit.Assert.assertEquals
 import org.junit.Before
+import org.junit.Ignore
 import org.junit.Test
 
+@Ignore
 class ApiTest : BaseTest() {
 
     private var api =  Api()
