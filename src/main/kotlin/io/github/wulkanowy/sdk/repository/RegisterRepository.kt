@@ -7,12 +7,12 @@ import io.github.wulkanowy.sdk.interfaces.RegisterApi
 import io.github.wulkanowy.sdk.register.CertificateRequest
 import io.github.wulkanowy.sdk.register.CertificateResponse
 import io.github.wulkanowy.sdk.register.Student
+import io.reactivex.Observable
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
-import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory
+import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
-import rx.Observable
 
 class RegisterRepository(private val host: String, private val symbol: String, var signature: String = "", var certificate: String = "") {
 
@@ -25,7 +25,7 @@ class RegisterRepository(private val host: String, private val symbol: String, v
     private fun getRegisterApi(): RegisterApi {
         return Retrofit.Builder()
                 .baseUrl("$host/$symbol/mobile-api/Uczen.v3.UczenStart/")
-                .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
+                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .addConverterFactory(GsonConverterFactory.create())
                 .client(OkHttpClient().newBuilder()
                         .addInterceptor(HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY))

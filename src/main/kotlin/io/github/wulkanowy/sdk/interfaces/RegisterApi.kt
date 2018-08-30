@@ -5,10 +5,10 @@ import io.github.wulkanowy.sdk.base.ApiResponse
 import io.github.wulkanowy.sdk.register.CertificateRequest
 import io.github.wulkanowy.sdk.register.CertificateResponse
 import io.github.wulkanowy.sdk.register.Student
+import io.reactivex.Observable
 import retrofit2.http.Body
 import retrofit2.http.Headers
 import retrofit2.http.POST
-import rx.Observable
 
 interface RegisterApi {
 

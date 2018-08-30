@@ -12,9 +12,9 @@ import io.github.wulkanowy.sdk.register.Student
 import io.github.wulkanowy.sdk.repository.MobileRepository
 import io.github.wulkanowy.sdk.repository.RegisterRepository
 import io.github.wulkanowy.sdk.timetable.Lesson
+import io.reactivex.observers.TestObserver
 import junit.framework.TestCase.assertEquals
 import org.junit.Test
-import rx.observers.TestSubscriber
 
 const val DEVICE_NAME = "Wulkanowy#client"
 const val HOST = "https://api.fakelog.cf"
@@ -29,85 +29,86 @@ class UonetTest {
         val register = RegisterRepository(HOST, SYMBOL)
 
         val certificate = register.getCertificate(TOKEN, PIN, DEVICE_NAME)
-        val certSubscriber = TestSubscriber<CertificateResponse>()
+        val certSubscriber = TestObserver<CertificateResponse>()
         certificate.subscribe(certSubscriber)
-        certSubscriber.assertCompleted()
+        certSubscriber.assertComplete()
         certSubscriber.assertNoErrors()
-        assertEquals(false, certSubscriber.onNextEvents[0].isError)
 
-        val tokenCrt = certSubscriber.onNextEvents[0].tokenCert
+        assertEquals(false, certSubscriber.values()[0].isError)
+
+        val tokenCrt = certSubscriber.values()[0].tokenCert
 
         register.signature = tokenCrt.certificatePfx
         register.certificate = tokenCrt.certificateKey
 
         val pupils = register.getPupils()
-        val pupilSubscriber = TestSubscriber<ApiResponse<List<Student>>>()
+        val pupilSubscriber = TestObserver<ApiResponse<List<Student>>>()
         pupils.subscribe(pupilSubscriber)
-        pupilSubscriber.assertCompleted()
+        pupilSubscriber.assertComplete()
         pupilSubscriber.assertNoErrors()
-        assertEquals("Ok", pupilSubscriber.onNextEvents[0].status)
-        assertEquals(1, pupilSubscriber.onNextEvents[0].data!!.size)
+        assertEquals("Ok", pupilSubscriber.values()[0].status)
+        assertEquals(1, pupilSubscriber.values()[0].data!!.size)
 
-        val student = pupilSubscriber.onNextEvents[0].data!![0]
+        val student = pupilSubscriber.values()[0].data!![0]
 
         // MobileRepository
         val mobile = MobileRepository(HOST, SYMBOL, register.signature, register.certificate, student.reportingUnitSymbol)
 
         val start = mobile.logStart()
-        val startSubscriber = TestSubscriber<ApiResponse<String>>()
+        val startSubscriber = TestObserver<ApiResponse<String>>()
         start.subscribe(startSubscriber)
-        startSubscriber.assertCompleted()
+        startSubscriber.assertComplete()
         startSubscriber.assertNoErrors()
-        assertEquals("Ok", startSubscriber.onNextEvents[0].status)
+        assertEquals("Ok", startSubscriber.values()[0].status)
 
         val dictionaries = mobile.getDictionaries(student.userLoginId, student.classificationPeriodId, student.classId)
-        val dictionariesSubscriber = TestSubscriber<ApiResponse<Dictionaries>>()
+        val dictionariesSubscriber = TestObserver<ApiResponse<Dictionaries>>()
         dictionaries.subscribe(dictionariesSubscriber)
-        dictionariesSubscriber.assertCompleted()
+        dictionariesSubscriber.assertComplete()
         dictionariesSubscriber.assertNoErrors()
-        assertEquals("Ok", dictionariesSubscriber.onNextEvents[0].status)
+        assertEquals("Ok", dictionariesSubscriber.values()[0].status)
 
         val lessons = mobile.getTimetable("2018-04-23", "2018-04-24", student.classId, student.classificationPeriodId, student.id)
-        val lessonsSubscriber = TestSubscriber<ApiResponse<List<Lesson>>>()
+        val lessonsSubscriber = TestObserver<ApiResponse<List<Lesson>>>()
         lessons.subscribe(lessonsSubscriber)
-        lessonsSubscriber.assertCompleted()
+        lessonsSubscriber.assertComplete()
         lessonsSubscriber.assertNoErrors()
-        assertEquals("Ok", lessonsSubscriber.onNextEvents[0].status)
+        assertEquals("Ok", lessonsSubscriber.values()[0].status)
 
         val grades = mobile.getGrades(student.classId, student.classificationPeriodId, student.id)
-        val gradesSubscriber = TestSubscriber<ApiResponse<List<Grade>>>()
+        val gradesSubscriber = TestObserver<ApiResponse<List<Grade>>>()
         grades.subscribe(gradesSubscriber)
-        gradesSubscriber.assertCompleted()
+        gradesSubscriber.assertComplete()
         gradesSubscriber.assertNoErrors()
-        assertEquals("Ok", gradesSubscriber.onNextEvents[0].status)
+        assertEquals("Ok", gradesSubscriber.values()[0].status)
 
         val exams = mobile.getExams("2018-05-28", "2018-06-03", student.classId, student.classificationPeriodId, student.id)
-        val examsSubscriber = TestSubscriber<ApiResponse<List<Exam>>>()
+        val examsSubscriber = TestObserver<ApiResponse<List<Exam>>>()
         exams.subscribe(examsSubscriber)
-        examsSubscriber.assertCompleted()
+        examsSubscriber.assertComplete()
         examsSubscriber.assertNoErrors()
-        assertEquals("Ok", examsSubscriber.onNextEvents[0].status)
+        assertEquals("Ok", examsSubscriber.values()[0].status)
 
         val notes = mobile.getNotes(student.classificationPeriodId, student.id)
-        val notesSubscriber = TestSubscriber<ApiResponse<List<Note>>>()
+        val notesSubscriber = TestObserver<ApiResponse<List<Note>>>()
         notes.subscribe(notesSubscriber)
-        notesSubscriber.assertCompleted()
+        notesSubscriber.assertComplete()
         notesSubscriber.assertNoErrors()
-        assertEquals("Ok", notesSubscriber.onNextEvents[0].status)
+        assertEquals("Ok", notesSubscriber.values()[0].status)
 
         val attendance = mobile.getAttendance("2018-04-23", "2018-04-24", student.classId, student.classificationPeriodId, student.id)
-        val attendanceSubscriber = TestSubscriber<ApiResponse<AttendanceResponse>>()
+        val attendanceSubscriber = TestObserver<ApiResponse<AttendanceResponse>>()
         attendance.subscribe(attendanceSubscriber)
-        attendanceSubscriber.assertCompleted()
+        attendanceSubscriber.assertComplete()
         attendanceSubscriber.assertNoErrors()
-        assertEquals("Ok", attendanceSubscriber.onNextEvents[0].status)
-        assertEquals("2018-04-23", attendanceSubscriber.onNextEvents[0].data!!.dateStartText)
+        assertEquals("Ok", attendanceSubscriber.values()[0].status)
+        assertEquals("2018-04-23", attendanceSubscriber.values()[0].data!!.dateStartText)
 
         val homework = mobile.getHomework("2017-10-23", "2017-10-27", student.classId, student.classificationPeriodId, student.id)
-        val homeworkSubscriber = TestSubscriber<ApiResponse<List<Homework>>>()
+        val homeworkSubscriber = TestObserver<ApiResponse<List<Homework>>>()
         homework.subscribe(homeworkSubscriber)
-        homeworkSubscriber.assertCompleted()
+        homeworkSubscriber.assertComplete()
         homeworkSubscriber.assertNoErrors()
-        assertEquals("Ok", homeworkSubscriber.onNextEvents[0].status)
+        assertEquals("Ok", homeworkSubscriber.values()[0].status)
     }
 }

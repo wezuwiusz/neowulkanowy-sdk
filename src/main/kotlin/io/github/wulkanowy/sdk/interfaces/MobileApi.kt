@@ -16,9 +16,9 @@ import io.github.wulkanowy.sdk.notes.Note
 import io.github.wulkanowy.sdk.notes.NotesRequest
 import io.github.wulkanowy.sdk.timetable.Lesson
 import io.github.wulkanowy.sdk.timetable.TimetableRequest
+import io.reactivex.Observable
 import retrofit2.http.Body
 import retrofit2.http.POST
-import rx.Observable
 
 interface MobileApi {
 
