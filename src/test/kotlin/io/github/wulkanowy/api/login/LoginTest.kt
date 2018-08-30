@@ -11,18 +11,22 @@ import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
 import org.junit.Assert.assertTrue
 import org.junit.Test
+import java.net.InetAddress
 
 class LoginTest : BaseTest() {
 
     private val normal by lazy {
-        LoginRepository("http", "fakelog.localhost:3000", "default", getService(LoginService::class.java, "http://fakelog.localhost:3000/"))
+        LoginRepository("http", "fakelog.localhost:3000", "default",
+                getService(LoginService::class.java, "http://fakelog.localhost:3000/"))
     }
 
     private val adfs by lazy {
-        LoginRepository("http", "fakelog.localhost:3001", "default", getService(LoginService::class.java, "http://fakelog.localhost:3001/"))
+        LoginRepository("http", "fakelog.localhost:3001", "default",
+                getService(LoginService::class.java, "http://fakelog.localhost:3001/"))
     }
 
-    @Test fun adfsTest() {
+    @Test
+    fun adfsTest() {
         val server = MockWebServer()
         server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("ADFS-form-1.html").readText()))
         server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("ADFS-form-2.html").readText()))
@@ -38,7 +42,8 @@ class LoginTest : BaseTest() {
         server.shutdown()
     }
 
-    @Test fun normalLogin() {
+    @Test
+    fun normalLogin() {
         val server = MockWebServer()
         server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("Logowanie-uonet.html").readText()))
         server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("Login-success.html").readText()))
@@ -51,12 +56,13 @@ class LoginTest : BaseTest() {
         server.shutdown()
     }
 
-    @Test fun adfsBadCredentialsException() {
+    @Test
+    fun adfsBadCredentialsException() {
         val server = MockWebServer()
         server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("ADFS-form-1.html").readText()))
         server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("ADFS-form-2.html").readText()))
         server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("Logowanie-adfs-zle-haslo.html").readText()))
-        server.start(3001)
+        server.start(InetAddress.getByName("fakelog.localhost"), 3001)
 
         val res = adfs.login("jan@fakelog.cf", "jan1234")
         val observer = TestObserver<HomepageResponse>()
@@ -67,7 +73,8 @@ class LoginTest : BaseTest() {
         server.shutdown()
     }
 
-    @Test fun normalBadCredentialsException() {
+    @Test
+    fun normalBadCredentialsException() {
         val server = MockWebServer()
         server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("Logowanie-uonet.html").readText()))
         server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("Logowanie-normal-zle-haslo.html").readText()))
@@ -82,7 +89,8 @@ class LoginTest : BaseTest() {
         server.shutdown()
     }
 
-    @Test fun accessPermissionException() {
+    @Test
+    fun accessPermissionException() {
         val server = MockWebServer()
         server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("Logowanie-uonet.html").readText()))
         server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("Logowanie-brak-dostepu.html").readText()))

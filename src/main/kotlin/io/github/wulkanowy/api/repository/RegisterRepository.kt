@@ -19,27 +19,25 @@ class RegisterRepository(
 ) {
 
     fun getPupils(): Single<List<Pupil>> {
-        return getSymbols()
-                .flatMapObservable { Observable.fromIterable(it) }
-                .flatMap { symbol ->
-                    loginRepo.sendCertificate(symbol.second, symbol.second.action.replace(globalSymbol, symbol.first))
-                            .onErrorReturnItem(HomepageResponse())
-                            .flatMapObservable { Observable.fromIterable(it.schools) }
-                            .flatMapSingle { schoolUrl ->
-                                api.getSchoolInfo(schoolUrl).map {
-                                    it.students.map { pupil ->
-                                        Pupil(
-                                                email = email,
-                                                symbol = symbol.first,
-                                                studentId = pupil.id,
-                                                studentName = pupil.name,
-                                                schoolId = getExtractedIdFromUrl(schoolUrl),
-                                                schoolName = it.schoolName
-                                        )
-                                    }
-                                }
+        return getSymbols().flatMapObservable { Observable.fromIterable(it) }.flatMap { symbol ->
+            loginRepo.sendCertificate(symbol.second, symbol.second.action.replace(globalSymbol, symbol.first))
+                    .onErrorReturnItem(HomepageResponse())
+                    .flatMapObservable { Observable.fromIterable(it.schools) }
+                    .flatMapSingle { schoolUrl ->
+                        api.getSchoolInfo(schoolUrl).map {
+                            it.students.map { pupil ->
+                                Pupil(
+                                        email = email,
+                                        symbol = symbol.first,
+                                        studentId = pupil.id,
+                                        studentName = pupil.name,
+                                        schoolId = getExtractedIdFromUrl(schoolUrl),
+                                        schoolName = it.schoolName
+                                )
                             }
-                }.toList().map { it.flatten() }
+                        }
+                    }
+        }.toList().map { it.flatten() }
     }
 
     private fun getSymbols(): Single<List<Pair<String, CertificateResponse>>> {
