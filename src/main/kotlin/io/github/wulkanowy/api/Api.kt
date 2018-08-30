@@ -30,29 +30,29 @@ class Api {
 
     var diaryId: String = ""
 
-    private val schema by lazy { "http" + if (ssl) "s" else "" }
+    private val changeManager = resettableManager()
 
-    private val applyChanges = resettableManager()
+    fun notifyDataChanged() = changeManager.reset()
 
-    fun notifyDataChanged() = applyChanges.reset()
+    private val schema by resettableLazy(changeManager) { "http" + if (ssl) "s" else "" }
 
-    private val serviceManager by resettableLazy(applyChanges) {
+    private val serviceManager by resettableLazy(changeManager) {
         ServiceManager(logLevel, holdSession, schema, host, symbol, email, password, schoolId, studentId, diaryId)
     }
 
-    private val register by resettableLazy(applyChanges) {
+    private val register by resettableLazy(changeManager) {
         RegisterRepository(symbol, email, password,
                 LoginRepository(schema, host, symbol, serviceManager.getLoginService()),
                 serviceManager.getSnpService(false, false)
         )
     }
 
-    private val snpStart by resettableLazy(applyChanges) {
+    private val snpStart by resettableLazy(changeManager) {
         if (studentId.isBlank()) throw NotLoggedInException("Student id is not set")
         StudentAndParentStartRepository(symbol, schoolId, studentId, serviceManager.getSnpService(true, false))
     }
 
-    private val snp by resettableLazy(applyChanges) {
+    private val snp by resettableLazy(changeManager) {
         StudentAndParentRepository(serviceManager.getSnpService())
     }
 
