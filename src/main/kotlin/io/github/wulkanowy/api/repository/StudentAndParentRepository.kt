@@ -84,7 +84,8 @@ class StudentAndParentRepository(private val api: StudentAndParentService) {
         return api.getSchoolAndTeachers().map {
             it.subjects.flatMap { subject ->
                 subject.teachers.split(", ").map { teacher ->
-                    Teacher(teacher, subject.name)
+                    val tas = teacher.split(" [")
+                    Teacher(tas.first(), tas.last().removeSuffix("]"), subject.name)
                 }
             }
         }
