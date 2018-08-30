@@ -19,6 +19,9 @@ class Homework {
     @Selector(".wartosc", index = 1)
     lateinit var content: String
 
-    @Selector(".wartosc", index = 2, regex = "(.+), .+")
+    @Selector(".wartosc", index = 2, regex = "(.+)\\s\\[.+")
     lateinit var teacher: String
+
+    @Selector(".wartosc", index = 2, regex = "\\[(.+)\\]")
+    lateinit var teacherSymbol: String
 }
