@@ -2,13 +2,12 @@ package io.github.wulkanowy.api.student
 
 import io.github.wulkanowy.api.BaseTest
 import org.junit.Assert.assertEquals
-import org.junit.Assert.assertTrue
 import org.junit.Test
 
 class StudentInfoTest : BaseTest() {
 
     private val info by lazy {
-        getFixture(StudentInfoTest::class, StudentInfo::class.java, "UczenDanePodstawowe.html")
+        getSnpRepo(StudentInfoTest::class.java, "UczenDanePodstawowe.html").getStudentInfo().blockingGet()
     }
 
     @Test fun getStudentFirstNameTest() {
@@ -44,7 +43,7 @@ class StudentInfoTest : BaseTest() {
     }
 
     @Test fun isStudentPolishCitizenshipTest() {
-        assertTrue(info.student.polishCitizenship == "Tak") //
+        assertEquals("1", info.student.polishCitizenship)
     }
 
     @Test fun getStudentFamilyNameTest() {

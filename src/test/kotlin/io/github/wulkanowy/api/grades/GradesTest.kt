@@ -1,18 +1,17 @@
 package io.github.wulkanowy.api.grades
 
 import io.github.wulkanowy.api.BaseTest
-import org.junit.Assert
 import org.junit.Assert.assertEquals
 import org.junit.Test
 
 class GradesTest : BaseTest() {
 
     private val grades by lazy {
-        getFixture(GradesTest::class, GradesResponse::class.java, "OcenyWszystkie-filled.html").grades
+        getSnpRepo(GradesTest::class.java, "OcenyWszystkie-filled.html").getGrades(0).blockingGet()
     }
 
     @Test fun getAllTest() {
-        Assert.assertEquals(7, grades.size) // 2 items are skipped
+        assertEquals(7, grades.size) // 2 items are skipped
     }
 
     @Test fun getSubjectTest() {
@@ -47,7 +46,7 @@ class GradesTest : BaseTest() {
     @Test fun getDescriptionTest() {
         assertEquals("Dzień Kobiet w naszej klasie", grades[0].description)
         assertEquals("Writing", grades[3].description)
-//        assertEquals("", grades[4].description) // shuld be empty, changed in GradesRepository
+        assertEquals("", grades[4].description)
         assertEquals("Kordian", grades[5].description)
         assertEquals("Kordian", grades[6].description)
     }
