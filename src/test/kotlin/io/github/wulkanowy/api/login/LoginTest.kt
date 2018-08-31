@@ -17,13 +17,13 @@ import org.junit.Test
 class LoginTest : BaseTest() {
 
     private val normal by lazy {
-        LoginRepository("http", "localhost:3000", "default",
-                getService(LoginService::class.java, "http://localhost:3000/"))
+        LoginRepository("http", "fakelog.localhost:3000", "default",
+                getService(LoginService::class.java, "http://fakelog.localhost:3000/"))
     }
 
     private val adfs by lazy {
-        LoginRepository("http", "localhost:3001", "default",
-                getService(LoginService::class.java, "http://localhost:3001/"))
+        LoginRepository("http", "fakelog.localhost:3001", "default",
+                getService(LoginService::class.java, "http://fakelog.localhost:3001/"))
     }
 
     private lateinit var server: MockWebServer
