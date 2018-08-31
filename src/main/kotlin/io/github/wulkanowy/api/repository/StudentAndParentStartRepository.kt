@@ -13,7 +13,7 @@ class StudentAndParentStartRepository(
 ) {
 
     fun getSemesters(): Single<List<Semester>> {
-        return api.getUserInfo(studentId).flatMapObservable { Observable.fromIterable(it.diaries) }.flatMapSingle { diary ->
+        return api.getUserInfo(studentId).flatMapObservable { Observable.fromIterable(it.diaries.reversed()) }.flatMapSingle { diary ->
             api.getDiaryInfo(diary.id, "/$symbol/$schoolId/Oceny.mvc/Wszystkie").map { res ->
                 listOf(1, 2).map { it ->
                     Semester(diary.id, diary.name, if (it == res.semesterNumber) res.semesterId else {

@@ -76,21 +76,19 @@ class ApiTest : BaseTest() {
 
         val values = semestersObserver.values()[0]
 
-        assertEquals("303", values[0].diaryId)
-        assertEquals("III 2017", values[0].diaryName)
-        assertEquals(1234567, values[0].semesterId)
-        assertEquals(1, values[0].semesterNumber)
-
-        assertEquals("303", values[0].diaryId)
-        assertEquals("III 2017", values[1].diaryName)
-        assertEquals(1234568, values[1].semesterId)
-        assertEquals(2, values[1].semesterNumber)
+        assertEquals("101", values[1].diaryId)
+        assertEquals("1A 2015", values[1].diaryName)
 
         assertEquals("202", values[2].diaryId)
         assertEquals("II 2016", values[2].diaryName)
 
-        assertEquals("101", values[4].diaryId)
-        assertEquals("1A 2015", values[4].diaryName)
+        assertEquals("303", values[4].diaryId)
+        assertEquals("III 2017", values[4].diaryName)
+        assertEquals(1234567, values[4].semesterId)
+        assertEquals(1, values[4].semesterNumber)
+
+        assertEquals(1234568, values[5].semesterId)
+        assertEquals(2, values[5].semesterNumber)
     }
 
     @Test fun attendanceTest() {
