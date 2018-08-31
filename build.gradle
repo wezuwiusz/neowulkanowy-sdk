@@ -24,6 +24,7 @@ dependencies {
 
     implementation "pl.droidsonroids:jspoon:$jspoon"
     implementation "pl.droidsonroids.retrofit2:converter-jspoon:$jspoon"
+    implementation "com.squareup.retrofit2:converter-gson:$retrofit"
 
     implementation "com.squareup.retrofit2:retrofit:$retrofit"
     implementation "com.squareup.retrofit2:adapter-rxjava2:$retrofit"
@@ -31,7 +32,7 @@ dependencies {
     implementation "com.squareup.okhttp3:okhttp-urlconnection:$okhttp3"
 
     testImplementation "com.squareup.okhttp3:mockwebserver:$okhttp3"
-    testImplementation group: 'junit', name: 'junit', version: '4.12'
+    testImplementation "junit:junit:4.12"
 }
 
 compileKotlin {

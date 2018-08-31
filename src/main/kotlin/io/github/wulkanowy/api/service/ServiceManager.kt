@@ -11,6 +11,7 @@ import okhttp3.logging.HttpLoggingInterceptor
 import pl.droidsonroids.retrofit2.JspoonConverterFactory
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
+import retrofit2.converter.gson.GsonConverterFactory
 import java.net.CookieManager
 import java.net.CookiePolicy
 
@@ -36,12 +37,15 @@ class ServiceManager(
     private val loginInterceptor by lazy {
         if (email.isBlank() || password.isBlank()) throw NotLoggedInException("Email or/and password are not set")
         LoginInterceptor(LoginRepository(schema, host, symbol, getRetrofit(getClientBuilder(), "cufs", "$symbol/")
+                .addConverterFactory(JspoonConverterFactory.create()).build()
                 .create(LoginService::class.java)), holdSession, email, password)
     }
 
     fun getLoginService(): LoginService {
         if (email.isBlank() || password.isBlank()) throw NotLoggedInException("Email or/and password are not set")
-        return getRetrofit(getClientBuilder(), "cufs", "$symbol/").create(LoginService::class.java)
+        return getRetrofit(getClientBuilder(), "cufs", "$symbol/")
+                .addConverterFactory(JspoonConverterFactory.create()).build()
+                .create(LoginService::class.java)
     }
 
     private val studentAndParentInterceptor by lazy {
@@ -59,16 +63,22 @@ class ServiceManager(
 
         if (interceptor) client.addInterceptor(studentAndParentInterceptor)
 
-        return getRetrofit(client, "uonetplus-opiekun", "$symbol/$schoolId/").create(StudentAndParentService::class.java)
+        return getRetrofit(client, "uonetplus-opiekun", "$symbol/$schoolId/")
+                .addConverterFactory(JspoonConverterFactory.create()).build()
+                .create(StudentAndParentService::class.java)
     }
 
-    private fun getRetrofit(client: OkHttpClient.Builder, subDomain: String, urlAppend: String): Retrofit {
+    fun getMessagesService(): MessagesService {
+        return getRetrofit(getClientBuilder().addInterceptor(loginInterceptor), "uonetplus-uzytkownik", "$symbol/")
+                .addConverterFactory(GsonConverterFactory.create()).build()
+                .create(MessagesService::class.java)
+    }
+
+    private fun getRetrofit(client: OkHttpClient.Builder, subDomain: String, urlAppend: String): Retrofit.Builder {
         return Retrofit.Builder()
                 .baseUrl("$schema://$subDomain.$host/$urlAppend")
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-                .addConverterFactory(JspoonConverterFactory.create())
                 .client(client.build())
-                .build()
     }
 
     private fun getClientBuilder(): OkHttpClient.Builder {

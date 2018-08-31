@@ -10,6 +10,7 @@ import org.junit.Rule
 import pl.droidsonroids.retrofit2.JspoonConverterFactory
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
+import retrofit2.converter.gson.GsonConverterFactory
 import java.time.LocalDate
 import java.time.ZoneId
 import java.util.*
@@ -24,10 +25,10 @@ open class BaseTest {
         return StudentAndParentRepository(getService(StudentAndParentService::class.java))
     }
 
-    fun <T> getService(service: Class<T>, url: String = mockBackend.url("/").toString()): T {
+    fun <T> getService(service: Class<T>, url: String = mockBackend.url("/").toString(), html: Boolean = true): T {
         return Retrofit.Builder()
                 .client(OkHttpClient.Builder().addInterceptor(ErrorInterceptor()).build())
-                .addConverterFactory(JspoonConverterFactory.create())
+                .addConverterFactory(if (html) JspoonConverterFactory.create() else GsonConverterFactory.create())
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .baseUrl(url)
                 .build()

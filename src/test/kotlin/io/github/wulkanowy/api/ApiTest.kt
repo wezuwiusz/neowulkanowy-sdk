@@ -5,6 +5,9 @@ import io.github.wulkanowy.api.exams.Exam
 import io.github.wulkanowy.api.grades.Grade
 import io.github.wulkanowy.api.grades.Summary
 import io.github.wulkanowy.api.homework.Homework
+import io.github.wulkanowy.api.messages.Message
+import io.github.wulkanowy.api.messages.Recipient
+import io.github.wulkanowy.api.messages.ReportingUnit
 import io.github.wulkanowy.api.notes.Note
 import io.github.wulkanowy.api.register.Pupil
 import io.github.wulkanowy.api.register.Semester
@@ -247,5 +250,47 @@ class ApiTest : BaseTest() {
         assertEquals("Monika Nowak", values.family[0].fullName)
         assertEquals("-", values.family[0].email)
         assertEquals("-", values.family[1].email)
+    }
+
+    @Test fun messagesTest() {
+        val units = api.getReportingUnits()
+        val unitsObserver = TestObserver<List<ReportingUnit>>()
+        units.subscribe(unitsObserver)
+        unitsObserver.assertComplete()
+
+        val recipients = api.getRecipients()
+        val recipientsObserver = TestObserver<List<Recipient>>()
+        recipients.subscribe(recipientsObserver)
+        recipientsObserver.assertComplete()
+
+        val inbox = api.getReceivedMessages(getDate(2015, 10, 5))
+        val inboxObserver = TestObserver<List<Message>>()
+        inbox.subscribe(inboxObserver)
+        inboxObserver.assertComplete()
+
+        assertEquals(2, inboxObserver.values()[0].size)
+
+        val sent = api.getSentMessages()
+        val outObserver = TestObserver<List<Message>>()
+        sent.subscribe(outObserver)
+        outObserver.assertComplete()
+
+        assertEquals(1, outObserver.values()[0].size)
+
+        val trash = api.getDeletedMessages()
+        val trashObserver = TestObserver<List<Message>>()
+        trash.subscribe(trashObserver)
+        trashObserver.assertComplete()
+
+        val del = trashObserver.values()[0]
+
+        assertEquals(1, del.size)
+
+        val m = api.getMessage(del[0].messageId, del[0].folderId)
+        val mObserver = TestObserver<Message>()
+        m.subscribe(mObserver)
+        mObserver.assertComplete()
+
+        assertEquals(1, mObserver.values().size)
     }
 }

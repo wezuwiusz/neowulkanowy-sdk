@@ -1,0 +1,23 @@
+{
+  "success": true,
+  "data": [
+    {
+      "Id": "18rPracownik",
+      "Nazwa": "Janusz Tracz [TJ] - pracownik (Fake123456)",
+      "IdLogin": 18,
+      "IdJednostkaSprawozdawcza": 6,
+      "RolaEnum": null,
+      "Rola": 2,
+      "PushWiadomosc": null
+    },
+    {
+      "Id": "94rPracownik",
+      "Nazwa": "Lech Wałęsa [Dd] - pracownik (Fake123456)",
+      "IdLogin": 94,
+      "IdJednostkaSprawozdawcza": 6,
+      "RolaEnum": null,
+      "Rola": 2,
+      "PushWiadomosc": null
+    }
+  ]
+}

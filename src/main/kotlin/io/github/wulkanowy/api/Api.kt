@@ -1,12 +1,10 @@
 package io.github.wulkanowy.api
 
 import io.github.wulkanowy.api.auth.NotLoggedInException
-import io.github.wulkanowy.api.repository.LoginRepository
-import io.github.wulkanowy.api.repository.RegisterRepository
-import io.github.wulkanowy.api.repository.StudentAndParentRepository
-import io.github.wulkanowy.api.repository.StudentAndParentStartRepository
+import io.github.wulkanowy.api.repository.*
 import io.github.wulkanowy.api.service.ServiceManager
 import okhttp3.logging.HttpLoggingInterceptor
+import java.util.*
 
 class Api {
 
@@ -56,6 +54,10 @@ class Api {
         StudentAndParentRepository(serviceManager.getSnpService())
     }
 
+    private val messages by resettableLazy(changeManager) {
+        MessagesRepository(studentId.toInt(), serviceManager.getMessagesService())
+    }
+
     fun getPupils() = register.getPupils()
 
     fun getSemesters() = snpStart.getSemesters()
@@ -77,4 +79,16 @@ class Api {
     fun getTeachers() = snp.getTeachers()
 
     fun getStudentInfo() = snp.getStudentInfo()
+
+    fun getReportingUnits() = messages.getReportingUnits()
+
+    fun getRecipients(role: Int = 2) = messages.getRecipients(role)
+
+    fun getReceivedMessages(endDate: Date? = null, dateStart: Date? = null) = messages.getReceivedMessages(dateStart, endDate)
+
+    fun getSentMessages(endDate: Date? = null, dateStart: Date? = null) = messages.getSentMessages(dateStart, endDate)
+
+    fun getDeletedMessages(dateStart: Date? = null, endDate: Date? = null) = messages.getDeletedMessages(dateStart, endDate)
+
+    fun getMessage(id: Int, folderId: Int) = messages.getMessage(id, folderId)
 }
