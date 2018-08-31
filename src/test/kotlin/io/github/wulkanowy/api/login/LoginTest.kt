@@ -16,16 +16,21 @@ import org.junit.Test
 
 class LoginTest : BaseTest() {
 
+    private val normal by lazy {
+        LoginRepository("http", "localhost:3000", "default",
+                getService(LoginService::class.java, "http://localhost:3000/"))
+    }
+
+    private val adfs by lazy {
+        LoginRepository("http", "localhost:3001", "default",
+                getService(LoginService::class.java, "http://localhost:3001/"))
+    }
+
     private lateinit var server: MockWebServer
 
     @Before
     fun setUp() {
         server = MockWebServer()
-    }
-
-    private fun getRepo(url: String): LoginRepository {
-        return LoginRepository("http", url.removePrefix("http://").removeSuffix("/"), "default",
-                getService(LoginService::class.java, url))
     }
 
     @Test
@@ -37,7 +42,7 @@ class LoginTest : BaseTest() {
         server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("Login-success.html").readText()))
         server.start(3001)
 
-        val res = getRepo(server.url("/").toString()).login("jan@fakelog.cf", "jan123").blockingGet()
+        val res = adfs.login("jan@fakelog.cf", "jan123").blockingGet()
 
         assertTrue(res.schools.isNotEmpty())
     }
@@ -48,7 +53,7 @@ class LoginTest : BaseTest() {
         server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("Login-success.html").readText()))
         server.start(3000)
 
-        val res = getRepo(server.url("/").toString()).login("jan@fakelog.cf", "jan123").blockingGet()
+        val res = normal.login("jan@fakelog.cf", "jan123").blockingGet()
 
         assertTrue(res.schools.isNotEmpty())
     }
@@ -60,7 +65,7 @@ class LoginTest : BaseTest() {
         server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("Logowanie-adfs-zle-haslo.html").readText()))
         server.start(3001)
 
-        val res = getRepo(server.url("/").toString()).login("jan@fakelog.cf", "jan1234")
+        val res = adfs.login("jan@fakelog.cf", "jan1234")
         val observer = TestObserver<HomepageResponse>()
         res.subscribe(observer)
         observer.assertTerminated()
@@ -73,7 +78,7 @@ class LoginTest : BaseTest() {
         server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("Logowanie-normal-zle-haslo.html").readText()))
         server.start(3000)
 
-        val res = getRepo(server.url("/").toString()).login("jan@fakelog.cf", "jan1234")
+        val res = normal.login("jan@fakelog.cf", "jan1234")
         val observer = TestObserver<HomepageResponse>()
         res.subscribe(observer)
         observer.assertTerminated()
@@ -86,7 +91,7 @@ class LoginTest : BaseTest() {
         server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("Logowanie-brak-dostepu.html").readText()))
         server.start(3000)
 
-        val res = getRepo(server.url("/").toString()).login("jan@fakelog.cf", "jan123")
+        val res = normal.login("jan@fakelog.cf", "jan123")
         val observer = TestObserver<HomepageResponse>()
         res.subscribe(observer)
         observer.assertTerminated()

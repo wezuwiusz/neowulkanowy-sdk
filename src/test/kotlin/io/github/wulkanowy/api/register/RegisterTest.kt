@@ -23,6 +23,16 @@ class RegisterTest : BaseTest() {
         server = MockWebServer()
     }
 
+    private val login by lazy {
+        LoginRepository("http", "localhost:3000", "default",
+                getService(LoginService::class.java, "http://localhost:3000/"))
+    }
+
+    private val normal by lazy {
+        RegisterRepository("default", "jan@fakelog.localhost", "jan123", login,
+                getService(StudentAndParentService::class.java, "http://localhost:3000/"))
+    }
+
     @Test
     fun pupilsTest() {
         server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("Logowanie-uonet.html").readText()))
@@ -35,12 +45,6 @@ class RegisterTest : BaseTest() {
         server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("Logowanie-brak-dostepu.html").readText()))
         server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("Logowanie-brak-dostepu.html").readText()))
         server.start(3000)
-
-        val url = server.url("/").toString()
-        val normal = RegisterRepository("default", "jan@fakelog.localhost", "jan123",
-                LoginRepository("http", url.removePrefix("http://").removeSuffix("/"), "default",
-                        getService(LoginService::class.java, url)),
-                getService(StudentAndParentService::class.java, url))
 
         val res = normal.getPupils().blockingGet()
 
