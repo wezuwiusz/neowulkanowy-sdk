@@ -6,7 +6,7 @@ import java.util.*
 data class Message(
 
         @SerializedName("FolderWiadomosci")
-        var folderId: Int = 0,
+        val folderId: Int = 0,
 
         @SerializedName("Nieprzeczytana")
         val unread: Boolean,
@@ -21,15 +21,15 @@ data class Message(
         val subject: String,
 
         @SerializedName("Adresaci")
-        val recipient: String,
+        val recipient: String?,
 
         val recipientId: Int = 0,
 
         @SerializedName("Nieprzeczytane")
-        val unreadBy: Int?,
+        val unreadBy: Int,
 
         @SerializedName("Przeczytane")
-        val readBy: Int?,
+        val readBy: Int,
 
         @SerializedName("NadawcaNazwa")
         val sender: String?,

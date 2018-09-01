@@ -11,6 +11,7 @@ import io.github.wulkanowy.api.school.Teacher
 import io.github.wulkanowy.api.service.StudentAndParentService
 import io.github.wulkanowy.api.student.StudentInfo
 import io.reactivex.Single
+import java.util.*
 
 class StudentAndParentRepository(private val api: StudentAndParentService) {
 
@@ -18,8 +19,8 @@ class StudentAndParentRepository(private val api: StudentAndParentService) {
         return api.getSchoolInfo()
     }
 
-    fun getAttendance(startDate: String): Single<List<Attendance>> {
-        return api.getAttendance(startDate).map { res ->
+    fun getAttendance(startDate: Date?): Single<List<Attendance>> {
+        return api.getAttendance(getTickFromDate(startDate)).map { res ->
             res.rows.flatMap { row ->
                 row.lessons.mapIndexedNotNull { i, it ->
                     if ("null" == it.subject) return@mapIndexedNotNull null
@@ -31,8 +32,8 @@ class StudentAndParentRepository(private val api: StudentAndParentService) {
         }
     }
 
-    fun getExams(startDate: String): Single<List<Exam>> {
-        return api.getExams(startDate).map { res ->
+    fun getExams(startDate: Date?): Single<List<Exam>> {
+        return api.getExams(getTickFromDate(startDate)).map { res ->
             res.days.flatMap { day ->
                 day.exams.map { exam ->
                     exam.date = day.date
@@ -43,8 +44,8 @@ class StudentAndParentRepository(private val api: StudentAndParentService) {
         }
     }
 
-    fun getGrades(classificationPeriodId: Int): Single<List<Grade>> {
-        return api.getGrades(classificationPeriodId).map {
+    fun getGrades(semesterId: Int?): Single<List<Grade>> {
+        return api.getGrades(semesterId).map {
             it.grades.map { grade ->
                 if (grade.description == grade.symbol) grade.description = ""
                 grade
@@ -52,8 +53,8 @@ class StudentAndParentRepository(private val api: StudentAndParentService) {
         }
     }
 
-    fun getGradesSummary(classificationPeriodId: Int): Single<List<Summary>> {
-        return api.getGradesSummary(classificationPeriodId).map {
+    fun getGradesSummary(semesterId: Int?): Single<List<Summary>> {
+        return api.getGradesSummary(semesterId).map {
             it.subjects.map { summary ->
                 summary.predicted = getGradeShortValue(summary.predicted)
                 summary.final = getGradeShortValue(summary.final)
@@ -62,8 +63,8 @@ class StudentAndParentRepository(private val api: StudentAndParentService) {
         }
     }
 
-    fun getHomework(date: String): Single<List<Homework>> {
-        return api.getHomework(date).map {
+    fun getHomework(date: Date?): Single<List<Homework>> {
+        return api.getHomework(getTickFromDate(date)).map {
             it.items.map { item ->
                 item.date = it.date
                 item
@@ -108,5 +109,12 @@ class StudentAndParentRepository(private val api: StudentAndParentService) {
             "niedostateczny" -> "1"
             else -> value
         }
+    }
+
+    private fun getTickFromDate(date: Date?): String {
+        if (date == null) return ""
+        return (Calendar.getInstance().apply {
+            time = date
+        }.timeInMillis * 10000 + 621355968000000000L).toString()
     }
 }

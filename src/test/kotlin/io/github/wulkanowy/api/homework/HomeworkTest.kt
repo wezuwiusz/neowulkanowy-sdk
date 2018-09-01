@@ -7,7 +7,7 @@ import org.junit.Test
 class HomeworkTest : BaseTest() {
 
     private val full by lazy {
-        getSnpRepo(HomeworkTest::class.java, "ZadaniaDomowe.html").getHomework("636648768000000000").blockingGet()
+        getSnpRepo(HomeworkTest::class.java, "ZadaniaDomowe.html").getHomework(getDate(2018, 6, 18)).blockingGet()
     }
 
     @Test fun getHomework() {

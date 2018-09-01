@@ -64,15 +64,15 @@ class Api {
 
     fun getSchoolInfo() = snp.getSchoolInfo()
 
-    fun getAttendance(startDate: String) = snp.getAttendance(startDate)
+    fun getAttendance(startDate: Date? = null) = snp.getAttendance(startDate)
 
-    fun getExams(startDate: String) = snp.getExams(startDate)
+    fun getExams(startDate: Date? = null) = snp.getExams(startDate)
 
-    fun getGrades(semester: Int) = snp.getGrades(semester)
+    fun getGrades(semesterId: Int? = null) = snp.getGrades(semesterId)
 
-    fun getGradesSummary(semester: Int) = snp.getGradesSummary(semester)
+    fun getGradesSummary(semesterId: Int? = null) = snp.getGradesSummary(semesterId)
 
-    fun getHomework(date: String) = snp.getHomework(date)
+    fun getHomework(date: Date? = null) = snp.getHomework(date)
 
     fun getNotes() = snp.getNotes()
 
@@ -84,11 +84,11 @@ class Api {
 
     fun getRecipients(role: Int = 2) = messages.getRecipients(role)
 
-    fun getReceivedMessages(endDate: Date? = null, dateStart: Date? = null) = messages.getReceivedMessages(dateStart, endDate)
+    fun getReceivedMessages(endDate: Date? = null, startDate: Date? = null) = messages.getReceivedMessages(startDate, endDate)
 
-    fun getSentMessages(endDate: Date? = null, dateStart: Date? = null) = messages.getSentMessages(dateStart, endDate)
+    fun getSentMessages(endDate: Date? = null, startDate: Date? = null) = messages.getSentMessages(startDate, endDate)
 
-    fun getDeletedMessages(dateStart: Date? = null, endDate: Date? = null) = messages.getDeletedMessages(dateStart, endDate)
+    fun getDeletedMessages(startDate: Date? = null, endDate: Date? = null) = messages.getDeletedMessages(startDate, endDate)
 
     fun getMessage(id: Int, folderId: Int) = messages.getMessage(id, folderId)
 }

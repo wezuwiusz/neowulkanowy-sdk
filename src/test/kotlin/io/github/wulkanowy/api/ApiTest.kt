@@ -95,7 +95,7 @@ class ApiTest : BaseTest() {
     }
 
     @Test fun attendanceTest() {
-        val attendance = api.getAttendance("636648768000000000")
+        val attendance = api.getAttendance(getDate(2018, 6, 18))
         val attendanceObserver = TestObserver<List<Attendance>>()
         attendance.subscribe(attendanceObserver)
         attendanceObserver.assertComplete()
@@ -118,7 +118,7 @@ class ApiTest : BaseTest() {
     }
 
     @Test fun examsTest() {
-        val exams = api.getExams("636630624000000000")
+        val exams = api.getExams(getDate(2018, 5, 28))
         val examsObserver = TestObserver<List<Exam>>()
         exams.subscribe(examsObserver)
         examsObserver.assertComplete()
@@ -136,7 +136,7 @@ class ApiTest : BaseTest() {
     }
 
     @Test fun homeworkTest() {
-        val homework = api.getHomework("636443136000000000")
+        val homework = api.getHomework(getDate(2017, 10, 23))
         val homeworkObserver = TestObserver<List<Homework>>()
         homework.subscribe(homeworkObserver)
         homeworkObserver.assertComplete()

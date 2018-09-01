@@ -36,10 +36,10 @@ interface StudentAndParentService {
     fun getExams(@Query("data") date: String): Single<ExamResponse>
 
     @GET("Oceny/Wszystkie?details=2")
-    fun getGrades(@Query("okres") semester: Int): Single<GradesResponse>
+    fun getGrades(@Query("okres") semester: Int?): Single<GradesResponse>
 
     @GET("Oceny/Wszystkie?details=1")
-    fun getGradesSummary(@Query("okres") semester: Int): Single<GradesSummaryResponse>
+    fun getGradesSummary(@Query("okres") semester: Int?): Single<GradesSummaryResponse>
 
     @GET("ZadaniaDomowe.mvc?rodzajWidoku=Dzien")
     fun getHomework(@Query("data") date: String): Single<HomeworkResponse>

@@ -31,19 +31,21 @@ class MessagesRepository(private val userId: Int, private val api: MessagesServi
         return reportingUnit.map { unit -> api.getRecipients(unit.id, role).map { it.data } }.flatMap { it }
     }
 
-    fun getReceivedMessages(dateStart: Date?, endDate: Date?): Single<List<Message>> {
-        return api.getReceived(getDate(dateStart), getDate(endDate))
-                .map { res -> res.data?.map { it.apply { it.folderId = 1 } }?.sortedBy { it.date } }
+    fun getReceivedMessages(startDate: Date?, endDate: Date?): Single<List<Message>> {
+        return api.getReceived(getDate(startDate), getDate(endDate))
+                .map { res -> res.data
+                        ?.map { it.copy(folderId = 1) }
+                        ?.sortedBy { it.date } }
     }
 
-    fun getSentMessages(dateStart: Date?, endDate: Date?): Single<List<Message>> {
-        return api.getSent(getDate(dateStart), getDate(endDate))
-                .map { res -> res.data?.map { it.apply { it.folderId = 2 } }?.sortedBy { it.date } }
+    fun getSentMessages(startDate: Date?, endDate: Date?): Single<List<Message>> {
+        return api.getSent(getDate(startDate), getDate(endDate))
+                .map { res -> res.data?.map { it.copy(folderId = 2) }?.sortedBy { it.date } }
                 .flatMapObservable { Observable.fromIterable(it) }
                 .flatMap { message ->
                     recipients.flatMapObservable {
                         Observable.fromIterable(it.filter { recipient ->
-                            recipient.second == message.recipient.split("[").last().split("]").first()
+                            recipient.second == message.recipient?.split("[")?.last()?.split("]")?.first()
                         })
                     }.map {
                         message.copy(recipientId = it!!.first.loginId, recipient = it.first.name)
@@ -52,8 +54,8 @@ class MessagesRepository(private val userId: Int, private val api: MessagesServi
                 .toList()
     }
 
-    fun getDeletedMessages(dateStart: Date?, endDate: Date?): Single<List<Message>> {
-        return api.getDeleted(getDate(dateStart), getDate(endDate))
+    fun getDeletedMessages(startDate: Date?, endDate: Date?): Single<List<Message>> {
+        return api.getDeleted(getDate(startDate), getDate(endDate))
                 .map { res -> res.data?.sortedBy { it.date } }
     }
 

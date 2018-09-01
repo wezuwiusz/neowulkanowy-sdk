@@ -7,11 +7,11 @@ import org.junit.Test
 class AttendanceTest : BaseTest() {
 
     private val full by lazy {
-        getSnpRepo(AttendanceTest::class.java, "Frekwencja-full.html").getAttendance("636648768000000000").blockingGet()
+        getSnpRepo(AttendanceTest::class.java, "Frekwencja-full.html").getAttendance(getDate(2018, 6, 18)).blockingGet()
     }
 
     private val excellent by lazy {
-        getSnpRepo(AttendanceTest::class.java, "Frekwencja-excellent.html").getAttendance("636648768000000000").blockingGet()
+        getSnpRepo(AttendanceTest::class.java, "Frekwencja-excellent.html").getAttendance(getDate(2018, 6, 18)).blockingGet()
     }
 
     @Test
