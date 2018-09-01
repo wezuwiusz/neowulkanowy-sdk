@@ -42,7 +42,7 @@ class LoginTest : BaseTest() {
         server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("Login-success.html").readText()))
         server.start(3001)
 
-        val res = adfs.login("jan@fakelog.cf", "jan123").blockingGet()
+        val res = adfs.login("jan@fakelog.cf", "jan123", LoginRepository.LoginType.ADFS).blockingGet()
 
         assertTrue(res.schools.isNotEmpty())
     }
@@ -65,7 +65,7 @@ class LoginTest : BaseTest() {
         server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("Logowanie-adfs-zle-haslo.html").readText()))
         server.start(3001)
 
-        val res = adfs.login("jan@fakelog.cf", "jan1234")
+        val res = adfs.login("jan@fakelog.cf", "jan1234", LoginRepository.LoginType.ADFS)
         val observer = TestObserver<HomepageResponse>()
         res.subscribe(observer)
         observer.assertTerminated()

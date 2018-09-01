@@ -27,9 +27,5 @@ interface LoginService {
 
     @POST
     @FormUrlEncoded
-    fun sendADFSCredentials(@Url url: String, @FieldMap credentials: Map<String, String>): Single<CertificateResponse>
-
-    @POST
-    @FormUrlEncoded
-    fun sendADFSFirstCertificate(@Url url: String, @FieldMap certificate: Map<String, String>): Single<CertificateResponse>
+    fun sendADFSForm(@Url url: String, @FieldMap values: Map<String, String>): Single<CertificateResponse>
 }
