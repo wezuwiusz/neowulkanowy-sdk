@@ -81,6 +81,7 @@ class ApiTest : BaseTest() {
 
         assertEquals("101", values[1].diaryId)
         assertEquals("1A 2015", values[1].diaryName)
+        assertEquals(true, values[1].current)
 
         assertEquals("202", values[2].diaryId)
         assertEquals("II 2016", values[2].diaryName)
