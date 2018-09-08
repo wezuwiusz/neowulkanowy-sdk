@@ -12,6 +12,7 @@ import io.github.wulkanowy.api.service.StudentAndParentService
 import io.github.wulkanowy.api.student.StudentInfo
 import io.reactivex.Single
 import java.util.*
+import java.util.Calendar
 
 class StudentAndParentRepository(private val api: StudentAndParentService) {
 
@@ -113,8 +114,11 @@ class StudentAndParentRepository(private val api: StudentAndParentService) {
 
     private fun getTickFromDate(date: Date?): String {
         if (date == null) return ""
-        return (Calendar.getInstance().apply {
+        val c = Calendar.getInstance(TimeZone.getTimeZone("UTC")).apply {
+            timeZone = TimeZone.getDefault()
             time = date
-        }.timeInMillis * 10000 + 621355968000000000L).toString()
+        }
+        val utcOffset = c.get(Calendar.ZONE_OFFSET) + c.get(Calendar.DST_OFFSET)
+        return ((c.timeInMillis + utcOffset) * 10000 + 621355968000000000L).toString()
     }
 }
