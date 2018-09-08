@@ -29,7 +29,6 @@ class ApiTest : BaseTest() {
     @Before fun setUp() {
         api.apply {
             logLevel = HttpLoggingInterceptor.Level.BASIC
-            holdSession = false
             ssl = true
             host = "fakelog.cf"
             symbol = "Default"

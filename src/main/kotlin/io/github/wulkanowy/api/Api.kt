@@ -10,8 +10,6 @@ class Api {
 
     var logLevel: HttpLoggingInterceptor.Level = HttpLoggingInterceptor.Level.BASIC
 
-    var holdSession: Boolean = true
-
     var ssl: Boolean = true
 
     var host: String = "fakelog.cf"
@@ -35,7 +33,7 @@ class Api {
     private val schema by resettableLazy(changeManager) { "http" + if (ssl) "s" else "" }
 
     private val serviceManager by resettableLazy(changeManager) {
-        ServiceManager(logLevel, holdSession, schema, host, symbol, email, password, schoolId, studentId, diaryId)
+        ServiceManager(logLevel, schema, host, symbol, email, password, schoolId, studentId, diaryId)
     }
 
     private val register by resettableLazy(changeManager) {

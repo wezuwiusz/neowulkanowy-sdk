@@ -1,8 +1,8 @@
 package io.github.wulkanowy.api.service
 
+import RxJava2ReauthCallAdapterFactory
 import io.github.wulkanowy.api.auth.NotLoggedInException
 import io.github.wulkanowy.api.interceptor.ErrorInterceptor
-import io.github.wulkanowy.api.interceptor.LoginInterceptor
 import io.github.wulkanowy.api.interceptor.StudentAndParentInterceptor
 import io.github.wulkanowy.api.repository.LoginRepository
 import okhttp3.JavaNetCookieJar
@@ -18,7 +18,6 @@ import java.util.concurrent.TimeUnit
 
 class ServiceManager(
         private val logLevel: HttpLoggingInterceptor.Level,
-        private val holdSession: Boolean,
         private val schema: String,
         private val host: String,
         private val symbol: String,
@@ -35,16 +34,16 @@ class ServiceManager(
         cookieManager
     }
 
-    private val loginInterceptor by lazy {
+    private val loginRepository by lazy {
         if (email.isBlank() || password.isBlank()) throw NotLoggedInException("Email or/and password are not set")
-        LoginInterceptor(LoginRepository(schema, host, symbol, getRetrofit(getClientBuilder(), "cufs", "$symbol/")
+        LoginRepository(schema, host, symbol, getRetrofit(getClientBuilder(), "cufs", "$symbol/", false)
                 .addConverterFactory(JspoonConverterFactory.create()).build()
-                .create(LoginService::class.java)), holdSession, email, password)
+                .create(LoginService::class.java))
     }
 
     fun getLoginService(): LoginService {
         if (email.isBlank() || password.isBlank()) throw NotLoggedInException("Email or/and password are not set")
-        return getRetrofit(getClientBuilder(), "cufs", "$symbol/")
+        return getRetrofit(getClientBuilder(), "cufs", "$symbol/", false)
                 .addConverterFactory(JspoonConverterFactory.create()).build()
                 .create(LoginService::class.java)
     }
@@ -57,29 +56,38 @@ class ServiceManager(
     fun getSnpService(withLogin: Boolean = true, interceptor: Boolean = true): StudentAndParentService {
         val client = getClientBuilder()
 
-        if (withLogin) {
-            if (schoolId.isBlank()) throw NotLoggedInException("School id is not set")
-            client.addInterceptor(loginInterceptor)
-        }
-
         if (interceptor) client.addInterceptor(studentAndParentInterceptor)
 
-        return getRetrofit(client, "uonetplus-opiekun", "$symbol/$schoolId/")
+        if (withLogin) {
+            if (schoolId.isBlank()) throw NotLoggedInException("School id is not set")
+        }
+
+        return getRetrofit(client, "uonetplus-opiekun", "$symbol/$schoolId/", withLogin)
                 .addConverterFactory(JspoonConverterFactory.create()).build()
                 .create(StudentAndParentService::class.java)
     }
 
     fun getMessagesService(): MessagesService {
-        return getRetrofit(getClientBuilder().addInterceptor(loginInterceptor), "uonetplus-uzytkownik", "$symbol/")
+        return getRetrofit(getClientBuilder(), "uonetplus-uzytkownik", "$symbol/")
                 .addConverterFactory(GsonConverterFactory.create()).build()
                 .create(MessagesService::class.java)
     }
 
-    private fun getRetrofit(client: OkHttpClient.Builder, subDomain: String, urlAppend: String): Retrofit.Builder {
-        return Retrofit.Builder()
+    private fun getRetrofit(client: OkHttpClient.Builder, subDomain: String, urlAppend: String, login: Boolean = true): Retrofit.Builder {
+        val retrofit = Retrofit.Builder()
                 .baseUrl("$schema://$subDomain.$host/$urlAppend")
-                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .client(client.build())
+
+        return if (login) {
+            retrofit.addCallAdapterFactory(RxJava2ReauthCallAdapterFactory.create(
+                    loginRepository.login(email, password).toFlowable(),
+                    { it != NotLoggedInException("Zaloguj się") },
+                    1
+            ))
+        } else {
+            retrofit.addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+        }
+
     }
 
     private fun getClientBuilder(): OkHttpClient.Builder {
