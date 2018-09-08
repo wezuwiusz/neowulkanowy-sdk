@@ -3,7 +3,7 @@ package io.github.wulkanowy.api
 import io.github.wulkanowy.api.attendance.Attendance
 import io.github.wulkanowy.api.exams.Exam
 import io.github.wulkanowy.api.grades.Grade
-import io.github.wulkanowy.api.grades.Summary
+import io.github.wulkanowy.api.grades.GradeSummary
 import io.github.wulkanowy.api.homework.Homework
 import io.github.wulkanowy.api.messages.Message
 import io.github.wulkanowy.api.messages.Recipient
@@ -189,7 +189,7 @@ class ApiTest : BaseTest() {
 
     @Test fun gradesSummaryTest() {
         val summary = api.getGradesSummary(864)
-        val summaryObserver = TestObserver<List<Summary>>()
+        val summaryObserver = TestObserver<List<GradeSummary>>()
         summary.subscribe(summaryObserver)
         summaryObserver.assertComplete()
 

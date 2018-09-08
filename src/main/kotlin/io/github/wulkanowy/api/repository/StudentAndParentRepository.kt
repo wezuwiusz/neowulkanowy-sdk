@@ -3,7 +3,7 @@ package io.github.wulkanowy.api.repository
 import io.github.wulkanowy.api.attendance.Attendance
 import io.github.wulkanowy.api.exams.Exam
 import io.github.wulkanowy.api.grades.Grade
-import io.github.wulkanowy.api.grades.Summary
+import io.github.wulkanowy.api.grades.GradeSummary
 import io.github.wulkanowy.api.homework.Homework
 import io.github.wulkanowy.api.notes.Note
 import io.github.wulkanowy.api.register.StudentAndParentResponse
@@ -54,7 +54,7 @@ class StudentAndParentRepository(private val api: StudentAndParentService) {
         }
     }
 
-    fun getGradesSummary(semesterId: Int?): Single<List<Summary>> {
+    fun getGradesSummary(semesterId: Int?): Single<List<GradeSummary>> {
         return api.getGradesSummary(semesterId).map {
             it.subjects.map { summary ->
                 summary.predicted = getGradeShortValue(summary.predicted)

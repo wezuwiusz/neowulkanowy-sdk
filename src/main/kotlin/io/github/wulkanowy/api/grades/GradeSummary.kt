@@ -2,7 +2,7 @@ package io.github.wulkanowy.api.grades
 
 import pl.droidsonroids.jspoon.annotation.Selector
 
-class Summary {
+class GradeSummary {
 
     @Selector("td", index = 0)
     lateinit var name: String

@@ -4,7 +4,7 @@ import io.github.wulkanowy.api.BaseTest
 import org.junit.Assert.assertEquals
 import org.junit.Test
 
-class GradesSummaryTest : BaseTest() {
+class GradesGradeSummaryTest : BaseTest() {
 
     private val std by lazy {
         getSnpRepo(GradesTest::class.java, "OcenyWszystkie-subjects.html").getGradesSummary(0).blockingGet()
