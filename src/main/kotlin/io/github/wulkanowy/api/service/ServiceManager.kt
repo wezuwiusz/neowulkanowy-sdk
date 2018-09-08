@@ -14,6 +14,7 @@ import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
 import java.net.CookieManager
 import java.net.CookiePolicy
+import java.util.concurrent.TimeUnit
 
 class ServiceManager(
         private val logLevel: HttpLoggingInterceptor.Level,
@@ -83,6 +84,9 @@ class ServiceManager(
 
     private fun getClientBuilder(): OkHttpClient.Builder {
         return OkHttpClient().newBuilder()
+                .connectTimeout(25, TimeUnit.SECONDS)
+                .readTimeout(25, TimeUnit.SECONDS)
+                .writeTimeout(25, TimeUnit.SECONDS)
                 .cookieJar(JavaNetCookieJar(cookies))
                 .addInterceptor(HttpLoggingInterceptor().setLevel(logLevel))
                 .addInterceptor(ErrorInterceptor())
