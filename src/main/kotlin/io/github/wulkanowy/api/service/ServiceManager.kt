@@ -29,54 +29,43 @@ class ServiceManager(
 ) {
 
     private val cookies by lazy {
-        val cookieManager = CookieManager()
-        cookieManager.setCookiePolicy(CookiePolicy.ACCEPT_ALL)
-        cookieManager
-    }
-
-    private val loginRepository by lazy {
-        if (email.isBlank() || password.isBlank()) throw NotLoggedInException("Email or/and password are not set")
-        LoginRepository(schema, host, symbol, getRetrofit(getClientBuilder(), "cufs", "$symbol/", false)
-                .addConverterFactory(JspoonConverterFactory.create()).build()
-                .create(LoginService::class.java))
+        CookieManager().apply {
+            setCookiePolicy(CookiePolicy.ACCEPT_ALL)
+        }
     }
 
     fun getLoginService(): LoginService {
         if (email.isBlank() || password.isBlank()) throw NotLoggedInException("Email or/and password are not set")
-        return getRetrofit(getClientBuilder(), "cufs", "$symbol/", false)
-                .addConverterFactory(JspoonConverterFactory.create()).build()
+        return getRetrofit(getClientBuilder(), "cufs", "$symbol/", false).build()
                 .create(LoginService::class.java)
-    }
-
-    private val studentAndParentInterceptor by lazy {
-        if (diaryId.isBlank() || studentId.isBlank()) throw NotLoggedInException("Student or/and diaryId id are not set")
-        StudentAndParentInterceptor(cookies, schema, host, diaryId, studentId)
     }
 
     fun getSnpService(withLogin: Boolean = true, interceptor: Boolean = true): StudentAndParentService {
         if (withLogin && schoolId.isBlank()) throw NotLoggedInException("School id is not set")
 
         val client = getClientBuilder()
-        if (interceptor) client.addInterceptor(studentAndParentInterceptor)
+        if (interceptor) {
+            if (diaryId.isBlank() || studentId.isBlank()) throw NotLoggedInException("Student or/and diaryId id are not set")
+            client.addInterceptor(StudentAndParentInterceptor(cookies, schema, host, diaryId, studentId))
+        }
 
-        return getRetrofit(client, "uonetplus-opiekun", "$symbol/$schoolId/", withLogin)
-                .addConverterFactory(JspoonConverterFactory.create()).build()
+        return getRetrofit(client, "uonetplus-opiekun", "$symbol/$schoolId/", withLogin).build()
                 .create(StudentAndParentService::class.java)
     }
 
     fun getMessagesService(): MessagesService {
-        return getRetrofit(getClientBuilder(), "uonetplus-uzytkownik", "$symbol/")
-                .addConverterFactory(GsonConverterFactory.create()).build()
+        return getRetrofit(getClientBuilder(), "uonetplus-uzytkownik", "$symbol/", true, true).build()
                 .create(MessagesService::class.java)
     }
 
-    private fun getRetrofit(client: OkHttpClient.Builder, subDomain: String, urlAppend: String, login: Boolean = true): Retrofit.Builder {
+    private fun getRetrofit(client: OkHttpClient.Builder, subDomain: String, urlAppend: String, login: Boolean = true, gson: Boolean = false): Retrofit.Builder {
         return Retrofit.Builder()
-                .baseUrl("$schema://$subDomain.$host/$urlAppend")
                 .client(client.build())
+                .baseUrl("$schema://$subDomain.$host/$urlAppend")
+                .addConverterFactory(if (gson) GsonConverterFactory.create() else JspoonConverterFactory.create())
                 .addCallAdapterFactory(if (!login) RxJava2CallAdapterFactory.create() else
                     RxJava2ReauthCallAdapterFactory.create(
-                            loginRepository.login(email, password).toFlowable(),
+                            LoginRepository(schema, host, symbol, getLoginService()).login(email, password).toFlowable(),
                             { it is NotLoggedInException }
                     )
                 )
@@ -85,8 +74,8 @@ class ServiceManager(
     private fun getClientBuilder(): OkHttpClient.Builder {
         return OkHttpClient().newBuilder()
                 .connectTimeout(25, TimeUnit.SECONDS)
-                .readTimeout(25, TimeUnit.SECONDS)
                 .writeTimeout(25, TimeUnit.SECONDS)
+                .readTimeout(25, TimeUnit.SECONDS)
                 .cookieJar(JavaNetCookieJar(cookies))
                 .addInterceptor(HttpLoggingInterceptor().setLevel(logLevel))
                 .addInterceptor(ErrorInterceptor())
