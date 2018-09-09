@@ -34,9 +34,13 @@ class ServiceManager(
         }
     }
 
+    private val url by lazy {
+        UrlGenerator(schema, host, symbol, schoolId)
+    }
+
     fun getLoginService(): LoginService {
         if (email.isBlank() || password.isBlank()) throw NotLoggedInException("Email or/and password are not set")
-        return getRetrofit(getClientBuilder(), "cufs", "$symbol/", false).build()
+        return getRetrofit(getClientBuilder(), url.generate(UrlGenerator.Site.LOGIN), false).build()
                 .create(LoginService::class.java)
     }
 
@@ -49,19 +53,19 @@ class ServiceManager(
             client.addInterceptor(StudentAndParentInterceptor(cookies, schema, host, diaryId, studentId))
         }
 
-        return getRetrofit(client, "uonetplus-opiekun", "$symbol/$schoolId/", withLogin).build()
+        return getRetrofit(client, url.generate(UrlGenerator.Site.SNP), withLogin).build()
                 .create(StudentAndParentService::class.java)
     }
 
     fun getMessagesService(): MessagesService {
-        return getRetrofit(getClientBuilder(), "uonetplus-uzytkownik", "$symbol/", true, true).build()
+        return getRetrofit(getClientBuilder(), url.generate(UrlGenerator.Site.MESSAGES), true, true).build()
                 .create(MessagesService::class.java)
     }
 
-    private fun getRetrofit(client: OkHttpClient.Builder, subDomain: String, urlAppend: String, login: Boolean = true, gson: Boolean = false): Retrofit.Builder {
+    private fun getRetrofit(client: OkHttpClient.Builder, baseUrl: String, login: Boolean = true, gson: Boolean = false): Retrofit.Builder {
         return Retrofit.Builder()
+                .baseUrl(baseUrl)
                 .client(client.build())
-                .baseUrl("$schema://$subDomain.$host/$urlAppend")
                 .addConverterFactory(if (gson) GsonConverterFactory.create() else JspoonConverterFactory.create())
                 .addCallAdapterFactory(if (!login) RxJava2CallAdapterFactory.create() else
                     RxJava2ReauthCallAdapterFactory.create(
@@ -79,5 +83,24 @@ class ServiceManager(
                 .cookieJar(JavaNetCookieJar(cookies))
                 .addInterceptor(HttpLoggingInterceptor().setLevel(logLevel))
                 .addInterceptor(ErrorInterceptor())
+    }
+
+    private class UrlGenerator(private val schema: String, private val host: String, private val symbol: String, private val schoolId: String) {
+
+        enum class Site {
+            LOGIN, SNP, MESSAGES
+        }
+
+        fun generate(type: Site): String {
+            return "$schema://${getSubDomain(type)}.$host/$symbol/${if (type == Site.SNP) schoolId else ""}"
+        }
+
+        private fun getSubDomain(type: Site): String {
+            return when(type) {
+                Site.LOGIN -> "cufs"
+                Site.SNP -> "uonetplus-opiekun"
+                Site.MESSAGES -> "uonetplus-uzytkownik"
+            }
+        }
     }
 }
