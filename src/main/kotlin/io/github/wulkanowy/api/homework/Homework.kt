@@ -1,6 +1,5 @@
 package io.github.wulkanowy.api.homework
 
-import io.github.wulkanowy.api.DATE_FORMAT
 import pl.droidsonroids.jspoon.annotation.Format
 import pl.droidsonroids.jspoon.annotation.Selector
 import java.util.*
@@ -9,7 +8,7 @@ class Homework {
 
     lateinit var date: Date
 
-    @Format(value = DATE_FORMAT)
+    @Format("dd.MM.yyyy")
     @Selector(".wartosc", index = 2, regex = ".+, (.+)")
     lateinit var entryDate: Date
 

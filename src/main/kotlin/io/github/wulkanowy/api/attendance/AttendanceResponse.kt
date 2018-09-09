@@ -1,6 +1,5 @@
 package io.github.wulkanowy.api.attendance
 
-import io.github.wulkanowy.api.DATE_FORMAT
 import pl.droidsonroids.jspoon.annotation.Format
 import pl.droidsonroids.jspoon.annotation.Selector
 import java.util.*
@@ -8,7 +7,7 @@ import java.util.*
 class AttendanceResponse {
 
     @Selector(".presentData thead th:not(:first-of-type)", regex = "\\s(.*)")
-    @Format(value = DATE_FORMAT)
+    @Format("dd.MM.yyyy")
     var days: List<Date> = emptyList()
 
     @Selector(".presentData tbody tr")

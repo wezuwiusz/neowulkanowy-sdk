@@ -1,6 +1,5 @@
 package io.github.wulkanowy.api.grades
 
-import io.github.wulkanowy.api.DATE_FORMAT
 import pl.droidsonroids.jspoon.annotation.Format
 import pl.droidsonroids.jspoon.annotation.Selector
 import java.util.*
@@ -26,7 +25,7 @@ class Grade {
     lateinit var weight: String
 
     @Selector("td:not(:empty)", index = 4, defValue = "01.01.1970")
-    @Format(value = DATE_FORMAT)
+    @Format("dd.MM.yyyy")
     lateinit var date: Date
 
     @Selector("td", index = 5)

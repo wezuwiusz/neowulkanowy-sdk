@@ -1,6 +1,5 @@
 package io.github.wulkanowy.api.student
 
-import io.github.wulkanowy.api.DATE_FORMAT
 import pl.droidsonroids.jspoon.annotation.Format
 import pl.droidsonroids.jspoon.annotation.Selector
 import java.util.*
@@ -19,7 +18,7 @@ class Student {
     @Selector("article:nth-of-type(1) .wartosc", index = 0, regex = "[^,]+ (.+)")
     lateinit var surname: String
 
-    @Format(DATE_FORMAT)
+    @Format("dd.MM.yyyy")
     @Selector("article:nth-of-type(1) .wartosc", index = 1, regex = "^(.+?),")
     lateinit var birthDate: Date
 
