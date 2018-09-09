@@ -89,7 +89,7 @@ class ServiceManager(
         }
 
         fun generate(type: Site): String {
-            return "$schema://${getSubDomain(type)}.$host/$symbol/${if (type == Site.SNP) schoolId else ""}"
+            return "$schema://${getSubDomain(type)}.$host/$symbol/${if (type == Site.SNP) "$schoolId/" else ""}"
         }
 
         private fun getSubDomain(type: Site): String {
