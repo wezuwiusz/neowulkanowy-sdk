@@ -22,7 +22,7 @@ class ErrorInterceptor : Interceptor {
         }
 
         doc.body().text().let { // /messages
-            if (it.contains("The custom error module does not recognize this error")) throw NotLoggedInException("Zaloguj się")
+            if (it.contains("The custom error module")) throw NotLoggedInException("Zaloguj się")
         }
 
         doc.select(".ErrorMessage, #ErrorTextLabel").let {

@@ -18,11 +18,12 @@ class StudentAndParentInterceptor(
         arrayOf(
                 arrayOf("idBiezacyDziennik", diaryId),
                 arrayOf("idBiezacyUczen", studentId)
-        ).forEach {
-            val cookie = HttpCookie(it[0], it[1])
-            cookie.path = "/"
-            cookie.domain = "uonetplus-opiekun.$host"
-            cookies.cookieStore.add(URI("$schema://${cookie.domain}"), cookie)
+        ).forEach { cookie ->
+            HttpCookie(cookie[0], cookie[1]).let {
+                it.path = "/"
+                it.domain = "uonetplus-opiekun.$host"
+                cookies.cookieStore.add(URI("$schema://${it.domain}"), it)
+            }
         }
 
         return chain.proceed(chain.request().newBuilder().build())

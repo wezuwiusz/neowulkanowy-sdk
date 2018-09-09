@@ -40,8 +40,7 @@ class ServiceManager(
 
     fun getLoginService(): LoginService {
         if (email.isBlank() || password.isBlank()) throw NotLoggedInException("Email or/and password are not set")
-        return getRetrofit(getClientBuilder(), url.generate(UrlGenerator.Site.LOGIN), false).build()
-                .create(LoginService::class.java)
+        return getRetrofit(getClientBuilder(), url.generate(UrlGenerator.Site.LOGIN), false).create(LoginService::class.java)
     }
 
     fun getSnpService(withLogin: Boolean = true, interceptor: Boolean = true): StudentAndParentService {
@@ -53,16 +52,14 @@ class ServiceManager(
             client.addInterceptor(StudentAndParentInterceptor(cookies, schema, host, diaryId, studentId))
         }
 
-        return getRetrofit(client, url.generate(UrlGenerator.Site.SNP), withLogin).build()
-                .create(StudentAndParentService::class.java)
+        return getRetrofit(client, url.generate(UrlGenerator.Site.SNP), withLogin).create(StudentAndParentService::class.java)
     }
 
     fun getMessagesService(): MessagesService {
-        return getRetrofit(getClientBuilder(), url.generate(UrlGenerator.Site.MESSAGES), true, true).build()
-                .create(MessagesService::class.java)
+        return getRetrofit(getClientBuilder(), url.generate(UrlGenerator.Site.MESSAGES), true, true).create(MessagesService::class.java)
     }
 
-    private fun getRetrofit(client: OkHttpClient.Builder, baseUrl: String, login: Boolean = true, gson: Boolean = false): Retrofit.Builder {
+    private fun getRetrofit(client: OkHttpClient.Builder, baseUrl: String, login: Boolean = true, gson: Boolean = false): Retrofit {
         return Retrofit.Builder()
                 .baseUrl(baseUrl)
                 .client(client.build())
@@ -72,7 +69,7 @@ class ServiceManager(
                             LoginRepository(schema, host, symbol, getLoginService()).login(email, password).toFlowable(),
                             { it is NotLoggedInException }
                     )
-                )
+                ).build()
     }
 
     private fun getClientBuilder(): OkHttpClient.Builder {
