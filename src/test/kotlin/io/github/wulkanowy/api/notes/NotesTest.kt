@@ -23,25 +23,25 @@ class NotesTest : BaseTest() {
 
     @Test
     fun getDateTest() {
-        assertEquals(getDate(2017, 6, 6), filled[0].date)
-        assertEquals(getDate(2016, 10, 1), filled[2].date)
+        assertEquals(getDate(2016, 10, 1), filled[0].date)
+        assertEquals(getDate(2017, 6, 6), filled[2].date)
     }
 
     @Test
     fun getTeacherTest() {
-        assertEquals("Jan Kowalski [JK]", filled[0].teacher)
-        assertEquals("Kochański Leszek [KL]", filled[2].teacher)
+        assertEquals("Kochański Leszek [KL]", filled[0].teacher)
+        assertEquals("Jan Kowalski [JK]", filled[2].teacher)
     }
 
     @Test
     fun getCategoryTest() {
-        assertEquals("Zaangażowanie społeczne", filled[0].category)
-        assertEquals("Zachowanie na lekcji", filled[2].category)
+        assertEquals("Zachowanie na lekcji", filled[0].category)
+        assertEquals("Zaangażowanie społeczne", filled[2].category)
     }
 
     @Test
     fun getContentTest() {
-        assertEquals("Pomoc przy pikniku charytatywnym", filled[0].content)
-        assertEquals("Przeszkadzanie w prowadzeniu lekcji", filled[2].content)
+        assertEquals("Przeszkadzanie w prowadzeniu lekcji", filled[0].content)
+        assertEquals("Pomoc przy pikniku charytatywnym", filled[2].content)
     }
 }

@@ -48,7 +48,7 @@ class MessagesRepository(private val userId: Int, private val api: MessagesServi
                             recipient.second == message.recipient?.split("[")?.last()?.split("]")?.first()
                         })
                     }.map {
-                        message.copy(recipientId = it!!.first.loginId, recipient = it.first.name)
+                        message.copy(recipientId = it.first.loginId, recipient = it.first.name)
                     }
                 }
                 .toList()

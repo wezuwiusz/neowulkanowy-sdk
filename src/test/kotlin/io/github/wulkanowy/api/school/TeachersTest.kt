@@ -25,13 +25,13 @@ class TeachersTest : BaseTest() {
 
     @Test fun getTeacherNameTest() {
         assertEquals("Karolina Kowalska", teachers[0].name)
-        assertEquals("Karolina Kowalska", teachers[6].name)
-        assertEquals("Mateusz Kowal", teachers[7].name)
+        assertEquals("Karolina Kowalska", teachers[7].name)
+        assertEquals("Mateusz Kowal", teachers[8].name)
     }
 
     @Test fun getTeacherShortTest() {
         assertEquals("AN", teachers[0].short)
-        assertEquals("AN", teachers[6].short)
-        assertEquals("MK", teachers[7].short)
+        assertEquals("AM", teachers[6].short)
+        assertEquals("MK", teachers[8].short)
     }
 }

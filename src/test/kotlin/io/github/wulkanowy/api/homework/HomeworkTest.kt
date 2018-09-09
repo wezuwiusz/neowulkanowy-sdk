@@ -21,27 +21,27 @@ class HomeworkTest : BaseTest() {
 
     @Test
     fun getEntryDate() {
-        assertEquals(getDate(2017, 10, 16), full[0].entryDate)
-        assertEquals(getDate(2017, 10, 25), full[1].entryDate)
+        assertEquals(getDate(2017, 10, 25), full[0].entryDate)
+        assertEquals(getDate(2017, 10, 16), full[1].entryDate)
     }
 
     @Test fun getSubject() {
-        assertEquals("Sieci komputerowe i administrowanie sieciami", full[0].subject)
-        assertEquals("Naprawa komputera", full[1].subject)
+        assertEquals("Naprawa komputera", full[0].subject)
+        assertEquals("Sieci komputerowe i administrowanie sieciami", full[1].subject)
     }
 
     @Test fun getContent() {
-        assertEquals("Zadania egzaminacyjne", full[0].content)
-        assertEquals("Test diagnozujący", full[1].content)
+        assertEquals("Test diagnozujący", full[0].content)
+        assertEquals("Zadania egzaminacyjne", full[1].content)
     }
 
     @Test fun getTeacher() {
-        assertEquals("Słowacki Juliusz", full[0].teacher)
-        assertEquals("Mickiewicz Adam", full[1].teacher)
+        assertEquals("Mickiewicz Adam", full[0].teacher)
+        assertEquals("Słowacki Juliusz", full[1].teacher)
     }
 
     @Test fun getTeacherSymbol() {
-        assertEquals("SJ", full[0].teacherSymbol)
-        assertEquals("MA", full[1].teacherSymbol)
+        assertEquals("MA", full[0].teacherSymbol)
+        assertEquals("SJ", full[1].teacherSymbol)
     }
 }

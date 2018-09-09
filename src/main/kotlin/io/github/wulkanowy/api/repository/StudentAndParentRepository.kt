@@ -29,7 +29,7 @@ class StudentAndParentRepository(private val api: StudentAndParentService) {
                     it.number = row.number
                     it
                 }
-            }.sortedBy { it.date }
+            }.sortedWith(compareBy({ it.date }, {it.number }))
         }
     }
 
@@ -41,55 +41,55 @@ class StudentAndParentRepository(private val api: StudentAndParentService) {
                     if (exam.group.contains(" ")) exam.group = ""
                     exam
                 }
-            }
+            }.sortedBy { it.date }
         }
     }
 
     fun getGrades(semesterId: Int?): Single<List<Grade>> {
-        return api.getGrades(semesterId).map {
-            it.grades.map { grade ->
+        return api.getGrades(semesterId).map { res ->
+            res.grades.map { grade ->
                 if (grade.description == grade.symbol) grade.description = ""
                 grade
-            }
+            }.sortedWith(compareBy({ it.date }, { it.subject }))
         }
     }
 
     fun getGradesSummary(semesterId: Int?): Single<List<GradeSummary>> {
-        return api.getGradesSummary(semesterId).map {
-            it.subjects.map { summary ->
+        return api.getGradesSummary(semesterId).map { res ->
+            res.subjects.map { summary ->
                 summary.predicted = getGradeShortValue(summary.predicted)
                 summary.final = getGradeShortValue(summary.final)
                 summary
-            }
+            }.sortedBy { it.name }
         }
     }
 
     fun getHomework(date: Date?): Single<List<Homework>> {
-        return api.getHomework(getTickFromDate(date)).map {
-            it.items.map { item ->
-                item.date = it.date
+        return api.getHomework(getTickFromDate(date)).map { res ->
+            res.items.map { item ->
+                item.date = res.date
                 item
-            }
+            }.sortedWith(compareBy({ it.date }, { it.subject }))
         }
     }
 
     fun getNotes(): Single<List<Note>> {
-        return api.getNotes().map {
-            it.notes.mapIndexed { i, note ->
-                note.date = it.dates[i]
+        return api.getNotes().map { res ->
+            res.notes.mapIndexed { i, note ->
+                note.date = res.dates[i]
                 note
-            }
+            }.sortedWith(compareBy({ it.date }, { it.category }))
         }
     }
 
     fun getTeachers(): Single<List<Teacher>> {
-        return api.getSchoolAndTeachers().map {
-            it.subjects.flatMap { subject ->
+        return api.getSchoolAndTeachers().map { res ->
+            res.subjects.flatMap { subject ->
                 subject.teachers.split(", ").map { teacher ->
                     val tas = teacher.split(" [")
                     Teacher(tas.first(), tas.last().removeSuffix("]"), subject.name)
                 }
-            }
+            }.sortedWith(compareBy({ it.subject }, { it.name }))
         }
     }
 

@@ -143,12 +143,12 @@ class ApiTest : BaseTest() {
 
         val values = homeworkObserver.values()[0]
 
-        assertEquals(getDate(2017, 10, 23), values[0].date)
-        assertEquals(getDate(2017, 10, 18), values[0].entryDate)
-        assertEquals("Metodologia programowania", values[0].subject)
-        assertEquals("Wszystkie instrukcje warunkowe, pętle (budowa, zasada działania, schemat blokowy)", values[0].content)
-        assertEquals("Janusz Tracz", values[0].teacher)
-        assertEquals("TJ", values[0].teacherSymbol)
+        assertEquals(getDate(2017, 10, 23), values[1].date)
+        assertEquals(getDate(2017, 10, 18), values[1].entryDate)
+        assertEquals("Metodologia programowania", values[1].subject)
+        assertEquals("Wszystkie instrukcje warunkowe, pętle (budowa, zasada działania, schemat blokowy)", values[1].content)
+        assertEquals("Janusz Tracz", values[1].teacher)
+        assertEquals("TJ", values[1].teacherSymbol)
     }
 
     @Test fun notesTest() {
@@ -194,17 +194,17 @@ class ApiTest : BaseTest() {
 
         val values = summaryObserver.values()[0]
 
-        assertEquals("Historia", values[0].name)
-        assertEquals("1", values[0].predicted)
-        assertEquals("1", values[0].final)
+        assertEquals("Etyka", values[2].name)
+        assertEquals("2", values[2].predicted)
+        assertEquals("2", values[2].final)
 
-        assertEquals("Etyka", values[1].name)
-        assertEquals("2", values[1].predicted)
-        assertEquals("2", values[1].final)
+        assertEquals("Historia", values[5].name)
+        assertEquals("1", values[5].predicted)
+        assertEquals("1", values[5].final)
 
-        assertEquals("Język niemiecki", values[4].name)
-        assertEquals("", values[4].predicted)
-        assertEquals("", values[4].final)
+        assertEquals("Język niemiecki", values[8].name)
+        assertEquals("", values[8].predicted)
+        assertEquals("", values[8].final)
     }
 
     @Test fun teachersTest() {
@@ -215,9 +215,9 @@ class ApiTest : BaseTest() {
 
         val values = teachersObserver.values()[0]
 
-        assertEquals("Historia", values[0].subject)
-        assertEquals("Janusz Tracz", values[0].name)
-        assertEquals("TJ", values[0].short)
+        assertEquals("Historia", values[1].subject)
+        assertEquals("Janusz Tracz", values[1].name)
+        assertEquals("TJ", values[1].short)
     }
 
     @Test fun studentInfoTest() {
