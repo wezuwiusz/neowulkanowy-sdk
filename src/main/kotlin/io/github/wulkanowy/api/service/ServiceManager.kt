@@ -54,13 +54,10 @@ class ServiceManager(
     }
 
     fun getSnpService(withLogin: Boolean = true, interceptor: Boolean = true): StudentAndParentService {
+        if (withLogin && schoolId.isBlank()) throw NotLoggedInException("School id is not set")
+
         val client = getClientBuilder()
-
         if (interceptor) client.addInterceptor(studentAndParentInterceptor)
-
-        if (withLogin) {
-            if (schoolId.isBlank()) throw NotLoggedInException("School id is not set")
-        }
 
         return getRetrofit(client, "uonetplus-opiekun", "$symbol/$schoolId/", withLogin)
                 .addConverterFactory(JspoonConverterFactory.create()).build()
@@ -74,20 +71,15 @@ class ServiceManager(
     }
 
     private fun getRetrofit(client: OkHttpClient.Builder, subDomain: String, urlAppend: String, login: Boolean = true): Retrofit.Builder {
-        val retrofit = Retrofit.Builder()
+        return Retrofit.Builder()
                 .baseUrl("$schema://$subDomain.$host/$urlAppend")
                 .client(client.build())
-
-        return if (login) {
-            retrofit.addCallAdapterFactory(RxJava2ReauthCallAdapterFactory.create(
-                    loginRepository.login(email, password).toFlowable(),
-                    { it != NotLoggedInException("Zaloguj się") },
-                    1
-            ))
-        } else {
-            retrofit.addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-        }
-
+                .addCallAdapterFactory(if (!login) RxJava2CallAdapterFactory.create() else
+                    RxJava2ReauthCallAdapterFactory.create(
+                            loginRepository.login(email, password).toFlowable(),
+                            { it is NotLoggedInException }
+                    )
+                )
     }
 
     private fun getClientBuilder(): OkHttpClient.Builder {

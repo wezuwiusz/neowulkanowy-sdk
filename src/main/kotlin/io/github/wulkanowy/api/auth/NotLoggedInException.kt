@@ -1,3 +1,3 @@
 package io.github.wulkanowy.api.auth
 
-open class NotLoggedInException(message: String) : VulcanException(message)
+class NotLoggedInException(message: String) : Exception(message)

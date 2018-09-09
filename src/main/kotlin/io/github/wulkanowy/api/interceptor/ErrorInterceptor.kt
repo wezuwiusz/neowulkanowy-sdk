@@ -17,6 +17,14 @@ class ErrorInterceptor : Interceptor {
     }
 
     private fun checkForError(doc: Document) {
+        doc.select(".loginButton").let {
+            if (it.isNotEmpty()) throw NotLoggedInException(it.text())
+        }
+
+        doc.body().text().let { // /messages
+            if (it.contains("The custom error module does not recognize this error")) throw NotLoggedInException("Zaloguj się")
+        }
+
         doc.select(".ErrorMessage, #ErrorTextLabel").let {
             if (it.isNotEmpty()) throw BadCredentialsException(it.text())
         }
@@ -29,15 +37,10 @@ class ErrorInterceptor : Interceptor {
             if (it.isNotEmpty()) throw AccountPermissionException(it.text())
         }
 
-        if (doc.body().text().contains("The custom error module does not recognize this error")) { // /messages
-            throw NotLoggedInException("Zaloguj się")
-        }
-
         when(doc.title()) {
             "Błąd" -> throw VulcanException(doc.body().text())
             "Błąd strony" -> throw VulcanException(doc.select(".errorMessage").text())
             "Logowanie" -> throw AccountPermissionException(doc.select("div").last().html().split("<br>")[1].trim())
-            "Dziennik UONET+", "Uczeń" -> throw NotLoggedInException(doc.select(".loginButton").text())
             "Przerwa techniczna" -> throw ServiceUnavailableException(doc.title())
         }
     }
