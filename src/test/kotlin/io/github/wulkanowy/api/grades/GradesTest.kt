@@ -11,7 +11,7 @@ class GradesTest : BaseTest() {
     }
 
     @Test fun getAllTest() {
-        assertEquals(7, grades.size) // 2 items are skipped
+        assertEquals(8, grades.size) // 2 items are skipped
     }
 
     @Test fun getSubjectTest() {
@@ -23,9 +23,17 @@ class GradesTest : BaseTest() {
 
     @Test fun getValueTest() {
         assertEquals("1", grades[0].value)
+        assertEquals("5", grades[1].value)
         assertEquals("4-", grades[2].value)
         assertEquals("5", grades[4].value)
         assertEquals("5", grades[5].value)
+        assertEquals("65", grades[6].value)
+    }
+
+    @Test fun getCommentTest() {
+        assertEquals("pomoc przy tej uroczystości była wyjątkowa", grades[1].comment)
+        assertEquals("", grades[3].comment)
+        assertEquals("%", grades[6].comment)
     }
 
     @Test fun getColorTest() {

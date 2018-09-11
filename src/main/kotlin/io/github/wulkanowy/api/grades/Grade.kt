@@ -9,8 +9,11 @@ class Grade {
     @Selector("td", index = 0)
     lateinit var subject: String
 
-    @Selector("td", index = 1)
+    @Selector("td", index = 1, regex = "([^\\s]*)")
     lateinit var value: String
+
+    @Selector("td", index = 1, regex = "\\(([^)]+)\\)")
+    lateinit var comment: String
 
     @Selector("td .ocenaCzastkowa", attr = "style", regex = "#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})")
     lateinit var color: String
