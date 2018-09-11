@@ -74,6 +74,12 @@ class Api {
 
     fun getNotes() = snp.getNotes()
 
+    fun getRegisteredDevices() = snp.getRegisteredDevices()
+
+    fun getToken() = snp.getToken()
+
+    fun unregisterDevice(id: Int) = snp.unregisterDevice(id)
+
     fun getTeachers() = snp.getTeachers()
 
     fun getStudentInfo() = snp.getStudentInfo()

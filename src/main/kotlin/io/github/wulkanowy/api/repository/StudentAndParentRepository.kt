@@ -5,6 +5,8 @@ import io.github.wulkanowy.api.exams.Exam
 import io.github.wulkanowy.api.grades.Grade
 import io.github.wulkanowy.api.grades.GradeSummary
 import io.github.wulkanowy.api.homework.Homework
+import io.github.wulkanowy.api.mobile.Device
+import io.github.wulkanowy.api.mobile.TokenResponse
 import io.github.wulkanowy.api.notes.Note
 import io.github.wulkanowy.api.register.StudentAndParentResponse
 import io.github.wulkanowy.api.school.Teacher
@@ -80,6 +82,18 @@ class StudentAndParentRepository(private val api: StudentAndParentService) {
                 note
             }.sortedWith(compareBy({ it.date }, { it.category }))
         }
+    }
+
+    fun getRegisteredDevices(): Single<List<Device>> {
+        return api.getRegisteredDevices().map { it.devices }
+    }
+
+    fun getToken(): Single<TokenResponse> {
+        return api.getToken()
+    }
+
+    fun unregisterDevice(id: Int): Single<List<Device>> {
+        return api.unregisterDevice(id).map { it.devices }
     }
 
     fun getTeachers(): Single<List<Teacher>> {

@@ -5,15 +5,14 @@ import io.github.wulkanowy.api.exams.ExamResponse
 import io.github.wulkanowy.api.grades.GradesResponse
 import io.github.wulkanowy.api.grades.GradesSummaryResponse
 import io.github.wulkanowy.api.homework.HomeworkResponse
+import io.github.wulkanowy.api.mobile.RegisteredDevicesResponse
+import io.github.wulkanowy.api.mobile.TokenResponse
 import io.github.wulkanowy.api.notes.NotesResponse
 import io.github.wulkanowy.api.register.StudentAndParentResponse
 import io.github.wulkanowy.api.school.SchoolAndTeachersResponse
 import io.github.wulkanowy.api.student.StudentInfo
 import io.reactivex.Single
-import retrofit2.http.GET
-import retrofit2.http.Header
-import retrofit2.http.Query
-import retrofit2.http.Url
+import retrofit2.http.*
 
 interface StudentAndParentService {
 
@@ -44,11 +43,18 @@ interface StudentAndParentService {
     @GET("ZadaniaDomowe.mvc?rodzajWidoku=Dzien")
     fun getHomework(@Query("data") date: String): Single<HomeworkResponse>
 
-    @GET("DostepMobilny.mvc")
-    fun getRegisteredDevices()
-
     @GET("UwagiOsiagniecia.mvc/Wszystkie")
     fun getNotes(): Single<NotesResponse>
+
+    @GET("DostepMobilny.mvc")
+    fun getRegisteredDevices(): Single<RegisteredDevicesResponse>
+
+    @GET("DostepMobilny.mvc/Rejestruj")
+    fun getToken(): Single<TokenResponse>
+
+    @POST("DostepMobilny.mvc/PotwierdzWyrejestrowanie")
+    @FormUrlEncoded
+    fun unregisterDevice(@Field("Id") id: Int): Single<RegisteredDevicesResponse>
 
     @GET("Szkola.mvc/Nauczyciele")
     fun getSchoolAndTeachers(): Single<SchoolAndTeachersResponse>

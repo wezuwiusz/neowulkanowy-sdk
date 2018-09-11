@@ -8,6 +8,8 @@ import io.github.wulkanowy.api.homework.Homework
 import io.github.wulkanowy.api.messages.Message
 import io.github.wulkanowy.api.messages.Recipient
 import io.github.wulkanowy.api.messages.ReportingUnit
+import io.github.wulkanowy.api.mobile.Device
+import io.github.wulkanowy.api.mobile.TokenResponse
 import io.github.wulkanowy.api.notes.Note
 import io.github.wulkanowy.api.register.Pupil
 import io.github.wulkanowy.api.register.Semester
@@ -293,5 +295,36 @@ class ApiTest : BaseTest() {
         mObserver.assertComplete()
 
         assertEquals(1, mObserver.values().size)
+    }
+
+    @Test fun devicesTest() {
+        val devices = api.getRegisteredDevices()
+        val devicesObserver = TestObserver<List<Device>>()
+        devices.subscribe(devicesObserver)
+        devicesObserver.assertComplete()
+
+        val values = devicesObserver.values()[0]
+
+        assertEquals(2, values.size)
+    }
+
+    @Test fun tokenTest() {
+        val token = api.getToken()
+        val tokenObserver = TestObserver<TokenResponse>()
+        token.subscribe(tokenObserver)
+        tokenObserver.assertComplete()
+
+        assertEquals("FK100000", tokenObserver.values()[0].token)
+        assertEquals("Default", tokenObserver.values()[0].symbol)
+        assertEquals("999999", tokenObserver.values()[0].pin)
+    }
+
+    @Test fun unregisterTest() {
+        val unregister = api.unregisterDevice(1234)
+        val unregisterObserver = TestObserver<List<Device>>()
+        unregister.subscribe(unregisterObserver)
+        unregisterObserver.assertComplete()
+
+        assertEquals(2, unregisterObserver.values()[0].size)
     }
 }
