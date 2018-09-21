@@ -176,11 +176,12 @@ class ApiTest : BaseTest() {
         val values = gradesObserver.values()[0]
 
         assertEquals("Historia", values[0].subject)
-        assertEquals("1", values[0].value)
+        assertEquals("1", values[0].entry)
         assertEquals("000000", values[0].color)
         assertEquals("Spr", values[0].symbol)
         assertEquals("spr.-rozbiory", values[0].description)
         assertEquals("5,00", values[0].weight)
+        assertEquals(5, values[0].weightValue.toInt())
         assertEquals(getDate(2018, 1, 29), values[0].date)
         assertEquals("Janusz Tracz", values[0].teacher)
 

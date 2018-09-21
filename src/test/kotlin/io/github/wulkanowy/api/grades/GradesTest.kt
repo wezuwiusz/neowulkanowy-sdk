@@ -22,12 +22,30 @@ class GradesTest : BaseTest() {
     }
 
     @Test fun getValueTest() {
-        assertEquals("1", grades[0].value)
-        assertEquals("5", grades[1].value)
-        assertEquals("4-", grades[2].value)
-        assertEquals("5", grades[4].value)
-        assertEquals("5", grades[5].value)
-        assertEquals("65", grades[6].value)
+        assertEquals(2, grades[0].value)
+        assertEquals(5, grades[1].value)
+        assertEquals(4, grades[2].value)
+        assertEquals(5, grades[4].value)
+        assertEquals(5, grades[5].value)
+        assertEquals(0, grades[6].value)
+    }
+
+    @Test fun getEntryTest() {
+        assertEquals("2=", grades[0].entry)
+        assertEquals("5", grades[1].entry)
+        assertEquals("4-", grades[2].entry)
+        assertEquals("5+", grades[4].entry)
+        assertEquals("-5", grades[5].entry)
+        assertEquals("65", grades[6].entry)
+    }
+
+    @Test fun getModifierTest() {
+        assertEquals(-0.5f, grades[0].modifier)
+        assertEquals(0f, grades[1].modifier)
+        assertEquals(-0.33f, grades[2].modifier)
+        assertEquals(0.33f, grades[4].modifier)
+        assertEquals(-0.33f, grades[5].modifier)
+        assertEquals(0f, grades[6].modifier)
     }
 
     @Test fun getCommentTest() {
@@ -63,6 +81,13 @@ class GradesTest : BaseTest() {
         assertEquals("8,00", grades[3].weight)
         assertEquals("5,00", grades[4].weight)
         assertEquals("3,00", grades[5].weight)
+    }
+
+    @Test fun getWeightValueTest() {
+        assertEquals(5, grades[2].weightValue.toInt())
+        assertEquals(8, grades[3].weightValue.toInt())
+        assertEquals(5, grades[4].weightValue.toInt())
+        assertEquals(3, grades[5].weightValue.toInt())
     }
 
     @Test fun getDateTest() {

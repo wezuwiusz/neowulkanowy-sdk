@@ -10,7 +10,13 @@ class Grade {
     lateinit var subject: String
 
     @Selector("td", index = 1, regex = "([^\\s]*)")
-    lateinit var value: String
+    lateinit var entry: String
+
+    @Selector("td", index = 1, converter = GradeValueConverter::class)
+    var value: Int = 0
+
+    @Selector("td", index = 1, converter = GradeModifierValueConverter::class)
+    var modifier: Float = 0f
 
     @Selector("td", index = 1, regex = "\\(([^)]+)\\)")
     lateinit var comment: String
@@ -26,6 +32,10 @@ class Grade {
 
     @Selector("td", index = 3)
     lateinit var weight: String
+
+    @Selector("td", index = 3)
+    @Format("%1$,.2f")
+    var weightValue: Double = 0.0
 
     @Selector("td:not(:empty)", index = 4, defValue = "01.01.1970")
     @Format("dd.MM.yyyy")

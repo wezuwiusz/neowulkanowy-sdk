@@ -49,11 +49,11 @@ class StudentAndParentRepository(private val api: StudentAndParentService) {
 
     fun getGrades(semesterId: Int?): Single<List<Grade>> {
         return api.getGrades(semesterId).map { res ->
-            res.grades.map { grade ->
-                if (grade.value == grade.comment) grade.comment = ""
+            res.grades.asSequence().map { grade ->
+                if (grade.entry == grade.comment) grade.comment = ""
                 if (grade.description == grade.symbol) grade.description = ""
                 grade
-            }.sortedWith(compareBy({ it.date }, { it.subject }))
+            }.sortedWith(compareBy({ it.date }, { it.subject })).toList()
         }
     }
 
