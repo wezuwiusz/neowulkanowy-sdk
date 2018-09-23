@@ -33,9 +33,8 @@ class Grade {
     @Selector("td", index = 3)
     lateinit var weight: String
 
-    @Selector("td", index = 3)
-    @Format("%1$,.2f")
-    var weightValue: Double = 0.0
+    @Selector("td", index = 3, converter = GradeWeightValueConverter::class)
+    var weightValue: Int = 0
 
     @Selector("td:not(:empty)", index = 4, defValue = "01.01.1970")
     @Format("dd.MM.yyyy")

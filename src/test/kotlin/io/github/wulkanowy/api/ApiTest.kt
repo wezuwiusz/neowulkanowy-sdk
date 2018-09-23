@@ -182,7 +182,7 @@ class ApiTest : BaseTest() {
         assertEquals("Spr", values[0].symbol)
         assertEquals("spr.-rozbiory", values[0].description)
         assertEquals("5,00", values[0].weight)
-        assertEquals(5, values[0].weightValue.toInt())
+        assertEquals(5, values[0].weightValue)
         assertEquals(getDate(2018, 1, 29), values[0].date)
         assertEquals("Janusz Tracz", values[0].teacher)
 

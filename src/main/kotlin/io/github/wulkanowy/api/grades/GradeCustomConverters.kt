@@ -14,10 +14,17 @@ class GradeValueConverter : ElementConverter<Int?> {
     }
 }
 
-class GradeModifierValueConverter: ElementConverter<Float> {
+class GradeModifierValueConverter : ElementConverter<Float> {
 
     override fun convert(node: Element, selector: Selector): Float {
         return getGradeValueWithModifier(node.text()).second
+    }
+}
+
+class GradeWeightValueConverter : ElementConverter<Int> {
+
+    override fun convert(node: Element, selector: Selector): Int {
+        return node.text().substringBefore(",").toInt()
     }
 }
 

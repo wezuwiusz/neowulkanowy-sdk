@@ -84,10 +84,10 @@ class GradesTest : BaseTest() {
     }
 
     @Test fun getWeightValueTest() {
-        assertEquals(5.00, grades[2].weightValue, 0.0)
-        assertEquals(8.00, grades[3].weightValue, 0.0)
-        assertEquals(5.00, grades[4].weightValue, 0.0)
-        assertEquals(3.00, grades[5].weightValue, 0.0)
+        assertEquals(5, grades[2].weightValue)
+        assertEquals(8, grades[3].weightValue)
+        assertEquals(5, grades[4].weightValue)
+        assertEquals(3, grades[5].weightValue)
     }
 
     @Test fun getDateTest() {
