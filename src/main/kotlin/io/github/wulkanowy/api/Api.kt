@@ -95,4 +95,6 @@ class Api {
     fun getDeletedMessages(startDate: Date? = null, endDate: Date? = null) = messages.getDeletedMessages(startDate, endDate)
 
     fun getMessage(id: Int, folderId: Int) = messages.getMessage(id, folderId)
+
+    fun getTimetable(startDate: Date? = null) = snp.getTimetable(startDate)
 }

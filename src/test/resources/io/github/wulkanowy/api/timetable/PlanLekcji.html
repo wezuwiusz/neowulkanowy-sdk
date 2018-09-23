@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="utf-8">
+    <title>Witryna ucznia i rodzica – Plan lekcji</title>
+    <style>
+      table, th, td {
+        border: 1px solid;
+        border-collapse: collapse;
+      }
+      table td > div:not(:last-child) {
+        border-bottom: 5px solid silver;
+        padding-bottom: 5px;
+        margin-bottom: 5px;
+      }
+      table td div span:nth-child(1) {
+        display: block;
+      }
+      table span {
+        font-size: smaller;
+      }
+      .x-treelabel-ppl {
+        background: #99f;
+        font-style: italic;
+      }
+      .x-treelabel-rlz {
+        background: #f3a;
+      }
+      .x-treelabel-inv {
+        background: #f00;
+      }
+      .x-treelabel-zas {
+        background: #0f0;
+      }
+      table span:not([class]),
+      table span[class=""] {
+        background: #999;
+      }
+    </style>
+</head>
+<body>
+<main class="mainContainer">
+    <h1>Plan lekcji</h1>
+    <div>
+        <table class="presentData">
+            <thead>
+            <tr>
+                <th>Lekcja</th>
+                <th>Pora lekcji</th>
+                <th>poniedziałek<br>24.09.2018</th>
+                <th>wtorek<br>25.09.2018</th>
+                <th>środa<br>26.09.2018</th>
+                <th>czwartek<br>27.09.2018</th>
+                <th>piątek<br>28.09.2018</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>0</td>
+                <td>07:10 07:55</td>
+                <td>
+                    <!-- @see TimetableTest#getSimpleLesson() -->
+                    <!--Prosta lekcja-->
+                    <div>
+                        <span class="">Matematyka</span>
+                        <span class="">Rachunek Beata</span>
+                        <span class="">23</span>
+                    </div>
+                </td>
+                <td>
+                    <!-- @see TimetableTest#getSimpleLesson_canceled() -->
+                    <!--Prosta lekcja : odwołana-->
+                    <div>
+                        <span class="x-treelabel-ppl x-treelabel-inv">Język polski</span>
+                        <span class="x-treelabel-ppl x-treelabel-inv">Polonistka Joanna</span>
+                        <span class="x-treelabel-ppl x-treelabel-inv">W3</span>
+                        <span class="x-treelabel-rlz">(oddział nieobecny - Wycieczka warsztat)</span>
+                    </div>
+                </td>
+                <td>
+                    <!-- @see TimetableTest#getSimpleLesson_replacementSameTeacher() -->
+                    <!--Prosta lekcja z zastępstwem z tym samym nauczycielem-->
+                    <div>
+                        <span class="">Język polski</span>
+                        <span class="">Polonistka Joanna</span>
+                        <span class="">5</span>
+                    </div>
+                    <div>
+                        <span class="x-treelabel-ppl x-treelabel-inv">Religia</span>
+                        <span class="x-treelabel-ppl x-treelabel-inv">Polonistka Joanna</span>
+                        <span class="x-treelabel-ppl x-treelabel-inv">3</span>
+                    </div>
+                </td>
+                <td>
+                    <!-- @see TimetableTest#getSimpleLesson_replacementDifferentTeacher() -->
+                    <!--Prosta lekcja z zastępstwem z innym nauczycielem-->
+                    <div>
+                        <span class=" x-treelabel-inv">Religia</span>
+                        <span class=" x-treelabel-inv">Gliniak Krystian</span>
+                        <span class=" x-treelabel-inv">3</span>
+                        <span class="x-treelabel-ppl x-treelabel-zas">Wychowanie do życia w rodzinie</span>
+                        <span class="x-treelabel-ppl x-treelabel-zas">Telichowska Aleksandra</span>
+                        <span class="x-treelabel-ppl x-treelabel-zas">5</span>
+                        <span class="x-treelabel-rlz">(zastępstwo)</span>
+                    </div>
+                </td>
+                <td>
+                    <!-- @see TimetableTest#getGroupLesson() -->
+                    <!-- Lekcja z podziałem na grupy -->
+                    <div>
+                        <span class="">Fizyka [zaw2]</span>
+                        <span class=""></span>
+                        <span class="">Fizyczny Janusz</span>
+                        <span class="">19</span>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td>1</td>
+                <td>08:00 08:45</td>
+                <td>
+                    <!-- @see TimetableTest#getGroupLesson_canceled() -->
+                    <!-- Lekcja z podziałem na grupy : odwołana -->
+                    <div>
+                        <span class="x-treelabel-ppl x-treelabel-inv">Język angielski [J1]</span>
+                        <span class="x-treelabel-ppl x-treelabel-inv"></span>
+                        <span class="x-treelabel-ppl x-treelabel-inv">Angielska Amerykanka</span>
+                        <span class="x-treelabel-ppl x-treelabel-inv">24</span>
+                        <span class="x-treelabel-rlz">(uczniowie przychodzą później)</span>
+                    </div>
+                </td>
+                <td>
+                    <!-- @see TimetableTest#getGroupLesson_replacementSameTeacher() -->
+                    <!-- Lekcja z podziałem na grupy z zastępstwem z tym samym nauczycielem -->
+                    <div>
+                        <span class="">Wychowanie fizyczne [zaw2]</span>
+                        <span class=""></span>
+                        <span class="">Wychowawczy Kazimierz</span>
+                        <span class="">WG</span>
+                    </div>
+                    <div>
+                        <span class="x-treelabel-ppl x-treelabel-inv">Naprawa komputera [zaw2]</span>
+                        <span class="x-treelabel-ppl x-treelabel-inv"></span>
+                        <span class="x-treelabel-ppl x-treelabel-inv">Naprawowy Andrzej</span>
+                        <span class="x-treelabel-ppl x-treelabel-inv">32</span>
+                        <span class="x-treelabel-rlz">(okienko dla uczniów)</span>
+                    </div>
+                </td>
+                <td>
+                    <!-- @see TimetableTest#getGroupLesson_replacementDifferentTeacher() -->
+                    <!-- Lekcja z podziałem na grupy i zastępstwem z innym nauczycielem - 1div z do 4span stara lekcja, 1 div z od 5span nowa lekcja, 2 div stara lekcja -->
+                    <div>
+                        <span class=" x-treelabel-inv">Tworzenie i administrowanie bazami danych [zaw2]</span>
+                        <span class=" x-treelabel-inv"></span>
+                        <span class=" x-treelabel-inv">Dębicki Robert</span>
+                        <span class=" x-treelabel-inv">34</span>
+                        <span class="x-treelabel-ppl x-treelabel-zas">Tworzenie i administrowanie bazami danych [zaw2]</span>
+                        <span class="x-treelabel-ppl x-treelabel-zas"></span>
+                        <span class="x-treelabel-ppl x-treelabel-zas">Kobyliński Leszek</span>
+                        <span class="x-treelabel-ppl x-treelabel-zas">34</span>
+                        <span class="x-treelabel-rlz">(zastępstwo)</span>
+                    </div>
+                    <div>
+                        <span class="">Tworzenie aplikacji internetowych [zaw2]</span>
+                        <span class=""></span>
+                        <span class=""></span>
+                        <span class=""></span>
+                    </div>
+                </td>
+                <td>
+                    <!-- @see TimetableTest#getLesson_button() -->
+                    <!--Lekcja z przyciskiem-->
+                    <div>
+                        <span class="x-treelabel-ppl x-treelabel-inv">Język polski</span>
+                        <span class="x-treelabel-ppl x-treelabel-inv">Polonistka Joanna</span>
+                        <span class="x-treelabel-ppl x-treelabel-inv">16</span>
+                        <span class="x-treelabel-rlz">(oddział nieobecny)</span>
+                    </div>
+                    <button type="button" class="uwaga-btn">Uwaga</button>
+                    <div class="uwaga-panel">egzamin</div>
+                </td>
+                <td>
+                    <!-- @see TimetableTest#getLesson_emptyOriginal() -->
+                    <!--Lekcja z pustą lekcją oryginalną-->
+                    <div>
+                        <span class="x-treelabel-ppl x-treelabel-zas">Wychowanie fizyczne [zaw2]</span>
+                        <span class="x-treelabel-ppl x-treelabel-zas"></span>
+                        <span class="x-treelabel-ppl x-treelabel-zas"></span>
+                        <span class="x-treelabel-ppl x-treelabel-zas">G3</span>
+                        <span class="x-treelabel-rlz">(przeniesiona z lekcji 7, 01.12.2017)</span>
+                    </div>
+                    <div>
+                        <!--<span>WTF</span>-->
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="description">
+        <div>
+            <span class="x-treelabel-ppl">Kursywa</span>- planowane
+        </div>
+        <div>
+            <span class="x-treelabel-rlz">Zwykła czcionka</span>- zrealizowane
+        </div>
+        <div>
+            <span class="x-treelabel-inv">Przekreślone</span>- odwołane lub przeniesione
+        </div>
+        <div>
+            <span class="x-treelabel-zas">Pogrubione</span>- nowe lekcje, przeniesione z innego terminu, zastępstwa
+        </div>
+    </div>
+</main>
+<footer>18.04.0003.29139</footer>
+</body>
+</html>

@@ -12,9 +12,11 @@ import io.github.wulkanowy.api.register.StudentAndParentResponse
 import io.github.wulkanowy.api.school.Teacher
 import io.github.wulkanowy.api.service.StudentAndParentService
 import io.github.wulkanowy.api.student.StudentInfo
+import io.github.wulkanowy.api.timetable.Timetable
+import io.github.wulkanowy.api.timetable.TimetableParser
 import io.reactivex.Single
+import java.text.SimpleDateFormat
 import java.util.*
-import java.util.Calendar
 
 class StudentAndParentRepository(private val api: StudentAndParentService) {
 
@@ -23,7 +25,7 @@ class StudentAndParentRepository(private val api: StudentAndParentService) {
     }
 
     fun getAttendance(startDate: Date?): Single<List<Attendance>> {
-        return api.getAttendance(getTickFromDate(startDate)).map { res ->
+        return api.getAttendance(startDate.toTick()).map { res ->
             res.rows.flatMap { row ->
                 row.lessons.mapIndexedNotNull { i, it ->
                     if ("null" == it.subject) return@mapIndexedNotNull null
@@ -31,12 +33,12 @@ class StudentAndParentRepository(private val api: StudentAndParentService) {
                     it.number = row.number
                     it
                 }
-            }.sortedWith(compareBy({ it.date }, {it.number }))
+            }.sortedWith(compareBy({ it.date }, { it.number }))
         }
     }
 
     fun getExams(startDate: Date?): Single<List<Exam>> {
-        return api.getExams(getTickFromDate(startDate)).map { res ->
+        return api.getExams(startDate.toTick()).map { res ->
             res.days.flatMap { day ->
                 day.exams.map { exam ->
                     exam.date = day.date
@@ -59,29 +61,29 @@ class StudentAndParentRepository(private val api: StudentAndParentService) {
 
     fun getGradesSummary(semesterId: Int?): Single<List<GradeSummary>> {
         return api.getGradesSummary(semesterId).map { res ->
-            res.subjects.map { summary ->
+            res.subjects.asSequence().map { summary ->
                 summary.predicted = getGradeShortValue(summary.predicted)
                 summary.final = getGradeShortValue(summary.final)
                 summary
-            }.sortedBy { it.name }
+            }.sortedBy { it.name }.toList()
         }
     }
 
     fun getHomework(date: Date?): Single<List<Homework>> {
-        return api.getHomework(getTickFromDate(date)).map { res ->
-            res.items.map { item ->
+        return api.getHomework(date.toTick()).map { res ->
+            res.items.asSequence().map { item ->
                 item.date = res.date
                 item
-            }.sortedWith(compareBy({ it.date }, { it.subject }))
+            }.sortedWith(compareBy({ it.date }, { it.subject })).toList()
         }
     }
 
     fun getNotes(): Single<List<Note>> {
         return api.getNotes().map { res ->
-            res.notes.mapIndexed { i, note ->
+            res.notes.asSequence().mapIndexed { i, note ->
                 note.date = res.dates[i]
                 note
-            }.sortedWith(compareBy({ it.date }, { it.category }))
+            }.sortedWith(compareBy({ it.date }, { it.category })).toList()
         }
     }
 
@@ -115,6 +117,20 @@ class StudentAndParentRepository(private val api: StudentAndParentService) {
         }
     }
 
+    fun getTimetable(startDate: Date?): Single<List<Timetable>> {
+        return api.getTimetable(startDate.toTick()).map { res ->
+            res.rows.flatMap { row ->
+                row.lessons.asSequence().mapIndexedNotNull { i, it ->
+                    it.date = res.days[i]
+                    it.start = "${it.date.toString("yyy-MM-dd")} ${row.startTime}".toDate("yyyy-MM-dd HH:mm")
+                    it.end = "${it.date.toString("yyy-MM-dd")} ${row.endTime}".toDate("yyyy-MM-dd HH:mm")
+                    it.number = row.number
+                    it
+                }.mapNotNull { TimetableParser().getTimetable(it) }.toList()
+            }.sortedWith(compareBy({ it.date }, { it.number }))
+        }
+    }
+
     private fun getGradeShortValue(value: String): String {
         return when (value) {
             "celujący" -> "6"
@@ -127,11 +143,15 @@ class StudentAndParentRepository(private val api: StudentAndParentService) {
         }
     }
 
-    private fun getTickFromDate(date: Date?): String {
-        if (date == null) return ""
+    private fun String.toDate(format: String): Date = SimpleDateFormat(format).parse(this)
+
+    private fun Date.toString(format: String): String = SimpleDateFormat(format).format(this)
+
+    private fun Date?.toTick(): String {
+        if (this == null) return ""
         val c = Calendar.getInstance(TimeZone.getTimeZone("UTC")).apply {
             timeZone = TimeZone.getDefault()
-            time = date
+            time = this@toTick
         }
         val utcOffset = c.get(Calendar.ZONE_OFFSET) + c.get(Calendar.DST_OFFSET)
         return ((c.timeInMillis + utcOffset) * 10000 + 621355968000000000L).toString()

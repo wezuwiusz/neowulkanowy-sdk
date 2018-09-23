@@ -16,6 +16,7 @@ import io.github.wulkanowy.api.register.Semester
 import io.github.wulkanowy.api.register.StudentAndParentResponse
 import io.github.wulkanowy.api.school.Teacher
 import io.github.wulkanowy.api.student.StudentInfo
+import io.github.wulkanowy.api.timetable.Timetable
 import io.reactivex.observers.TestObserver
 import okhttp3.logging.HttpLoggingInterceptor
 import org.junit.Assert.assertEquals
@@ -327,5 +328,21 @@ class ApiTest : BaseTest() {
         unregisterObserver.assertComplete()
 
         assertEquals(2, unregisterObserver.values()[0].size)
+    }
+
+    @Test fun timetableTest() {
+        val timetable = api.getTimetable(getDate(2018, 9, 17))
+        val timetableObserver = TestObserver<List<Timetable>>()
+        timetable.subscribe(timetableObserver)
+        timetableObserver.assertComplete()
+
+        val values = timetableObserver.values()[0]
+
+        assertEquals(0, values[0].number)
+        assertEquals("Fizyka", values[0].subject)
+        assertEquals("zaw2", values[0].group)
+        assertEquals("uczniowie zwolnieni do domu", values[0].info)
+        assertEquals(true, values[0].canceled)
+        assertEquals(false, values[0].changes)
     }
 }

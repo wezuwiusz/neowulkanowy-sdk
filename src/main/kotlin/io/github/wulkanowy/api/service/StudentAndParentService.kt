@@ -11,6 +11,7 @@ import io.github.wulkanowy.api.notes.NotesResponse
 import io.github.wulkanowy.api.register.StudentAndParentResponse
 import io.github.wulkanowy.api.school.SchoolAndTeachersResponse
 import io.github.wulkanowy.api.student.StudentInfo
+import io.github.wulkanowy.api.timetable.TimetableResponse
 import io.reactivex.Single
 import retrofit2.http.*
 
@@ -60,7 +61,7 @@ interface StudentAndParentService {
     fun getSchoolAndTeachers(): Single<SchoolAndTeachersResponse>
 
     @GET("Lekcja.mvc/PlanZajec")
-    fun getTimetable(@Query("data") date: String)
+    fun getTimetable(@Query("data") date: String): Single<TimetableResponse>
 
     @GET("Uczen.mvc/DanePodstawowe")
     fun getStudentInfo(): Single<StudentInfo>

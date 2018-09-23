@@ -11,8 +11,6 @@ import pl.droidsonroids.retrofit2.JspoonConverterFactory
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
-import java.time.LocalDate
-import java.time.ZoneId
 import java.util.*
 
 open class BaseTest {
@@ -35,8 +33,15 @@ open class BaseTest {
                 .create(service)
     }
 
-    fun getDate(year: Int, month: Int, day: Int): Date {
-        return Date.from(LocalDate.of(year, month, day)
-                .atStartOfDay(ZoneId.systemDefault()).toInstant())
+    fun getDate(year: Int, month: Int, day: Int, hour: Int = 0, minute: Int = 0, second: Int = 0, mili: Int = 0): Date {
+        return Calendar.getInstance().apply {
+            set(Calendar.YEAR, year)
+            set(Calendar.MONTH, month - 1)
+            set(Calendar.DAY_OF_MONTH, day)
+            set(Calendar.HOUR_OF_DAY, hour)
+            set(Calendar.MINUTE, minute)
+            set(Calendar.SECOND, second)
+            set(Calendar.MILLISECOND, mili)
+        }.time
     }
 }
