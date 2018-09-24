@@ -97,4 +97,6 @@ class Api {
     fun getMessage(id: Int, folderId: Int) = messages.getMessage(id, folderId)
 
     fun getTimetable(startDate: Date? = null) = snp.getTimetable(startDate)
+
+    fun getRealized(startDate: Date? = null) = snp.getRealized(startDate)
 }

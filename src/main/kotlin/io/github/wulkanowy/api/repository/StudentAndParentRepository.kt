@@ -8,6 +8,7 @@ import io.github.wulkanowy.api.homework.Homework
 import io.github.wulkanowy.api.mobile.Device
 import io.github.wulkanowy.api.mobile.TokenResponse
 import io.github.wulkanowy.api.notes.Note
+import io.github.wulkanowy.api.realized.Realized
 import io.github.wulkanowy.api.register.StudentAndParentResponse
 import io.github.wulkanowy.api.school.Teacher
 import io.github.wulkanowy.api.service.StudentAndParentService
@@ -127,6 +128,20 @@ class StudentAndParentRepository(private val api: StudentAndParentService) {
                     it.number = row.number
                     it
                 }.mapNotNull { TimetableParser().getTimetable(it) }.toList()
+            }.sortedWith(compareBy({ it.date }, { it.number }))
+        }
+    }
+
+    fun getRealized(startDate: Date?): Single<List<Realized>> {
+        return api.getRealized(startDate.toTick(), null, null).map { res ->
+            lateinit var lastDate: Date
+            res.items.mapNotNull {
+                if (it.subject.isBlank()) {
+                    lastDate = it.date
+                    return@mapNotNull null
+                }
+
+                it.apply { date = lastDate }
             }.sortedWith(compareBy({ it.date }, { it.number }))
         }
     }

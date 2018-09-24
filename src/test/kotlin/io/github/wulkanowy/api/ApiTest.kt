@@ -11,6 +11,7 @@ import io.github.wulkanowy.api.messages.ReportingUnit
 import io.github.wulkanowy.api.mobile.Device
 import io.github.wulkanowy.api.mobile.TokenResponse
 import io.github.wulkanowy.api.notes.Note
+import io.github.wulkanowy.api.realized.Realized
 import io.github.wulkanowy.api.register.Pupil
 import io.github.wulkanowy.api.register.Semester
 import io.github.wulkanowy.api.register.StudentAndParentResponse
@@ -344,5 +345,22 @@ class ApiTest : BaseTest() {
         assertEquals("uczniowie zwolnieni do domu", values[0].info)
         assertEquals(true, values[0].canceled)
         assertEquals(false, values[0].changes)
+    }
+
+    @Test fun realizedTest() {
+        val realized = api.getRealized(getDate(2018, 9, 17))
+        val realizedObserver = TestObserver<List<Realized>>()
+        realized.subscribe(realizedObserver)
+        realizedObserver.assertComplete()
+
+        val values = realizedObserver.values()[0]
+
+        assertEquals(getDate(2018, 9, 17), values[0].date)
+        assertEquals(1, values[0].number)
+        assertEquals("Historia i społeczeństwo", values[0].subject)
+        assertEquals("Powstanie listopadowe", values[0].topic)
+        assertEquals("Histeryczna Jadwiga", values[0].teacher)
+        assertEquals("Hi", values[0].teacherSymbol)
+        assertEquals("Nieobecność nieusprawiedliwiona", values[0].absence)
     }
 }
