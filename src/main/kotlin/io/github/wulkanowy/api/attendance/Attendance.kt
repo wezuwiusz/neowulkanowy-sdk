@@ -9,14 +9,25 @@ class Attendance {
 
     lateinit var date: Date
 
-    @Selector("span", defValue = "null")
+    @Selector("span")
     lateinit var subject: String
 
     @Selector("div", attr = "class")
-    lateinit var type: String
+    lateinit var name: String
+
+    var presence: Boolean = false
+
+    var absence: Boolean = false
+
+    var exemption: Boolean = false
+
+    var lateness: Boolean = false
+
+    var excused: Boolean = false
+
+    var deleted: Boolean = false
 
     object Types {
-        const val NOT_EXIST = "x-sp-nieobecny-w-oddziale"
         const val PRESENCE = "x-obecnosc"
         const val ABSENCE_UNEXCUSED = "x-nieobecnosc-nieuspr"
         const val ABSENCE_EXCUSED = "x-nieobecnosc-uspr"

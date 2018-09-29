@@ -20,7 +20,7 @@ import io.github.wulkanowy.api.student.StudentInfo
 import io.github.wulkanowy.api.timetable.Timetable
 import io.reactivex.observers.TestObserver
 import okhttp3.logging.HttpLoggingInterceptor
-import org.junit.Assert.assertEquals
+import org.junit.Assert.*
 import org.junit.Before
 import org.junit.Ignore
 import org.junit.Test
@@ -99,26 +99,31 @@ class ApiTest : BaseTest() {
     }
 
     @Test fun attendanceTest() {
-        val attendance = api.getAttendance(getDate(2018, 6, 18))
+        val attendance = api.getAttendance(getDate(2018, 9, 24))
         val attendanceObserver = TestObserver<List<Attendance>>()
         attendance.subscribe(attendanceObserver)
         attendanceObserver.assertComplete()
 
         val values = attendanceObserver.values()[0]
 
-        assertEquals(0, values[0].number)
-        assertEquals("Fizyka", values[0].subject)
-        assertEquals(getDate(2018, 6, 18), values[0].date)
+        assertEquals(1, values[0].number)
+        assertEquals("Zajęcia artystyczne", values[0].subject)
+        assertEquals(getDate(2018, 9, 24), values[0].date)
 
-        assertEquals(Attendance.Types.PRESENCE, values[0].type)
-        assertEquals(Attendance.Types.EXCUSED_LATENESS, values[1].type)
-        assertEquals(Attendance.Types.ABSENCE_UNEXCUSED, values[3].type)
-        assertEquals(Attendance.Types.EXEMPTION, values[4].type)
-        assertEquals(Attendance.Types.ABSENCE_EXCUSED, values[6].type)
-        assertEquals(Attendance.Types.ABSENCE_FOR_SCHOOL_REASONS, values[9].type)
-        assertEquals(Attendance.Types.UNEXCUSED_LATENESS, values[12].type)
+        assertEquals("Obecność", values[0].name)
+        assertTrue(values[0].presence)
 
-        assertEquals(1, values[1].number)
+        assertEquals("Nieobecność nieusprawiedliwiona", values[1].name)
+        assertTrue(values[1].absence)
+        assertFalse(values[1].excused)
+
+        assertEquals("Spóźnienie nieusprawiedliwione", values[3].name)
+        assertEquals("Spóźnienie usprawiedliwione", values[4].name)
+        assertEquals("Nieobecność z przyczyn szkolnych", values[5].name)
+        assertEquals("Zwolnienie", values[6].name)
+        assertEquals("Obecność", values[9].name)
+
+        assertEquals(1, values[0].number)
     }
 
     @Test fun examsTest() {

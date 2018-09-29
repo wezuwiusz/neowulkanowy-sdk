@@ -6,90 +6,138 @@ import org.junit.Test
 
 class AttendanceTest : BaseTest() {
 
-    private val full by lazy {
-        getSnpRepo(AttendanceTest::class.java, "Frekwencja-full.html").getAttendance(getDate(2018, 6, 18)).blockingGet()
-    }
-
-    private val excellent by lazy {
-        getSnpRepo(AttendanceTest::class.java, "Frekwencja-excellent.html").getAttendance(getDate(2018, 6, 18)).blockingGet()
+    private val table by lazy {
+        getSnpRepo(AttendanceTest::class.java, "Frekwencja.html").getAttendance(getDate(2018, 9, 24)).blockingGet()
     }
 
     @Test
-    fun getAttendanceFull() {
-        assertTrue(full.isNotEmpty())
-        assertEquals(38, full.size)
+    fun getAttendance() {
+        assertEquals(7, table.size)
     }
 
-    @Test fun getAttendanceExcellent() {
-        assertTrue(excellent.isNotEmpty())
-        assertEquals(22, excellent.size)
+    @Test
+    fun getAttendance_presence() {
+        table[0].run {
+            // poniedziałek, 1
+            assertEquals(1, number)
+            assertEquals(getDate(2018, 9, 24), date)
+            assertEquals("Zajęcia artystyczne", subject)
+            assertEquals("Obecność", name)
+            assertTrue(presence)
+
+            assertFalse(absence)
+            assertFalse(exemption)
+            assertFalse(lateness)
+            assertFalse(excused)
+            assertFalse(deleted)
+        }
     }
 
-    @Test fun getLessonSubject() {
-        assertEquals("Uroczyste rozpoczęcie roku szkolnego 2015/2016", excellent[0].subject)
-        assertEquals("Geografia", excellent[11].subject)
+    @Test
+    fun getAttendance_absence() {
+        table[1].run {
+            // poniedziałek, 2
+            assertEquals(2, number)
+            assertEquals(getDate(2018, 9, 24), date)
+            assertEquals("Informatyka", subject)
+            assertEquals("Nieobecność nieusprawiedliwiona", name)
+            assertTrue(absence)
+            assertFalse(excused)
 
-        assertEquals("Naprawa komputera", full[14].subject)
-        assertEquals("Religia", full[23].subject)
-        assertEquals("Metodologia programowania", full[34].subject)
+            assertFalse(exemption)
+            assertFalse(presence)
+            assertFalse(lateness)
+            assertFalse(deleted)
+        }
     }
 
-    @Test fun getLessonIsPresence() {
-        assertEquals(Attendance.Types.PRESENCE, excellent[0].type)
-        assertEquals(Attendance.Types.PRESENCE, excellent[15].type)
+    @Test
+    fun getAttendance_absenceExcused() {
+        table[2].run {
+            // wtorek, 1
+            assertEquals(1, number)
+            assertEquals(getDate(2018, 9, 25), date)
+            assertEquals("Matematyka", subject)
+            assertEquals("Nieobecność usprawiedliwiona", name)
+            assertTrue(absence)
+            assertTrue(excused)
 
-        assertEquals(Attendance.Types.PRESENCE, full[0].type)
-        assertEquals(Attendance.Types.PRESENCE, full[21].type)
-        assertNotEquals(Attendance.Types.PRESENCE, full[36].type)
-        assertNotEquals(Attendance.Types.PRESENCE, full[37].type)
+            assertFalse(exemption)
+            assertFalse(presence)
+            assertFalse(lateness)
+            assertFalse(deleted)
+        }
     }
 
+    @Test
+    fun getAttendance_lateness() {
+        table[3].run {
+            // wtorek, 2
+            assertEquals(2, number)
+            assertEquals(getDate(2018, 9, 25), date)
+            assertEquals("Godzina wychowawcza", subject)
+            assertEquals("Spóźnienie nieusprawiedliwione", name)
+            assertTrue(lateness)
+            assertFalse(excused)
 
-    @Test fun getLessonIsAbsenceUnexcused() {
-        assertNotEquals(Attendance.Types.ABSENCE_UNEXCUSED, excellent[0].type)
-
-        assertEquals(Attendance.Types.ABSENCE_UNEXCUSED, full[14].type)
-        assertNotEquals(Attendance.Types.ABSENCE_UNEXCUSED, full[24].type)
-        assertNotEquals(Attendance.Types.ABSENCE_UNEXCUSED, full[37].type)
+            assertFalse(exemption)
+            assertFalse(presence)
+            assertFalse(absence)
+            assertFalse(deleted)
+        }
     }
 
-    @Test fun getLessonIsAbsenceExcused() {
-        assertNotEquals(Attendance.Types.ABSENCE_EXCUSED, excellent[0].type)
+    @Test
+    fun getAttendance_latenessExcused() {
+        table[4].run {
+            // środa, 1
+            assertEquals(1, number)
+            assertEquals(getDate(2018, 9, 26), date)
+            assertEquals("Historia", subject)
+            assertEquals("Spóźnienie usprawiedliwione", name)
+            assertTrue(lateness)
+            assertTrue(excused)
 
-        assertNotEquals(Attendance.Types.ABSENCE_EXCUSED, full[5].type)
-        assertNotEquals(Attendance.Types.ABSENCE_EXCUSED, full[10].type)
-        assertEquals(Attendance.Types.ABSENCE_EXCUSED, full[36].type)
+            assertFalse(exemption)
+            assertFalse(presence)
+            assertFalse(absence)
+            assertFalse(deleted)
+        }
     }
 
-    @Test fun getLessonIsAbsenceForSchoolReasons() {
-        assertNotEquals(Attendance.Types.ABSENCE_FOR_SCHOOL_REASONS, excellent[6].type)
+    @Test
+    fun getAttendance_absenceForSchoolReason() {
+        table[5].run {
+            // środa, 2
+            assertEquals(2, number)
+            assertEquals(getDate(2018, 9, 26), date)
+            assertEquals("Język angielski", subject)
+            assertEquals("Nieobecność z przyczyn szkolnych", name)
+            assertTrue(presence)
 
-        assertEquals(Attendance.Types.ABSENCE_FOR_SCHOOL_REASONS, full[19].type)
-        assertNotEquals(Attendance.Types.ABSENCE_FOR_SCHOOL_REASONS, full[0].type)
-        assertNotEquals(Attendance.Types.ABSENCE_FOR_SCHOOL_REASONS, full[37])
+            assertFalse(excused)
+            assertFalse(lateness)
+            assertFalse(exemption)
+            assertFalse(absence)
+            assertFalse(deleted)
+        }
     }
 
-    @Test fun getLessonIsUnexcusedLateness() {
-        assertNotEquals(Attendance.Types.UNEXCUSED_LATENESS, excellent[7].type)
+    @Test
+    fun getAttendance_exemption() {
+        table[6].run {
+            // czwartek, 1
+            assertEquals(1, number)
+            assertEquals(getDate(2018, 9, 27), date)
+            assertEquals("Informatyka", subject)
+            assertEquals("Zwolnienie", name)
+            assertTrue(exemption)
 
-        assertEquals(Attendance.Types.UNEXCUSED_LATENESS, full[12].type)
-        assertNotEquals(Attendance.Types.UNEXCUSED_LATENESS, full[13].type)
-        assertNotEquals(Attendance.Types.UNEXCUSED_LATENESS, full[36].type)
-    }
-
-    @Test fun getLessonIsExcusedLateness() {
-        assertNotEquals(Attendance.Types.EXCUSED_LATENESS, excellent[8].type)
-
-        assertEquals(Attendance.Types.EXCUSED_LATENESS, full[13].type)
-        assertNotEquals(Attendance.Types.EXCUSED_LATENESS, full[14].type)
-        assertNotEquals(Attendance.Types.EXCUSED_LATENESS, full[35].type)
-    }
-
-    @Test fun getLessonIsExemption() {
-        assertNotEquals(Attendance.Types.EXEMPTION, excellent[9].type)
-
-        assertNotEquals(Attendance.Types.EXEMPTION, full[0].type)
-        assertNotEquals(Attendance.Types.EXEMPTION, full[15].type)
-        assertEquals(Attendance.Types.EXEMPTION, full[37].type)
+            assertFalse(lateness)
+            assertFalse(excused)
+            assertFalse(presence)
+            assertFalse(absence)
+            assertFalse(deleted)
+        }
     }
 }

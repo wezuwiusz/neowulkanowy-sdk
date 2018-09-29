@@ -6,10 +6,10 @@ import java.util.*
 
 class NotesResponse {
 
-    @Selector(".mainContainer div:first-of-type article")
+    @Selector(".mainContainer div:first-of-name article")
     var notes: List<Note> = listOf()
 
     @Format("dd.MM.yyyy")
-    @Selector(".mainContainer div:first-of-type h2:not(:contains(Brak))")
+    @Selector(".mainContainer div:first-of-name h2:not(:contains(Brak))")
     var dates: List<Date> = listOf()
 }
