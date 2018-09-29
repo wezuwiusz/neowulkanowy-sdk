@@ -18,7 +18,7 @@ class AttendanceResponse {
         @Selector("td", index = 0)
         var number: Int = 0
 
-        @Selector("td.padding-zero")
+        @Selector("td:not(:first-of-type)")
         var lessons: List<Attendance> = emptyList()
     }
 }

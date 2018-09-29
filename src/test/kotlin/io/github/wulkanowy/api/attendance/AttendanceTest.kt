@@ -18,9 +18,9 @@ class AttendanceTest : BaseTest() {
     @Test
     fun getAttendance_presence() {
         table[0].run {
-            // poniedziałek, 1
+            // wtorek, 1
             assertEquals(1, number)
-            assertEquals(getDate(2018, 9, 24), date)
+            assertEquals(getDate(2018, 9, 25), date)
             assertEquals("Zajęcia artystyczne", subject)
             assertEquals("Obecność", name)
             assertTrue(presence)
@@ -36,9 +36,9 @@ class AttendanceTest : BaseTest() {
     @Test
     fun getAttendance_absence() {
         table[1].run {
-            // poniedziałek, 2
+            // wtorek, 2
             assertEquals(2, number)
-            assertEquals(getDate(2018, 9, 24), date)
+            assertEquals(getDate(2018, 9, 25), date)
             assertEquals("Informatyka", subject)
             assertEquals("Nieobecność nieusprawiedliwiona", name)
             assertTrue(absence)
@@ -54,9 +54,9 @@ class AttendanceTest : BaseTest() {
     @Test
     fun getAttendance_absenceExcused() {
         table[2].run {
-            // wtorek, 1
+            // środa, 1
             assertEquals(1, number)
-            assertEquals(getDate(2018, 9, 25), date)
+            assertEquals(getDate(2018, 9, 26), date)
             assertEquals("Matematyka", subject)
             assertEquals("Nieobecność usprawiedliwiona", name)
             assertTrue(absence)
@@ -72,9 +72,9 @@ class AttendanceTest : BaseTest() {
     @Test
     fun getAttendance_lateness() {
         table[3].run {
-            // wtorek, 2
+            // środa, 2
             assertEquals(2, number)
-            assertEquals(getDate(2018, 9, 25), date)
+            assertEquals(getDate(2018, 9, 26), date)
             assertEquals("Godzina wychowawcza", subject)
             assertEquals("Spóźnienie nieusprawiedliwione", name)
             assertTrue(lateness)
@@ -90,9 +90,9 @@ class AttendanceTest : BaseTest() {
     @Test
     fun getAttendance_latenessExcused() {
         table[4].run {
-            // środa, 1
+            // czwartek, 1
             assertEquals(1, number)
-            assertEquals(getDate(2018, 9, 26), date)
+            assertEquals(getDate(2018, 9, 27), date)
             assertEquals("Historia", subject)
             assertEquals("Spóźnienie usprawiedliwione", name)
             assertTrue(lateness)
@@ -108,9 +108,9 @@ class AttendanceTest : BaseTest() {
     @Test
     fun getAttendance_absenceForSchoolReason() {
         table[5].run {
-            // środa, 2
+            // czwartek, 2
             assertEquals(2, number)
-            assertEquals(getDate(2018, 9, 26), date)
+            assertEquals(getDate(2018, 9, 27), date)
             assertEquals("Język angielski", subject)
             assertEquals("Nieobecność z przyczyn szkolnych", name)
             assertTrue(presence)
@@ -126,9 +126,9 @@ class AttendanceTest : BaseTest() {
     @Test
     fun getAttendance_exemption() {
         table[6].run {
-            // czwartek, 1
+            // piątek, 1
             assertEquals(1, number)
-            assertEquals(getDate(2018, 9, 27), date)
+            assertEquals(getDate(2018, 9, 28), date)
             assertEquals("Informatyka", subject)
             assertEquals("Zwolnienie", name)
             assertTrue(exemption)

@@ -30,7 +30,8 @@ class StudentAndParentRepository(private val api: StudentAndParentService) {
     fun getAttendance(startDate: Date?): Single<List<Attendance>> {
         return api.getAttendance(startDate.toTick()).map { res ->
             res.rows.flatMap { row ->
-                row.lessons.mapIndexed { i, it ->
+                row.lessons.mapIndexedNotNull { i, it ->
+                    if ("null" == it.subject) return@mapIndexedNotNull null // fix empty days
                     it.date = res.days[i]
                     it.number = row.number
                     it.presence = it.name == Attendance.Types.PRESENCE || it.name == Attendance.Types.ABSENCE_FOR_SCHOOL_REASONS
@@ -164,7 +165,7 @@ class StudentAndParentRepository(private val api: StudentAndParentService) {
     fun getTimetable(startDate: Date?): Single<List<Timetable>> {
         return api.getTimetable(startDate.toTick()).map { res ->
             res.rows.flatMap { row ->
-                row.lessons.asSequence().mapIndexedNotNull { i, it ->
+                row.lessons.asSequence().mapIndexed { i, it ->
                     it.date = res.days[i]
                     it.start = "${it.date.toString("yyy-MM-dd")} ${row.startTime}".toDate("yyyy-MM-dd HH:mm")
                     it.end = "${it.date.toString("yyy-MM-dd")} ${row.endTime}".toDate("yyyy-MM-dd HH:mm")

@@ -9,7 +9,7 @@ class Attendance {
 
     lateinit var date: Date
 
-    @Selector("span")
+    @Selector("span", defValue = "null")
     lateinit var subject: String
 
     @Selector("div", attr = "class")
