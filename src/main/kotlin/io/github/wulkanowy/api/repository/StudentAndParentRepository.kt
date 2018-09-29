@@ -1,6 +1,7 @@
 package io.github.wulkanowy.api.repository
 
 import io.github.wulkanowy.api.attendance.Attendance
+import io.github.wulkanowy.api.attendance.AttendanceSummary
 import io.github.wulkanowy.api.exams.Exam
 import io.github.wulkanowy.api.grades.Grade
 import io.github.wulkanowy.api.grades.GradeSummary
@@ -49,6 +50,22 @@ class StudentAndParentRepository(private val api: StudentAndParentService) {
                     it
                 }
             }.sortedWith(compareBy({ it.date }, { it.number }))
+        }
+    }
+
+    fun getAttendanceSummary(subjectId: Int?): Single<List<AttendanceSummary>> {
+        return api.getAttendanceSummary(subjectId).map { res ->
+            res.days.mapIndexed { i, day ->
+                AttendanceSummary(day,
+                        res.rows[0].value[i].toIntOrNull() ?: 0,
+                        res.rows[1].value[i].toIntOrNull() ?: 0,
+                        res.rows[2].value[i].toIntOrNull() ?: 0,
+                        res.rows[3].value[i].toIntOrNull() ?: 0,
+                        res.rows[4].value[i].toIntOrNull() ?: 0,
+                        res.rows[5].value[i].toIntOrNull() ?: 0,
+                        res.rows[6].value[i].toIntOrNull() ?: 0
+                )
+            }
         }
     }
 

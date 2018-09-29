@@ -1,6 +1,7 @@
 package io.github.wulkanowy.api
 
 import io.github.wulkanowy.api.attendance.Attendance
+import io.github.wulkanowy.api.attendance.AttendanceSummary
 import io.github.wulkanowy.api.exams.Exam
 import io.github.wulkanowy.api.grades.Grade
 import io.github.wulkanowy.api.grades.GradeSummary
@@ -28,9 +29,10 @@ import org.junit.Test
 @Ignore
 class ApiTest : BaseTest() {
 
-    private var api =  Api()
+    private var api = Api()
 
-    @Before fun setUp() {
+    @Before
+    fun setUp() {
         api.apply {
             logLevel = HttpLoggingInterceptor.Level.BASIC
             ssl = true
@@ -45,7 +47,8 @@ class ApiTest : BaseTest() {
         }
     }
 
-    @Test fun schoolInfoTest() {
+    @Test
+    fun schoolInfoTest() {
         val info = api.getSchoolInfo()
         val infoObserver = TestObserver<StudentAndParentResponse>()
         info.subscribe(infoObserver)
@@ -58,7 +61,8 @@ class ApiTest : BaseTest() {
         assertEquals("Jan Kowalski", values.students[0].name)
     }
 
-    @Test fun pupilsTest() {
+    @Test
+    fun pupilsTest() {
         val pupils = api.getPupils()
         val pupilsObserver = TestObserver<List<Pupil>>()
         pupils.subscribe(pupilsObserver)
@@ -74,7 +78,8 @@ class ApiTest : BaseTest() {
         assertEquals("Publiczny dziennik Wulkanowego nr 1 w fakelog.cf", values[0].schoolName)
     }
 
-    @Test fun semestersTest() {
+    @Test
+    fun semestersTest() {
         val semesters = api.getSemesters()
         val semestersObserver = TestObserver<List<Semester>>()
         semesters.subscribe(semestersObserver)
@@ -98,7 +103,8 @@ class ApiTest : BaseTest() {
         assertEquals(2, values[5].semesterNumber)
     }
 
-    @Test fun attendanceTest() {
+    @Test
+    fun attendanceTest() {
         val attendance = api.getAttendance(getDate(2018, 9, 24))
         val attendanceObserver = TestObserver<List<Attendance>>()
         attendance.subscribe(attendanceObserver)
@@ -126,7 +132,30 @@ class ApiTest : BaseTest() {
         assertEquals(1, values[0].number)
     }
 
-    @Test fun examsTest() {
+    @Test
+    fun attendanceSummaryTest() {
+        val attendance = api.getAttendanceSummary()
+        val attendanceObserver = TestObserver<List<AttendanceSummary>>()
+        attendance.subscribe(attendanceObserver)
+        attendanceObserver.assertComplete()
+
+        val values = attendanceObserver.values()[0]
+
+        assertEquals(12, values.size)
+
+        assertEquals("IX", values[0].month)
+        assertEquals(32, values[0].presence)
+        assertEquals(1, values[0].absence)
+        assertEquals(2, values[0].absenceExcused)
+        assertEquals(3, values[0].absenceForSchoolReasons)
+        assertEquals(4, values[0].lateness)
+        assertEquals(5, values[0].latenessExcused)
+        assertEquals(6, values[0].exemption)
+        assertEquals(64, values[1].presence)
+    }
+
+    @Test
+    fun examsTest() {
         val exams = api.getExams(getDate(2018, 5, 28))
         val examsObserver = TestObserver<List<Exam>>()
         exams.subscribe(examsObserver)
@@ -144,7 +173,8 @@ class ApiTest : BaseTest() {
         assertEquals("AZ", values[0].teacherSymbol)
     }
 
-    @Test fun homeworkTest() {
+    @Test
+    fun homeworkTest() {
         val homework = api.getHomework(getDate(2017, 10, 23))
         val homeworkObserver = TestObserver<List<Homework>>()
         homework.subscribe(homeworkObserver)
@@ -160,7 +190,8 @@ class ApiTest : BaseTest() {
         assertEquals("TJ", values[1].teacherSymbol)
     }
 
-    @Test fun notesTest() {
+    @Test
+    fun notesTest() {
         val notes = api.getNotes()
         val notesObserver = TestObserver<List<Note>>()
         notes.subscribe(notesObserver)
@@ -174,7 +205,8 @@ class ApiTest : BaseTest() {
         assertEquals("+ 20p za udział w Konkursie Języka Angielskiego", values[0].content)
     }
 
-    @Test fun gradesTest() {
+    @Test
+    fun gradesTest() {
         val grades = api.getGrades(864)
         val gradesObserver = TestObserver<List<Grade>>()
         grades.subscribe(gradesObserver)
@@ -196,7 +228,8 @@ class ApiTest : BaseTest() {
         assertEquals("", values[5].description)
     }
 
-    @Test fun gradesSummaryTest() {
+    @Test
+    fun gradesSummaryTest() {
         val summary = api.getGradesSummary(864)
         val summaryObserver = TestObserver<List<GradeSummary>>()
         summary.subscribe(summaryObserver)
@@ -217,7 +250,8 @@ class ApiTest : BaseTest() {
         assertEquals("", values[8].final)
     }
 
-    @Test fun teachersTest() {
+    @Test
+    fun teachersTest() {
         val teachers = api.getTeachers()
         val teachersObserver = TestObserver<List<Teacher>>()
         teachers.subscribe(teachersObserver)
@@ -230,7 +264,8 @@ class ApiTest : BaseTest() {
         assertEquals("TJ", values[1].short)
     }
 
-    @Test fun studentInfoTest() {
+    @Test
+    fun studentInfoTest() {
         val student = api.getStudentInfo()
         val studentObserver = TestObserver<StudentInfo>()
         student.subscribe(studentObserver)
@@ -263,7 +298,8 @@ class ApiTest : BaseTest() {
         assertEquals("-", values.family[1].email)
     }
 
-    @Test fun messagesTest() {
+    @Test
+    fun messagesTest() {
         val units = api.getReportingUnits()
         val unitsObserver = TestObserver<List<ReportingUnit>>()
         units.subscribe(unitsObserver)
@@ -305,7 +341,8 @@ class ApiTest : BaseTest() {
         assertEquals(1, mObserver.values().size)
     }
 
-    @Test fun devicesTest() {
+    @Test
+    fun devicesTest() {
         val devices = api.getRegisteredDevices()
         val devicesObserver = TestObserver<List<Device>>()
         devices.subscribe(devicesObserver)
@@ -316,7 +353,8 @@ class ApiTest : BaseTest() {
         assertEquals(2, values.size)
     }
 
-    @Test fun tokenTest() {
+    @Test
+    fun tokenTest() {
         val token = api.getToken()
         val tokenObserver = TestObserver<TokenResponse>()
         token.subscribe(tokenObserver)
@@ -327,7 +365,8 @@ class ApiTest : BaseTest() {
         assertEquals("999999", tokenObserver.values()[0].pin)
     }
 
-    @Test fun unregisterTest() {
+    @Test
+    fun unregisterTest() {
         val unregister = api.unregisterDevice(1234)
         val unregisterObserver = TestObserver<List<Device>>()
         unregister.subscribe(unregisterObserver)
@@ -336,7 +375,8 @@ class ApiTest : BaseTest() {
         assertEquals(2, unregisterObserver.values()[0].size)
     }
 
-    @Test fun timetableTest() {
+    @Test
+    fun timetableTest() {
         val timetable = api.getTimetable(getDate(2018, 9, 17))
         val timetableObserver = TestObserver<List<Timetable>>()
         timetable.subscribe(timetableObserver)
@@ -352,7 +392,8 @@ class ApiTest : BaseTest() {
         assertEquals(false, values[0].changes)
     }
 
-    @Test fun realizedTest() {
+    @Test
+    fun realizedTest() {
         val realized = api.getRealized(getDate(2018, 9, 17))
         val realizedObserver = TestObserver<List<Realized>>()
         realized.subscribe(realizedObserver)
