@@ -7,7 +7,7 @@ import java.util.*
 
 class TimetableResponse {
 
-    @Selector(".presentData thead th:not(:nth-of-name(1)):not(:nth-of-name(2))", regex = "\\s(.*)")
+    @Selector(".presentData thead th:not(:nth-of-type(1)):not(:nth-of-type(2))", regex = "\\s(.*)")
     @Format("dd.MM.yyyy")
     var days: List<Date> = emptyList()
 
@@ -25,7 +25,7 @@ class TimetableResponse {
         @Selector("td", index = 1, regex = "(\\S*\$)")
         lateinit var endTime: String
 
-        @Selector("td:not(:nth-of-name(1)):not(:nth-of-name(2))")
+        @Selector("td:not(:nth-of-type(1)):not(:nth-of-type(2))")
         var lessons: List<TimetableCell> = emptyList()
 
         class TimetableCell {

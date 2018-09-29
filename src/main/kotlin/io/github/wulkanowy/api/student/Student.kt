@@ -6,55 +6,55 @@ import java.util.*
 
 class Student {
 
-    @Selector("article:nth-of-name(1) .wartosc", index = 0)
+    @Selector("article:nth-of-type(1) .wartosc", index = 0)
     lateinit var fullName: String
 
-    @Selector("article:nth-of-name(1) .wartosc", index = 0, regex = "^([^\\s]*)")
+    @Selector("article:nth-of-type(1) .wartosc", index = 0, regex = "^([^\\s]*)")
     lateinit var firstName: String
 
-    @Selector("article:nth-of-name(1) .wartosc", index = 0, regex = "\\s([^\\s]*)\\s", defValue = "")
+    @Selector("article:nth-of-type(1) .wartosc", index = 0, regex = "\\s([^\\s]*)\\s", defValue = "")
     lateinit var secondName: String
 
-    @Selector("article:nth-of-name(1) .wartosc", index = 0, regex = "[^,]+ (.+)")
+    @Selector("article:nth-of-type(1) .wartosc", index = 0, regex = "[^,]+ (.+)")
     lateinit var surname: String
 
     @Format("dd.MM.yyyy")
-    @Selector("article:nth-of-name(1) .wartosc", index = 1, regex = "^(.+?),")
+    @Selector("article:nth-of-type(1) .wartosc", index = 1, regex = "^(.+?),")
     lateinit var birthDate: Date
 
-    @Selector("article:nth-of-name(1) .wartosc", index = 1, regex = "[^,]+, (.+)")
+    @Selector("article:nth-of-type(1) .wartosc", index = 1, regex = "[^,]+, (.+)")
     lateinit var birthPlace: String
 
-    @Selector("article:nth-of-name(1) .wartosc", index = 2)
+    @Selector("article:nth-of-type(1) .wartosc", index = 2)
     lateinit var pesel: String
 
-    @Selector("article:nth-of-name(1) .wartosc", index = 3)
+    @Selector("article:nth-of-type(1) .wartosc", index = 3)
     lateinit var gender: String
 
-    @Selector("article:nth-of-name(1) .wartosc", index = 4)
+    @Selector("article:nth-of-type(1) .wartosc", index = 4)
     lateinit var polishCitizenship: String
 
-    @Selector("article:nth-of-name(1) .wartosc", index = 5)
+    @Selector("article:nth-of-type(1) .wartosc", index = 5)
     lateinit var familyName: String
 
-    @Selector("article:nth-of-name(1) .wartosc", index = 6)
+    @Selector("article:nth-of-type(1) .wartosc", index = 6)
     lateinit var parentsNames: String
 
-    @Selector("article:nth-of-name(2) .wartosc", index = 0)
+    @Selector("article:nth-of-type(2) .wartosc", index = 0)
     lateinit var address: String
 
-    @Selector("article:nth-of-name(2) .wartosc", index = 1)
+    @Selector("article:nth-of-type(2) .wartosc", index = 1)
     lateinit var registeredAddress: String
 
-    @Selector("article:nth-of-name(2) .wartosc", index = 2)
+    @Selector("article:nth-of-type(2) .wartosc", index = 2)
     lateinit var correspondenceAddress: String
 
-    @Selector("article:nth-of-name(3) .wartosc", index = 0)
+    @Selector("article:nth-of-type(3) .wartosc", index = 0)
     lateinit var phoneNumber: String
 
-    @Selector("article:nth-of-name(3) .wartosc", index = 1)
+    @Selector("article:nth-of-type(3) .wartosc", index = 1)
     lateinit var cellPhoneNumber: String
 
-    @Selector("article:nth-of-name(3) .wartosc", index = 2)
+    @Selector("article:nth-of-type(3) .wartosc", index = 2)
     lateinit var email: String
 }
