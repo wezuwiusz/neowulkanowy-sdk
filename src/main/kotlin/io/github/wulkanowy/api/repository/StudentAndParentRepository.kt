@@ -4,6 +4,7 @@ import io.github.wulkanowy.api.attendance.Attendance
 import io.github.wulkanowy.api.attendance.AttendanceSummary
 import io.github.wulkanowy.api.exams.Exam
 import io.github.wulkanowy.api.grades.Grade
+import io.github.wulkanowy.api.grades.GradeStatistics
 import io.github.wulkanowy.api.grades.GradeSummary
 import io.github.wulkanowy.api.homework.Homework
 import io.github.wulkanowy.api.mobile.Device
@@ -98,6 +99,17 @@ class StudentAndParentRepository(private val api: StudentAndParentService) {
                 summary.final = getGradeShortValue(summary.final)
                 summary
             }.sortedBy { it.name }.toList()
+        }
+    }
+
+    fun getGradesStatistics(semesterId: Int?, annual: Boolean): Single<List<GradeStatistics>> {
+        return api.getGradesStatistics(if (!annual) 1 else 2, semesterId).map { res ->
+            res.items.map {
+                it.apply {
+                    this.gradeValue = getGradeShortValue(this.grade).toIntOrNull() ?: 0
+                    this.semesterId = res.semesterId
+                }
+            }
         }
     }
 

@@ -4,6 +4,7 @@ import io.github.wulkanowy.api.attendance.Attendance
 import io.github.wulkanowy.api.attendance.AttendanceSummary
 import io.github.wulkanowy.api.exams.Exam
 import io.github.wulkanowy.api.grades.Grade
+import io.github.wulkanowy.api.grades.GradeStatistics
 import io.github.wulkanowy.api.grades.GradeSummary
 import io.github.wulkanowy.api.homework.Homework
 import io.github.wulkanowy.api.messages.Message
@@ -248,6 +249,26 @@ class ApiTest : BaseTest() {
         assertEquals("Język niemiecki", values[8].name)
         assertEquals("", values[8].predicted)
         assertEquals("", values[8].final)
+    }
+
+    @Test
+    fun gradesStatisticsTest() {
+        val stats = api.getGradesStatistics(321, false)
+        val statsObserver = TestObserver<List<GradeStatistics>>()
+        stats.subscribe(statsObserver)
+
+        val values = statsObserver.values()[0]
+
+        assertEquals("Język polski", values[0].subject)
+        assertEquals("Matematyka", values[7].subject)
+
+        val annual = api.getGradesStatistics(123, true)
+        val annualObserver = TestObserver<List<GradeStatistics>>()
+        annual.subscribe(annualObserver)
+
+        val values2 = annualObserver.values()[0]
+
+        assertEquals("Język angielski", values2[0].subject)
     }
 
     @Test

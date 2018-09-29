@@ -4,6 +4,7 @@ import io.github.wulkanowy.api.attendance.AttendanceResponse
 import io.github.wulkanowy.api.attendance.AttendanceSummaryResponse
 import io.github.wulkanowy.api.exams.ExamResponse
 import io.github.wulkanowy.api.grades.GradesResponse
+import io.github.wulkanowy.api.grades.GradesStatisticsResponse
 import io.github.wulkanowy.api.grades.GradesSummaryResponse
 import io.github.wulkanowy.api.homework.HomeworkResponse
 import io.github.wulkanowy.api.mobile.RegisteredDevicesResponse
@@ -45,6 +46,9 @@ interface StudentAndParentService {
 
     @GET("Oceny/Wszystkie?details=1")
     fun getGradesSummary(@Query("okres") semester: Int?): Single<GradesSummaryResponse>
+
+    @GET("Statystyki.mvc/Uczen")
+    fun getGradesStatistics(@Query("rodzajWidoku") type: Int?, @Query("semestr") semesterId: Int?): Single<GradesStatisticsResponse>
 
     @GET("ZadaniaDomowe.mvc?rodzajWidoku=Dzien")
     fun getHomework(@Query("data") date: String): Single<HomeworkResponse>

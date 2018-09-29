@@ -72,6 +72,8 @@ class Api {
 
     fun getGradesSummary(semesterId: Int? = null) = snp.getGradesSummary(semesterId)
 
+    fun getGradesStatistics(semesterId: Int? = null, annual: Boolean = false) = snp.getGradesStatistics(semesterId, annual)
+
     fun getHomework(date: Date? = null) = snp.getHomework(date)
 
     fun getNotes() = snp.getNotes()
