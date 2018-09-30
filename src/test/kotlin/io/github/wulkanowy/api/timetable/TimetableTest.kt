@@ -1,13 +1,13 @@
 package io.github.wulkanowy.api.timetable
 
 import io.github.wulkanowy.api.BaseTest
-import org.junit.Assert.*
+import org.junit.Assert.assertEquals
 import org.junit.Test
 
 class TimetableTest : BaseTest() {
 
     private val table by lazy {
-        getSnpRepo(TimetableTest::class.java, "PlanLekcji.html").getTimetable(getDate(2018, 9, 24)).blockingGet()
+        getSnpRepo(TimetableTest::class.java, "PlanLekcji.html").getTimetable(getLocalDate(2018, 9, 24)).blockingGet()
     }
 
     @Test

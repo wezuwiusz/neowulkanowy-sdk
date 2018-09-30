@@ -7,7 +7,7 @@ import org.junit.Test
 class AttendanceTest : BaseTest() {
 
     private val table by lazy {
-        getSnpRepo(AttendanceTest::class.java, "Frekwencja.html").getAttendance(getDate(2018, 9, 24)).blockingGet()
+        getSnpRepo(AttendanceTest::class.java, "Frekwencja.html").getAttendance(getLocalDate(2018, 10, 1)).blockingGet()
     }
 
     @Test
@@ -20,7 +20,7 @@ class AttendanceTest : BaseTest() {
         table[0].run {
             // wtorek, 1
             assertEquals(1, number)
-            assertEquals(getDate(2018, 9, 25), date)
+            assertEquals(getDate(2018, 10, 2), date)
             assertEquals("Zajęcia artystyczne", subject)
             assertEquals("Obecność", name)
             assertTrue(presence)
@@ -38,7 +38,7 @@ class AttendanceTest : BaseTest() {
         table[1].run {
             // wtorek, 2
             assertEquals(2, number)
-            assertEquals(getDate(2018, 9, 25), date)
+            assertEquals(getDate(2018, 10, 2), date)
             assertEquals("Informatyka", subject)
             assertEquals("Nieobecność nieusprawiedliwiona", name)
             assertTrue(absence)
@@ -56,7 +56,7 @@ class AttendanceTest : BaseTest() {
         table[2].run {
             // środa, 1
             assertEquals(1, number)
-            assertEquals(getDate(2018, 9, 26), date)
+            assertEquals(getDate(2018, 10, 3), date)
             assertEquals("Matematyka", subject)
             assertEquals("Nieobecność usprawiedliwiona", name)
             assertTrue(absence)
@@ -74,7 +74,7 @@ class AttendanceTest : BaseTest() {
         table[3].run {
             // środa, 2
             assertEquals(2, number)
-            assertEquals(getDate(2018, 9, 26), date)
+            assertEquals(getDate(2018, 10, 3), date)
             assertEquals("Godzina wychowawcza", subject)
             assertEquals("Spóźnienie nieusprawiedliwione", name)
             assertTrue(lateness)
@@ -92,7 +92,7 @@ class AttendanceTest : BaseTest() {
         table[4].run {
             // czwartek, 1
             assertEquals(1, number)
-            assertEquals(getDate(2018, 9, 27), date)
+            assertEquals(getDate(2018, 10, 4), date)
             assertEquals("Historia", subject)
             assertEquals("Spóźnienie usprawiedliwione", name)
             assertTrue(lateness)
@@ -110,7 +110,7 @@ class AttendanceTest : BaseTest() {
         table[5].run {
             // czwartek, 2
             assertEquals(2, number)
-            assertEquals(getDate(2018, 9, 27), date)
+            assertEquals(getDate(2018, 10, 4), date)
             assertEquals("Język angielski", subject)
             assertEquals("Nieobecność z przyczyn szkolnych", name)
             assertTrue(presence)
@@ -128,7 +128,7 @@ class AttendanceTest : BaseTest() {
         table[6].run {
             // piątek, 1
             assertEquals(1, number)
-            assertEquals(getDate(2018, 9, 28), date)
+            assertEquals(getDate(2018, 10, 5), date)
             assertEquals("Informatyka", subject)
             assertEquals("Zwolnienie", name)
             assertTrue(exemption)

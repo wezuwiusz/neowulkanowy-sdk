@@ -7,11 +7,11 @@ import org.junit.Test
 class ExamsTest : BaseTest() {
 
     private val onePerDay by lazy {
-        getSnpRepo(ExamsTest::class.java, "Sprawdziany-one-per-day.html").getExams(getDate(2018, 6, 18)).blockingGet()
+        getSnpRepo(ExamsTest::class.java, "Sprawdziany-one-per-day.html").getExams(getLocalDate(2018, 10, 1)).blockingGet()
     }
 
     private val empty by lazy {
-        getSnpRepo(ExamsTest::class.java, "Sprawdziany-empty.html").getExams(getDate(2018, 6, 18)).blockingGet()
+        getSnpRepo(ExamsTest::class.java, "Sprawdziany-empty.html").getExams(getLocalDate(2018, 10, 1)).blockingGet()
     }
 
     @Test
@@ -21,12 +21,12 @@ class ExamsTest : BaseTest() {
     }
 
     @Test fun getExamsDateTest() {
-        assertEquals(getDate(2017, 10, 23), onePerDay[0].date)
-        assertEquals(getDate(2017, 10, 24), onePerDay[1].date)
-        assertEquals(getDate(2017, 10, 25), onePerDay[2].date)
-        assertEquals(getDate(2017, 10, 25), onePerDay[3].date)
-        assertEquals(getDate(2017, 10, 26), onePerDay[4].date)
-        assertEquals(getDate(2017, 10, 27), onePerDay[5].date)
+        assertEquals(getDate(2018, 10, 1), onePerDay[0].date)
+        assertEquals(getDate(2018, 10, 2), onePerDay[1].date)
+        assertEquals(getDate(2018, 10, 3), onePerDay[2].date)
+        assertEquals(getDate(2018, 10, 3), onePerDay[3].date)
+        assertEquals(getDate(2018, 10, 4), onePerDay[4].date)
+        assertEquals(getDate(2018, 10, 5), onePerDay[5].date)
     }
 
     @Test fun getExamSubjectTest() {
@@ -68,8 +68,8 @@ class ExamsTest : BaseTest() {
     }
 
     @Test fun getExamEntryDateTest() {
-        assertEquals(getDate(2017, 10, 16), onePerDay[0].entryDate)
-        assertEquals(getDate(2017, 10, 17), onePerDay[1].entryDate)
-        assertEquals(getDate(2017, 10, 16), onePerDay[5].entryDate)
+        assertEquals(getDate(2018, 9, 15), onePerDay[0].entryDate)
+        assertEquals(getDate(2018, 9, 17), onePerDay[1].entryDate)
+        assertEquals(getDate(2018, 9, 16), onePerDay[5].entryDate)
     }
 }

@@ -106,7 +106,7 @@ class ApiTest : BaseTest() {
 
     @Test
     fun attendanceTest() {
-        val attendance = api.getAttendance(getDate(2018, 9, 24))
+        val attendance = api.getAttendance(getLocalDate(2018, 10, 1))
         val attendanceObserver = TestObserver<List<Attendance>>()
         attendance.subscribe(attendanceObserver)
         attendanceObserver.assertComplete()
@@ -115,7 +115,7 @@ class ApiTest : BaseTest() {
 
         assertEquals(1, values[0].number)
         assertEquals("Zajęcia artystyczne", values[0].subject)
-        assertEquals(getDate(2018, 9, 24), values[0].date)
+        assertEquals(getDate(2018, 10, 1), values[0].date)
 
         assertEquals("Obecność", values[0].name)
         assertTrue(values[0].presence)
@@ -157,7 +157,7 @@ class ApiTest : BaseTest() {
 
     @Test
     fun examsTest() {
-        val exams = api.getExams(getDate(2018, 5, 28))
+        val exams = api.getExams(getLocalDate(2018, 5, 7))
         val examsObserver = TestObserver<List<Exam>>()
         exams.subscribe(examsObserver)
         examsObserver.assertComplete()
@@ -176,7 +176,7 @@ class ApiTest : BaseTest() {
 
     @Test
     fun homeworkTest() {
-        val homework = api.getHomework(getDate(2017, 10, 23))
+        val homework = api.getHomework(getLocalDate(2017, 10, 23))
         val homeworkObserver = TestObserver<List<Homework>>()
         homework.subscribe(homeworkObserver)
         homeworkObserver.assertComplete()
@@ -331,7 +331,7 @@ class ApiTest : BaseTest() {
         recipients.subscribe(recipientsObserver)
         recipientsObserver.assertComplete()
 
-        val inbox = api.getReceivedMessages(getDate(2015, 10, 5))
+        val inbox = api.getReceivedMessages(getLocalDate(2015, 10, 5))
         val inboxObserver = TestObserver<List<Message>>()
         inbox.subscribe(inboxObserver)
         inboxObserver.assertComplete()
@@ -398,7 +398,7 @@ class ApiTest : BaseTest() {
 
     @Test
     fun timetableTest() {
-        val timetable = api.getTimetable(getDate(2018, 9, 17))
+        val timetable = api.getTimetable(getLocalDate(2018, 9, 17))
         val timetableObserver = TestObserver<List<Timetable>>()
         timetable.subscribe(timetableObserver)
         timetableObserver.assertComplete()
@@ -415,7 +415,7 @@ class ApiTest : BaseTest() {
 
     @Test
     fun realizedTest() {
-        val realized = api.getRealized(getDate(2018, 9, 17))
+        val realized = api.getRealized(getLocalDate(2018, 9, 17))
         val realizedObserver = TestObserver<List<Realized>>()
         realized.subscribe(realizedObserver)
         realizedObserver.assertComplete()

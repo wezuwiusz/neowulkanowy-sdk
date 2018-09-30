@@ -4,7 +4,7 @@ import io.github.wulkanowy.api.auth.NotLoggedInException
 import io.github.wulkanowy.api.repository.*
 import io.github.wulkanowy.api.service.ServiceManager
 import okhttp3.logging.HttpLoggingInterceptor
-import java.util.*
+import org.threeten.bp.LocalDate
 
 class Api {
 
@@ -62,11 +62,11 @@ class Api {
 
     fun getSchoolInfo() = snp.getSchoolInfo()
 
-    fun getAttendance(startDate: Date? = null) = snp.getAttendance(startDate)
+    fun getAttendance(startDate: LocalDate, endDate: LocalDate? = null) = snp.getAttendance(startDate, endDate)
 
     fun getAttendanceSummary(subjectId: Int? = null) = snp.getAttendanceSummary(subjectId)
 
-    fun getExams(startDate: Date? = null) = snp.getExams(startDate)
+    fun getExams(startDate: LocalDate, endDate: LocalDate? = null) = snp.getExams(startDate, endDate)
 
     fun getGrades(semesterId: Int? = null) = snp.getGrades(semesterId)
 
@@ -74,7 +74,7 @@ class Api {
 
     fun getGradesStatistics(semesterId: Int? = null, annual: Boolean = false) = snp.getGradesStatistics(semesterId, annual)
 
-    fun getHomework(date: Date? = null) = snp.getHomework(date)
+    fun getHomework(startDate: LocalDate, endDate: LocalDate? = null) = snp.getHomework(startDate, endDate)
 
     fun getNotes() = snp.getNotes()
 
@@ -92,15 +92,15 @@ class Api {
 
     fun getRecipients(role: Int = 2) = messages.getRecipients(role)
 
-    fun getReceivedMessages(endDate: Date? = null, startDate: Date? = null) = messages.getReceivedMessages(startDate, endDate)
+    fun getReceivedMessages(endDate: LocalDate? = null, startDate: LocalDate? = null) = messages.getReceivedMessages(startDate, endDate)
 
-    fun getSentMessages(endDate: Date? = null, startDate: Date? = null) = messages.getSentMessages(startDate, endDate)
+    fun getSentMessages(endDate: LocalDate? = null, startDate: LocalDate? = null) = messages.getSentMessages(startDate, endDate)
 
-    fun getDeletedMessages(startDate: Date? = null, endDate: Date? = null) = messages.getDeletedMessages(startDate, endDate)
+    fun getDeletedMessages(startDate: LocalDate? = null, endDate: LocalDate? = null) = messages.getDeletedMessages(startDate, endDate)
 
     fun getMessage(id: Int, folderId: Int) = messages.getMessage(id, folderId)
 
-    fun getTimetable(startDate: Date? = null) = snp.getTimetable(startDate)
+    fun getTimetable(startDate: LocalDate, endDate: LocalDate? = null) = snp.getTimetable(startDate, endDate)
 
-    fun getRealized(startDate: Date? = null) = snp.getRealized(startDate)
+    fun getRealized(startDate: LocalDate? = null) = snp.getRealized(startDate)
 }

@@ -7,7 +7,7 @@ import org.junit.Test
 class RealizedTest : BaseTest() {
 
     private val realized by lazy {
-        getSnpRepo(RealizedTest::class.java, "Zrealizowane.html").getRealized(getDate(2018, 9, 24)).blockingGet()
+        getSnpRepo(RealizedTest::class.java, "Zrealizowane.html").getRealized(getLocalDate(2018, 9, 24)).blockingGet()
     }
 
     @Test

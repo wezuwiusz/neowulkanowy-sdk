@@ -18,6 +18,12 @@ import io.github.wulkanowy.api.student.StudentInfo
 import io.github.wulkanowy.api.timetable.Timetable
 import io.github.wulkanowy.api.timetable.TimetableParser
 import io.reactivex.Single
+import org.threeten.bp.DayOfWeek
+import org.threeten.bp.Instant
+import org.threeten.bp.LocalDate
+import org.threeten.bp.ZoneId
+import org.threeten.bp.format.DateTimeFormatter
+import org.threeten.bp.temporal.TemporalAdjusters
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -27,8 +33,9 @@ class StudentAndParentRepository(private val api: StudentAndParentService) {
         return api.getSchoolInfo()
     }
 
-    fun getAttendance(startDate: Date?): Single<List<Attendance>> {
-        return api.getAttendance(startDate.toTick()).map { res ->
+    fun getAttendance(startDate: LocalDate, endDate: LocalDate? = null): Single<List<Attendance>> {
+        val end = endDate ?: startDate.plusDays(4)
+        return api.getAttendance(startDate.getLastMonday().toTick()).map { res ->
             res.rows.flatMap { row ->
                 row.lessons.mapIndexedNotNull { i, it ->
                     if ("null" == it.subject) return@mapIndexedNotNull null // fix empty days
@@ -51,7 +58,9 @@ class StudentAndParentRepository(private val api: StudentAndParentService) {
                     }
                     it
                 }
-            }.sortedWith(compareBy({ it.date }, { it.number }))
+            }.asSequence().filter {
+                it.date.toLocalDate() >= startDate && it.date.toLocalDate() <= end
+            }.sortedWith(compareBy({ it.date }, { it.number })).toList()
         }
     }
 
@@ -71,15 +80,18 @@ class StudentAndParentRepository(private val api: StudentAndParentService) {
         }
     }
 
-    fun getExams(startDate: Date?): Single<List<Exam>> {
-        return api.getExams(startDate.toTick()).map { res ->
+    fun getExams(startDate: LocalDate, endDate: LocalDate? = null): Single<List<Exam>> {
+        val end = endDate ?: startDate.plusDays(4)
+        return api.getExams(startDate.getLastMonday().toTick()).map { res ->
             res.days.flatMap { day ->
                 day.exams.map { exam ->
                     exam.date = day.date
                     if (exam.group.contains(" ")) exam.group = ""
                     exam
                 }
-            }.sortedBy { it.date }
+            }.asSequence().filter {
+                it.date.toLocalDate() >= startDate && it.date.toLocalDate() <= end
+            }.sortedBy { it.date }.toList()
         }
     }
 
@@ -114,11 +126,14 @@ class StudentAndParentRepository(private val api: StudentAndParentService) {
         }
     }
 
-    fun getHomework(date: Date?): Single<List<Homework>> {
-        return api.getHomework(date.toTick()).map { res ->
+    fun getHomework(startDate: LocalDate, endDate: LocalDate? = null): Single<List<Homework>> {
+        val end = endDate ?: startDate.plusDays(4)
+        return api.getHomework(startDate.getLastMonday().toTick()).map { res ->
             res.items.asSequence().map { item ->
                 item.date = res.date
                 item
+            }.filter {
+                it.date.toLocalDate() >= startDate && it.date.toLocalDate() <= end
             }.sortedWith(compareBy({ it.date }, { it.subject })).toList()
         }
     }
@@ -148,8 +163,9 @@ class StudentAndParentRepository(private val api: StudentAndParentService) {
         return api.getSchoolAndTeachers().map { res ->
             res.subjects.flatMap { subject ->
                 subject.teachers.split(", ").map { teacher ->
-                    val tas = teacher.split(" [")
-                    Teacher(tas.first(), tas.last().removeSuffix("]"), subject.name)
+                    teacher.split(" [").run {
+                        Teacher(first(), last().removeSuffix("]"), subject.name)
+                    }
                 }
             }.sortedWith(compareBy({ it.subject }, { it.name }))
         }
@@ -162,21 +178,24 @@ class StudentAndParentRepository(private val api: StudentAndParentService) {
         }
     }
 
-    fun getTimetable(startDate: Date?): Single<List<Timetable>> {
-        return api.getTimetable(startDate.toTick()).map { res ->
+    fun getTimetable(startDate: LocalDate, endDate: LocalDate? = null): Single<List<Timetable>> {
+        val end = endDate ?: startDate.plusDays(4)
+        return api.getTimetable(startDate.getLastMonday().toTick()).map { res ->
             res.rows.flatMap { row ->
                 row.lessons.asSequence().mapIndexed { i, it ->
                     it.date = res.days[i]
-                    it.start = "${it.date.toString("yyy-MM-dd")} ${row.startTime}".toDate("yyyy-MM-dd HH:mm")
-                    it.end = "${it.date.toString("yyy-MM-dd")} ${row.endTime}".toDate("yyyy-MM-dd HH:mm")
+                    it.start = "${it.date.toLocalDate().toFormat("yyy-MM-dd")} ${row.startTime}".toDate("yyyy-MM-dd HH:mm")
+                    it.end = "${it.date.toLocalDate().toFormat("yyy-MM-dd")} ${row.endTime}".toDate("yyyy-MM-dd HH:mm")
                     it.number = row.number
                     it
                 }.mapNotNull { TimetableParser().getTimetable(it) }.toList()
-            }.sortedWith(compareBy({ it.date }, { it.number }))
+            }.asSequence().filter {
+                it.date.toLocalDate() >= startDate && it.date.toLocalDate() <= end
+            }.sortedWith(compareBy({ it.date }, { it.number })).toList()
         }
     }
 
-    fun getRealized(startDate: Date?): Single<List<Realized>> {
+    fun getRealized(startDate: LocalDate?): Single<List<Realized>> {
         return api.getRealized(startDate.toTick(), null, null).map { res ->
             lateinit var lastDate: Date
             res.items.asSequence().mapNotNull {
@@ -202,9 +221,17 @@ class StudentAndParentRepository(private val api: StudentAndParentService) {
         }
     }
 
-    private fun String.toDate(format: String): Date = SimpleDateFormat(format).parse(this)
+    private fun String.toDate(format: String) = SimpleDateFormat(format).parse(this)
 
-    private fun Date.toString(format: String): String = SimpleDateFormat(format).format(this)
+    private fun Date.toLocalDate() = Instant.ofEpochMilli(this.time).atZone(ZoneId.systemDefault()).toLocalDate()
+
+    private fun LocalDate.toDate() = java.sql.Date.valueOf(this.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")))
+
+    private fun LocalDate.toFormat(format: String) = this.format(DateTimeFormatter.ofPattern(format))
+
+    private fun LocalDate.getLastMonday() = this.with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY))
+
+    private fun LocalDate?.toTick() = this?.toDate().toTick()
 
     private fun Date?.toTick(): String {
         if (this == null) return ""

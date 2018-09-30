@@ -7,7 +7,7 @@ import org.junit.Test
 class HomeworkTest : BaseTest() {
 
     private val full by lazy {
-        getSnpRepo(HomeworkTest::class.java, "ZadaniaDomowe.html").getHomework(getDate(2018, 6, 18)).blockingGet()
+        getSnpRepo(HomeworkTest::class.java, "ZadaniaDomowe.html").getHomework(getLocalDate(2018, 10, 1)).blockingGet()
     }
 
     @Test fun getHomework() {
@@ -15,14 +15,14 @@ class HomeworkTest : BaseTest() {
     }
 
     @Test fun getDate() {
-        assertEquals(getDate(2017, 10, 23), full[0].date)
-        assertEquals(getDate(2017, 10, 23), full[1].date)
+        assertEquals(getDate(2018, 10, 1), full[0].date)
+        assertEquals(getDate(2018, 10, 1), full[1].date)
     }
 
     @Test
     fun getEntryDate() {
-        assertEquals(getDate(2017, 10, 25), full[0].entryDate)
-        assertEquals(getDate(2017, 10, 16), full[1].entryDate)
+        assertEquals(getDate(2018, 9, 25), full[0].entryDate)
+        assertEquals(getDate(2018, 9, 16), full[1].entryDate)
     }
 
     @Test fun getSubject() {
