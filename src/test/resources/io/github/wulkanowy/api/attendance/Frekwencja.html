@@ -4,6 +4,9 @@
     <meta charset="utf-8">
     <title>Witryna ucznia i rodzica – Frekwencja</title>
     <style>
+      td div::before {
+        display: block;
+      }
       .x-obecnosc:before {
         content: 'obecność';
         background: green;
@@ -45,6 +48,10 @@
         content: 'pusta';
         background: grey;
       }
+      table img {
+        margin: 0 auto;
+        display: block;
+      }
     </style>
 </head>
 <body>
@@ -69,22 +76,35 @@
                 <td class="padding-zero">
                     <!-- @see AttendanceTest#getAttendance_present() -->
                     <!--Obecność-->
-                    <div class="x-obecnosc"><span>Zajęcia artystyczne</span></div>
+                    <div class="x-obecnosc">
+                        <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAUCAYAAADPym6aAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAACHSURBVFhH7ZZBCoAgEEW9pgfoEq47hLsu4aZLCJ3CbvGL1ELQosDI+A9m5QjzkD8oCCH1gRuhZAe51QALIBxlASbovb+Hcef9r+FF7g/09F41KNKKCDDDqHIWmhGxOkrEShdBEyLpZjpKryahhS9SjdJAv8nIFRSphR8on4Mcn/2iEPJbhFgAXyJEEWgRs3YAAAAASUVORK5CYII=" alt="Obecność" title="Obecność">
+                        <span>Zajęcia artystyczne</span>
+                    </div>
                 </td>
                 <td class="padding-zero">
                     <!-- @see AttendanceTest#getAttendance_absenceExcused() -->
                     <!--Obecność usprawiedliwiona-->
-                    <div class="x-nieobecnosc-uspr"><span>Matematyka</span></div>
+                    <div class="x-nieobecnosc-uspr">
+                        <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAUCAYAAADPym6aAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAACOSURBVFhHY/hzMOD/cMCjHhlseNQjcLwp+n9lZOr/SDCO+38GmxoMHP5/OlxP0v/Nm7CpIQ1TySNkOoYSvWh41CNwjM0xlIiRiUc9AsejHsEhRiYe9QgcY3UMpJ6YvgghdqYeS50x+D0CxIvioBUeBE+fOCRjhEg8+DwCC/mh3EQZJHjUI4MNDxOPBPwHAHpBr9UG/Y9xAAAAAElFTkSuQmCC" alt="Nieobecność usprawiedliwiona" title="Nieobecność usprawiedliwiona">
+                        <span>Matematyka</span>
+                    </div>
                 </td>
                 <td class="padding-zero">
                     <!-- @see AttendanceTest#getAttendance_latenessExcused() -->
                     <!--Spóźnienie (usprawiedliwione)-->
-                    <div class="x-sp-spr"><span>Historia</span></div>
+                    <div class="x-sp-spr">
+                        <!--TODO:update this img src-->
+                        <img src="data:image/gif;base64,R0lGODlhAQABAIAAAMLCwgAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==" alt="Spóźnienie usprawiedliwione" title="Spóźnienie usprawiedliwione">
+                        <span>Historia</span>
+                    </div>
                 </td>
                 <td class="padding-zero">
                     <!-- @see AttendanceTest#getAttendance_exemption() -->
                     <!--Zwolnienie-->
-                    <div class="x-sp-zwolnienie"><span>Informatyka</span></div>
+                    <div class="x-sp-zwolnienie">
+                        <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAUCAYAAADPym6aAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAACrSURBVFhHY7i7++n/4YBHPTLY8KhHUPCaVf+LIlP/R4Lx1P/bsKmB433/u+Bq6/4vXINNDemYih4h0VHk6MGDRz2CgrE5au5UaPJBwtmr/p/Cp4cCTKcYgeSLrrlIYkPPI5f+L8wGxkbtPlTxoeaRU311qEkKhoeUR8D5BEdxPHQ8giVfIOOh4hFwkkIusUB46JdaWPDg9Qgs5IdyE2UQ4FGPDDY8TDzy9D8ABeBQSeVMqv4AAAAASUVORK5CYII=" alt="Zwolnienie" title="Zwolnienie">
+                        <span>Informatyka</span>
+                    </div>
                 </td>
             </tr>
             <tr>
@@ -93,17 +113,26 @@
                 <td class="padding-zero">
                     <!-- @see AttendanceTest#getAttendance_absence() -->
                     <!--Nieobecność (nieusprawiedliwiona)-->
-                    <div class="x-nieobecnosc-nieuspr"><span>Informatyka</span></div>
+                    <div class="x-nieobecnosc-nieuspr">
+                        <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAUCAYAAADPym6aAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAB3SURBVFhHY/i/rP3/cMCjHhlseNQjYDyr/H9VZOr/SDAu/H8OmxqcuOb/DLje7P9bZmFTQzymgkcodAQ1zADiUY+A8ahHkPBg9Qgk8+LHhMwgB496BIyp4YhRj6DiUY+A8fDyCCwTD+UmyiDCox4ZbHiYeKT9PwD3fSQpoN7BnAAAAABJRU5ErkJggg==" alt="Nieobecność nieusprawiedliwiona" title="Nieobecność nieusprawiedliwiona">
+                        <span>Informatyka</span>
+                    </div>
                 </td>
                 <td class="padding-zero">
                     <!-- @see AttendanceTest#getAttendance_lateness() -->
                     <!--Spóźnienie (nieusprawiedliwione)-->
-                    <div class="x-sp-nieusprawiedliwione"><span>Godzina wychowawcza</span></div>
+                    <div class="x-sp-nieusprawiedliwione">
+                        <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAUCAYAAADPym6aAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAACySURBVFhHY3j7wPP/cMCjHhlseNQjKPhM+P+yyNT/kWAc8/8gNjUoOPj/BLj6xP+rzmBTQxqmokfIcBC5+rDgUY+gYFwO2hEDTT5Q3BOMKj80PALKB8hivv9X9YT/vw6XB+Ih4RGwWOr/CTuQxNDx0IgRIEZLWhieGjIeQcZgT6EVzUPCI0CHly32RVMzFD0CFkMqsbA5eEh4hBg8OD0CC/mh3EQZBHjUI4MNDxOPeP4HAAbs0vtNjLFcAAAAAElFTkSuQmCC" alt="Spóźnienie nieusprawiedliwione" title="Spóźnienie nieusprawiedliwione">
+                        <span>Godzina wychowawcza</span>
+                    </div>
                 </td>
                 <td class="padding-zero">
                     <!-- @see AttendanceTest#getAttendance_absenceForSchoolReason() -->
                     <!--Nieobecność z przyczyn szkolnych-->
-                    <div class="x-nieobecnosc-przycz-szkol"><span>Język angielski</span></div>
+                    <div class="x-nieobecnosc-przycz-szkol">
+                        <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAUCAYAAADPym6aAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAADBSURBVFhHY1h58u//4YBHPTLY8Aj2yI4d/9MjU/9HgvG8/xOwqSEJn/9fCjev+X/LDmxqCGMyPUK+hTgxheaOegTFQpjYtHnQJALBpcuR1CxHlYtsPo+QQzZj4D2C5jiww2F5CJQPkPU8/9/SvOP/XJhaEB48HsEjBvUoSgyh4yHhERAfLWlheGrIeAQZoyQ7KB4SHgE6PH3aczS5oegRMBuRrLBWfIPCI9TAA+MRWMgO5SbKIMWjHhlseJh45O9/AH/u/uJdUzaTAAAAAElFTkSuQmCC" alt="Nieobecność z przyczyn szkolnych" title="Nieobecność z przyczyn szkolnych">
+                        <span>Język angielski</span>
+                    </div>
                 </td>
                 <td class="x-sp-nieobecny-w-oddziale"></td>
             </tr>

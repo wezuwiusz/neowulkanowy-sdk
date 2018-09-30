@@ -39,24 +39,15 @@ class StudentAndParentRepository(private val api: StudentAndParentService) {
             res.rows.flatMap { row ->
                 row.lessons.mapIndexedNotNull { i, it ->
                     if ("null" == it.subject) return@mapIndexedNotNull null // fix empty days
-                    it.date = res.days[i]
-                    it.number = row.number
-                    it.presence = it.name == Attendance.Types.PRESENCE || it.name == Attendance.Types.ABSENCE_FOR_SCHOOL_REASONS
-                    it.absence = it.name == Attendance.Types.ABSENCE_UNEXCUSED || it.name == Attendance.Types.ABSENCE_EXCUSED
-                    it.lateness = it.name == Attendance.Types.EXCUSED_LATENESS || it.name == Attendance.Types.UNEXCUSED_LATENESS
-                    it.excused = it.name == Attendance.Types.ABSENCE_EXCUSED || it.name == Attendance.Types.EXCUSED_LATENESS
-                    it.exemption = it.name == Attendance.Types.EXEMPTION
-                    it.name = when (it.name) {
-                        Attendance.Types.PRESENCE -> "Obecność"
-                        Attendance.Types.ABSENCE_UNEXCUSED -> "Nieobecność nieusprawiedliwiona"
-                        Attendance.Types.ABSENCE_EXCUSED -> "Nieobecność usprawiedliwiona"
-                        Attendance.Types.ABSENCE_FOR_SCHOOL_REASONS -> "Nieobecność z przyczyn szkolnych"
-                        Attendance.Types.EXEMPTION -> "Zwolnienie"
-                        Attendance.Types.UNEXCUSED_LATENESS -> "Spóźnienie nieusprawiedliwione"
-                        Attendance.Types.EXCUSED_LATENESS -> "Spóźnienie usprawiedliwione"
-                        else -> ""
+                    it.apply {
+                        date = res.days[i]
+                        number = row.number
+                        presence = it.type == Attendance.Types.PRESENCE || it.type == Attendance.Types.ABSENCE_FOR_SCHOOL_REASONS
+                        absence = it.type == Attendance.Types.ABSENCE_UNEXCUSED || it.type == Attendance.Types.ABSENCE_EXCUSED
+                        lateness = it.type == Attendance.Types.EXCUSED_LATENESS || it.type == Attendance.Types.UNEXCUSED_LATENESS
+                        excused = it.type == Attendance.Types.ABSENCE_EXCUSED || it.type == Attendance.Types.EXCUSED_LATENESS
+                        exemption = it.type == Attendance.Types.EXEMPTION
                     }
-                    it
                 }
             }.asSequence().filter {
                 it.date.toLocalDate() >= startDate && it.date.toLocalDate() <= end

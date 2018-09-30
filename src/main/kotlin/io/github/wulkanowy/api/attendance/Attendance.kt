@@ -12,8 +12,11 @@ class Attendance {
     @Selector("span", defValue = "null")
     lateinit var subject: String
 
-    @Selector("div", attr = "class")
+    @Selector("img", attr = "title", defValue = "Nieznany wpis")
     lateinit var name: String
+
+    @Selector("div", attr = "class")
+    lateinit var type: String // do not use
 
     var presence: Boolean = false
 
