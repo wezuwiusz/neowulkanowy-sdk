@@ -25,6 +25,10 @@ class ErrorInterceptor : Interceptor {
             if (it.contains("The custom error module")) throw NotLoggedInException("Zaloguj się")
         }
 
+        doc.select(".errorBlock").let {
+            if (it.isNotEmpty()) throw VulcanException("${it.select(".errorTitle").text()}. ${it.select(".errorMessage").text()}")
+        }
+
         doc.select(".ErrorMessage, #ErrorTextLabel").let {
             if (it.isNotEmpty()) throw BadCredentialsException(it.text())
         }
