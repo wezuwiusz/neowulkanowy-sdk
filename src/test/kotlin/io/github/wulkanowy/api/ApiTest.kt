@@ -21,6 +21,7 @@ import io.github.wulkanowy.api.school.Teacher
 import io.github.wulkanowy.api.student.StudentInfo
 import io.github.wulkanowy.api.timetable.Timetable
 import io.reactivex.observers.TestObserver
+import okhttp3.Interceptor
 import okhttp3.logging.HttpLoggingInterceptor
 import org.junit.Assert.*
 import org.junit.Before
@@ -45,6 +46,10 @@ class ApiTest : BaseTest() {
             studentId = "1"
             diaryId = "101"
             notifyDataChanged() // unnecessary in this case
+            setInterceptor(Interceptor { // important! put bellow notifyDataChanged
+                println("Request event ${it.request().url().host()}")
+                it.proceed(it.request())
+            }, 0)
         }
     }
 

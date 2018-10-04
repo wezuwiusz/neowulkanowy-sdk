@@ -2,6 +2,7 @@ package io.github.wulkanowy.api
 
 import io.github.wulkanowy.api.repository.*
 import io.github.wulkanowy.api.service.ServiceManager
+import okhttp3.Interceptor
 import okhttp3.logging.HttpLoggingInterceptor
 import org.threeten.bp.LocalDate
 
@@ -53,6 +54,10 @@ class Api {
 
     private val messages by resettableLazy(changeManager) {
         MessagesRepository(studentId.toInt(), serviceManager.getMessagesService())
+    }
+
+    fun setInterceptor(interceptor: Interceptor, index: Int = -1) {
+        serviceManager.setInterceptor(interceptor, index)
     }
 
     fun getPupils() = register.getPupils()

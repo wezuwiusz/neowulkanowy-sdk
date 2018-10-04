@@ -6,6 +6,7 @@ import io.github.wulkanowy.api.interceptor.ErrorInterceptor
 import io.github.wulkanowy.api.interceptor.StudentAndParentInterceptor
 import io.github.wulkanowy.api.login.NotLoggedInException
 import io.github.wulkanowy.api.repository.LoginRepository
+import okhttp3.Interceptor
 import okhttp3.JavaNetCookieJar
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -18,7 +19,7 @@ import java.net.CookiePolicy
 import java.util.concurrent.TimeUnit
 
 class ServiceManager(
-        private val logLevel: HttpLoggingInterceptor.Level,
+        logLevel: HttpLoggingInterceptor.Level,
         private val schema: String,
         private val host: String,
         private val symbol: String,
@@ -37,6 +38,16 @@ class ServiceManager(
 
     private val url by lazy {
         UrlGenerator(schema, host, symbol, schoolId)
+    }
+
+    private val interceptors: MutableList<Interceptor> = mutableListOf(
+            HttpLoggingInterceptor().setLevel(logLevel),
+            ErrorInterceptor()
+    )
+
+    fun setInterceptor(interceptor: Interceptor, index: Int = -1) {
+        if (index == -1) interceptors.add(interceptor)
+        else interceptors.add(index, interceptor)
     }
 
     fun getLoginService(): LoginService {
@@ -79,8 +90,11 @@ class ServiceManager(
                 .writeTimeout(25, TimeUnit.SECONDS)
                 .readTimeout(25, TimeUnit.SECONDS)
                 .cookieJar(JavaNetCookieJar(cookies))
-                .addInterceptor(HttpLoggingInterceptor().setLevel(logLevel))
-                .addInterceptor(ErrorInterceptor())
+                .apply {
+                    interceptors.forEach {
+                        this.addInterceptor(it)
+                    }
+                }
     }
 
     private class UrlGenerator(private val schema: String, private val host: String, private val symbol: String, private val schoolId: String) {
