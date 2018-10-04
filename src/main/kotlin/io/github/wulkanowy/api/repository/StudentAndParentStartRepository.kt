@@ -16,7 +16,7 @@ class StudentAndParentStartRepository(
         return api.getUserInfo(studentId).flatMapObservable { Observable.fromIterable(it.diaries.reversed()) }.flatMapSingle { diary ->
             api.getDiaryInfo(diary.id, "/$symbol/$schoolId/Oceny.mvc/Wszystkie").map { res ->
                 res.semesters.map {
-                    Semester(diary.id, diary.name, it.semesterId, it.semesterNumber,"selected" == it.current && "selected" == diary.current)
+                    Semester(diary.id, diary.name, it.semesterId, it.semesterNumber, "selected" == it.current && "selected" == diary.current)
                 }
             }
         }.toList().map { it.flatten() }

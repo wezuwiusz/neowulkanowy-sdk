@@ -1,7 +1,7 @@
 package io.github.wulkanowy.api.repository
 
-import io.github.wulkanowy.api.auth.AccountPermissionException
-import io.github.wulkanowy.api.auth.VulcanException
+import io.github.wulkanowy.api.ApiException
+import io.github.wulkanowy.api.login.AccountPermissionException
 import io.github.wulkanowy.api.login.CertificateResponse
 import io.github.wulkanowy.api.register.HomepageResponse
 import io.github.wulkanowy.api.register.Pupil
@@ -58,7 +58,7 @@ class RegisterRepository(
         val path = URL(snpPageUrl).path.split("/")
 
         if (6 != path.size) {
-            throw VulcanException("Na pewno używasz konta z dostępem do Witryny ucznia i rodzica?")
+            throw ApiException("Na pewno używasz konta z dostępem do Witryny ucznia i rodzica?")
         }
 
         return path[2]

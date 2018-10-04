@@ -1,8 +1,6 @@
 package io.github.wulkanowy.api.login
 
 import io.github.wulkanowy.api.BaseTest
-import io.github.wulkanowy.api.auth.AccountPermissionException
-import io.github.wulkanowy.api.auth.BadCredentialsException
 import io.github.wulkanowy.api.register.HomepageResponse
 import io.github.wulkanowy.api.repository.LoginRepository
 import io.github.wulkanowy.api.service.LoginService

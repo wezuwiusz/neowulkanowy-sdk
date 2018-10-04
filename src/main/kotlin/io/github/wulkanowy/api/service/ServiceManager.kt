@@ -1,9 +1,10 @@
 package io.github.wulkanowy.api.service
 
 import RxJava2ReauthCallAdapterFactory
-import io.github.wulkanowy.api.auth.NotLoggedInException
+import io.github.wulkanowy.api.ApiException
 import io.github.wulkanowy.api.interceptor.ErrorInterceptor
 import io.github.wulkanowy.api.interceptor.StudentAndParentInterceptor
+import io.github.wulkanowy.api.login.NotLoggedInException
 import io.github.wulkanowy.api.repository.LoginRepository
 import okhttp3.JavaNetCookieJar
 import okhttp3.OkHttpClient
@@ -39,16 +40,16 @@ class ServiceManager(
     }
 
     fun getLoginService(): LoginService {
-        if (email.isBlank() || password.isBlank()) throw NotLoggedInException("Email or/and password are not set")
+        if (email.isBlank() || password.isBlank()) throw ApiException("Email or/and password are not set")
         return getRetrofit(getClientBuilder(), url.generate(UrlGenerator.Site.LOGIN), false).create(LoginService::class.java)
     }
 
     fun getSnpService(withLogin: Boolean = true, interceptor: Boolean = true): StudentAndParentService {
-        if (withLogin && schoolId.isBlank()) throw NotLoggedInException("School id is not set")
+        if (withLogin && schoolId.isBlank()) throw ApiException("School id is not set")
 
         val client = getClientBuilder()
         if (interceptor) {
-            if (diaryId.isBlank() || studentId.isBlank()) throw NotLoggedInException("Student or/and diaryId id are not set")
+            if (diaryId.isBlank() || studentId.isBlank()) throw ApiException("Student or/and diaryId id are not set")
             client.addInterceptor(StudentAndParentInterceptor(cookies, schema, host, diaryId, studentId))
         }
 
@@ -93,7 +94,7 @@ class ServiceManager(
         }
 
         private fun getSubDomain(type: Site): String {
-            return when(type) {
+            return when (type) {
                 Site.LOGIN -> "cufs"
                 Site.SNP -> "uonetplus-opiekun"
                 Site.MESSAGES -> "uonetplus-uzytkownik"

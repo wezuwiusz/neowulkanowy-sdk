@@ -1,6 +1,8 @@
 package io.github.wulkanowy.api.interceptor
 
-import io.github.wulkanowy.api.auth.*
+import io.github.wulkanowy.api.login.AccountPermissionException
+import io.github.wulkanowy.api.login.BadCredentialsException
+import io.github.wulkanowy.api.login.NotLoggedInException
 import okhttp3.Interceptor
 import okhttp3.Response
 import org.jsoup.Jsoup
@@ -41,7 +43,7 @@ class ErrorInterceptor : Interceptor {
             if (it.isNotEmpty()) throw AccountPermissionException(it.text())
         }
 
-        when(doc.title()) {
+        when (doc.title()) {
             "Błąd" -> throw VulcanException(doc.body().text())
             "Błąd strony" -> throw VulcanException(doc.select(".errorMessage").text())
             "Logowanie" -> throw AccountPermissionException(doc.select("div").last().html().split("<br>")[1].trim())

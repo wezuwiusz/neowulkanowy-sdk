@@ -1,7 +1,7 @@
 package io.github.wulkanowy.api.repository
 
 import io.github.wulkanowy.api.BaseTest
-import io.github.wulkanowy.api.auth.VulcanException
+import io.github.wulkanowy.api.ApiException
 import io.github.wulkanowy.api.login.LoginTest
 import io.github.wulkanowy.api.register.Pupil
 import io.github.wulkanowy.api.service.LoginService
@@ -50,6 +50,6 @@ class RegisterRepositoryTest : BaseTest() {
         val observer = TestObserver<List<Pupil>>()
         res.subscribe(observer)
         observer.assertTerminated()
-        observer.assertError(VulcanException::class.java)
+        observer.assertError(ApiException::class.java)
     }
 }

@@ -1,6 +1,5 @@
 package io.github.wulkanowy.api
 
-import io.github.wulkanowy.api.auth.NotLoggedInException
 import io.github.wulkanowy.api.repository.*
 import io.github.wulkanowy.api.service.ServiceManager
 import okhttp3.logging.HttpLoggingInterceptor
@@ -44,7 +43,7 @@ class Api {
     }
 
     private val snpStart by resettableLazy(changeManager) {
-        if (studentId.isBlank()) throw NotLoggedInException("Student id is not set")
+        if (studentId.isBlank()) throw ApiException("Student id is not set")
         StudentAndParentStartRepository(symbol, schoolId, studentId, serviceManager.getSnpService(true, false))
     }
 

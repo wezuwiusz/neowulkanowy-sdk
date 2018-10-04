@@ -24,16 +24,16 @@ class StudentAndParentResponse {
         lateinit var name: String
     }
 
-     class Diary {
-         @Selector("option", attr = "value", regex = "\\=(.*)")
-         lateinit var id: String
+    class Diary {
+        @Selector("option", attr = "value", regex = "\\=(.*)")
+        lateinit var id: String
 
-         @Selector("option")
-         lateinit var name: String
+        @Selector("option")
+        lateinit var name: String
 
-         @Selector("option", attr = "selected")
-         lateinit var current: String
-     }
+        @Selector("option", attr = "selected")
+        lateinit var current: String
+    }
 
     class Semester {
 

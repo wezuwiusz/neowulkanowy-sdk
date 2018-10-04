@@ -120,14 +120,14 @@ class ApiTest : BaseTest() {
         assertEquals("Obecność", values[0].name)
         assertTrue(values[0].presence)
 
-        assertEquals("Nieobecność nieusprawiedliwiona", values[1].name)
+        assertEquals("Nieobecność", values[1].name)
         assertTrue(values[1].absence)
         assertFalse(values[1].excused)
 
-        assertEquals("Spóźnienie nieusprawiedliwione", values[3].name)
+        assertEquals("Spóźnienie", values[3].name)
         assertEquals("Spóźnienie usprawiedliwione", values[4].name)
-        assertEquals("Nieobecność z przyczyn szkolnych", values[5].name)
-        assertEquals("Zwolnienie", values[6].name)
+        assertEquals("Nieobecny z przyczyn szkolnych", values[5].name)
+        assertEquals("Zwolniony", values[6].name)
         assertEquals("Obecność", values[9].name)
 
         assertEquals(1, values[0].number)
