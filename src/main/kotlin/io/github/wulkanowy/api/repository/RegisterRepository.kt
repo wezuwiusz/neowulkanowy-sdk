@@ -13,7 +13,7 @@ import org.jsoup.parser.Parser
 import java.net.URL
 
 class RegisterRepository(
-        private val globalSymbol: String,
+        private val startSymbol: String,
         private val email: String,
         private val password: String,
         private val loginRepo: LoginRepository,
@@ -22,7 +22,7 @@ class RegisterRepository(
 
     fun getPupils(): Single<List<Pupil>> {
         return getSymbols().flatMapObservable { Observable.fromIterable(it) }.flatMap { symbol ->
-            loginRepo.sendCertificate(symbol.second, symbol.second.action.replace(globalSymbol, symbol.first))
+            loginRepo.sendCertificate(symbol.second, symbol.second.action.replace(startSymbol, symbol.first))
                     .onErrorResumeNext { t ->
                         if (t is AccountPermissionException) Single.just(HomepageResponse())
                         else Single.error(t)

@@ -32,20 +32,22 @@ class Api {
 
     private val schema by resettableLazy(changeManager) { "http" + if (ssl) "s" else "" }
 
+    private val normalizedSymbol by resettableLazy(changeManager) { if (symbol.isBlank()) "Default" else symbol }
+
     private val serviceManager by resettableLazy(changeManager) {
-        ServiceManager(logLevel, schema, host, symbol, email, password, schoolId, studentId, diaryId)
+        ServiceManager(logLevel, schema, host, normalizedSymbol, email, password, schoolId, studentId, diaryId)
     }
 
     private val register by resettableLazy(changeManager) {
-        RegisterRepository(symbol, email, password,
-                LoginRepository(schema, host, symbol, serviceManager.getLoginService()),
+        RegisterRepository(normalizedSymbol, email, password,
+                LoginRepository(schema, host, normalizedSymbol, serviceManager.getLoginService()),
                 serviceManager.getSnpService(false, false)
         )
     }
 
     private val snpStart by resettableLazy(changeManager) {
         if (studentId.isBlank()) throw ApiException("Student id is not set")
-        StudentAndParentStartRepository(symbol, schoolId, studentId, serviceManager.getSnpService(true, false))
+        StudentAndParentStartRepository(normalizedSymbol, schoolId, studentId, serviceManager.getSnpService(true, false))
     }
 
     private val snp by resettableLazy(changeManager) {
