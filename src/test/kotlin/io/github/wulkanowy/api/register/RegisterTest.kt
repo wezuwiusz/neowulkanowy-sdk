@@ -44,7 +44,7 @@ class RegisterTest : BaseTest() {
         server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("Logowanie-uonet.html").readText()))
         server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("Login-success.html").readText()))
         server.enqueue(MockResponse().setBody(RegisterTest::class.java.getResource("WitrynaUczniaIRodzica.html").readText()))
-        server.enqueue(MockResponse().setBody(GradesTest::class.java.getResource("OcenyWszystkie-filled.html").readText()))
+        server.enqueue(MockResponse().setBody(GradesTest::class.java.getResource("OcenyWszystkie-details.html").readText()))
         // 4x symbol
         server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("Logowanie-brak-dostepu.html").readText()))
         server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("Logowanie-brak-dostepu.html").readText()))
@@ -62,9 +62,9 @@ class RegisterTest : BaseTest() {
     fun semestersTest() {
         server.enqueue(MockResponse().setBody(RegisterTest::class.java.getResource("WitrynaUczniaIRodzica.html").readText()))
         // 3x diary
-        server.enqueue(MockResponse().setBody(GradesTest::class.java.getResource("OcenyWszystkie-filled.html").readText()))
-        server.enqueue(MockResponse().setBody(GradesTest::class.java.getResource("OcenyWszystkie-filled.html").readText().replace("1234568", "1234570")))
-        server.enqueue(MockResponse().setBody(GradesTest::class.java.getResource("OcenyWszystkie-filled.html").readText().replace("1234568", "1234572")))
+        server.enqueue(MockResponse().setBody(GradesTest::class.java.getResource("OcenyWszystkie-details.html").readText()))
+        server.enqueue(MockResponse().setBody(GradesTest::class.java.getResource("OcenyWszystkie-details.html").readText().replace("1234568", "1234570")))
+        server.enqueue(MockResponse().setBody(GradesTest::class.java.getResource("OcenyWszystkie-details.html").readText().replace("1234568", "1234572")))
         server.start(3000)
 
         val res = snp.getSemesters().blockingGet()

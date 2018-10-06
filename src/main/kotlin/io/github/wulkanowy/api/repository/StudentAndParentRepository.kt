@@ -92,7 +92,7 @@ class StudentAndParentRepository(private val api: StudentAndParentService) {
                 if (grade.entry == grade.comment) grade.comment = ""
                 if (grade.description == grade.symbol) grade.description = ""
                 grade
-            }.sortedWith(compareBy({ it.date }, { it.subject })).toList()
+            }.toList()
         }
     }
 
