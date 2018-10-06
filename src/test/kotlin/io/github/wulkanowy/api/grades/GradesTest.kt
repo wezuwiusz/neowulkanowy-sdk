@@ -40,12 +40,12 @@ class GradesTest : BaseTest() {
     }
 
     @Test fun getModifierTest() {
-        assertEquals(-0.5f, grades[0].modifier)
-        assertEquals(0f, grades[1].modifier)
-        assertEquals(-0.33f, grades[2].modifier)
-        assertEquals(0.33f, grades[4].modifier)
-        assertEquals(-0.33f, grades[5].modifier)
-        assertEquals(0f, grades[6].modifier)
+        assertEquals(-0.5, grades[0].modifier, .0)
+        assertEquals(.0, grades[1].modifier, .0)
+        assertEquals(-0.33, grades[2].modifier, .0)
+        assertEquals(.33, grades[4].modifier, .0)
+        assertEquals(-0.33, grades[5].modifier, .0)
+        assertEquals(.0, grades[6].modifier, .0)
     }
 
     @Test fun getCommentTest() {

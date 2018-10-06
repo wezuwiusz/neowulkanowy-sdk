@@ -5,7 +5,7 @@ import pl.droidsonroids.jspoon.ElementConverter
 import pl.droidsonroids.jspoon.annotation.Selector
 
 private val validGrade = "^(\\++|-|--|=)?[0-6](\\++|-|--|=)?$".toRegex()
-private const val modifierWeight = 0.33f
+private const val modifierWeight = .33
 
 class GradeValueConverter : ElementConverter<Int?> {
 
@@ -14,9 +14,9 @@ class GradeValueConverter : ElementConverter<Int?> {
     }
 }
 
-class GradeModifierValueConverter : ElementConverter<Float> {
+class GradeModifierValueConverter : ElementConverter<Double> {
 
-    override fun convert(node: Element, selector: Selector): Float {
+    override fun convert(node: Element, selector: Selector): Double {
         return getGradeValueWithModifier(node.text()).second
     }
 }
@@ -28,17 +28,17 @@ class GradeWeightValueConverter : ElementConverter<Int> {
     }
 }
 
-private fun getGradeValueWithModifier(grade: String): Pair<Int, Float> {
+private fun getGradeValueWithModifier(grade: String): Pair<Int, Double> {
     return grade.substringBefore(" (").run {
         if (this.matches(validGrade)) {
             when {
                 matches("[-][0-6]|[0-6][-]".toRegex()) -> Pair(replace("-", "").toInt(), -modifierWeight)
                 matches("[+][0-6]|[0-6][+]".toRegex()) -> Pair(replace("+", "").toInt(), modifierWeight)
-                matches("[-|=]{1,2}[0-6]|[0-6][-|=]{1,2}".toRegex()) -> Pair(replace("[-|=]{1,2}".toRegex(), "").toInt(), -0.5f)
-                else -> Pair(this.toInt(), 0f)
+                matches("[-|=]{1,2}[0-6]|[0-6][-|=]{1,2}".toRegex()) -> Pair(replace("[-|=]{1,2}".toRegex(), "").toInt(), -.5)
+                else -> Pair(this.toInt(), .0)
             }
         } else {
-            Pair(0, 0f)
+            Pair(0, .0)
         }
     }
 }

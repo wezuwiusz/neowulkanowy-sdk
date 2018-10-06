@@ -16,7 +16,7 @@ class Grade {
     var value: Int = 0
 
     @Selector("td", index = 1, converter = GradeModifierValueConverter::class)
-    var modifier: Float = 0f
+    var modifier: Double = .0
 
     @Selector("td", index = 1, regex = "\\(([^)]+)\\)")
     lateinit var comment: String
