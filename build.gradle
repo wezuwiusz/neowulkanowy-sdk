@@ -23,8 +23,6 @@ ext {
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
 
-    implementation 'com.github.VLO-GDA:uonet-sdk:master-SNAPSHOT'
-
     implementation 'com.google.code.gson:gson:2.8.5'
     implementation "com.squareup.retrofit2:retrofit:$retrofit"
     implementation "com.squareup.retrofit2:converter-gson:$retrofit"

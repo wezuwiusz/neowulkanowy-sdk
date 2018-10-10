@@ -17,6 +17,7 @@ import junit.framework.TestCase.assertEquals
 import org.junit.BeforeClass
 import org.junit.Test
 
+const val PASSWORD = "012345678901234567890123456789AB"
 const val DEVICE_NAME = "Wulkanowy#client"
 const val HOST = "https://api.fakelog.cf"
 const val SYMBOL = "Default"
@@ -34,7 +35,7 @@ class UonetTest {
         @JvmStatic
         @BeforeClass fun setUp() {
             // RegisterRepository
-            val register = RegisterRepository(HOST, SYMBOL)
+            val register = RegisterRepository(PASSWORD, HOST, SYMBOL)
 
             val certificate = register.getCertificate(TOKEN, PIN, DEVICE_NAME)
             val certSubscriber = TestObserver<CertificateResponse>()
@@ -60,7 +61,7 @@ class UonetTest {
             student = pupilSubscriber.values()[0].data!![0]
 
             // MobileRepository
-            mobile = MobileRepository(HOST, SYMBOL, register.signature, register.certificate, student.reportingUnitSymbol)
+            mobile = MobileRepository(PASSWORD, HOST, SYMBOL, register.signature, register.certificate, student.reportingUnitSymbol)
         }
     }
 
