@@ -4,6 +4,7 @@ import io.github.wulkanowy.api.interceptor.ErrorInterceptor
 import io.github.wulkanowy.api.repository.StudentAndParentRepository
 import io.github.wulkanowy.api.service.StudentAndParentService
 import okhttp3.OkHttpClient
+import okhttp3.logging.HttpLoggingInterceptor
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
 import org.junit.Rule
@@ -24,9 +25,15 @@ open class BaseTest {
         return StudentAndParentRepository(getService(StudentAndParentService::class.java))
     }
 
-    fun <T> getService(service: Class<T>, url: String = mockBackend.url("/").toString(), html: Boolean = true): T {
+    fun <T> getService(service: Class<T>, url: String = mockBackend.url("/").toString(), html: Boolean = true, errorInterceptor: Boolean = true): T {
         return Retrofit.Builder()
-                .client(OkHttpClient.Builder().addInterceptor(ErrorInterceptor()).build())
+                .client(OkHttpClient.Builder()
+                        .apply {
+                            if (errorInterceptor) addInterceptor(ErrorInterceptor())
+                        }
+                        .addInterceptor(HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BASIC))
+                        .build()
+                )
                 .addConverterFactory(if (html) JspoonConverterFactory.create() else GsonConverterFactory.create())
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .baseUrl(url)

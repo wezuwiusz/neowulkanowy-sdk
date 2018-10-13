@@ -1,5 +1,6 @@
 package io.github.wulkanowy.api.login
 
+import io.github.wulkanowy.api.Api
 import io.github.wulkanowy.api.BaseTest
 import io.github.wulkanowy.api.register.HomepageResponse
 import io.github.wulkanowy.api.repository.LoginRepository
@@ -15,13 +16,13 @@ import org.junit.Test
 class LoginTest : BaseTest() {
 
     private val normal by lazy {
-        LoginRepository("http", "fakelog.localhost:3000", "default",
+        LoginRepository(Api.LoginType.STANDARD, "http", "fakelog.localhost:3000", "default",
                 getService(LoginService::class.java, "http://fakelog.localhost:3000/"))
     }
 
     private val adfs by lazy {
-        LoginRepository("http", "fakelog.localhost:3001", "default",
-                getService(LoginService::class.java, "http://fakelog.localhost:3001/"))
+        LoginRepository(Api.LoginType.ADFS, "http", "fakelog.localhost:3000", "default",
+                getService(LoginService::class.java, "http://fakelog.localhost:3000/"))
     }
 
     private lateinit var server: MockWebServer
@@ -35,14 +36,19 @@ class LoginTest : BaseTest() {
     fun adfsTest() {
         server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("ADFS-form-1.html").readText()))
         server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("ADFS-form-2.html").readText()))
-        server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("Logowanie-cufs.html").readText().replace("3000", "3001")))
-        server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("Logowanie-uonet.html").readText().replace("3000", "3001")))
+        server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("Logowanie-cufs.html").readText()))
+        server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("Logowanie-uonet.html").readText()))
         server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("Login-success.html").readText()))
-        server.start(3001)
+        server.start(3000)
 
-        val res = adfs.login("jan@fakelog.cf", "jan123", LoginRepository.LoginType.ADFS).blockingGet()
+        val res = adfs.login("jan@fakelog.cf", "jan123").blockingGet()
 
         assertTrue(res.schools.isNotEmpty())
+    }
+
+    @After
+    fun tearDown() {
+        server.shutdown()
     }
 
     @Test
@@ -61,9 +67,9 @@ class LoginTest : BaseTest() {
         server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("ADFS-form-1.html").readText()))
         server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("ADFS-form-2.html").readText()))
         server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("Logowanie-adfs-zle-haslo.html").readText()))
-        server.start(3001)
+        server.start(3000)
 
-        val res = adfs.login("jan@fakelog.cf", "jan1234", LoginRepository.LoginType.ADFS)
+        val res = adfs.login("jan@fakelog.cf", "jan1234")
         val observer = TestObserver<HomepageResponse>()
         res.subscribe(observer)
         observer.assertTerminated()
@@ -94,10 +100,5 @@ class LoginTest : BaseTest() {
         res.subscribe(observer)
         observer.assertTerminated()
         observer.assertError(AccountPermissionException::class.java)
-    }
-
-    @After
-    fun tearDown() {
-        server.shutdown()
     }
 }

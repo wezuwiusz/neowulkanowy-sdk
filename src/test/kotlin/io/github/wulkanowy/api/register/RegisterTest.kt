@@ -1,5 +1,6 @@
 package io.github.wulkanowy.api.register
 
+import io.github.wulkanowy.api.Api
 import io.github.wulkanowy.api.BaseTest
 import io.github.wulkanowy.api.grades.GradesTest
 import io.github.wulkanowy.api.login.LoginTest
@@ -7,6 +8,7 @@ import io.github.wulkanowy.api.repository.LoginRepository
 import io.github.wulkanowy.api.repository.RegisterRepository
 import io.github.wulkanowy.api.repository.StudentAndParentStartRepository
 import io.github.wulkanowy.api.service.LoginService
+import io.github.wulkanowy.api.service.RegisterService
 import io.github.wulkanowy.api.service.StudentAndParentService
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
@@ -24,13 +26,19 @@ class RegisterTest : BaseTest() {
         server = MockWebServer()
     }
 
+    @After
+    fun tearDown() {
+        server.shutdown()
+    }
+
     private val login by lazy {
-        LoginRepository("http", "localhost:3000", "default",
+        LoginRepository(Api.LoginType.STANDARD, "http", "localhost:3000", "default",
                 getService(LoginService::class.java, "http://localhost:3000/"))
     }
 
     private val normal by lazy {
         RegisterRepository("default", "jan@fakelog.localhost", "jan123", login,
+                getService(RegisterService::class.java, "http://fakelog.localhost:3000/Default/", true, false),
                 getService(StudentAndParentService::class.java, "http://localhost:3000/"))
     }
 
@@ -41,8 +49,10 @@ class RegisterTest : BaseTest() {
 
     @Test
     fun pupilsTest() {
+        server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("LoginPage-standard.html").readText()))
         server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("Logowanie-uonet.html").readText()))
         server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("Login-success.html").readText()))
+        server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("LoginPage-standard.html").readText()))
         server.enqueue(MockResponse().setBody(RegisterTest::class.java.getResource("WitrynaUczniaIRodzica.html").readText()))
         server.enqueue(MockResponse().setBody(GradesTest::class.java.getResource("OcenyWszystkie-details.html").readText()))
         // 4x symbol
@@ -78,8 +88,64 @@ class RegisterTest : BaseTest() {
         assertEquals(1, res[2].semesterNumber)
     }
 
-    @After
-    fun tearDown() {
-        server.shutdown()
+    @Test
+    fun loginType_standard() {
+        server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("LoginPage-standard.html").readText())) //
+        server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("Logowanie-uonet.html").readText()))
+        server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("Login-success.html").readText()))
+        server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("LoginPage-standard.html").readText())) //
+        server.enqueue(MockResponse().setBody(RegisterTest::class.java.getResource("WitrynaUczniaIRodzica.html").readText()))
+        server.enqueue(MockResponse().setBody(GradesTest::class.java.getResource("OcenyWszystkie-details.html").readText()))
+        // 4x symbol
+        server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("Logowanie-brak-dostepu.html").readText()))
+        server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("Logowanie-brak-dostepu.html").readText()))
+        server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("Logowanie-brak-dostepu.html").readText()))
+        server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("Logowanie-brak-dostepu.html").readText()))
+        server.start(3000)
+
+        val res = normal.getPupils().blockingGet()
+        assertEquals(Api.LoginType.STANDARD, res[0].loginType)
+    }
+
+    @Test
+    fun loginType_adfs() {
+        server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("ADFS-form-1.html").readText())) //
+        server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("ADFS-form-1.html").readText()))
+        server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("ADFS-form-2.html").readText()))
+        server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("Logowanie-cufs.html").readText()))
+        server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("Logowanie-uonet.html").readText()))
+        server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("Login-success.html").readText()))
+        server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("ADFS-form-1.html").readText())) //
+        server.enqueue(MockResponse().setBody(RegisterTest::class.java.getResource("WitrynaUczniaIRodzica.html").readText()))
+        server.enqueue(MockResponse().setBody(GradesTest::class.java.getResource("OcenyWszystkie-details.html").readText()))
+        // 4x symbol
+        server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("Logowanie-brak-dostepu.html").readText()))
+        server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("Logowanie-brak-dostepu.html").readText()))
+        server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("Logowanie-brak-dostepu.html").readText()))
+        server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("Logowanie-brak-dostepu.html").readText()))
+        server.start(3000)
+
+        val res = normal.getPupils().blockingGet()
+        assertEquals(Api.LoginType.ADFS, res[0].loginType)
+    }
+
+    @Test
+    fun loginType_adfsLight() {
+        server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("ADFSLight-form-1.html").readText())) //
+        server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("ADFSLight-form-1.html").readText()))
+        server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("Logowanie-uonet.html").readText()))
+        server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("Login-success.html").readText()))
+        server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("ADFSLight-form-1.html").readText())) //
+        server.enqueue(MockResponse().setBody(RegisterTest::class.java.getResource("WitrynaUczniaIRodzica.html").readText()))
+        server.enqueue(MockResponse().setBody(GradesTest::class.java.getResource("OcenyWszystkie-details.html").readText()))
+        // 4x symbol
+        server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("Logowanie-brak-dostepu.html").readText()))
+        server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("Logowanie-brak-dostepu.html").readText()))
+        server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("Logowanie-brak-dostepu.html").readText()))
+        server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("Logowanie-brak-dostepu.html").readText()))
+        server.start(3000)
+
+        val res = normal.getPupils().blockingGet()
+        assertEquals(Api.LoginType.ADFSLight, res[0].loginType)
     }
 }

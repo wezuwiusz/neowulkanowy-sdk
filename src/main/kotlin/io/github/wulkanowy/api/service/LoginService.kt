@@ -1,6 +1,7 @@
 package io.github.wulkanowy.api.service
 
 import io.github.wulkanowy.api.login.ADFSFormResponse
+import io.github.wulkanowy.api.login.ADFSLightFormResponse
 import io.github.wulkanowy.api.login.CertificateResponse
 import io.github.wulkanowy.api.register.HomepageResponse
 import io.reactivex.Single
@@ -28,4 +29,7 @@ interface LoginService {
     @POST
     @FormUrlEncoded
     fun sendADFSForm(@Url url: String, @FieldMap values: Map<String, String>): Single<CertificateResponse>
+
+    @GET
+    fun getADFSLightForm(@Url url: String): Single<ADFSLightFormResponse>
 }

@@ -14,6 +14,8 @@ class Api {
 
     var host: String = "fakelog.cf"
 
+    var loginType: LoginType = LoginType.AUTO
+
     var symbol: String = "Default"
 
     var email: String = ""
@@ -26,6 +28,13 @@ class Api {
 
     var diaryId: String = ""
 
+    enum class LoginType {
+        AUTO,
+        STANDARD,
+        ADFS,
+        ADFSLight
+    }
+
     private val changeManager = resettableManager()
 
     fun notifyDataChanged() = changeManager.reset()
@@ -35,12 +44,13 @@ class Api {
     private val normalizedSymbol by resettableLazy(changeManager) { if (symbol.isBlank()) "Default" else symbol }
 
     private val serviceManager by resettableLazy(changeManager) {
-        ServiceManager(logLevel, schema, host, normalizedSymbol, email, password, schoolId, studentId, diaryId)
+        ServiceManager(logLevel, loginType, schema, host, normalizedSymbol, email, password, schoolId, studentId, diaryId)
     }
 
     private val register by resettableLazy(changeManager) {
         RegisterRepository(normalizedSymbol, email, password,
-                LoginRepository(schema, host, normalizedSymbol, serviceManager.getLoginService()),
+                LoginRepository(loginType, schema, host, normalizedSymbol, serviceManager.getLoginService()),
+                serviceManager.getRegisterService(),
                 serviceManager.getSnpService(false, false)
         )
     }

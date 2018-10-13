@@ -1,6 +1,7 @@
 package io.github.wulkanowy.api.service
 
 import RxJava2ReauthCallAdapterFactory
+import io.github.wulkanowy.api.Api
 import io.github.wulkanowy.api.ApiException
 import io.github.wulkanowy.api.interceptor.ErrorInterceptor
 import io.github.wulkanowy.api.interceptor.StudentAndParentInterceptor
@@ -20,6 +21,7 @@ import java.util.concurrent.TimeUnit
 
 class ServiceManager(
         logLevel: HttpLoggingInterceptor.Level,
+        private val loginType: Api.LoginType,
         private val schema: String,
         private val host: String,
         private val symbol: String,
@@ -55,6 +57,10 @@ class ServiceManager(
         return getRetrofit(getClientBuilder(), url.generate(UrlGenerator.Site.LOGIN), false).create(LoginService::class.java)
     }
 
+    fun getRegisterService(): RegisterService {
+        return getRetrofit(getClientBuilder(false, true), url.generate(UrlGenerator.Site.LOGIN), false).create(RegisterService::class.java)
+    }
+
     fun getSnpService(withLogin: Boolean = true, interceptor: Boolean = true): StudentAndParentService {
         if (withLogin && schoolId.isBlank()) throw ApiException("School id is not set")
 
@@ -78,21 +84,24 @@ class ServiceManager(
                 .addConverterFactory(if (gson) GsonConverterFactory.create() else JspoonConverterFactory.create())
                 .addCallAdapterFactory(if (!login) RxJava2CallAdapterFactory.create() else
                     RxJava2ReauthCallAdapterFactory.create(
-                            LoginRepository(schema, host, symbol, getLoginService()).login(email, password).toFlowable(),
+                            LoginRepository(loginType, schema, host, symbol, getLoginService()).login(email, password).toFlowable(),
                             { it is NotLoggedInException }
                     )
                 ).build()
     }
 
-    private fun getClientBuilder(): OkHttpClient.Builder {
+    private fun getClientBuilder(errorInterceptor: Boolean = true, separateJar: Boolean = false): OkHttpClient.Builder {
         return OkHttpClient().newBuilder()
                 .connectTimeout(25, TimeUnit.SECONDS)
                 .writeTimeout(25, TimeUnit.SECONDS)
                 .readTimeout(25, TimeUnit.SECONDS)
-                .cookieJar(JavaNetCookieJar(cookies))
+                .cookieJar(if (!separateJar) JavaNetCookieJar(cookies) else JavaNetCookieJar(CookieManager()))
                 .apply {
                     interceptors.forEach {
-                        this.addInterceptor(it)
+                        if (it is ErrorInterceptor) {
+                            if (errorInterceptor) this.addInterceptor(it)
+                        }
+                        else this.addInterceptor(it)
                     }
                 }
     }

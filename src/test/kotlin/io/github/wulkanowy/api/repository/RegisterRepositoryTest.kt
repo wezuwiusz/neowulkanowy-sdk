@@ -1,10 +1,12 @@
 package io.github.wulkanowy.api.repository
 
-import io.github.wulkanowy.api.BaseTest
+import io.github.wulkanowy.api.Api
 import io.github.wulkanowy.api.ApiException
+import io.github.wulkanowy.api.BaseTest
 import io.github.wulkanowy.api.login.LoginTest
 import io.github.wulkanowy.api.register.Pupil
 import io.github.wulkanowy.api.service.LoginService
+import io.github.wulkanowy.api.service.RegisterService
 import io.github.wulkanowy.api.service.StudentAndParentService
 import io.reactivex.observers.TestObserver
 import okhttp3.mockwebserver.MockResponse
@@ -17,8 +19,9 @@ class RegisterRepositoryTest : BaseTest() {
 
     private val normal by lazy {
         RegisterRepository("Default", "jan@fakelog.cf", "jan123",
-                LoginRepository("http", "fakelog.localhost:3000", "default",
+                LoginRepository(Api.LoginType.STANDARD, "http", "fakelog.localhost:3000", "default",
                         getService(LoginService::class.java, "http://fakelog.localhost:3000/")),
+                getService(service = RegisterService::class.java, url = "http://fakelog.localhost:3000/", errorInterceptor = false),
                 getService(StudentAndParentService::class.java)
         )
     }
@@ -37,6 +40,7 @@ class RegisterRepositoryTest : BaseTest() {
 
     @Test
     fun normalVulcanException() {
+        server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("LoginPage-standard.html").readText()))
         server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("Logowanie-uonet.html").readText()))
         server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("Logowanie-brak-dostepu.html").readText()))
         server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("Offline.html").readText()))

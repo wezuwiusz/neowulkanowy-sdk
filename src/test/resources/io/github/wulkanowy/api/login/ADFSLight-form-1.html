@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Logowanie do systemu</title>
+</head>
+<body>
+<form action="/LoginPage.aspx" method="post">
+    <div class="mainDiv" id="mainDiv">
+        <table class="UsernamePasswordTable" id="tableUserCredentials">
+            <tr class="UsernamePasswordTableHeading">
+                <td colspan="2"><label>Proszę podać nazwę użytkownika i hasło</label></td>
+            </tr>
+            <tr>
+                <td class="UsernamePasswordTableField"><label for="Username">Nazwa użytkownika:</label></td>
+                <td><input id="Username" name="Username" type="text"/></td>
+            </tr>
+            <tr>
+                <td class="UsernamePasswordTableField"><label for="Password">Hasło:</label></td>
+                <td><input id="Password" name="Password" type="password"></td>
+            </tr>
+            <tr>
+                <td colspan="2" class="SubmitTableField">
+                    <input type="image" src="/Resources/g-zaloguj-1.png" id="SubmitButton"/>
+                </td>
+            </tr>
+        </table>
+    </div>
+</form>
+</body>
+</html>
+

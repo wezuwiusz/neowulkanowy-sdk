@@ -1,5 +1,7 @@
 package io.github.wulkanowy.api.repository
 
+import io.github.wulkanowy.api.Api
+import io.github.wulkanowy.api.ApiException
 import io.github.wulkanowy.api.login.CertificateResponse
 import io.github.wulkanowy.api.register.HomepageResponse
 import io.github.wulkanowy.api.service.LoginService
@@ -7,49 +9,38 @@ import io.reactivex.Single
 import java.net.URLEncoder
 
 class LoginRepository(
+        var loginType: Api.LoginType,
         private val schema: String,
         private val host: String,
         private val symbol: String,
         private val api: LoginService
 ) {
 
-    enum class LoginType {
-        ADFS, ADFSLight, STANDARD
-    }
-
-    private val firstEndpointUrl by lazy {
+    private val firstStepReturnUrl by lazy {
         val url = URLEncoder.encode("$schema://uonetplus.$host/$symbol/LoginEndpoint.aspx", "UTF-8")
         "/$symbol/FS/LS?wa=wsignin1.0&wtrealm=$url&wctx=$url"
     }
 
-    private val adfsLight by lazy {
-        "$schema://adfslight.$host/LoginPage.aspx?ReturnUrl=/?wa=wsignin1.0&wtrealm=" +
-                URLEncoder.encode("$schema://cufs.$host/Default/Account/LogOn&wctx=rm=0&id=ADFS&ru=/Default", "UTF-8")
-    }
-
-    private fun getType(): LoginType {
-        return when (host) {
-            // ADFS
-            "eszkola.opolskie.pl" -> LoginType.ADFS
-            "umt.tarnow.pl" -> LoginType.ADFS
-
-            // ADFSLight
-            "resman.pl" -> LoginType.ADFSLight
-
-            // standard
-            else -> LoginType.STANDARD
-        }
-    }
-
-    fun login(email: String, password: String, type: LoginType = getType()): Single<HomepageResponse> {
-        return sendCredentials(email, password, type).flatMap {
+    fun login(email: String, password: String): Single<HomepageResponse> {
+        return sendCredentials(email, password).flatMap {
             sendCertificate(it)
         }
     }
 
-    fun sendCredentials(email: String, password: String, type: LoginType = getType()): Single<CertificateResponse> {
-        return when (type) {
-            LoginType.ADFS -> api.getForm(firstEndpointUrl).flatMap {
+    fun sendCredentials(email: String, password: String): Single<CertificateResponse> {
+        return when (loginType) {
+            Api.LoginType.AUTO -> throw ApiException("You must first specify LoginType before logging in")
+            Api.LoginType.STANDARD -> api.sendCredentials(firstStepReturnUrl, mapOf(
+                    "LoginName" to email,
+                    "Password" to password
+            ))
+            Api.LoginType.ADFSLight -> api.getADFSLightForm("$schema://cufs.$host/$symbol/").flatMap {
+                api.sendADFSForm("$schema://adfslight.$host/${it.formAction.removePrefix("/")}", mapOf(
+                        "Username" to email,
+                        "Password" to email
+                ))
+            }
+            Api.LoginType.ADFS -> api.getForm(firstStepReturnUrl).flatMap {
                 api.sendADFSFormStandardChoice("$schema://adfs.$host/${it.formAction.removePrefix("/")}", mapOf(
                         "__db" to it.db,
                         "__VIEWSTATE" to it.viewstate,
@@ -76,14 +67,6 @@ class LoginRepository(
                         "wctx" to it.wctx
                 ))
             }
-            LoginType.ADFSLight -> api.sendADFSForm(adfsLight, mapOf(
-                    "Username" to email,
-                    "Password" to email
-            ))
-            else -> api.sendCredentials(firstEndpointUrl, mapOf(
-                    "LoginName" to email,
-                    "Password" to password
-            ))
         }
     }
 

@@ -37,6 +37,7 @@ class ApiTest : BaseTest() {
     fun setUp() {
         api.apply {
             logLevel = HttpLoggingInterceptor.Level.BASIC
+            loginType = Api.LoginType.STANDARD
             ssl = true
             host = "fakelog.cf"
             symbol = "Default"

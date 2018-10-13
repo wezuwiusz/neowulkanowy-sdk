@@ -5,23 +5,38 @@ import io.github.wulkanowy.api.ApiException
 import io.github.wulkanowy.api.BaseTest
 import io.github.wulkanowy.api.login.LoginTest
 import io.github.wulkanowy.api.notes.NotesResponse
+import io.github.wulkanowy.api.notes.NotesTest
 import io.github.wulkanowy.api.register.Pupil
 import io.reactivex.observers.TestObserver
 import okhttp3.Interceptor
 import okhttp3.logging.HttpLoggingInterceptor
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
+import org.junit.After
 import org.junit.Assert.assertEquals
+import org.junit.Before
 import org.junit.Test
 import java.io.IOException
 import java.net.URL
 
 class ServiceManagerTest : BaseTest() {
 
+    lateinit var server: MockWebServer
+
+    @Before
+    fun setUp() {
+        server = MockWebServer()
+    }
+
+    @After
+    fun shutDown() {
+        server.shutdown()
+    }
+
     @Test
     fun interceptorTest() {
         val manager = ServiceManager(HttpLoggingInterceptor.Level.NONE,
-                "http", "fakelog.localhost:3000", "default", "email", "password",
+                Api.LoginType.STANDARD, "http", "fakelog.localhost:3000", "default", "email", "password",
                 "schoolId", "studentId", "diaryId"
         )
         manager.setInterceptor(Interceptor {
@@ -38,8 +53,10 @@ class ServiceManagerTest : BaseTest() {
 
     @Test
     fun interceptorTest_prepend() {
+        server.enqueue(MockResponse().setBody(NotesTest::class.java.getResource("UwagiOsiagniecia-filled.html").readText()))
+        server.start(3000)
         val manager = ServiceManager(HttpLoggingInterceptor.Level.NONE,
-                "http", "fakelog.localhost:3000", "default", "email", "password",
+                Api.LoginType.STANDARD, "http", "fakelog.localhost:3000", "default", "email", "password",
                 "schoolId", "studentId", "diaryId"
         )
         manager.setInterceptor(Interceptor {
@@ -58,8 +75,8 @@ class ServiceManagerTest : BaseTest() {
     }
 
     @Test
-    fun blankSymbol() {
-        val server = MockWebServer()
+    fun apiNormalizedSymbol_blank() {
+        server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("LoginPage-standard.html").readText().replace("fakelog.cf", "fakelog.localhost:3000")))
         server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("Logowanie-uonet.html").readText()))
         server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("Logowanie-brak-dostepu.html").readText()))
         server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("Offline.html").readText()))
@@ -70,6 +87,7 @@ class ServiceManagerTest : BaseTest() {
         server.start(3000)
 
         val api = Api().apply {
+            logLevel = HttpLoggingInterceptor.Level.BODY
             ssl = false
             host = "fakelog.localhost:3000"
             email = "jan@fakelog.cf"
@@ -83,9 +101,8 @@ class ServiceManagerTest : BaseTest() {
         observer.assertTerminated()
         observer.assertError(ApiException::class.java)
 
+        server.takeRequest()
         // /Default/Account/LogOn <– default symbol set
         assertEquals("/Default/Account/LogOn", URL(server.takeRequest().requestUrl.toString()).path)
-
-        server.shutdown()
     }
 }
