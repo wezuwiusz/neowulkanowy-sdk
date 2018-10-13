@@ -32,19 +32,19 @@ class RegisterTest : BaseTest() {
     }
 
     private val login by lazy {
-        LoginRepository(Api.LoginType.STANDARD, "http", "localhost:3000", "default",
-                getService(LoginService::class.java, "http://localhost:3000/"))
+        LoginRepository(Api.LoginType.STANDARD, "http", "fakelog.localhost:3000", "default",
+                getService(LoginService::class.java, "http://fakelog.localhost:3000/"))
     }
 
-    private val normal by lazy {
+    private val register by lazy {
         RegisterRepository("default", "jan@fakelog.localhost", "jan123", login,
-                getService(RegisterService::class.java, "http://fakelog.localhost:3000/Default/", true, false),
-                getService(StudentAndParentService::class.java, "http://localhost:3000/"))
+                getService(RegisterService::class.java, "http://fakelog.fakelog.localhost:3000/Default/", true, false),
+                getService(StudentAndParentService::class.java, "http://fakelog.localhost:3000/"))
     }
 
     private val snp by lazy {
         StudentAndParentStartRepository("default", "0012345", "123",
-                getService(StudentAndParentService::class.java, "http://localhost:3000/"))
+                getService(StudentAndParentService::class.java, "http://fakelog.fakelog.localhost:3000/"))
     }
 
     @Test
@@ -62,7 +62,7 @@ class RegisterTest : BaseTest() {
         server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("Logowanie-brak-dostepu.html").readText()))
         server.start(3000)
 
-        val res = normal.getPupils().blockingGet()
+        val res = register.getPupils().blockingGet()
 
         assertEquals(1, res.size)
         assertEquals("Jan Kowal", res[0].studentName)
@@ -103,7 +103,7 @@ class RegisterTest : BaseTest() {
         server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("Logowanie-brak-dostepu.html").readText()))
         server.start(3000)
 
-        val res = normal.getPupils().blockingGet()
+        val res = register.getPupils().blockingGet()
         assertEquals(Api.LoginType.STANDARD, res[0].loginType)
     }
 
@@ -125,7 +125,7 @@ class RegisterTest : BaseTest() {
         server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("Logowanie-brak-dostepu.html").readText()))
         server.start(3000)
 
-        val res = normal.getPupils().blockingGet()
+        val res = register.getPupils().blockingGet()
         assertEquals(Api.LoginType.ADFS, res[0].loginType)
     }
 
@@ -145,7 +145,7 @@ class RegisterTest : BaseTest() {
         server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("Logowanie-brak-dostepu.html").readText()))
         server.start(3000)
 
-        val res = normal.getPupils().blockingGet()
+        val res = register.getPupils().blockingGet()
         assertEquals(Api.LoginType.ADFSLight, res[0].loginType)
     }
 }
