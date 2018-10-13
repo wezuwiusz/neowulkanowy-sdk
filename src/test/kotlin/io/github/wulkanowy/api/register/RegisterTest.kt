@@ -38,13 +38,13 @@ class RegisterTest : BaseTest() {
 
     private val register by lazy {
         RegisterRepository("default", "jan@fakelog.localhost", "jan123", login,
-                getService(RegisterService::class.java, "http://fakelog.fakelog.localhost:3000/Default/", true, false),
+                getService(RegisterService::class.java, "http://fakelog.localhost:3000/Default/", true, false),
                 getService(StudentAndParentService::class.java, "http://fakelog.localhost:3000/"))
     }
 
     private val snp by lazy {
         StudentAndParentStartRepository("default", "0012345", "123",
-                getService(StudentAndParentService::class.java, "http://fakelog.fakelog.localhost:3000/"))
+                getService(StudentAndParentService::class.java, "http://fakelog.localhost:3000/"))
     }
 
     @Test
