@@ -30,17 +30,39 @@ class LoginRepository(
     fun sendCredentials(email: String, password: String): Single<CertificateResponse> {
         return when (loginType) {
             Api.LoginType.AUTO -> throw ApiException("You must first specify LoginType before logging in")
+
             Api.LoginType.STANDARD -> api.sendCredentials(firstStepReturnUrl, mapOf(
                     "LoginName" to email,
                     "Password" to password
             ))
+
             Api.LoginType.ADFSLight -> api.getADFSLightForm("$schema://cufs.$host/$symbol/").flatMap {
                 api.sendADFSForm("$schema://adfslight.$host/${it.formAction.removePrefix("/")}", mapOf(
                         "Username" to email,
                         "Password" to email
                 ))
             }
+
             Api.LoginType.ADFS -> api.getForm(firstStepReturnUrl).flatMap {
+                api.sendADFSForm("$schema://adfs.$host/${it.formAction.removePrefix("/")}", mapOf(
+                        "__db" to it.db,
+                        "__VIEWSTATE" to it.viewstate,
+                        "__VIEWSTATEGENERATOR" to it.viewstateGenerator,
+                        "__EVENTVALIDATION" to it.eventValidation,
+                        "UsernameTextBox" to email,
+                        "PasswordTextBox" to password,
+                        "SubmitButton.x" to "0",
+                        "SubmitButton.y" to "0"
+                ))
+            }.flatMap {
+                api.sendADFSForm(it.action, mapOf(
+                        "wa" to it.wa,
+                        "wresult" to it.wresult,
+                        "wctx" to it.wctx
+                ))
+            }
+
+            Api.LoginType.ADFSCards -> api.getForm(firstStepReturnUrl).flatMap {
                 api.sendADFSFormStandardChoice("$schema://adfs.$host/${it.formAction.removePrefix("/")}", mapOf(
                         "__db" to it.db,
                         "__VIEWSTATE" to it.viewstate,

@@ -32,6 +32,7 @@ class Api {
         AUTO,
         STANDARD,
         ADFS,
+        ADFSCards,
         ADFSLight
     }
 

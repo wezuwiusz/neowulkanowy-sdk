@@ -68,8 +68,9 @@ class RegisterRepository(
         return register.getFormType().map {
             when {
                 it.page.select(".LogOnBoard input[type=submit]").isNotEmpty() -> Api.LoginType.STANDARD
-                it.page.select("#SubmitButton").isNotEmpty() -> Api.LoginType.ADFSLight
-                it.page.select("#PassiveSignInButton").isNotEmpty() -> Api.LoginType.ADFS
+                it.page.select("form[name=form1] #SubmitButton").isNotEmpty() -> Api.LoginType.ADFS
+                it.page.select("form #SubmitButton").isNotEmpty() -> Api.LoginType.ADFSLight
+                it.page.select("#PassiveSignInButton").isNotEmpty() -> Api.LoginType.ADFSCards
                 else -> throw ApiException("Nieznany typ dziennika")
             }
         }
