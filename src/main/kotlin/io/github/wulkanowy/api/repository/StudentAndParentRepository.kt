@@ -11,7 +11,7 @@ import io.github.wulkanowy.api.mobile.Device
 import io.github.wulkanowy.api.mobile.TokenResponse
 import io.github.wulkanowy.api.notes.Note
 import io.github.wulkanowy.api.realized.Realized
-import io.github.wulkanowy.api.register.StudentAndParentResponse
+import io.github.wulkanowy.api.register.Semester
 import io.github.wulkanowy.api.school.Teacher
 import io.github.wulkanowy.api.service.StudentAndParentService
 import io.github.wulkanowy.api.student.StudentInfo
@@ -29,8 +29,13 @@ import java.util.*
 
 class StudentAndParentRepository(private val api: StudentAndParentService) {
 
-    fun getSchoolInfo(): Single<StudentAndParentResponse> {
-        return api.getSchoolInfo()
+    fun getCurrentSemester(): Single<Semester> {
+        return api.getSchoolInfo().flatMap { info ->
+            val diary = info.diaries.first { it.current == "selected" }
+            api.getGrades(0).map { semester ->
+                Semester(diary.id, diary.name, semester.semesterId, semester.semesterNumber, true)
+            }
+        }
     }
 
     fun getAttendance(startDate: LocalDate, endDate: LocalDate? = null): Single<List<Attendance>> {

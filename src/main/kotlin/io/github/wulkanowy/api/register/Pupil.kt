@@ -5,9 +5,9 @@ import io.github.wulkanowy.api.Api
 data class Pupil(
         val email: String,
         val symbol: String,
-        val studentId: String,
+        val studentId: Int,
         val studentName: String,
-        val schoolId: String,
+        val schoolSymbol: String,
         val schoolName: String,
         val loginType: Api.LoginType
 )

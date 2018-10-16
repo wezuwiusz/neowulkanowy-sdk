@@ -81,7 +81,7 @@ class RegisterTest : BaseTest() {
 
         assertEquals(6, res.size)
         assertEquals(1234567, res[0].semesterId)
-        assertEquals("1100", res[0].diaryId)
+        assertEquals(1100, res[0].diaryId)
         assertEquals(1234568, res[1].semesterId)
         assertEquals("1Ti 2015", res[1].diaryName)
         assertEquals(1234567, res[2].semesterId)

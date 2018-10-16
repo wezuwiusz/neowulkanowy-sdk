@@ -22,7 +22,7 @@ class Api {
 
     var password: String = ""
 
-    var schoolId: String = ""
+    var schoolSymbol: String = ""
 
     var studentId: String = ""
 
@@ -45,7 +45,7 @@ class Api {
     private val normalizedSymbol by resettableLazy(changeManager) { if (symbol.isBlank()) "Default" else symbol }
 
     private val serviceManager by resettableLazy(changeManager) {
-        ServiceManager(logLevel, loginType, schema, host, normalizedSymbol, email, password, schoolId, studentId, diaryId)
+        ServiceManager(logLevel, loginType, schema, host, normalizedSymbol, email, password, schoolSymbol, studentId, diaryId)
     }
 
     private val register by resettableLazy(changeManager) {
@@ -58,7 +58,7 @@ class Api {
 
     private val snpStart by resettableLazy(changeManager) {
         if (studentId.isBlank()) throw ApiException("Student id is not set")
-        StudentAndParentStartRepository(normalizedSymbol, schoolId, studentId, serviceManager.getSnpService(true, false))
+        StudentAndParentStartRepository(normalizedSymbol, schoolSymbol, studentId, serviceManager.getSnpService(true, false))
     }
 
     private val snp by resettableLazy(changeManager) {
@@ -77,7 +77,7 @@ class Api {
 
     fun getSemesters() = snpStart.getSemesters()
 
-    fun getSchoolInfo() = snp.getSchoolInfo()
+    fun getCurrentSemester() = snp.getCurrentSemester()
 
     fun getAttendance(startDate: LocalDate, endDate: LocalDate? = null) = snp.getAttendance(startDate, endDate)
 

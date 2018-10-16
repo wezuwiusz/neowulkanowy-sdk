@@ -16,7 +16,6 @@ import io.github.wulkanowy.api.notes.Note
 import io.github.wulkanowy.api.realized.Realized
 import io.github.wulkanowy.api.register.Pupil
 import io.github.wulkanowy.api.register.Semester
-import io.github.wulkanowy.api.register.StudentAndParentResponse
 import io.github.wulkanowy.api.school.Teacher
 import io.github.wulkanowy.api.student.StudentInfo
 import io.github.wulkanowy.api.timetable.Timetable
@@ -43,7 +42,7 @@ class ApiTest : BaseTest() {
             symbol = "Default"
             email = "jan@fakelog.cf"
             password = "jan123"
-            schoolId = "123456"
+            schoolSymbol = "123456"
             studentId = "1"
             diaryId = "101"
             notifyDataChanged() // unnecessary in this case
@@ -55,16 +54,18 @@ class ApiTest : BaseTest() {
     }
 
     @Test
-    fun schoolInfoTest() {
-        val info = api.getSchoolInfo()
-        val infoObserver = TestObserver<StudentAndParentResponse>()
-        info.subscribe(infoObserver)
-        infoObserver.assertComplete()
+    fun semesterTest() {
+        val semester = api.getCurrentSemester()
+        val semesterObserver = TestObserver<Semester>()
+        semester.subscribe(semesterObserver)
+        semesterObserver.assertComplete()
 
-        infoObserver.values()[0].run {
-            assertEquals("Publiczny dziennik Wulkanowego nr 1 w fakelog.cf", schoolName)
-            assertEquals("III 2017", diaries[0].name)
-            assertEquals("Jan Kowalski", students[0].name)
+        semesterObserver.values()[0].run {
+            assertEquals(101, diaryId)
+            assertEquals("1A 2015", diaryName)
+            assertEquals(1234568, semesterId)
+            assertEquals(2, semesterNumber)
+            assertTrue(current)
         }
     }
 
@@ -79,8 +80,8 @@ class ApiTest : BaseTest() {
             assertEquals("Default", symbol)
             assertEquals("jan@fakelog.cf", email)
             assertEquals("Jan Kowalski", studentName)
-            assertEquals("123456", schoolId)
-            assertEquals("1", studentId)
+            assertEquals("123456", schoolSymbol)
+            assertEquals(1, studentId)
             assertEquals("Publiczny dziennik Wulkanowego nr 1 w fakelog.cf", schoolName)
         }
     }
@@ -95,18 +96,18 @@ class ApiTest : BaseTest() {
         val values = semestersObserver.values()[0]
 
         values[1].run {
-            assertEquals("101", diaryId)
+            assertEquals(101, diaryId)
             assertEquals("1A 2015", diaryName)
             assertEquals(true, current)
         }
 
         values[2].run {
-            assertEquals("202", diaryId)
+            assertEquals(202, diaryId)
             assertEquals("II 2016", diaryName)
         }
 
         values[4].run {
-            assertEquals("303", diaryId)
+            assertEquals(303, diaryId)
             assertEquals("III 2017", diaryName)
             assertEquals(1234567, semesterId)
             assertEquals(1, semesterNumber)

@@ -30,7 +30,7 @@ interface StudentAndParentService {
     fun getUserInfo(@Query("id") userId: String): Single<StudentAndParentResponse>
 
     @GET("Dziennik/DziennikOnChange")
-    fun getDiaryInfo(@Query("id") diaryId: String, @Header("Referer") referer: String): Single<StudentAndParentResponse>
+    fun getDiaryInfo(@Query("id") diaryId: Int, @Header("Referer") referer: String): Single<StudentAndParentResponse>
 
     @GET("Frekwencja.mvc")
     fun getAttendance(@Query("data") date: String): Single<AttendanceResponse>

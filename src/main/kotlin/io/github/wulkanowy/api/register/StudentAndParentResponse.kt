@@ -18,7 +18,7 @@ class StudentAndParentResponse {
 
     class Pupil {
         @Selector("option", attr = "value", regex = "\\=(.*)")
-        lateinit var id: String
+        var id: Int = 0
 
         @Selector("option")
         lateinit var name: String
@@ -26,7 +26,7 @@ class StudentAndParentResponse {
 
     class Diary {
         @Selector("option", attr = "value", regex = "\\=(.*)")
-        lateinit var id: String
+        var id: Int = 0
 
         @Selector("option")
         lateinit var name: String

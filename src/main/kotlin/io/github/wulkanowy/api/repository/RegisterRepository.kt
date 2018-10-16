@@ -40,7 +40,7 @@ class RegisterRepository(
                                             symbol = symbol.first,
                                             studentId = pupil.id,
                                             studentName = pupil.name,
-                                            schoolId = getExtractedIdFromUrl(schoolUrl),
+                                            schoolSymbol = getExtractedSchoolSymbolFromUrl(schoolUrl),
                                             schoolName = it.schoolName,
                                             loginType = loginType
                                     )
@@ -76,7 +76,7 @@ class RegisterRepository(
         }
     }
 
-    private fun getExtractedIdFromUrl(snpPageUrl: String): String {
+    private fun getExtractedSchoolSymbolFromUrl(snpPageUrl: String): String {
         val path = URL(snpPageUrl).path.split("/")
 
         if (6 != path.size) {
