@@ -21,6 +21,7 @@ class LoginRepository(
         "/$symbol/FS/LS?wa=wsignin1.0&wtrealm=$url&wctx=$url"
     }
 
+    @Synchronized
     fun login(email: String, password: String): Single<HomepageResponse> {
         return sendCredentials(email, password).flatMap {
             sendCertificate(it)

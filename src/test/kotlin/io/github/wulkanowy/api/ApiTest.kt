@@ -61,11 +61,11 @@ class ApiTest : BaseTest() {
         info.subscribe(infoObserver)
         infoObserver.assertComplete()
 
-        val values = infoObserver.values()[0]
-
-        assertEquals("Publiczny dziennik Wulkanowego nr 1 w fakelog.cf", values.schoolName)
-        assertEquals("III 2017", values.diaries[0].name)
-        assertEquals("Jan Kowalski", values.students[0].name)
+        infoObserver.values()[0].run {
+            assertEquals("Publiczny dziennik Wulkanowego nr 1 w fakelog.cf", schoolName)
+            assertEquals("III 2017", diaries[0].name)
+            assertEquals("Jan Kowalski", students[0].name)
+        }
     }
 
     @Test
@@ -75,14 +75,14 @@ class ApiTest : BaseTest() {
         pupils.subscribe(pupilsObserver)
         pupilsObserver.assertComplete()
 
-        val values = pupilsObserver.values()[0]
-
-        assertEquals("Default", values[0].symbol)
-        assertEquals("jan@fakelog.cf", values[0].email)
-        assertEquals("Jan Kowalski", values[0].studentName)
-        assertEquals("123456", values[0].schoolId)
-        assertEquals("1", values[0].studentId)
-        assertEquals("Publiczny dziennik Wulkanowego nr 1 w fakelog.cf", values[0].schoolName)
+        pupilsObserver.values()[0][0].run {
+            assertEquals("Default", symbol)
+            assertEquals("jan@fakelog.cf", email)
+            assertEquals("Jan Kowalski", studentName)
+            assertEquals("123456", schoolId)
+            assertEquals("1", studentId)
+            assertEquals("Publiczny dziennik Wulkanowego nr 1 w fakelog.cf", schoolName)
+        }
     }
 
     @Test
@@ -94,20 +94,28 @@ class ApiTest : BaseTest() {
 
         val values = semestersObserver.values()[0]
 
-        assertEquals("101", values[1].diaryId)
-        assertEquals("1A 2015", values[1].diaryName)
-        assertEquals(true, values[1].current)
+        values[1].run {
+            assertEquals("101", diaryId)
+            assertEquals("1A 2015", diaryName)
+            assertEquals(true, current)
+        }
 
-        assertEquals("202", values[2].diaryId)
-        assertEquals("II 2016", values[2].diaryName)
+        values[2].run {
+            assertEquals("202", diaryId)
+            assertEquals("II 2016", diaryName)
+        }
 
-        assertEquals("303", values[4].diaryId)
-        assertEquals("III 2017", values[4].diaryName)
-        assertEquals(1234567, values[4].semesterId)
-        assertEquals(1, values[4].semesterNumber)
+        values[4].run {
+            assertEquals("303", diaryId)
+            assertEquals("III 2017", diaryName)
+            assertEquals(1234567, semesterId)
+            assertEquals(1, semesterNumber)
+        }
 
-        assertEquals(1234568, values[5].semesterId)
-        assertEquals(2, values[5].semesterNumber)
+        values[5].run {
+            assertEquals(1234568, semesterId)
+            assertEquals(2, semesterNumber)
+        }
     }
 
     @Test
@@ -119,16 +127,20 @@ class ApiTest : BaseTest() {
 
         val values = attendanceObserver.values()[0]
 
-        assertEquals(1, values[0].number)
-        assertEquals("Zajęcia artystyczne", values[0].subject)
-        assertEquals(getDate(2018, 10, 1), values[0].date)
+        values[0].run {
+            assertEquals(1, number)
+            assertEquals("Zajęcia artystyczne", subject)
+            assertEquals(getDate(2018, 10, 1), date)
 
-        assertEquals("Obecność", values[0].name)
-        assertTrue(values[0].presence)
+            assertEquals("Obecność", name)
+            assertTrue(presence)
+        }
 
-        assertEquals("Nieobecność", values[1].name)
-        assertTrue(values[1].absence)
-        assertFalse(values[1].excused)
+        values[1].run {
+            assertEquals("Nieobecność", name)
+            assertTrue(absence)
+            assertFalse(excused)
+        }
 
         assertEquals("Spóźnienie", values[3].name)
         assertEquals("Spóźnienie usprawiedliwione", values[4].name)
@@ -136,7 +148,6 @@ class ApiTest : BaseTest() {
         assertEquals("Zwolniony", values[6].name)
         assertEquals("Obecność", values[9].name)
 
-        assertEquals(1, values[0].number)
     }
 
     @Test
@@ -150,14 +161,17 @@ class ApiTest : BaseTest() {
 
         assertEquals(12, values.size)
 
-        assertEquals("IX", values[0].month)
-        assertEquals(32, values[0].presence)
-        assertEquals(1, values[0].absence)
-        assertEquals(2, values[0].absenceExcused)
-        assertEquals(3, values[0].absenceForSchoolReasons)
-        assertEquals(4, values[0].lateness)
-        assertEquals(5, values[0].latenessExcused)
-        assertEquals(6, values[0].exemption)
+        values[0].run {
+            assertEquals("IX", month)
+            assertEquals(32, presence)
+            assertEquals(1, absence)
+            assertEquals(2, absenceExcused)
+            assertEquals(3, absenceForSchoolReasons)
+            assertEquals(4, lateness)
+            assertEquals(5, latenessExcused)
+            assertEquals(6, exemption)
+        }
+
         assertEquals(64, values[1].presence)
     }
 
@@ -168,16 +182,16 @@ class ApiTest : BaseTest() {
         exams.subscribe(examsObserver)
         examsObserver.assertComplete()
 
-        val values = examsObserver.values()[0]
-
-        assertEquals(getDate(2018, 5, 9), values[0].date)
-        assertEquals(getDate(2018, 4, 1), values[0].entryDate)
-        assertEquals("Język angielski", values[0].subject)
-        assertEquals("J1", values[0].group)
-        assertEquals("Sprawdzian", values[0].type)
-        assertEquals("słownictwo(kultura)", values[0].description)
-        assertEquals("Anyż Zofia", values[0].teacher)
-        assertEquals("AZ", values[0].teacherSymbol)
+        examsObserver.values()[0][0].run {
+            assertEquals(getDate(2018, 5, 7), date)
+            assertEquals(getDate(1970, 1, 1), entryDate)
+            assertEquals("Matematyka", subject)
+            assertEquals("", group)
+            assertEquals("Sprawdzian", type)
+            assertEquals("Figury na płaszczyźnie.", description)
+            assertEquals("Janusz Tracz", teacher)
+            assertEquals("TJ", teacherSymbol)
+        }
     }
 
     @Test
@@ -187,14 +201,14 @@ class ApiTest : BaseTest() {
         homework.subscribe(homeworkObserver)
         homeworkObserver.assertComplete()
 
-        val values = homeworkObserver.values()[0]
-
-        assertEquals(getDate(2017, 10, 23), values[1].date)
-        assertEquals(getDate(2017, 10, 18), values[1].entryDate)
-        assertEquals("Metodologia programowania", values[1].subject)
-        assertEquals("Wszystkie instrukcje warunkowe, pętle (budowa, zasada działania, schemat blokowy)", values[1].content)
-        assertEquals("Janusz Tracz", values[1].teacher)
-        assertEquals("TJ", values[1].teacherSymbol)
+        homeworkObserver.values()[0][1].run {
+            assertEquals(getDate(2017, 10, 23), date)
+            assertEquals(getDate(2017, 10, 18), entryDate)
+            assertEquals("Metodologia programowania", subject)
+            assertEquals("Wszystkie instrukcje warunkowe, pętle (budowa, zasada działania, schemat blokowy)", content)
+            assertEquals("Janusz Tracz", teacher)
+            assertEquals("TJ", teacherSymbol)
+        }
     }
 
     @Test
@@ -204,12 +218,12 @@ class ApiTest : BaseTest() {
         notes.subscribe(notesObserver)
         notesObserver.assertComplete()
 
-        val values = notesObserver.values()[0]
-
-        assertEquals(getDate(2018, 3, 26), values[0].date)
-        assertEquals("Janusz Tracz", values[0].teacher)
-        assertEquals("Udział w konkursie szkolnym +20 pkt", values[0].category)
-        assertEquals("+ 20p za udział w Konkursie Języka Angielskiego", values[0].content)
+        notesObserver.values()[0][0].run {
+            assertEquals(getDate(2018, 3, 26), date)
+            assertEquals("Janusz Tracz", teacher)
+            assertEquals("Udział w konkursie szkolnym +20 pkt", category)
+            assertEquals("+ 20p za udział w Konkursie Języka Angielskiego", content)
+        }
     }
 
     @Test
@@ -221,18 +235,22 @@ class ApiTest : BaseTest() {
 
         val values = gradesObserver.values()[0]
 
-        assertEquals("Historia", values[0].subject)
-        assertEquals("1", values[0].entry)
-        assertEquals("000000", values[0].color)
-        assertEquals("Spr", values[0].symbol)
-        assertEquals("spr.-rozbiory", values[0].description)
-        assertEquals("5,00", values[0].weight)
-        assertEquals(5, values[0].weightValue)
-        assertEquals(getDate(2018, 1, 29), values[0].date)
-        assertEquals("Janusz Tracz", values[0].teacher)
+        values[0].run {
+            assertEquals("Historia", subject)
+            assertEquals("1", entry)
+            assertEquals("000000", color)
+            assertEquals("Spr", symbol)
+            assertEquals("spr.-rozbiory", description)
+            assertEquals("5,00", weight)
+            assertEquals(5, weightValue)
+            assertEquals(getDate(2018, 1, 29), date)
+            assertEquals("Janusz Tracz", teacher)
+        }
 
-        assertEquals("Bież", values[5].symbol)
-        assertEquals("", values[5].description)
+        values[5].run {
+            assertEquals("Bież", symbol)
+            assertEquals("", description)
+        }
     }
 
     @Test
@@ -244,17 +262,23 @@ class ApiTest : BaseTest() {
 
         val values = summaryObserver.values()[0]
 
-        assertEquals("Etyka", values[2].name)
-        assertEquals("2", values[2].predicted)
-        assertEquals("2", values[2].final)
+        values[2].run {
+            assertEquals("Etyka", name)
+            assertEquals("2", predicted)
+            assertEquals("2", final)
+        }
 
-        assertEquals("Historia", values[5].name)
-        assertEquals("1", values[5].predicted)
-        assertEquals("1", values[5].final)
+        values[5].run {
+            assertEquals("Historia", name)
+            assertEquals("1", predicted)
+            assertEquals("1", final)
+        }
 
-        assertEquals("Język niemiecki", values[8].name)
-        assertEquals("", values[8].predicted)
-        assertEquals("", values[8].final)
+        values[8].run {
+            assertEquals("Język niemiecki", name)
+            assertEquals("", predicted)
+            assertEquals("", final)
+        }
     }
 
     @Test
@@ -293,36 +317,39 @@ class ApiTest : BaseTest() {
 
     @Test
     fun studentInfoTest() {
-        val student = api.getStudentInfo()
+        val info = api.getStudentInfo()
         val studentObserver = TestObserver<StudentInfo>()
-        student.subscribe(studentObserver)
+        info.subscribe(studentObserver)
         studentObserver.assertComplete()
 
-        val values = studentObserver.values()[0]
+        studentObserver.values()[0].run {
+            assertEquals("Jan Marek Kowalski", student.fullName)
+            assertEquals("Jan", student.firstName)
+            assertEquals("Marek", student.secondName)
+            assertEquals("Kowalski", student.surname)
+            assertEquals(getDate(1970, 1, 1), student.birthDate)
+            assertEquals("Warszawa", student.birthPlace)
+            assertEquals("12345678900", student.pesel)
+            assertEquals("Mężczyzna", student.gender)
+            assertEquals("1", student.polishCitizenship)
+            assertEquals("Nowak", student.familyName)
+            assertEquals("Monika, Kamil", student.parentsNames)
 
-        assertEquals("Jan Marek Kowalski", values.student.fullName)
-        assertEquals("Jan", values.student.firstName)
-        assertEquals("Marek", values.student.secondName)
-        assertEquals("Kowalski", values.student.surname)
-        assertEquals(getDate(1970, 1, 1), values.student.birthDate)
-        assertEquals("Warszawa", values.student.birthPlace)
-        assertEquals("12345678900", values.student.pesel)
-        assertEquals("Mężczyzna", values.student.gender)
-        assertEquals("1", values.student.polishCitizenship)
-        assertEquals("Nowak", values.student.familyName)
-        assertEquals("Monika, Kamil", values.student.parentsNames)
+            assertEquals("", student.address)
+            assertEquals("", student.registeredAddress)
+            assertEquals("", student.correspondenceAddress)
 
-        assertEquals("", values.student.address)
-        assertEquals("", values.student.registeredAddress)
-        assertEquals("", values.student.correspondenceAddress)
+            assertEquals("", student.phoneNumber)
+            assertEquals("-", student.cellPhoneNumber)
+            assertEquals("jan@fakelog.cf", student.email)
 
-        assertEquals("", values.student.phoneNumber)
-        assertEquals("-", values.student.cellPhoneNumber)
-        assertEquals("jan@fakelog.cf", values.student.email)
+            family[0].run {
+                assertEquals("Monika Nowak", fullName)
+                assertEquals("-", email)
+            }
 
-        assertEquals("Monika Nowak", values.family[0].fullName)
-        assertEquals("-", values.family[0].email)
-        assertEquals("-", values.family[1].email)
+            assertEquals("-", family[1].email)
+        }
     }
 
     @Test
@@ -382,14 +409,16 @@ class ApiTest : BaseTest() {
 
     @Test
     fun tokenTest() {
-        val token = api.getToken()
+        val tokenizer = api.getToken()
         val tokenObserver = TestObserver<TokenResponse>()
-        token.subscribe(tokenObserver)
+        tokenizer.subscribe(tokenObserver)
         tokenObserver.assertComplete()
 
-        assertEquals("FK100000", tokenObserver.values()[0].token)
-        assertEquals("Default", tokenObserver.values()[0].symbol)
-        assertEquals("999999", tokenObserver.values()[0].pin)
+        tokenObserver.values()[0].run {
+            assertEquals("FK100000", token)
+            assertEquals("Default", symbol)
+            assertEquals("999999", pin)
+        }
     }
 
     @Test
@@ -411,12 +440,16 @@ class ApiTest : BaseTest() {
 
         val values = timetableObserver.values()[0]
 
-        assertEquals(0, values[0].number)
-        assertEquals("Fizyka", values[0].subject)
-        assertEquals("zaw2", values[0].group)
-        assertEquals("uczniowie zwolnieni do domu", values[0].info)
-        assertEquals(true, values[0].canceled)
-        assertEquals(false, values[0].changes)
+        values[0].run {
+            assertEquals(1, number)
+            assertEquals("Fizyka", subject)
+            assertEquals("Janusz Tracz", teacher)
+            assertEquals("", group)
+            assertEquals("213", room)
+            assertEquals("", info)
+            assertEquals(false, canceled)
+            assertEquals(false, changes)
+        }
     }
 
     @Test
@@ -426,14 +459,14 @@ class ApiTest : BaseTest() {
         realized.subscribe(realizedObserver)
         realizedObserver.assertComplete()
 
-        val values = realizedObserver.values()[0]
-
-        assertEquals(getDate(2018, 9, 17), values[0].date)
-        assertEquals(1, values[0].number)
-        assertEquals("Historia i społeczeństwo", values[0].subject)
-        assertEquals("Powstanie listopadowe", values[0].topic)
-        assertEquals("Histeryczna Jadwiga", values[0].teacher)
-        assertEquals("Hi", values[0].teacherSymbol)
-        assertEquals("Nieobecność nieusprawiedliwiona", values[0].absence)
+        realizedObserver.values()[0][0].run {
+            assertEquals(getDate(2018, 9, 17), date)
+            assertEquals(1, number)
+            assertEquals("Historia i społeczeństwo", subject)
+            assertEquals("Powstanie listopadowe", topic)
+            assertEquals("Histeryczna Jadwiga", teacher)
+            assertEquals("Hi", teacherSymbol)
+            assertEquals("Nieobecność nieusprawiedliwiona", absence)
+        }
     }
 }
