@@ -43,8 +43,8 @@ class ApiTest : BaseTest() {
             email = "jan@fakelog.cf"
             password = "jan123"
             schoolSymbol = "123456"
-            studentId = "1"
-            diaryId = "101"
+            studentId = 1
+            diaryId = 101
             notifyDataChanged() // unnecessary in this case
             setInterceptor(Interceptor { // important! put bellow notifyDataChanged
                 println("Request event ${it.request().url().host()}")

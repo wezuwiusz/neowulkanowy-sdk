@@ -24,9 +24,9 @@ class Api {
 
     var schoolSymbol: String = ""
 
-    var studentId: String = ""
+    var studentId: Int = 0
 
-    var diaryId: String = ""
+    var diaryId: Int = 0
 
     enum class LoginType {
         AUTO,
@@ -57,7 +57,7 @@ class Api {
     }
 
     private val snpStart by resettableLazy(changeManager) {
-        if (studentId.isBlank()) throw ApiException("Student id is not set")
+        if (0 == studentId) throw ApiException("Student id is not set")
         StudentAndParentStartRepository(normalizedSymbol, schoolSymbol, studentId, serviceManager.getSnpService(true, false))
     }
 
@@ -66,7 +66,7 @@ class Api {
     }
 
     private val messages by resettableLazy(changeManager) {
-        MessagesRepository(studentId.toInt(), serviceManager.getMessagesService())
+        MessagesRepository(studentId, serviceManager.getMessagesService())
     }
 
     fun setInterceptor(interceptor: Interceptor, index: Int = -1) {

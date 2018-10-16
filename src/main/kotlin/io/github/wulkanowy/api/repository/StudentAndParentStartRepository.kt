@@ -7,14 +7,14 @@ import io.reactivex.Single
 
 class StudentAndParentStartRepository(
         private val symbol: String,
-        private val schoolId: String,
-        private val studentId: String,
+        private val schoolSymbol: String,
+        private val studentId: Int,
         private val api: StudentAndParentService
 ) {
 
     fun getSemesters(): Single<List<Semester>> {
         return api.getUserInfo(studentId).flatMapObservable { Observable.fromIterable(it.diaries.reversed()) }.flatMapSingle { diary ->
-            api.getDiaryInfo(diary.id, "/$symbol/$schoolId/Oceny.mvc/Wszystkie").map { res ->
+            api.getDiaryInfo(diary.id, "/$symbol/$schoolSymbol/Oceny.mvc/Wszystkie").map { res ->
                 res.semesters.map {
                     Semester(diary.id, diary.name, it.semesterId, it.semesterNumber, "selected" == it.current && "selected" == diary.current)
                 }

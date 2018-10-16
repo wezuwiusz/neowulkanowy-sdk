@@ -27,9 +27,9 @@ class ServiceManager(
         private val symbol: String,
         private val email: String,
         private val password: String,
-        private val schoolId: String,
-        private val studentId: String,
-        private val diaryId: String
+        private val schoolSymbol: String,
+        private val studentId: Int,
+        private val diaryId: Int
 ) {
 
     private val cookies by lazy {
@@ -39,7 +39,7 @@ class ServiceManager(
     }
 
     private val url by lazy {
-        UrlGenerator(schema, host, symbol, schoolId)
+        UrlGenerator(schema, host, symbol, schoolSymbol)
     }
 
     private val interceptors: MutableList<Interceptor> = mutableListOf(
@@ -62,11 +62,11 @@ class ServiceManager(
     }
 
     fun getSnpService(withLogin: Boolean = true, interceptor: Boolean = true): StudentAndParentService {
-        if (withLogin && schoolId.isBlank()) throw ApiException("School id is not set")
+        if (withLogin && schoolSymbol.isBlank()) throw ApiException("School id is not set")
 
         val client = getClientBuilder()
         if (interceptor) {
-            if (diaryId.isBlank() || studentId.isBlank()) throw ApiException("Student or/and diaryId id are not set")
+            if (0 == diaryId || 0 == studentId) throw ApiException("Student or/and diaryId id are not set")
             client.addInterceptor(StudentAndParentInterceptor(cookies, schema, host, diaryId, studentId))
         }
 
