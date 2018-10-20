@@ -29,15 +29,6 @@ import java.util.*
 
 class StudentAndParentRepository(private val api: StudentAndParentService) {
 
-    fun getCurrentSemester(): Single<Semester> {
-        return api.getSchoolInfo().flatMap { info ->
-            val diary = info.diaries.first { it.current == "selected" }
-            api.getGrades(0).map { semester ->
-                Semester(diary.id, diary.name, semester.semesterId, semester.semesterNumber, true)
-            }
-        }
-    }
-
     fun getAttendance(startDate: LocalDate, endDate: LocalDate? = null): Single<List<Attendance>> {
         val end = endDate ?: startDate.plusDays(4)
         return api.getAttendance(startDate.getLastMonday().toTick()).map { res ->

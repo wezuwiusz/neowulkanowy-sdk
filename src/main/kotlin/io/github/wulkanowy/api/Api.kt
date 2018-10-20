@@ -77,7 +77,7 @@ class Api {
 
     fun getSemesters() = snpStart.getSemesters()
 
-    fun getCurrentSemester() = snp.getCurrentSemester()
+    fun getCurrentSemester() = snpStart.getCurrentSemester()
 
     fun getAttendance(startDate: LocalDate, endDate: LocalDate? = null) = snp.getAttendance(startDate, endDate)
 
