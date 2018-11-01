@@ -1,6 +1,7 @@
 package io.github.wulkanowy.api.messages
 
 import com.google.gson.annotations.SerializedName
+import pl.droidsonroids.jspoon.annotation.Format
 import java.util.*
 
 data class Message(
@@ -12,6 +13,7 @@ data class Message(
         val unread: Boolean,
 
         @SerializedName("Data")
+        @Format("yyyy-MM-dd HH:mm:ss")
         val date: Date,
 
         @SerializedName("Tresc")
