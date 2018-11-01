@@ -1,6 +1,7 @@
 package io.github.wulkanowy.api.service
 
 import RxJava2ReauthCallAdapterFactory
+import com.google.gson.GsonBuilder
 import io.github.wulkanowy.api.Api
 import io.github.wulkanowy.api.ApiException
 import io.github.wulkanowy.api.interceptor.ErrorInterceptor
@@ -81,7 +82,7 @@ class ServiceManager(
         return Retrofit.Builder()
                 .baseUrl(baseUrl)
                 .client(client.build())
-                .addConverterFactory(if (gson) GsonConverterFactory.create() else JspoonConverterFactory.create())
+                .addConverterFactory(if (gson) GsonConverterFactory.create(GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create()) else JspoonConverterFactory.create())
                 .addCallAdapterFactory(if (!login) RxJava2CallAdapterFactory.create() else
                     RxJava2ReauthCallAdapterFactory.create(
                             LoginRepository(loginType, schema, host, symbol, getLoginService()).login(email, password).toFlowable(),
