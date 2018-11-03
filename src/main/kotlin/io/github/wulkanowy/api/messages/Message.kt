@@ -10,11 +10,11 @@ data class Message(
         val folderId: Int = 0,
 
         @SerializedName("Nieprzeczytana")
-        val unread: Boolean,
+        val unread: Boolean?,
 
         @SerializedName("Data")
         @Format("yyyy-MM-dd HH:mm:ss")
-        val date: Date,
+        val date: Date?,
 
         @SerializedName("Tresc")
         val content: String?,
@@ -25,23 +25,23 @@ data class Message(
         @SerializedName("Adresaci")
         val recipient: String?,
 
-        val recipientId: Int = 0,
+        val recipientId: Int? = 0,
 
         @SerializedName("Nieprzeczytane")
-        val unreadBy: Int,
+        val unreadBy: Int?,
 
         @SerializedName("Przeczytane")
-        val readBy: Int,
+        val readBy: Int?,
 
         @SerializedName("NadawcaNazwa")
         val sender: String?,
 
         @SerializedName("IdWiadomosci")
-        val messageId: Int,
+        val messageId: Int?,
 
         @SerializedName("IdNadawca")
-        val senderId: Int,
+        val senderId: Int?,
 
         @SerializedName("Id")
-        val id: Int
+        val id: Int?
 )
