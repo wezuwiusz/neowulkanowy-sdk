@@ -43,7 +43,9 @@ data class Message(
         @SerializedName("Id")
         val id: Int?
 ) {
-        var conversationId: Int = 0
+    var conversationId: Int = 0
 
-        var recipientId: Int = 0
+    var conversationName: String = "null"
+
+    var recipientId: Int = 0
 }
