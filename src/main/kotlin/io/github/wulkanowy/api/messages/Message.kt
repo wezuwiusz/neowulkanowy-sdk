@@ -25,8 +25,6 @@ data class Message(
         @SerializedName("Adresaci")
         val recipient: String?,
 
-        val recipientId: Int? = 0,
-
         @SerializedName("Nieprzeczytane")
         val unreadBy: Int?,
 
@@ -44,4 +42,8 @@ data class Message(
 
         @SerializedName("Id")
         val id: Int?
-)
+) {
+        var conversationId: Int = 0
+
+        var recipientId: Int = 0
+}

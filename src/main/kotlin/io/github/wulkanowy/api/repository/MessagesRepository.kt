@@ -34,7 +34,8 @@ class MessagesRepository(private val userId: Int, private val api: MessagesServi
     fun getReceivedMessages(startDate: LocalDate?, endDate: LocalDate?): Single<List<Message>> {
         return api.getReceived(getDate(startDate), getDate(endDate))
                 .map { res ->
-                    res.data?.asSequence()?.map { it.copy(folderId = 1) }
+                    res.data?.asSequence()
+                            ?.map { it.copy(folderId = 1).apply { conversationId = it.senderId ?: 0 } }
                             ?.sortedBy { it.date }?.toList()
                 }
     }
@@ -49,7 +50,10 @@ class MessagesRepository(private val userId: Int, private val api: MessagesServi
                             recipient.second == message.recipient?.split("[")?.last()?.split("]")?.first()
                         })
                     }.map {
-                        message.copy(recipientId = it.first.loginId, recipient = it.first.name)
+                        message.copy(recipient = it.first.name, messageId = message.id).apply {
+                            recipientId = it.first.loginId
+                            conversationId = it.first.loginId
+                        }
                     }
                 }
                 .toList()

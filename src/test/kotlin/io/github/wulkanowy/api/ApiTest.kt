@@ -388,7 +388,7 @@ class ApiTest : BaseTest() {
 
         assertEquals(1, del.size)
 
-        val m = api.getMessage(del[0].messageId, del[0].folderId)
+        val m = api.getMessage(del[0].messageId ?: 0, del[0].folderId)
         val mObserver = TestObserver<Message>()
         m.subscribe(mObserver)
         mObserver.assertComplete()
