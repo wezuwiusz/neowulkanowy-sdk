@@ -100,9 +100,9 @@ class ServiceManager(
                 .apply {
                     interceptors.forEach {
                         if (it is ErrorInterceptor) {
-                            if (errorInterceptor) this.addInterceptor(it)
+                            if (errorInterceptor) addInterceptor(it)
                         }
-                        else this.addInterceptor(it)
+                        else addNetworkInterceptor(it)
                     }
                 }
     }

@@ -45,11 +45,11 @@ class ApiTest : BaseTest() {
             schoolSymbol = "123456"
             studentId = 1
             diaryId = 101
-            notifyDataChanged() // unnecessary in this case
-            setInterceptor(Interceptor { // important! put bellow notifyDataChanged
+            setInterceptor(Interceptor {
                 println("Request event ${it.request().url().host()}")
                 it.proceed(it.request())
             }, 0)
+            notifyDataChanged() // unnecessary in this case
         }
     }
 
