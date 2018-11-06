@@ -70,8 +70,8 @@ class MessagesRepository(private val userId: Int, private val api: MessagesServi
                 .map { res -> res.data?.sortedBy { it.date } }
     }
 
-    fun getMessage(id: Int, folderId: Int, read: Boolean): Single<Message> {
-        return api.getMessage(id, folderId, read).map { it.data }
+    fun getMessage(messageId: Int, folderId: Int, read: Boolean, id: Int?): Single<Message> {
+        return api.getMessage(messageId, folderId, read, id).map { it.data }
     }
 
     private fun getDate(date: LocalDateTime?): String {
