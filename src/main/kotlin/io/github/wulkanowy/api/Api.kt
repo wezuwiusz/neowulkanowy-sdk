@@ -5,6 +5,7 @@ import io.github.wulkanowy.api.service.ServiceManager
 import okhttp3.Interceptor
 import okhttp3.logging.HttpLoggingInterceptor
 import org.threeten.bp.LocalDate
+import org.threeten.bp.LocalDateTime
 
 class Api {
 
@@ -109,11 +110,11 @@ class Api {
 
     fun getRecipients(role: Int = 2) = messages.getRecipients(role)
 
-    fun getReceivedMessages(endDate: LocalDate? = null, startDate: LocalDate? = null) = messages.getReceivedMessages(startDate, endDate)
+    fun getReceivedMessages(startDate: LocalDateTime? = null, endDate: LocalDateTime? = null) = messages.getReceivedMessages(startDate, endDate)
 
-    fun getSentMessages(endDate: LocalDate? = null, startDate: LocalDate? = null) = messages.getSentMessages(startDate, endDate)
+    fun getSentMessages(startDate: LocalDateTime? = null, endDate: LocalDateTime? = null) = messages.getSentMessages(startDate, endDate)
 
-    fun getDeletedMessages(startDate: LocalDate? = null, endDate: LocalDate? = null) = messages.getDeletedMessages(startDate, endDate)
+    fun getDeletedMessages(startDate: LocalDateTime? = null, endDate: LocalDateTime? = null) = messages.getDeletedMessages(startDate, endDate)
 
     fun getMessage(id: Int, folderId: Int) = messages.getMessage(id, folderId)
 

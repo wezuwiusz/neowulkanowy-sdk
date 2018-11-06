@@ -9,6 +9,7 @@ import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
 import org.junit.Rule
 import org.threeten.bp.LocalDate
+import org.threeten.bp.LocalDateTime
 import pl.droidsonroids.retrofit2.JspoonConverterFactory
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
@@ -43,6 +44,10 @@ open class BaseTest {
 
     fun getLocalDate(year: Int, month: Int, day: Int): LocalDate {
         return LocalDate.of(year, month, day)
+    }
+
+    fun getLocalDateTime(year: Int, month: Int, day: Int, hour: Int = 0, minute: Int = 0, second: Int = 0): LocalDateTime {
+        return LocalDateTime.of(year, month, day, hour, minute, second)
     }
 
     fun getDate(year: Int, month: Int, day: Int, hour: Int = 0, minute: Int = 0, second: Int = 0, mili: Int = 0): Date {

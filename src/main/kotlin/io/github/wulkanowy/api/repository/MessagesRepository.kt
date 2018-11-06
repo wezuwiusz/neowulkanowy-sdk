@@ -6,7 +6,7 @@ import io.github.wulkanowy.api.messages.ReportingUnit
 import io.github.wulkanowy.api.service.MessagesService
 import io.reactivex.Observable
 import io.reactivex.Single
-import org.threeten.bp.LocalDate
+import org.threeten.bp.LocalDateTime
 import org.threeten.bp.format.DateTimeFormatter
 
 class MessagesRepository(private val userId: Int, private val api: MessagesService) {
@@ -31,7 +31,7 @@ class MessagesRepository(private val userId: Int, private val api: MessagesServi
         return reportingUnit.map { unit -> api.getRecipients(unit.id, role).map { it.data } }.flatMap { it }
     }
 
-    fun getReceivedMessages(startDate: LocalDate?, endDate: LocalDate?): Single<List<Message>> {
+    fun getReceivedMessages(startDate: LocalDateTime?, endDate: LocalDateTime?): Single<List<Message>> {
         return api.getReceived(getDate(startDate), getDate(endDate))
                 .map { res ->
                     res.data?.asSequence()
@@ -45,7 +45,7 @@ class MessagesRepository(private val userId: Int, private val api: MessagesServi
                 }
     }
 
-    fun getSentMessages(startDate: LocalDate?, endDate: LocalDate?): Single<List<Message>> {
+    fun getSentMessages(startDate: LocalDateTime?, endDate: LocalDateTime?): Single<List<Message>> {
         return api.getSent(getDate(startDate), getDate(endDate))
                 .map { res -> res.data?.asSequence()?.map { it.copy(folderId = 2) }?.sortedBy { it.date }?.toList() }
                 .flatMapObservable { Observable.fromIterable(it) }
@@ -65,7 +65,7 @@ class MessagesRepository(private val userId: Int, private val api: MessagesServi
                 .toList()
     }
 
-    fun getDeletedMessages(startDate: LocalDate?, endDate: LocalDate?): Single<List<Message>> {
+    fun getDeletedMessages(startDate: LocalDateTime?, endDate: LocalDateTime?): Single<List<Message>> {
         return api.getDeleted(getDate(startDate), getDate(endDate))
                 .map { res -> res.data?.sortedBy { it.date } }
     }
@@ -74,8 +74,8 @@ class MessagesRepository(private val userId: Int, private val api: MessagesServi
         return api.getMessage(id, folderId).map { it.data }
     }
 
-    private fun getDate(date: LocalDate?): String {
+    private fun getDate(date: LocalDateTime?): String {
         if (date == null) return ""
-        return date.atStartOfDay().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))
+        return date.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))
     }
 }

@@ -365,7 +365,7 @@ class ApiTest : BaseTest() {
         recipients.subscribe(recipientsObserver)
         recipientsObserver.assertComplete()
 
-        val inbox = api.getReceivedMessages(getLocalDate(2015, 10, 5))
+        val inbox = api.getReceivedMessages(getLocalDateTime(2015, 10, 5))
         val inboxObserver = TestObserver<List<Message>>()
         inbox.subscribe(inboxObserver)
         inboxObserver.assertComplete()
