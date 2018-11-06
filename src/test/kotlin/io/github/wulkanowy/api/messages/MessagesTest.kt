@@ -54,7 +54,7 @@ class MessagesTest : BaseTest() {
         server.enqueue(MockResponse().setBody(MessagesTest::class.java.getResource("Wiadomosc.json").readText()))
         server.start(3000)
 
-        assertEquals(27214, api.getMessage(1, 1).blockingGet().id)
+        assertEquals(27214, api.getMessage(1, 1, false).blockingGet().id)
     }
 
     @After

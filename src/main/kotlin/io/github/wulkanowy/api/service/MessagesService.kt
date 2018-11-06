@@ -26,5 +26,5 @@ interface MessagesService {
 
     @POST("Wiadomosc.mvc/GetTrescWiadomosci")
     @FormUrlEncoded
-    fun getMessage(@Field("idWiadomosc") id: Int, @Field("Folder") folderId: Int): Single<MessagesResponse<Message>>
+    fun getMessage(@Field("idWiadomosc") id: Int, @Field("Folder") folderId: Int, @Field("Nieprzeczytana") read: Boolean): Single<MessagesResponse<Message>>
 }
