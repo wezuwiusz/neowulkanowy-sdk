@@ -101,8 +101,7 @@ class ServiceManager(
                     interceptors.forEach {
                         if (it is ErrorInterceptor) {
                             if (errorInterceptor) addInterceptor(it)
-                        }
-                        else addNetworkInterceptor(it)
+                        } else addInterceptor(it)
                     }
                 }
     }

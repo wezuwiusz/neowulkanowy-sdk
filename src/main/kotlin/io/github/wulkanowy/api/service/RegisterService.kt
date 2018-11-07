@@ -6,6 +6,6 @@ import retrofit2.http.GET
 
 interface RegisterService {
 
-    @GET(".")
+    @GET("Account/LogOn")
     fun getFormType(): Single<LoginForm>
 }
