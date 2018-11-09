@@ -71,9 +71,10 @@ class StudentAndParentRepository(private val api: StudentAndParentService) {
         return api.getExams(startDate.getLastMonday().toTick()).map { res ->
             res.days.flatMap { day ->
                 day.exams.map { exam ->
-                    exam.date = day.date
-                    if (exam.group.contains(" ")) exam.group = ""
-                    exam
+                    exam.apply {
+                        if (group.contains(" ")) group = ""
+                        date = day.date
+                    }
                 }
             }.asSequence().filter {
                 it.date.toLocalDate() >= startDate && it.date.toLocalDate() <= end
@@ -84,9 +85,10 @@ class StudentAndParentRepository(private val api: StudentAndParentService) {
     fun getGrades(semesterId: Int?): Single<List<Grade>> {
         return api.getGrades(semesterId).map { res ->
             res.grades.asSequence().map { grade ->
-                if (grade.entry == grade.comment) grade.comment = ""
-                if (grade.description == grade.symbol) grade.description = ""
-                grade
+                grade.apply {
+                    if (entry == comment) comment = ""
+                    if (description == symbol) description = ""
+                }
             }.toList()
         }
     }
@@ -94,9 +96,10 @@ class StudentAndParentRepository(private val api: StudentAndParentService) {
     fun getGradesSummary(semesterId: Int?): Single<List<GradeSummary>> {
         return api.getGradesSummary(semesterId).map { res ->
             res.subjects.asSequence().map { summary ->
-                summary.predicted = getGradeShortValue(summary.predicted)
-                summary.final = getGradeShortValue(summary.final)
-                summary
+                summary.apply {
+                    predicted = getGradeShortValue(predicted)
+                    final = getGradeShortValue(final)
+                }
             }.sortedBy { it.name }.toList()
         }
     }
@@ -161,24 +164,25 @@ class StudentAndParentRepository(private val api: StudentAndParentService) {
 
     fun getStudentInfo(): Single<StudentInfo> {
         return api.getStudentInfo().map {
-            it.student.polishCitizenship = if ("Tak" == it.student.polishCitizenship) "1" else "0"
-            it
+            it.apply {
+                student.polishCitizenship = if ("Tak" == student.polishCitizenship) "1" else "0"
+            }
         }
     }
 
     fun getTimetable(startDate: LocalDate, endDate: LocalDate? = null): Single<List<Timetable>> {
-        val end = endDate ?: startDate.plusDays(4)
         return api.getTimetable(startDate.getLastMonday().toTick()).map { res ->
             res.rows.flatMap { row ->
                 row.lessons.asSequence().mapIndexed { i, it ->
-                    it.date = res.days[i]
-                    it.start = "${it.date.toLocalDate().toFormat("yyy-MM-dd")} ${row.startTime}".toDate("yyyy-MM-dd HH:mm")
-                    it.end = "${it.date.toLocalDate().toFormat("yyy-MM-dd")} ${row.endTime}".toDate("yyyy-MM-dd HH:mm")
-                    it.number = row.number
-                    it
+                    it.apply {
+                        date = res.days[i]
+                        start = "${date.toLocalDate().toFormat("yyy-MM-dd")} ${row.startTime}".toDate("yyyy-MM-dd HH:mm")
+                        end = "${date.toLocalDate().toFormat("yyy-MM-dd")} ${row.endTime}".toDate("yyyy-MM-dd HH:mm")
+                        number = row.number
+                    }
                 }.mapNotNull { TimetableParser().getTimetable(it) }.toList()
             }.asSequence().filter {
-                it.date.toLocalDate() >= startDate && it.date.toLocalDate() <= end
+                it.date.toLocalDate() >= startDate && it.date.toLocalDate() <= endDate ?: startDate.plusDays(4)
             }.sortedWith(compareBy({ it.date }, { it.number })).toList()
         }
     }
