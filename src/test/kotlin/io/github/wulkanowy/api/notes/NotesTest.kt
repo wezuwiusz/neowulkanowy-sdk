@@ -29,8 +29,14 @@ class NotesTest : BaseTest() {
 
     @Test
     fun getTeacherTest() {
-        assertEquals("Kochański Leszek [KL]", filled[0].teacher)
-        assertEquals("Jan Kowalski [JK]", filled[2].teacher)
+        assertEquals("Kochański Leszek", filled[0].teacher)
+        assertEquals("Jan Kowalski", filled[2].teacher)
+    }
+
+    @Test
+    fun getTeacherSymbol() {
+        assertEquals("KL", filled[0].teacherSymbol)
+        assertEquals("JK", filled[2].teacherSymbol)
     }
 
     @Test

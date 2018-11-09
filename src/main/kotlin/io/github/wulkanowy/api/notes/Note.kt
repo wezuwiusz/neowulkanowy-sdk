@@ -7,8 +7,11 @@ class Note {
 
     lateinit var date: Date
 
-    @Selector(".wartosc", index = 0)
+    @Selector(".wartosc", index = 0, regex = "(.+)\\s\\[.+")
     lateinit var teacher: String
+
+    @Selector(".wartosc", index = 0, regex = "\\[(.+)\\]")
+    lateinit var teacherSymbol: String
 
     @Selector(".wartosc", index = 1)
     lateinit var category: String

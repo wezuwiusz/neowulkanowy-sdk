@@ -222,6 +222,7 @@ class ApiTest : BaseTest() {
         notesObserver.values()[0][0].run {
             assertEquals(getDate(2018, 3, 26), date)
             assertEquals("Janusz Tracz", teacher)
+            assertEquals("", teacherSymbol)
             assertEquals("Udział w konkursie szkolnym +20 pkt", category)
             assertEquals("+ 20p za udział w Konkursie Języka Angielskiego", content)
         }

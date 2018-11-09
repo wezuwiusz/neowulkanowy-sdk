@@ -11,7 +11,6 @@ import io.github.wulkanowy.api.mobile.Device
 import io.github.wulkanowy.api.mobile.TokenResponse
 import io.github.wulkanowy.api.notes.Note
 import io.github.wulkanowy.api.realized.Realized
-import io.github.wulkanowy.api.register.Semester
 import io.github.wulkanowy.api.school.Teacher
 import io.github.wulkanowy.api.service.StudentAndParentService
 import io.github.wulkanowy.api.student.StudentInfo
@@ -128,8 +127,10 @@ class StudentAndParentRepository(private val api: StudentAndParentService) {
     fun getNotes(): Single<List<Note>> {
         return api.getNotes().map { res ->
             res.notes.asSequence().mapIndexed { i, note ->
-                note.date = res.dates[i]
-                note
+                note.apply {
+                    if (teacher == teacherSymbol) teacherSymbol = ""
+                    date = res.dates[i]
+                }
             }.sortedWith(compareBy({ it.date }, { it.category })).toList()
         }
     }
