@@ -197,13 +197,13 @@ class ApiTest : BaseTest() {
 
     @Test
     fun homeworkTest() {
-        val homework = api.getHomework(getLocalDate(2017, 10, 23))
+        val homework = api.getHomework(getLocalDate(2017, 10, 24))
         val homeworkObserver = TestObserver<List<Homework>>()
         homework.subscribe(homeworkObserver)
         homeworkObserver.assertComplete()
 
         homeworkObserver.values()[0][1].run {
-            assertEquals(getDate(2017, 10, 23), date)
+            assertEquals(getDate(2017, 10, 24), date)
             assertEquals(getDate(2017, 10, 18), entryDate)
             assertEquals("Metodologia programowania", subject)
             assertEquals("Wszystkie instrukcje warunkowe, pętle (budowa, zasada działania, schemat blokowy)", content)

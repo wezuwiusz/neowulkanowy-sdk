@@ -117,10 +117,11 @@ class StudentAndParentRepository(private val api: StudentAndParentService) {
 
     fun getHomework(startDate: LocalDate, endDate: LocalDate? = null): Single<List<Homework>> {
         val end = endDate ?: startDate.plusDays(4)
-        return api.getHomework(startDate.getLastMonday().toTick()).map { res ->
-            res.items.asSequence().map { item ->
-                item.date = res.date
-                item
+        return api.getHomework(startDate.toTick()).map { res ->
+            res.items.asSequence().map {
+                it.apply {
+                    date = res.date
+                }
             }.filter {
                 it.date.toLocalDate() >= startDate && it.date.toLocalDate() <= end
             }.sortedWith(compareBy({ it.date }, { it.subject })).toList()
