@@ -220,11 +220,11 @@ class ApiTest : BaseTest() {
         notesObserver.assertComplete()
 
         notesObserver.values()[0][0].run {
-            assertEquals(getDate(2018, 3, 26), date)
-            assertEquals("Janusz Tracz", teacher)
+            assertEquals(getDate(2018, 1, 16), date)
+            assertEquals("Lech Wałęsa", teacher)
             assertEquals("", teacherSymbol)
-            assertEquals("Udział w konkursie szkolnym +20 pkt", category)
-            assertEquals("+ 20p za udział w Konkursie Języka Angielskiego", content)
+            assertEquals("Kultura języka", category)
+            assertEquals("Litwo! Ojczyzno moja! Ty jesteś jak zdrowie. Ile cię trzeba cenić, ten tylko aż kędy pieprz rośnie gdzie podział się? szukać prawodawstwa.", content)
         }
     }
 

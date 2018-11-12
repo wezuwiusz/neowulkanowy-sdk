@@ -9,6 +9,7 @@ import io.reactivex.observers.TestObserver
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
 import org.junit.After
+import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
@@ -60,6 +61,18 @@ class LoginTest : BaseTest() {
         val res = normal.login("jan@fakelog.cf", "jan123").blockingGet()
 
         assertTrue(res.schools.isNotEmpty())
+    }
+
+    @Test
+    fun normalLogin_encodingError() {
+        server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("Logowanie-uonet-encoding-error.html").readText()))
+        server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("Login-success.html").readText()))
+        server.start(3000)
+
+        normal.login("jan@fakelog.cf", "jan123").blockingGet()
+
+        server.takeRequest()
+        assertFalse(server.takeRequest().body.readUtf8().contains("ValueType%3D%26t%3Bhttp")) // ValueType=&t;http
     }
 
     @Test

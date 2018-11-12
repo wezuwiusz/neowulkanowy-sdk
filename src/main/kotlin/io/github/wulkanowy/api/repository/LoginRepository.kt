@@ -6,6 +6,7 @@ import io.github.wulkanowy.api.login.CertificateResponse
 import io.github.wulkanowy.api.register.HomepageResponse
 import io.github.wulkanowy.api.service.LoginService
 import io.reactivex.Single
+import pl.droidsonroids.jspoon.Jspoon
 import java.net.URLEncoder
 
 class LoginRepository(
@@ -19,6 +20,10 @@ class LoginRepository(
     private val firstStepReturnUrl by lazy {
         val url = URLEncoder.encode("$schema://uonetplus.$host/$symbol/LoginEndpoint.aspx", "UTF-8")
         "/$symbol/FS/LS?wa=wsignin1.0&wtrealm=$url&wctx=$url"
+    }
+
+    private val certificateAdapter by lazy {
+        Jspoon.create().adapter(CertificateResponse::class.java)
     }
 
     @Synchronized
@@ -35,14 +40,17 @@ class LoginRepository(
             Api.LoginType.STANDARD -> api.sendCredentials(firstStepReturnUrl, mapOf(
                     "LoginName" to email,
                     "Password" to password
-            ))
+            )).flatMap {
+                Single.just(Jspoon.create().adapter(CertificateResponse::class.java).fromHtml(it))
+            }
 
-            Api.LoginType.ADFSLight -> api.getADFSLightForm("$schema://cufs.$host/$symbol/")
-                    .flatMap {
+            Api.LoginType.ADFSLight -> api.getADFSLightForm("$schema://cufs.$host/$symbol/").flatMap {
                         api.sendADFSForm("$schema://adfslight.$host/${it.formAction.removePrefix("/")}", mapOf(
                                 "Username" to email,
                                 "Password" to email
                         ))
+                    }.flatMap {
+                        Single.just(certificateAdapter.fromHtml(it))
                     }
 
             Api.LoginType.ADFS -> api.getForm(firstStepReturnUrl)
@@ -58,11 +66,15 @@ class LoginRepository(
                                 "SubmitButton.y" to "0"
                         ))
                     }.flatMap {
+                        Single.just(certificateAdapter.fromHtml(it))
+                    }.flatMap {
                         api.sendADFSForm(it.action, mapOf(
                                 "wa" to it.wa,
                                 "wresult" to it.wresult,
                                 "wctx" to it.wctx
                         ))
+                    }.flatMap {
+                        Single.just(certificateAdapter.fromHtml(it))
                     }
 
             Api.LoginType.ADFSCards -> api.getForm(firstStepReturnUrl)
@@ -87,11 +99,15 @@ class LoginRepository(
                                 "PasswordTextBox" to password
                         ))
                     }.flatMap {
+                        Single.just(certificateAdapter.fromHtml(it))
+                    }.flatMap {
                         api.sendADFSForm(it.action, mapOf(
                                 "wa" to it.wa,
                                 "wresult" to it.wresult,
                                 "wctx" to it.wctx
                         ))
+                    }.flatMap {
+                        Single.just(certificateAdapter.fromHtml(it))
                     }
         }
     }

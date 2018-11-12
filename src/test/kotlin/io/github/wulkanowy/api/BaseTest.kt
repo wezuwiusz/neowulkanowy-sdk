@@ -14,6 +14,7 @@ import pl.droidsonroids.retrofit2.JspoonConverterFactory
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
+import retrofit2.converter.scalars.ScalarsConverterFactory
 import java.util.*
 
 open class BaseTest {
@@ -35,6 +36,7 @@ open class BaseTest {
                         .addInterceptor(HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BASIC))
                         .build()
                 )
+                .addConverterFactory(ScalarsConverterFactory.create())
                 .addConverterFactory(if (html) JspoonConverterFactory.create() else GsonConverterFactory.create())
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .baseUrl(url)

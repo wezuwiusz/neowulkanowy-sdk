@@ -16,6 +16,7 @@ import pl.droidsonroids.retrofit2.JspoonConverterFactory
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
+import retrofit2.converter.scalars.ScalarsConverterFactory
 import java.net.CookieManager
 import java.net.CookiePolicy
 import java.util.concurrent.TimeUnit
@@ -82,6 +83,7 @@ class ServiceManager(
         return Retrofit.Builder()
                 .baseUrl(baseUrl)
                 .client(client.build())
+                .addConverterFactory(ScalarsConverterFactory.create())
                 .addConverterFactory(if (gson) GsonConverterFactory.create(GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create()) else JspoonConverterFactory.create())
                 .addCallAdapterFactory(if (!login) RxJava2CallAdapterFactory.create() else
                     RxJava2ReauthCallAdapterFactory.create(

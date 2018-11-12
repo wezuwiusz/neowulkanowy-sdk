@@ -11,7 +11,7 @@ interface LoginService {
 
     @POST("Account/LogOn")
     @FormUrlEncoded
-    fun sendCredentials(@Query("ReturnUrl") returnUrl: String, @FieldMap credentials: Map<String, String>): Single<CertificateResponse>
+    fun sendCredentials(@Query("ReturnUrl") returnUrl: String, @FieldMap credentials: Map<String, String>): Single<String>
 
     @POST
     @FormUrlEncoded
@@ -28,7 +28,7 @@ interface LoginService {
 
     @POST
     @FormUrlEncoded
-    fun sendADFSForm(@Url url: String, @FieldMap values: Map<String, String>): Single<CertificateResponse>
+    fun sendADFSForm(@Url url: String, @FieldMap values: Map<String, String>): Single<String>
 
     @GET
     fun getADFSLightForm(@Url url: String): Single<ADFSLightFormResponse>
