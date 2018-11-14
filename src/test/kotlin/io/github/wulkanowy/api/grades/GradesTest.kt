@@ -1,10 +1,10 @@
 package io.github.wulkanowy.api.grades
 
-import io.github.wulkanowy.api.BaseTest
+import io.github.wulkanowy.api.BaseLocalTest
 import org.junit.Assert.assertEquals
 import org.junit.Test
 
-class GradesTest : BaseTest() {
+class GradesTest : BaseLocalTest() {
 
     private val grades by lazy {
         getSnpRepo(GradesTest::class.java, "OcenyWszystkie-details.html").getGrades(0).blockingGet()

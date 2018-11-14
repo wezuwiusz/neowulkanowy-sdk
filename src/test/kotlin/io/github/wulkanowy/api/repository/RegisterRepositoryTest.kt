@@ -2,7 +2,7 @@ package io.github.wulkanowy.api.repository
 
 import io.github.wulkanowy.api.Api
 import io.github.wulkanowy.api.ApiException
-import io.github.wulkanowy.api.BaseTest
+import io.github.wulkanowy.api.BaseLocalTest
 import io.github.wulkanowy.api.login.LoginTest
 import io.github.wulkanowy.api.register.Pupil
 import io.github.wulkanowy.api.service.LoginService
@@ -10,12 +10,9 @@ import io.github.wulkanowy.api.service.RegisterService
 import io.github.wulkanowy.api.service.StudentAndParentService
 import io.reactivex.observers.TestObserver
 import okhttp3.mockwebserver.MockResponse
-import okhttp3.mockwebserver.MockWebServer
-import org.junit.After
-import org.junit.Before
 import org.junit.Test
 
-class RegisterRepositoryTest : BaseTest() {
+class RegisterRepositoryTest : BaseLocalTest() {
 
     private val normal by lazy {
         RegisterRepository("Default", "jan@fakelog.cf", "jan123",
@@ -24,18 +21,6 @@ class RegisterRepositoryTest : BaseTest() {
                 getService(service = RegisterService::class.java, url = "http://fakelog.localhost:3000/", errorInterceptor = false),
                 getService(StudentAndParentService::class.java)
         )
-    }
-
-    private lateinit var server: MockWebServer
-
-    @Before
-    fun setUp() {
-        server = MockWebServer()
-    }
-
-    @After
-    fun tearDown() {
-        server.shutdown()
     }
 
     @Test

@@ -1,10 +1,10 @@
 package io.github.wulkanowy.api.attendance
 
-import io.github.wulkanowy.api.BaseTest
+import io.github.wulkanowy.api.BaseLocalTest
 import org.junit.Assert.*
 import org.junit.Test
 
-class AttendanceTest : BaseTest() {
+class AttendanceTest : BaseLocalTest() {
 
     private val table by lazy {
         getSnpRepo(AttendanceTest::class.java, "Frekwencja.html").getAttendance(getLocalDate(2018, 10, 1)).blockingGet()

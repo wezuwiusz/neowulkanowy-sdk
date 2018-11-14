@@ -1,7 +1,7 @@
 package io.github.wulkanowy.api.register
 
 import io.github.wulkanowy.api.Api
-import io.github.wulkanowy.api.BaseTest
+import io.github.wulkanowy.api.BaseLocalTest
 import io.github.wulkanowy.api.grades.GradesTest
 import io.github.wulkanowy.api.login.LoginTest
 import io.github.wulkanowy.api.repository.LoginRepository
@@ -11,25 +11,10 @@ import io.github.wulkanowy.api.service.LoginService
 import io.github.wulkanowy.api.service.RegisterService
 import io.github.wulkanowy.api.service.StudentAndParentService
 import okhttp3.mockwebserver.MockResponse
-import okhttp3.mockwebserver.MockWebServer
-import org.junit.After
 import org.junit.Assert.assertEquals
-import org.junit.Before
 import org.junit.Test
 
-class RegisterTest : BaseTest() {
-
-    private lateinit var server: MockWebServer
-
-    @Before
-    fun setUp() {
-        server = MockWebServer()
-    }
-
-    @After
-    fun tearDown() {
-        server.shutdown()
-    }
+class RegisterTest : BaseLocalTest() {
 
     private val login by lazy {
         LoginRepository(Api.LoginType.STANDARD, "http", "fakelog.localhost:3000", "default",

@@ -1,10 +1,10 @@
 package io.github.wulkanowy.api.timetable
 
-import io.github.wulkanowy.api.BaseTest
+import io.github.wulkanowy.api.BaseLocalTest
 import org.junit.Assert.assertEquals
 import org.junit.Test
 
-class TimetableTest : BaseTest() {
+class TimetableTest : BaseLocalTest() {
 
     private val table by lazy {
         getSnpRepo(TimetableTest::class.java, "PlanLekcji.html").getTimetable(getLocalDate(2018, 9, 24)).blockingGet()

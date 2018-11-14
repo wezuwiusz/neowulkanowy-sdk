@@ -1,10 +1,10 @@
 package io.github.wulkanowy.api.grades
 
-import io.github.wulkanowy.api.BaseTest
+import io.github.wulkanowy.api.BaseLocalTest
 import org.junit.Assert.assertEquals
 import org.junit.Test
 
-class GradesGradeSummaryTest : BaseTest() {
+class GradesGradeSummaryTest : BaseLocalTest() {
 
     private val std by lazy {
         getSnpRepo(GradesTest::class.java, "OcenyWszystkie-subjects.html").getGradesSummary(0).blockingGet()
@@ -14,12 +14,14 @@ class GradesGradeSummaryTest : BaseTest() {
         getSnpRepo(GradesTest::class.java, "OcenyWszystkie-subjects-average.html").getGradesSummary(0).blockingGet()
     }
 
-    @Test fun getSummaryTest() {
+    @Test
+    fun getSummaryTest() {
         assertEquals(5, std.size)
         assertEquals(5, average.size)
     }
 
-    @Test fun getNameTest() {
+    @Test
+    fun getNameTest() {
         assertEquals("Metodologia programowania", std[0].name)
         assertEquals("Podstawy przedsiębiorczości", std[1].name)
         assertEquals("Praktyka zawodowa", std[2].name)
@@ -33,7 +35,8 @@ class GradesGradeSummaryTest : BaseTest() {
         assertEquals("Zachowanie", average[4].name)
     }
 
-    @Test fun getPredictedRatingTest() {
+    @Test
+    fun getPredictedRatingTest() {
         assertEquals("5", std[0].predicted)
         assertEquals("3/4", std[1].predicted)
         assertEquals("", std[2].predicted)

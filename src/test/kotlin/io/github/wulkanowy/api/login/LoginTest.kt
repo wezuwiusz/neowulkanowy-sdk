@@ -1,20 +1,17 @@
 package io.github.wulkanowy.api.login
 
 import io.github.wulkanowy.api.Api
-import io.github.wulkanowy.api.BaseTest
+import io.github.wulkanowy.api.BaseLocalTest
 import io.github.wulkanowy.api.register.HomepageResponse
 import io.github.wulkanowy.api.repository.LoginRepository
 import io.github.wulkanowy.api.service.LoginService
 import io.reactivex.observers.TestObserver
 import okhttp3.mockwebserver.MockResponse
-import okhttp3.mockwebserver.MockWebServer
-import org.junit.After
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
-import org.junit.Before
 import org.junit.Test
 
-class LoginTest : BaseTest() {
+class LoginTest : BaseLocalTest() {
 
     private val normal by lazy {
         LoginRepository(Api.LoginType.STANDARD, "http", "fakelog.localhost:3000", "default",
@@ -24,13 +21,6 @@ class LoginTest : BaseTest() {
     private val adfs by lazy {
         LoginRepository(Api.LoginType.ADFSCards, "http", "fakelog.localhost:3000", "default",
                 getService(LoginService::class.java, "http://fakelog.localhost:3000/"))
-    }
-
-    private lateinit var server: MockWebServer
-
-    @Before
-    fun setUp() {
-        server = MockWebServer()
     }
 
     @Test
@@ -45,11 +35,6 @@ class LoginTest : BaseTest() {
         val res = adfs.login("jan@fakelog.cf", "jan123").blockingGet()
 
         assertTrue(res.schools.isNotEmpty())
-    }
-
-    @After
-    fun tearDown() {
-        server.shutdown()
     }
 
     @Test

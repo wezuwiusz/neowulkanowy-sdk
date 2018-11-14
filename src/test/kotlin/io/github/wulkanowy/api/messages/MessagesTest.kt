@@ -1,26 +1,16 @@
 package io.github.wulkanowy.api.messages
 
-import io.github.wulkanowy.api.BaseTest
+import io.github.wulkanowy.api.BaseLocalTest
 import io.github.wulkanowy.api.repository.MessagesRepository
 import io.github.wulkanowy.api.service.MessagesService
 import okhttp3.mockwebserver.MockResponse
-import okhttp3.mockwebserver.MockWebServer
-import org.junit.After
 import org.junit.Assert.assertEquals
-import org.junit.Before
 import org.junit.Test
 
-class MessagesTest : BaseTest() {
+class MessagesTest : BaseLocalTest() {
 
     private val api by lazy {
         MessagesRepository(1, getService(MessagesService::class.java, "http://fakelog.localhost:3000/", false))
-    }
-
-    private lateinit var server: MockWebServer
-
-    @Before
-    fun setUp() {
-        server = MockWebServer()
     }
 
     @Test
@@ -55,10 +45,5 @@ class MessagesTest : BaseTest() {
         server.start(3000)
 
         assertEquals(27214, api.getMessage(1, 1, false, 0).blockingGet().id)
-    }
-
-    @After
-    fun tearDown() {
-        server.shutdown()
     }
 }

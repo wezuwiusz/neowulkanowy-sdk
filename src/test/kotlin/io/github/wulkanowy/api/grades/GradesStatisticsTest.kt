@@ -1,10 +1,10 @@
 package io.github.wulkanowy.api.grades
 
-import io.github.wulkanowy.api.BaseTest
+import io.github.wulkanowy.api.BaseLocalTest
 import org.junit.Assert.assertEquals
 import org.junit.Test
 
-class GradesStatisticsTest : BaseTest() {
+class GradesStatisticsTest : BaseLocalTest() {
 
     private val partial by lazy {
         getSnpRepo(GradesStatisticsTest::class.java, "Statystyki-czastkowe.html").getGradesStatistics(123, false).blockingGet()

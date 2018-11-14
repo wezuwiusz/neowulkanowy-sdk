@@ -1,11 +1,11 @@
 package io.github.wulkanowy.api.notes
 
-import io.github.wulkanowy.api.BaseTest
+import io.github.wulkanowy.api.BaseLocalTest
 import org.junit.Assert.assertEquals
 import org.junit.Test
 
 
-class NotesTest : BaseTest() {
+class NotesTest : BaseLocalTest() {
 
     private val filled by lazy {
         getSnpRepo(NotesTest::class.java, "UwagiOsiagniecia-filled.html").getNotes().blockingGet()

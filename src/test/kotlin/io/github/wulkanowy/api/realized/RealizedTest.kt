@@ -1,10 +1,10 @@
 package io.github.wulkanowy.api.realized
 
-import io.github.wulkanowy.api.BaseTest
+import io.github.wulkanowy.api.BaseLocalTest
 import org.junit.Assert.assertEquals
 import org.junit.Test
 
-class RealizedTest : BaseTest() {
+class RealizedTest : BaseLocalTest() {
 
     private val realized by lazy {
         getSnpRepo(RealizedTest::class.java, "Zrealizowane.html").getRealized(getLocalDate(2018, 9, 24)).blockingGet()
