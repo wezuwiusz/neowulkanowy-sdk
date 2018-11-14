@@ -48,7 +48,7 @@ class ApiTest : BaseTest() {
             setInterceptor(Interceptor {
                 println("Request event ${it.request().url().host()}")
                 it.proceed(it.request())
-            }, 0)
+            }, true, 0)
             notifyDataChanged() // unnecessary in this case
         }
     }

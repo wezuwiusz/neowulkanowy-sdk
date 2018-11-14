@@ -44,14 +44,14 @@ class ServiceManager(
         UrlGenerator(schema, host, symbol, schoolSymbol)
     }
 
-    private val interceptors: MutableList<Interceptor> = mutableListOf(
-            HttpLoggingInterceptor().setLevel(logLevel),
-            ErrorInterceptor()
+    private val interceptors: MutableList<Pair<Interceptor, Boolean>> = mutableListOf(
+            Pair(HttpLoggingInterceptor().setLevel(logLevel), true),
+            Pair(ErrorInterceptor(), false)
     )
 
-    fun setInterceptor(interceptor: Interceptor, index: Int = -1) {
-        if (index == -1) interceptors.add(interceptor)
-        else interceptors.add(index, interceptor)
+    fun setInterceptor(interceptor: Interceptor, network: Boolean = false, index: Int = -1) {
+        if (index == -1) interceptors.add(Pair(interceptor, network))
+        else interceptors.add(index, Pair(interceptor, network))
     }
 
     fun getLoginService(): LoginService {
@@ -101,9 +101,12 @@ class ServiceManager(
                 .cookieJar(if (!separateJar) JavaNetCookieJar(cookies) else JavaNetCookieJar(CookieManager()))
                 .apply {
                     interceptors.forEach {
-                        if (it is ErrorInterceptor) {
-                            if (errorInterceptor) addInterceptor(it)
-                        } else addInterceptor(it)
+                        if (it.first is ErrorInterceptor) {
+                            if (errorInterceptor) addInterceptor(it.first)
+                        } else {
+                            if (it.second) addNetworkInterceptor(it.first)
+                            else addInterceptor(it.first)
+                        }
                     }
                 }
     }

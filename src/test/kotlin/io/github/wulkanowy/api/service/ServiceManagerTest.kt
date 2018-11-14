@@ -64,7 +64,7 @@ class ServiceManagerTest : BaseTest() {
         })
         manager.setInterceptor(Interceptor {
             throw ApiException("Test")
-        }, 0)
+        }, false, 0)
 
         val notes = manager.getSnpService().getNotes()
         val observer = TestObserver<NotesResponse>()

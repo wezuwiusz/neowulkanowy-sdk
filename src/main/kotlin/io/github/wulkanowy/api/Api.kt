@@ -29,7 +29,7 @@ class Api {
 
     var diaryId: Int = 0
 
-    private val interceptors: MutableMap<Int, Interceptor> = mutableMapOf()
+    private val appInterceptors: MutableMap<Int, Pair<Interceptor, Boolean>> = mutableMapOf()
 
     enum class LoginType {
         AUTO,
@@ -43,8 +43,8 @@ class Api {
 
     fun notifyDataChanged() = changeManager.reset()
 
-    fun setInterceptor(interceptor: Interceptor, index: Int = -1) {
-        interceptors[index] = interceptor
+    fun setInterceptor(interceptor: Interceptor, network: Boolean = false, index: Int = -1) {
+        appInterceptors[index] = Pair(interceptor, network)
     }
 
     private val schema by resettableLazy(changeManager) { "http" + if (ssl) "s" else "" }
@@ -53,8 +53,8 @@ class Api {
 
     private val serviceManager by resettableLazy(changeManager) {
         ServiceManager(logLevel, loginType, schema, host, normalizedSymbol, email, password, schoolSymbol, studentId, diaryId).apply {
-            interceptors.forEach {
-                setInterceptor(it.value, it.key)
+            appInterceptors.forEach {
+                setInterceptor(it.value.first, it.value.second, it.key)
             }
         }
     }
