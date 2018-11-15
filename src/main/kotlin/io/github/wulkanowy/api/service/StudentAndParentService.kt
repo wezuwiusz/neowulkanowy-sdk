@@ -1,7 +1,6 @@
 package io.github.wulkanowy.api.service
 
 import io.github.wulkanowy.api.attendance.AttendanceResponse
-import io.github.wulkanowy.api.attendance.AttendanceSummaryResponse
 import io.github.wulkanowy.api.exams.ExamResponse
 import io.github.wulkanowy.api.grades.GradesResponse
 import io.github.wulkanowy.api.grades.GradesStatisticsResponse
@@ -36,7 +35,7 @@ interface StudentAndParentService {
     fun getAttendance(@Query("data") date: String): Single<AttendanceResponse>
 
     @GET("Frekwencja.mvc")
-    fun getAttendanceSummary(@Query("idPrzedmiot") subjectId: Int?): Single<AttendanceSummaryResponse>
+    fun getAttendanceSummary(@Query("idPrzedmiot") subjectId: Int?): Single<AttendanceResponse>
 
     @GET("Sprawdziany.mvc/Terminarz?rodzajWidoku=2")
     fun getExams(@Query("data") date: String): Single<ExamResponse>

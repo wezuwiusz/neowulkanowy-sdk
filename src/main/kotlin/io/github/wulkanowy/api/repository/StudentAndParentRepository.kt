@@ -33,7 +33,7 @@ class StudentAndParentRepository(private val api: StudentAndParentService) {
         return api.getAttendance(startDate.getLastMonday().toTick()).map { res ->
             res.rows.flatMap { row ->
                 row.lessons.mapIndexedNotNull { i, it ->
-                    if ("null" == it.subject) return@mapIndexedNotNull null // fix empty days
+                    if ("null" == it.subject) return@mapIndexedNotNull null // fix empty months
                     it.apply {
                         date = res.days[i]
                         number = row.number
@@ -52,15 +52,15 @@ class StudentAndParentRepository(private val api: StudentAndParentService) {
 
     fun getAttendanceSummary(subjectId: Int?): Single<List<AttendanceSummary>> {
         return api.getAttendanceSummary(subjectId).map { res ->
-            res.days.mapIndexed { i, day ->
+            res.months.mapIndexed { i, day ->
                 AttendanceSummary(day,
-                        res.rows[0].value[i].toIntOrNull() ?: 0,
-                        res.rows[1].value[i].toIntOrNull() ?: 0,
-                        res.rows[2].value[i].toIntOrNull() ?: 0,
-                        res.rows[3].value[i].toIntOrNull() ?: 0,
-                        res.rows[4].value[i].toIntOrNull() ?: 0,
-                        res.rows[5].value[i].toIntOrNull() ?: 0,
-                        res.rows[6].value[i].toIntOrNull() ?: 0
+                        res.summaryRows[0].value[i].toIntOrNull() ?: 0,
+                        res.summaryRows[1].value[i].toIntOrNull() ?: 0,
+                        res.summaryRows[2].value[i].toIntOrNull() ?: 0,
+                        res.summaryRows[3].value[i].toIntOrNull() ?: 0,
+                        res.summaryRows[4].value[i].toIntOrNull() ?: 0,
+                        res.summaryRows[5].value[i].toIntOrNull() ?: 0,
+                        res.summaryRows[6].value[i].toIntOrNull() ?: 0
                 )
             }
         }
