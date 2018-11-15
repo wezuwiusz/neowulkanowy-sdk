@@ -11,12 +11,13 @@ import io.github.wulkanowy.api.service.StudentAndParentService
 import io.reactivex.observers.TestObserver
 import okhttp3.mockwebserver.MockResponse
 import org.junit.Test
+import java.net.CookieManager
 
 class RegisterRepositoryTest : BaseLocalTest() {
 
     private val normal by lazy {
         RegisterRepository("Default", "jan@fakelog.cf", "jan123",
-                LoginRepository(Api.LoginType.STANDARD, "http", "fakelog.localhost:3000", "default",
+                LoginRepository(Api.LoginType.STANDARD, "http", "fakelog.localhost:3000", "default",  CookieManager(),
                         getService(LoginService::class.java, "http://fakelog.localhost:3000/")),
                 getService(service = RegisterService::class.java, url = "http://fakelog.localhost:3000/", errorInterceptor = false),
                 getService(StudentAndParentService::class.java)

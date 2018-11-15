@@ -10,16 +10,17 @@ import okhttp3.mockwebserver.MockResponse
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Test
+import java.net.CookieManager
 
 class LoginTest : BaseLocalTest() {
 
     private val normal by lazy {
-        LoginRepository(Api.LoginType.STANDARD, "http", "fakelog.localhost:3000", "default",
+        LoginRepository(Api.LoginType.STANDARD, "http", "fakelog.localhost:3000", "default", CookieManager(),
                 getService(LoginService::class.java, "http://fakelog.localhost:3000/"))
     }
 
     private val adfs by lazy {
-        LoginRepository(Api.LoginType.ADFSCards, "http", "fakelog.localhost:3000", "default",
+        LoginRepository(Api.LoginType.ADFSCards, "http", "fakelog.localhost:3000", "default", CookieManager(),
                 getService(LoginService::class.java, "http://fakelog.localhost:3000/"))
     }
 

@@ -7,6 +7,7 @@ import io.github.wulkanowy.api.register.HomepageResponse
 import io.github.wulkanowy.api.service.LoginService
 import io.reactivex.Single
 import pl.droidsonroids.jspoon.Jspoon
+import java.net.CookieManager
 import java.net.URLEncoder
 
 class LoginRepository(
@@ -14,6 +15,7 @@ class LoginRepository(
         private val schema: String,
         private val host: String,
         private val symbol: String,
+        private val cookies: CookieManager,
         private val api: LoginService
 ) {
 
@@ -113,6 +115,7 @@ class LoginRepository(
     }
 
     fun sendCertificate(certificate: CertificateResponse, url: String = certificate.action): Single<HomepageResponse> {
+        cookies.cookieStore.removeAll()
         return api.sendCertificate(url, mapOf(
                 "wa" to certificate.wa,
                 "wresult" to certificate.wresult,

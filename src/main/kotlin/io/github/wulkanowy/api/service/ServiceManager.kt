@@ -54,6 +54,10 @@ class ServiceManager(
         else interceptors.add(index, Pair(interceptor, network))
     }
 
+    fun getCookieManager(): CookieManager {
+        return cookies
+    }
+
     fun getLoginService(): LoginService {
         if (email.isBlank() || password.isBlank()) throw ApiException("Email or/and password are not set")
         return getRetrofit(getClientBuilder(), url.generate(UrlGenerator.Site.LOGIN), false).create(LoginService::class.java)
@@ -87,7 +91,7 @@ class ServiceManager(
                 .addConverterFactory(if (gson) GsonConverterFactory.create(GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create()) else JspoonConverterFactory.create())
                 .addCallAdapterFactory(if (!login) RxJava2CallAdapterFactory.create() else
                     RxJava2ReauthCallAdapterFactory.create(
-                            LoginRepository(loginType, schema, host, symbol, getLoginService()).login(email, password).toFlowable(),
+                            LoginRepository(loginType, schema, host, symbol, cookies, getLoginService()).login(email, password).toFlowable(),
                             { it is NotLoggedInException }
                     )
                 ).build()

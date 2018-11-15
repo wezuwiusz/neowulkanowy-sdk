@@ -61,7 +61,7 @@ class Api {
 
     private val register by resettableLazy(changeManager) {
         RegisterRepository(normalizedSymbol, email, password,
-                LoginRepository(loginType, schema, host, normalizedSymbol, serviceManager.getLoginService()),
+                LoginRepository(loginType, schema, host, normalizedSymbol, serviceManager.getCookieManager(), serviceManager.getLoginService()),
                 serviceManager.getRegisterService(),
                 serviceManager.getSnpService(false, false)
         )
