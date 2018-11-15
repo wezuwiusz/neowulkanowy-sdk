@@ -42,18 +42,14 @@ class LoginRepository(
             Api.LoginType.STANDARD -> api.sendCredentials(firstStepReturnUrl, mapOf(
                     "LoginName" to email,
                     "Password" to password
-            )).flatMap {
-                Single.just(Jspoon.create().adapter(CertificateResponse::class.java).fromHtml(it))
-            }
+            )).map { certificateAdapter.fromHtml(it) }
 
             Api.LoginType.ADFSLight -> api.getADFSLightForm("$schema://cufs.$host/$symbol/").flatMap {
-                        api.sendADFSForm("$schema://adfslight.$host/${it.formAction.removePrefix("/")}", mapOf(
-                                "Username" to email,
-                                "Password" to email
-                        ))
-                    }.flatMap {
-                        Single.just(certificateAdapter.fromHtml(it))
-                    }
+                api.sendADFSForm("$schema://adfslight.$host/${it.formAction.removePrefix("/")}", mapOf(
+                        "Username" to email,
+                        "Password" to email
+                ))
+            }.map { certificateAdapter.fromHtml(it) }
 
             Api.LoginType.ADFS -> api.getForm(firstStepReturnUrl)
                     .flatMap {
@@ -67,17 +63,13 @@ class LoginRepository(
                                 "SubmitButton.x" to "0",
                                 "SubmitButton.y" to "0"
                         ))
-                    }.flatMap {
-                        Single.just(certificateAdapter.fromHtml(it))
-                    }.flatMap {
+                    }.map { certificateAdapter.fromHtml(it) }.flatMap {
                         api.sendADFSForm(it.action, mapOf(
                                 "wa" to it.wa,
                                 "wresult" to it.wresult,
                                 "wctx" to it.wctx
                         ))
-                    }.flatMap {
-                        Single.just(certificateAdapter.fromHtml(it))
-                    }
+                    }.map { certificateAdapter.fromHtml(it) }
 
             Api.LoginType.ADFSCards -> api.getForm(firstStepReturnUrl)
                     .flatMap {
@@ -100,17 +92,13 @@ class LoginRepository(
                                 "UsernameTextBox" to email,
                                 "PasswordTextBox" to password
                         ))
-                    }.flatMap {
-                        Single.just(certificateAdapter.fromHtml(it))
-                    }.flatMap {
+                    }.map { certificateAdapter.fromHtml(it) }.flatMap {
                         api.sendADFSForm(it.action, mapOf(
                                 "wa" to it.wa,
                                 "wresult" to it.wresult,
                                 "wctx" to it.wctx
                         ))
-                    }.flatMap {
-                        Single.just(certificateAdapter.fromHtml(it))
-                    }
+                    }.map { certificateAdapter.fromHtml(it) }
         }
     }
 
