@@ -50,6 +50,17 @@ class LoginTest : BaseLocalTest() {
     }
 
     @Test
+    fun normalLogin_beforeNewStudentSite() {
+        server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("Logowanie-uonet.html").readText()))
+        server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("Login-success-old.html").readText()))
+        server.start(3000)
+
+        val res = normal.login("jan@fakelog.cf", "jan123").blockingGet()
+
+        assertTrue(res.schools.isNotEmpty())
+    }
+
+    @Test
     fun normalLogin_encodingError() {
         server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("Logowanie-uonet-encoding-error.html").readText()))
         server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("Login-success.html").readText()))
