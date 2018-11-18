@@ -2,6 +2,7 @@ package io.github.wulkanowy.api.repository
 
 import io.github.wulkanowy.api.attendance.Attendance
 import io.github.wulkanowy.api.attendance.AttendanceSummary
+import io.github.wulkanowy.api.attendance.Subject
 import io.github.wulkanowy.api.exams.Exam
 import io.github.wulkanowy.api.grades.Grade
 import io.github.wulkanowy.api.grades.GradeStatistics
@@ -65,6 +66,10 @@ class StudentAndParentRepository(private val api: StudentAndParentService) {
                 )
             }
         }
+    }
+
+    fun getSubjects(): Single<List<Subject>> {
+        return api.getAttendanceSummary(-1).map { it.subjects }
     }
 
     fun getExams(startDate: LocalDate, endDate: LocalDate? = null): Single<List<Exam>> {

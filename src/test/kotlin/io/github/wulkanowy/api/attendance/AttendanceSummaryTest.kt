@@ -10,9 +10,20 @@ class AttendanceSummaryTest : BaseLocalTest() {
         getSnpRepo(AttendanceSummaryTest::class.java, "Frekwencja.html").getAttendanceSummary(-1).blockingGet()
     }
 
+    private val subjects by lazy {
+        getSnpRepo(AttendanceSummaryTest::class.java, "Frekwencja.html").getSubjects().blockingGet()
+    }
+
     @Test
     fun getAttendanceSummary() {
         assertEquals(10, table.size)
+    }
+
+    @Test
+    fun getSubjects() {
+        assertEquals(23, subjects.size)
+        assertEquals("Wszystkie", subjects[0].name)
+        assertEquals(-1, subjects[0].value)
     }
 
     @Test

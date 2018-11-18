@@ -22,11 +22,14 @@ class AttendanceResponse {
         var lessons: List<Attendance> = emptyList()
     }
 
+    @Selector("#idPrzedmiot option")
+    var subjects: List<Subject> = emptyList()
+
     @Selector(".mainContainer > table thead th:not(:first-of-type):not(:last-of-type)")
     var months: List<String> = emptyList()
 
     @Selector(".mainContainer > table tbody tr")
-    var summaryRows: List<AttendanceResponse.AttendanceSummaryRow> = emptyList()
+    var summaryRows: List<AttendanceSummaryRow> = emptyList()
 
     class AttendanceSummaryRow {
 

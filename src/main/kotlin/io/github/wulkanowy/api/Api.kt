@@ -90,6 +90,8 @@ class Api {
 
     fun getAttendanceSummary(subjectId: Int? = null) = snp.getAttendanceSummary(subjectId)
 
+    fun getSubjects() = snp.getSubjects()
+
     fun getExams(startDate: LocalDate, endDate: LocalDate? = null) = snp.getExams(startDate, endDate)
 
     fun getGrades(semesterId: Int? = null) = snp.getGrades(semesterId)

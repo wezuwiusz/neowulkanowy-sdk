@@ -2,6 +2,7 @@ package io.github.wulkanowy.api
 
 import io.github.wulkanowy.api.attendance.Attendance
 import io.github.wulkanowy.api.attendance.AttendanceSummary
+import io.github.wulkanowy.api.attendance.Subject
 import io.github.wulkanowy.api.exams.Exam
 import io.github.wulkanowy.api.grades.Grade
 import io.github.wulkanowy.api.grades.GradeStatistics
@@ -148,7 +149,23 @@ class ApiTest : BaseTest() {
         assertEquals("Nieobecny z przyczyn szkolnych", values[5].name)
         assertEquals("Zwolniony", values[6].name)
         assertEquals("Obecność", values[9].name)
+    }
 
+    @Test
+    fun getSubjects() {
+        val subjects = api.getSubjects()
+        val subjectsObserver = TestObserver<List<Subject>>()
+        subjects.subscribe(subjectsObserver)
+        subjectsObserver.assertComplete()
+
+        val values = subjectsObserver.values()[0]
+
+        assertEquals(16, values.size)
+
+        values[0].run {
+            assertEquals(-1, value)
+            assertEquals("Wszystkie", name)
+        }
     }
 
     @Test
