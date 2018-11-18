@@ -160,7 +160,7 @@ class ApiTest : BaseTest() {
 
         val values = attendanceObserver.values()[0]
 
-        assertEquals(12, values.size)
+        assertEquals(10, values.size)
 
         values[0].run {
             assertEquals("IX", month)

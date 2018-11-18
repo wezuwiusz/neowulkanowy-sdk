@@ -12,7 +12,7 @@ class AttendanceSummaryTest : BaseLocalTest() {
 
     @Test
     fun getAttendanceSummary() {
-        assertEquals(12, table.size)
+        assertEquals(10, table.size)
     }
 
     @Test
@@ -20,7 +20,7 @@ class AttendanceSummaryTest : BaseLocalTest() {
         assertEquals("IX", table[0].month)
         assertEquals("X", table[1].month)
         assertEquals("XI", table[2].month)
-        assertEquals("VIII", table[11].month)
+        assertEquals("VI", table[9].month)
     }
 
     @Test
@@ -35,8 +35,6 @@ class AttendanceSummaryTest : BaseLocalTest() {
         assertEquals(90, table[7].presence)
         assertEquals(103, table[8].presence)
         assertEquals(59, table[9].presence)
-        assertEquals(0, table[10].presence)
-        assertEquals(0, table[11].presence)
     }
 
     @Test

@@ -52,8 +52,9 @@ class StudentAndParentRepository(private val api: StudentAndParentService) {
 
     fun getAttendanceSummary(subjectId: Int?): Single<List<AttendanceSummary>> {
         return api.getAttendanceSummary(subjectId).map { res ->
-            res.months.mapIndexed { i, day ->
-                AttendanceSummary(day,
+            res.months.mapIndexedNotNull { i, month ->
+                if (res.summaryRows.all { it.value[i].isBlank() }) return@mapIndexedNotNull null
+                AttendanceSummary(month,
                         res.summaryRows[0].value[i].toIntOrNull() ?: 0,
                         res.summaryRows[1].value[i].toIntOrNull() ?: 0,
                         res.summaryRows[2].value[i].toIntOrNull() ?: 0,
