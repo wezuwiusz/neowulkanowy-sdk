@@ -17,6 +17,7 @@ import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.converter.scalars.ScalarsConverterFactory
+import retrofit2.create
 import java.net.CookieManager
 import java.net.CookiePolicy
 import java.util.concurrent.TimeUnit
@@ -60,11 +61,11 @@ class ServiceManager(
 
     fun getLoginService(): LoginService {
         if (email.isBlank() || password.isBlank()) throw ApiException("Email or/and password are not set")
-        return getRetrofit(getClientBuilder(), url.generate(UrlGenerator.Site.LOGIN), false).create(LoginService::class.java)
+        return getRetrofit(getClientBuilder(), url.generate(UrlGenerator.Site.LOGIN), false).create()
     }
 
     fun getRegisterService(): RegisterService {
-        return getRetrofit(getClientBuilder(false, true), url.generate(UrlGenerator.Site.LOGIN), false).create(RegisterService::class.java)
+        return getRetrofit(getClientBuilder(false, true), url.generate(UrlGenerator.Site.LOGIN), false).create()
     }
 
     fun getSnpService(withLogin: Boolean = true, interceptor: Boolean = true): StudentAndParentService {
@@ -76,11 +77,11 @@ class ServiceManager(
             client.addInterceptor(StudentAndParentInterceptor(cookies, schema, host, diaryId, studentId))
         }
 
-        return getRetrofit(client, url.generate(UrlGenerator.Site.SNP), withLogin).create(StudentAndParentService::class.java)
+        return getRetrofit(client, url.generate(UrlGenerator.Site.SNP), withLogin).create()
     }
 
     fun getMessagesService(): MessagesService {
-        return getRetrofit(getClientBuilder(), url.generate(UrlGenerator.Site.MESSAGES), true, true).create(MessagesService::class.java)
+        return getRetrofit(getClientBuilder(), url.generate(UrlGenerator.Site.MESSAGES), true, true).create()
     }
 
     private fun getRetrofit(client: OkHttpClient.Builder, baseUrl: String, login: Boolean = true, gson: Boolean = false): Retrofit {
