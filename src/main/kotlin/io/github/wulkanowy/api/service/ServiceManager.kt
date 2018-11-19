@@ -100,9 +100,7 @@ class ServiceManager(
 
     private fun getClientBuilder(errorInterceptor: Boolean = true, separateJar: Boolean = false): OkHttpClient.Builder {
         return OkHttpClient().newBuilder()
-                .connectTimeout(25, TimeUnit.SECONDS)
-                .writeTimeout(25, TimeUnit.SECONDS)
-                .readTimeout(25, TimeUnit.SECONDS)
+                .callTimeout(25, TimeUnit.SECONDS)
                 .cookieJar(if (!separateJar) JavaNetCookieJar(cookies) else JavaNetCookieJar(CookieManager()))
                 .apply {
                     interceptors.forEach {
