@@ -9,27 +9,67 @@ import org.threeten.bp.LocalDateTime
 
 class Api {
 
+    private val changeManager = resettableManager()
+
     var logLevel: HttpLoggingInterceptor.Level = HttpLoggingInterceptor.Level.BASIC
+        set(value) {
+            if (field != value) changeManager.reset()
+            field = value
+        }
 
     var ssl: Boolean = true
+        set(value) {
+            if (field != value) changeManager.reset()
+            field = value
+        }
 
     var host: String = "fakelog.cf"
+        set(value) {
+            if (field != value) changeManager.reset()
+            field = value
+        }
 
     var loginType: LoginType = LoginType.AUTO
+        set(value) {
+            if (field != value) changeManager.reset()
+            field = value
+        }
 
     var symbol: String = "Default"
+        set(value) {
+            if (field != value) changeManager.reset()
+            field = value
+        }
 
     var email: String = ""
+        set(value) {
+            if (field != value) changeManager.reset()
+            field = value
+        }
 
     var password: String = ""
+        set(value) {
+            if (field != value) changeManager.reset()
+            field = value
+        }
 
     var schoolSymbol: String = ""
+        set(value) {
+            if (field != value) changeManager.reset()
+            field = value
+        }
 
     var studentId: Int = 0
+        set(value) {
+            if (field != value) changeManager.reset()
+            field = value
+        }
 
     var diaryId: Int = 0
-
-    private val appInterceptors: MutableMap<Int, Pair<Interceptor, Boolean>> = mutableMapOf()
+        set(value) {
+            if (field != value) changeManager.reset()
+            field = value
+        }
 
     enum class LoginType {
         AUTO,
@@ -39,9 +79,10 @@ class Api {
         ADFSLight
     }
 
-    private val changeManager = resettableManager()
+    private val appInterceptors: MutableMap<Int, Pair<Interceptor, Boolean>> = mutableMapOf()
 
-    fun notifyDataChanged() = changeManager.reset()
+    @Deprecated("redundant call, will be deleted in feature")
+    fun notifyDataChanged() {}
 
     fun setInterceptor(interceptor: Interceptor, network: Boolean = false, index: Int = -1) {
         appInterceptors[index] = Pair(interceptor, network)
