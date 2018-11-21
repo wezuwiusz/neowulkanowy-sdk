@@ -12,5 +12,4 @@ class TokenResponse {
 
     @Selector("#rejestracja-formularz .blockElement:nth-last-child(1)", regex = ": (.*)")
     lateinit var pin: String
-
 }

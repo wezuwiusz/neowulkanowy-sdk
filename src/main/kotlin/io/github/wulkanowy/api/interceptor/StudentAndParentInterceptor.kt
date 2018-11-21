@@ -17,13 +17,16 @@ class StudentAndParentInterceptor(
     override fun intercept(chain: Interceptor.Chain): Response {
         arrayOf(
                 arrayOf("idBiezacyDziennik", diaryId),
-                arrayOf("idBiezacyUczen", studentId)
+                arrayOf("idBiezacyUczen", studentId),
+                arrayOf("idBiezacyDziennikPrzedszkole", 0)
         ).forEach { cookie ->
-            HttpCookie(cookie[0].toString(), cookie[1].toString()).let {
-                it.path = "/"
-                it.domain = "uonetplus-opiekun.$host"
-                cookies.cookieStore.add(URI("$schema://${it.domain}"), it)
-            }
+           arrayOf("opiekun", "uczen").forEach { module ->
+               HttpCookie(cookie[0].toString(), cookie[1].toString()).let {
+                   it.path = "/"
+                   it.domain = "uonetplus-$module.$host"
+                   cookies.cookieStore.add(URI("$schema://${it.domain}"), it)
+               }
+           }
         }
 
         return chain.proceed(chain.request().newBuilder().build())

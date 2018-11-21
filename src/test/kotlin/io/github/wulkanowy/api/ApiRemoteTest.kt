@@ -50,7 +50,6 @@ class ApiRemoteTest : BaseTest() {
                 println("Request event ${it.request().url().host()}")
                 it.proceed(it.request())
             }, true, 0)
-            notifyDataChanged() // unnecessary in this case
         }
     }
 
@@ -247,7 +246,7 @@ class ApiRemoteTest : BaseTest() {
 
     @Test
     fun gradesTest() {
-        val grades = api.getGrades(864)
+        val grades = api.getGrades(865)
         val gradesObserver = TestObserver<List<Grade>>()
         grades.subscribe(gradesObserver)
         gradesObserver.assertComplete()
@@ -274,7 +273,7 @@ class ApiRemoteTest : BaseTest() {
 
     @Test
     fun gradesSummaryTest() {
-        val summary = api.getGradesSummary(864)
+        val summary = api.getGradesSummary(865)
         val summaryObserver = TestObserver<List<GradeSummary>>()
         summary.subscribe(summaryObserver)
         summaryObserver.assertComplete()

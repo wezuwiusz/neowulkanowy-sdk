@@ -30,7 +30,7 @@ class GradeWeightValueConverter : ElementConverter<Int> {
     }
 }
 
-private fun getGradeValueWithModifier(grade: String): Pair<Int, Double> {
+fun getGradeValueWithModifier(grade: String): Pair<Int, Double> {
     return grade.substringBefore(" (").run {
         if (this.matches(validGrade)) {
             when {

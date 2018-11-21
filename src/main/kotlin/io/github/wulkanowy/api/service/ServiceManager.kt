@@ -4,6 +4,8 @@ import RxJava2ReauthCallAdapterFactory
 import com.google.gson.GsonBuilder
 import io.github.wulkanowy.api.Api
 import io.github.wulkanowy.api.ApiException
+import io.github.wulkanowy.api.grades.DateDeserializer
+import io.github.wulkanowy.api.grades.GradeDate
 import io.github.wulkanowy.api.interceptor.ErrorInterceptor
 import io.github.wulkanowy.api.interceptor.StudentAndParentInterceptor
 import io.github.wulkanowy.api.login.NotLoggedInException
@@ -68,6 +70,18 @@ class ServiceManager(
         return getRetrofit(getClientBuilder(false, true), url.generate(UrlGenerator.Site.LOGIN), false).create()
     }
 
+    fun getStudentService(withLogin: Boolean = true, interceptor: Boolean = true): StudentService {
+        if (withLogin && schoolSymbol.isBlank()) throw ApiException("School id is not set")
+
+        val client = getClientBuilder()
+        if (interceptor) {
+            if (0 == diaryId || 0 == studentId) throw ApiException("Student or/and diaryId id are not set")
+            client.addInterceptor(StudentAndParentInterceptor(cookies, schema, host, diaryId, studentId))
+        }
+
+        return getRetrofit(client, url.generate(UrlGenerator.Site.STUDENT), withLogin, true).create()
+    }
+
     fun getSnpService(withLogin: Boolean = true, interceptor: Boolean = true): StudentAndParentService {
         if (withLogin && schoolSymbol.isBlank()) throw ApiException("School id is not set")
 
@@ -89,7 +103,10 @@ class ServiceManager(
                 .baseUrl(baseUrl)
                 .client(client.build())
                 .addConverterFactory(ScalarsConverterFactory.create())
-                .addConverterFactory(if (gson) GsonConverterFactory.create(GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create()) else JspoonConverterFactory.create())
+                .addConverterFactory(if (gson) GsonConverterFactory.create(GsonBuilder()
+                        .setDateFormat("yyyy-MM-dd HH:mm:ss")
+                        .registerTypeAdapter(GradeDate::class.java, DateDeserializer(GradeDate.DATE_FORMAT, GradeDate::class.java))
+                        .create()) else JspoonConverterFactory.create())
                 .addCallAdapterFactory(if (!login) RxJava2CallAdapterFactory.create() else
                     RxJava2ReauthCallAdapterFactory.create(
                             LoginRepository(loginType, schema, host, symbol, cookies, getLoginService()).login(email, password).toFlowable(),
@@ -117,17 +134,18 @@ class ServiceManager(
     private class UrlGenerator(private val schema: String, private val host: String, private val symbol: String, private val schoolId: String) {
 
         enum class Site {
-            LOGIN, SNP, MESSAGES
+            LOGIN, SNP, STUDENT, MESSAGES
         }
 
         fun generate(type: Site): String {
-            return "$schema://${getSubDomain(type)}.$host/$symbol/${if (type == Site.SNP) "$schoolId/" else ""}"
+            return "$schema://${getSubDomain(type)}.$host/$symbol/${if (type == Site.SNP || type == Site.STUDENT) "$schoolId/" else ""}"
         }
 
         private fun getSubDomain(type: Site): String {
             return when (type) {
                 Site.LOGIN -> "cufs"
                 Site.SNP -> "uonetplus-opiekun"
+                Site.STUDENT -> "uonetplus-uczen"
                 Site.MESSAGES -> "uonetplus-uzytkownik"
             }
         }

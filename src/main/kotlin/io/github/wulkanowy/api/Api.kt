@@ -71,6 +71,8 @@ class Api {
             field = value
         }
 
+    var useNewStudent: Boolean = false
+
     enum class LoginType {
         AUTO,
         STANDARD,
@@ -117,6 +119,10 @@ class Api {
         StudentAndParentRepository(serviceManager.getSnpService())
     }
 
+    private val student by resettableLazy(changeManager) {
+        StudentRepository(serviceManager.getStudentService())
+    }
+
     private val messages by resettableLazy(changeManager) {
         MessagesRepository(studentId, serviceManager.getMessagesService())
     }
@@ -135,7 +141,7 @@ class Api {
 
     fun getExams(startDate: LocalDate, endDate: LocalDate? = null) = snp.getExams(startDate, endDate)
 
-    fun getGrades(semesterId: Int? = null) = snp.getGrades(semesterId)
+    fun getGrades(semesterId: Int? = null) = if (useNewStudent) student.getGrades(semesterId) else snp.getGrades(semesterId)
 
     fun getGradesSummary(semesterId: Int? = null) = snp.getGradesSummary(semesterId)
 
@@ -145,7 +151,7 @@ class Api {
 
     fun getNotes() = snp.getNotes()
 
-    fun getRegisteredDevices() = snp.getRegisteredDevices()
+    fun getRegisteredDevices() = if (useNewStudent) student.getRegisteredDevices() else snp.getRegisteredDevices()
 
     fun getToken() = snp.getToken()
 

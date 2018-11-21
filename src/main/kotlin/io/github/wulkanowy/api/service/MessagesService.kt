@@ -1,7 +1,7 @@
 package io.github.wulkanowy.api.service
 
 import io.github.wulkanowy.api.messages.Message
-import io.github.wulkanowy.api.messages.MessagesResponse
+import io.github.wulkanowy.api.ApiResponse
 import io.github.wulkanowy.api.messages.Recipient
 import io.github.wulkanowy.api.messages.ReportingUnit
 import io.reactivex.Single
@@ -10,19 +10,19 @@ import retrofit2.http.*
 interface MessagesService {
 
     @GET("NowaWiadomosc.mvc/GetJednostkiUzytkownika")
-    fun getUserReportingUnits(): Single<MessagesResponse<List<ReportingUnit>>>
+    fun getUserReportingUnits(): Single<ApiResponse<List<ReportingUnit>>>
 
     @GET("NowaWiadomosc.mvc/GetAdresaci")
-    fun getRecipients(@Query("IdJednostkaSprawozdawcza") reportingUnitId: Int, @Query("Rola") role: Int): Single<MessagesResponse<List<Recipient>>>
+    fun getRecipients(@Query("IdJednostkaSprawozdawcza") reportingUnitId: Int, @Query("Rola") role: Int): Single<ApiResponse<List<Recipient>>>
 
     @GET("Wiadomosc.mvc/GetWiadomosciOdebrane")
-    fun getReceived(@Query("dataOd") dateStart: String, @Query("dataDo") dateEnd: String): Single<MessagesResponse<List<Message>>>
+    fun getReceived(@Query("dataOd") dateStart: String, @Query("dataDo") dateEnd: String): Single<ApiResponse<List<Message>>>
 
     @GET("Wiadomosc.mvc/GetWiadomosciWyslane")
-    fun getSent(@Query("dataOd") dateStart: String, @Query("dataDo") dateEnd: String): Single<MessagesResponse<List<Message>>>
+    fun getSent(@Query("dataOd") dateStart: String, @Query("dataDo") dateEnd: String): Single<ApiResponse<List<Message>>>
 
     @GET("Wiadomosc.mvc/GetWiadomosciUsuniete")
-    fun getDeleted(@Query("dataOd") dateStart: String, @Query("dataDo") dateEnd: String): Single<MessagesResponse<List<Message>>>
+    fun getDeleted(@Query("dataOd") dateStart: String, @Query("dataDo") dateEnd: String): Single<ApiResponse<List<Message>>>
 
     @POST("Wiadomosc.mvc/GetTrescWiadomosci")
     @FormUrlEncoded
@@ -31,5 +31,5 @@ interface MessagesService {
             @Field("Folder") folderId: Int,
             @Field("Nieprzeczytana") read: Boolean,
             @Field("idWiadomoscAdresat") id: Int?
-    ): Single<MessagesResponse<Message>>
+    ): Single<ApiResponse<Message>>
 }
