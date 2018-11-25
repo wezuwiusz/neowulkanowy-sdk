@@ -12,7 +12,7 @@ interface MessagesService {
     @GET("NowaWiadomosc.mvc/GetJednostkiUzytkownika")
     fun getUserReportingUnits(): Single<ApiResponse<List<ReportingUnit>>>
 
-    @GET("NowaWiadomosc.mvc/GetAdresaci")
+    @GET("Adresaci.mvc/GetAdresaci")
     fun getRecipients(@Query("IdJednostkaSprawozdawcza") reportingUnitId: Int, @Query("Rola") role: Int): Single<ApiResponse<List<Recipient>>>
 
     @GET("Wiadomosc.mvc/GetWiadomosciOdebrane")
