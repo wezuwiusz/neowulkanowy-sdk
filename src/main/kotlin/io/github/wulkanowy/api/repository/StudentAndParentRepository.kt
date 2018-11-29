@@ -1,5 +1,6 @@
 package io.github.wulkanowy.api.repository
 
+import io.github.wulkanowy.api.*
 import io.github.wulkanowy.api.attendance.Attendance
 import io.github.wulkanowy.api.attendance.AttendanceSummary
 import io.github.wulkanowy.api.attendance.Subject
@@ -207,28 +208,6 @@ class StudentAndParentRepository(private val api: StudentAndParentService) {
             }.sortedWith(compareBy({ it.date }, { it.number })).toList()
         }
     }
-
-    private fun getGradeShortValue(value: String): String {
-        return when (value) {
-            "celujący" -> "6"
-            "bardzo dobry" -> "5"
-            "dobry" -> "4"
-            "dostateczny" -> "3"
-            "dopuszczający" -> "2"
-            "niedostateczny" -> "1"
-            else -> value
-        }
-    }
-
-    private fun String.toDate(format: String) = SimpleDateFormat(format).parse(this)
-
-    private fun Date.toLocalDate() = Instant.ofEpochMilli(this.time).atZone(ZoneId.systemDefault()).toLocalDate()
-
-    private fun LocalDate.toDate() = java.sql.Date.valueOf(this.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")))
-
-    private fun LocalDate.toFormat(format: String) = this.format(DateTimeFormatter.ofPattern(format))
-
-    private fun LocalDate.getLastMonday() = this.with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY))
 
     private fun LocalDate?.toTick() = this?.toDate().toTick()
 

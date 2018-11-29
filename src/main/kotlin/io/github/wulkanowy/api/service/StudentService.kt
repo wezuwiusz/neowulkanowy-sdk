@@ -4,12 +4,18 @@ import io.github.wulkanowy.api.ApiResponse
 import io.github.wulkanowy.api.grades.GradeRequest
 import io.github.wulkanowy.api.grades.GradesResponse
 import io.github.wulkanowy.api.mobile.Device
+import io.github.wulkanowy.api.register.Diary
 import io.reactivex.Single
 import retrofit2.http.Body
-import retrofit2.http.GET
 import retrofit2.http.POST
 
 interface StudentService {
+
+    @POST("UczenCache.mvc/Get")
+    fun getUserCache()
+
+    @POST("UczenDziennik.mvc/Get")
+    fun getDiaries(): Single<ApiResponse<List<Diary>>>
 
     @POST("Oceny.mvc/Get")
     fun getGrades(@Body gradeRequest: GradeRequest): Single<ApiResponse<GradesResponse>>
