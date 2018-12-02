@@ -67,7 +67,7 @@ class MessagesRepository(private val userId: Int, private val api: MessagesServi
 
     fun getDeletedMessages(startDate: LocalDateTime?, endDate: LocalDateTime?): Single<List<Message>> {
         return api.getDeleted(getDate(startDate), getDate(endDate))
-                .map { res -> res.data?.sortedBy { it.date } }
+                .map { res -> res.data?.map { it.copy(folderId = 3) }?.sortedBy { it.date } }
     }
 
     fun getMessage(messageId: Int, folderId: Int, read: Boolean, id: Int?): Single<Message> {
