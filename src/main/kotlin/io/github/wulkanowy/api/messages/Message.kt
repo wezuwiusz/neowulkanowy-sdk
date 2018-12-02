@@ -1,10 +1,33 @@
 package io.github.wulkanowy.api.messages
 
 import com.google.gson.annotations.SerializedName
-import pl.droidsonroids.jspoon.annotation.Format
 import java.util.*
 
 data class Message(
+
+        @SerializedName("Id")
+        val id: Int?,
+
+        @SerializedName("IdWiadomosci")
+        val messageId: Int?,
+
+        @SerializedName("NadawcaNazwa")
+        val sender: String?,
+
+        @SerializedName("IdNadawca")
+        val senderId: Int?,
+
+        @SerializedName("Adresaci")
+        val recipient: String?,
+
+        @SerializedName("Temat")
+        val subject: String,
+
+        @SerializedName("Tresc")
+        val content: String?,
+
+        @SerializedName("Data")
+        val date: Date?,
 
         @SerializedName("FolderWiadomosci")
         val folderId: Int = 0,
@@ -12,40 +35,13 @@ data class Message(
         @SerializedName("Nieprzeczytana")
         val unread: Boolean?,
 
-        @SerializedName("Data")
-        @Format("yyyy-MM-dd HH:mm:ss")
-        val date: Date?,
-
-        @SerializedName("Tresc")
-        val content: String?,
-
-        @SerializedName("Temat")
-        val subject: String,
-
-        @SerializedName("Adresaci")
-        val recipient: String?,
-
         @SerializedName("Nieprzeczytane")
         val unreadBy: Int?,
 
         @SerializedName("Przeczytane")
-        val readBy: Int?,
-
-        @SerializedName("NadawcaNazwa")
-        val sender: String?,
-
-        @SerializedName("IdWiadomosci")
-        val messageId: Int?,
-
-        @SerializedName("IdNadawca")
-        val senderId: Int?,
-
-        @SerializedName("Id")
-        val id: Int?
+        val readBy: Int?
 ) {
-    var conversationId: Int = 0
-
-    var conversationName: String = "null"
-
     var recipientId: Int = 0
+
+    var removed: Boolean = false
 }

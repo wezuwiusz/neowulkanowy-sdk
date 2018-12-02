@@ -35,12 +35,7 @@ class MessagesRepository(private val userId: Int, private val api: MessagesServi
         return api.getReceived(getDate(startDate), getDate(endDate))
                 .map { res ->
                     res.data?.asSequence()
-                            ?.map {
-                                it.copy(folderId = 1).apply {
-                                    conversationId = it.senderId ?: 0
-                                    conversationName = it.sender ?: "null"
-                                }
-                            }
+                            ?.map { it.copy(folderId = 1) }
                             ?.sortedBy { it.date }?.toList()
                 }
     }
@@ -55,10 +50,8 @@ class MessagesRepository(private val userId: Int, private val api: MessagesServi
                             recipient.second == message.recipient?.split("[")?.last()?.split("]")?.first()
                         })
                     }.map {
-                        message.copy(recipient = it.first.name, messageId = message.id).apply {
+                        message.copy(recipient = it.first.name.split(" [").first(), messageId = message.id).apply {
                             recipientId = it.first.loginId
-                            conversationId = it.first.loginId
-                            conversationName = it.first.name.split(" [").first()
                         }
                     }
                 }
@@ -67,7 +60,7 @@ class MessagesRepository(private val userId: Int, private val api: MessagesServi
 
     fun getDeletedMessages(startDate: LocalDateTime?, endDate: LocalDateTime?): Single<List<Message>> {
         return api.getDeleted(getDate(startDate), getDate(endDate))
-                .map { res -> res.data?.map { it.copy(folderId = 3) }?.sortedBy { it.date } }
+                .map { res -> res.data?.map { it.apply { removed = true } }?.sortedBy { it.date } }
     }
 
     fun getMessage(messageId: Int, folderId: Int, read: Boolean, id: Int?): Single<Message> {
