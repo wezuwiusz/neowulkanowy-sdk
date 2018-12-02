@@ -136,9 +136,6 @@ class Api {
 
     fun getSemesters() = if (useNewStudent) studentStart.getSemesters() else snpStart.getSemesters()
 
-    @Deprecated("Use getSemesters() instead")
-    fun getCurrentSemester() = snpStart.getCurrentSemester()
-
     fun getAttendance(startDate: LocalDate, endDate: LocalDate? = null) = snp.getAttendance(startDate, endDate)
 
     fun getAttendanceSummary(subjectId: Int? = null) = snp.getAttendanceSummary(subjectId)

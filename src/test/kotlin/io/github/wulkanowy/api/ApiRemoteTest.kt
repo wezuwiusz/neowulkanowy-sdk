@@ -54,22 +54,6 @@ class ApiRemoteTest : BaseTest() {
     }
 
     @Test
-    fun semesterTest() {
-        val semester = api.getCurrentSemester()
-        val semesterObserver = TestObserver<Semester>()
-        semester.subscribe(semesterObserver)
-        semesterObserver.assertComplete()
-
-        semesterObserver.values()[0].run {
-            assertEquals(101, diaryId)
-            assertEquals("1A 2015", diaryName)
-            assertEquals(1234568, semesterId)
-            assertEquals(2, semesterNumber)
-            assertTrue(current)
-        }
-    }
-
-    @Test
     fun pupilsTest() {
         val pupils = api.getPupils()
         val pupilsObserver = TestObserver<List<Pupil>>()

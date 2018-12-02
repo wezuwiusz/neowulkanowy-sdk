@@ -21,13 +21,4 @@ class StudentAndParentStartRepository(
             }
         }.toList().map { it.flatten() }
     }
-
-    fun getCurrentSemester(): Single<Semester> {
-        return api.getSchoolInfo().flatMap { info ->
-            val diary = info.diaries.first { it.current == "selected" }
-            api.getGrades(0).map { semester ->
-                Semester(diary.id, diary.name, semester.semesterId, semester.semesterNumber, true)
-            }
-        }
-    }
 }
