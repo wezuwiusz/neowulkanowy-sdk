@@ -83,9 +83,6 @@ class Api {
 
     private val appInterceptors: MutableMap<Int, Pair<Interceptor, Boolean>> = mutableMapOf()
 
-    @Deprecated("redundant call, will be deleted in feature")
-    fun notifyDataChanged() {}
-
     fun setInterceptor(interceptor: Interceptor, network: Boolean = false, index: Int = -1) {
         appInterceptors[index] = Pair(interceptor, network)
     }
