@@ -1,7 +1,11 @@
 package io.github.wulkanowy.api
 
+import io.github.wulkanowy.api.messages.Folder
+import io.github.wulkanowy.api.messages.Folder.*
+import io.github.wulkanowy.api.messages.Message
 import io.github.wulkanowy.api.repository.*
 import io.github.wulkanowy.api.service.ServiceManager
+import io.reactivex.Single
 import okhttp3.Interceptor
 import okhttp3.logging.HttpLoggingInterceptor
 import org.threeten.bp.LocalDate
@@ -164,6 +168,14 @@ class Api {
     fun getReportingUnits() = messages.getReportingUnits()
 
     fun getRecipients(role: Int = 2) = messages.getRecipients(role)
+
+    fun getMessages(folder: Folder, startDate: LocalDateTime? = null, endDate: LocalDateTime? = null): Single<List<Message>> {
+        return when (folder) {
+            RECEIVED -> messages.getReceivedMessages(startDate, endDate)
+            SENT -> messages.getSentMessages(startDate, endDate)
+            TRASHED -> messages.getDeletedMessages(startDate, endDate)
+        }
+    }
 
     fun getReceivedMessages(startDate: LocalDateTime? = null, endDate: LocalDateTime? = null) = messages.getReceivedMessages(startDate, endDate)
 

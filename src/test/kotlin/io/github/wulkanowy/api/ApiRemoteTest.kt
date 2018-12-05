@@ -8,6 +8,7 @@ import io.github.wulkanowy.api.grades.Grade
 import io.github.wulkanowy.api.grades.GradeStatistics
 import io.github.wulkanowy.api.grades.GradeSummary
 import io.github.wulkanowy.api.homework.Homework
+import io.github.wulkanowy.api.messages.Folder
 import io.github.wulkanowy.api.messages.Message
 import io.github.wulkanowy.api.messages.Recipient
 import io.github.wulkanowy.api.messages.ReportingUnit
@@ -366,6 +367,11 @@ class ApiRemoteTest : BaseTest() {
         val recipientsObserver = TestObserver<List<Recipient>>()
         recipients.subscribe(recipientsObserver)
         recipientsObserver.assertComplete()
+
+        val messages = api.getMessages(Folder.RECEIVED)
+        val messagesObserver = TestObserver<List<Message>>()
+        messages.subscribe(messagesObserver)
+        messagesObserver.assertComplete()
 
         val inbox = api.getReceivedMessages(getLocalDateTime(2015, 10, 5))
         val inboxObserver = TestObserver<List<Message>>()
