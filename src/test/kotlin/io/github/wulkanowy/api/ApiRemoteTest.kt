@@ -46,6 +46,7 @@ class ApiRemoteTest : BaseTest() {
             schoolSymbol = "123456"
             studentId = 1
             diaryId = 101
+            useNewStudent = false
             setInterceptor(Interceptor {
                 println("Request event ${it.request().url().host()}")
                 it.proceed(it.request())
@@ -66,7 +67,7 @@ class ApiRemoteTest : BaseTest() {
             assertEquals("Jan Kowalski", studentName)
             assertEquals("123456", schoolSymbol)
             assertEquals(1, studentId)
-            assertEquals("Publiczny dziennik Wulkanowego nr 1 w fakelog.cf", schoolName)
+            assertEquals("Publiczny szkoła Wulkanowego nr 1 w fakelog.cf", schoolName)
         }
     }
 
@@ -389,12 +390,10 @@ class ApiRemoteTest : BaseTest() {
 
         assertEquals(1, del.size)
 
-        val m = api.getMessage(del[0].messageId ?: 0, del[0].folderId)
-        val mObserver = TestObserver<Message>()
+        val m = api.getMessageContent(del[0].messageId ?: 0, del[0].folderId)
+        val mObserver = TestObserver<String>()
         m.subscribe(mObserver)
         mObserver.assertComplete()
-
-        assertEquals(1, mObserver.values().size)
     }
 
     @Test
