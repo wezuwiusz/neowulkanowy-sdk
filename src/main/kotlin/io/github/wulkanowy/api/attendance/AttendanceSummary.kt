@@ -1,7 +1,9 @@
 package io.github.wulkanowy.api.attendance
 
+import org.threeten.bp.Month
+
 data class AttendanceSummary(
-        val month: String,
+        val month: Month,
         val presence: Int,
         val absence: Int,
         val absenceExcused: Int,

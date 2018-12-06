@@ -28,6 +28,7 @@ import org.junit.Assert.*
 import org.junit.Before
 import org.junit.Ignore
 import org.junit.Test
+import org.threeten.bp.Month
 
 @Ignore
 class ApiRemoteTest : BaseTest() {
@@ -165,7 +166,7 @@ class ApiRemoteTest : BaseTest() {
         assertEquals(10, values.size)
 
         values[0].run {
-            assertEquals("IX", month)
+            assertEquals(Month.SEPTEMBER, month)
             assertEquals(32, presence)
             assertEquals(1, absence)
             assertEquals(2, absenceExcused)

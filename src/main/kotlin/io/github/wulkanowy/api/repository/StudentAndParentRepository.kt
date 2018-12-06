@@ -19,13 +19,8 @@ import io.github.wulkanowy.api.student.StudentInfo
 import io.github.wulkanowy.api.timetable.Timetable
 import io.github.wulkanowy.api.timetable.TimetableParser
 import io.reactivex.Single
-import org.threeten.bp.DayOfWeek
-import org.threeten.bp.Instant
 import org.threeten.bp.LocalDate
-import org.threeten.bp.ZoneId
-import org.threeten.bp.format.DateTimeFormatter
-import org.threeten.bp.temporal.TemporalAdjusters
-import java.text.SimpleDateFormat
+import org.threeten.bp.Month
 import java.util.*
 
 class StudentAndParentRepository(private val api: StudentAndParentService) {
@@ -56,7 +51,7 @@ class StudentAndParentRepository(private val api: StudentAndParentService) {
         return api.getAttendanceSummary(subjectId).map { res ->
             res.months.mapIndexedNotNull { i, month ->
                 if (res.summaryRows.all { it.value[i].isBlank() }) return@mapIndexedNotNull null
-                AttendanceSummary(month,
+                AttendanceSummary(romanToMonthEnum(month),
                         res.summaryRows[0].value[i].toIntOrNull() ?: 0,
                         res.summaryRows[1].value[i].toIntOrNull() ?: 0,
                         res.summaryRows[2].value[i].toIntOrNull() ?: 0,
@@ -219,5 +214,23 @@ class StudentAndParentRepository(private val api: StudentAndParentService) {
         }
         val utcOffset = c.get(Calendar.ZONE_OFFSET) + c.get(Calendar.DST_OFFSET)
         return ((c.timeInMillis + utcOffset) * 10000 + 621355968000000000L).toString()
+    }
+
+    private fun romanToMonthEnum(romanMonth: String): Month {
+        return Month.of(when (romanMonth) {
+            "I" -> 1
+            "II" -> 2
+            "III" -> 3
+            "IV" -> 4
+            "V" -> 5
+            "VI" -> 6
+            "VII" -> 7
+            "VIII" -> 8
+            "IX" -> 9
+            "X" -> 10
+            "XI" -> 11
+            "XII" -> 12
+            else -> 0
+        })
     }
 }

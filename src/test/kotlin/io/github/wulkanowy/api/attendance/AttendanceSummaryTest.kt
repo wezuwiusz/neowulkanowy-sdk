@@ -3,6 +3,7 @@ package io.github.wulkanowy.api.attendance
 import io.github.wulkanowy.api.BaseLocalTest
 import org.junit.Assert.assertEquals
 import org.junit.Test
+import org.threeten.bp.Month
 
 class AttendanceSummaryTest : BaseLocalTest() {
 
@@ -28,10 +29,10 @@ class AttendanceSummaryTest : BaseLocalTest() {
 
     @Test
     fun getAttendanceSummary_month() {
-        assertEquals("IX", table[0].month)
-        assertEquals("X", table[1].month)
-        assertEquals("XI", table[2].month)
-        assertEquals("VI", table[9].month)
+        assertEquals(Month.SEPTEMBER, table[0].month)
+        assertEquals(Month.OCTOBER, table[1].month)
+        assertEquals(Month.NOVEMBER, table[2].month)
+        assertEquals(Month.JUNE, table[9].month)
     }
 
     @Test
