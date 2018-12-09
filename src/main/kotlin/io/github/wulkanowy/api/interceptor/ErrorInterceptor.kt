@@ -19,8 +19,8 @@ class ErrorInterceptor : Interceptor {
     }
 
     private fun checkForError(doc: Document) {
-        doc.select(".loginButton").let {
-            if (it.isNotEmpty()) throw NotLoggedInException(it.text())
+        doc.select(".loginButton, .LogOnBoard input[type=submit], #PassiveSignInButton, form #SubmitButton, form[name=form1] #SubmitButton").let {
+            if (it.isNotEmpty()) throw NotLoggedInException("User not logged in")
         }
 
         doc.body().text().let { // /messages
