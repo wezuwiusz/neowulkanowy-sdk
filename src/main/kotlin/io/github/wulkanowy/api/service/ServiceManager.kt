@@ -7,6 +7,7 @@ import io.github.wulkanowy.api.ApiException
 import io.github.wulkanowy.api.grades.DateDeserializer
 import io.github.wulkanowy.api.grades.GradeDate
 import io.github.wulkanowy.api.interceptor.ErrorInterceptor
+import io.github.wulkanowy.api.interceptor.NotLoggedInErrorInterceptor
 import io.github.wulkanowy.api.interceptor.StudentAndParentInterceptor
 import io.github.wulkanowy.api.login.NotLoggedInException
 import io.github.wulkanowy.api.repository.LoginRepository
@@ -49,7 +50,8 @@ class ServiceManager(
 
     private val interceptors: MutableList<Pair<Interceptor, Boolean>> = mutableListOf(
             Pair(HttpLoggingInterceptor().setLevel(logLevel), true),
-            Pair(ErrorInterceptor(), false)
+            Pair(ErrorInterceptor(), false),
+            Pair(NotLoggedInErrorInterceptor(), false)
     )
 
     fun setInterceptor(interceptor: Interceptor, network: Boolean = false, index: Int = -1) {
@@ -67,7 +69,7 @@ class ServiceManager(
     }
 
     fun getRegisterService(): RegisterService {
-        return getRetrofit(getClientBuilder(false, true), url.generate(UrlGenerator.Site.LOGIN), false).create()
+        return getRetrofit(getClientBuilder(false,  false,true), url.generate(UrlGenerator.Site.LOGIN), false).create()
     }
 
     fun getStudentService(withLogin: Boolean = true, interceptor: Boolean = true): StudentService {
@@ -85,7 +87,7 @@ class ServiceManager(
     fun getSnpService(withLogin: Boolean = true, interceptor: Boolean = true): StudentAndParentService {
         if (withLogin && schoolSymbol.isBlank()) throw ApiException("School id is not set")
 
-        val client = getClientBuilder()
+        val client = getClientBuilder(true, withLogin)
         if (interceptor) {
             if (0 == diaryId || 0 == studentId) throw ApiException("Student or/and diaryId id are not set")
             client.addInterceptor(StudentAndParentInterceptor(cookies, schema, host, diaryId, studentId))
@@ -115,14 +117,15 @@ class ServiceManager(
                 ).build()
     }
 
-    private fun getClientBuilder(errorInterceptor: Boolean = true, separateJar: Boolean = false): OkHttpClient.Builder {
+    private fun getClientBuilder(errorInterceptor: Boolean = true, loginInterceptor: Boolean = true, separateJar: Boolean = false): OkHttpClient.Builder {
         return OkHttpClient().newBuilder()
                 .callTimeout(25, TimeUnit.SECONDS)
                 .cookieJar(if (!separateJar) JavaNetCookieJar(cookies) else JavaNetCookieJar(CookieManager()))
                 .apply {
                     interceptors.forEach {
-                        if (it.first is ErrorInterceptor) {
+                        if (it.first is ErrorInterceptor || it.first is NotLoggedInErrorInterceptor) {
                             if (errorInterceptor) addInterceptor(it.first)
+                            if (loginInterceptor) addInterceptor(it.first)
                         } else {
                             if (it.second) addNetworkInterceptor(it.first)
                             else addInterceptor(it.first)

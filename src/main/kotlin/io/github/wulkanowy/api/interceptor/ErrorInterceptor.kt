@@ -19,14 +19,6 @@ class ErrorInterceptor : Interceptor {
     }
 
     private fun checkForError(doc: Document) {
-        doc.select(".loginButton, .LogOnBoard input[type=submit], #PassiveSignInButton, form #SubmitButton, form[name=form1] #SubmitButton").let {
-            if (it.isNotEmpty()) throw NotLoggedInException("User not logged in")
-        }
-
-        doc.body().text().let { // /messages
-            if (it.contains("The custom error module")) throw NotLoggedInException("Zaloguj się")
-        }
-
         doc.select(".errorBlock").let {
             if (it.isNotEmpty()) throw VulcanException("${it.select(".errorTitle").text()}. ${it.select(".errorMessage").text()}")
         }

@@ -19,12 +19,12 @@ class RegisterTest : BaseLocalTest() {
 
     private val login by lazy {
         LoginRepository(Api.LoginType.STANDARD, "http", "fakelog.localhost:3000", "default", CookieManager(),
-                getService(LoginService::class.java, "http://fakelog.localhost:3000/"))
+                getService(LoginService::class.java, "http://fakelog.localhost:3000/", true, true, false))
     }
 
     private val register by lazy {
         RegisterRepository("default", "jan@fakelog.localhost", "jan123", login,
-                getService(RegisterService::class.java, "http://fakelog.localhost:3000/Default/", true, false),
+                getService(RegisterService::class.java, "http://fakelog.localhost:3000/Default/", true, false, false),
                 getService(StudentAndParentService::class.java, "http://fakelog.localhost:3000/"))
     }
 

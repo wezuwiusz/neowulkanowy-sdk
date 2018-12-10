@@ -21,7 +21,7 @@ class LoginTest : BaseLocalTest() {
 
     private val adfs by lazy {
         LoginRepository(Api.LoginType.ADFSCards, "http", "fakelog.localhost:3000", "default", CookieManager(),
-                getService(LoginService::class.java, "http://fakelog.localhost:3000/"))
+                getService(LoginService::class.java, "http://fakelog.localhost:3000/", true, true, false))
     }
 
     @Test

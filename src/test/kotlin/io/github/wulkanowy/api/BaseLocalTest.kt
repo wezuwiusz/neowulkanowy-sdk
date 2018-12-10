@@ -1,6 +1,7 @@
 package io.github.wulkanowy.api
 
 import io.github.wulkanowy.api.interceptor.ErrorInterceptor
+import io.github.wulkanowy.api.interceptor.NotLoggedInErrorInterceptor
 import io.github.wulkanowy.api.repository.StudentAndParentRepository
 import io.github.wulkanowy.api.service.StudentAndParentService
 import okhttp3.OkHttpClient
@@ -28,11 +29,12 @@ abstract class BaseLocalTest : BaseTest() {
         return StudentAndParentRepository(getService(StudentAndParentService::class.java))
     }
 
-    fun <T> getService(service: Class<T>, url: String = this.server.url("/").toString(), html: Boolean = true, errorInterceptor: Boolean = true): T {
+    fun <T> getService(service: Class<T>, url: String = this.server.url("/").toString(), html: Boolean = true, errorInterceptor: Boolean = true, noLoggedInInterceptor: Boolean = true): T {
         return Retrofit.Builder()
                 .client(OkHttpClient.Builder()
                         .apply {
                             if (errorInterceptor) addInterceptor(ErrorInterceptor())
+                            if (noLoggedInInterceptor) addInterceptor(NotLoggedInErrorInterceptor())
                         }
                         .addInterceptor(HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BASIC))
                         .build()
