@@ -51,7 +51,7 @@ class ServiceManager(
     private val interceptors: MutableList<Pair<Interceptor, Boolean>> = mutableListOf(
             Pair(HttpLoggingInterceptor().setLevel(logLevel), true),
             Pair(ErrorInterceptor(), false),
-            Pair(NotLoggedInErrorInterceptor(), false)
+            Pair(NotLoggedInErrorInterceptor(loginType), false)
     )
 
     fun setInterceptor(interceptor: Interceptor, network: Boolean = false, index: Int = -1) {
@@ -65,7 +65,7 @@ class ServiceManager(
 
     fun getLoginService(): LoginService {
         if (email.isBlank() || password.isBlank()) throw ApiException("Email or/and password are not set")
-        return getRetrofit(getClientBuilder(), url.generate(UrlGenerator.Site.LOGIN), false).create()
+        return getRetrofit(getClientBuilder(true, false), url.generate(UrlGenerator.Site.LOGIN), false).create()
     }
 
     fun getRegisterService(): RegisterService {

@@ -24,17 +24,23 @@ abstract class BaseLocalTest : BaseTest() {
         server.shutdown()
     }
 
-    fun getSnpRepo(testClass: Class<*>, fixture: String): StudentAndParentRepository {
+    fun getSnpRepo(testClass: Class<*>, fixture: String, loginType: Api.LoginType = Api.LoginType.STANDARD): StudentAndParentRepository {
         server.enqueue(MockResponse().setBody(testClass.getResource(fixture).readText()))
-        return StudentAndParentRepository(getService(StudentAndParentService::class.java))
+        return StudentAndParentRepository(getService(StudentAndParentService::class.java, this.server.url("/").toString(), true, true, true, loginType))
     }
 
-    fun <T> getService(service: Class<T>, url: String = this.server.url("/").toString(), html: Boolean = true, errorInterceptor: Boolean = true, noLoggedInInterceptor: Boolean = true): T {
+
+    fun <T> getService(service: Class<T>,
+                       url: String = this.server.url("/").toString(),
+                       html: Boolean = true, errorInterceptor: Boolean = true,
+                       noLoggedInInterceptor: Boolean = true,
+                       loginType: Api.LoginType = Api.LoginType.STANDARD
+    ): T {
         return Retrofit.Builder()
                 .client(OkHttpClient.Builder()
                         .apply {
                             if (errorInterceptor) addInterceptor(ErrorInterceptor())
-                            if (noLoggedInInterceptor) addInterceptor(NotLoggedInErrorInterceptor())
+                            if (noLoggedInInterceptor) addInterceptor(NotLoggedInErrorInterceptor(loginType))
                         }
                         .addInterceptor(HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BASIC))
                         .build()

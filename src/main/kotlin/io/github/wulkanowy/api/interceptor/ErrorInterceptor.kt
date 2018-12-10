@@ -2,7 +2,6 @@ package io.github.wulkanowy.api.interceptor
 
 import io.github.wulkanowy.api.login.AccountPermissionException
 import io.github.wulkanowy.api.login.BadCredentialsException
-import io.github.wulkanowy.api.login.NotLoggedInException
 import okhttp3.Interceptor
 import okhttp3.Response
 import org.jsoup.Jsoup
