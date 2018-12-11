@@ -36,10 +36,10 @@ class RegisterRepository(
                         if (t is AccountPermissionException) Single.just(HomepageResponse())
                         else Single.error(t)
                     }
-                    .flatMapObservable { Observable.fromIterable(if (useNewStudent) it.studentSchools else it.oldStudentSchools) }
+                    .flatMapObservable { if (useNewStudent) Observable.fromIterable(it.studentSchools) else Observable.fromIterable(it.oldStudentSchools) }
                     .flatMapSingle { schoolUrl ->
                         getLoginType().flatMap { loginType ->
-                            getStudents(schoolUrl).map {
+                            getStudents(symbol.first, schoolUrl).map {
                                 it.map { pupil ->
                                     Pupil(
                                             email = email,
@@ -57,7 +57,9 @@ class RegisterRepository(
         }.toList().map { it.flatten() }
     }
 
-    private fun getStudents(schoolUrl: String): Single<List<StudentAndParentResponse.Pupil>> {
+    private fun getStudents(symbol: String, schoolUrl: String): Single<List<StudentAndParentResponse.Pupil>> {
+        url.schoolId = getExtractedSchoolSymbolFromUrl(schoolUrl)
+        url.symbol = symbol
         return if (!useNewStudent) snp.getSchoolInfo(schoolUrl).map { it.students }
         else student.getSchoolInfo(url.generate(ServiceManager.UrlGenerator.Site.STUDENT) + "UczenDziennik.mvc/Get").map { diary -> diary.data?.distinctBy { it.studentId } }
                 .map { diaries ->

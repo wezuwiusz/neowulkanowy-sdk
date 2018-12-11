@@ -96,7 +96,7 @@ class ApiRemoteTest : BaseTest() {
         }
 
         values[4].run {
-//            assertEquals(15, diaryId)
+            //            assertEquals(15, diaryId)
             assertEquals("2A 2016", diaryName)
             assertEquals(12, semesterId)
 //            assertEquals(2, semesterNumber)
