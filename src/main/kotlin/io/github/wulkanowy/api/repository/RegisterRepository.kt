@@ -57,7 +57,7 @@ class RegisterRepository(
 
     private fun getStudents(schoolUrl: String): Single<List<StudentAndParentResponse.Pupil>> {
         return if (!useNewStudent) snp.getSchoolInfo(schoolUrl).map { it.students }
-        else student.getDiaries().map { diary -> diary.data?.distinctBy { it.studentId } }
+        else student.getSchoolInfo(schoolUrl).map { diary -> diary.data?.distinctBy { it.studentId } }
                 .map { diaries ->
                     diaries.map {
                         StudentAndParentResponse.Pupil().apply {
