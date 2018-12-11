@@ -5,10 +5,7 @@ import io.github.wulkanowy.api.ApiException
 import io.github.wulkanowy.api.BaseLocalTest
 import io.github.wulkanowy.api.login.LoginTest
 import io.github.wulkanowy.api.register.Pupil
-import io.github.wulkanowy.api.service.LoginService
-import io.github.wulkanowy.api.service.RegisterService
-import io.github.wulkanowy.api.service.StudentAndParentService
-import io.github.wulkanowy.api.service.StudentService
+import io.github.wulkanowy.api.service.*
 import io.reactivex.observers.TestObserver
 import okhttp3.mockwebserver.MockResponse
 import org.junit.Test
@@ -22,7 +19,8 @@ class RegisterRepositoryTest : BaseLocalTest() {
                         getService(LoginService::class.java, "http://fakelog.localhost:3000/")),
                 getService(service = RegisterService::class.java, url = "http://fakelog.localhost:3000/", errorInterceptor = false),
                 getService(StudentAndParentService::class.java),
-                getService(StudentService::class.java)
+                getService(StudentService::class.java),
+                ServiceManager.UrlGenerator("", "", "", "")
         )
     }
 

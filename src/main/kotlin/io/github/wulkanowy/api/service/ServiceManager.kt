@@ -44,7 +44,7 @@ class ServiceManager(
         }
     }
 
-    private val url by lazy {
+    val urlGenerator by lazy {
         UrlGenerator(schema, host, symbol, schoolSymbol)
     }
 
@@ -65,11 +65,11 @@ class ServiceManager(
 
     fun getLoginService(): LoginService {
         if (email.isBlank() || password.isBlank()) throw ApiException("Email or/and password are not set")
-        return getRetrofit(getClientBuilder(true, false), url.generate(UrlGenerator.Site.LOGIN), false).create()
+        return getRetrofit(getClientBuilder(true, false), urlGenerator.generate(UrlGenerator.Site.LOGIN), false).create()
     }
 
     fun getRegisterService(): RegisterService {
-        return getRetrofit(getClientBuilder(false,  false,true), url.generate(UrlGenerator.Site.LOGIN), false).create()
+        return getRetrofit(getClientBuilder(false,  false,true), urlGenerator.generate(UrlGenerator.Site.LOGIN), false).create()
     }
 
     fun getStudentService(withLogin: Boolean = true, interceptor: Boolean = true): StudentService {
@@ -81,7 +81,7 @@ class ServiceManager(
             client.addInterceptor(StudentAndParentInterceptor(cookies, schema, host, diaryId, studentId))
         }
 
-        return getRetrofit(client, url.generate(UrlGenerator.Site.STUDENT), withLogin, true).create()
+        return getRetrofit(client, urlGenerator.generate(UrlGenerator.Site.STUDENT), withLogin, true).create()
     }
 
     fun getSnpService(withLogin: Boolean = true, interceptor: Boolean = true): StudentAndParentService {
@@ -93,11 +93,11 @@ class ServiceManager(
             client.addInterceptor(StudentAndParentInterceptor(cookies, schema, host, diaryId, studentId))
         }
 
-        return getRetrofit(client, url.generate(UrlGenerator.Site.SNP), withLogin).create()
+        return getRetrofit(client, urlGenerator.generate(UrlGenerator.Site.SNP), withLogin).create()
     }
 
     fun getMessagesService(): MessagesService {
-        return getRetrofit(getClientBuilder(), url.generate(UrlGenerator.Site.MESSAGES), true, true).create()
+        return getRetrofit(getClientBuilder(), urlGenerator.generate(UrlGenerator.Site.MESSAGES), true, true).create()
     }
 
     private fun getRetrofit(client: OkHttpClient.Builder, baseUrl: String, login: Boolean = true, gson: Boolean = false): Retrofit {
@@ -134,7 +134,7 @@ class ServiceManager(
                 }
     }
 
-    private class UrlGenerator(private val schema: String, private val host: String, private val symbol: String, private val schoolId: String) {
+    class UrlGenerator(private val schema: String, private val host: String, private val symbol: String, private val schoolId: String) {
 
         enum class Site {
             LOGIN, SNP, STUDENT, MESSAGES

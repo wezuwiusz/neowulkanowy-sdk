@@ -108,7 +108,8 @@ class Api {
                 LoginRepository(loginType, schema, host, normalizedSymbol, serviceManager.getCookieManager(), serviceManager.getLoginService()),
                 serviceManager.getRegisterService(),
                 serviceManager.getSnpService(false, false),
-                serviceManager.getStudentService(false, false)
+                serviceManager.getStudentService(false, false),
+                serviceManager.urlGenerator
         )
     }
 

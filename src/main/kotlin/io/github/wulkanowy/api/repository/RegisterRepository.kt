@@ -8,6 +8,7 @@ import io.github.wulkanowy.api.register.HomepageResponse
 import io.github.wulkanowy.api.register.Pupil
 import io.github.wulkanowy.api.register.StudentAndParentResponse
 import io.github.wulkanowy.api.service.RegisterService
+import io.github.wulkanowy.api.service.ServiceManager
 import io.github.wulkanowy.api.service.StudentAndParentService
 import io.github.wulkanowy.api.service.StudentService
 import io.reactivex.Observable
@@ -24,7 +25,8 @@ class RegisterRepository(
         private val loginRepo: LoginRepository,
         private val register: RegisterService,
         private val snp: StudentAndParentService,
-        private val student: StudentService
+        private val student: StudentService,
+        private val url: ServiceManager.UrlGenerator
 ) {
 
     fun getPupils(): Single<List<Pupil>> {
@@ -57,7 +59,7 @@ class RegisterRepository(
 
     private fun getStudents(schoolUrl: String): Single<List<StudentAndParentResponse.Pupil>> {
         return if (!useNewStudent) snp.getSchoolInfo(schoolUrl).map { it.students }
-        else student.getSchoolInfo(schoolUrl).map { diary -> diary.data?.distinctBy { it.studentId } }
+        else student.getSchoolInfo(url.generate(ServiceManager.UrlGenerator.Site.STUDENT) + "UczenDziennik.mvc/Get").map { diary -> diary.data?.distinctBy { it.studentId } }
                 .map { diaries ->
                     diaries.map {
                         StudentAndParentResponse.Pupil().apply {

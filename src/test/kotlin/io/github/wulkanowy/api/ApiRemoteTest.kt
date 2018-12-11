@@ -63,7 +63,9 @@ class ApiRemoteTest : BaseTest() {
         pupils.subscribe(pupilsObserver)
         pupilsObserver.assertComplete()
 
-        pupilsObserver.values()[0][0].run {
+        val values = pupilsObserver.values()[0]
+
+        values[0].run {
             assertEquals("Default", symbol)
             assertEquals("jan@fakelog.cf", email)
             assertEquals("Jan Kowalski", studentName)
