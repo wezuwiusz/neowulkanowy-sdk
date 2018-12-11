@@ -10,11 +10,15 @@ import io.github.wulkanowy.api.timetable.TimetableResponse
 import io.reactivex.Single
 import retrofit2.http.Body
 import retrofit2.http.POST
+import retrofit2.http.Url
 
 interface StudentService {
 
     @POST("UczenCache.mvc/Get")
     fun getUserCache()
+
+    @POST
+    fun getSchoolInfo(@Url url: String): Single<ApiResponse<List<Diary>>>
 
     @POST("UczenDziennik.mvc/Get")
     fun getDiaries(): Single<ApiResponse<List<Diary>>>
