@@ -2,7 +2,6 @@ package io.github.wulkanowy.api.service
 
 import io.github.wulkanowy.api.login.ADFSFormResponse
 import io.github.wulkanowy.api.login.ADFSLightFormResponse
-import io.github.wulkanowy.api.login.CertificateResponse
 import io.github.wulkanowy.api.register.HomepageResponse
 import io.reactivex.Single
 import retrofit2.http.*

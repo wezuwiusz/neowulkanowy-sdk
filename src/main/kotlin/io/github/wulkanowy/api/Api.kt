@@ -185,7 +185,7 @@ class Api {
 
     fun getMessageContent(messageId: Int, folderId: Int, read: Boolean = false, id: Int? = null) = messages.getMessage(messageId, folderId, read, id)
 
-    fun getTimetable(startDate: LocalDate, endDate: LocalDate? = null) = snp.getTimetable(startDate, endDate)
+    fun getTimetable(startDate: LocalDate, endDate: LocalDate? = null) = if (useNewStudent) student.getTimetable(startDate, endDate) else snp.getTimetable(startDate, endDate)
 
     fun getRealized(startDate: LocalDate? = null) = snp.getRealized(startDate)
 }

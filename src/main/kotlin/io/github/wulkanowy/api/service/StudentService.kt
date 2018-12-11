@@ -5,6 +5,8 @@ import io.github.wulkanowy.api.grades.GradeRequest
 import io.github.wulkanowy.api.grades.GradesResponse
 import io.github.wulkanowy.api.mobile.Device
 import io.github.wulkanowy.api.register.Diary
+import io.github.wulkanowy.api.timetable.TimetableRequest
+import io.github.wulkanowy.api.timetable.TimetableResponse
 import io.reactivex.Single
 import retrofit2.http.Body
 import retrofit2.http.POST
@@ -39,7 +41,7 @@ interface StudentService {
     fun getHomework()
 
     @POST("PlanZajec.mvc/Get")
-    fun getTimetable()
+    fun getTimetable(@Body timetableRequest: TimetableRequest): Single<ApiResponse<TimetableResponse>>
 
     @POST("LekcjeZrealizowane.mvc/GetPrzedmioty")
     fun getRealizedSubjects()

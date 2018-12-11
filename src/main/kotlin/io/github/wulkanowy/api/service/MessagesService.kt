@@ -1,7 +1,7 @@
 package io.github.wulkanowy.api.service
 
-import io.github.wulkanowy.api.messages.Message
 import io.github.wulkanowy.api.ApiResponse
+import io.github.wulkanowy.api.messages.Message
 import io.github.wulkanowy.api.messages.Recipient
 import io.github.wulkanowy.api.messages.ReportingUnit
 import io.reactivex.Single

@@ -1,5 +1,6 @@
 package io.github.wulkanowy.api.timetable
 
+import com.google.gson.annotations.SerializedName
 import org.jsoup.nodes.Element
 import pl.droidsonroids.jspoon.annotation.Format
 import pl.droidsonroids.jspoon.annotation.Selector
@@ -10,6 +11,18 @@ class TimetableResponse {
     @Selector(".presentData thead th:not(:nth-of-type(1)):not(:nth-of-type(2))", regex = "\\s(.*)")
     @Format("dd.MM.yyyy")
     var days: List<Date> = emptyList()
+
+    @SerializedName("Header")
+    var header: List<Header> = emptyList()
+
+    @SerializedName("Rows")
+    var rows2api: List<List<String>> = emptyList()
+
+    class Header {
+
+        @SerializedName("Text")
+        lateinit var date: String
+    }
 
     @Selector(".presentData tbody tr")
     var rows: List<TimetableRow> = emptyList()
