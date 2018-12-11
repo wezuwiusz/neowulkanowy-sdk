@@ -3,6 +3,7 @@ package io.github.wulkanowy.api.repository
 import io.github.wulkanowy.api.grades.Grade
 import io.github.wulkanowy.api.grades.GradeRequest
 import io.github.wulkanowy.api.grades.getGradeValueWithModifier
+import io.github.wulkanowy.api.grades.isGradeValid
 import io.github.wulkanowy.api.mobile.Device
 import io.github.wulkanowy.api.service.StudentService
 import io.github.wulkanowy.api.timetable.Timetable
@@ -32,6 +33,7 @@ class StudentRepository(private val api: StudentService) {
                         date = privateDate
                         modifier = values.second
                         weight = "$weightValue,00"
+                        weightValue = if (isGradeValid(entry)) weightValue else 0
                         color = if ("0" == color) "000000" else color.toInt().toString(16).toUpperCase()
                     }
                 }

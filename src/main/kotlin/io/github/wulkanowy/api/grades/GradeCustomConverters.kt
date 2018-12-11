@@ -24,10 +24,14 @@ class GradeModifierValueConverter : ElementConverter<Double> {
 class GradeWeightValueConverter : ElementConverter<Int> {
 
     override fun convert(node: Element, selector: Selector): Int {
-        return if (node.parent().select("td")[1].text().substringBefore(" (").matches(validGrade)) {
+        return if (isGradeValid(node.parent().select("td")[1].text().substringBefore(" ("))) {
             node.text().substringBefore(",").toInt()
         } else 0
     }
+}
+
+fun isGradeValid(grade: String): Boolean {
+    return grade.matches(validGrade)
 }
 
 fun getGradeValueWithModifier(grade: String): Pair<Int, Double> {
