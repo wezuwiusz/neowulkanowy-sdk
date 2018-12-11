@@ -35,7 +35,7 @@ class LoginTest : BaseLocalTest() {
 
         val res = adfs.login("jan@fakelog.cf", "jan123").blockingGet()
 
-        assertTrue(res.schools.isNotEmpty())
+        assertTrue(res.oldStudentSchools.isNotEmpty())
     }
 
     @Test
@@ -46,7 +46,7 @@ class LoginTest : BaseLocalTest() {
 
         val res = normal.login("jan@fakelog.cf", "jan123").blockingGet()
 
-        assertTrue(res.schools.isNotEmpty())
+        assertTrue(res.oldStudentSchools.isNotEmpty())
     }
 
     @Test
@@ -57,7 +57,7 @@ class LoginTest : BaseLocalTest() {
 
         val res = normal.login("jan@fakelog.cf", "jan123").blockingGet()
 
-        assertTrue(res.schools.isNotEmpty())
+        assertTrue(res.oldStudentSchools.isNotEmpty())
     }
 
     @Test

@@ -5,5 +5,8 @@ import pl.droidsonroids.jspoon.annotation.Selector
 class HomepageResponse {
 
     @Selector(".panel.linkownia.pracownik.klient a[href*=\"uonetplus-opiekun\"]", attr = "href")
-    var schools: List<String> = emptyList()
+    var oldStudentSchools: List<String> = emptyList()
+
+    @Selector(".panel.linkownia.pracownik.klient a[href*=\"uonetplus-uczen\"]", attr = "href")
+    var studentSchools: List<String> = emptyList()
 }

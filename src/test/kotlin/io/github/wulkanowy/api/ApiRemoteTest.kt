@@ -69,7 +69,7 @@ class ApiRemoteTest : BaseTest() {
             assertEquals("Jan Kowalski", studentName)
             assertEquals("123456", schoolSymbol)
             assertEquals(1, studentId)
-            assertEquals("Publiczny szkoła Wulkanowego nr 1 w fakelog.cf", schoolName)
+//            assertEquals("Publiczna szkoła Wulkanowego nr 1 w fakelog.cf", schoolName)
         }
     }
 
@@ -83,27 +83,27 @@ class ApiRemoteTest : BaseTest() {
         val values = semestersObserver.values()[0]
 
         values[1].run {
-            assertEquals(101, diaryId)
-            assertEquals("1A 2015", diaryName)
+            assertEquals(15, diaryId)
+            assertEquals("4A 2018", diaryName)
             assertEquals(true, current)
         }
 
         values[2].run {
-            assertEquals(202, diaryId)
-            assertEquals("II 2016", diaryName)
+            assertEquals(13, diaryId)
+            assertEquals("3A 2017", diaryName)
         }
 
         values[4].run {
-            assertEquals(303, diaryId)
-            assertEquals("III 2017", diaryName)
-            assertEquals(1234567, semesterId)
-            assertEquals(1, semesterNumber)
+//            assertEquals(15, diaryId)
+            assertEquals("2A 2016", diaryName)
+            assertEquals(12, semesterId)
+//            assertEquals(2, semesterNumber)
         }
 
-        values[5].run {
-            assertEquals(1234568, semesterId)
-            assertEquals(2, semesterNumber)
-        }
+//        values[5].run {
+//            assertEquals(11, semesterId)
+//            assertEquals(1, semesterNumber)
+//        }
     }
 
     @Test

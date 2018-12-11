@@ -19,9 +19,6 @@ import retrofit2.http.*
 
 interface StudentAndParentService {
 
-    @GET("Start/Index/")
-    fun getSchoolInfo(): Single<StudentAndParentResponse>
-
     @GET
     fun getSchoolInfo(@Url url: String): Single<StudentAndParentResponse>
 
