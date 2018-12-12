@@ -36,7 +36,7 @@ class RegisterRepository(
                         if (t is AccountPermissionException) Single.just(HomepageResponse())
                         else Single.error(t)
                     }
-                    .flatMapObservable { if (useNewStudent) Observable.fromIterable(it.studentSchools) else Observable.fromIterable(it.oldStudentSchools) }
+                    .flatMapObservable { Observable.fromIterable(if (useNewStudent) it.studentSchools else it.oldStudentSchools) }
                     .flatMapSingle { schoolUrl ->
                         getLoginType().flatMap { loginType ->
                             getStudents(symbol.first, schoolUrl).map {
@@ -54,7 +54,7 @@ class RegisterRepository(
                             }
                         }
                     }
-        }.toList().map { it.flatten() }
+        }.toList().map { it.flatten().distinctBy { pupil -> pupil.studentId to pupil.schoolSymbol } }
     }
 
     private fun getStudents(symbol: String, schoolUrl: String): Single<List<StudentAndParentResponse.Pupil>> {
