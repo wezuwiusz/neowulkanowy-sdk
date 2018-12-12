@@ -4,6 +4,7 @@ import io.github.wulkanowy.api.exams.Exam
 import io.github.wulkanowy.api.exams.ExamRequest
 import io.github.wulkanowy.api.getGradeShortValue
 import io.github.wulkanowy.api.grades.*
+import io.github.wulkanowy.api.homework.Homework
 import io.github.wulkanowy.api.mobile.Device
 import io.github.wulkanowy.api.service.StudentService
 import io.github.wulkanowy.api.timetable.Timetable
@@ -72,6 +73,25 @@ class StudentRepository(private val api: StudentService) {
                     final = getGradeShortValue(subject.annual)
                 }
             }?.sortedBy { it.name }?.toList()
+        }
+    }
+
+    fun getHomework(startDate: LocalDate, endDate: LocalDate? = null): Single<List<Homework>> {
+        val end = endDate ?: startDate
+        return api.getHomework(ExamRequest(startDate.toDate(), startDate.year)).map { res ->
+            res.data?.map { day ->
+                day.items.map {
+                    val teacherAndDate = it.teacher.split(", ")
+                    it.apply {
+                        date = day.date
+                        entryDate = teacherAndDate.last().toDate("dd.MM.yyyy")
+                        teacher = teacherAndDate.first().split(" [").first()
+                        teacherSymbol = teacherAndDate.first().split(" [").last().removeSuffix("]")
+                    }
+                }
+            }?.flatten()?.filter {
+                it.date.toLocalDate() in startDate..end
+            }?.sortedWith(compareBy({ it.date }, { it.subject }))?.toList()
         }
     }
 

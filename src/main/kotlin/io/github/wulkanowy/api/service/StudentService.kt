@@ -5,8 +5,11 @@ import io.github.wulkanowy.api.exams.ExamRequest
 import io.github.wulkanowy.api.exams.ExamResponse
 import io.github.wulkanowy.api.grades.GradeRequest
 import io.github.wulkanowy.api.grades.GradesResponse
+import io.github.wulkanowy.api.homework.Homework
+import io.github.wulkanowy.api.homework.HomeworkResponse
 import io.github.wulkanowy.api.mobile.Device
 import io.github.wulkanowy.api.register.Diary
+import io.github.wulkanowy.api.register.HomepageResponse
 import io.github.wulkanowy.api.timetable.TimetableRequest
 import io.github.wulkanowy.api.timetable.TimetableResponse
 import io.reactivex.Single
@@ -44,7 +47,7 @@ interface StudentService {
     fun getExams(@Body examRequest: ExamRequest): Single<ApiResponse<List<ExamResponse>>>
 
     @POST("ZadaniaDomowe.mvc/Get")
-    fun getHomework()
+    fun getHomework(@Body homeworkRequest: ExamRequest): Single<ApiResponse<List<HomeworkResponse>>>
 
     @POST("PlanZajec.mvc/Get")
     fun getTimetable(@Body timetableRequest: TimetableRequest): Single<ApiResponse<TimetableResponse>>
