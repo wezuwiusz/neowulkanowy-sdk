@@ -155,7 +155,7 @@ class Api {
 
     fun getHomework(startDate: LocalDate, endDate: LocalDate? = null) = if (useNewStudent) student.getHomework(startDate, endDate) else snp.getHomework(startDate, endDate)
 
-    fun getNotes() = snp.getNotes()
+    fun getNotes() = if (useNewStudent) student.getNotes() else snp.getNotes()
 
     fun getRegisteredDevices() = if (useNewStudent) student.getRegisteredDevices() else snp.getRegisteredDevices()
 

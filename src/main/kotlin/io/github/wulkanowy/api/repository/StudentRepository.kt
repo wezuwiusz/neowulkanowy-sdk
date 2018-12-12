@@ -6,6 +6,7 @@ import io.github.wulkanowy.api.getGradeShortValue
 import io.github.wulkanowy.api.grades.*
 import io.github.wulkanowy.api.homework.Homework
 import io.github.wulkanowy.api.mobile.Device
+import io.github.wulkanowy.api.notes.Note
 import io.github.wulkanowy.api.service.StudentService
 import io.github.wulkanowy.api.timetable.Timetable
 import io.github.wulkanowy.api.timetable.TimetableParser
@@ -92,6 +93,17 @@ class StudentRepository(private val api: StudentService) {
             }?.flatten()?.filter {
                 it.date.toLocalDate() in startDate..end
             }?.sortedWith(compareBy({ it.date }, { it.subject }))?.toList()
+        }
+    }
+
+    fun getNotes(): Single<List<Note>> {
+        return api.getNotes().map { res ->
+            res.data?.notes?.map {
+                it.apply {
+                    teacherSymbol = teacher.split(" [").last().removeSuffix("]")
+                    teacher = teacher.split(" [").first()
+                }
+            }
         }
     }
 

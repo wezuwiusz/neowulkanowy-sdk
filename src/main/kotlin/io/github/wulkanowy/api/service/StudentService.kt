@@ -8,6 +8,7 @@ import io.github.wulkanowy.api.grades.GradesResponse
 import io.github.wulkanowy.api.homework.Homework
 import io.github.wulkanowy.api.homework.HomeworkResponse
 import io.github.wulkanowy.api.mobile.Device
+import io.github.wulkanowy.api.notes.NotesResponse
 import io.github.wulkanowy.api.register.Diary
 import io.github.wulkanowy.api.register.HomepageResponse
 import io.github.wulkanowy.api.timetable.TimetableRequest
@@ -59,7 +60,7 @@ interface StudentService {
     fun getRealizedLessons()
 
     @POST("UwagiIOsiagniecia.mvc/Get")
-    fun getNotes()
+    fun getNotes(): Single<ApiResponse<NotesResponse>>
 
     @POST("ZarejestrowaneUrzadzenia.mvc/Get")
     fun getRegisteredDevices(): Single<ApiResponse<List<Device>>>
