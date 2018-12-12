@@ -47,7 +47,8 @@ class RegisterRepository(
                                             studentId = pupil.id,
                                             studentName = pupil.name,
                                             schoolSymbol = getExtractedSchoolSymbolFromUrl(schoolUrl),
-                                            schoolName = "?",
+                                            description = pupil.description,
+                                            schoolName = pupil.description,
                                             loginType = loginType
                                     )
                                 }
@@ -60,13 +61,20 @@ class RegisterRepository(
     private fun getStudents(symbol: String, schoolUrl: String): Single<List<StudentAndParentResponse.Pupil>> {
         url.schoolId = getExtractedSchoolSymbolFromUrl(schoolUrl)
         url.symbol = symbol
-        return if (!useNewStudent) snp.getSchoolInfo(schoolUrl).map { it.students }
-        else student.getSchoolInfo(url.generate(ServiceManager.UrlGenerator.Site.STUDENT) + "UczenDziennik.mvc/Get").map { diary -> diary.data?.distinctBy { it.studentId } }
+        return if (!useNewStudent) snp.getSchoolInfo(schoolUrl).map { res ->
+            res.students.map { pupil ->
+                pupil.apply {
+                    description = res.schoolName
+                }
+            }
+        } else student.getSchoolInfo(url.generate(ServiceManager.UrlGenerator.Site.STUDENT) + "UczenDziennik.mvc/Get")
+                .map { diary -> diary.data?.distinctBy { it.studentId } }
                 .map { diaries ->
                     diaries.map {
                         StudentAndParentResponse.Pupil().apply {
                             id = it.studentId
                             name = "${it.studentName} ${it.studentSurname}"
+                            description = it.symbol + " " + (it.year - it.level + 1)
                         }
                     }
                 }

@@ -8,6 +8,8 @@ data class Pupil(
         val studentId: Int,
         val studentName: String,
         val schoolSymbol: String,
+        @Deprecated("use description val")
         val schoolName: String,
+        val description: String,
         val loginType: Api.LoginType
 )

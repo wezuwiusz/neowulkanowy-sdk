@@ -22,6 +22,8 @@ class StudentAndParentResponse {
 
         @Selector("option")
         lateinit var name: String
+
+        lateinit var description: String
     }
 
     class Diary {
