@@ -28,7 +28,7 @@ class GradesTest : BaseLocalTest() {
             assertEquals("PIERWSZA POMOC I RESUSCYTACJA", description)
             assertEquals("5,00", weight)
             assertEquals(5, weightValue)
-            assertEquals(getDate(2017, 3, 31), date)
+            assertEquals(getDate(2018, 12, 12), date)
             assertEquals("Weronika Ratajczak", teacher)
         }
     }
@@ -46,7 +46,7 @@ class GradesTest : BaseLocalTest() {
             assertEquals("Odpowiedź", description)
             assertEquals("3,00", weight)
             assertEquals(3, weightValue)
-            assertEquals(getDate(2017, 6, 25), date)
+            assertEquals(getDate(2018, 12, 5), date)
             assertEquals("Jakub Michalak", teacher)
         }
     }
@@ -64,7 +64,7 @@ class GradesTest : BaseLocalTest() {
             assertEquals("Writing", description)
             assertEquals("3,00", weight)
             assertEquals(3, weightValue)
-            assertEquals(getDate(2017, 6, 2), date)
+            assertEquals(getDate(2018, 11, 28), date)
             assertEquals("Oliwia Woźniak", teacher)
         }
     }
@@ -82,7 +82,7 @@ class GradesTest : BaseLocalTest() {
             assertEquals("Kordian", description)
             assertEquals("5,00", weight)
             assertEquals(5, weightValue)
-            assertEquals(getDate(2017, 2, 6), date)
+            assertEquals(getDate(2018, 11, 21), date)
             assertEquals("Amelia Stępień", teacher)
         }
     }
@@ -100,7 +100,7 @@ class GradesTest : BaseLocalTest() {
             assertEquals("", description)
             assertEquals("8,00", weight)
             assertEquals(8, weightValue)
-            assertEquals(getDate(2017, 4, 2), date)
+            assertEquals(getDate(2018, 11, 14), date)
             assertEquals("Klaudia Dziedzic", teacher)
         }
     }
@@ -118,7 +118,7 @@ class GradesTest : BaseLocalTest() {
             assertEquals("Kordian", description)
             assertEquals("5,00", weight)
             assertEquals(5, weightValue)
-            assertEquals(getDate(2017, 5, 11), date)
+            assertEquals(getDate(2018,  11, 7), date)
             assertEquals("Amelia Stępień", teacher)
         }
     }
@@ -136,7 +136,7 @@ class GradesTest : BaseLocalTest() {
             assertEquals("Dzień Kobiet w naszej klasie", description)
             assertEquals("1,00", weight)
             assertEquals(1, weightValue)
-            assertEquals(getDate(2017, 3, 21), date)
+            assertEquals(getDate(2018, 10, 31), date)
             assertEquals("Patryk Maciejewski", teacher)
         }
     }
@@ -154,7 +154,7 @@ class GradesTest : BaseLocalTest() {
             assertEquals("matura próbna", description)
             assertEquals("0,00", weight)
             assertEquals(0, weightValue)
-            assertEquals(getDate(2017, 6, 11), date)
+            assertEquals(getDate(2018, 10, 24), date)
             assertEquals("Jadwiga Czerwieńska", teacher)
         }
     }

@@ -36,7 +36,7 @@ class StudentRepository(private val api: StudentService) {
                         weightValue = if (isGradeValid(entry)) weightValue else 0
                         color = if ("0" == color) "000000" else color.toInt().toString(16).toUpperCase()
                     }
-                }
+                }.sortedByDescending { it.date }
             }?.flatten()
         }
     }

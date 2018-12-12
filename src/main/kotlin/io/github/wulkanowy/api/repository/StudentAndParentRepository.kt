@@ -91,7 +91,7 @@ class StudentAndParentRepository(private val api: StudentAndParentService) {
                     if (entry == comment) comment = ""
                     if (description == symbol) description = ""
                 }
-            }.toList()
+            }.toList().sortedByDescending { it.date }
         }
     }
 
