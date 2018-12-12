@@ -1,5 +1,6 @@
 package io.github.wulkanowy.api.attendance
 
+import com.google.gson.annotations.SerializedName
 import pl.droidsonroids.jspoon.annotation.Format
 import pl.droidsonroids.jspoon.annotation.Selector
 import java.util.*
@@ -21,6 +22,9 @@ class AttendanceResponse {
         @Selector("td:not(:first-of-type)")
         var lessons: List<Attendance> = emptyList()
     }
+
+    @SerializedName("Frekwencje")
+    var lessons: List<Attendance> = emptyList()
 
     @Selector("#idPrzedmiot option")
     var subjects: List<Subject> = emptyList()

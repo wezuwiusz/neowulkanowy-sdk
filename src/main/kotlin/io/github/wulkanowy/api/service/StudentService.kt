@@ -1,6 +1,7 @@
 package io.github.wulkanowy.api.service
 
 import io.github.wulkanowy.api.ApiResponse
+import io.github.wulkanowy.api.attendance.*
 import io.github.wulkanowy.api.exams.ExamRequest
 import io.github.wulkanowy.api.exams.ExamResponse
 import io.github.wulkanowy.api.grades.GradeRequest
@@ -11,6 +12,7 @@ import io.github.wulkanowy.api.mobile.Device
 import io.github.wulkanowy.api.notes.NotesResponse
 import io.github.wulkanowy.api.register.Diary
 import io.github.wulkanowy.api.register.HomepageResponse
+import io.github.wulkanowy.api.timetable.CacheResponse
 import io.github.wulkanowy.api.timetable.TimetableRequest
 import io.github.wulkanowy.api.timetable.TimetableResponse
 import io.reactivex.Single
@@ -21,7 +23,7 @@ import retrofit2.http.Url
 interface StudentService {
 
     @POST("UczenCache.mvc/Get")
-    fun getUserCache()
+    fun getUserCache(): Single<ApiResponse<CacheResponse>>
 
     @POST
     fun getSchoolInfo(@Url url: String): Single<ApiResponse<List<Diary>>>
@@ -33,13 +35,13 @@ interface StudentService {
     fun getGrades(@Body gradeRequest: GradeRequest): Single<ApiResponse<GradesResponse>>
 
     @POST("Frekwencja.mvc/Get")
-    fun getAttendance()
+    fun getAttendance(@Body attendanceRequest: AttendanceRequest): Single<ApiResponse<AttendanceResponse>>
 
     @POST("FrekwencjaStatystyki.mvc/Get")
-    fun getAttendanceStatistics()
+    fun getAttendanceStatistics(@Body attendanceSummaryRequest: AttendanceSummaryRequest): Single<ApiResponse<AttendanceSummaryResponse>>
 
     @POST("FrekwencjaStatystykiPrzedmioty.mvc/Get")
-    fun getAttendanceSubjects()
+    fun getAttendanceSubjects(): Single<ApiResponse<List<Subject>>>
 
     @POST("EgzaminyZewnetrzne.mvc/Get")
     fun getExternalExaminations()

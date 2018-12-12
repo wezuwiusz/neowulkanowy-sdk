@@ -1,5 +1,6 @@
 package io.github.wulkanowy.api.repository
 
+import io.github.wulkanowy.api.attendance.*
 import io.github.wulkanowy.api.exams.Exam
 import io.github.wulkanowy.api.exams.ExamRequest
 import io.github.wulkanowy.api.getGradeShortValue
@@ -15,11 +16,60 @@ import io.github.wulkanowy.api.timetable.TimetableResponse
 import io.github.wulkanowy.api.toDate
 import io.github.wulkanowy.api.toFormat
 import io.github.wulkanowy.api.toLocalDate
+import io.reactivex.Observable
 import io.reactivex.Single
 import org.jsoup.Jsoup
 import org.threeten.bp.LocalDate
+import org.threeten.bp.Month
 
 class StudentRepository(private val api: StudentService) {
+
+//    private val times by lazy { api.getUserCache().map { it.data?.times } }
+
+    fun getAttendance(startDate: LocalDate, endDate: LocalDate? = null): Single<List<Attendance>> {
+        val end = endDate ?: startDate.plusDays(4)
+        return api.getAttendance(AttendanceRequest(startDate.toDate())).map { it.data?.lessons }
+                .flatMapObservable { Observable.fromIterable(it) }
+                .map { a ->
+//                .flatMap { a ->
+//                    times.flatMapObservable { times ->
+//                        Observable.fromIterable(times.filter { time -> time.id == a.categoryId })
+//                    }.map {
+                        a.apply {
+                            presence = a.categoryId == Attendance.Category.PRESENCE.id || a.categoryId == Attendance.Category.ABSENCE_FOR_SCHOOL_REASONS.id
+                            absence = a.categoryId == Attendance.Category.ABSENCE_UNEXCUSED.id || a.categoryId == Attendance.Category.ABSENCE_EXCUSED.id
+                            lateness = a.categoryId == Attendance.Category.EXCUSED_LATENESS.id || a.categoryId == Attendance.Category.UNEXCUSED_LATENESS.id
+                            excused = a.categoryId == Attendance.Category.ABSENCE_EXCUSED.id || a.categoryId == Attendance.Category.EXCUSED_LATENESS.id
+                            exemption = a.categoryId == Attendance.Category.EXEMPTION.id
+                            name = Attendance.Category.values().single { category -> category.id == categoryId }.title
+                        }
+//                    }
+                }.filter {
+                    it.date.toLocalDate() >= startDate && it.date.toLocalDate() <= end
+                }.toList().map { it.sortedWith(compareBy({ it.date }, { it.number })) }
+
+    }
+
+    fun getAttendanceSummary(subjectId: Int?): Single<List<AttendanceSummary>> {
+        return api.getAttendanceStatistics(AttendanceSummaryRequest(subjectId)).map { it.data?.items }.map {
+            listOf(
+                    AttendanceSummary(Month.SEPTEMBER, it[0].september, it[1].september, it[2].september, it[3].september, it[4].september, it[5].september, it[6].september),
+                    AttendanceSummary(Month.OCTOBER, it[0].october, it[1].october, it[2].october, it[3].october, it[4].october, it[5].october, it[6].october),
+                    AttendanceSummary(Month.NOVEMBER, it[0].november, it[1].november, it[2].november, it[3].november, it[4].november, it[5].november, it[6].november),
+                    AttendanceSummary(Month.DECEMBER, it[0].december, it[1].december, it[2].december, it[3].december, it[4].december, it[5].december, it[6].december),
+                    AttendanceSummary(Month.JANUARY, it[0].january, it[1].january, it[2].january, it[3].january, it[4].january, it[5].january, it[6].january),
+                    AttendanceSummary(Month.FEBRUARY, it[0].february, it[1].february, it[2].february, it[3].february, it[4].february, it[5].february, it[6].february),
+                    AttendanceSummary(Month.MARCH, it[0].march, it[1].march, it[2].march, it[3].march, it[4].march, it[5].march, it[6].march),
+                    AttendanceSummary(Month.APRIL, it[0].april, it[1].april, it[2].april, it[3].april, it[4].april, it[5].april, it[6].april),
+                    AttendanceSummary(Month.MAY, it[0].may, it[1].may, it[2].may, it[3].may, it[4].may, it[5].may, it[6].may),
+                    AttendanceSummary(Month.JUNE, it[0].june, it[1].june, it[2].june, it[3].june, it[4].june, it[5].june, it[6].june)
+            ).filterNot { it.absence == 0 && it.absenceExcused == 0 && it.absenceForSchoolReasons == 0 && it.exemption == 0 && it.lateness == 0 && it.latenessExcused == 0 && it.presence == 0 }
+        }
+    }
+
+    fun getSubjects(): Single<List<Subject>> {
+        return api.getAttendanceSubjects().map { it.data }
+    }
 
     fun getExams(startDate: LocalDate, endDate: LocalDate? = null): Single<List<Exam>> {
         val end = endDate ?: startDate.plusDays(4)

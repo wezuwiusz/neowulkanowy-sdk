@@ -1,14 +1,18 @@
 package io.github.wulkanowy.api.attendance
 
+import com.google.gson.annotations.SerializedName
 import pl.droidsonroids.jspoon.annotation.Selector
 import java.util.*
 
 class Attendance {
 
+    @SerializedName("IdPoraLekcji")
     var number: Int = 0
 
+    @SerializedName("Data")
     lateinit var date: Date
 
+    @SerializedName("PrzedmiotNazwa")
     @Selector("span", defValue = "null")
     lateinit var subject: String
 
@@ -17,6 +21,9 @@ class Attendance {
 
     @Selector("div", attr = "class")
     lateinit var type: String // do not use
+
+    @SerializedName("IdKategoria")
+    var categoryId: Int = -1
 
     var presence: Boolean = false
 
@@ -38,5 +45,15 @@ class Attendance {
         const val UNEXCUSED_LATENESS = "x-sp-nieusprawiedliwione"
         const val EXCUSED_LATENESS = "x-sp-spr"
         const val EXEMPTION = "x-sp-zwolnienie"
+    }
+
+    enum class Category(val id: Int, val title: String) {
+        PRESENCE(1, "Obecność"),
+        ABSENCE_UNEXCUSED(2, "Nieobecność nieusprawiedliwiona"),
+        ABSENCE_EXCUSED(3, "Nieobecność usprawiedliwiona"),
+        UNEXCUSED_LATENESS(4, "Spóźnienie nieusprawiedliwione"),
+        EXCUSED_LATENESS(5, "Spóźnienie usprawiedliwione"),
+        ABSENCE_FOR_SCHOOL_REASONS(6, "Nieobecność z przyczyn szkolnych"),
+        EXEMPTION(7, "Zwolnienie")
     }
 }

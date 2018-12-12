@@ -139,11 +139,11 @@ class Api {
 
     fun getSemesters() = if (useNewStudent) studentStart.getSemesters() else snpStart.getSemesters()
 
-    fun getAttendance(startDate: LocalDate, endDate: LocalDate? = null) = snp.getAttendance(startDate, endDate)
+    fun getAttendance(startDate: LocalDate, endDate: LocalDate? = null) = if (useNewStudent) student.getAttendance(startDate, endDate) else snp.getAttendance(startDate, endDate)
 
-    fun getAttendanceSummary(subjectId: Int? = null) = snp.getAttendanceSummary(subjectId)
+    fun getAttendanceSummary(subjectId: Int? = -1) = if (useNewStudent) student.getAttendanceSummary(subjectId) else snp.getAttendanceSummary(subjectId)
 
-    fun getSubjects() = snp.getSubjects()
+    fun getSubjects() = if (useNewStudent) student.getSubjects() else snp.getSubjects()
 
     fun getExams(startDate: LocalDate, endDate: LocalDate? = null) = if (useNewStudent) student.getExams(startDate, endDate) else snp.getExams(startDate, endDate)
 

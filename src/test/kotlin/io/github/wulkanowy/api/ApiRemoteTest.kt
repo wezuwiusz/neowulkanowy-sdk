@@ -71,7 +71,7 @@ class ApiRemoteTest : BaseTest() {
             assertEquals("Jan Kowalski", studentName)
             assertEquals("123456", schoolSymbol)
             assertEquals(1, studentId)
-//            assertEquals("Publiczna szkoła Wulkanowego nr 1 w fakelog.cf", schoolName)
+            assertEquals("Publiczna szkoła Wulkanowego nr 1 w fakelog.cf", schoolName)
         }
     }
 
@@ -188,7 +188,9 @@ class ApiRemoteTest : BaseTest() {
         exams.subscribe(examsObserver)
         examsObserver.assertComplete()
 
-        examsObserver.values()[0][0].run {
+        val values = examsObserver.values()[0]
+
+        values[0].run {
             assertEquals(getDate(2018, 5, 7), date)
             assertEquals(getDate(1970, 1, 1), entryDate)
             assertEquals("Matematyka", subject)
@@ -202,12 +204,14 @@ class ApiRemoteTest : BaseTest() {
 
     @Test
     fun homeworkTest() {
-        val homework = api.getHomework(getLocalDate(2017, 10, 24))
+        val homework = api.getHomework(getLocalDate(2018, 9, 11))
         val homeworkObserver = TestObserver<List<Homework>>()
         homework.subscribe(homeworkObserver)
         homeworkObserver.assertComplete()
 
-        homeworkObserver.values()[0][1].run {
+        val values = homeworkObserver.values()[0]
+
+        values[1].run {
             assertEquals(getDate(2017, 10, 24), date)
             assertEquals(getDate(2017, 10, 18), entryDate)
             assertEquals("Metodologia programowania", subject)
@@ -224,7 +228,9 @@ class ApiRemoteTest : BaseTest() {
         notes.subscribe(notesObserver)
         notesObserver.assertComplete()
 
-        notesObserver.values()[0][0].run {
+        val values = notesObserver.values()[0]
+
+        values[0].run {
             assertEquals(getDate(2018, 1, 16), date)
             assertEquals("Lech Wałęsa", teacher)
             assertEquals("", teacherSymbol)
