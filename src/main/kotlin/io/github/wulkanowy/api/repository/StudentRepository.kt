@@ -1,5 +1,7 @@
 package io.github.wulkanowy.api.repository
 
+import io.github.wulkanowy.api.exams.Exam
+import io.github.wulkanowy.api.exams.ExamRequest
 import io.github.wulkanowy.api.getGradeShortValue
 import io.github.wulkanowy.api.grades.*
 import io.github.wulkanowy.api.mobile.Device
@@ -16,6 +18,25 @@ import org.jsoup.Jsoup
 import org.threeten.bp.LocalDate
 
 class StudentRepository(private val api: StudentService) {
+
+    fun getExams(startDate: LocalDate, endDate: LocalDate? = null): Single<List<Exam>> {
+        return api.getExams(ExamRequest(startDate.toDate(), startDate.year)).map { res ->
+            res.data?.map { weeks ->
+                weeks.weeks.map { day ->
+                    day.exams.map { exam ->
+                        exam.apply {
+                            group = subject.split("|").last()
+                            if (group.contains(" ")) group = ""
+                            date = day.date
+                            type = if ("2" == type) "Sprawdzian" else "Kartkówka"
+                            teacherSymbol = teacher.split(" [").last().removeSuffix("]")
+                            teacher = teacher.split(" [").first()
+                        }
+                    }
+                }.flatten()
+            }?.flatten()
+        }
+    }
 
     fun getGrades(semesterId: Int?): Single<List<Grade>> {
         return api.getGrades(GradeRequest(semesterId)).map { res ->

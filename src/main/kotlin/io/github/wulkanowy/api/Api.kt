@@ -145,7 +145,7 @@ class Api {
 
     fun getSubjects() = snp.getSubjects()
 
-    fun getExams(startDate: LocalDate, endDate: LocalDate? = null) = snp.getExams(startDate, endDate)
+    fun getExams(startDate: LocalDate, endDate: LocalDate? = null) = if (useNewStudent) student.getExams(startDate, endDate) else snp.getExams(startDate, endDate)
 
     fun getGrades(semesterId: Int? = null) = if (useNewStudent) student.getGrades(semesterId) else snp.getGrades(semesterId)
 

@@ -1,6 +1,8 @@
 package io.github.wulkanowy.api.service
 
 import io.github.wulkanowy.api.ApiResponse
+import io.github.wulkanowy.api.exams.ExamRequest
+import io.github.wulkanowy.api.exams.ExamResponse
 import io.github.wulkanowy.api.grades.GradeRequest
 import io.github.wulkanowy.api.grades.GradesResponse
 import io.github.wulkanowy.api.mobile.Device
@@ -39,7 +41,7 @@ interface StudentService {
     fun getExternalExaminations()
 
     @POST("Sprawdziany.mvc/Get")
-    fun getExams()
+    fun getExams(@Body examRequest: ExamRequest): Single<ApiResponse<List<ExamResponse>>>
 
     @POST("ZadaniaDomowe.mvc/Get")
     fun getHomework()
