@@ -48,6 +48,8 @@ class Attendance {
     }
 
     enum class Category(val id: Int, val title: String) {
+        ALL(-1, "Wszystkie"),
+        UNKNOWN(0, "Nieznany"),
         PRESENCE(1, "Obecność"),
         ABSENCE_UNEXCUSED(2, "Nieobecność nieusprawiedliwiona"),
         ABSENCE_EXCUSED(3, "Nieobecność usprawiedliwiona"),
