@@ -19,7 +19,7 @@ fun LocalDate.toFormat(format: String): String = this.format(DateTimeFormatter.o
 
 fun LocalDate.getLastMonday(): LocalDate = this.with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY))
 
-fun getGradeShortValue(value: String): String {
+fun getGradeShortValue(value: String?): String {
     return when (value) {
         "celujący" -> "6"
         "bardzo dobry" -> "5"
@@ -27,6 +27,6 @@ fun getGradeShortValue(value: String): String {
         "dostateczny" -> "3"
         "dopuszczający" -> "2"
         "niedostateczny" -> "1"
-        else -> value
+        else -> value ?: ""
     }
 }

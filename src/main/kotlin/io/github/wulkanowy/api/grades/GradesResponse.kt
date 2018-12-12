@@ -5,12 +5,6 @@ import pl.droidsonroids.jspoon.annotation.Selector
 
 class GradesResponse {
 
-    @Selector("#okresyKlasyfikacyjneDropDownList option[selected]", attr = "value")
-    var semesterId: Int = 0
-
-    @Selector("#okresyKlasyfikacyjneDropDownList option[selected]")
-    var semesterNumber: Int = 0
-
     @Selector(".ocenySzczegoly-table tbody tr:has(td:nth-of-type(2):not(:contains(Brak ocen)))")
     var grades: List<Grade> = emptyList()
 
@@ -25,5 +19,10 @@ class GradesResponse {
         @SerializedName("OcenyCzastkowe")
         val grades: List<Grade> = emptyList()
 
+        @SerializedName("ProponowanaOcenaRoczna")
+        var proposed: String? = ""
+
+        @SerializedName("OcenaRoczna")
+        var annual: String? = ""
     }
 }

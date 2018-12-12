@@ -1,9 +1,7 @@
 package io.github.wulkanowy.api.repository
 
-import io.github.wulkanowy.api.grades.Grade
-import io.github.wulkanowy.api.grades.GradeRequest
-import io.github.wulkanowy.api.grades.getGradeValueWithModifier
-import io.github.wulkanowy.api.grades.isGradeValid
+import io.github.wulkanowy.api.getGradeShortValue
+import io.github.wulkanowy.api.grades.*
 import io.github.wulkanowy.api.mobile.Device
 import io.github.wulkanowy.api.service.StudentService
 import io.github.wulkanowy.api.timetable.Timetable
@@ -38,6 +36,18 @@ class StudentRepository(private val api: StudentService) {
                     }
                 }.sortedByDescending { it.date }
             }?.flatten()
+        }
+    }
+
+    fun getGradesSummary(semesterId: Int?): Single<List<GradeSummary>> {
+        return api.getGrades(GradeRequest(semesterId)).map { res ->
+            res.data?.gradesWithSubjects?.map { subject ->
+                GradeSummary().apply {
+                    name = subject.name
+                    predicted = getGradeShortValue(subject.proposed)
+                    final = getGradeShortValue(subject.annual)
+                }
+            }?.sortedBy { it.name }?.toList()
         }
     }
 
