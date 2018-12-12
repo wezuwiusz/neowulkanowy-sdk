@@ -20,6 +20,7 @@ import org.threeten.bp.LocalDate
 class StudentRepository(private val api: StudentService) {
 
     fun getExams(startDate: LocalDate, endDate: LocalDate? = null): Single<List<Exam>> {
+        val end = endDate ?: startDate.plusDays(4)
         return api.getExams(ExamRequest(startDate.toDate(), startDate.year)).map { res ->
             res.data?.map { weeks ->
                 weeks.weeks.map { day ->
@@ -34,7 +35,9 @@ class StudentRepository(private val api: StudentService) {
                         }
                     }
                 }.flatten()
-            }?.flatten()
+            }?.flatten()?.filter {
+                it.date.toLocalDate() >= startDate && it.date.toLocalDate() <= end
+            }?.sortedBy { it.date }?.toList()
         }
     }
 
