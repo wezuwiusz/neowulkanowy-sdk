@@ -30,7 +30,7 @@ class Grade {
 
     @SerializedName("KodKolumny")
     @Selector("td", index = 2, regex = "^(.+?),")
-    lateinit var symbol: String
+    var symbol: String? = ""
 
     @SerializedName("NazwaKolumny")
     @Selector("td", index = 2, regex = "[^,]+, (.+)")
