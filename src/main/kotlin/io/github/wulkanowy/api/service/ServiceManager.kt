@@ -124,8 +124,8 @@ class ServiceManager(
                 .apply {
                     interceptors.forEach {
                         if (it.first is ErrorInterceptor || it.first is NotLoggedInErrorInterceptor) {
-                            if (errorInterceptor) addInterceptor(it.first)
-                            if (loginInterceptor) addInterceptor(it.first)
+                            if (it.first is NotLoggedInErrorInterceptor && loginInterceptor) addInterceptor(it.first)
+                            if (it.first is ErrorInterceptor && errorInterceptor) addInterceptor(it.first)
                         } else {
                             if (it.second) addNetworkInterceptor(it.first)
                             else addInterceptor(it.first)
