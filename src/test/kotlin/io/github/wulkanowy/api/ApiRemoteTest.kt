@@ -71,7 +71,7 @@ class ApiRemoteTest : BaseTest() {
             assertEquals("Jan Kowalski", studentName)
             assertEquals("123456", schoolSymbol)
             assertEquals(1, studentId)
-            assertEquals("Publiczna szkoła Wulkanowego nr 1 w fakelog.cf", schoolName)
+            assertEquals("Publiczna szkoła Wulkanowego nr 1 w fakelog.cf", description)
         }
     }
 
@@ -212,7 +212,7 @@ class ApiRemoteTest : BaseTest() {
         val values = homeworkObserver.values()[0]
 
         values[1].run {
-            assertEquals(getDate(2017, 10, 24), date)
+            assertEquals(getDate(2018, 9, 11), date)
             assertEquals(getDate(2017, 10, 18), entryDate)
             assertEquals("Metodologia programowania", subject)
             assertEquals("Wszystkie instrukcje warunkowe, pętle (budowa, zasada działania, schemat blokowy)", content)
@@ -248,7 +248,7 @@ class ApiRemoteTest : BaseTest() {
 
         val values = gradesObserver.values()[0]
 
-        values[0].run {
+        values[5].run {
             assertEquals("Historia", subject)
             assertEquals("1", entry)
             assertEquals("000000", color)
@@ -260,7 +260,7 @@ class ApiRemoteTest : BaseTest() {
             assertEquals("Janusz Tracz", teacher)
         }
 
-        values[5].run {
+        values[0].run {
             assertEquals("Bież", symbol)
             assertEquals("", description)
         }
