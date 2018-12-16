@@ -2,10 +2,18 @@ plugins {
     id 'java'
     id 'org.jetbrains.kotlin.jvm' version '1.3.10'
     id 'jacoco'
+    id 'com.jfrog.bintray' version '1.8.4'
+    id 'com.github.dcendents.android-maven' version '2.1'
+}
+
+ext {
+    PUBLISH_VERSION = '0.6.0'
+    SITE_URL = 'https://github.com/wulkanowy/api'
+    GIT_URL = 'https://github.com/wulkanowy/api.git'
 }
 
 group 'io.github.wulkanowy'
-version '0-1.0-SNAPSHOT'
+version PUBLISH_VERSION
 
 sourceCompatibility = 1.8
 
@@ -51,6 +59,58 @@ compileTestKotlin {
 jacocoTestReport {
     reports {
         xml.enabled true
+    }
+}
+
+bintray {
+    user = System.getenv('BINTRAY_USER')
+    key = System.getenv('BINTRAY_KEY')
+    configurations = ['archives']
+    pkg {
+        repo = 'wulkanowy'
+        name = 'api'
+        userOrg = 'wulkanowy'
+        licenses = ['Apache-2.0']
+        vcsUrl = GIT_URL
+        labels = ['aar', 'wulkanowy', 'api']
+        publicDownloadNumbers = true
+        publish = true
+
+        version {
+            name = PUBLISH_VERSION
+            vcsTag = PUBLISH_VERSION
+            released  = new Date()
+        }
+    }
+}
+
+install {
+    repositories.mavenInstaller {
+        pom {
+            project {
+                packaging 'aar'
+                name 'Bintray publish Gradle aar'
+                url SITE_URL
+                licenses {
+                    license {
+                        name 'The Apache Software License, Version 2.0'
+                        url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                    }
+                }
+                developers {
+                    developer {
+                        id 'mklkj'
+                        name 'Mikołaj Pich'
+                        email 'm.pich@outlook.com'
+                    }
+                }
+                scm {
+                    connection GIT_URL
+                    developerConnection GIT_URL
+                    url SITE_URL
+                }
+            }
+        }
     }
 }
 
