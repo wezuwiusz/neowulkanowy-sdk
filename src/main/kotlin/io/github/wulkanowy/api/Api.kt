@@ -1,7 +1,5 @@
 package io.github.wulkanowy.api
 
-import io.github.wulkanowy.api.interceptor.ErrorInterceptor
-import io.github.wulkanowy.api.interceptor.NotLoggedInErrorInterceptor
 import io.github.wulkanowy.api.messages.Folder
 import io.github.wulkanowy.api.messages.Folder.*
 import io.github.wulkanowy.api.messages.Message
@@ -87,14 +85,10 @@ class Api {
         ADFSLight
     }
 
-    private val interceptors: HashMap<Interceptor, Boolean> = hashMapOf(
-            ErrorInterceptor() to false,
-            NotLoggedInErrorInterceptor(loginType) to false,
-            HttpLoggingInterceptor().setLevel(logLevel) to true
-    )
+    private val appInterceptors: MutableMap<Int, Pair<Interceptor, Boolean>> = mutableMapOf()
 
-    fun setInterceptor(interceptor: Interceptor, network: Boolean = false) {
-        interceptors[interceptor] = network
+    fun setInterceptor(interceptor: Interceptor, network: Boolean = false, index: Int = -1) {
+        appInterceptors[index] = Pair(interceptor, network)
     }
 
     private val schema by resettableLazy(changeManager) { "http" + if (ssl) "s" else "" }
@@ -102,9 +96,9 @@ class Api {
     private val normalizedSymbol by resettableLazy(changeManager) { if (symbol.isBlank()) "Default" else symbol }
 
     private val serviceManager by resettableLazy(changeManager) {
-        ServiceManager(loginType, schema, host, normalizedSymbol, email, password, schoolSymbol, studentId, diaryId).apply {
-            interceptors.forEach {
-                setInterceptor(it.key, it.value)
+        ServiceManager(logLevel, loginType, schema, host, normalizedSymbol, email, password, schoolSymbol, studentId, diaryId).apply {
+            appInterceptors.forEach {
+                setInterceptor(it.value.first, it.value.second, it.key)
             }
         }
     }

@@ -21,7 +21,7 @@ import java.net.URL
 
 class ServiceManagerTest : BaseTest() {
 
-    private lateinit var server: MockWebServer
+    lateinit var server: MockWebServer
 
     @Before
     fun setUp() {
@@ -35,12 +35,36 @@ class ServiceManagerTest : BaseTest() {
 
     @Test
     fun interceptorTest() {
-        val manager = ServiceManager(Api.LoginType.STANDARD, "http", "fakelog.localhost:3000",
-                "default", "email", "password", "schoolSymbol", 123, 101
+        val manager = ServiceManager(HttpLoggingInterceptor.Level.NONE,
+                Api.LoginType.STANDARD, "http", "fakelog.localhost:3000", "default", "email", "password",
+                "schoolSymbol", 123, 101
         )
         manager.setInterceptor(Interceptor {
             throw ApiException("Test")
         })
+
+        val notes = manager.getSnpService().getNotes()
+        val observer = TestObserver<NotesResponse>()
+        notes.subscribe(observer)
+        observer.assertTerminated()
+        observer.assertNotComplete()
+        observer.assertError(ApiException::class.java)
+    }
+
+    @Test
+    fun interceptorTest_prepend() {
+        server.enqueue(MockResponse().setBody(NotesTest::class.java.getResource("UwagiOsiagniecia-filled.html").readText()))
+        server.start(3000)
+        val manager = ServiceManager(HttpLoggingInterceptor.Level.NONE,
+                Api.LoginType.STANDARD, "http", "fakelog.localhost:3000", "default", "email", "password",
+                "schoolSymbol", 123, 101
+        )
+        manager.setInterceptor(Interceptor {
+            throw IOException("Test")
+        })
+        manager.setInterceptor(Interceptor {
+            throw ApiException("Test")
+        }, false, 0)
 
         val notes = manager.getSnpService().getNotes()
         val observer = TestObserver<NotesResponse>()
