@@ -49,6 +49,8 @@ class ApiRemoteTest : BaseTest() {
             studentId = 1
             diaryId = 101
             useNewStudent = false
+            androidVersion = "7.1.1"
+            buildTag = "PIXEL"
             setInterceptor(Interceptor {
                 println("Request event ${it.request().url().host()}")
                 it.proceed(it.request())
