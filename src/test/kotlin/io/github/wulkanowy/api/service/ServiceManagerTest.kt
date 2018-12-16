@@ -37,7 +37,7 @@ class ServiceManagerTest : BaseTest() {
     fun interceptorTest() {
         val manager = ServiceManager(HttpLoggingInterceptor.Level.NONE,
                 Api.LoginType.STANDARD, "http", "fakelog.localhost:3000", "default", "email", "password",
-                "schoolSymbol", 123, 101
+                "schoolSymbol", 123, 101, "", ""
         )
         manager.setInterceptor(Interceptor {
             throw ApiException("Test")
@@ -57,7 +57,7 @@ class ServiceManagerTest : BaseTest() {
         server.start(3000)
         val manager = ServiceManager(HttpLoggingInterceptor.Level.NONE,
                 Api.LoginType.STANDARD, "http", "fakelog.localhost:3000", "default", "email", "password",
-                "schoolSymbol", 123, 101
+                "schoolSymbol", 123, 101, "", ""
         )
         manager.setInterceptor(Interceptor {
             throw IOException("Test")

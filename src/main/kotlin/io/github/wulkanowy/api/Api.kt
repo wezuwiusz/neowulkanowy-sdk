@@ -77,6 +77,22 @@ class Api {
 
     var useNewStudent: Boolean = false
 
+    /**
+     * @see <a href="https://deviceatlas.com/blog/most-popular-android-smartphones#poland">The most popular Android phones - 2018</a>
+     * @see <a href="http://www.tera-wurfl.com/explore/?action=wurfl_id&id=samsung_sm_j500h_ver1">Tera-WURFL Explorer - Samsung SM-J500H (Galaxy J5)</a>
+     */
+    var androidVersion: String = "5.1"
+        set(value) {
+            if (field != value) changeManager.reset()
+            field = value
+        }
+
+    var buildTag: String = "SM-J500H Build/LMY48B"
+        set(value) {
+            if (field != value) changeManager.reset()
+            field = value
+        }
+
     enum class LoginType {
         AUTO,
         STANDARD,
@@ -96,7 +112,7 @@ class Api {
     private val normalizedSymbol by resettableLazy(changeManager) { if (symbol.isBlank()) "Default" else symbol }
 
     private val serviceManager by resettableLazy(changeManager) {
-        ServiceManager(logLevel, loginType, schema, host, normalizedSymbol, email, password, schoolSymbol, studentId, diaryId).apply {
+        ServiceManager(logLevel, loginType, schema, host, normalizedSymbol, email, password, schoolSymbol, studentId, diaryId, androidVersion, buildTag).apply {
             appInterceptors.forEach {
                 setInterceptor(it.value.first, it.value.second, it.key)
             }

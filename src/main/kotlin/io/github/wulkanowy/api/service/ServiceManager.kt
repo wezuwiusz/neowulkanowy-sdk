@@ -9,6 +9,7 @@ import io.github.wulkanowy.api.grades.GradeDate
 import io.github.wulkanowy.api.interceptor.ErrorInterceptor
 import io.github.wulkanowy.api.interceptor.NotLoggedInErrorInterceptor
 import io.github.wulkanowy.api.interceptor.StudentAndParentInterceptor
+import io.github.wulkanowy.api.interceptor.UserAgentInterceptor
 import io.github.wulkanowy.api.login.NotLoggedInException
 import io.github.wulkanowy.api.repository.LoginRepository
 import okhttp3.Interceptor
@@ -35,7 +36,9 @@ class ServiceManager(
         private val password: String,
         private val schoolSymbol: String,
         private val studentId: Int,
-        private val diaryId: Int
+        private val diaryId: Int,
+        androidVersion: String,
+        buildTag: String
 ) {
 
     private val cookies by lazy {
@@ -51,7 +54,8 @@ class ServiceManager(
     private val interceptors: MutableList<Pair<Interceptor, Boolean>> = mutableListOf(
             Pair(HttpLoggingInterceptor().setLevel(logLevel), true),
             Pair(ErrorInterceptor(), false),
-            Pair(NotLoggedInErrorInterceptor(loginType), false)
+            Pair(NotLoggedInErrorInterceptor(loginType), false),
+            Pair(UserAgentInterceptor(androidVersion, buildTag), false)
     )
 
     fun setInterceptor(interceptor: Interceptor, network: Boolean = false, index: Int = -1) {
