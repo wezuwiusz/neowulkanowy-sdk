@@ -14,7 +14,6 @@ import io.github.wulkanowy.api.repository.LoginRepository
 import okhttp3.Interceptor
 import okhttp3.JavaNetCookieJar
 import okhttp3.OkHttpClient
-import okhttp3.logging.HttpLoggingInterceptor
 import pl.droidsonroids.retrofit2.JspoonConverterFactory
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
@@ -26,7 +25,6 @@ import java.net.CookiePolicy
 import java.util.concurrent.TimeUnit
 
 class ServiceManager(
-        logLevel: HttpLoggingInterceptor.Level,
         private val loginType: Api.LoginType,
         private val schema: String,
         private val host: String,
@@ -48,15 +46,10 @@ class ServiceManager(
         UrlGenerator(schema, host, symbol, schoolSymbol)
     }
 
-    private val interceptors: MutableList<Pair<Interceptor, Boolean>> = mutableListOf(
-            Pair(HttpLoggingInterceptor().setLevel(logLevel), true),
-            Pair(ErrorInterceptor(), false),
-            Pair(NotLoggedInErrorInterceptor(loginType), false)
-    )
+    private val interceptors: HashMap<Interceptor, Boolean> = hashMapOf()
 
-    fun setInterceptor(interceptor: Interceptor, network: Boolean = false, index: Int = -1) {
-        if (index == -1) interceptors.add(Pair(interceptor, network))
-        else interceptors.add(index, Pair(interceptor, network))
+    fun setInterceptor(interceptor: Interceptor, network: Boolean = false) {
+        interceptors[interceptor] = network
     }
 
     fun getCookieManager(): CookieManager {
@@ -69,7 +62,7 @@ class ServiceManager(
     }
 
     fun getRegisterService(): RegisterService {
-        return getRetrofit(getClientBuilder(false,  false,true), urlGenerator.generate(UrlGenerator.Site.LOGIN), false).create()
+        return getRetrofit(getClientBuilder(false, false, true), urlGenerator.generate(UrlGenerator.Site.LOGIN), false).create()
     }
 
     fun getStudentService(withLogin: Boolean = true, interceptor: Boolean = true): StudentService {
@@ -123,12 +116,12 @@ class ServiceManager(
                 .cookieJar(if (!separateJar) JavaNetCookieJar(cookies) else JavaNetCookieJar(CookieManager()))
                 .apply {
                     interceptors.forEach {
-                        if (it.first is ErrorInterceptor || it.first is NotLoggedInErrorInterceptor) {
-                            if (it.first is NotLoggedInErrorInterceptor && loginInterceptor) addInterceptor(it.first)
-                            if (it.first is ErrorInterceptor && errorInterceptor) addInterceptor(it.first)
+                        if (it.key is ErrorInterceptor || it.key is NotLoggedInErrorInterceptor) {
+                            if (it.key is NotLoggedInErrorInterceptor && loginInterceptor) addInterceptor(it.key)
+                            if (it.key is ErrorInterceptor && errorInterceptor) addInterceptor(it.key)
                         } else {
-                            if (it.second) addNetworkInterceptor(it.first)
-                            else addInterceptor(it.first)
+                            if (it.value) addNetworkInterceptor(it.key)
+                            else addInterceptor(it.key)
                         }
                     }
                 }
