@@ -2,7 +2,6 @@ package io.github.wulkanowy.api
 
 import io.github.wulkanowy.api.interceptor.ErrorInterceptor
 import io.github.wulkanowy.api.interceptor.NotLoggedInErrorInterceptor
-import io.github.wulkanowy.api.interceptor.UserAgentInterceptor
 import io.github.wulkanowy.api.messages.Folder
 import io.github.wulkanowy.api.messages.Folder.*
 import io.github.wulkanowy.api.messages.Message
@@ -80,13 +79,6 @@ class Api {
 
     var useNewStudent: Boolean = false
 
-    /**
-     * @see <a href="https://deviceatlas.com/blog/most-popular-android-smartphones#poland">The most popular Android phones - 2018</a>
-     * @see <a href="http://www.tera-wurfl.com/explore/?action=wurfl_id&id=samsung_sm_j500h_ver1">Tera-WURFL Explorer - Samsung SM-J500H (Galaxy J5)</a>
-     */
-    var androidVersion: String = "5.1"
-    var buildTag: String = "SM-J500H Build/LMY48B"
-
     enum class LoginType {
         AUTO,
         STANDARD,
@@ -95,14 +87,11 @@ class Api {
         ADFSLight
     }
 
-    private val interceptors by lazy {
-        hashMapOf(
-                UserAgentInterceptor(androidVersion, buildTag) to false,
-                ErrorInterceptor() to false,
-                NotLoggedInErrorInterceptor(loginType) to false,
-                HttpLoggingInterceptor().setLevel(logLevel) to true
-        )
-    }
+    private val interceptors: HashMap<Interceptor, Boolean> = hashMapOf(
+            ErrorInterceptor() to false,
+            NotLoggedInErrorInterceptor(loginType) to false,
+            HttpLoggingInterceptor().setLevel(logLevel) to true
+    )
 
     fun setInterceptor(interceptor: Interceptor, network: Boolean = false) {
         interceptors[interceptor] = network
