@@ -18,7 +18,7 @@ class MessagesRepository(private val api: MessagesService) {
     private val recipients by lazy {
         getRecipients(2).map { list ->
             list.map {
-                Pair(it, it.name.split("[").last().split("]").first())
+                Pair(it, it.name.split(" -").first())
             }
         }
     }
@@ -47,10 +47,15 @@ class MessagesRepository(private val api: MessagesService) {
                 .flatMap { message ->
                     recipients.flatMapObservable {
                         Observable.fromIterable(it.filter { recipient ->
-                            recipient.second == message.recipient?.split("[")?.last()?.split("]")?.first()
+                            recipient.second == message.recipient?.split(" -")?.first()
+                        }.ifEmpty {
+                            listOf(Pair(
+                                    Recipient("unknown", message.recipient?.split(" -")?.first() ?: "unknown",
+                                            9999, 9999, 2), "unknown"
+                            ))
                         })
                     }.map {
-                        message.copy(recipient = it.first.name.split(" [").first(), messageId = message.id).apply {
+                        message.copy(recipient = it.first.name, messageId = message.id).apply {
                             recipientId = it.first.loginId
                         }
                     }
