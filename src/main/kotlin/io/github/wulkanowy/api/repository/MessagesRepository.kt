@@ -9,10 +9,10 @@ import io.reactivex.Single
 import org.threeten.bp.LocalDateTime
 import org.threeten.bp.format.DateTimeFormatter
 
-class MessagesRepository(private val userId: Int, private val api: MessagesService) {
+class MessagesRepository(private val api: MessagesService) {
 
     private val reportingUnit by lazy {
-        getReportingUnits().map { list -> list.first { it.senderId == userId } }
+        getReportingUnits().map { list -> list.first() }
     }
 
     private val recipients by lazy {

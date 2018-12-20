@@ -148,7 +148,7 @@ class Api {
     }
 
     private val messages by resettableLazy(changeManager) {
-        MessagesRepository(studentId, serviceManager.getMessagesService())
+        MessagesRepository(serviceManager.getMessagesService())
     }
 
     fun getPupils() = register.getPupils()

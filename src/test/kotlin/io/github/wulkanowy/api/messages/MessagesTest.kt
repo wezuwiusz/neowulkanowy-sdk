@@ -10,7 +10,7 @@ import org.junit.Test
 class MessagesTest : BaseLocalTest() {
 
     private val api by lazy {
-        MessagesRepository(1, getService(MessagesService::class.java, "http://fakelog.localhost:3000/", false))
+        MessagesRepository(getService(MessagesService::class.java, "http://fakelog.localhost:3000/", false))
     }
 
     @Test
