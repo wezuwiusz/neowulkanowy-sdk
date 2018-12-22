@@ -86,8 +86,8 @@ class RegisterRepository(
         }.flatMap { login ->
             login.sendCredentials(email, password).flatMap { Single.just(it) }.flatMap { cert ->
                 Single.just(Jsoup.parse(cert.wresult.replace(":", ""), "", Parser.xmlParser())
-                        .select("[AttributeName$=\"Instance\"] samlAttributeValue")
-                        .map { Pair(it.text(), cert) }
+                        .select("[AttributeName$=\"Instance\"] samlAttributeValue").map { it.text() }.ifEmpty { listOf("opole", "rzeszow") }
+                        .map { Pair(it, cert) }
                 )
             }
         }
