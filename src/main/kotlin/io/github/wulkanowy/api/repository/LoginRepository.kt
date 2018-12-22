@@ -44,12 +44,21 @@ class LoginRepository(
                     "Password" to password
             )).map { certificateAdapter.fromHtml(it) }
 
-            Api.LoginType.ADFSLight -> api.getADFSLightForm("$schema://cufs.$host/$symbol/").flatMap {
-                api.sendADFSForm("$schema://adfslight.$host/${it.formAction.removePrefix("/")}", mapOf(
-                        "Username" to email,
-                        "Password" to email
-                ))
-            }.map { certificateAdapter.fromHtml(it) }
+            Api.LoginType.ADFSLight -> api.getADFSLightForm("$schema://cufs.$host/$symbol/")
+                    .flatMap {
+                        api.sendADFSForm("$schema://adfslight.$host/${it.formAction.removePrefix("/")}", mapOf(
+                                "Username" to email,
+                                "Password" to email,
+                                "x" to "104",
+                                "y" to "22"
+                        ))
+                    }.map { certificateAdapter.fromHtml(it) }.flatMap {
+                        api.sendADFSForm(it.action, mapOf(
+                                "wa" to it.wa,
+                                "wresult" to it.wresult,
+                                "wctx" to it.wctx
+                        ))
+                    }.map { certificateAdapter.fromHtml(it) }
 
             Api.LoginType.ADFS -> api.getForm(firstStepReturnUrl)
                     .flatMap {
