@@ -58,9 +58,9 @@ class LoginRepository(
 
             Api.LoginType.ADFSLight -> api.sendADFSForm(adfsLightUrl, mapOf(
                     "Username" to email,
-                    "Password" to email,
-                    "x" to "104",
-                    "y" to "22"
+                    "Password" to password,
+                    "x" to "0",
+                    "y" to "0"
             )).map { certificateAdapter.fromHtml(it) }.flatMap {
                 api.sendADFSForm(it.action, mapOf(
                         "wa" to it.wa,
