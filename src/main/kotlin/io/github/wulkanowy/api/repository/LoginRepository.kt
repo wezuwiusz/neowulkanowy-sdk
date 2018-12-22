@@ -20,8 +20,20 @@ class LoginRepository(
 ) {
 
     private val firstStepReturnUrl by lazy {
-        val url = URLEncoder.encode("$schema://uonetplus.$host/$symbol/LoginEndpoint.aspx", "UTF-8")
-        "/$symbol/FS/LS?wa=wsignin1.0&wtrealm=$url&wctx=$url"
+        val uonetplus = encode("$schema://uonetplus.$host/$symbol/LoginEndpoint.aspx")
+        "/$symbol/FS/LS?wa=wsignin1.0&wtrealm=$uonetplus&wctx=$uonetplus"
+    }
+
+    private fun encode(url: String) = URLEncoder.encode(url, "UTF-8")
+
+    private val adfsLightUrl by lazy {
+        val uonetplus = URLEncoder.encode("$schema://uonetplus.$host/$symbol/LoginEndpoint.aspx", "UTF-8")
+
+        "$schema://adfslight.$host/LoginPage.aspx?ReturnUrl=" +
+                encode("/?wa=wsignin1.0&wtrealm=" +
+                        encode("$schema://cufs.$host:443/$symbol/Account/LogOn") + "&wctx=" +
+                        encode("rm=0&id=ADFS&ru=" + encode("/$symbol/FS/LS?wa=wsignin1.0&wtrealm=$uonetplus&wctx=$uonetplus"))
+                )
     }
 
     private val certificateAdapter by lazy {
@@ -44,21 +56,18 @@ class LoginRepository(
                     "Password" to password
             )).map { certificateAdapter.fromHtml(it) }
 
-            Api.LoginType.ADFSLight -> api.getADFSLightForm("$schema://cufs.$host/$symbol/")
-                    .flatMap {
-                        api.sendADFSForm("$schema://adfslight.$host/${it.formAction.removePrefix("/")}", mapOf(
-                                "Username" to email,
-                                "Password" to email,
-                                "x" to "104",
-                                "y" to "22"
-                        ))
-                    }.map { certificateAdapter.fromHtml(it) }.flatMap {
-                        api.sendADFSForm(it.action, mapOf(
-                                "wa" to it.wa,
-                                "wresult" to it.wresult,
-                                "wctx" to it.wctx
-                        ))
-                    }.map { certificateAdapter.fromHtml(it) }
+            Api.LoginType.ADFSLight -> api.sendADFSForm(adfsLightUrl, mapOf(
+                    "Username" to email,
+                    "Password" to email,
+                    "x" to "104",
+                    "y" to "22"
+            )).map { certificateAdapter.fromHtml(it) }.flatMap {
+                api.sendADFSForm(it.action, mapOf(
+                        "wa" to it.wa,
+                        "wresult" to it.wresult,
+                        "wctx" to it.wctx
+                ))
+            }.map { certificateAdapter.fromHtml(it) }
 
             Api.LoginType.ADFS -> api.getForm(firstStepReturnUrl)
                     .flatMap {
