@@ -56,7 +56,7 @@ class UonetTest {
             pupilSubscriber.assertComplete()
             pupilSubscriber.assertNoErrors()
             assertEquals("Ok", pupilSubscriber.values()[0].status)
-            assertEquals(1, pupilSubscriber.values()[0].data!!.size)
+            assertEquals(2, pupilSubscriber.values()[0].data!!.size)
 
             student = pupilSubscriber.values()[0].data!![0]
 
