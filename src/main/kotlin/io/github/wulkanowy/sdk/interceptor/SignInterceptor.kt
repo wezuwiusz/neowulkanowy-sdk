@@ -1,6 +1,5 @@
 package io.github.wulkanowy.sdk.interceptor
 
-import io.github.wulkanowy.sdk.USER_AGENT
 import io.github.wulkanowy.signer.signContent
 import okhttp3.Interceptor
 import okhttp3.Response
@@ -15,7 +14,7 @@ class SignInterceptor(
         val original = chain.request()
         val request = original.newBuilder()
 
-        request.header("User-Agent", USER_AGENT)
+        request.header("User-Agent", "MobileUserAgent")
 
         if (signature.isNotBlank() && certificate.isNotBlank()) {
             request.header("RequestCertificateKey", certificate)

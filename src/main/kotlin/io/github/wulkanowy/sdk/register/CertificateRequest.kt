@@ -1,9 +1,6 @@
 package io.github.wulkanowy.sdk.register
 
 import com.google.gson.annotations.SerializedName
-import io.github.wulkanowy.sdk.APP_VERSION
-import io.github.wulkanowy.sdk.DEVICE_SYSTEM_TYPE
-import io.github.wulkanowy.sdk.DEVICE_SYSTEM_VERSION
 import io.github.wulkanowy.sdk.base.ApiRequest
 import java.util.*
 
@@ -16,7 +13,7 @@ data class CertificateRequest(
         val tokenKey: String,
 
         @SerializedName("AppVersion")
-        val appVersion: String = APP_VERSION,
+        val appVersion: String = "18.4.1.388",
 
         @SerializedName("DeviceId")
         val deviceId: String = UUID.randomUUID().toString(),
@@ -31,9 +28,9 @@ data class CertificateRequest(
         val deviceDescription: String = "",
 
         @SerializedName("DeviceSystemType")
-        val deviceSystemType: String = DEVICE_SYSTEM_TYPE,
+        val deviceSystemType: String = "Android",
 
         @SerializedName("DeviceSystemVersion")
-        val deviceSystemVersion: String = DEVICE_SYSTEM_VERSION
+        val deviceSystemVersion: String = "8.1.0"
 
 ) : ApiRequest()

@@ -1,8 +1,6 @@
 package io.github.wulkanowy.sdk.base
 
 import com.google.gson.annotations.SerializedName
-import io.github.wulkanowy.sdk.REMOTE_MOBILE_APP_NAME
-import io.github.wulkanowy.sdk.REMOTE_MOBILE_APP_VERSION
 import java.time.Instant
 import java.util.*
 
@@ -18,8 +16,8 @@ abstract class ApiRequest(
     val requestId: String = UUID.randomUUID().toString(),
 
     @SerializedName("RemoteMobileAppVersion")
-    val remoteMobileAppVersion: String = REMOTE_MOBILE_APP_VERSION,
+    val remoteMobileAppVersion: String = "18.4.1.388",
 
     @SerializedName("RemoteMobileAppName")
-    val remoteMobileAppName: String = REMOTE_MOBILE_APP_NAME
+    val remoteMobileAppName: String = "VULCAN-Android-ModulUcznia"
 )
