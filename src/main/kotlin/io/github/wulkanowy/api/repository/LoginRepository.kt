@@ -2,6 +2,7 @@ package io.github.wulkanowy.api.repository
 
 import io.github.wulkanowy.api.Api
 import io.github.wulkanowy.api.ApiException
+import io.github.wulkanowy.api.interceptor.VulcanException
 import io.github.wulkanowy.api.login.CertificateResponse
 import io.github.wulkanowy.api.register.HomepageResponse
 import io.github.wulkanowy.api.service.LoginService
@@ -43,6 +44,11 @@ class LoginRepository(
     @Synchronized
     fun login(email: String, password: String): Single<HomepageResponse> {
         return sendCredentials(email, password).flatMap {
+            when {
+                it.title.startsWith("Witryna ucznia i rodzica") -> return@flatMap Single.just(HomepageResponse())
+                it.action.isBlank() -> throw VulcanException("Invalid certificate page: '${it.title}'. Try again")
+            }
+
             sendCertificate(it)
         }
     }

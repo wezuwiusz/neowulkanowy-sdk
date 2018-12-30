@@ -2,6 +2,8 @@ package io.github.wulkanowy.api.login
 
 import io.github.wulkanowy.api.Api
 import io.github.wulkanowy.api.BaseLocalTest
+import io.github.wulkanowy.api.homework.HomeworkTest
+import io.github.wulkanowy.api.interceptor.VulcanException
 import io.github.wulkanowy.api.register.HomepageResponse
 import io.github.wulkanowy.api.repository.LoginRepository
 import io.github.wulkanowy.api.service.LoginService
@@ -110,5 +112,28 @@ class LoginTest : BaseLocalTest() {
         res.subscribe(observer)
         observer.assertTerminated()
         observer.assertError(AccountPermissionException::class.java)
+    }
+
+    @Test
+    fun alreadyLoggedIn() {
+        server.enqueue(MockResponse().setBody(HomeworkTest::class.java.getResource("ZadaniaDomowe.html").readText()))
+        server.start(3000)
+
+        val res = normal.login("jan@fakelog.cf", "jan123")
+        val observer = TestObserver<HomepageResponse>()
+        res.subscribe(observer)
+        observer.assertComplete()
+    }
+
+    @Test
+    fun invalidCertificatePage() {
+        server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("Offline.html").readText()))
+        server.start(3000)
+
+        val res = normal.login("jan@fakelog.cf", "jan123")
+        val observer = TestObserver<HomepageResponse>()
+        res.subscribe(observer)
+        observer.assertTerminated()
+        observer.assertError(VulcanException::class.java)
     }
 }
