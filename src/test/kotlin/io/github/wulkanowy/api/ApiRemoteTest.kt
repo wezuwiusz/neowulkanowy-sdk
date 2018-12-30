@@ -119,7 +119,7 @@ class ApiRemoteTest : BaseTest() {
 
         values[0].run {
             assertEquals(1, number)
-            assertEquals("Zajęcia artystyczne", subject)
+            assertEquals("Zajęcia z wychowawcą", subject)
             assertEquals(getDate(2018, 10, 1), date)
 
             assertEquals("Obecność", name)
@@ -132,10 +132,10 @@ class ApiRemoteTest : BaseTest() {
             assertFalse(excused)
         }
 
-        assertEquals("Spóźnienie", values[3].name)
-        assertEquals("Spóźnienie usprawiedliwione", values[4].name)
-        assertEquals("Nieobecny z przyczyn szkolnych", values[5].name)
-        assertEquals("Zwolniony", values[6].name)
+        assertEquals("Nieobecność", values[3].name)
+        assertEquals("Nieobecność", values[4].name)
+        assertEquals("Nieobecność usprawiedliwiona", values[5].name)
+        assertEquals("Spóźnienie", values[6].name)
         assertEquals("Obecność", values[9].name)
     }
 
@@ -148,7 +148,7 @@ class ApiRemoteTest : BaseTest() {
 
         val values = subjectsObserver.values()[0]
 
-        assertEquals(16, values.size)
+        assertEquals(17, values.size)
 
         values[0].run {
             assertEquals(-1, value)
@@ -197,8 +197,8 @@ class ApiRemoteTest : BaseTest() {
             assertEquals("", group)
             assertEquals("Sprawdzian", type)
             assertEquals("Figury na płaszczyźnie.", description)
-            assertEquals("Janusz Tracz", teacher)
-            assertEquals("TJ", teacherSymbol)
+            assertEquals("Aleksandra Krajewska", teacher)
+            assertEquals("AK", teacherSymbol)
         }
     }
 
@@ -213,11 +213,11 @@ class ApiRemoteTest : BaseTest() {
 
         values[1].run {
             assertEquals(getDate(2018, 9, 11), date)
-            assertEquals(getDate(2017, 10, 18), entryDate)
-            assertEquals("Metodologia programowania", subject)
-            assertEquals("Wszystkie instrukcje warunkowe, pętle (budowa, zasada działania, schemat blokowy)", content)
-            assertEquals("Janusz Tracz", teacher)
-            assertEquals("TJ", teacherSymbol)
+            assertEquals(getDate(2017, 10, 26), entryDate)
+            assertEquals("Etyka", subject)
+            assertEquals("Notatka własna do zajęć o ks. Jerzym Popiełuszko.", content)
+            assertEquals("Michał Mazur", teacher)
+            assertEquals("MM", teacherSymbol)
         }
     }
 
@@ -232,7 +232,7 @@ class ApiRemoteTest : BaseTest() {
 
         values[0].run {
             assertEquals(getDate(2018, 1, 16), date)
-            assertEquals("Lech Wałęsa", teacher)
+            assertEquals("Stanisław Krupa", teacher)
             assertEquals("", teacherSymbol)
             assertEquals("Kultura języka", category)
             assertEquals("Litwo! Ojczyzno moja! Ty jesteś jak zdrowie. Ile cię trzeba cenić, ten tylko aż kędy pieprz rośnie gdzie podział się? szukać prawodawstwa.", content)
@@ -249,15 +249,15 @@ class ApiRemoteTest : BaseTest() {
         val values = gradesObserver.values()[0]
 
         values[5].run {
-            assertEquals("Historia", subject)
+            assertEquals("Religia", subject)
             assertEquals("1", entry)
             assertEquals("000000", color)
-            assertEquals("Spr", symbol)
-            assertEquals("spr.-rozbiory", description)
-            assertEquals("5,00", weight)
-            assertEquals(5, weightValue)
-            assertEquals(getDate(2018, 1, 29), date)
-            assertEquals("Janusz Tracz", teacher)
+            assertEquals("Kart", symbol)
+            assertEquals("", description)
+            assertEquals("3,00", weight)
+            assertEquals(3, weightValue)
+            assertEquals(getDate(2018, 11, 19), date)
+            assertEquals("Michał Mazur", teacher)
         }
 
         values[0].run {
@@ -277,14 +277,14 @@ class ApiRemoteTest : BaseTest() {
 
         values[2].run {
             assertEquals("Etyka", name)
-            assertEquals("2", predicted)
-            assertEquals("2", final)
+            assertEquals("4", predicted)
+            assertEquals("4", final)
         }
 
         values[5].run {
             assertEquals("Historia", name)
-            assertEquals("1", predicted)
-            assertEquals("1", final)
+            assertEquals("4", predicted)
+            assertEquals("4", final)
         }
 
         values[8].run {
@@ -324,8 +324,8 @@ class ApiRemoteTest : BaseTest() {
         val values = teachersObserver.values()[0]
 
         assertEquals("Historia", values[1].subject)
-        assertEquals("Janusz Tracz", values[1].name)
-        assertEquals("TJ", values[1].short)
+        assertEquals("Aleksandra Krajewska", values[1].name)
+        assertEquals("AK", values[1].short)
     }
 
     @Test
@@ -459,7 +459,7 @@ class ApiRemoteTest : BaseTest() {
         values[0].run {
             assertEquals(1, number)
             assertEquals("Fizyka", subject)
-            assertEquals("Janusz Tracz", teacher)
+            assertEquals("Karolina Kowalska", teacher)
             assertEquals("", group)
             assertEquals("213", room)
             assertEquals("", info)
