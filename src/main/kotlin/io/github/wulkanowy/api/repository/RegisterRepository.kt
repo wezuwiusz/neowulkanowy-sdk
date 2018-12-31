@@ -88,8 +88,8 @@ class RegisterRepository(
                 Single.just(Jsoup.parse(cert.wresult.replace(":", ""), "", Parser.xmlParser())
                         .select("[AttributeName$=\"Instance\"] samlAttributeValue")
                         .map { it.text().trim() }
-                        .filter { !it.contains(" ") && it.matches("[a-zA-Z]*".toRegex()) } // early filter invalid symbols
-                        .ifEmpty { listOf("opole", "rzeszow") } // fallback
+                        .filter { it.matches("[a-zA-Z]*".toRegex()) } // early filter invalid symbols
+                        .ifEmpty { listOf("opole", "gdansk", "tarnow", "rzeszow") } // fallback
                         .map { Pair(it, cert) }
                 )
             }
