@@ -1,4 +1,6 @@
-# api
+# UONET+ Scraping API
+
+> The UONET+ client using web scraping
 
 [![CircleCI](https://img.shields.io/circleci/project/github/wulkanowy/api/master.svg?style=flat-square)](https://circleci.com/gh/wulkanowy/api)
 [![Codecov](https://img.shields.io/codecov/c/github/wulkanowy/api/master.svg?style=flat-square)](https://codecov.io/gh/wulkanowy/api)
@@ -6,3 +8,34 @@
 [![JitPack](https://jitpack.io/v/wulkanowy/api.svg)](https://jitpack.io/#wulkanowy/api)
 [![License](https://img.shields.io/github/license/wulkanowy/api.svg?style=flat-square)](https://github.com/wulkanowy/api)
 [![Discord](https://img.shields.io/discord/390889354199040011.svg?style=flat-square)](https://discord.gg/vccAQBr)
+
+
+## Features
+
+- attendance
+- exams
+- grades
+- homework
+- notes
+- timetable
+- messages
+
+... and more. Check it out [full public api](https://github.com/wulkanowy/api/blob/0.6.0/src/main/kotlin/io/github/wulkanowy/api/Api.kt).
+
+
+## Download
+
+```gradle
+allprojects {
+    repositories {
+		...
+        jcenter()
+    }
+}
+
+dependencies {
+    implementation 'io.github.wulkanowy:api:0.6.0'
+}
+```
+
+Or you can get last development version with [jitpack](https://jitpack.io/#wulkanowy/api).
