@@ -11,7 +11,7 @@ class Homework {
 
     @SerializedName("DataModyfikacji")
     @Format("dd.MM.yyyy")
-    @Selector(".wartosc", index = 2, regex = ".+, (.+)")
+    @Selector(".wartosc", index = 2, regex = ".+, (.+)", defValue = "01.01.1970")
     lateinit var entryDate: Date
 
     @SerializedName("Przedmiot")

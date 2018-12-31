@@ -17,6 +17,6 @@ class Device {
 
     @SerializedName("DataUtworzenia")
     @Format(value = "dd.MM.yyyy 'godz:' HH:mm:ss")
-    @Selector("td", index = 1)
+    @Selector("td", index = 1, defValue = "01.01.1970")
     lateinit var date: Date
 }

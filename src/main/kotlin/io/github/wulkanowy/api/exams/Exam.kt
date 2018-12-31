@@ -11,7 +11,7 @@ class Exam {
 
     @SerializedName("DataModyfikacji")
     @Format("dd.MM.yyyy")
-    @Selector(".wartosc", index = 3, regex = ".+, (.+)")
+    @Selector(".wartosc", index = 3, regex = ".+, (.+)", defValue = "01.01.1970")
     lateinit var entryDate: Date
 
     @SerializedName("DisplayValue")

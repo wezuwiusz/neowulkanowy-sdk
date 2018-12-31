@@ -17,7 +17,7 @@ class ExamResponse {
 
         @SerializedName("Data")
         @Format("dd.MM.yyyy")
-        @Selector("h2", regex = ".+, (.+)")
+        @Selector("h2", regex = ".+, (.+)", defValue = "01.01.1970")
         lateinit var date: Date
 
         @SerializedName("Sprawdziany")

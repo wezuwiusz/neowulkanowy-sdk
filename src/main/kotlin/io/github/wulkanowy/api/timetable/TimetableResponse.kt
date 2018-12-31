@@ -8,7 +8,7 @@ import java.util.*
 
 class TimetableResponse {
 
-    @Selector(".presentData thead th:not(:nth-of-type(1)):not(:nth-of-type(2))", regex = "\\s(.*)")
+    @Selector(".presentData thead th:not(:nth-of-type(1)):not(:nth-of-type(2))", regex = "\\s(.*)", defValue = "01.01.1970")
     @Format("dd.MM.yyyy")
     var days: List<Date> = emptyList()
 

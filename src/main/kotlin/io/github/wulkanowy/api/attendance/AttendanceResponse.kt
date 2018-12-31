@@ -7,7 +7,7 @@ import java.util.*
 
 class AttendanceResponse {
 
-    @Selector(".presentData thead th:not(:first-of-type)", regex = "\\s(.*)")
+    @Selector(".presentData thead th:not(:first-of-type)", regex = "\\s(.*)", defValue = "01.01.1970")
     @Format("dd.MM.yyyy")
     var days: List<Date> = emptyList()
 

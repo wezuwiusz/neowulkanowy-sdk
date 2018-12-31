@@ -12,6 +12,6 @@ class NotesResponse {
     var notes: List<Note> = listOf()
 
     @Format("dd.MM.yyyy")
-    @Selector(".mainContainer div:first-of-type h2:not(:contains(Brak))")
+    @Selector(".mainContainer div:first-of-type h2:not(:contains(Brak))", defValue = "01.01.1970")
     var dates: List<Date> = listOf()
 }

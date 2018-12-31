@@ -9,7 +9,7 @@ class HomeworkResponse {
 
     @SerializedName("Data")
     @Format("dd.MM.yyyy")
-    @Selector(".mainContainer h2:not(:contains(Brak))", regex = "\\s(.*)")
+    @Selector(".mainContainer h2:not(:contains(Brak))", regex = "\\s(.*)", defValue = "01.01.1970")
     lateinit var date: Date
 
     @SerializedName("ZadaniaDomowe")
