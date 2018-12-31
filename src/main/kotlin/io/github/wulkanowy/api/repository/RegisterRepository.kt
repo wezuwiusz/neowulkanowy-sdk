@@ -38,7 +38,7 @@ class RegisterRepository(
                     }
                     .flatMapObservable { Observable.fromIterable(if (useNewStudent) it.studentSchools else it.oldStudentSchools) }
                     .flatMapSingle { schoolUrl ->
-                        getLoginType().flatMap { loginType ->
+                        getLoginType(symbol.first).flatMap { loginType ->
                             getStudents(symbol.first, schoolUrl).map {
                                 it.map { pupil ->
                                     Pupil(
@@ -81,7 +81,7 @@ class RegisterRepository(
     }
 
     private fun getSymbols(): Single<List<Pair<String, CertificateResponse>>> {
-        return getLoginType().map {
+        return getLoginType(startSymbol).map {
             loginRepo.apply { loginType = it }
         }.flatMap { login ->
             login.sendCredentials(email, password).flatMap { Single.just(it) }.flatMap { cert ->
@@ -96,8 +96,8 @@ class RegisterRepository(
         }
     }
 
-    private fun getLoginType(): Single<Api.LoginType> {
-        return register.getFormType().map {
+    private fun getLoginType(symbol: String): Single<Api.LoginType> {
+        return register.getFormType("/$symbol/Account/LogOn").map {
             when {
                 it.page.select(".LogOnBoard input[type=submit]").isNotEmpty() -> Api.LoginType.STANDARD
                 it.page.select("form[name=form1] #SubmitButton").isNotEmpty() -> Api.LoginType.ADFS
