@@ -86,7 +86,10 @@ class RegisterRepository(
         }.flatMap { login ->
             login.sendCredentials(email, password).flatMap { Single.just(it) }.flatMap { cert ->
                 Single.just(Jsoup.parse(cert.wresult.replace(":", ""), "", Parser.xmlParser())
-                        .select("[AttributeName$=\"Instance\"] samlAttributeValue").map { it.text() }.ifEmpty { listOf("opole", "rzeszow") }
+                        .select("[AttributeName$=\"Instance\"] samlAttributeValue")
+                        .map { it.text().trim() }
+                        .filter { !it.contains(" ") && it.matches("[a-zA-Z]*".toRegex()) } // early filter invalid symbols
+                        .ifEmpty { listOf("opole", "rzeszow") } // fallback
                         .map { Pair(it, cert) }
                 )
             }
