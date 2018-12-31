@@ -151,7 +151,7 @@ class LoginRepository(
 
         return hostPart +
                 "?wa=wsignin1.0" +
-                "&wtrealm=" + encode("http${if (Api.LoginType.ADFSLight == type) "s" else ""}://cufs.$host/$symbol/Account/LogOn") +
+                "&wtrealm=" + encode("http${if (Api.LoginType.ADFSCards != type) "s" else ""}://cufs.$host/$symbol/Account/LogOn") +
                 "&wctx=" + encode("rm=0&id=$id&ru=" + encode(firstStepReturnUrl)) +
                 "&wct=" + encode(now(ZoneId.of("UTC")).format(DateTimeFormatter.ISO_LOCAL_DATE_TIME) + "Z")
     }
