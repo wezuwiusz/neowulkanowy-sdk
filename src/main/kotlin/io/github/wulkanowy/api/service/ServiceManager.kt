@@ -69,11 +69,11 @@ class ServiceManager(
 
     fun getLoginService(): LoginService {
         if (email.isBlank() || password.isBlank()) throw ApiException("Email or/and password are not set")
-        return getRetrofit(getClientBuilder(true, false), urlGenerator.generate(UrlGenerator.Site.LOGIN), false).create()
+        return getRetrofit(getClientBuilder(loginInterceptor = false), urlGenerator.generate(UrlGenerator.Site.LOGIN), false).create()
     }
 
     fun getRegisterService(): RegisterService {
-        return getRetrofit(getClientBuilder(false,  false,true), urlGenerator.generate(UrlGenerator.Site.LOGIN), false).create()
+        return getRetrofit(getClientBuilder(errorInterceptor = false, loginInterceptor = false, separateJar = true), urlGenerator.generate(UrlGenerator.Site.LOGIN), false).create()
     }
 
     fun getStudentService(withLogin: Boolean = true, interceptor: Boolean = true): StudentService {
@@ -91,7 +91,7 @@ class ServiceManager(
     fun getSnpService(withLogin: Boolean = true, interceptor: Boolean = true): StudentAndParentService {
         if (withLogin && schoolSymbol.isBlank()) throw ApiException("School id is not set")
 
-        val client = getClientBuilder(true, withLogin)
+        val client = getClientBuilder(loginInterceptor = withLogin)
         if (interceptor) {
             if (0 == diaryId || 0 == studentId) throw ApiException("Student or/and diaryId id are not set")
             client.addInterceptor(StudentAndParentInterceptor(cookies, schema, host, diaryId, studentId))

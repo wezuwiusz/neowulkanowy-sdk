@@ -17,7 +17,7 @@ class RegisterRepositoryTest : BaseLocalTest() {
         RegisterRepository("Default", "jan@fakelog.cf", "jan123", false,
                 LoginRepository(Api.LoginType.STANDARD, "http", "fakelog.localhost:3000", "default",  CookieManager(),
                         getService(LoginService::class.java, "http://fakelog.localhost:3000/")),
-                getService(service = RegisterService::class.java, url = "http://fakelog.localhost:3000/", errorInterceptor = false),
+                getService(service = RegisterService::class.java, url = "http://fakelog.localhost:3000/", errorInterceptor = false, noLoggedInInterceptor = false),
                 getService(StudentAndParentService::class.java),
                 getService(StudentService::class.java),
                 ServiceManager.UrlGenerator("", "", "", "")
@@ -30,10 +30,6 @@ class RegisterRepositoryTest : BaseLocalTest() {
         server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("Logowanie-uonet.html").readText()))
         server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("Logowanie-brak-dostepu.html").readText()))
         server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("Offline.html").readText()))
-        server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("Logowanie-brak-dostepu.html").readText()))
-        server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("Logowanie-brak-dostepu.html").readText()))
-        server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("Logowanie-brak-dostepu.html").readText()))
-        server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("Logowanie-brak-dostepu.html").readText()))
         server.start(3000)
 
         val res = normal.getPupils()
