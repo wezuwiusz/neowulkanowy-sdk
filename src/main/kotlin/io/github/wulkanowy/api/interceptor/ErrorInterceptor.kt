@@ -41,6 +41,7 @@ class ErrorInterceptor : Interceptor {
             "Logowanie" -> throw AccountPermissionException(doc.select("div").last().html().split("<br>")[1].trim())
             "Przerwa techniczna" -> throw ServiceUnavailableException(doc.title())
             "Strona nie została odnaleziona" -> throw ApiException(doc.title())
+            "Strona nie znaleziona" -> throw ApiException(doc.selectFirst("div div").text())
         }
 
         doc.select("h2").text().let {

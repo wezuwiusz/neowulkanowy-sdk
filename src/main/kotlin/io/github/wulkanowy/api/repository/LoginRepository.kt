@@ -7,6 +7,9 @@ import io.github.wulkanowy.api.login.CertificateResponse
 import io.github.wulkanowy.api.register.HomepageResponse
 import io.github.wulkanowy.api.service.LoginService
 import io.reactivex.Single
+import org.threeten.bp.LocalDateTime.now
+import org.threeten.bp.ZoneId
+import org.threeten.bp.format.DateTimeFormatter
 import pl.droidsonroids.jspoon.Jspoon
 import java.net.CookieManager
 import java.net.URLEncoder
@@ -21,20 +24,9 @@ class LoginRepository(
 ) {
 
     private val firstStepReturnUrl by lazy {
-        val uonetplus = encode("$schema://uonetplus.$host/$symbol/LoginEndpoint.aspx")
-        "/$symbol/FS/LS?wa=wsignin1.0&wtrealm=$uonetplus&wctx=$uonetplus"
-    }
-
-    private fun encode(url: String) = URLEncoder.encode(url, "UTF-8")
-
-    private val adfsLightUrl by lazy {
-        val uonetplus = URLEncoder.encode("$schema://uonetplus.$host/$symbol/LoginEndpoint.aspx", "UTF-8")
-
-        "$schema://adfslight.$host/LoginPage.aspx?ReturnUrl=" +
-                encode("/?wa=wsignin1.0&wtrealm=" +
-                        encode("$schema://cufs.$host:443/$symbol/Account/LogOn") + "&wctx=" +
-                        encode("rm=0&id=ADFS&ru=" + encode("/$symbol/FS/LS?wa=wsignin1.0&wtrealm=$uonetplus&wctx=$uonetplus"))
-                )
+        encode("$schema://uonetplus.$host/$symbol/LoginEndpoint.aspx").let {
+            "/$symbol/FS/LS?wa=wsignin1.0&wtrealm=$it&wctx=$it"
+        }
     }
 
     private val certificateAdapter by lazy {
@@ -56,73 +48,10 @@ class LoginRepository(
     fun sendCredentials(email: String, password: String): Single<CertificateResponse> {
         return when (loginType) {
             Api.LoginType.AUTO -> throw ApiException("You must first specify LoginType before logging in")
-
-            Api.LoginType.STANDARD -> api.sendCredentials(firstStepReturnUrl, mapOf(
-                    "LoginName" to email,
-                    "Password" to password
-            )).map { certificateAdapter.fromHtml(it) }
-
-            Api.LoginType.ADFSLight -> api.sendADFSForm(adfsLightUrl, mapOf(
-                    "Username" to email,
-                    "Password" to password,
-                    "x" to "0",
-                    "y" to "0"
-            )).map { certificateAdapter.fromHtml(it) }.flatMap {
-                api.sendADFSForm(it.action, mapOf(
-                        "wa" to it.wa,
-                        "wresult" to it.wresult,
-                        "wctx" to it.wctx
-                ))
-            }.map { certificateAdapter.fromHtml(it) }
-
-            Api.LoginType.ADFS -> api.getForm(firstStepReturnUrl)
-                    .flatMap {
-                        api.sendADFSForm("$schema://adfs.$host/${it.formAction.removePrefix("/")}", mapOf(
-                                "__db" to it.db,
-                                "__VIEWSTATE" to it.viewstate,
-                                "__VIEWSTATEGENERATOR" to it.viewstateGenerator,
-                                "__EVENTVALIDATION" to it.eventValidation,
-                                "UsernameTextBox" to email,
-                                "PasswordTextBox" to password,
-                                "SubmitButton.x" to "0",
-                                "SubmitButton.y" to "0"
-                        ))
-                    }.map { certificateAdapter.fromHtml(it) }.flatMap {
-                        api.sendADFSForm(it.action, mapOf(
-                                "wa" to it.wa,
-                                "wresult" to it.wresult,
-                                "wctx" to it.wctx
-                        ))
-                    }.map { certificateAdapter.fromHtml(it) }
-
-            Api.LoginType.ADFSCards -> api.getForm(firstStepReturnUrl)
-                    .flatMap {
-                        api.sendADFSFormStandardChoice("$schema://adfs.$host/${it.formAction.removePrefix("/")}", mapOf(
-                                "__db" to it.db,
-                                "__VIEWSTATE" to it.viewstate,
-                                "__VIEWSTATEGENERATOR" to it.viewstateGenerator,
-                                "__EVENTVALIDATION" to it.eventValidation,
-                                "PassiveSignInButton.x" to "0",
-                                "PassiveSignInButton.y" to "0"
-                        ))
-                    }.flatMap {
-                        api.sendADFSForm("$schema://adfs.$host/${it.formAction.removePrefix("/")}", mapOf(
-                                "__db" to it.db,
-                                "__VIEWSTATE" to it.viewstate,
-                                "__VIEWSTATEGENERATOR" to it.viewstateGenerator,
-                                "__EVENTVALIDATION" to it.eventValidation,
-                                "SubmitButton.x" to "0",
-                                "SubmitButton.y" to "0",
-                                "UsernameTextBox" to email,
-                                "PasswordTextBox" to password
-                        ))
-                    }.map { certificateAdapter.fromHtml(it) }.flatMap {
-                        api.sendADFSForm(it.action, mapOf(
-                                "wa" to it.wa,
-                                "wresult" to it.wresult,
-                                "wctx" to it.wctx
-                        ))
-                    }.map { certificateAdapter.fromHtml(it) }
+            Api.LoginType.STANDARD -> sendStandard(email, password)
+            Api.LoginType.ADFS -> sendAdfs(email, password)
+            Api.LoginType.ADFSLight -> sendADFSLight(email, password)
+            Api.LoginType.ADFSCards -> sendADFSCards(email, password)
         }
     }
 
@@ -134,4 +63,98 @@ class LoginRepository(
                 "wctx" to certificate.wctx
         ))
     }
+
+    private fun sendStandard(email: String, password: String): Single<CertificateResponse> {
+        return api.sendCredentials(firstStepReturnUrl, mapOf(
+                "LoginName" to email,
+                "Password" to password
+        )).map { certificateAdapter.fromHtml(it) }
+    }
+
+    private fun sendADFSLight(email: String, password: String): Single<CertificateResponse> {
+        return api.sendADFSForm(getADFSUrl(Api.LoginType.ADFSLight), mapOf(
+                "Username" to email,
+                "Password" to password,
+                "x" to "0",
+                "y" to "0"
+        )).map { certificateAdapter.fromHtml(it) }.flatMap {
+            api.sendADFSForm(it.action, mapOf(
+                    "wa" to it.wa,
+                    "wresult" to it.wresult,
+                    "wctx" to it.wctx
+            ))
+        }.map { certificateAdapter.fromHtml(it) }
+    }
+
+    private fun sendAdfs(email: String, password: String): Single<CertificateResponse> {
+        return api.getForm(getADFSUrl(Api.LoginType.ADFS)).flatMap {
+            api.sendADFSForm("$schema://adfs.$host/${it.formAction.removePrefix("/")}", mapOf(
+                    "__db" to it.db,
+                    "__VIEWSTATE" to it.viewstate,
+                    "__VIEWSTATEGENERATOR" to it.viewstateGenerator,
+                    "__EVENTVALIDATION" to it.eventValidation,
+                    "UsernameTextBox" to email,
+                    "PasswordTextBox" to password,
+                    "SubmitButton.x" to "0",
+                    "SubmitButton.y" to "0"
+            ))
+        }.map { certificateAdapter.fromHtml(it) }.flatMap {
+            api.sendADFSForm(it.action, mapOf(
+                    "wa" to it.wa,
+                    "wresult" to it.wresult,
+                    "wctx" to it.wctx
+            ))
+        }.map { certificateAdapter.fromHtml(it) }
+    }
+
+    private fun sendADFSCards(email: String, password: String): Single<CertificateResponse> {
+        return api.getForm(getADFSUrl(Api.LoginType.ADFSCards)).flatMap {
+            api.sendADFSFormStandardChoice("$schema://adfs.$host/${it.formAction.removePrefix("/")}", mapOf(
+                    "__db" to it.db,
+                    "__VIEWSTATE" to it.viewstate,
+                    "__VIEWSTATEGENERATOR" to it.viewstateGenerator,
+                    "__EVENTVALIDATION" to it.eventValidation,
+                    "PassiveSignInButton.x" to "0",
+                    "PassiveSignInButton.y" to "0"
+            ))
+        }.flatMap {
+            api.sendADFSForm("$schema://adfs.$host/${it.formAction.removePrefix("/")}", mapOf(
+                    "__db" to it.db,
+                    "__VIEWSTATE" to it.viewstate,
+                    "__VIEWSTATEGENERATOR" to it.viewstateGenerator,
+                    "__EVENTVALIDATION" to it.eventValidation,
+                    "SubmitButton.x" to "0",
+                    "SubmitButton.y" to "0",
+                    "UsernameTextBox" to email,
+                    "PasswordTextBox" to password
+            ))
+        }.map { certificateAdapter.fromHtml(it) }.flatMap {
+            api.sendADFSForm(it.action, mapOf(
+                    "wa" to it.wa,
+                    "wresult" to it.wresult,
+                    "wctx" to it.wctx
+            ))
+        }.map { certificateAdapter.fromHtml(it) }
+    }
+
+    private fun getADFSUrl(type: Api.LoginType): String {
+        val id = when (type) {
+            Api.LoginType.ADFS -> "adfs"
+            Api.LoginType.ADFSCards -> "eSzkola"
+            else -> "ADFS"
+        }
+
+        val hostPart = when (type) {
+            Api.LoginType.ADFSLight -> "$schema://adfslight.$host/LoginPage.aspx?ReturnUrl=" + encode("/")
+            else -> "$schema://adfs.$host/adfs/ls/"
+        }
+
+        return hostPart +
+                "?wa=wsignin1.0" +
+                "&wtrealm=" + encode("http${if (Api.LoginType.ADFSLight == type) "s" else ""}://cufs.$host/$symbol/Account/LogOn") +
+                "&wctx=" + encode("rm=0&id=$id&ru=" + encode(firstStepReturnUrl)) +
+                "&wct=" + encode(now(ZoneId.of("UTC")).format(DateTimeFormatter.ISO_LOCAL_DATE_TIME) + "Z")
+    }
+
+    private fun encode(url: String) = URLEncoder.encode(url, "UTF-8")
 }

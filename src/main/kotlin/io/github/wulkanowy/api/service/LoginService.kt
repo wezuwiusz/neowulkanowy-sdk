@@ -17,8 +17,8 @@ interface LoginService {
 
     // ADFS
 
-    @GET("Account/LogOn")
-    fun getForm(@Query("ReturnUrl") returnUrl: String): Single<ADFSFormResponse>
+    @GET
+    fun getForm(@Url url: String): Single<ADFSFormResponse>
 
     @POST
     @FormUrlEncoded
