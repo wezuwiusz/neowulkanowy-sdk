@@ -1,5 +1,6 @@
 package io.github.wulkanowy.api.interceptor
 
+import io.github.wulkanowy.api.ApiException
 import io.github.wulkanowy.api.login.AccountPermissionException
 import io.github.wulkanowy.api.login.BadCredentialsException
 import okhttp3.Interceptor
@@ -39,6 +40,11 @@ class ErrorInterceptor : Interceptor {
             "Błąd strony" -> throw VulcanException(doc.select(".errorMessage").text())
             "Logowanie" -> throw AccountPermissionException(doc.select("div").last().html().split("<br>")[1].trim())
             "Przerwa techniczna" -> throw ServiceUnavailableException(doc.title())
+            "Strona nie została odnaleziona" -> throw ApiException(doc.title())
+        }
+
+        doc.select("h2").text().let {
+            if (it == "Strona nie znaleziona") throw ApiException(it)
         }
     }
 }
