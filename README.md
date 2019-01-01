@@ -7,6 +7,7 @@
 [![Bintray](https://img.shields.io/bintray/v/wulkanowy/wulkanowy/api.svg?style=flat-square)](https://bintray.com/wulkanowy/wulkanowy/api)
 [![JitPack](https://img.shields.io/jitpack/v/jitpack/maven-simple.svg?style=flat-square)](https://jitpack.io/#wulkanowy/api)
 [![License](https://img.shields.io/github/license/wulkanowy/api.svg?style=flat-square)](https://github.com/wulkanowy/api)
+[![Trello](https://img.shields.io/badge/trello-api-blue.svg?style=flat-square)](https://trello.com/b/h9mKsEjb/api)
 [![Discord](https://img.shields.io/discord/390889354199040011.svg?style=flat-square)](https://discord.gg/vccAQBr)
 
 
