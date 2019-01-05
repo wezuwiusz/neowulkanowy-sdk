@@ -12,7 +12,7 @@ class TimetableTest : BaseLocalTest() {
 
     @Test
     fun getTimetableTest() {
-        assertEquals(10, table.size)
+        assertEquals(11, table.size)
     }
 
     @Test
@@ -36,7 +36,7 @@ class TimetableTest : BaseLocalTest() {
 
     @Test
     fun getSimpleLesson_canceled() {
-        table[2].run {
+        table[3].run {
             // wtorek, 0
             assertEquals(0, number)
             assertEquals(getDate(2018, 9, 25, 7, 10, 0), start)
@@ -54,7 +54,7 @@ class TimetableTest : BaseLocalTest() {
 
     @Test
     fun getSimpleLesson_replacementSameTeacher() {
-        table[4].run {
+        table[5].run {
             // środa, 0
             assertEquals(0, number)
             assertEquals(getDate(2018, 9, 26, 7, 10, 0), start)
@@ -73,7 +73,7 @@ class TimetableTest : BaseLocalTest() {
 
     @Test
     fun getSimpleLesson_replacementDifferentTeacher() {
-        table[6].run {
+        table[7].run {
             // czwartek, 0
             assertEquals(0, number)
             assertEquals(getDate(2018, 9, 27, 7, 10, 0), start)
@@ -81,7 +81,7 @@ class TimetableTest : BaseLocalTest() {
             assertEquals("Wychowanie do życia w rodzinie", subject)
             assertEquals("Telichowska Aleksandra", teacher)
             assertEquals("5", room)
-            assertEquals("zastępstwo, poprzednio: Religia, Gliniak Krystian, sala 3", info)
+            assertEquals("zastępstwo, poprzednio: Religia, Religijny Janusz, sala 3", info)
 
             assertEquals(false, canceled)
             assertEquals(true, changes)
@@ -92,7 +92,7 @@ class TimetableTest : BaseLocalTest() {
 
     @Test
     fun getGroupLesson() {
-        table[8].run {
+        table[9].run {
             // piątek, 0
             assertEquals(0, number)
             assertEquals(getDate(2018, 9, 28, 7, 10, 0), start)
@@ -128,7 +128,7 @@ class TimetableTest : BaseLocalTest() {
 
     @Test
     fun getGroupLesson_replacementSameTeacher() {
-        table[3].run {
+        table[4].run {
             // wtorek, 1
             assertEquals(1, number)
             assertEquals(getDate(2018, 9, 25, 8, 0, 0), start)
@@ -146,7 +146,7 @@ class TimetableTest : BaseLocalTest() {
 
     @Test
     fun getGroupLesson_replacementDifferentTeacher() {
-        table[5].run {
+        table[6].run {
             // środa, 1
             assertEquals(1, number)
             assertEquals(getDate(2018, 9, 26, 8, 0, 0), start)
@@ -165,7 +165,7 @@ class TimetableTest : BaseLocalTest() {
 
     @Test
     fun getLesson_button() {
-        table[7].run {
+        table[8].run {
             // czwartek, 1
             assertEquals(1, number)
             assertEquals(getDate(2018, 9, 27, 8, 0, 0), start)
@@ -184,7 +184,7 @@ class TimetableTest : BaseLocalTest() {
 
     @Test
     fun getLesson_emptyOriginal() {
-        table[9].run {
+        table[10].run {
             // piątek, 1
             assertEquals(1, number)
             assertEquals(getDate(2018, 9, 28, 8, 0, 0), start)
@@ -197,6 +197,24 @@ class TimetableTest : BaseLocalTest() {
 
             assertEquals(true, canceled)
             assertEquals(false, changes)
+        }
+    }
+
+    @Test
+    fun getLesson() {
+        table[2].run {
+            // poniedziałek, 2
+            assertEquals(2, number)
+            assertEquals(getDate(2018, 9, 24, 8, 50, 0), start)
+
+            assertEquals("Geografia", subject)
+            assertEquals("", group)
+            assertEquals("Światowy Michał", teacher)
+            assertEquals("23", room)
+            assertEquals("zastępstwo, poprzednio: Religia, Religijny Janusz, sala 23", info)
+
+            assertEquals(false, canceled)
+            assertEquals(true, changes)
         }
     }
 }

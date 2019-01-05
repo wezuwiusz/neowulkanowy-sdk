@@ -6,6 +6,7 @@ import org.jsoup.select.Elements
 class TimetableParser {
 
     private companion object {
+        const val CLASS_PLANNED = "x-treelabel-ppl"
         const val CLASS_REALIZED = "x-treelabel-rlz"
         const val CLASS_MOVED_OR_CANCELED = "x-treelabel-inv"
     }
@@ -20,10 +21,13 @@ class TimetableParser {
         return when {
             divs.size == 1 -> getLessonInfo(lesson, divs[0])
             divs.size == 2 && divs[1]?.selectFirst("span")?.hasClass(CLASS_MOVED_OR_CANCELED) ?: false -> {
-                getLessonInfo(lesson, divs[0]).run {
-                    copy(changes = true, info = getLessonInfo(lesson, divs[1]).run {
-                        stripLessonInfo("${getFormattedLessonInfo(this.info)}, $info, poprzednio: $subject, $teacher, sala $room")
-                    })
+                when {
+                    divs[1]?.selectFirst("span")?.hasClass(CLASS_PLANNED) == true -> getLessonInfo(lesson, divs[0]).run {
+                        copy(changes = true, info = getLessonInfo(lesson, divs[1]).run {
+                            stripLessonInfo("${getFormattedLessonInfo(this.info)}, $info, poprzednio: $subject, $teacher, sala $room")
+                        })
+                    }
+                    else -> getLessonInfo(lesson, divs[1])
                 }
             }
             divs.size == 2 -> getLessonInfo(lesson, divs[0])
