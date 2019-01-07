@@ -7,7 +7,7 @@ plugins {
 }
 
 ext {
-    PUBLISH_VERSION = '0.6.0'
+    PUBLISH_VERSION = '0.6.2'
     SITE_URL = 'https://github.com/wulkanowy/api'
     GIT_URL = 'https://github.com/wulkanowy/api.git'
 }
