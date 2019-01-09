@@ -11,7 +11,9 @@ import io.github.wulkanowy.api.interceptor.NotLoggedInErrorInterceptor
 import io.github.wulkanowy.api.interceptor.StudentAndParentInterceptor
 import io.github.wulkanowy.api.interceptor.UserAgentInterceptor
 import io.github.wulkanowy.api.login.NotLoggedInException
+import io.github.wulkanowy.api.register.HomepageResponse
 import io.github.wulkanowy.api.repository.LoginRepository
+import io.reactivex.Flowable
 import okhttp3.Interceptor
 import okhttp3.JavaNetCookieJar
 import okhttp3.OkHttpClient
@@ -115,7 +117,7 @@ class ServiceManager(
                         .create()) else JspoonConverterFactory.create())
                 .addCallAdapterFactory(if (!login) RxJava2CallAdapterFactory.create() else
                     RxJava2ReauthCallAdapterFactory.create(
-                            LoginRepository(loginType, schema, host, symbol, cookies, getLoginService()).login(email, password).toFlowable(),
+                            getLoginHelper(),
                             { it is NotLoggedInException }
                     )
                 ).build()
@@ -136,6 +138,13 @@ class ServiceManager(
                         }
                     }
                 }
+    }
+
+    private fun getLoginHelper(): Flowable<HomepageResponse> {
+        return LoginRepository(loginType, schema, host, symbol, cookies, getLoginService())
+                .login(email, password)
+                .toFlowable()
+                .share()
     }
 
     class UrlGenerator(private val schema: String, private val host: String, var symbol: String, var schoolId: String) {
