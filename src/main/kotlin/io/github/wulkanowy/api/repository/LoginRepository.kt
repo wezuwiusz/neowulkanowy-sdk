@@ -144,16 +144,15 @@ class LoginRepository(
             else -> "ADFS"
         }
 
-        val hostPart = when (type) {
-            Api.LoginType.ADFSLight -> "$schema://adfslight.$host/LoginPage.aspx?ReturnUrl=" + encode("/")
-            else -> "$schema://adfs.$host/adfs/ls/"
-        }
-
-        return hostPart +
-                "?wa=wsignin1.0" +
+        val query = "?wa=wsignin1.0" +
                 "&wtrealm=" + encode("http${if (Api.LoginType.ADFSCards != type) "s" else ""}://cufs.$host/$symbol/Account/LogOn") +
                 "&wctx=" + encode("rm=0&id=$id&ru=" + encode(firstStepReturnUrl)) +
                 "&wct=" + encode(now(ZoneId.of("UTC")).format(DateTimeFormatter.ISO_LOCAL_DATE_TIME) + "Z")
+
+        return when (type) {
+            Api.LoginType.ADFSLight -> "$schema://adfslight.$host/LoginPage.aspx?ReturnUrl=" + encode("/") + encode(query)
+            else -> "$schema://adfs.$host/adfs/ls/$query"
+        }
     }
 
     private fun encode(url: String) = URLEncoder.encode(url, "UTF-8")
