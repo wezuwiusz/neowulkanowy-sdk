@@ -3,6 +3,7 @@ package io.github.wulkanowy.api.login
 import io.github.wulkanowy.api.Api
 import io.github.wulkanowy.api.BaseLocalTest
 import io.github.wulkanowy.api.homework.HomeworkTest
+import io.github.wulkanowy.api.interceptor.ErrorInterceptorTest
 import io.github.wulkanowy.api.interceptor.VulcanException
 import io.github.wulkanowy.api.register.HomepageResponse
 import io.github.wulkanowy.api.repository.LoginRepository
@@ -127,7 +128,7 @@ class LoginTest : BaseLocalTest() {
 
     @Test
     fun invalidCertificatePage() {
-        server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("Offline.html").readText()))
+        server.enqueue(MockResponse().setBody(ErrorInterceptorTest::class.java.getResource("Offline.html").readText()))
         server.start(3000)
 
         val res = normal.login("jan@fakelog.cf", "jan123")

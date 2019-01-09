@@ -49,4 +49,12 @@ class ErrorInterceptorTest : BaseLocalTest() {
         notes.subscribe(observer)
         observer.assertError(NotLoggedInException::class.java)
     }
+
+    @Test
+    fun offline_databaseUpdate() {
+        val notes = getSnpRepo(ErrorInterceptorTest::class.java, "AktualizacjaBazyDanych.html", Api.LoginType.STANDARD).getNotes()
+        val observer = TestObserver<List<Note>>()
+        notes.subscribe(observer)
+        observer.assertError(ServiceUnavailableException::class.java)
+    }
 }

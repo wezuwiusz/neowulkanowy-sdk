@@ -3,6 +3,7 @@ package io.github.wulkanowy.api.repository
 import io.github.wulkanowy.api.Api
 import io.github.wulkanowy.api.ApiException
 import io.github.wulkanowy.api.BaseLocalTest
+import io.github.wulkanowy.api.interceptor.ErrorInterceptorTest
 import io.github.wulkanowy.api.login.LoginTest
 import io.github.wulkanowy.api.register.Pupil
 import io.github.wulkanowy.api.service.*
@@ -29,7 +30,7 @@ class RegisterRepositoryTest : BaseLocalTest() {
         server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("LoginPage-standard.html").readText()))
         server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("Logowanie-uonet.html").readText()))
         server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("Logowanie-brak-dostepu.html").readText()))
-        server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("Offline.html").readText()))
+        server.enqueue(MockResponse().setBody(ErrorInterceptorTest::class.java.getResource("Offline.html").readText()))
         server.start(3000)
 
         val res = normal.getPupils()
