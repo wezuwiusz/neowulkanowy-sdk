@@ -35,7 +35,7 @@ allprojects {
 }
 
 dependencies {
-    implementation 'io.github.wulkanowy:api:0.6.2'
+    implementation 'io.github.wulkanowy:api:0.6.3'
 }
 ```
 
