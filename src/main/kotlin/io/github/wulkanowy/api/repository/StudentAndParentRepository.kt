@@ -99,8 +99,8 @@ class StudentAndParentRepository(private val api: StudentAndParentService) {
         return api.getGradesSummary(semesterId).map { res ->
             res.subjects.asSequence().map { summary ->
                 summary.apply {
-                    predicted = getGradeShortValue(predicted)
-                    final = getGradeShortValue(final)
+                    predicted = if (predicted != "-") getGradeShortValue(predicted) else ""
+                    final = if (final != "-") getGradeShortValue(final) else ""
                 }
             }.sortedBy { it.name }.toList()
         }

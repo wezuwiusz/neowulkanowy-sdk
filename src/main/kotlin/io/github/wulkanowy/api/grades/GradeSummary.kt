@@ -7,9 +7,9 @@ class GradeSummary {
     @Selector("td", index = 0)
     lateinit var name: String
 
-    @Selector("td:nth-last-of-type(2):not(:contains(-))")
+    @Selector("td:nth-last-of-type(2)")
     var predicted: String = ""
 
-    @Selector("td:nth-last-of-type(1):not(:contains(-))")
+    @Selector("td:nth-last-of-type(1)")
     var final: String = ""
 }

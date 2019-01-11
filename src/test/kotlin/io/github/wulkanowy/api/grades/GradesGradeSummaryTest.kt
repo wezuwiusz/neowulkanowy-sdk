@@ -45,7 +45,7 @@ class GradesGradeSummaryTest : BaseLocalTest() {
 
         assertEquals("4/5", average[0].predicted)
         assertEquals("", average[1].predicted)
-        assertEquals("", average[2].predicted)
+        assertEquals("4", average[2].predicted)
         assertEquals("5", average[3].predicted)
         assertEquals("bardzo dobre", average[4].predicted)
     }
@@ -60,7 +60,7 @@ class GradesGradeSummaryTest : BaseLocalTest() {
 
         assertEquals("5", average[0].final)
         assertEquals("4", average[1].final)
-        assertEquals("", average[2].final)
+        assertEquals("5-", average[2].final)
         assertEquals("6", average[3].final)
         assertEquals("bardzo dobre", average[4].final)
     }
