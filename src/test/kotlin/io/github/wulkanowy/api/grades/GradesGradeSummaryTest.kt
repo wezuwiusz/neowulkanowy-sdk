@@ -15,53 +15,56 @@ class GradesGradeSummaryTest : BaseLocalTest() {
     }
 
     @Test
-    fun getSummaryTest() {
-        assertEquals(5, std.size)
-        assertEquals(5, average.size)
+    fun getSummaryStd_longPredictedAndFinal() {
+        std[0].run {
+            assertEquals("Metodologia programowania", name)
+            assertEquals("5", predicted)
+            assertEquals("6", final)
+        }
     }
 
     @Test
-    fun getNameTest() {
-        assertEquals("Metodologia programowania", std[0].name)
-        assertEquals("Podstawy przedsiębiorczości", std[1].name)
-        assertEquals("Praktyka zawodowa", std[2].name)
-        assertEquals("Wychowanie do życia w rodzinie", std[3].name)
-        assertEquals("Zachowanie", std[4].name)
-
-        assertEquals("Język angielski", average[0].name)
-        assertEquals("Język polski", average[1].name)
-        assertEquals("Wiedza o społeczeństwie", average[2].name)
-        assertEquals("Wychowanie fizyczne", average[3].name)
-        assertEquals("Zachowanie", average[4].name)
+    fun getSummaryAverage_empty() {
+        average[0].run {
+            assertEquals("Język angielski", name)
+            assertEquals("", predicted)
+            assertEquals("", final)
+        }
     }
 
     @Test
-    fun getPredictedRatingTest() {
-        assertEquals("5", std[0].predicted)
-        assertEquals("3/4", std[1].predicted)
-        assertEquals("", std[2].predicted)
-        assertEquals("", std[3].predicted)
-        assertEquals("bardzo dobre", std[4].predicted)
-
-        assertEquals("4/5", average[0].predicted)
-        assertEquals("", average[1].predicted)
-        assertEquals("4", average[2].predicted)
-        assertEquals("5", average[3].predicted)
-        assertEquals("bardzo dobre", average[4].predicted)
+    fun getSummaryAverage_longFinal() {
+        average[1].run {
+            assertEquals("Język polski", name)
+            assertEquals("", predicted)
+            assertEquals("4", final)
+        }
     }
 
     @Test
-    fun getFinalRatingTest() {
-        assertEquals("6", std[0].final)
-        assertEquals("3", std[1].final)
-        assertEquals("6", std[2].final)
-        assertEquals("", std[3].final)
-        assertEquals("bardzo dobre", std[4].final)
+    fun getSummaryAverage_longPredictedAndFinal() {
+        average[2].run {
+            assertEquals("Wiedza o społeczeństwie", name)
+            assertEquals("5", predicted)
+            assertEquals("6", final)
+        }
+    }
 
-        assertEquals("5", average[0].final)
-        assertEquals("4", average[1].final)
-        assertEquals("5-", average[2].final)
-        assertEquals("6", average[3].final)
-        assertEquals("bardzo dobre", average[4].final)
+    @Test
+    fun getSummaryAverage_shortPredictedAndLongFinal() {
+        average[3].run {
+            assertEquals("Wychowanie fizyczne", name)
+            assertEquals("4/5", predicted)
+            assertEquals("5", final)
+        }
+    }
+
+    @Test
+    fun getSummaryAverage_shortNegativePredictedAndFinal() {
+        average[4].run {
+            assertEquals("Zachowanie", name)
+            assertEquals("4-", predicted)
+            assertEquals("5-", final)
+        }
     }
 }
