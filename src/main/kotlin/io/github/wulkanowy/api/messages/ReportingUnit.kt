@@ -10,9 +10,6 @@ data class ReportingUnit(
         @SerializedName("Skrot")
         val short: String,
 
-        @SerializedName("NazwaNadawcy")
-        val senderName: String,
-
         @SerializedName("Id")
         val senderId: Int
 )

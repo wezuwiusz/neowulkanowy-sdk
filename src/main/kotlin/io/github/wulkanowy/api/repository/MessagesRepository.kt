@@ -11,8 +11,12 @@ import org.threeten.bp.format.DateTimeFormatter
 
 class MessagesRepository(private val api: MessagesService) {
 
-    private val reportingUnit by lazy {
-        getReportingUnits().map { list -> list.first() }
+    private val reportingUnit: Single<ReportingUnit> by lazy {
+        getReportingUnits().map { list ->
+            list.ifEmpty {
+                listOf(ReportingUnit(0, "unknown", 0))
+            }.first()
+        }
     }
 
     private val recipients by lazy {
@@ -28,7 +32,11 @@ class MessagesRepository(private val api: MessagesService) {
     }
 
     fun getRecipients(role: Int): Single<List<Recipient>> {
-        return reportingUnit.map { unit -> api.getRecipients(unit.id, role).map { it.data } }.flatMap { it }
+        return reportingUnit.flatMap { unit ->
+            // invalid unit id produced error
+            if (unit.id == 0) return@flatMap Single.just(emptyList<Recipient>())
+            api.getRecipients(unit.id, role).map { it.data }
+        }
     }
 
     fun getReceivedMessages(startDate: LocalDateTime?, endDate: LocalDateTime?): Single<List<Message>> {

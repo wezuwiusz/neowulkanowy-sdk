@@ -40,6 +40,16 @@ class MessagesTest : BaseLocalTest() {
     }
 
     @Test
+    fun getMessagesSentTest_emptyUnits() {
+        server.enqueue(MockResponse().setBody(MessagesTest::class.java.getResource("WiadomosciWyslane.json").readText()))
+        server.enqueue(MockResponse().setBody(MessagesTest::class.java.getResource("JednostkiUzytkownika-empty.json").readText()))
+//        server.enqueue(MockResponse().setBody(MessagesTest::class.java.getResource("Adresaci.json").readText()))
+        server.start(3000)
+
+        assertEquals(1, api.getSentMessages(null, null).blockingGet().size)
+    }
+
+    @Test
     fun getMessageTest() {
         server.enqueue(MockResponse().setBody(MessagesTest::class.java.getResource("Wiadomosc.json").readText()))
         server.start(3000)
