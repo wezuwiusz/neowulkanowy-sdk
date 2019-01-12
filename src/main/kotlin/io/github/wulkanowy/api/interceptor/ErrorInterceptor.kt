@@ -39,7 +39,7 @@ class ErrorInterceptor : Interceptor {
         when (doc.title()) {
             "Błąd" -> throw VulcanException(doc.body().text())
             "Błąd strony" -> throw VulcanException(doc.select(".errorMessage").text())
-            "Logowanie" -> throw AccountPermissionException(doc.select("div").last().html().split("<br>")[1].trim())
+            "Logowanie" -> throw AccountPermissionException(doc.select("div").last().ownText().split(" Jeśli")[0])
             "Przerwa techniczna" -> throw ServiceUnavailableException(doc.title())
             "Strona nie została odnaleziona" -> throw ApiException(doc.title())
             "Strona nie znaleziona" -> throw ApiException(doc.selectFirst("div div").text())

@@ -113,6 +113,9 @@ class LoginTest : BaseLocalTest() {
         res.subscribe(observer)
         observer.assertTerminated()
         observer.assertError(AccountPermissionException::class.java)
+        observer.assertError {
+            it.localizedMessage == "Adres nie został zarejestrowany w dzienniku uczniowskim jako adres rodzica, bądź ucznia."
+        }
     }
 
     @Test
