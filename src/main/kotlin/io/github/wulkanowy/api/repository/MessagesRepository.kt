@@ -9,31 +9,32 @@ import org.threeten.bp.format.DateTimeFormatter
 
 class MessagesRepository(private val api: MessagesService) {
 
-    private val reportingUnit: Single<ReportingUnit> by lazy {
-        getReportingUnits().map { list ->
+    private lateinit var recipients: List<Recipient>
+
+    private lateinit var reportingUnits: List<ReportingUnit>
+
+    fun getReportingUnits(): Single<List<ReportingUnit>> {
+        if (::reportingUnits.isInitialized) return Single.just(reportingUnits)
+
+        return api.getUserReportingUnits().map { it.data }.map { list ->
             list.ifEmpty {
                 listOf(ReportingUnit(0, "unknown", 0))
-            }.first()
-        }
-    }
-
-    private val recipients by lazy {
-        getRecipients(2).map { list ->
-            list.map {
-                Pair(it, it.name.split(" -").first())
+            }.apply {
+                reportingUnits = this
             }
         }
     }
 
-    fun getReportingUnits(): Single<List<ReportingUnit>> {
-        return api.getUserReportingUnits().map { it.data }
-    }
+    fun getRecipients(role: Int = 2): Single<List<Recipient>> {
+        if (::recipients.isInitialized) return Single.just(recipients)
 
-    fun getRecipients(role: Int): Single<List<Recipient>> {
-        return reportingUnit.flatMap { unit ->
+        return getReportingUnits().map { it.first() }.flatMap { unit ->
             // invalid unit id produced error
             if (unit.id == 0) return@flatMap Single.just(emptyList<Recipient>())
-            api.getRecipients(unit.id, role).map { it.data }
+            api.getRecipients(unit.id, role).map {
+                recipients = if (null !== it.data) it.data else listOf()
+                it.data
+            }
         }
     }
 
@@ -51,18 +52,13 @@ class MessagesRepository(private val api: MessagesService) {
                 .map { res -> res.data?.asSequence()?.map { it.copy(folderId = 2) }?.sortedBy { it.date }?.toList() }
                 .flatMapObservable { Observable.fromIterable(it) }
                 .flatMap { message ->
-                    recipients.flatMapObservable {
-                        Observable.fromIterable(it.filter { recipient ->
-                            recipient.second == message.recipient?.split(" -")?.first()
-                        }.ifEmpty {
-                            listOf(Pair(
-                                    Recipient("unknown", message.recipient?.split(" -")?.first() ?: "unknown",
-                                            9999, 9999, 2, "unknown"), "unknown"
-                            ))
+                    getRecipients().flatMapObservable {
+                        Observable.fromIterable(it.filter { recipient -> recipient.name == message.recipient }.ifEmpty {
+                            listOf(Recipient("0", message.recipient ?: "unknown", 0, 0, 2, "unknown"))
                         })
                     }.map {
-                        message.copy(recipient = it.first.name, messageId = message.id).apply {
-                            recipientId = it.first.loginId
+                        message.copy(recipient = it.name.split(" -").first(), messageId = message.id).apply {
+                            recipientId = it.loginId
                         }
                     }
                 }
