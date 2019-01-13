@@ -1,6 +1,5 @@
 package io.github.wulkanowy.api.messages
 
-import com.google.gson.Gson
 import com.google.gson.JsonParser
 import io.github.wulkanowy.api.BaseLocalTest
 import io.github.wulkanowy.api.repository.MessagesRepository
@@ -38,7 +37,7 @@ class MessagesTest : BaseLocalTest() {
         server.enqueue(MockResponse().setBody(MessagesTest::class.java.getResource("Adresaci.json").readText()))
         server.start(3000)
 
-        assertEquals(1, api.getSentMessages(null, null).blockingGet().size)
+        assertEquals(2, api.getSentMessages(null, null).blockingGet().size)
     }
 
     @Test
@@ -48,7 +47,33 @@ class MessagesTest : BaseLocalTest() {
 //        server.enqueue(MockResponse().setBody(MessagesTest::class.java.getResource("Adresaci.json").readText()))
         server.start(3000)
 
-        assertEquals(1, api.getSentMessages(null, null).blockingGet().size)
+        assertEquals(2, api.getSentMessages(null, null).blockingGet().size)
+    }
+
+    @Test
+    fun getMessagesSent_recipientWithDashInName() {
+        server.enqueue(MockResponse().setBody(MessagesTest::class.java.getResource("WiadomosciWyslane.json").readText()))
+        server.enqueue(MockResponse().setBody(MessagesTest::class.java.getResource("JednostkiUzytkownika.json").readText()))
+        server.enqueue(MockResponse().setBody(MessagesTest::class.java.getResource("Adresaci.json").readText()))
+        server.start(3000)
+
+        val recipients = api.getSentMessages(null, null).blockingGet()
+
+        assertEquals("Czerwieńska - Kowalska Joanna [CJ]", recipients[1].recipient)
+        assertEquals(95, recipients[1].recipientId)
+    }
+
+    @Test
+    fun getMessagesSent_recipientWithDashInNameAndEmptyUnits() {
+        server.enqueue(MockResponse().setBody(MessagesTest::class.java.getResource("WiadomosciWyslane.json").readText()))
+        server.enqueue(MockResponse().setBody(MessagesTest::class.java.getResource("JednostkiUzytkownika-empty.json").readText()))
+//        server.enqueue(MockResponse().setBody(MessagesTest::class.java.getResource("Adresaci.json").readText()))
+        server.start(3000)
+
+        val recipients = api.getSentMessages(null, null).blockingGet()
+
+        assertEquals("Czerwieńska - Kowalska Joanna [CJ]", recipients[1].recipient)
+        assertEquals(0, recipients[1].recipientId)
     }
 
     @Test
@@ -65,7 +90,8 @@ class MessagesTest : BaseLocalTest() {
         server.start(3000)
 
         api.sendMessage("Temat wiadomości", "Tak wygląda zawartość wiadomości.\nZazwyczaj ma wiele linijek.\n\nZ poważaniem,\nNazwisko Imię",
-                listOf(Recipient("0", "Kowalski Jan", 0, 0, 2, "hash"))).blockingGet()
+                listOf(Recipient("0", "Kowalski Jan", 0, 0, 2, "hash"))
+        ).blockingGet()
 
         val parser = JsonParser()
         val expected = parser.parse(MessagesTest::class.java.getResource("NowaWiadomosc.json").readText())

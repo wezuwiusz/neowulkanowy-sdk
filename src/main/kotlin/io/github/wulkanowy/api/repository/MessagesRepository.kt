@@ -57,7 +57,7 @@ class MessagesRepository(private val api: MessagesService) {
                             listOf(Recipient("0", message.recipient ?: "unknown", 0, 0, 2, "unknown"))
                         })
                     }.map {
-                        message.copy(recipient = it.name.split(" -").first(), messageId = message.id).apply {
+                        message.copy(recipient = it.name.substringBeforeLast(" -"), messageId = message.id).apply {
                             recipientId = it.loginId
                         }
                     }
