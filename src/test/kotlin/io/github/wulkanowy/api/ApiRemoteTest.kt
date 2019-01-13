@@ -354,7 +354,7 @@ class ApiRemoteTest : BaseTest() {
 
             assertEquals("", student.phoneNumber)
             assertEquals("-", student.cellPhoneNumber)
-            assertEquals("jan@fakelog.cf", student.email)
+//            assertEquals("jan@fakelog.cf", student.email)
 
             family[0].run {
                 assertEquals("Monika Nowak", fullName)
