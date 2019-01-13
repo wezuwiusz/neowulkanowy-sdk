@@ -2,23 +2,24 @@ package io.github.wulkanowy.api.messages
 
 import com.google.gson.annotations.SerializedName
 
-data class Recipient(
+data class Sender(
 
         @SerializedName("Id")
-        val id: String,
+        val id: String? = null,
 
         @SerializedName("Nazwa")
-        val name: String,
+        val name: String? = null,
 
         @SerializedName("IdLogin")
-        val loginId: Int,
+        val loginId: Int? = null,
 
         @SerializedName("IdJednostkaSprawozdawcza")
-        val reportingUnitId: Int,
+        val reportingUnitId: Int? = null,
 
         @SerializedName("Rola")
-        val role: Int,
+        val role: Int? = null,
 
         @SerializedName("Hash")
-        val hash: String
+        val hash: String? = null
+
 )

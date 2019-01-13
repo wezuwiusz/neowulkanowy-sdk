@@ -1,5 +1,7 @@
 package io.github.wulkanowy.api.messages
 
+import com.google.gson.Gson
+import com.google.gson.JsonParser
 import io.github.wulkanowy.api.BaseLocalTest
 import io.github.wulkanowy.api.repository.MessagesRepository
 import io.github.wulkanowy.api.service.MessagesService
@@ -55,5 +57,20 @@ class MessagesTest : BaseLocalTest() {
         server.start(3000)
 
         assertEquals(90, api.getMessage(1, 1, false, 0).blockingGet().length)
+    }
+
+    @Test
+    fun sendMessageTest() {
+        server.enqueue(MockResponse().setBody(MessagesTest::class.java.getResource("WyslanaWiadomosc.json").readText()))
+        server.start(3000)
+
+        api.sendMessage("Temat wiadomości", "Tak wygląda zawartość wiadomości.\nZazwyczaj ma wiele linijek.\n\nZ poważaniem,\nNazwisko Imię",
+                listOf(Recipient("0", "Kowalski Jan", 0, 0, 2, "hash"))).blockingGet()
+
+        val parser = JsonParser()
+        val expected = parser.parse(MessagesTest::class.java.getResource("NowaWiadomosc.json").readText())
+        val actual = parser.parse(server.takeRequest().body.readUtf8())
+
+        assertEquals(expected, actual)
     }
 }

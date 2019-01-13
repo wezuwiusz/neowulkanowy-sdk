@@ -3,6 +3,7 @@ package io.github.wulkanowy.api
 import io.github.wulkanowy.api.messages.Folder
 import io.github.wulkanowy.api.messages.Folder.*
 import io.github.wulkanowy.api.messages.Message
+import io.github.wulkanowy.api.messages.Recipient
 import io.github.wulkanowy.api.repository.*
 import io.github.wulkanowy.api.service.ServiceManager
 import io.reactivex.Single
@@ -202,6 +203,8 @@ class Api {
     fun getDeletedMessages(startDate: LocalDateTime? = null, endDate: LocalDateTime? = null) = messages.getDeletedMessages(startDate, endDate)
 
     fun getMessageContent(messageId: Int, folderId: Int, read: Boolean = false, id: Int? = null) = messages.getMessage(messageId, folderId, read, id)
+
+    fun sendMessage(subject: String, content: String, recipients: List<Recipient>) = messages.sendMessage(subject, content, recipients)
 
     fun getTimetable(startDate: LocalDate, endDate: LocalDate? = null) = if (useNewStudent) student.getTimetable(startDate, endDate) else snp.getTimetable(startDate, endDate)
 

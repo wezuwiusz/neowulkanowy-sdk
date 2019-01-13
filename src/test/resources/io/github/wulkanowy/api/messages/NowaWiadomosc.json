@@ -1,0 +1,18 @@
+{
+  "incomming": {
+    "Adresaci": [
+      {
+        "Id": "0",
+        "Nazwa": "Kowalski Jan",
+        "IdLogin": 0,
+        "IdJednostkaSprawozdawcza": 0,
+        "Rola": 2,
+        "Hash": "hash"
+      }
+    ],
+    "Id": 0,
+    "Nadawca": {},
+    "Temat": "Temat wiadomości",
+    "Tresc": "Tak wygląda zawartość wiadomości.\nZazwyczaj ma wiele linijek.\n\nZ poważaniem,\nNazwisko Imię"
+  }
+}
