@@ -56,12 +56,17 @@ class MessagesRepository(private val api: MessagesService) {
                 .flatMapObservable { Observable.fromIterable(it) }
                 .flatMap { message ->
                     getRecipients().flatMapObservable {
-                        Observable.fromIterable(it.filter { recipient -> recipient.name == message.recipient?.normalizeRecipient() }.ifEmpty {
-                            listOf(Recipient("0", message.recipient?.normalizeRecipient() ?: "unknown", 0, 0, 2, "unknown"))
-                        })
+                        Observable.fromArray(message.recipient!!
+                                .split("; ")
+                                .map { recipient -> recipient.normalizeRecipient() }
+                                .joinBy(it) { (name, recipient) -> name == recipient.name }
+                                .ifEmpty {
+                                    listOf(Recipient("0", message.recipient.normalizeRecipient(), 0, 0, 2, "unknown"))
+                                })
                     }.map {
-                        message.copy(recipient = it.name, messageId = message.id).apply {
-                            recipientId = it.loginId
+                        message.copy(recipient = it.joinToString("; ") { recipient -> recipient.name }, messageId = message.id).apply {
+                            recipientId = it[0].loginId
+                            recipients = it
                         }
                     }
                 }
@@ -94,5 +99,11 @@ class MessagesRepository(private val api: MessagesService) {
     private fun getDate(date: LocalDateTime?): String {
         if (date == null) return ""
         return date.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))
+    }
+
+    private inline fun <T : Any, U : Any> List<T>.joinBy(collection: List<U>, filter: (Pair<T, U>) -> Boolean): List<U> {
+        return map { t ->
+            collection.filter { filter(Pair(t, it)) }
+        }.flatten()
     }
 }

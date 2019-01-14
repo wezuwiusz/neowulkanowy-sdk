@@ -37,7 +37,7 @@ class MessagesTest : BaseLocalTest() {
         server.enqueue(MockResponse().setBody(MessagesTest::class.java.getResource("Adresaci.json").readText()))
         server.start(3000)
 
-        assertEquals(3, api.getSentMessages(null, null).blockingGet().size)
+        assertEquals(5, api.getSentMessages(null, null).blockingGet().size)
     }
 
     @Test
@@ -47,7 +47,7 @@ class MessagesTest : BaseLocalTest() {
 //        server.enqueue(MockResponse().setBody(MessagesTest::class.java.getResource("Adresaci.json").readText()))
         server.start(3000)
 
-        assertEquals(3, api.getSentMessages(null, null).blockingGet().size)
+        assertEquals(5, api.getSentMessages(null, null).blockingGet().size)
     }
 
     @Test
@@ -70,10 +70,10 @@ class MessagesTest : BaseLocalTest() {
         server.enqueue(MockResponse().setBody(MessagesTest::class.java.getResource("Adresaci.json").readText()))
         server.start(3000)
 
-        val recipients = api.getSentMessages(null, null).blockingGet()
+        val messages = api.getSentMessages(null, null).blockingGet()
 
-        assertEquals("Czerwieńska - Kowalska Joanna", recipients[1].recipient)
-        assertEquals(95, recipients[2].recipientId)
+        assertEquals("Czerwieńska - Kowalska Joanna", messages[1].recipient)
+        assertEquals(95, messages[2].recipientId)
     }
 
     @Test
@@ -83,10 +83,51 @@ class MessagesTest : BaseLocalTest() {
 //        server.enqueue(MockResponse().setBody(MessagesTest::class.java.getResource("Adresaci.json").readText()))
         server.start(3000)
 
-        val recipients = api.getSentMessages(null, null).blockingGet()
+        val messages = api.getSentMessages(null, null).blockingGet()
 
-        assertEquals("Czerwieńska - Kowalska Joanna", recipients[1].recipient)
-        assertEquals(0, recipients[1].recipientId)
+        assertEquals("Czerwieńska - Kowalska Joanna", messages[1].recipient)
+        assertEquals(0, messages[1].recipientId)
+    }
+
+    @Test
+    fun getMessagesSent_multiRecipients() {
+        server.enqueue(MockResponse().setBody(MessagesTest::class.java.getResource("WiadomosciWyslane.json").readText()))
+        server.enqueue(MockResponse().setBody(MessagesTest::class.java.getResource("JednostkiUzytkownika.json").readText()))
+        server.enqueue(MockResponse().setBody(MessagesTest::class.java.getResource("Adresaci.json").readText()))
+        server.start(3000)
+
+        val message = api.getSentMessages(null, null).blockingGet()[3]
+
+        assertEquals("Czerwieńska - Kowalska Joanna; Tracz Janusz", message.recipient)
+        assertEquals(95, message.recipientId)
+
+        val recipients = message.recipients
+
+        assertEquals("Czerwieńska - Kowalska Joanna", recipients[0].name)
+        assertEquals(95, recipients[0].loginId)
+        assertEquals("Tracz Janusz", recipients[1].name)
+        assertEquals(95, recipients[0].loginId)
+    }
+
+    @Test
+    fun getMessagesSent_multiRecipientsWithOneBroken() {
+        server.enqueue(MockResponse().setBody(MessagesTest::class.java.getResource("WiadomosciWyslane.json").readText()))
+        server.enqueue(MockResponse().setBody(MessagesTest::class.java.getResource("JednostkiUzytkownika.json").readText()))
+        server.enqueue(MockResponse().setBody(MessagesTest::class.java.getResource("Adresaci.json").readText()))
+        server.start(3000)
+
+        val message = api.getSentMessages(null, null).blockingGet()[4]
+
+//        assertEquals("Tracz Janusz; Kowalska Joanna", message.recipient)
+        assertEquals("Tracz Janusz", message.recipient)
+        assertEquals(18, message.recipientId)
+
+        val recipients = message.recipients
+
+        assertEquals("Tracz Janusz", recipients[0].name)
+        assertEquals(18, recipients[0].loginId)
+
+        assertEquals(1, recipients.size)
     }
 
     @Test
