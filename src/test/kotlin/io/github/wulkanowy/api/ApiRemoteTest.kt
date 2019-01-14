@@ -485,4 +485,14 @@ class ApiRemoteTest : BaseTest() {
             assertEquals("Nieobecność nieusprawiedliwiona", absence)
         }
     }
+
+    @Test
+    fun luckyNumberTest() {
+        val luckyNumber = api.getLuckyNumber()
+        val luckyNumberObserver = TestObserver<Int>()
+        luckyNumber.subscribe(luckyNumberObserver)
+        luckyNumberObserver.assertComplete()
+
+        assertEquals(0, luckyNumberObserver.values()[0])
+    }
 }

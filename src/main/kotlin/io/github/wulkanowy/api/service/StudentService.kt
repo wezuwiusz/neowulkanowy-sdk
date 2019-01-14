@@ -6,12 +6,10 @@ import io.github.wulkanowy.api.exams.ExamRequest
 import io.github.wulkanowy.api.exams.ExamResponse
 import io.github.wulkanowy.api.grades.GradeRequest
 import io.github.wulkanowy.api.grades.GradesResponse
-import io.github.wulkanowy.api.homework.Homework
 import io.github.wulkanowy.api.homework.HomeworkResponse
 import io.github.wulkanowy.api.mobile.Device
 import io.github.wulkanowy.api.notes.NotesResponse
 import io.github.wulkanowy.api.register.Diary
-import io.github.wulkanowy.api.register.HomepageResponse
 import io.github.wulkanowy.api.timetable.CacheResponse
 import io.github.wulkanowy.api.timetable.TimetableRequest
 import io.github.wulkanowy.api.timetable.TimetableResponse

@@ -11,7 +11,7 @@ import io.github.wulkanowy.api.interceptor.NotLoggedInErrorInterceptor
 import io.github.wulkanowy.api.interceptor.StudentAndParentInterceptor
 import io.github.wulkanowy.api.interceptor.UserAgentInterceptor
 import io.github.wulkanowy.api.login.NotLoggedInException
-import io.github.wulkanowy.api.register.HomepageResponse
+import io.github.wulkanowy.api.register.SendCertificateResponse
 import io.github.wulkanowy.api.repository.LoginRepository
 import io.reactivex.Flowable
 import okhttp3.Interceptor
@@ -106,6 +106,10 @@ class ServiceManager(
         return getRetrofit(getClientBuilder(), urlGenerator.generate(UrlGenerator.Site.MESSAGES), true, true).create()
     }
 
+    fun getHomepageService(): HomepageService {
+        return getRetrofit(getClientBuilder(), urlGenerator.generate(UrlGenerator.Site.HOME), true, false).create()
+    }
+
     private fun getRetrofit(client: OkHttpClient.Builder, baseUrl: String, login: Boolean = true, gson: Boolean = false): Retrofit {
         return Retrofit.Builder()
                 .baseUrl(baseUrl)
@@ -140,7 +144,7 @@ class ServiceManager(
                 }
     }
 
-    private fun getLoginHelper(): Flowable<HomepageResponse> {
+    private fun getLoginHelper(): Flowable<SendCertificateResponse> {
         return LoginRepository(loginType, schema, host, symbol, cookies, getLoginService())
                 .login(email, password)
                 .toFlowable()
@@ -150,7 +154,7 @@ class ServiceManager(
     class UrlGenerator(private val schema: String, private val host: String, var symbol: String, var schoolId: String) {
 
         enum class Site {
-            LOGIN, SNP, STUDENT, MESSAGES
+            LOGIN, HOME, SNP, STUDENT, MESSAGES
         }
 
         fun generate(type: Site): String {
@@ -160,6 +164,7 @@ class ServiceManager(
         private fun getSubDomain(type: Site): String {
             return when (type) {
                 Site.LOGIN -> "cufs"
+                Site.HOME -> "uonetplus"
                 Site.SNP -> "uonetplus-opiekun"
                 Site.STUDENT -> "uonetplus-uczen"
                 Site.MESSAGES -> "uonetplus-uzytkownik"

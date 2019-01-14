@@ -4,7 +4,7 @@ import io.github.wulkanowy.api.Api
 import io.github.wulkanowy.api.ApiException
 import io.github.wulkanowy.api.interceptor.VulcanException
 import io.github.wulkanowy.api.login.CertificateResponse
-import io.github.wulkanowy.api.register.HomepageResponse
+import io.github.wulkanowy.api.register.SendCertificateResponse
 import io.github.wulkanowy.api.service.LoginService
 import io.reactivex.Single
 import org.threeten.bp.LocalDateTime.now
@@ -34,10 +34,10 @@ class LoginRepository(
     }
 
     @Synchronized
-    fun login(email: String, password: String): Single<HomepageResponse> {
+    fun login(email: String, password: String): Single<SendCertificateResponse> {
         return sendCredentials(email, password).flatMap {
             when {
-                it.title.startsWith("Witryna ucznia i rodzica") -> return@flatMap Single.just(HomepageResponse())
+                it.title.startsWith("Witryna ucznia i rodzica") -> return@flatMap Single.just(SendCertificateResponse())
                 it.action.isBlank() -> throw VulcanException("Invalid certificate page: '${it.title}'. Try again")
             }
 
@@ -55,7 +55,7 @@ class LoginRepository(
         }
     }
 
-    fun sendCertificate(certificate: CertificateResponse, url: String = certificate.action): Single<HomepageResponse> {
+    fun sendCertificate(certificate: CertificateResponse, url: String = certificate.action): Single<SendCertificateResponse> {
         cookies.cookieStore.removeAll()
         return api.sendCertificate(url, mapOf(
                 "wa" to certificate.wa,

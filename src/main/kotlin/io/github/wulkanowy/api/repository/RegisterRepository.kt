@@ -4,7 +4,7 @@ import io.github.wulkanowy.api.Api
 import io.github.wulkanowy.api.ApiException
 import io.github.wulkanowy.api.login.AccountPermissionException
 import io.github.wulkanowy.api.login.CertificateResponse
-import io.github.wulkanowy.api.register.HomepageResponse
+import io.github.wulkanowy.api.register.SendCertificateResponse
 import io.github.wulkanowy.api.register.Pupil
 import io.github.wulkanowy.api.register.StudentAndParentResponse
 import io.github.wulkanowy.api.service.RegisterService
@@ -33,7 +33,7 @@ class RegisterRepository(
         return getSymbols().flatMapObservable { Observable.fromIterable(it) }.flatMap { symbol ->
             loginRepo.sendCertificate(symbol.second, symbol.second.action.replace(startSymbol, symbol.first))
                     .onErrorResumeNext { t ->
-                        if (t is AccountPermissionException) Single.just(HomepageResponse())
+                        if (t is AccountPermissionException) Single.just(SendCertificateResponse())
                         else Single.error(t)
                     }
                     .flatMapObservable { Observable.fromIterable(if (useNewStudent) it.studentSchools else it.oldStudentSchools) }

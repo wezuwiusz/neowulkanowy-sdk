@@ -5,7 +5,7 @@ import io.github.wulkanowy.api.BaseLocalTest
 import io.github.wulkanowy.api.homework.HomeworkTest
 import io.github.wulkanowy.api.interceptor.ErrorInterceptorTest
 import io.github.wulkanowy.api.interceptor.VulcanException
-import io.github.wulkanowy.api.register.HomepageResponse
+import io.github.wulkanowy.api.register.SendCertificateResponse
 import io.github.wulkanowy.api.repository.LoginRepository
 import io.github.wulkanowy.api.service.LoginService
 import io.reactivex.observers.TestObserver
@@ -83,7 +83,7 @@ class LoginTest : BaseLocalTest() {
         server.start(3000)
 
         val res = adfs.login("jan@fakelog.cf", "jan1234")
-        val observer = TestObserver<HomepageResponse>()
+        val observer = TestObserver<SendCertificateResponse>()
         res.subscribe(observer)
         observer.assertTerminated()
         observer.assertError(BadCredentialsException::class.java)
@@ -96,7 +96,7 @@ class LoginTest : BaseLocalTest() {
         server.start(3000)
 
         val res = normal.login("jan@fakelog.cf", "jan1234")
-        val observer = TestObserver<HomepageResponse>()
+        val observer = TestObserver<SendCertificateResponse>()
         res.subscribe(observer)
         observer.assertTerminated()
         observer.assertError(BadCredentialsException::class.java)
@@ -109,7 +109,7 @@ class LoginTest : BaseLocalTest() {
         server.start(3000)
 
         val res = normal.login("jan@fakelog.cf", "jan123")
-        val observer = TestObserver<HomepageResponse>()
+        val observer = TestObserver<SendCertificateResponse>()
         res.subscribe(observer)
         observer.assertTerminated()
         observer.assertError(AccountPermissionException::class.java)
@@ -124,7 +124,7 @@ class LoginTest : BaseLocalTest() {
         server.start(3000)
 
         val res = normal.login("jan@fakelog.cf", "jan123")
-        val observer = TestObserver<HomepageResponse>()
+        val observer = TestObserver<SendCertificateResponse>()
         res.subscribe(observer)
         observer.assertComplete()
     }
@@ -135,7 +135,7 @@ class LoginTest : BaseLocalTest() {
         server.start(3000)
 
         val res = normal.login("jan@fakelog.cf", "jan123")
-        val observer = TestObserver<HomepageResponse>()
+        val observer = TestObserver<SendCertificateResponse>()
         res.subscribe(observer)
         observer.assertTerminated()
         observer.assertError(VulcanException::class.java)

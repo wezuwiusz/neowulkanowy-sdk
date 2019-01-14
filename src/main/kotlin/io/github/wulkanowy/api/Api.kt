@@ -152,6 +152,10 @@ class Api {
         MessagesRepository(serviceManager.getMessagesService())
     }
 
+    private val homepage by resettableLazy(changeManager) {
+        HomepageRepository(serviceManager.getHomepageService())
+    }
+
     fun getPupils() = register.getPupils()
 
     fun getSemesters() = if (useNewStudent) studentStart.getSemesters() else snpStart.getSemesters()
@@ -209,4 +213,6 @@ class Api {
     fun getTimetable(startDate: LocalDate, endDate: LocalDate? = null) = if (useNewStudent) student.getTimetable(startDate, endDate) else snp.getTimetable(startDate, endDate)
 
     fun getRealized(startDate: LocalDate? = null) = snp.getRealized(startDate)
+
+    fun getLuckyNumber() = homepage.getLuckyNumber()
 }
