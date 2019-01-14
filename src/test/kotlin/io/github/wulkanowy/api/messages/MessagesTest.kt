@@ -37,7 +37,7 @@ class MessagesTest : BaseLocalTest() {
         server.enqueue(MockResponse().setBody(MessagesTest::class.java.getResource("Adresaci.json").readText()))
         server.start(3000)
 
-        assertEquals(2, api.getSentMessages(null, null).blockingGet().size)
+        assertEquals(3, api.getSentMessages(null, null).blockingGet().size)
     }
 
     @Test
@@ -47,7 +47,7 @@ class MessagesTest : BaseLocalTest() {
 //        server.enqueue(MockResponse().setBody(MessagesTest::class.java.getResource("Adresaci.json").readText()))
         server.start(3000)
 
-        assertEquals(2, api.getSentMessages(null, null).blockingGet().size)
+        assertEquals(3, api.getSentMessages(null, null).blockingGet().size)
     }
 
     @Test
@@ -59,8 +59,21 @@ class MessagesTest : BaseLocalTest() {
 
         val recipients = api.getSentMessages(null, null).blockingGet()
 
-        assertEquals("Czerwieńska - Kowalska Joanna [CJ]", recipients[1].recipient)
+        assertEquals("Czerwieńska - Kowalska Joanna", recipients[1].recipient)
         assertEquals(95, recipients[1].recipientId)
+    }
+
+    @Test
+    fun getMessagesSent_recipientWithoutBracket() {
+        server.enqueue(MockResponse().setBody(MessagesTest::class.java.getResource("WiadomosciWyslane.json").readText()))
+        server.enqueue(MockResponse().setBody(MessagesTest::class.java.getResource("JednostkiUzytkownika.json").readText()))
+        server.enqueue(MockResponse().setBody(MessagesTest::class.java.getResource("Adresaci.json").readText()))
+        server.start(3000)
+
+        val recipients = api.getSentMessages(null, null).blockingGet()
+
+        assertEquals("Czerwieńska - Kowalska Joanna", recipients[1].recipient)
+        assertEquals(95, recipients[2].recipientId)
     }
 
     @Test
@@ -72,7 +85,7 @@ class MessagesTest : BaseLocalTest() {
 
         val recipients = api.getSentMessages(null, null).blockingGet()
 
-        assertEquals("Czerwieńska - Kowalska Joanna [CJ]", recipients[1].recipient)
+        assertEquals("Czerwieńska - Kowalska Joanna", recipients[1].recipient)
         assertEquals(0, recipients[1].recipientId)
     }
 

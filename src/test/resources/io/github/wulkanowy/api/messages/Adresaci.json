@@ -6,27 +6,27 @@
       "Nazwa": "Tracz Janusz [TJ] - pracownik (Fake123456)",
       "IdLogin": 18,
       "IdJednostkaSprawozdawcza": 6,
-      "RolaEnum": null,
       "Rola": 2,
-      "PushWiadomosc": null
+      "PushWiadomosc": null,
+      "Hash": "NTVhNTQwMDhhZDFiYTU4OWFhMjEwZDI2MjljMWRmNDE="
     },
     {
       "Id": "94rPracownik",
       "Nazwa": "Lech Wałęsa [Dd] - pracownik (Fake123456)",
       "IdLogin": 94,
       "IdJednostkaSprawozdawcza": 6,
-      "RolaEnum": null,
       "Rola": 2,
-      "PushWiadomosc": null
+      "PushWiadomosc": null,
+      "Hash": "NTVhNTQwMDhhZDFiYTU4OWFhMjEwZDI2MjljMWRmNDE="
     },
     {
       "Id": "95rPracownik",
       "Nazwa": "Czerwieńska - Kowalska Joanna [CJ] - pracownik (Fake123456)",
       "IdLogin": 95,
       "IdJednostkaSprawozdawcza": 6,
-      "RolaEnum": null,
       "Rola": 2,
-      "PushWiadomosc": null
+      "PushWiadomosc": null,
+      "Hash": "NTVhNTQwMDhhZDFiYTU4OWFhMjEwZDI2MjljMWRmNDE="
     }
   ]
 }

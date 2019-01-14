@@ -31,9 +31,12 @@ class MessagesRepository(private val api: MessagesService) {
         return getReportingUnits().map { it.first() }.flatMap { unit ->
             // invalid unit id produced error
             if (unit.id == 0) return@flatMap Single.just(emptyList<Recipient>())
-            api.getRecipients(unit.id, role).map {
-                recipients = if (null !== it.data) it.data else listOf()
-                it.data
+            api.getRecipients(unit.id, role).map { it.data }.map { list ->
+                list.ifEmpty { listOf() }.map {
+                    it.copy(name = it.name.normalizeRecipient())
+                }.apply {
+                    recipients = this
+                }
             }
         }
     }
@@ -53,11 +56,11 @@ class MessagesRepository(private val api: MessagesService) {
                 .flatMapObservable { Observable.fromIterable(it) }
                 .flatMap { message ->
                     getRecipients().flatMapObservable {
-                        Observable.fromIterable(it.filter { recipient -> recipient.name == message.recipient }.ifEmpty {
-                            listOf(Recipient("0", message.recipient ?: "unknown", 0, 0, 2, "unknown"))
+                        Observable.fromIterable(it.filter { recipient -> recipient.name == message.recipient?.normalizeRecipient() }.ifEmpty {
+                            listOf(Recipient("0", message.recipient?.normalizeRecipient() ?: "unknown", 0, 0, 2, "unknown"))
                         })
                     }.map {
-                        message.copy(recipient = it.name.substringBeforeLast(" -"), messageId = message.id).apply {
+                        message.copy(recipient = it.name, messageId = message.id).apply {
                             recipientId = it.loginId
                         }
                     }
@@ -82,6 +85,10 @@ class MessagesRepository(private val api: MessagesService) {
                         content = content
                 )
         )).map { it.data }
+    }
+
+    private fun String.normalizeRecipient(): String {
+        return this.substringBeforeLast(" -").substringBefore(" [")
     }
 
     private fun getDate(date: LocalDateTime?): String {
