@@ -59,7 +59,7 @@ class MessagesRepository(private val api: MessagesService) {
                         Observable.fromArray(message.recipient!!
                                 .split("; ")
                                 .map { recipient -> recipient.normalizeRecipient() }
-                                .joinBy(it) { (name, recipient) -> name == recipient.name }
+                                .replaceWithRecipients(it)
                                 .ifEmpty {
                                     listOf(Recipient("0", message.recipient.normalizeRecipient(), 0, 0, 2, "unknown"))
                                 })
@@ -93,7 +93,7 @@ class MessagesRepository(private val api: MessagesService) {
     }
 
     private fun String.normalizeRecipient(): String {
-        return this.substringBeforeLast(" -").substringBefore(" [")
+        return this.substringBeforeLast("-").substringBefore(" [").trim()
     }
 
     private fun getDate(date: LocalDateTime?): String {
@@ -101,9 +101,13 @@ class MessagesRepository(private val api: MessagesService) {
         return date.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))
     }
 
-    private inline fun <T : Any, U : Any> List<T>.joinBy(collection: List<U>, filter: (Pair<T, U>) -> Boolean): List<U> {
-        return map { t ->
-            collection.filter { filter(Pair(t, it)) }
+    private fun List<String>.replaceWithRecipients(recipients: List<Recipient>): List<Recipient> {
+        return map { origin ->
+            recipients.filter { recipient ->
+                origin == recipient.name
+            }.ifEmpty {
+                listOf(Recipient("0", origin, 0, 0, 2, "unknown"))
+            }
         }.flatten()
     }
 }

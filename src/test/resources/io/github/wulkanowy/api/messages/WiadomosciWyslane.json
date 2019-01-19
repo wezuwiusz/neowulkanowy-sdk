@@ -40,6 +40,14 @@
       "Nieprzeczytane": "1",
       "Przeczytane": "0",
       "Id": 32801
+    },
+    {
+      "Data": "2018-06-11T09:38:35.000Z",
+      "Temat": "Wiadomość tekstowa",
+      "Adresaci": "Tracz Antoni (TA)- pracownik (Fake123456); Kowalska Joanna - pracownik (Fake123456)",
+      "Nieprzeczytane": "1",
+      "Przeczytane": "0",
+      "Id": 32801
     }
   ]
 }

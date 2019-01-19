@@ -37,7 +37,7 @@ class MessagesTest : BaseLocalTest() {
         server.enqueue(MockResponse().setBody(MessagesTest::class.java.getResource("Adresaci.json").readText()))
         server.start(3000)
 
-        assertEquals(5, api.getSentMessages(null, null).blockingGet().size)
+        assertEquals(6, api.getSentMessages(null, null).blockingGet().size)
     }
 
     @Test
@@ -47,7 +47,7 @@ class MessagesTest : BaseLocalTest() {
 //        server.enqueue(MockResponse().setBody(MessagesTest::class.java.getResource("Adresaci.json").readText()))
         server.start(3000)
 
-        assertEquals(5, api.getSentMessages(null, null).blockingGet().size)
+        assertEquals(6, api.getSentMessages(null, null).blockingGet().size)
     }
 
     @Test
@@ -118,16 +118,34 @@ class MessagesTest : BaseLocalTest() {
 
         val message = api.getSentMessages(null, null).blockingGet()[4]
 
-//        assertEquals("Tracz Janusz; Kowalska Joanna", message.recipient)
-        assertEquals("Tracz Janusz", message.recipient)
+        assertEquals("Tracz Janusz; Kowalska Joanna", message.recipient)
         assertEquals(18, message.recipientId)
 
         val recipients = message.recipients
 
+        assertEquals(2, recipients.size)
+
         assertEquals("Tracz Janusz", recipients[0].name)
         assertEquals(18, recipients[0].loginId)
+    }
 
-        assertEquals(1, recipients.size)
+    @Test
+    fun getMessagesSent_multiRecipientsWithAllBroken() {
+        server.enqueue(MockResponse().setBody(MessagesTest::class.java.getResource("WiadomosciWyslane.json").readText()))
+        server.enqueue(MockResponse().setBody(MessagesTest::class.java.getResource("JednostkiUzytkownika.json").readText()))
+        server.enqueue(MockResponse().setBody(MessagesTest::class.java.getResource("Adresaci.json").readText()))
+        server.start(3000)
+
+        api.getSentMessages(null, null).blockingGet()[5].run {
+            assertEquals("Tracz Antoni (TA); Kowalska Joanna", recipient)
+            assertEquals(0, recipientId)
+
+            assertEquals(2, recipients.size)
+            assertEquals("Tracz Antoni (TA)", recipients[0].name)
+            assertEquals(0, recipients[0].loginId)
+            assertEquals("Kowalska Joanna", recipients[1].name)
+            assertEquals(0, recipients[1].loginId)
+        }
     }
 
     @Test
