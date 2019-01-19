@@ -26,7 +26,7 @@ class LuckyNumberTest : BaseLocalTest() {
         server.enqueue(MockResponse().setBody(LuckyNumberTest::class.java.getResource("Index-withoutLuckyNumber.html").readText()))
         server.start(3000)
 
-        assertEquals(0, api.getLuckyNumber().blockingGet())
+        assertEquals(null, api.getLuckyNumber().blockingGet())
     }
 
 }
