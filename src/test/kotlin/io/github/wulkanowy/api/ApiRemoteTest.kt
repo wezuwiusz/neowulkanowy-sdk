@@ -493,6 +493,6 @@ class ApiRemoteTest : BaseTest() {
         luckyNumber.subscribe(luckyNumberObserver)
         luckyNumberObserver.assertComplete()
 
-        assertEquals(0, luckyNumberObserver.values()[0])
+        assertNotEquals(0, luckyNumberObserver.values()[0])
     }
 }
