@@ -24,7 +24,7 @@ class TimetableParser {
                 when {
                     divs[1]?.selectFirst("span")?.hasClass(CLASS_PLANNED) == true -> getLessonInfo(lesson, divs[0]).run {
                         copy(changes = true, info = getLessonInfo(lesson, divs[1]).run {
-                            stripLessonInfo("${getFormattedLessonInfo(this.info)}, $info, poprzednio: $subject, $teacher, sala $room")
+                            stripLessonInfo("${getFormattedLessonInfo(this.info)}, $info, poprzednio: $subject")
                         })
                     }
                     else -> getLessonInfo(lesson, divs[1])
@@ -93,7 +93,7 @@ class TimetableParser {
                 group = getLessonAndGroupInfoFromSpan(spans[3 + o])[1],
                 teacher = spans[4 + o * 2].text(),
                 room = spans[5 + o * 2].text(),
-                info = "${getFormattedLessonInfo(spans.last().text())}, poprzednio: ${spans[0].text()}, ${spans[1 + o].text()}, sala ${spans[2 + o].text()}",
+                info = "${getFormattedLessonInfo(spans.last().text())}, poprzednio: ${spans[0].text()}",
                 changes = true
         )
     }
