@@ -4,6 +4,9 @@ import pl.droidsonroids.jspoon.annotation.Selector
 
 class StudentAndParentResponse {
 
+    @Selector("title")
+    lateinit var title: String
+
     @Selector("header[data-organization-name]", attr = "data-organization-name")
     lateinit var schoolName: String
 
