@@ -1,9 +1,8 @@
-package io.github.wulkanowy.api.repository
+package io.github.wulkanowy.api.login
 
 import io.github.wulkanowy.api.Api
 import io.github.wulkanowy.api.ApiException
 import io.github.wulkanowy.api.interceptor.VulcanException
-import io.github.wulkanowy.api.login.CertificateResponse
 import io.github.wulkanowy.api.register.SendCertificateResponse
 import io.github.wulkanowy.api.service.LoginService
 import io.reactivex.Single
@@ -14,7 +13,7 @@ import pl.droidsonroids.jspoon.Jspoon
 import java.net.CookieManager
 import java.net.URLEncoder
 
-class LoginRepository(
+class LoginHelper(
         var loginType: Api.LoginType,
         private val schema: String,
         private val host: String,

@@ -1,5 +1,6 @@
 package io.github.wulkanowy.api
 
+import io.github.wulkanowy.api.login.LoginHelper
 import io.github.wulkanowy.api.messages.Folder
 import io.github.wulkanowy.api.messages.Folder.*
 import io.github.wulkanowy.api.messages.Message
@@ -122,7 +123,7 @@ class Api {
 
     private val register by resettableLazy(changeManager) {
         RegisterRepository(normalizedSymbol, email, password, useNewStudent,
-                LoginRepository(loginType, schema, host, normalizedSymbol, serviceManager.getCookieManager(), serviceManager.getLoginService()),
+                LoginHelper(loginType, schema, host, normalizedSymbol, serviceManager.getCookieManager(), serviceManager.getLoginService()),
                 serviceManager.getRegisterService(),
                 serviceManager.getSnpService(false, false),
                 serviceManager.getStudentService(false, false),

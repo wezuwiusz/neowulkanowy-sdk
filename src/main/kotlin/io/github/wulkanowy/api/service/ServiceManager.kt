@@ -12,7 +12,7 @@ import io.github.wulkanowy.api.interceptor.StudentAndParentInterceptor
 import io.github.wulkanowy.api.interceptor.UserAgentInterceptor
 import io.github.wulkanowy.api.login.NotLoggedInException
 import io.github.wulkanowy.api.register.SendCertificateResponse
-import io.github.wulkanowy.api.repository.LoginRepository
+import io.github.wulkanowy.api.login.LoginHelper
 import io.reactivex.Flowable
 import okhttp3.Interceptor
 import okhttp3.JavaNetCookieJar
@@ -145,7 +145,7 @@ class ServiceManager(
     }
 
     private fun getLoginHelper(): Flowable<SendCertificateResponse> {
-        return LoginRepository(loginType, schema, host, symbol, cookies, getLoginService())
+        return LoginHelper(loginType, schema, host, symbol, cookies, getLoginService())
                 .login(email, password)
                 .toFlowable()
 //                .share()

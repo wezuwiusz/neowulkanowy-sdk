@@ -6,7 +6,6 @@ import io.github.wulkanowy.api.homework.HomeworkTest
 import io.github.wulkanowy.api.interceptor.ErrorInterceptorTest
 import io.github.wulkanowy.api.interceptor.VulcanException
 import io.github.wulkanowy.api.register.SendCertificateResponse
-import io.github.wulkanowy.api.repository.LoginRepository
 import io.github.wulkanowy.api.service.LoginService
 import io.reactivex.observers.TestObserver
 import okhttp3.mockwebserver.MockResponse
@@ -18,12 +17,12 @@ import java.net.CookieManager
 class LoginTest : BaseLocalTest() {
 
     private val normal by lazy {
-        LoginRepository(Api.LoginType.STANDARD, "http", "fakelog.localhost:3000", "default", CookieManager(),
+        LoginHelper(Api.LoginType.STANDARD, "http", "fakelog.localhost:3000", "default", CookieManager(),
                 getService(LoginService::class.java, "http://fakelog.localhost:3000/"))
     }
 
     private val adfs by lazy {
-        LoginRepository(Api.LoginType.ADFSCards, "http", "fakelog.localhost:3000", "default", CookieManager(),
+        LoginHelper(Api.LoginType.ADFSCards, "http", "fakelog.localhost:3000", "default", CookieManager(),
                 getService(LoginService::class.java, "http://fakelog.localhost:3000/", true, true, false, Api.LoginType.ADFSCards))
     }
 

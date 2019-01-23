@@ -4,6 +4,7 @@ import io.github.wulkanowy.api.Api
 import io.github.wulkanowy.api.ApiException
 import io.github.wulkanowy.api.login.AccountPermissionException
 import io.github.wulkanowy.api.login.CertificateResponse
+import io.github.wulkanowy.api.login.LoginHelper
 import io.github.wulkanowy.api.register.SendCertificateResponse
 import io.github.wulkanowy.api.register.Pupil
 import io.github.wulkanowy.api.register.StudentAndParentResponse
@@ -22,7 +23,7 @@ class RegisterRepository(
         private val email: String,
         private val password: String,
         private val useNewStudent: Boolean,
-        private val loginRepo: LoginRepository,
+        private val loginHelper: LoginHelper,
         private val register: RegisterService,
         private val snp: StudentAndParentService,
         private val student: StudentService,
@@ -31,7 +32,7 @@ class RegisterRepository(
 
     fun getPupils(): Single<List<Pupil>> {
         return getSymbols().flatMapObservable { Observable.fromIterable(it) }.flatMap { symbol ->
-            loginRepo.sendCertificate(symbol.second, symbol.second.action.replace(startSymbol, symbol.first))
+            loginHelper.sendCertificate(symbol.second, symbol.second.action.replace(startSymbol, symbol.first))
                     .onErrorResumeNext { t ->
                         if (t is AccountPermissionException) Single.just(SendCertificateResponse())
                         else Single.error(t)
@@ -82,7 +83,7 @@ class RegisterRepository(
 
     private fun getSymbols(): Single<List<Pair<String, CertificateResponse>>> {
         return getLoginType(startSymbol).map {
-            loginRepo.apply { loginType = it }
+            loginHelper.apply { loginType = it }
         }.flatMap { login ->
             login.sendCredentials(email, password).flatMap { Single.just(it) }.flatMap { cert ->
                 Single.just(Jsoup.parse(cert.wresult.replace(":", ""), "", Parser.xmlParser())

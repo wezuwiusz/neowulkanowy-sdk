@@ -4,7 +4,7 @@ import io.github.wulkanowy.api.Api
 import io.github.wulkanowy.api.BaseLocalTest
 import io.github.wulkanowy.api.grades.GradesTest
 import io.github.wulkanowy.api.login.LoginTest
-import io.github.wulkanowy.api.repository.LoginRepository
+import io.github.wulkanowy.api.login.LoginHelper
 import io.github.wulkanowy.api.repository.RegisterRepository
 import io.github.wulkanowy.api.repository.StudentAndParentStartRepository
 import io.github.wulkanowy.api.service.*
@@ -16,7 +16,7 @@ import java.net.CookieManager
 class RegisterTest : BaseLocalTest() {
 
     private val login by lazy {
-        LoginRepository(Api.LoginType.STANDARD, "http", "fakelog.localhost:3000", "default", CookieManager(),
+        LoginHelper(Api.LoginType.STANDARD, "http", "fakelog.localhost:3000", "default", CookieManager(),
                 getService(LoginService::class.java, "http://fakelog.localhost:3000/", true, true, false, Api.LoginType.STANDARD))
     }
 
