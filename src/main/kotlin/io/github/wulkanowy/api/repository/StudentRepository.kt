@@ -28,7 +28,7 @@ class StudentRepository(private val api: StudentService) {
     private fun getCache(): Single<CacheResponse> {
         if (::cache.isInitialized) return Single.just(cache)
 
-        return api.getStart().flatMap {
+        return api.getStart("Start").flatMap {
             api.getUserCache(
                     getScriptParam("antiForgeryToken: '(.)*',".toRegex(), it),
                     getScriptParam("appGuid: '(.)*',".toRegex(), it),

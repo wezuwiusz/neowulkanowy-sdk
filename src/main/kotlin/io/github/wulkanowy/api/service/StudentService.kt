@@ -19,8 +19,8 @@ import retrofit2.http.*
 
 interface StudentService {
 
-    @GET("Start")
-    fun getStart(): Single<String>
+    @GET
+    fun getStart(@Url url: String): Single<String>
 
     @POST("UczenCache.mvc/Get")
     fun getUserCache(

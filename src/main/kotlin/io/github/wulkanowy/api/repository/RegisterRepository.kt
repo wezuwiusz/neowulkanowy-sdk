@@ -71,7 +71,7 @@ class RegisterRepository(
         } else student.getSchoolInfo(url.generate(ServiceManager.UrlGenerator.Site.STUDENT) + "UczenDziennik.mvc/Get")
                 .map { diary -> diary.data?.distinctBy { it.studentId } }
                 .flatMap { diaries ->
-                    student.getStart().map { startPage ->
+                    student.getStart(url.generate(ServiceManager.UrlGenerator.Site.STUDENT) + "Start").map { startPage ->
                         diaries.map {
                             StudentAndParentResponse.Student().apply {
                                 id = it.studentId
