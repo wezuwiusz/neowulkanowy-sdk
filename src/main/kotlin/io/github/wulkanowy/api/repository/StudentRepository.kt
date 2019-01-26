@@ -105,7 +105,7 @@ class StudentRepository(private val api: StudentService) {
 
     fun getExams(startDate: LocalDate, endDate: LocalDate? = null): Single<List<Exam>> {
         val end = endDate ?: startDate.plusDays(4)
-        return api.getExams(ExamRequest(startDate.toDate(), startDate.year)).map { res ->
+        return api.getExams(ExamRequest(startDate.toDate(), startDate.getSchoolYear())).map { res ->
             res.data?.asSequence()?.map { weeks ->
                 weeks.weeks.map { day ->
                     day.exams.map { exam ->
@@ -163,7 +163,7 @@ class StudentRepository(private val api: StudentService) {
 
     fun getHomework(startDate: LocalDate, endDate: LocalDate? = null): Single<List<Homework>> {
         val end = endDate ?: startDate
-        return api.getHomework(ExamRequest(startDate.toDate(), startDate.year)).map { res ->
+        return api.getHomework(ExamRequest(startDate.toDate(), startDate.getSchoolYear())).map { res ->
             res.data?.asSequence()?.map { day ->
                 day.items.map {
                     val teacherAndDate = it.teacher.split(", ")

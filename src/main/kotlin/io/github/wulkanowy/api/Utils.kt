@@ -19,6 +19,8 @@ fun LocalDate.toFormat(format: String): String = this.format(DateTimeFormatter.o
 
 fun LocalDate.getLastMonday(): LocalDate = this.with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY))
 
+fun LocalDate.getSchoolYear(): Int = if (month.value > 8) year else year - 1
+
 fun getGradeShortValue(value: String?): String {
     return when (value) {
         "celujący" -> "6"
