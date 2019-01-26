@@ -6,7 +6,7 @@ import io.github.wulkanowy.api.BaseLocalTest
 import io.github.wulkanowy.api.interceptor.ErrorInterceptorTest
 import io.github.wulkanowy.api.login.LoginHelper
 import io.github.wulkanowy.api.login.LoginTest
-import io.github.wulkanowy.api.register.Pupil
+import io.github.wulkanowy.api.register.Student
 import io.github.wulkanowy.api.service.*
 import io.reactivex.observers.TestObserver
 import okhttp3.mockwebserver.MockResponse
@@ -34,8 +34,8 @@ class RegisterRepositoryTest : BaseLocalTest() {
         server.enqueue(MockResponse().setBody(ErrorInterceptorTest::class.java.getResource("Offline.html").readText()))
         server.start(3000)
 
-        val res = normal.getPupils()
-        val observer = TestObserver<List<Pupil>>()
+        val res = normal.getStudents()
+        val observer = TestObserver<List<Student>>()
         res.subscribe(observer)
         observer.assertTerminated()
         observer.assertError(ApiException::class.java)
@@ -54,8 +54,8 @@ class RegisterRepositoryTest : BaseLocalTest() {
 
         server.start(3000)
 
-        val res = normal.getPupils()
-        val observer = TestObserver<List<Pupil>>()
+        val res = normal.getStudents()
+        val observer = TestObserver<List<Student>>()
         res.subscribe(observer)
         observer.assertComplete()
     }

@@ -7,7 +7,7 @@ import io.github.wulkanowy.api.interceptor.ErrorInterceptorTest
 import io.github.wulkanowy.api.login.LoginTest
 import io.github.wulkanowy.api.notes.NotesResponse
 import io.github.wulkanowy.api.notes.NotesTest
-import io.github.wulkanowy.api.register.Pupil
+import io.github.wulkanowy.api.register.Student
 import io.reactivex.observers.TestObserver
 import okhttp3.Interceptor
 import okhttp3.logging.HttpLoggingInterceptor
@@ -96,8 +96,8 @@ class ServiceManagerTest : BaseTest() {
             symbol = ""
         }
 
-        val pupils = api.getPupils()
-        val observer = TestObserver<List<Pupil>>()
+        val pupils = api.getStudents()
+        val observer = TestObserver<List<Student>>()
         pupils.subscribe(observer)
         observer.assertTerminated()
         observer.assertError(ApiException::class.java)

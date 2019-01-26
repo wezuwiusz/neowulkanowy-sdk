@@ -2,7 +2,7 @@ package io.github.wulkanowy.api.register
 
 import io.github.wulkanowy.api.Api
 
-data class Pupil(
+data class Student(
         val email: String,
         val symbol: String,
         val studentId: Int,

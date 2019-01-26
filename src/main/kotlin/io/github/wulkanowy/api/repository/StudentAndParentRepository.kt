@@ -13,6 +13,7 @@ import io.github.wulkanowy.api.mobile.Device
 import io.github.wulkanowy.api.mobile.TokenResponse
 import io.github.wulkanowy.api.notes.Note
 import io.github.wulkanowy.api.realized.Realized
+import io.github.wulkanowy.api.school.School
 import io.github.wulkanowy.api.school.Teacher
 import io.github.wulkanowy.api.service.StudentAndParentService
 import io.github.wulkanowy.api.student.StudentInfo
@@ -162,6 +163,12 @@ class StudentAndParentRepository(private val api: StudentAndParentService) {
                     }
                 }
             }.sortedWith(compareBy({ it.subject }, { it.name }))
+        }
+    }
+
+    fun getSchool(): Single<School> {
+        return api.getSchoolAndTeachers().map {
+            School(it.name, it.address, it.contact, it.headmaster, it.pedagogue)
         }
     }
 

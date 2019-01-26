@@ -16,8 +16,9 @@ import io.github.wulkanowy.api.mobile.Device
 import io.github.wulkanowy.api.mobile.TokenResponse
 import io.github.wulkanowy.api.notes.Note
 import io.github.wulkanowy.api.realized.Realized
-import io.github.wulkanowy.api.register.Pupil
+import io.github.wulkanowy.api.register.Student
 import io.github.wulkanowy.api.register.Semester
+import io.github.wulkanowy.api.school.School
 import io.github.wulkanowy.api.school.Teacher
 import io.github.wulkanowy.api.student.StudentInfo
 import io.github.wulkanowy.api.timetable.Timetable
@@ -57,13 +58,13 @@ class ApiRemoteTest : BaseTest() {
     }
 
     @Test
-    fun pupilsTest() {
-        val pupils = api.getPupils()
-        val pupilsObserver = TestObserver<List<Pupil>>()
-        pupils.subscribe(pupilsObserver)
-        pupilsObserver.assertComplete()
+    fun studentsTest() {
+        val students = api.getStudents()
+        val studentObserver = TestObserver<List<Student>>()
+        students.subscribe(studentObserver)
+        studentObserver.assertComplete()
 
-        val values = pupilsObserver.values()[0]
+        val values = studentObserver.values()[0]
 
         values[0].run {
             assertEquals("Default", symbol)
@@ -326,6 +327,18 @@ class ApiRemoteTest : BaseTest() {
         assertEquals("Historia", values[1].subject)
         assertEquals("Aleksandra Krajewska", values[1].name)
         assertEquals("AK", values[1].short)
+    }
+
+    @Test
+    fun schoolTest() {
+        val school = api.getSchool()
+        val schoolObserver = TestObserver<School>()
+        school.subscribe(schoolObserver)
+        schoolObserver.assertComplete()
+
+        val values = schoolObserver.values()[0]
+
+        assertEquals("Publiczna szkoła Wulkanowego nr 1 w fakelog.cf", values.name)
     }
 
     @Test

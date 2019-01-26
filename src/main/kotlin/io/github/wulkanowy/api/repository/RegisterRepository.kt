@@ -6,7 +6,7 @@ import io.github.wulkanowy.api.login.AccountPermissionException
 import io.github.wulkanowy.api.login.CertificateResponse
 import io.github.wulkanowy.api.login.LoginHelper
 import io.github.wulkanowy.api.register.SendCertificateResponse
-import io.github.wulkanowy.api.register.Pupil
+import io.github.wulkanowy.api.register.Student
 import io.github.wulkanowy.api.register.StudentAndParentResponse
 import io.github.wulkanowy.api.service.RegisterService
 import io.github.wulkanowy.api.service.ServiceManager
@@ -30,7 +30,7 @@ class RegisterRepository(
         private val url: ServiceManager.UrlGenerator
 ) {
 
-    fun getPupils(): Single<List<Pupil>> {
+    fun getStudents(): Single<List<Student>> {
         return getSymbols().flatMapObservable { Observable.fromIterable(it) }.flatMap { symbol ->
             loginHelper.sendCertificate(symbol.second, symbol.second.action.replace(startSymbol, symbol.first))
                     .onErrorResumeNext { t ->
@@ -41,15 +41,15 @@ class RegisterRepository(
                     .flatMapSingle { schoolUrl ->
                         getLoginType(symbol.first).flatMap { loginType ->
                             getStudents(symbol.first, schoolUrl).map {
-                                it.map { pupil ->
-                                    Pupil(
+                                it.map { student ->
+                                    Student(
                                             email = email,
                                             symbol = symbol.first,
-                                            studentId = pupil.id,
-                                            studentName = pupil.name,
+                                            studentId = student.id,
+                                            studentName = student.name,
                                             schoolSymbol = getExtractedSchoolSymbolFromUrl(schoolUrl),
-                                            description = pupil.description,
-                                            schoolName = pupil.description,
+                                            description = student.description,
+                                            schoolName = student.description,
                                             loginType = loginType
                                     )
                                 }
@@ -59,26 +59,34 @@ class RegisterRepository(
         }.toList().map { it.flatten().distinctBy { pupil -> pupil.studentId to pupil.schoolSymbol } }
     }
 
-    private fun getStudents(symbol: String, schoolUrl: String): Single<List<StudentAndParentResponse.Pupil>> {
+    private fun getStudents(symbol: String, schoolUrl: String): Single<List<StudentAndParentResponse.Student>> {
         url.schoolId = getExtractedSchoolSymbolFromUrl(schoolUrl)
         url.symbol = symbol
         return if (!useNewStudent) snp.getSchoolInfo(schoolUrl).map { res ->
-            res.students.map { pupil ->
-                pupil.apply {
+            res.students.map { student ->
+                student.apply {
                     description = res.schoolName
                 }
             }
         } else student.getSchoolInfo(url.generate(ServiceManager.UrlGenerator.Site.STUDENT) + "UczenDziennik.mvc/Get")
                 .map { diary -> diary.data?.distinctBy { it.studentId } }
-                .map { diaries ->
-                    diaries.map {
-                        StudentAndParentResponse.Pupil().apply {
-                            id = it.studentId
-                            name = "${it.studentName} ${it.studentSurname}"
-                            description = it.symbol + " " + (it.year - it.level + 1)
+                .flatMap { diaries ->
+                    student.getStart().map { startPage ->
+                        diaries.map {
+                            StudentAndParentResponse.Student().apply {
+                                id = it.studentId
+                                name = "${it.studentName} ${it.studentSurname}"
+                                description = getScriptParam("organizationName: '(.)*',".toRegex(), startPage, it.symbol + " " + (it.year - it.level + 1))
+                            }
                         }
                     }
                 }
+    }
+
+    private fun getScriptParam(regex: Regex, content: String, fallback: String): String {
+        return regex.find(content).let { result ->
+            if (null !== result) Jsoup.parse(result.groupValues[0].substringAfter("'").substringBefore("'")).text() else fallback
+        }
     }
 
     private fun getSymbols(): Single<List<Pair<String, CertificateResponse>>> {

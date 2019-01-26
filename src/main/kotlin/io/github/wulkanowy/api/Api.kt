@@ -157,7 +157,10 @@ class Api {
         HomepageRepository(serviceManager.getHomepageService())
     }
 
-    fun getPupils() = register.getPupils()
+    fun getStudents() = register.getStudents()
+
+    @Deprecated("use getStudents() instead")
+    fun getPupils() = register.getStudents()
 
     fun getSemesters() = if (useNewStudent) studentStart.getSemesters() else snpStart.getSemesters()
 
@@ -185,7 +188,9 @@ class Api {
 
     fun unregisterDevice(id: Int) = snp.unregisterDevice(id)
 
-    fun getTeachers() = snp.getTeachers()
+    fun getTeachers() = if (useNewStudent) student.getTeachers() else snp.getTeachers()
+
+    fun getSchool() = if (useNewStudent) student.getSchool() else snp.getSchool()
 
     fun getStudentInfo() = snp.getStudentInfo()
 

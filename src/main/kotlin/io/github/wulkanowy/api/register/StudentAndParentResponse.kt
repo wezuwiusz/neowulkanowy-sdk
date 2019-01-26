@@ -11,7 +11,7 @@ class StudentAndParentResponse {
     lateinit var schoolName: String
 
     @Selector("#uczenDropDownList option")
-    lateinit var students: List<Pupil>
+    lateinit var students: List<Student>
 
     @Selector("#dziennikDropDownList option")
     lateinit var diaries: List<Diary>
@@ -19,7 +19,7 @@ class StudentAndParentResponse {
     @Selector("#okresyKlasyfikacyjneDropDownList option")
     lateinit var semesters: List<Semester>
 
-    class Pupil {
+    class Student {
         @Selector("option", attr = "value", regex = "\\=(.*)")
         var id: Int = 0
 

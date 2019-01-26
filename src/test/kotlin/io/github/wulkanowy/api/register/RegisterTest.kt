@@ -49,7 +49,7 @@ class RegisterTest : BaseLocalTest() {
         server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("Logowanie-brak-dostepu.html").readText()))
         server.start(3000)
 
-        val res = register.getPupils().blockingGet()
+        val res = register.getStudents().blockingGet()
 
         assertEquals(1, res.size)
         assertEquals("Jan Kowal", res[0].studentName)
@@ -90,7 +90,7 @@ class RegisterTest : BaseLocalTest() {
         server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("Logowanie-brak-dostepu.html").readText()))
         server.start(3000)
 
-        val res = register.getPupils().blockingGet()
+        val res = register.getStudents().blockingGet()
         assertEquals(Api.LoginType.STANDARD, res[0].loginType)
     }
 
@@ -111,7 +111,7 @@ class RegisterTest : BaseLocalTest() {
         server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("Logowanie-brak-dostepu.html").readText()))
         server.start(3000)
 
-        val res = register.getPupils().blockingGet()
+        val res = register.getStudents().blockingGet()
         assertEquals(Api.LoginType.ADFS, res[0].loginType)
     }
 
@@ -133,7 +133,7 @@ class RegisterTest : BaseLocalTest() {
         server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("Logowanie-brak-dostepu.html").readText()))
         server.start(3000)
 
-        val res = register.getPupils().blockingGet()
+        val res = register.getStudents().blockingGet()
         assertEquals(Api.LoginType.ADFSCards, res[0].loginType)
     }
 
@@ -153,7 +153,7 @@ class RegisterTest : BaseLocalTest() {
         server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("Logowanie-brak-dostepu.html").readText()))
         server.start(3000)
 
-        val res = register.getPupils().blockingGet()
+        val res = register.getStudents().blockingGet()
         assertEquals(Api.LoginType.ADFSLight, res[0].loginType)
     }
 }

@@ -8,6 +8,9 @@ import io.github.wulkanowy.api.grades.*
 import io.github.wulkanowy.api.homework.Homework
 import io.github.wulkanowy.api.mobile.Device
 import io.github.wulkanowy.api.notes.Note
+import io.github.wulkanowy.api.school.School
+import io.github.wulkanowy.api.school.SchoolAndTeachersResponse
+import io.github.wulkanowy.api.school.Teacher
 import io.github.wulkanowy.api.service.StudentService
 import io.github.wulkanowy.api.timetable.*
 import io.reactivex.Observable
@@ -205,6 +208,25 @@ class StudentRepository(private val api: StudentService) {
                 it.date.toLocalDate() >= startDate && it.date.toLocalDate() <= endDate ?: startDate.plusDays(4)
             }?.sortedWith(compareBy({ it.date }, { it.number }))?.toList()
         }
+    }
+
+    fun getTeachers(): Single<List<Teacher>> {
+        return api.getSchoolAndTeachers()
+                .map { it.data }
+                .map { res ->
+                    res.teachers.map {
+                        it.copy(
+                                short = it.name.substringAfter("[").substringBefore("]"),
+                                name = it.name.substringBefore(" [")
+                        )
+                    }
+                }
+    }
+
+    fun getSchool(): Single<School> {
+        return api.getSchoolAndTeachers()
+                .map { it.data }
+                .map { it.school }
     }
 
     fun getRegisteredDevices(): Single<List<Device>> {

@@ -10,6 +10,7 @@ import io.github.wulkanowy.api.homework.HomeworkResponse
 import io.github.wulkanowy.api.mobile.Device
 import io.github.wulkanowy.api.notes.NotesResponse
 import io.github.wulkanowy.api.register.Diary
+import io.github.wulkanowy.api.school.SchoolAndTeachersResponse
 import io.github.wulkanowy.api.timetable.CacheResponse
 import io.github.wulkanowy.api.timetable.TimetableRequest
 import io.github.wulkanowy.api.timetable.TimetableResponse
@@ -77,7 +78,7 @@ interface StudentService {
     fun unregisterDevice()
 
     @POST("SzkolaINauczyciele.mvc/Get")
-    fun getSchoolAndTeachers()
+    fun getSchoolAndTeachers(): Single<ApiResponse<SchoolAndTeachersResponse>>
 
     @POST("Uczen.mvc/Get")
     fun getStudentInfo()
