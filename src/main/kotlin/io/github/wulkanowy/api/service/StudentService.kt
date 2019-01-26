@@ -14,14 +14,19 @@ import io.github.wulkanowy.api.timetable.CacheResponse
 import io.github.wulkanowy.api.timetable.TimetableRequest
 import io.github.wulkanowy.api.timetable.TimetableResponse
 import io.reactivex.Single
-import retrofit2.http.Body
-import retrofit2.http.POST
-import retrofit2.http.Url
+import retrofit2.http.*
 
 interface StudentService {
 
+    @GET("Start")
+    fun getStart(): Single<String>
+
     @POST("UczenCache.mvc/Get")
-    fun getUserCache(): Single<ApiResponse<CacheResponse>>
+    fun getUserCache(
+            @Header("X-V-RequestVerificationToken") token: String,
+            @Header("X-V-AppGuid") appGuid: String,
+            @Header("X-V-AppVersion") appVersion: String
+    ): Single<ApiResponse<CacheResponse>>
 
     @POST
     fun getSchoolInfo(@Url url: String): Single<ApiResponse<List<Diary>>>

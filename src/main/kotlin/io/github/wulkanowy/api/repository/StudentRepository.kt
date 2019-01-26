@@ -1,21 +1,15 @@
 package io.github.wulkanowy.api.repository
 
+import io.github.wulkanowy.api.*
 import io.github.wulkanowy.api.attendance.*
 import io.github.wulkanowy.api.exams.Exam
 import io.github.wulkanowy.api.exams.ExamRequest
-import io.github.wulkanowy.api.getGradeShortValue
 import io.github.wulkanowy.api.grades.*
 import io.github.wulkanowy.api.homework.Homework
 import io.github.wulkanowy.api.mobile.Device
 import io.github.wulkanowy.api.notes.Note
 import io.github.wulkanowy.api.service.StudentService
-import io.github.wulkanowy.api.timetable.Timetable
-import io.github.wulkanowy.api.timetable.TimetableParser
-import io.github.wulkanowy.api.timetable.TimetableRequest
-import io.github.wulkanowy.api.timetable.TimetableResponse
-import io.github.wulkanowy.api.toDate
-import io.github.wulkanowy.api.toFormat
-import io.github.wulkanowy.api.toLocalDate
+import io.github.wulkanowy.api.timetable.*
 import io.reactivex.Observable
 import io.reactivex.Single
 import org.jsoup.Jsoup
@@ -24,17 +18,44 @@ import org.threeten.bp.Month
 
 class StudentRepository(private val api: StudentService) {
 
-//    private val times by lazy { api.getUserCache().map { it.data?.times } }
+    private lateinit var cache: CacheResponse
+
+    private lateinit var times: List<CacheResponse.Time>
+
+    private fun getCache(): Single<CacheResponse> {
+        if (::cache.isInitialized) return Single.just(cache)
+
+        return api.getStart().flatMap {
+            api.getUserCache(
+                    getScriptParam("antiForgeryToken: '(.)*',".toRegex(), it),
+                    getScriptParam("appGuid: '(.)*',".toRegex(), it),
+                    getScriptParam("version: '(.)*',".toRegex(), it)
+            )
+        }.map { it.data }
+    }
+
+    private fun getTimes(): Single<List<CacheResponse.Time>> {
+        if (::times.isInitialized) return Single.just(times)
+
+        return getCache().map { res -> res.times }.map { list ->
+            list.apply { times = this }
+        }
+    }
+
+    private fun getScriptParam(regex: Regex, content: String): String {
+        return regex.find(content).let { result ->
+            if (null !== result) result.groupValues[0].substringAfter("'").substringBefore("'") else ""
+        }
+    }
 
     fun getAttendance(startDate: LocalDate, endDate: LocalDate? = null): Single<List<Attendance>> {
         val end = endDate ?: startDate.plusDays(4)
         return api.getAttendance(AttendanceRequest(startDate.toDate())).map { it.data?.lessons }
                 .flatMapObservable { Observable.fromIterable(it) }
-                .map { a ->
-//                .flatMap { a ->
-//                    times.flatMapObservable { times ->
-//                        Observable.fromIterable(times.filter { time -> time.id == a.categoryId })
-//                    }.map {
+                .flatMap { a ->
+                    getTimes().flatMapObservable { times ->
+                        Observable.fromIterable(times.filter { time -> time.id == a.number })
+                    }.map {
                         a.apply {
                             presence = a.categoryId == Attendance.Category.PRESENCE.id || a.categoryId == Attendance.Category.ABSENCE_FOR_SCHOOL_REASONS.id
                             absence = a.categoryId == Attendance.Category.ABSENCE_UNEXCUSED.id || a.categoryId == Attendance.Category.ABSENCE_EXCUSED.id
@@ -42,11 +63,12 @@ class StudentRepository(private val api: StudentService) {
                             excused = a.categoryId == Attendance.Category.ABSENCE_EXCUSED.id || a.categoryId == Attendance.Category.EXCUSED_LATENESS.id
                             exemption = a.categoryId == Attendance.Category.EXEMPTION.id
                             name = Attendance.Category.values().single { category -> category.id == categoryId }.title
+                            number = it.number
                         }
-//                    }
+                    }
                 }.filter {
                     it.date.toLocalDate() >= startDate && it.date.toLocalDate() <= end
-                }.toList().map { it.sortedWith(compareBy({ it.date }, { it.number })) }
+                }.toList().map { list -> list.sortedWith(compareBy({ it.date }, { it.number })) }
 
     }
 
@@ -63,7 +85,15 @@ class StudentRepository(private val api: StudentService) {
                     AttendanceSummary(Month.APRIL, it[0].april, it[1].april, it[2].april, it[3].april, it[4].april, it[5].april, it[6].april),
                     AttendanceSummary(Month.MAY, it[0].may, it[1].may, it[2].may, it[3].may, it[4].may, it[5].may, it[6].may),
                     AttendanceSummary(Month.JUNE, it[0].june, it[1].june, it[2].june, it[3].june, it[4].june, it[5].june, it[6].june)
-            ).filterNot { it.absence == 0 && it.absenceExcused == 0 && it.absenceForSchoolReasons == 0 && it.exemption == 0 && it.lateness == 0 && it.latenessExcused == 0 && it.presence == 0 }
+            ).filterNot { summary ->
+                summary.absence == 0
+                        && summary.absenceExcused == 0
+                        && summary.absenceForSchoolReasons == 0
+                        && summary.exemption == 0
+                        && summary.lateness == 0
+                        && summary.latenessExcused == 0
+                        && summary.presence == 0
+            }
         }
     }
 
@@ -74,7 +104,7 @@ class StudentRepository(private val api: StudentService) {
     fun getExams(startDate: LocalDate, endDate: LocalDate? = null): Single<List<Exam>> {
         val end = endDate ?: startDate.plusDays(4)
         return api.getExams(ExamRequest(startDate.toDate(), startDate.year)).map { res ->
-            res.data?.map { weeks ->
+            res.data?.asSequence()?.map { weeks ->
                 weeks.weeks.map { day ->
                     day.exams.map { exam ->
                         exam.apply {
@@ -130,7 +160,7 @@ class StudentRepository(private val api: StudentService) {
     fun getHomework(startDate: LocalDate, endDate: LocalDate? = null): Single<List<Homework>> {
         val end = endDate ?: startDate
         return api.getHomework(ExamRequest(startDate.toDate(), startDate.year)).map { res ->
-            res.data?.map { day ->
+            res.data?.asSequence()?.map { day ->
                 day.items.map {
                     val teacherAndDate = it.teacher.split(", ")
                     it.apply {
