@@ -9,7 +9,6 @@ import io.github.wulkanowy.api.homework.Homework
 import io.github.wulkanowy.api.mobile.Device
 import io.github.wulkanowy.api.notes.Note
 import io.github.wulkanowy.api.school.School
-import io.github.wulkanowy.api.school.SchoolAndTeachersResponse
 import io.github.wulkanowy.api.school.Teacher
 import io.github.wulkanowy.api.service.StudentService
 import io.github.wulkanowy.api.timetable.*
@@ -143,6 +142,7 @@ class StudentRepository(private val api: StudentService) {
                         weightValue = if (isGradeValid(entry)) weightValue else 0
                         color = if ("0" == color) "000000" else color.toInt().toString(16).toUpperCase()
                         symbol = symbol ?: ""
+                        description = description ?: ""
                     }
                 }.sortedByDescending { it.date }
             }?.flatten()

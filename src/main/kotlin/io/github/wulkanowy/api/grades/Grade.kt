@@ -33,8 +33,8 @@ class Grade {
     var symbol: String? = ""
 
     @SerializedName("NazwaKolumny")
-    @Selector("td", index = 2, regex = "[^,]+, (.+)")
-    var description: String = ""
+    @Selector("td", index = 2, regex = "[^,]+, (.+)", defValue = "")
+    var description: String? = ""
 
     @Selector("td", index = 3)
     var weight: String = ""
