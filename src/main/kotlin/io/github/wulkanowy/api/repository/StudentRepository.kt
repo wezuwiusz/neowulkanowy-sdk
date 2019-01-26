@@ -139,6 +139,7 @@ class StudentRepository(private val api: StudentService) {
                         weight = "$weightValue,00"
                         weightValue = if (isGradeValid(entry)) weightValue else 0
                         color = if ("0" == color) "000000" else color.toInt().toString(16).toUpperCase()
+                        symbol = symbol ?: ""
                     }
                 }.sortedByDescending { it.date }
             }?.flatten()
