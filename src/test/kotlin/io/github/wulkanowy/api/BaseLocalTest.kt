@@ -3,7 +3,9 @@ package io.github.wulkanowy.api
 import io.github.wulkanowy.api.interceptor.ErrorInterceptor
 import io.github.wulkanowy.api.interceptor.NotLoggedInErrorInterceptor
 import io.github.wulkanowy.api.repository.StudentAndParentRepository
+import io.github.wulkanowy.api.repository.StudentRepository
 import io.github.wulkanowy.api.service.StudentAndParentService
+import io.github.wulkanowy.api.service.StudentService
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import okhttp3.mockwebserver.MockResponse
@@ -26,9 +28,13 @@ abstract class BaseLocalTest : BaseTest() {
 
     fun getSnpRepo(testClass: Class<*>, fixture: String, loginType: Api.LoginType = Api.LoginType.STANDARD): StudentAndParentRepository {
         server.enqueue(MockResponse().setBody(testClass.getResource(fixture).readText()))
-        return StudentAndParentRepository(getService(StudentAndParentService::class.java, this.server.url("/").toString(), true, true, true, loginType))
+        return StudentAndParentRepository(getService(StudentAndParentService::class.java, server.url("/").toString(), true, true, true, loginType))
     }
 
+    open fun getStudentRepo(testClass: Class<*>, fixture: String, loginType: Api.LoginType = Api.LoginType.STANDARD): StudentRepository {
+        server.enqueue(MockResponse().setBody(testClass.getResource(fixture).readText()))
+        return StudentRepository(getService(StudentService::class.java, server.url("/").toString(), false, true, true, loginType))
+    }
 
     fun <T> getService(service: Class<T>,
                        url: String = this.server.url("/").toString(),

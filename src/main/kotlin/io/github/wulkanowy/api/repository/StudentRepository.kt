@@ -64,7 +64,9 @@ class StudentRepository(private val api: StudentService) {
                             lateness = a.categoryId == Attendance.Category.EXCUSED_LATENESS.id || a.categoryId == Attendance.Category.UNEXCUSED_LATENESS.id
                             excused = a.categoryId == Attendance.Category.ABSENCE_EXCUSED.id || a.categoryId == Attendance.Category.EXCUSED_LATENESS.id
                             exemption = a.categoryId == Attendance.Category.EXEMPTION.id
-                            name = Attendance.Category.values().single { category -> category.id == categoryId }.title
+                            name = (Attendance.Category.values()
+                                    .singleOrNull { category -> category.id == categoryId }
+                                    ?: Attendance.Category.UNKNOWN).title
                             number = it.number
                         }
                     }

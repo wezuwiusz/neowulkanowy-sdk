@@ -56,6 +56,7 @@ class Attendance {
         UNEXCUSED_LATENESS(4, "Spóźnienie nieusprawiedliwione"),
         EXCUSED_LATENESS(5, "Spóźnienie usprawiedliwione"),
         ABSENCE_FOR_SCHOOL_REASONS(6, "Nieobecność z przyczyn szkolnych"),
-        EXEMPTION(7, "Zwolnienie")
+        EXEMPTION(7, "Zwolnienie"),
+        DELETED(8, "Usunięty wpis")
     }
 }
