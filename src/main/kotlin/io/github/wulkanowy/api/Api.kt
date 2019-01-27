@@ -2,10 +2,15 @@ package io.github.wulkanowy.api
 
 import io.github.wulkanowy.api.login.LoginHelper
 import io.github.wulkanowy.api.messages.Folder
-import io.github.wulkanowy.api.messages.Folder.*
 import io.github.wulkanowy.api.messages.Message
 import io.github.wulkanowy.api.messages.Recipient
-import io.github.wulkanowy.api.repository.*
+import io.github.wulkanowy.api.repository.HomepageRepository
+import io.github.wulkanowy.api.repository.MessagesRepository
+import io.github.wulkanowy.api.repository.RegisterRepository
+import io.github.wulkanowy.api.repository.StudentAndParentRepository
+import io.github.wulkanowy.api.repository.StudentAndParentStartRepository
+import io.github.wulkanowy.api.repository.StudentRepository
+import io.github.wulkanowy.api.repository.StudentStartRepository
 import io.github.wulkanowy.api.service.ServiceManager
 import io.reactivex.Single
 import okhttp3.Interceptor
@@ -114,7 +119,20 @@ class Api {
     private val normalizedSymbol by resettableLazy(changeManager) { if (symbol.isBlank()) "Default" else symbol }
 
     private val serviceManager by resettableLazy(changeManager) {
-        ServiceManager(logLevel, loginType, schema, host, normalizedSymbol, email, password, schoolSymbol, studentId, diaryId, androidVersion, buildTag).apply {
+        ServiceManager(
+            logLevel,
+            loginType,
+            schema,
+            host,
+            normalizedSymbol,
+            email,
+            password,
+            schoolSymbol,
+            studentId,
+            diaryId,
+            androidVersion,
+            buildTag
+        ).apply {
             appInterceptors.forEach {
                 setInterceptor(it.value.first, it.value.second, it.key)
             }
@@ -122,23 +140,36 @@ class Api {
     }
 
     private val register by resettableLazy(changeManager) {
-        RegisterRepository(normalizedSymbol, email, password, useNewStudent,
-                LoginHelper(loginType, schema, host, normalizedSymbol, serviceManager.getCookieManager(), serviceManager.getLoginService()),
-                serviceManager.getRegisterService(),
-                serviceManager.getSnpService(false, false),
-                serviceManager.getStudentService(false, false),
-                serviceManager.urlGenerator
+        RegisterRepository(
+            normalizedSymbol, email, password, useNewStudent,
+            LoginHelper(
+                loginType,
+                schema,
+                host,
+                normalizedSymbol,
+                serviceManager.getCookieManager(),
+                serviceManager.getLoginService()
+            ),
+            serviceManager.getRegisterService(),
+            serviceManager.getSnpService(withLogin = false, interceptor = false),
+            serviceManager.getStudentService(withLogin = false, interceptor = false),
+            serviceManager.urlGenerator
         )
     }
 
     private val snpStart by resettableLazy(changeManager) {
         if (0 == studentId) throw ApiException("Student id is not set")
-        StudentAndParentStartRepository(normalizedSymbol, schoolSymbol, studentId, serviceManager.getSnpService(true, false))
+        StudentAndParentStartRepository(
+            normalizedSymbol,
+            schoolSymbol,
+            studentId,
+            serviceManager.getSnpService(withLogin = true, interceptor = false)
+        )
     }
 
     private val studentStart by resettableLazy(changeManager) {
         if (0 == studentId) throw ApiException("Student id is not set")
-        StudentStartRepository(studentId, serviceManager.getStudentService(true, false))
+        StudentStartRepository(studentId, serviceManager.getStudentService(withLogin = true, interceptor = false))
     }
 
     private val snp by resettableLazy(changeManager) {
@@ -164,21 +195,28 @@ class Api {
 
     fun getSemesters() = if (useNewStudent) studentStart.getSemesters() else snpStart.getSemesters()
 
-    fun getAttendance(startDate: LocalDate, endDate: LocalDate? = null) = if (useNewStudent) student.getAttendance(startDate, endDate) else snp.getAttendance(startDate, endDate)
+    fun getAttendance(startDate: LocalDate, endDate: LocalDate? = null) =
+        if (useNewStudent) student.getAttendance(startDate, endDate) else snp.getAttendance(startDate, endDate)
 
-    fun getAttendanceSummary(subjectId: Int? = -1) = if (useNewStudent) student.getAttendanceSummary(subjectId) else snp.getAttendanceSummary(subjectId)
+    fun getAttendanceSummary(subjectId: Int? = -1) =
+        if (useNewStudent) student.getAttendanceSummary(subjectId) else snp.getAttendanceSummary(subjectId)
 
     fun getSubjects() = if (useNewStudent) student.getSubjects() else snp.getSubjects()
 
-    fun getExams(startDate: LocalDate, endDate: LocalDate? = null) = if (useNewStudent) student.getExams(startDate, endDate) else snp.getExams(startDate, endDate)
+    fun getExams(startDate: LocalDate, endDate: LocalDate? = null) =
+        if (useNewStudent) student.getExams(startDate, endDate) else snp.getExams(startDate, endDate)
 
-    fun getGrades(semesterId: Int? = null) = if (useNewStudent) student.getGrades(semesterId) else snp.getGrades(semesterId)
+    fun getGrades(semesterId: Int? = null) =
+        if (useNewStudent) student.getGrades(semesterId) else snp.getGrades(semesterId)
 
-    fun getGradesSummary(semesterId: Int? = null) = if (useNewStudent) student.getGradesSummary(semesterId) else snp.getGradesSummary(semesterId)
+    fun getGradesSummary(semesterId: Int? = null) =
+        if (useNewStudent) student.getGradesSummary(semesterId) else snp.getGradesSummary(semesterId)
 
-    fun getGradesStatistics(semesterId: Int? = null, annual: Boolean = false) = snp.getGradesStatistics(semesterId, annual)
+    fun getGradesStatistics(semesterId: Int? = null, annual: Boolean = false) =
+        snp.getGradesStatistics(semesterId, annual)
 
-    fun getHomework(startDate: LocalDate, endDate: LocalDate? = null) = if (useNewStudent) student.getHomework(startDate, endDate) else snp.getHomework(startDate, endDate)
+    fun getHomework(startDate: LocalDate, endDate: LocalDate? = null) =
+        if (useNewStudent) student.getHomework(startDate, endDate) else snp.getHomework(startDate, endDate)
 
     fun getNotes() = if (useNewStudent) student.getNotes() else snp.getNotes()
 
@@ -198,25 +236,35 @@ class Api {
 
     fun getRecipients(role: Int = 2) = messages.getRecipients(role)
 
-    fun getMessages(folder: Folder, startDate: LocalDateTime? = null, endDate: LocalDateTime? = null): Single<List<Message>> {
+    fun getMessages(
+        folder: Folder,
+        startDate: LocalDateTime? = null,
+        endDate: LocalDateTime? = null
+    ): Single<List<Message>> {
         return when (folder) {
-            RECEIVED -> messages.getReceivedMessages(startDate, endDate)
-            SENT -> messages.getSentMessages(startDate, endDate)
-            TRASHED -> messages.getDeletedMessages(startDate, endDate)
+            Folder.RECEIVED -> messages.getReceivedMessages(startDate, endDate)
+            Folder.SENT -> messages.getSentMessages(startDate, endDate)
+            Folder.TRASHED -> messages.getDeletedMessages(startDate, endDate)
         }
     }
 
-    fun getReceivedMessages(startDate: LocalDateTime? = null, endDate: LocalDateTime? = null) = messages.getReceivedMessages(startDate, endDate)
+    fun getReceivedMessages(startDate: LocalDateTime? = null, endDate: LocalDateTime? = null) =
+        messages.getReceivedMessages(startDate, endDate)
 
-    fun getSentMessages(startDate: LocalDateTime? = null, endDate: LocalDateTime? = null) = messages.getSentMessages(startDate, endDate)
+    fun getSentMessages(startDate: LocalDateTime? = null, endDate: LocalDateTime? = null) =
+        messages.getSentMessages(startDate, endDate)
 
-    fun getDeletedMessages(startDate: LocalDateTime? = null, endDate: LocalDateTime? = null) = messages.getDeletedMessages(startDate, endDate)
+    fun getDeletedMessages(startDate: LocalDateTime? = null, endDate: LocalDateTime? = null) =
+        messages.getDeletedMessages(startDate, endDate)
 
-    fun getMessageContent(messageId: Int, folderId: Int, read: Boolean = false, id: Int? = null) = messages.getMessage(messageId, folderId, read, id)
+    fun getMessageContent(messageId: Int, folderId: Int, read: Boolean = false, id: Int? = null) =
+        messages.getMessage(messageId, folderId, read, id)
 
-    fun sendMessage(subject: String, content: String, recipients: List<Recipient>) = messages.sendMessage(subject, content, recipients)
+    fun sendMessage(subject: String, content: String, recipients: List<Recipient>) =
+        messages.sendMessage(subject, content, recipients)
 
-    fun getTimetable(startDate: LocalDate, endDate: LocalDate? = null) = if (useNewStudent) student.getTimetable(startDate, endDate) else snp.getTimetable(startDate, endDate)
+    fun getTimetable(startDate: LocalDate, endDate: LocalDate? = null) =
+        if (useNewStudent) student.getTimetable(startDate, endDate) else snp.getTimetable(startDate, endDate)
 
     fun getRealized(startDate: LocalDate? = null) = snp.getRealized(startDate)
 

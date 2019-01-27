@@ -10,5 +10,4 @@ class HomepageRepository(private val api: HomepageService) {
                 .map { it.luckyNumer }
                 .filter { it != 0 }
     }
-
 }

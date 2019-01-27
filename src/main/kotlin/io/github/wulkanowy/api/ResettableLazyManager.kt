@@ -1,6 +1,6 @@
 package io.github.wulkanowy.api
 
-import java.util.*
+import java.util.LinkedList
 import kotlin.reflect.KProperty
 
 /**

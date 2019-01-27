@@ -3,11 +3,15 @@ package io.github.wulkanowy.api.register
 import io.github.wulkanowy.api.Api
 import io.github.wulkanowy.api.BaseLocalTest
 import io.github.wulkanowy.api.grades.GradesTest
-import io.github.wulkanowy.api.login.LoginTest
 import io.github.wulkanowy.api.login.LoginHelper
+import io.github.wulkanowy.api.login.LoginTest
 import io.github.wulkanowy.api.repository.RegisterRepository
 import io.github.wulkanowy.api.repository.StudentAndParentStartRepository
-import io.github.wulkanowy.api.service.*
+import io.github.wulkanowy.api.service.LoginService
+import io.github.wulkanowy.api.service.RegisterService
+import io.github.wulkanowy.api.service.ServiceManager
+import io.github.wulkanowy.api.service.StudentAndParentService
+import io.github.wulkanowy.api.service.StudentService
 import okhttp3.mockwebserver.MockResponse
 import org.junit.Assert.assertEquals
 import org.junit.Test

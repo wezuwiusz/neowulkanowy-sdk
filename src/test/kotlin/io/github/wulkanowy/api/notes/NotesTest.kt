@@ -4,7 +4,6 @@ import io.github.wulkanowy.api.BaseLocalTest
 import org.junit.Assert.assertEquals
 import org.junit.Test
 
-
 class NotesTest : BaseLocalTest() {
 
     private val filled by lazy {

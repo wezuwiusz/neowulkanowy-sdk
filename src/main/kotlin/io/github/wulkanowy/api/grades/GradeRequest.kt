@@ -4,6 +4,6 @@ import com.google.gson.annotations.SerializedName
 
 data class GradeRequest(
 
-        @SerializedName("okres")
-        val semesterId: Int?
+    @SerializedName("okres")
+    val semesterId: Int?
 )

@@ -7,8 +7,8 @@ import io.reactivex.Single
 import org.threeten.bp.LocalDate.now
 
 class StudentStartRepository(
-        private val studentId: Int,
-        private val api: StudentService
+    private val studentId: Int,
+    private val api: StudentService
 ) {
 
     fun getSemesters(): Single<List<Semester>> {

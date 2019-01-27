@@ -2,7 +2,8 @@ package io.github.wulkanowy.api
 
 import org.threeten.bp.LocalDate
 import org.threeten.bp.LocalDateTime
-import java.util.*
+import java.util.Calendar
+import java.util.Date
 
 open class BaseTest {
 

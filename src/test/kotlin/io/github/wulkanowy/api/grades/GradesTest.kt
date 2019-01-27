@@ -118,7 +118,7 @@ class GradesTest : BaseLocalTest() {
             assertEquals("Kordian", description)
             assertEquals("5,00", weight)
             assertEquals(5, weightValue)
-            assertEquals(getDate(2018,  11, 7), date)
+            assertEquals(getDate(2018, 11, 7), date)
             assertEquals("Amelia Stępień", teacher)
         }
     }

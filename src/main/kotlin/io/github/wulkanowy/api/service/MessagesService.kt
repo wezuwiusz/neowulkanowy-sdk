@@ -1,9 +1,18 @@
 package io.github.wulkanowy.api.service
 
 import io.github.wulkanowy.api.ApiResponse
-import io.github.wulkanowy.api.messages.*
+import io.github.wulkanowy.api.messages.Message
+import io.github.wulkanowy.api.messages.Recipient
+import io.github.wulkanowy.api.messages.ReportingUnit
+import io.github.wulkanowy.api.messages.SendMessageRequest
+import io.github.wulkanowy.api.messages.SentMessage
 import io.reactivex.Single
-import retrofit2.http.*
+import retrofit2.http.Body
+import retrofit2.http.Field
+import retrofit2.http.FormUrlEncoded
+import retrofit2.http.GET
+import retrofit2.http.POST
+import retrofit2.http.Query
 
 interface MessagesService {
 
@@ -25,10 +34,10 @@ interface MessagesService {
     @POST("Wiadomosc.mvc/GetTrescWiadomosci")
     @FormUrlEncoded
     fun getMessage(
-            @Field("idWiadomosc") messageId: Int,
-            @Field("Folder") folderId: Int,
-            @Field("Nieprzeczytana") read: Boolean,
-            @Field("idWiadomoscAdresat") id: Int?
+        @Field("idWiadomosc") messageId: Int,
+        @Field("Folder") folderId: Int,
+        @Field("Nieprzeczytana") read: Boolean,
+        @Field("idWiadomoscAdresat") id: Int?
     ): Single<ApiResponse<Message>>
 
     @POST("NowaWiadomosc.mvc/InsertWiadomosc")

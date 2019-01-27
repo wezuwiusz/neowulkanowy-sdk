@@ -1,5 +1,6 @@
 package io.github.wulkanowy.api
 
+import com.google.gson.GsonBuilder
 import io.github.wulkanowy.api.interceptor.ErrorInterceptor
 import io.github.wulkanowy.api.interceptor.NotLoggedInErrorInterceptor
 import io.github.wulkanowy.api.repository.StudentAndParentRepository
@@ -36,26 +37,31 @@ abstract class BaseLocalTest : BaseTest() {
         return StudentRepository(getService(StudentService::class.java, server.url("/").toString(), false, true, true, loginType))
     }
 
-    fun <T> getService(service: Class<T>,
-                       url: String = this.server.url("/").toString(),
-                       html: Boolean = true, errorInterceptor: Boolean = true,
-                       noLoggedInInterceptor: Boolean = true,
-                       loginType: Api.LoginType = Api.LoginType.STANDARD
+    fun <T> getService(
+        service: Class<T>,
+        url: String = this.server.url("/").toString(),
+        html: Boolean = true,
+        errorInterceptor: Boolean = true,
+        noLoggedInInterceptor: Boolean = true,
+        loginType: Api.LoginType = Api.LoginType.STANDARD
     ): T {
         return Retrofit.Builder()
-                .client(OkHttpClient.Builder()
-                        .apply {
-                            if (errorInterceptor) addInterceptor(ErrorInterceptor())
-                            if (noLoggedInInterceptor) addInterceptor(NotLoggedInErrorInterceptor(loginType))
-                        }
-                        .addInterceptor(HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BASIC))
-                        .build()
-                )
-                .addConverterFactory(ScalarsConverterFactory.create())
-                .addConverterFactory(if (html) JspoonConverterFactory.create() else GsonConverterFactory.create())
-                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-                .baseUrl(url)
+            .client(OkHttpClient.Builder()
+                .apply {
+                    if (errorInterceptor) addInterceptor(ErrorInterceptor())
+                    if (noLoggedInInterceptor) addInterceptor(NotLoggedInErrorInterceptor(loginType))
+                }
+                .addInterceptor(HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BASIC))
                 .build()
-                .create(service)
+            )
+            .addConverterFactory(ScalarsConverterFactory.create())
+            .addConverterFactory(
+                if (html) JspoonConverterFactory.create()
+                else GsonConverterFactory.create(GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create())
+            )
+            .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+            .baseUrl(url)
+            .build()
+            .create(service)
     }
 }

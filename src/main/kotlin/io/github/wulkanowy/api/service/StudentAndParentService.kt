@@ -15,7 +15,13 @@ import io.github.wulkanowy.api.school.SchoolAndTeachersResponse
 import io.github.wulkanowy.api.student.StudentInfo
 import io.github.wulkanowy.api.timetable.TimetableResponse
 import io.reactivex.Single
-import retrofit2.http.*
+import retrofit2.http.Field
+import retrofit2.http.FormUrlEncoded
+import retrofit2.http.GET
+import retrofit2.http.Header
+import retrofit2.http.POST
+import retrofit2.http.Query
+import retrofit2.http.Url
 
 interface StudentAndParentService {
 

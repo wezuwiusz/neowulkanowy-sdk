@@ -6,5 +6,4 @@ class GradesSummaryResponse {
 
     @Selector(".ocenyZwykle-table tbody tr")
     var subjects: List<GradeSummary> = listOf()
-
 }

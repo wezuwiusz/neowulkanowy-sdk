@@ -87,7 +87,6 @@ class StudentAndParentStartRepositoryTest : BaseLocalTest() {
     fun getSemesters_normal() {
         server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("Logowanie-standard.html").readText()))
 
-
         server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("Logowanie-uonet.html").readText()))
         server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("Login-success.html").readText()))
 

@@ -4,7 +4,7 @@ import com.google.gson.annotations.SerializedName
 
 data class SendMessageRequest(
 
-        @SerializedName("incomming")
-        val incoming: Incoming
+    @SerializedName("incomming")
+    val incoming: Incoming
 
 )

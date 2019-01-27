@@ -16,8 +16,8 @@ import io.github.wulkanowy.api.mobile.Device
 import io.github.wulkanowy.api.mobile.TokenResponse
 import io.github.wulkanowy.api.notes.Note
 import io.github.wulkanowy.api.realized.Realized
-import io.github.wulkanowy.api.register.Student
 import io.github.wulkanowy.api.register.Semester
+import io.github.wulkanowy.api.register.Student
 import io.github.wulkanowy.api.school.School
 import io.github.wulkanowy.api.school.Teacher
 import io.github.wulkanowy.api.student.StudentInfo
@@ -25,7 +25,10 @@ import io.github.wulkanowy.api.timetable.Timetable
 import io.reactivex.observers.TestObserver
 import okhttp3.Interceptor
 import okhttp3.logging.HttpLoggingInterceptor
-import org.junit.Assert.*
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
+import org.junit.Assert.assertNotEquals
+import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Ignore
 import org.junit.Test

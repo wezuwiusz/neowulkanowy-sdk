@@ -12,49 +12,49 @@ class AttendanceSummaryResponse {
 
     data class Summary(
 
-            @SerializedName("Id")
-            val id: Int,
+        @SerializedName("Id")
+        val id: Int,
 
-            @SerializedName("NazwaTypuFrekwencji")
-            val type: String,
+        @SerializedName("NazwaTypuFrekwencji")
+        val type: String,
 
-            @SerializedName("Wrzesien")
-            val september: Int,
+        @SerializedName("Wrzesien")
+        val september: Int,
 
-            @SerializedName("Pazdziernik")
-            val october: Int,
+        @SerializedName("Pazdziernik")
+        val october: Int,
 
-            @SerializedName("Listopad")
-            val november: Int,
+        @SerializedName("Listopad")
+        val november: Int,
 
-            @SerializedName("Grudzien")
-            val december: Int,
+        @SerializedName("Grudzien")
+        val december: Int,
 
-            @SerializedName("Styczen")
-            val january: Int,
+        @SerializedName("Styczen")
+        val january: Int,
 
-            @SerializedName("Luty")
-            val february: Int,
+        @SerializedName("Luty")
+        val february: Int,
 
-            @SerializedName("Marzec")
-            val march: Int,
+        @SerializedName("Marzec")
+        val march: Int,
 
-            @SerializedName("Kwiecien")
-            val april: Int,
+        @SerializedName("Kwiecien")
+        val april: Int,
 
-            @SerializedName("Maj")
-            val may: Int,
+        @SerializedName("Maj")
+        val may: Int,
 
-            @SerializedName("Czerwiec")
-            val june: Int,
+        @SerializedName("Czerwiec")
+        val june: Int,
 
-            @SerializedName("Lipiec")
-            val july: Int,
+        @SerializedName("Lipiec")
+        val july: Int,
 
-            @SerializedName("Sierpien")
-            val august: Int,
+        @SerializedName("Sierpien")
+        val august: Int,
 
-            @SerializedName("Razem")
-            val total: Int
+        @SerializedName("Razem")
+        val total: Int
     )
 }

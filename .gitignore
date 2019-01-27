@@ -23,7 +23,7 @@
 hs_err_pid*
 
 .idea/
-
+!.idea/codeStyles/
 .gradle
 /build/
 /out/

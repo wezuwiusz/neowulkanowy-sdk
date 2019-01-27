@@ -1,13 +1,13 @@
 package io.github.wulkanowy.api.exams
 
 import com.google.gson.annotations.SerializedName
-import java.util.*
+import java.util.Date
 
 data class ExamRequest(
 
-        @SerializedName("data")
-        val date: Date,
+    @SerializedName("data")
+    val date: Date,
 
-        @SerializedName("rokSzkolny")
-        val schoolYear: Int
+    @SerializedName("rokSzkolny")
+    val schoolYear: Int
 )

@@ -1,7 +1,7 @@
 package io.github.wulkanowy.api.timetable
 
 import com.google.gson.annotations.SerializedName
-import java.util.*
+import java.util.Date
 
 class CacheResponse {
 

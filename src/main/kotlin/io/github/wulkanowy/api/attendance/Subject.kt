@@ -5,11 +5,11 @@ import pl.droidsonroids.jspoon.annotation.Selector
 
 data class Subject(
 
-        @SerializedName("Nazwa")
-        @Selector("option")
-        var name: String = "Wszystkie",
+    @SerializedName("Nazwa")
+    @Selector("option")
+    var name: String = "Wszystkie",
 
-        @SerializedName("Id")
-        @Selector("option", attr = "value")
-        var value: Int = -1
+    @SerializedName("Id")
+    @Selector("option", attr = "value")
+    var value: Int = -1
 )

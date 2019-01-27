@@ -1,17 +1,33 @@
 package io.github.wulkanowy.api.repository
 
-import io.github.wulkanowy.api.*
-import io.github.wulkanowy.api.attendance.*
+import io.github.wulkanowy.api.attendance.Attendance
+import io.github.wulkanowy.api.attendance.AttendanceRequest
+import io.github.wulkanowy.api.attendance.AttendanceSummary
+import io.github.wulkanowy.api.attendance.AttendanceSummaryRequest
+import io.github.wulkanowy.api.attendance.Subject
 import io.github.wulkanowy.api.exams.Exam
 import io.github.wulkanowy.api.exams.ExamRequest
-import io.github.wulkanowy.api.grades.*
+import io.github.wulkanowy.api.getGradeShortValue
+import io.github.wulkanowy.api.getSchoolYear
+import io.github.wulkanowy.api.grades.Grade
+import io.github.wulkanowy.api.grades.GradeRequest
+import io.github.wulkanowy.api.grades.GradeSummary
+import io.github.wulkanowy.api.grades.getGradeValueWithModifier
+import io.github.wulkanowy.api.grades.isGradeValid
 import io.github.wulkanowy.api.homework.Homework
 import io.github.wulkanowy.api.mobile.Device
 import io.github.wulkanowy.api.notes.Note
 import io.github.wulkanowy.api.school.School
 import io.github.wulkanowy.api.school.Teacher
 import io.github.wulkanowy.api.service.StudentService
-import io.github.wulkanowy.api.timetable.*
+import io.github.wulkanowy.api.timetable.CacheResponse
+import io.github.wulkanowy.api.timetable.Timetable
+import io.github.wulkanowy.api.timetable.TimetableParser
+import io.github.wulkanowy.api.timetable.TimetableRequest
+import io.github.wulkanowy.api.timetable.TimetableResponse
+import io.github.wulkanowy.api.toDate
+import io.github.wulkanowy.api.toFormat
+import io.github.wulkanowy.api.toLocalDate
 import io.reactivex.Observable
 import io.reactivex.Single
 import org.jsoup.Jsoup
@@ -73,7 +89,6 @@ class StudentRepository(private val api: StudentService) {
                 }.filter {
                     it.date.toLocalDate() >= startDate && it.date.toLocalDate() <= end
                 }.toList().map { list -> list.sortedWith(compareBy({ it.date }, { it.number })) }
-
     }
 
     fun getAttendanceSummary(subjectId: Int?): Single<List<AttendanceSummary>> {
@@ -90,13 +105,13 @@ class StudentRepository(private val api: StudentService) {
                     AttendanceSummary(Month.MAY, it[0].may, it[1].may, it[2].may, it[3].may, it[4].may, it[5].may, it[6].may),
                     AttendanceSummary(Month.JUNE, it[0].june, it[1].june, it[2].june, it[3].june, it[4].june, it[5].june, it[6].june)
             ).filterNot { summary ->
-                summary.absence == 0
-                        && summary.absenceExcused == 0
-                        && summary.absenceForSchoolReasons == 0
-                        && summary.exemption == 0
-                        && summary.lateness == 0
-                        && summary.latenessExcused == 0
-                        && summary.presence == 0
+                summary.absence == 0 &&
+                        summary.absenceExcused == 0 &&
+                        summary.absenceForSchoolReasons == 0 &&
+                        summary.exemption == 0 &&
+                        summary.lateness == 0 &&
+                        summary.latenessExcused == 0 &&
+                        summary.presence == 0
             }
         }
     }

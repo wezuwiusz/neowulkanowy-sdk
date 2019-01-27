@@ -8,10 +8,10 @@ import okhttp3.Response
  * @see <a href="https://developer.chrome.com/multidevice/user-agent#chrome_for_android_user_agent">User Agent Strings - Google Chrome</a>
  */
 class UserAgentInterceptor(
-        private val androidVersion: String,
-        private val buildTag: String,
-        private val webKitRev: String = "537.36",
-        private val chromeRev: String = "71.0.3578.98"
+    private val androidVersion: String,
+    private val buildTag: String,
+    private val webKitRev: String = "537.36",
+    private val chromeRev: String = "71.0.3578.98"
 ) : Interceptor {
 
     override fun intercept(chain: Interceptor.Chain): Response {

@@ -2,7 +2,7 @@ package io.github.wulkanowy.api.student
 
 import pl.droidsonroids.jspoon.annotation.Format
 import pl.droidsonroids.jspoon.annotation.Selector
-import java.util.*
+import java.util.Date
 
 class Student {
 

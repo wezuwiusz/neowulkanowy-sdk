@@ -30,7 +30,6 @@ class ApiTest : BaseLocalTest() {
         subjects.subscribe(subjectsObserver)
         subjectsObserver.assertNotComplete() //
 
-
         api.apply {
             host = "fakelog.localhost:3000" //
         }

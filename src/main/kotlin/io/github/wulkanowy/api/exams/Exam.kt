@@ -3,7 +3,7 @@ package io.github.wulkanowy.api.exams
 import com.google.gson.annotations.SerializedName
 import pl.droidsonroids.jspoon.annotation.Format
 import pl.droidsonroids.jspoon.annotation.Selector
-import java.util.*
+import java.util.Date
 
 class Exam {
 

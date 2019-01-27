@@ -4,12 +4,12 @@ import com.google.gson.annotations.SerializedName
 
 data class ReportingUnit(
 
-        @SerializedName("IdJednostkaSprawozdawcza")
-        val id: Int,
+    @SerializedName("IdJednostkaSprawozdawcza")
+    val id: Int,
 
-        @SerializedName("Skrot")
-        val short: String,
+    @SerializedName("Skrot")
+    val short: String,
 
-        @SerializedName("Id")
-        val senderId: Int
+    @SerializedName("Id")
+    val senderId: Int
 )

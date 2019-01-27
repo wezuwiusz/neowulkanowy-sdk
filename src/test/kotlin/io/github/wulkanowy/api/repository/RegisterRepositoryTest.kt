@@ -7,7 +7,11 @@ import io.github.wulkanowy.api.interceptor.ErrorInterceptorTest
 import io.github.wulkanowy.api.login.LoginHelper
 import io.github.wulkanowy.api.login.LoginTest
 import io.github.wulkanowy.api.register.Student
-import io.github.wulkanowy.api.service.*
+import io.github.wulkanowy.api.service.LoginService
+import io.github.wulkanowy.api.service.RegisterService
+import io.github.wulkanowy.api.service.ServiceManager
+import io.github.wulkanowy.api.service.StudentAndParentService
+import io.github.wulkanowy.api.service.StudentService
 import io.reactivex.observers.TestObserver
 import okhttp3.mockwebserver.MockResponse
 import org.junit.Test

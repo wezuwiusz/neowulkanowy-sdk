@@ -7,7 +7,7 @@ import org.threeten.bp.ZoneId
 import org.threeten.bp.format.DateTimeFormatter
 import org.threeten.bp.temporal.TemporalAdjusters
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Date
 
 fun String.toDate(format: String): Date = SimpleDateFormat(format).parse(this)
 

@@ -4,7 +4,7 @@ import com.google.gson.annotations.SerializedName
 import pl.droidsonroids.jspoon.annotation.Format
 import pl.droidsonroids.jspoon.annotation.Selector
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Date
 
 class Grade {
 
@@ -24,8 +24,8 @@ class Grade {
     @Selector("td", index = 1, regex = "\\(([^)]+)\\)")
     var comment: String = ""
 
-    @SerializedName("KolorOceny") //dec
-    @Selector("td .ocenaCzastkowa", attr = "style", regex = "#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})") //hex
+    @SerializedName("KolorOceny") // dec
+    @Selector("td .ocenaCzastkowa", attr = "style", regex = "#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})") // hex
     var color: String = ""
 
     @SerializedName("KodKolumny")

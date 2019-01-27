@@ -2,7 +2,7 @@ package io.github.wulkanowy.api.attendance
 
 import com.google.gson.annotations.SerializedName
 import pl.droidsonroids.jspoon.annotation.Selector
-import java.util.*
+import java.util.Date
 
 class Attendance {
 

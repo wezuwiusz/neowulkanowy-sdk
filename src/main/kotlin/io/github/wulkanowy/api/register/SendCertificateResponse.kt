@@ -9,5 +9,4 @@ class SendCertificateResponse {
 
     @Selector(".panel.linkownia.pracownik.klient a[href*=\"uonetplus-uczen\"]", attr = "href")
     var studentSchools: List<String> = emptyList()
-
 }

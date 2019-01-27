@@ -2,7 +2,7 @@ package io.github.wulkanowy.api.notes
 
 import com.google.gson.annotations.SerializedName
 import pl.droidsonroids.jspoon.annotation.Selector
-import java.util.*
+import java.util.Date
 
 class Note {
 

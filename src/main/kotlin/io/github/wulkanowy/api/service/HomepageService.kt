@@ -8,5 +8,4 @@ interface HomepageService {
 
     @GET("Start.mvc/Index")
     fun getLuckyNumber(): Single<LuckyNumberResponse>
-
 }

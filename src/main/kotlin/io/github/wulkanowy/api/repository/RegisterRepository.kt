@@ -19,15 +19,15 @@ import org.jsoup.parser.Parser
 import java.net.URL
 
 class RegisterRepository(
-        private val startSymbol: String,
-        private val email: String,
-        private val password: String,
-        private val useNewStudent: Boolean,
-        private val loginHelper: LoginHelper,
-        private val register: RegisterService,
-        private val snp: StudentAndParentService,
-        private val student: StudentService,
-        private val url: ServiceManager.UrlGenerator
+    private val startSymbol: String,
+    private val email: String,
+    private val password: String,
+    private val useNewStudent: Boolean,
+    private val loginHelper: LoginHelper,
+    private val register: RegisterService,
+    private val snp: StudentAndParentService,
+    private val student: StudentService,
+    private val url: ServiceManager.UrlGenerator
 ) {
 
     fun getStudents(): Single<List<Student>> {

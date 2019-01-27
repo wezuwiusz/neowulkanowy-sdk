@@ -14,12 +14,12 @@ import java.net.CookieManager
 import java.net.URLEncoder
 
 class LoginHelper(
-        var loginType: Api.LoginType,
-        private val schema: String,
-        private val host: String,
-        private val symbol: String,
-        private val cookies: CookieManager,
-        private val api: LoginService
+    var loginType: Api.LoginType,
+    private val schema: String,
+    private val host: String,
+    private val symbol: String,
+    private val cookies: CookieManager,
+    private val api: LoginService
 ) {
 
     private val firstStepReturnUrl by lazy {

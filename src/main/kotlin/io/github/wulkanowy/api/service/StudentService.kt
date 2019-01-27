@@ -1,7 +1,11 @@
 package io.github.wulkanowy.api.service
 
 import io.github.wulkanowy.api.ApiResponse
-import io.github.wulkanowy.api.attendance.*
+import io.github.wulkanowy.api.attendance.AttendanceRequest
+import io.github.wulkanowy.api.attendance.AttendanceResponse
+import io.github.wulkanowy.api.attendance.AttendanceSummaryRequest
+import io.github.wulkanowy.api.attendance.AttendanceSummaryResponse
+import io.github.wulkanowy.api.attendance.Subject
 import io.github.wulkanowy.api.exams.ExamRequest
 import io.github.wulkanowy.api.exams.ExamResponse
 import io.github.wulkanowy.api.grades.GradeRequest
@@ -15,7 +19,11 @@ import io.github.wulkanowy.api.timetable.CacheResponse
 import io.github.wulkanowy.api.timetable.TimetableRequest
 import io.github.wulkanowy.api.timetable.TimetableResponse
 import io.reactivex.Single
-import retrofit2.http.*
+import retrofit2.http.Body
+import retrofit2.http.GET
+import retrofit2.http.Header
+import retrofit2.http.POST
+import retrofit2.http.Url
 
 interface StudentService {
 
@@ -24,9 +32,9 @@ interface StudentService {
 
     @POST("UczenCache.mvc/Get")
     fun getUserCache(
-            @Header("X-V-RequestVerificationToken") token: String,
-            @Header("X-V-AppGuid") appGuid: String,
-            @Header("X-V-AppVersion") appVersion: String
+        @Header("X-V-RequestVerificationToken") token: String,
+        @Header("X-V-AppGuid") appGuid: String,
+        @Header("X-V-AppVersion") appVersion: String
     ): Single<ApiResponse<CacheResponse>>
 
     @POST

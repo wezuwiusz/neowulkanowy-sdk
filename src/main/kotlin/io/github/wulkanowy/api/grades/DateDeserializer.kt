@@ -7,7 +7,7 @@ import com.google.gson.JsonParseException
 import java.lang.reflect.Type
 import java.text.ParseException
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Date
 
 class DateDeserializer<T : Date>(private val mSimpleDateFormat: SimpleDateFormat, private val mClazz: Class<T>) : JsonDeserializer<T> {
 

@@ -28,5 +28,4 @@ class LuckyNumberTest : BaseLocalTest() {
 
         assertEquals(null, api.getLuckyNumber().blockingGet())
     }
-
 }

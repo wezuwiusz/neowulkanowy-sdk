@@ -6,7 +6,9 @@ import io.github.wulkanowy.api.register.RegisterTest
 import io.github.wulkanowy.api.repository.StudentRepository
 import io.github.wulkanowy.api.service.StudentService
 import okhttp3.mockwebserver.MockResponse
-import org.junit.Assert.*
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
+import org.junit.Assert.assertTrue
 import org.junit.Test
 
 class AttendanceTest : BaseLocalTest() {
