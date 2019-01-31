@@ -128,6 +128,7 @@ class StudentRepository(private val api: StudentService) {
                     day.exams.map { exam ->
                         exam.apply {
                             group = subject.split("|").last()
+                            subject = subject.substringBeforeLast(" ")
                             if (group.contains(" ")) group = ""
                             date = day.date
                             type = if ("1" == type) "Sprawdzian" else "Kartkówka"

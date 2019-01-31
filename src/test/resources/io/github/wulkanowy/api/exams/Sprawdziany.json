@@ -1,0 +1,208 @@
+{
+  "data": [
+    {
+      "SprawdzianyGroupedByDayList": [
+        {
+          "Data": "2018-10-01 00:00:00",
+          "Sprawdziany": [
+            {
+              "DisplayValue": "Język polski 3Ti",
+              "PracownikModyfikujacyDisplay": "Czerwieńska Agata [CA]",
+              "DataModyfikacji": "2018-09-16 00:00:00",
+              "Opis": "Dwudziestolecie",
+              "Rodzaj": 1
+            }
+          ],
+          "Pokazuj": true
+        },
+        {
+          "Data": "2018-10-02 00:00:00",
+          "Sprawdziany": [
+            {
+              "DisplayValue": "Język angielski 3Ti|J1",
+              "PracownikModyfikujacyDisplay": "Natalia Nowak [NN]",
+              "DataModyfikacji": "2018-09-17 00:00:00",
+              "Opis": "Czasy teraźniejsze",
+              "Rodzaj": 1
+            }
+          ],
+          "Pokazuj": true
+        },
+        {
+          "Data": "2018-10-03 00:00:00",
+          "Sprawdziany": [
+            {
+              "DisplayValue": "Metodologia programowania 3Ti|zaw1",
+              "PracownikModyfikujacyDisplay": "Małgorzata Nowacka [MN]",
+              "DataModyfikacji": "2018-09-16 00:00:00",
+              "Opis": "programowanie obiektowe",
+              "Rodzaj": 0
+            },
+            {
+              "DisplayValue": "Metodologia programowania 3Ti|zaw2",
+              "PracownikModyfikujacyDisplay": "Małgorzata Nowacka [MN]",
+              "DataModyfikacji": "2018-09-16 00:00:00",
+              "Opis": "",
+              "Rodzaj": 1
+            }
+          ],
+          "Pokazuj": true
+        },
+        {
+          "Data": "2018-10-04 00:00:00",
+          "Sprawdziany": [
+            {
+              "DisplayValue": "Sieci komputerowe 3Ti|zaw2",
+              "PracownikModyfikujacyDisplay": "Adam Wiśniewski [AW]",
+              "DataModyfikacji": "2018-09-15 00:00:00",
+              "Opis": "Łącza danych.",
+              "Rodzaj": 1
+            }
+          ],
+          "Pokazuj": true
+        },
+        {
+          "Data": "2018-10-05 00:00:00",
+          "Sprawdziany": [
+            {
+              "DisplayValue": "Język angielski 3Ti|J2",
+              "PracownikModyfikujacyDisplay": "Natalia Nowak [NN]",
+              "DataModyfikacji": "2018-09-17 00:00:00",
+              "Opis": "słownictwo (zdrowie)",
+              "Rodzaj": 1
+            }
+          ],
+          "Pokazuj": true
+        },
+        {
+          "Data": "2018-10-06 00:00:00",
+          "Sprawdziany": [],
+          "Pokazuj": false
+        },
+        {
+          "Data": "2018-10-07 00:00:00",
+          "Sprawdziany": [],
+          "Pokazuj": false
+        }
+      ]
+    },
+    {
+      "SprawdzianyGroupedByDayList": [
+        {
+          "Data": "2018-10-08 00:00:00",
+          "Sprawdziany": [],
+          "Pokazuj": true
+        },
+        {
+          "Data": "2018-10-09 00:00:00",
+          "Sprawdziany": [],
+          "Pokazuj": true
+        },
+        {
+          "Data": "2018-10-10 00:00:00",
+          "Sprawdziany": [],
+          "Pokazuj": true
+        },
+        {
+          "Data": "2018-10-11 00:00:00",
+          "Sprawdziany": [],
+          "Pokazuj": true
+        },
+        {
+          "Data": "2018-10-12 00:00:00",
+          "Sprawdziany": [],
+          "Pokazuj": true
+        },
+        {
+          "Data": "2018-10-13 00:00:00",
+          "Sprawdziany": [],
+          "Pokazuj": false
+        },
+        {
+          "Data": "2018-10-14 00:00:00",
+          "Sprawdziany": [],
+          "Pokazuj": false
+        }
+      ]
+    },
+    {
+      "SprawdzianyGroupedByDayList": [
+        {
+          "Data": "2018-10-15 00:00:00",
+          "Sprawdziany": [],
+          "Pokazuj": true
+        },
+        {
+          "Data": "2018-10-16 00:00:00",
+          "Sprawdziany": [],
+          "Pokazuj": true
+        },
+        {
+          "Data": "2018-10-17 00:00:00",
+          "Sprawdziany": [],
+          "Pokazuj": true
+        },
+        {
+          "Data": "2018-10-18 00:00:00",
+          "Sprawdziany": [],
+          "Pokazuj": true
+        },
+        {
+          "Data": "2018-10-19 00:00:00",
+          "Sprawdziany": [],
+          "Pokazuj": true
+        },
+        {
+          "Data": "2018-10-20 00:00:00",
+          "Sprawdziany": [],
+          "Pokazuj": false
+        },
+        {
+          "Data": "2018-10-21 00:00:00",
+          "Sprawdziany": [],
+          "Pokazuj": false
+        }
+      ]
+    },
+    {
+      "SprawdzianyGroupedByDayList": [
+        {
+          "Data": "2018-10-22 00:00:00",
+          "Sprawdziany": [],
+          "Pokazuj": true
+        },
+        {
+          "Data": "2018-10-23 00:00:00",
+          "Sprawdziany": [],
+          "Pokazuj": true
+        },
+        {
+          "Data": "2018-10-24 00:00:00",
+          "Sprawdziany": [],
+          "Pokazuj": true
+        },
+        {
+          "Data": "2018-10-25 00:00:00",
+          "Sprawdziany": [],
+          "Pokazuj": true
+        },
+        {
+          "Data": "2018-10-26 00:00:00",
+          "Sprawdziany": [],
+          "Pokazuj": true
+        },
+        {
+          "Data": "2018-10-27 00:00:00",
+          "Sprawdziany": [],
+          "Pokazuj": false
+        },
+        {
+          "Data": "2018-10-28 00:00:00",
+          "Sprawdziany": [],
+          "Pokazuj": false
+        }
+      ]
+    }
+  ],
+  "success": true
+}

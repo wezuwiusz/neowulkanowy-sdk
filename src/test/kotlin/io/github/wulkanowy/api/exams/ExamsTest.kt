@@ -6,78 +6,82 @@ import org.junit.Test
 
 class ExamsTest : BaseLocalTest() {
 
-    private val onePerDay by lazy {
+    private val snp by lazy {
         getSnpRepo(ExamsTest::class.java, "Sprawdziany-one-per-day.html").getExams(getLocalDate(2018, 10, 1)).blockingGet()
     }
 
-    private val empty by lazy {
+    private val snpEmpty by lazy {
         getSnpRepo(ExamsTest::class.java, "Sprawdziany-empty.html").getExams(getLocalDate(2018, 10, 1)).blockingGet()
+    }
+
+    private val student by lazy {
+        getStudentRepo(ExamsTest::class.java, "Sprawdziany.json").getExams(getLocalDate(2018, 10, 1)).blockingGet()
     }
 
     @Test
     fun getExamsSizeTest() {
-        assertEquals(6, onePerDay.size)
-        assertEquals(0, empty.size)
+        assertEquals(6, snp.size)
+        assertEquals(6, student.size)
+        assertEquals(0, snpEmpty.size)
     }
 
     @Test
-    fun getExamsDateTest() {
-        assertEquals(getDate(2018, 10, 1), onePerDay[0].date)
-        assertEquals(getDate(2018, 10, 2), onePerDay[1].date)
-        assertEquals(getDate(2018, 10, 3), onePerDay[2].date)
-        assertEquals(getDate(2018, 10, 3), onePerDay[3].date)
-        assertEquals(getDate(2018, 10, 4), onePerDay[4].date)
-        assertEquals(getDate(2018, 10, 5), onePerDay[5].date)
+    fun getExam_normal() {
+        listOf(snp[0], student[0]).map {
+            it.run {
+                assertEquals("Język polski", subject)
+                assertEquals("", group)
+                assertEquals("Sprawdzian", type)
+                assertEquals("Dwudziestolecie", description)
+                assertEquals("Czerwieńska Agata", teacher)
+                assertEquals("CA", teacherSymbol)
+                assertEquals(getDate(2018, 9, 16), entryDate)
+            }
+        }
     }
 
     @Test
-    fun getExamSubjectTest() {
-        assertEquals("Sieci komputerowe", onePerDay[0].subject)
-        assertEquals("Język angielski", onePerDay[1].subject)
-        assertEquals("Język polski", onePerDay[4].subject)
-        assertEquals("Metodologia programowania", onePerDay[5].subject)
+    fun getExam_group() {
+        listOf(snp[1], student[1]).map {
+            it.run {
+                assertEquals("Język angielski", subject)
+                assertEquals("J1", group)
+                assertEquals("Sprawdzian", type)
+                assertEquals("Czasy teraźniejsze", description)
+                assertEquals("Natalia Nowak", teacher)
+                assertEquals("NN", teacherSymbol)
+                assertEquals(getDate(2018, 9, 17), entryDate)
+            }
+        }
     }
 
     @Test
-    fun getExamGroupTest() {
-        assertEquals("zaw2", onePerDay[0].group)
-        assertEquals("J1", onePerDay[1].group)
-        assertEquals("", onePerDay[4].group)
+    fun getExam_type() {
+        listOf(snp[2], student[2]).map {
+            it.run {
+                assertEquals("Metodologia programowania", subject)
+                assertEquals("zaw1", group)
+                assertEquals("Kartkówka", type)
+                assertEquals("programowanie obiektowe", description)
+                assertEquals("Małgorzata Nowacka", teacher)
+                assertEquals("MN", teacherSymbol)
+                assertEquals(getDate(2018, 9, 16), entryDate)
+            }
+        }
     }
 
     @Test
-    fun getExamTypeTest() {
-        assertEquals("Sprawdzian", onePerDay[0].type)
-        assertEquals("Sprawdzian", onePerDay[1].type)
-        assertEquals("Sprawdzian", onePerDay[2].type)
-        assertEquals("Kartkówka", onePerDay[3].type)
-    }
-
-    @Test
-    fun getExamDescriptionTest() {
-        assertEquals("Łącza danych", onePerDay[0].description)
-        assertEquals("Czasy teraźniejsze", onePerDay[1].description)
-        assertEquals("", onePerDay[5].description)
-    }
-
-    @Test
-    fun getExamTeacherTest() {
-        assertEquals("Adam Wiśniewski", onePerDay[0].teacher)
-        assertEquals("Natalia Nowak", onePerDay[1].teacher)
-        assertEquals("Małgorzata Nowacka", onePerDay[5].teacher)
-    }
-
-    @Test
-    fun getExamTeacherSymbolTest() {
-        assertEquals("AW", onePerDay[0].teacherSymbol)
-        assertEquals("NN", onePerDay[1].teacherSymbol)
-        assertEquals("MN", onePerDay[5].teacherSymbol)
-    }
-
-    @Test
-    fun getExamEntryDateTest() {
-        assertEquals(getDate(2018, 9, 15), onePerDay[0].entryDate)
-        assertEquals(getDate(2018, 9, 17), onePerDay[1].entryDate)
-        assertEquals(getDate(2018, 9, 16), onePerDay[5].entryDate)
+    fun getExam_emptyDescription() {
+        listOf(snp[3], student[3]).map {
+            it.run {
+                assertEquals("Metodologia programowania", subject)
+                assertEquals("zaw2", group)
+                assertEquals("Sprawdzian", type)
+                assertEquals("", description)
+                assertEquals("Małgorzata Nowacka", teacher)
+                assertEquals("MN", teacherSymbol)
+                assertEquals(getDate(2018, 9, 16), entryDate)
+            }
+        }
     }
 }
