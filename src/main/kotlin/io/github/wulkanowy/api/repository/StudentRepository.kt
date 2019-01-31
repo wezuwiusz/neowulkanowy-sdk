@@ -130,7 +130,7 @@ class StudentRepository(private val api: StudentService) {
                             group = subject.split("|").last()
                             if (group.contains(" ")) group = ""
                             date = day.date
-                            type = if ("2" == type) "Sprawdzian" else "Kartkówka"
+                            type = if ("1" == type) "Sprawdzian" else "Kartkówka"
                             teacherSymbol = teacher.split(" [").last().removeSuffix("]")
                             teacher = teacher.split(" [").first()
                         }
