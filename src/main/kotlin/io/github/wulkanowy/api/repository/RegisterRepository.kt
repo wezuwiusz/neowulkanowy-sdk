@@ -48,7 +48,6 @@ class RegisterRepository(
                                             studentId = student.id,
                                             studentName = student.name,
                                             schoolSymbol = getExtractedSchoolSymbolFromUrl(schoolUrl),
-                                            description = student.description,
                                             schoolName = student.description,
                                             loginType = loginType
                                     )
