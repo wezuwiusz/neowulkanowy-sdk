@@ -1,0 +1,26 @@
+{
+  "data": {
+    "Uwagi": [
+      {
+        "TrescUwagi": "Przeszkadzanie w prowadzeniu lekcji",
+        "Kategoria": "Zachowanie na lekcji",
+        "DataWpisu": "2016-10-01 00:00:00",
+        "Nauczyciel": "Kochański Leszek [KL]"
+      },
+      {
+        "TrescUwagi": "Udział w przygotowaniu spektaklu",
+        "Kategoria": "Reprezentowanie szkoły",
+        "DataWpisu": "2016-12-26 00:00:00",
+        "Nauczyciel": "Ochocka Zofia [PZ]"
+      },
+      {
+        "TrescUwagi": "Pomoc przy pikniku charytatywnym",
+        "Kategoria": "Zaangażowanie społeczne",
+        "DataWpisu": "2017-06-26 00:00:00",
+        "Nauczyciel": "Jan Kowalski [JK]"
+      }
+    ],
+    "Osiagniecia": []
+  },
+  "success": true
+}
