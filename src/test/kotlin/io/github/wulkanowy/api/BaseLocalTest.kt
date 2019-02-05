@@ -1,6 +1,8 @@
 package io.github.wulkanowy.api
 
 import com.google.gson.GsonBuilder
+import io.github.wulkanowy.api.grades.DateDeserializer
+import io.github.wulkanowy.api.grades.GradeDate
 import io.github.wulkanowy.api.interceptor.ErrorInterceptor
 import io.github.wulkanowy.api.interceptor.NotLoggedInErrorInterceptor
 import io.github.wulkanowy.api.repository.StudentAndParentRepository
@@ -55,10 +57,10 @@ abstract class BaseLocalTest : BaseTest() {
                 .build()
             )
             .addConverterFactory(ScalarsConverterFactory.create())
-            .addConverterFactory(
-                if (html) JspoonConverterFactory.create()
-                else GsonConverterFactory.create(GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create())
-            )
+            .addConverterFactory(if (!html) GsonConverterFactory.create(GsonBuilder()
+                .setDateFormat("yyyy-MM-dd HH:mm:ss")
+                .registerTypeAdapter(GradeDate::class.java, DateDeserializer(GradeDate.DATE_FORMAT, GradeDate::class.java))
+                .create()) else JspoonConverterFactory.create())
             .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
             .baseUrl(url)
             .build()

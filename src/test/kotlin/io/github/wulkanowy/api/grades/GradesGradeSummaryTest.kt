@@ -10,8 +10,12 @@ class GradesGradeSummaryTest : BaseLocalTest() {
         getSnpRepo(GradesTest::class.java, "OcenyWszystkie-subjects.html").getGradesSummary(0).blockingGet()
     }
 
-    private val average by lazy {
+    private val snp by lazy {
         getSnpRepo(GradesTest::class.java, "OcenyWszystkie-subjects-average.html").getGradesSummary(0).blockingGet()
+    }
+
+    private val student by lazy {
+        getStudentRepo(GradesTest::class.java, "Oceny.json").getGradesSummary(0).blockingGet()
     }
 
     @Test
@@ -25,46 +29,56 @@ class GradesGradeSummaryTest : BaseLocalTest() {
 
     @Test
     fun getSummaryAverage_empty() {
-        average[0].run {
-            assertEquals("Język angielski", name)
-            assertEquals("", predicted)
-            assertEquals("", final)
+        listOf(snp[0], student[0]).map {
+            it.run {
+                assertEquals("Edukacja dla bezpieczeństwa", name)
+                assertEquals("", predicted)
+                assertEquals("", final)
+            }
         }
     }
 
     @Test
     fun getSummaryAverage_longFinal() {
-        average[1].run {
-            assertEquals("Język polski", name)
-            assertEquals("", predicted)
-            assertEquals("4", final)
+        listOf(snp[1], student[1]).map {
+            it.run {
+                assertEquals("Fizyka", name)
+                assertEquals("3", predicted)
+                assertEquals("4", final)
+            }
         }
     }
 
     @Test
     fun getSummaryAverage_longPredictedAndFinal() {
-        average[2].run {
-            assertEquals("Wiedza o społeczeństwie", name)
-            assertEquals("5", predicted)
-            assertEquals("6", final)
+        listOf(snp[2], student[2]).map {
+            it.run {
+                assertEquals("Język angielski", name)
+                assertEquals("5", predicted)
+                assertEquals("6", final)
+            }
         }
     }
 
     @Test
     fun getSummaryAverage_shortPredictedAndLongFinal() {
-        average[3].run {
-            assertEquals("Wychowanie fizyczne", name)
-            assertEquals("4/5", predicted)
-            assertEquals("5", final)
+        listOf(snp[3], student[3]).map {
+            it.run {
+                assertEquals("Język polski", name)
+                assertEquals("4/5", predicted)
+                assertEquals("5", final)
+            }
         }
     }
 
     @Test
     fun getSummaryAverage_shortNegativePredictedAndFinal() {
-        average[4].run {
-            assertEquals("Zachowanie", name)
-            assertEquals("4-", predicted)
-            assertEquals("5-", final)
+        listOf(snp[4], student[4]).map {
+            it.run {
+                assertEquals("Wychowanie fizyczne", name)
+                assertEquals("4-", predicted)
+                assertEquals("5-", final)
+            }
         }
     }
 }

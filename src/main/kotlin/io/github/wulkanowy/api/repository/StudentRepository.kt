@@ -162,8 +162,8 @@ class StudentRepository(private val api: StudentService) {
                         symbol = symbol ?: ""
                         description = description ?: ""
                     }
-                }.sortedByDescending { it.date }
-            }?.flatten()
+                }
+            }?.flatten()?.sortedByDescending { it.date }
         }
     }
 
