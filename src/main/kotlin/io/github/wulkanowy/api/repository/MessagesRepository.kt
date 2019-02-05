@@ -23,7 +23,7 @@ class MessagesRepository(private val api: MessagesService) {
 
         return api.getUserReportingUnits().map { it.data }.map { list ->
             list.ifEmpty {
-                listOf(ReportingUnit(0, "unknown", 0))
+                listOf(ReportingUnit())
             }.apply {
                 reportingUnits = this
             }
