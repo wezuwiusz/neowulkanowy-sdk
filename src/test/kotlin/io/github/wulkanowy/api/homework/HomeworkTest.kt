@@ -6,48 +6,31 @@ import org.junit.Test
 
 class HomeworkTest : BaseLocalTest() {
 
-    private val full by lazy {
+    private val snp by lazy {
         getSnpRepo(HomeworkTest::class.java, "ZadaniaDomowe.html").getHomework(getLocalDate(2018, 10, 1)).blockingGet()
+    }
+
+    private val student by lazy {
+        getStudentRepo(HomeworkTest::class.java, "ZadaniaDomowe.json").getHomework(getLocalDate(2018, 10, 1)).blockingGet()
+    }
+
+    @Test
+    fun getHomeworkList() {
+        assertEquals(2, snp.size)
+        assertEquals(2, student.size)
     }
 
     @Test
     fun getHomework() {
-        assertEquals(2, full.size)
-    }
-
-    @Test
-    fun getDate() {
-        assertEquals(getDate(2018, 10, 1), full[0].date)
-        assertEquals(getDate(2018, 10, 1), full[1].date)
-    }
-
-    @Test
-    fun getEntryDate() {
-        assertEquals(getDate(2018, 9, 25), full[0].entryDate)
-        assertEquals(getDate(2018, 9, 16), full[1].entryDate)
-    }
-
-    @Test
-    fun getSubject() {
-        assertEquals("Naprawa komputera", full[0].subject)
-        assertEquals("Sieci komputerowe i administrowanie sieciami", full[1].subject)
-    }
-
-    @Test
-    fun getContent() {
-        assertEquals("Test diagnozujący", full[0].content)
-        assertEquals("Zadania egzaminacyjne", full[1].content)
-    }
-
-    @Test
-    fun getTeacher() {
-        assertEquals("Mickiewicz Adam", full[0].teacher)
-        assertEquals("Słowacki Juliusz", full[1].teacher)
-    }
-
-    @Test
-    fun getTeacherSymbol() {
-        assertEquals("MA", full[0].teacherSymbol)
-        assertEquals("SJ", full[1].teacherSymbol)
+        listOf(snp[0], student[0]).map {
+            it.run {
+                assertEquals(getDate(2018, 10, 1), date)
+                assertEquals(getDate(2018, 9, 25), entryDate)
+                assertEquals("Naprawa komputera", subject)
+                assertEquals("Test diagnozujący", content)
+                assertEquals("Mickiewicz Adam", teacher)
+                assertEquals("MA", teacherSymbol)
+            }
+        }
     }
 }
