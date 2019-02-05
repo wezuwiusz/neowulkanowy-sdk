@@ -27,7 +27,6 @@ import okhttp3.Interceptor
 import okhttp3.logging.HttpLoggingInterceptor
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
-import org.junit.Assert.assertNotEquals
 import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Ignore
@@ -100,16 +99,16 @@ class ApiRemoteTest : BaseTest() {
         }
 
         values[4].run {
-            //            assertEquals(15, diaryId)
+            assertEquals(11, diaryId)
             assertEquals("2A 2016", diaryName)
-            assertEquals(12, semesterId)
-//            assertEquals(2, semesterNumber)
+//            assertEquals(11, semesterId)
+            assertEquals(1, semesterNumber)
         }
 
-//        values[5].run {
-//            assertEquals(11, semesterId)
-//            assertEquals(1, semesterNumber)
-//        }
+        values[5].run {
+//            assertEquals(12, semesterId)
+            assertEquals(2, semesterNumber)
+        }
     }
 
     @Test
@@ -237,7 +236,7 @@ class ApiRemoteTest : BaseTest() {
         values[0].run {
             assertEquals(getDate(2018, 1, 16), date)
             assertEquals("Stanisław Krupa", teacher)
-            assertEquals("", teacherSymbol)
+            assertEquals("BS", teacherSymbol)
             assertEquals("Kultura języka", category)
             assertEquals("Litwo! Ojczyzno moja! Ty jesteś jak zdrowie. Ile cię trzeba cenić, ten tylko aż kędy pieprz rośnie gdzie podział się? szukać prawodawstwa.", content)
         }
@@ -509,6 +508,6 @@ class ApiRemoteTest : BaseTest() {
         luckyNumber.subscribe(luckyNumberObserver)
         luckyNumberObserver.assertComplete()
 
-        assertNotEquals(0, luckyNumberObserver.values()[0])
+        assertTrue(luckyNumberObserver.values().size == 0 || luckyNumberObserver.values()[0] == 0)
     }
 }

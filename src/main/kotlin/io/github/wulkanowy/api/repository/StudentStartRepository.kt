@@ -16,7 +16,7 @@ class StudentStartRepository(
                 .map { it.data?.filter { diary -> diary.studentId == studentId } }
                 .map { diaries ->
                     diaries.map { diary ->
-                        diary.semesters.reversed().map {
+                        diary.semesters.map {
                             Semester(
                                     diaryId = diary.diaryId,
                                     diaryName = "${diary.level}${diary.symbol} ${diary.year}",

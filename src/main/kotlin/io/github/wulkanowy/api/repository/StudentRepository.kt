@@ -205,7 +205,7 @@ class StudentRepository(private val api: StudentService) {
                     teacherSymbol = teacher.split(" [").last().removeSuffix("]")
                     teacher = teacher.split(" [").first()
                 }
-            }
+            }?.sortedWith(compareBy({ it.date }, { it.category }))
         }
     }
 
@@ -237,7 +237,7 @@ class StudentRepository(private val api: StudentService) {
                                 short = it.name.substringAfter("[").substringBefore("]"),
                                 name = it.name.substringBefore(" [")
                         )
-                    }
+                    }.sortedWith(compareBy({ it.subject }, { it.name }))
                 }
     }
 
