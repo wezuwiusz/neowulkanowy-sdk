@@ -130,15 +130,15 @@ class ApiRemoteTest : BaseTest() {
         }
 
         values[1].run {
-            assertEquals("Nieobecność", name)
+            assertEquals("Nieobecność nieusprawiedliwiona", name)
             assertTrue(absence)
             assertFalse(excused)
         }
 
-        assertEquals("Nieobecność", values[3].name)
-        assertEquals("Nieobecność", values[4].name)
+        assertEquals("Nieobecność nieusprawiedliwiona", values[3].name)
+        assertEquals("Nieobecność nieusprawiedliwiona", values[4].name)
         assertEquals("Nieobecność usprawiedliwiona", values[5].name)
-        assertEquals("Spóźnienie", values[6].name)
+        assertEquals("Spóźnienie nieusprawiedliwione", values[6].name)
         assertEquals("Obecność", values[9].name)
     }
 
