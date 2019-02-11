@@ -88,7 +88,7 @@ class ServiceManagerTest : BaseTest() {
         server.start(3000)
 
         val api = Api().apply {
-            logLevel = HttpLoggingInterceptor.Level.BODY
+            logLevel = HttpLoggingInterceptor.Level.BASIC
             ssl = false
             host = "fakelog.localhost:3000"
             email = "jan@fakelog.cf"

@@ -203,8 +203,9 @@ class StudentAndParentRepository(private val api: StudentAndParentService) {
         }
     }
 
-    fun getRealized(startDate: LocalDate?): Single<List<Realized>> {
-        return api.getRealized(startDate.toTick(), null, null).map { res ->
+    fun getRealized(start: LocalDate, endDate: LocalDate?): Single<List<Realized>> {
+        val end = endDate ?: start.plusMonths(1)
+        return api.getRealized(start.toTick(), end.toTick(), null).map { res ->
             lateinit var lastDate: Date
             res.items.asSequence().mapNotNull {
                 if (it.subject.isBlank()) {
@@ -213,7 +214,9 @@ class StudentAndParentRepository(private val api: StudentAndParentService) {
                 }
 
                 it.apply { date = lastDate }
-            }.sortedWith(compareBy({ it.date }, { it.number })).toList()
+            }.sortedWith(compareBy({ it.date }, { it.number })).toList().filter {
+                it.date.toLocalDate() >= start && it.date.toLocalDate() <= end
+            }
         }
     }
 

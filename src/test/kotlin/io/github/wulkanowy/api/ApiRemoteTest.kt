@@ -51,7 +51,7 @@ class ApiRemoteTest : BaseTest() {
             schoolSymbol = "123456"
             studentId = 1
             diaryId = 101
-            useNewStudent = false
+            useNewStudent = true
             setInterceptor(Interceptor {
                 println("Request event ${it.request().url().host()}")
                 it.proceed(it.request())

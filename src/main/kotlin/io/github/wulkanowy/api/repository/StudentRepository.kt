@@ -17,6 +17,7 @@ import io.github.wulkanowy.api.grades.isGradeValid
 import io.github.wulkanowy.api.homework.Homework
 import io.github.wulkanowy.api.mobile.Device
 import io.github.wulkanowy.api.notes.Note
+import io.github.wulkanowy.api.realized.Realized
 import io.github.wulkanowy.api.school.School
 import io.github.wulkanowy.api.school.Teacher
 import io.github.wulkanowy.api.service.StudentService
@@ -33,6 +34,11 @@ import io.reactivex.Single
 import org.jsoup.Jsoup
 import org.threeten.bp.LocalDate
 import org.threeten.bp.Month
+import com.google.gson.Gson
+import com.google.gson.internal.LinkedTreeMap
+import com.google.gson.reflect.TypeToken
+import io.github.wulkanowy.api.ApiResponse
+import io.github.wulkanowy.api.realized.RealizedRequest
 
 class StudentRepository(private val api: StudentService) {
 
@@ -225,6 +231,25 @@ class StudentRepository(private val api: StudentService) {
             }?.asSequence()?.filter {
                 it.date.toLocalDate() >= startDate && it.date.toLocalDate() <= endDate ?: startDate.plusDays(4)
             }?.sortedWith(compareBy({ it.date }, { it.number }))?.toList()
+        }
+    }
+
+    fun getRealized(start: LocalDate, endDate: LocalDate?): Single<List<Realized>> {
+        val end = endDate ?: start.plusMonths(1)
+        return api.getRealizedLessons(RealizedRequest(
+            start.toFormat("yyyy-MM-dd'T00:00:00'"),
+            end.toFormat("yyyy-MM-dd'T00:00:00'"))
+        ).map { res ->
+            (Gson().fromJson(res, ApiResponse::class.java).data as LinkedTreeMap<*, *>).map { list ->
+                Gson().fromJson<List<Realized>>(Gson().toJson(list.value), object : TypeToken<ArrayList<Realized>>() {}.type)
+            }.flatten().map {
+                it.apply {
+                    teacherSymbol = teacher.substringAfter(" [").substringBefore("]")
+                    teacher = teacher.substringBefore(" [")
+                }
+            }.sortedWith(compareBy({ it.date }, { it.number })).toList().filter {
+                it.date.toLocalDate() >= start && it.date.toLocalDate() <= end
+            }
         }
     }
 

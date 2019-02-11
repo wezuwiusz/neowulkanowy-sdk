@@ -20,7 +20,7 @@ class Attendance {
     lateinit var name: String
 
     @Selector("div", attr = "class")
-    lateinit var type: String // do not use
+    internal lateinit var type: String // do not use
 
     @SerializedName("IdKategoria")
     var categoryId: Int = -1
