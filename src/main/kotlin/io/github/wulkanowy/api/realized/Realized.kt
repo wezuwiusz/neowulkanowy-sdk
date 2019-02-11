@@ -31,7 +31,13 @@ class Realized {
     @Selector(".wartosc", index = 2, regex = "\\[(.+)\\]")
     var teacherSymbol: String = ""
 
+    @SerializedName("Zastepstwo")
+    var substitution: String = ""
+
     @SerializedName("Nieobecnosc")
     @Selector(".wartosc", index = 3)
     var absence: String = ""
+
+    @SerializedName("ZasobyPubliczne")
+    var resources: String = ""
 }

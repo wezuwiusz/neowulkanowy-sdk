@@ -36,7 +36,9 @@ class RealizedTest : BaseLocalTest() {
                 assertEquals("Human - vocabulary practice", topic)
                 assertEquals("Angielska Amerykanka", teacher)
                 assertEquals("An", teacherSymbol)
+                assertEquals("", substitution)
                 assertEquals("", absence)
+                assertEquals("", resources)
             }
         }
     }
@@ -51,7 +53,9 @@ class RealizedTest : BaseLocalTest() {
                 assertEquals("Powstanie listopadowe, Napoleon, i inne przecinki", topic)
                 assertEquals("Histeryczna Jadwiga", teacher)
                 assertEquals("Hi", teacherSymbol)
+                assertEquals("", substitution)
                 assertEquals("", absence)
+                assertEquals("", resources)
             }
         }
     }
@@ -66,7 +70,9 @@ class RealizedTest : BaseLocalTest() {
                 assertEquals("Inspiracje krajobrazem gór w poezji", topic)
                 assertEquals("Polonistka Joanna", teacher)
                 assertEquals("Po", teacherSymbol)
+                assertEquals("", substitution)
                 assertEquals("Nieobecność nieusprawiedliwiona", absence)
+                assertEquals("", resources)
             }
         }
     }
