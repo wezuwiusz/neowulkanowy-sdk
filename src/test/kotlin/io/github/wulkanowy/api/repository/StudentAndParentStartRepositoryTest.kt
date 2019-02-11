@@ -23,6 +23,7 @@ class StudentAndParentStartRepositoryTest : BaseLocalTest() {
             schoolSymbol = "123456"
             studentId = 1
             diaryId = 101
+            useNewStudent = false
         }
     }
 

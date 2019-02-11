@@ -8,7 +8,7 @@ data class Semester(
     val diaryName: String,
     val semesterId: Int,
     val semesterNumber: Int,
-    val current: Boolean = false,
+    var current: Boolean = false,
     val start: LocalDate = now(),
     val end: LocalDate = now()
 )

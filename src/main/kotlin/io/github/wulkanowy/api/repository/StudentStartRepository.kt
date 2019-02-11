@@ -13,21 +13,27 @@ class StudentStartRepository(
 
     fun getSemesters(): Single<List<Semester>> {
         return api.getDiaries()
-                .map { it.data?.filter { diary -> diary.studentId == studentId } }
-                .map { diaries ->
-                    diaries.map { diary ->
-                        diary.semesters.map {
-                            Semester(
-                                    diaryId = diary.diaryId,
-                                    diaryName = "${diary.level}${diary.symbol} ${diary.year}",
-                                    semesterId = it.id,
-                                    semesterNumber = it.number,
-                                    start = it.start.toLocalDate(),
-                                    end = it.end.toLocalDate(),
-                                    current = it.start.toLocalDate() <= now() && it.end.toLocalDate() >= now()
-                            )
-                        }
-                    }.flatten()
+            .map { it.data?.filter { diary -> diary.studentId == studentId } }
+            .map { diaries ->
+                val semesters = diaries.map { diary ->
+                    diary.semesters.map {
+                        Semester(
+                            diaryId = diary.diaryId,
+                            diaryName = "${diary.level}${diary.symbol} ${diary.year}",
+                            semesterId = it.id,
+                            semesterNumber = it.number,
+                            start = it.start.toLocalDate(),
+                            end = it.end.toLocalDate(),
+                            current = it.start.toLocalDate() <= now() && it.end.toLocalDate() >= now()
+                        )
+                    }
+                }.flatten().sortedByDescending { it.semesterId }
+
+                if (semesters.singleOrNull { it.current } == null) {
+                    semesters.first().current = true
                 }
+
+                semesters
+            }
     }
 }
