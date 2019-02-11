@@ -35,6 +35,7 @@ import org.jsoup.Jsoup
 import org.threeten.bp.LocalDate
 import org.threeten.bp.Month
 import com.google.gson.Gson
+import com.google.gson.GsonBuilder
 import com.google.gson.internal.LinkedTreeMap
 import com.google.gson.reflect.TypeToken
 import io.github.wulkanowy.api.ApiResponse
@@ -235,13 +236,14 @@ class StudentRepository(private val api: StudentService) {
     }
 
     fun getRealized(start: LocalDate, endDate: LocalDate?): Single<List<Realized>> {
+        val gson = GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create()
         val end = endDate ?: start.plusMonths(1)
         return api.getRealizedLessons(RealizedRequest(
             start.toFormat("yyyy-MM-dd'T00:00:00'"),
             end.toFormat("yyyy-MM-dd'T00:00:00'"))
         ).map { res ->
-            (Gson().fromJson(res, ApiResponse::class.java).data as LinkedTreeMap<*, *>).map { list ->
-                Gson().fromJson<List<Realized>>(Gson().toJson(list.value), object : TypeToken<ArrayList<Realized>>() {}.type)
+            (gson.fromJson(res, ApiResponse::class.java).data as LinkedTreeMap<*, *>).map { list ->
+                gson.fromJson<List<Realized>>(Gson().toJson(list.value), object : TypeToken<ArrayList<Realized>>() {}.type)
             }.flatten().map {
                 it.apply {
                     teacherSymbol = teacher.substringAfter(" [").substringBefore("]")
