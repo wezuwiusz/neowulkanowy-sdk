@@ -1,0 +1,73 @@
+{
+  "data": [
+    {
+      "Id": -1,
+      "Nazwa": "Wszystkie"
+    },
+    {
+      "Id": 300,
+      "Nazwa": "Zajęcia z wychowawcą"
+    },
+    {
+      "Id": 301,
+      "Nazwa": "Język polski"
+    },
+    {
+      "Id": 302,
+      "Nazwa": "Historia"
+    },
+    {
+      "Id": 303,
+      "Nazwa": "Etyka"
+    },
+    {
+      "Id": 304,
+      "Nazwa": "Język angielski"
+    },
+    {
+      "Id": 305,
+      "Nazwa": "Język niemiecki"
+    },
+    {
+      "Id": 306,
+      "Nazwa": "Metodologia programowania"
+    },
+    {
+      "Id": 307,
+      "Nazwa": "Matematyka"
+    },
+    {
+      "Id": 308,
+      "Nazwa": "Fizyka"
+    },
+    {
+      "Id": 309,
+      "Nazwa": "Chemia"
+    },
+    {
+      "Id": 310,
+      "Nazwa": "Biologia"
+    },
+    {
+      "Id": 311,
+      "Nazwa": "Geografia"
+    },
+    {
+      "Id": 312,
+      "Nazwa": "Informatyka"
+    },
+    {
+      "Id": 313,
+      "Nazwa": "Religia"
+    },
+    {
+      "Id": 0,
+      "Nazwa": "Brak opisu lekcji"
+    },
+    {
+      "Id": 492,
+      "Nazwa": "Opieka nad uczniami"
+    }
+  ],
+  "success": true
+}

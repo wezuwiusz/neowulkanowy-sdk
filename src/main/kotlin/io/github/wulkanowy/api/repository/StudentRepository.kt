@@ -33,19 +33,21 @@ import io.reactivex.Observable
 import io.reactivex.Single
 import org.jsoup.Jsoup
 import org.threeten.bp.LocalDate
-import org.threeten.bp.Month
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.google.gson.internal.LinkedTreeMap
 import com.google.gson.reflect.TypeToken
 import io.github.wulkanowy.api.ApiResponse
 import io.github.wulkanowy.api.realized.RealizedRequest
+import org.threeten.bp.Month
 
 class StudentRepository(private val api: StudentService) {
 
     private lateinit var cache: CacheResponse
 
     private lateinit var times: List<CacheResponse.Time>
+
+    private val gson by lazy { GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create() }
 
     private fun getCache(): Single<CacheResponse> {
         if (::cache.isInitialized) return Single.just(cache)
@@ -87,9 +89,7 @@ class StudentRepository(private val api: StudentService) {
                             lateness = a.categoryId == Attendance.Category.EXCUSED_LATENESS.id || a.categoryId == Attendance.Category.UNEXCUSED_LATENESS.id
                             excused = a.categoryId == Attendance.Category.ABSENCE_EXCUSED.id || a.categoryId == Attendance.Category.EXCUSED_LATENESS.id
                             exemption = a.categoryId == Attendance.Category.EXEMPTION.id
-                            name = (Attendance.Category.values()
-                                    .singleOrNull { category -> category.id == categoryId }
-                                    ?: Attendance.Category.UNKNOWN).title
+                            name = (Attendance.Category.values().singleOrNull { category -> category.id == categoryId } ?: Attendance.Category.UNKNOWN).title
                             number = it.number
                         }
                     }
@@ -99,26 +99,28 @@ class StudentRepository(private val api: StudentService) {
     }
 
     fun getAttendanceSummary(subjectId: Int?): Single<List<AttendanceSummary>> {
-        return api.getAttendanceStatistics(AttendanceSummaryRequest(subjectId)).map { it.data?.items }.map {
-            listOf(
-                    AttendanceSummary(Month.SEPTEMBER, it[0].september, it[1].september, it[2].september, it[3].september, it[4].september, it[5].september, it[6].september),
-                    AttendanceSummary(Month.OCTOBER, it[0].october, it[1].october, it[2].october, it[3].october, it[4].october, it[5].october, it[6].october),
-                    AttendanceSummary(Month.NOVEMBER, it[0].november, it[1].november, it[2].november, it[3].november, it[4].november, it[5].november, it[6].november),
-                    AttendanceSummary(Month.DECEMBER, it[0].december, it[1].december, it[2].december, it[3].december, it[4].december, it[5].december, it[6].december),
-                    AttendanceSummary(Month.JANUARY, it[0].january, it[1].january, it[2].january, it[3].january, it[4].january, it[5].january, it[6].january),
-                    AttendanceSummary(Month.FEBRUARY, it[0].february, it[1].february, it[2].february, it[3].february, it[4].february, it[5].february, it[6].february),
-                    AttendanceSummary(Month.MARCH, it[0].march, it[1].march, it[2].march, it[3].march, it[4].march, it[5].march, it[6].march),
-                    AttendanceSummary(Month.APRIL, it[0].april, it[1].april, it[2].april, it[3].april, it[4].april, it[5].april, it[6].april),
-                    AttendanceSummary(Month.MAY, it[0].may, it[1].may, it[2].may, it[3].may, it[4].may, it[5].may, it[6].may),
-                    AttendanceSummary(Month.JUNE, it[0].june, it[1].june, it[2].june, it[3].june, it[4].june, it[5].june, it[6].june)
-            ).filterNot { summary ->
+        return api.getAttendanceStatistics(AttendanceSummaryRequest(subjectId)).map { it.data }.map { res ->
+            val stats = res.items.map {
+                (gson.fromJson<LinkedTreeMap<String, String?>>(gson.toJson(it), object : TypeToken<LinkedTreeMap<String, String?>>() {}.type))
+            }
+
+            val getMonthValue = fun (type: Int, month: Int): Int {
+                return stats[type][stats[0].keys.toTypedArray()[month + 1]]?.toInt() ?: 0
+            }
+
+            (1..12).map {
+                AttendanceSummary(Month.of(if (it < 5) 8 + it else it - 4),
+                    getMonthValue(0, it), getMonthValue(1, it), getMonthValue(2, it), getMonthValue(3, it),
+                    getMonthValue(4, it), getMonthValue(5, it), getMonthValue(6, it)
+                )
+            }.filterNot { summary ->
                 summary.absence == 0 &&
-                        summary.absenceExcused == 0 &&
-                        summary.absenceForSchoolReasons == 0 &&
-                        summary.exemption == 0 &&
-                        summary.lateness == 0 &&
-                        summary.latenessExcused == 0 &&
-                        summary.presence == 0
+                    summary.absenceExcused == 0 &&
+                    summary.absenceForSchoolReasons == 0 &&
+                    summary.exemption == 0 &&
+                    summary.lateness == 0 &&
+                    summary.latenessExcused == 0 &&
+                    summary.presence == 0
             }
         }
     }
@@ -236,7 +238,6 @@ class StudentRepository(private val api: StudentService) {
     }
 
     fun getRealized(start: LocalDate, endDate: LocalDate?): Single<List<Realized>> {
-        val gson = GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create()
         val end = endDate ?: start.plusMonths(1)
         return api.getRealizedLessons(RealizedRequest(
             start.toFormat("yyyy-MM-dd'T00:00:00'"),
