@@ -190,9 +190,6 @@ class Api {
 
     fun getStudents() = register.getStudents()
 
-    @Deprecated("use getStudents() instead")
-    fun getPupils() = register.getStudents()
-
     fun getSemesters() = if (useNewStudent) studentStart.getSemesters() else snpStart.getSemesters()
 
     fun getAttendance(startDate: LocalDate, endDate: LocalDate? = null) =
