@@ -54,9 +54,9 @@ class StudentRepository(private val api: StudentService) {
 
         return api.getStart("Start").flatMap {
             api.getUserCache(
-                    getScriptParam("antiForgeryToken: '(.)*',".toRegex(), it),
-                    getScriptParam("appGuid: '(.)*',".toRegex(), it),
-                    getScriptParam("version: '(.)*',".toRegex(), it)
+                getScriptParam("antiForgeryToken: '(.)*',".toRegex(), it),
+                getScriptParam("appGuid: '(.)*',".toRegex(), it),
+                getScriptParam("version: '(.)*',".toRegex(), it)
             )
         }.map { it.data }
     }
@@ -78,24 +78,24 @@ class StudentRepository(private val api: StudentService) {
     fun getAttendance(startDate: LocalDate, endDate: LocalDate? = null): Single<List<Attendance>> {
         val end = endDate ?: startDate.plusDays(4)
         return api.getAttendance(AttendanceRequest(startDate.toDate())).map { it.data?.lessons }
-                .flatMapObservable { Observable.fromIterable(it) }
-                .flatMap { a ->
-                    getTimes().flatMapObservable { times ->
-                        Observable.fromIterable(times.filter { time -> time.id == a.number })
-                    }.map {
-                        a.apply {
-                            presence = a.categoryId == Attendance.Category.PRESENCE.id || a.categoryId == Attendance.Category.ABSENCE_FOR_SCHOOL_REASONS.id
-                            absence = a.categoryId == Attendance.Category.ABSENCE_UNEXCUSED.id || a.categoryId == Attendance.Category.ABSENCE_EXCUSED.id
-                            lateness = a.categoryId == Attendance.Category.EXCUSED_LATENESS.id || a.categoryId == Attendance.Category.UNEXCUSED_LATENESS.id
-                            excused = a.categoryId == Attendance.Category.ABSENCE_EXCUSED.id || a.categoryId == Attendance.Category.EXCUSED_LATENESS.id
-                            exemption = a.categoryId == Attendance.Category.EXEMPTION.id
-                            name = (Attendance.Category.values().singleOrNull { category -> category.id == categoryId } ?: Attendance.Category.UNKNOWN).title
-                            number = it.number
-                        }
+            .flatMapObservable { Observable.fromIterable(it) }
+            .flatMap { a ->
+                getTimes().flatMapObservable { times ->
+                    Observable.fromIterable(times.filter { time -> time.id == a.number })
+                }.map {
+                    a.apply {
+                        presence = a.categoryId == Attendance.Category.PRESENCE.id || a.categoryId == Attendance.Category.ABSENCE_FOR_SCHOOL_REASONS.id
+                        absence = a.categoryId == Attendance.Category.ABSENCE_UNEXCUSED.id || a.categoryId == Attendance.Category.ABSENCE_EXCUSED.id
+                        lateness = a.categoryId == Attendance.Category.EXCUSED_LATENESS.id || a.categoryId == Attendance.Category.UNEXCUSED_LATENESS.id
+                        excused = a.categoryId == Attendance.Category.ABSENCE_EXCUSED.id || a.categoryId == Attendance.Category.EXCUSED_LATENESS.id
+                        exemption = a.categoryId == Attendance.Category.EXEMPTION.id
+                        name = (Attendance.Category.values().singleOrNull { category -> category.id == categoryId } ?: Attendance.Category.UNKNOWN).title
+                        number = it.number
                     }
-                }.filter {
-                    it.date.toLocalDate() >= startDate && it.date.toLocalDate() <= end
-                }.toList().map { list -> list.sortedWith(compareBy({ it.date }, { it.number })) }
+                }
+            }.filter {
+                it.date.toLocalDate() >= startDate && it.date.toLocalDate() <= end
+            }.toList().map { list -> list.sortedWith(compareBy({ it.date }, { it.number })) }
     }
 
     fun getAttendanceSummary(subjectId: Int?): Single<List<AttendanceSummary>> {
@@ -104,12 +104,13 @@ class StudentRepository(private val api: StudentService) {
                 (gson.fromJson<LinkedTreeMap<String, String?>>(gson.toJson(it), object : TypeToken<LinkedTreeMap<String, String?>>() {}.type))
             }
 
-            val getMonthValue = fun (type: Int, month: Int): Int {
+            val getMonthValue = fun(type: Int, month: Int): Int {
                 return stats[type][stats[0].keys.toTypedArray()[month + 1]]?.toInt() ?: 0
             }
 
             (1..12).map {
-                AttendanceSummary(Month.of(if (it < 5) 8 + it else it - 4),
+                AttendanceSummary(
+                    Month.of(if (it < 5) 8 + it else it - 4),
                     getMonthValue(0, it), getMonthValue(1, it), getMonthValue(2, it), getMonthValue(3, it),
                     getMonthValue(4, it), getMonthValue(5, it), getMonthValue(6, it)
                 )
@@ -239,9 +240,11 @@ class StudentRepository(private val api: StudentService) {
 
     fun getRealized(start: LocalDate, endDate: LocalDate?): Single<List<Realized>> {
         val end = endDate ?: start.plusMonths(1)
-        return api.getRealizedLessons(RealizedRequest(
-            start.toFormat("yyyy-MM-dd'T00:00:00'"),
-            end.toFormat("yyyy-MM-dd'T00:00:00'"))
+        return api.getRealizedLessons(
+            RealizedRequest(
+                start.toFormat("yyyy-MM-dd'T00:00:00'"),
+                end.toFormat("yyyy-MM-dd'T00:00:00'")
+            )
         ).map { res ->
             (gson.fromJson(res, ApiResponse::class.java).data as LinkedTreeMap<*, *>).map { list ->
                 gson.fromJson<List<Realized>>(Gson().toJson(list.value), object : TypeToken<ArrayList<Realized>>() {}.type)
@@ -258,21 +261,21 @@ class StudentRepository(private val api: StudentService) {
 
     fun getTeachers(): Single<List<Teacher>> {
         return api.getSchoolAndTeachers()
-                .map { it.data }
-                .map { res ->
-                    res.teachers.map {
-                        it.copy(
-                                short = it.name.substringAfter("[").substringBefore("]"),
-                                name = it.name.substringBefore(" [")
-                        )
-                    }.sortedWith(compareBy({ it.subject }, { it.name }))
-                }
+            .map { it.data }
+            .map { res ->
+                res.teachers.map {
+                    it.copy(
+                        short = it.name.substringAfter("[").substringBefore("]"),
+                        name = it.name.substringBefore(" [")
+                    )
+                }.sortedWith(compareBy({ it.subject }, { it.name }))
+            }
     }
 
     fun getSchool(): Single<School> {
         return api.getSchoolAndTeachers()
-                .map { it.data }
-                .map { it.school }
+            .map { it.data }
+            .map { it.school }
     }
 
     fun getRegisteredDevices(): Single<List<Device>> {
