@@ -203,9 +203,9 @@ class StudentAndParentRepository(private val api: StudentAndParentService) {
         }
     }
 
-    fun getCompletedLessons(start: LocalDate, endDate: LocalDate?): Single<List<CompletedLesson>> {
+    fun getCompletedLessons(start: LocalDate, endDate: LocalDate?, subjectId: Int): Single<List<CompletedLesson>> {
         val end = endDate ?: start.plusMonths(1)
-        return api.getCompletedLessons(start.toTick(), end.toTick(), null).map { res ->
+        return api.getCompletedLessons(start.toTick(), end.toTick(), subjectId).map { res ->
             lateinit var lastDate: Date
             res.items.asSequence().mapNotNull {
                 if (it.subject.isBlank()) {

@@ -1,6 +1,5 @@
 package io.github.wulkanowy.api.timetable
 
-import io.github.wulkanowy.api.timetable.CompletedLesson
 import pl.droidsonroids.jspoon.annotation.Selector
 
 class RealizedResponse {

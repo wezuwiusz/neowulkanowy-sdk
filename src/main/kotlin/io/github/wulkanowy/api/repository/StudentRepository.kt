@@ -238,12 +238,13 @@ class StudentRepository(private val api: StudentService) {
         }
     }
 
-    fun getCompletedLessons(start: LocalDate, endDate: LocalDate?): Single<List<CompletedLesson>> {
+    fun getCompletedLessons(start: LocalDate, endDate: LocalDate?, subjectId: Int): Single<List<CompletedLesson>> {
         val end = endDate ?: start.plusMonths(1)
         return api.getCompletedLessons(
             CompletedLessonsRequest(
                 startDate = start.toFormat("yyyy-MM-dd'T00:00:00'"),
-                endDate = end.toFormat("yyyy-MM-dd'T00:00:00'")
+                endDate = end.toFormat("yyyy-MM-dd'T00:00:00'"),
+                subject = subjectId
             )
         ).map { res ->
             (gson.fromJson(res, ApiResponse::class.java).data as LinkedTreeMap<*, *>).map { list ->

@@ -263,8 +263,8 @@ class Api {
     fun getTimetable(startDate: LocalDate, endDate: LocalDate? = null) =
         if (useNewStudent) student.getTimetable(startDate, endDate) else snp.getTimetable(startDate, endDate)
 
-    fun getCompletedLessons(startDate: LocalDate, endDate: LocalDate? = null) =
-        if (useNewStudent) student.getCompletedLessons(startDate, endDate) else snp.getCompletedLessons(startDate, endDate)
+    fun getCompletedLessons(startDate: LocalDate, endDate: LocalDate? = null, subjectId: Int = -1) =
+        if (useNewStudent) student.getCompletedLessons(startDate, endDate, subjectId) else snp.getCompletedLessons(startDate, endDate, subjectId)
 
     fun getLuckyNumber() = homepage.getLuckyNumber()
 }

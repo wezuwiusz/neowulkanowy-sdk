@@ -9,14 +9,16 @@ class CompletedLessonsTest : BaseLocalTest() {
     private val snp by lazy {
         getSnpRepo(CompletedLessonsTest::class.java, "Zrealizowane.html").getCompletedLessons(
             getLocalDate(2018, 9, 17),
-            getLocalDate(2018, 9, 18)
+            getLocalDate(2018, 9, 18),
+            -1
         ).blockingGet()
     }
 
     private val student by lazy {
         getStudentRepo(CompletedLessonsTest::class.java, "Zrealizowane.json").getCompletedLessons(
             getLocalDate(2018, 9, 17),
-            getLocalDate(2018, 9, 18)
+            getLocalDate(2018, 9, 18),
+            -1
         ).blockingGet()
     }
 
