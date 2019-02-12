@@ -15,7 +15,7 @@ class StudentStartRepository(
         return api.getDiaries()
             .map { it.data?.filter { diary -> diary.studentId == studentId } }
             .map { diaries ->
-                val semesters = diaries.map { diary ->
+                diaries.map { diary ->
                     diary.semesters.map {
                         Semester(
                             diaryId = diary.diaryId,
@@ -28,12 +28,9 @@ class StudentStartRepository(
                         )
                     }
                 }.flatten().sortedByDescending { it.semesterId }
-
-                if (semesters.singleOrNull { it.current } == null) {
-                    semesters.first().current = true
-                }
-
-                semesters
+            }.map {
+                if (it.singleOrNull { semester -> semester.current } == null) it.apply { first().current = true }
+                else it
             }
     }
 }
