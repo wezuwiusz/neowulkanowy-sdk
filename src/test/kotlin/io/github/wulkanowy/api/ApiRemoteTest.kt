@@ -15,7 +15,7 @@ import io.github.wulkanowy.api.messages.ReportingUnit
 import io.github.wulkanowy.api.mobile.Device
 import io.github.wulkanowy.api.mobile.TokenResponse
 import io.github.wulkanowy.api.notes.Note
-import io.github.wulkanowy.api.realized.Realized
+import io.github.wulkanowy.api.timetable.CompletedLesson
 import io.github.wulkanowy.api.register.Semester
 import io.github.wulkanowy.api.register.Student
 import io.github.wulkanowy.api.school.School
@@ -485,8 +485,8 @@ class ApiRemoteTest : BaseTest() {
 
     @Test
     fun realizedTest() {
-        val realized = api.getRealized(getLocalDate(2018, 9, 17))
-        val realizedObserver = TestObserver<List<Realized>>()
+        val realized = api.getCompletedLessons(getLocalDate(2018, 9, 17))
+        val realizedObserver = TestObserver<List<CompletedLesson>>()
         realized.subscribe(realizedObserver)
         realizedObserver.assertComplete()
 

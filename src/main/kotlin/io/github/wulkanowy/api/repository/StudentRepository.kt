@@ -1,5 +1,6 @@
 package io.github.wulkanowy.api.repository
 
+import io.github.wulkanowy.api.ApiResponse
 import io.github.wulkanowy.api.attendance.Attendance
 import io.github.wulkanowy.api.attendance.AttendanceRequest
 import io.github.wulkanowy.api.attendance.AttendanceSummary
@@ -17,7 +18,8 @@ import io.github.wulkanowy.api.grades.isGradeValid
 import io.github.wulkanowy.api.homework.Homework
 import io.github.wulkanowy.api.mobile.Device
 import io.github.wulkanowy.api.notes.Note
-import io.github.wulkanowy.api.realized.Realized
+import io.github.wulkanowy.api.timetable.CompletedLesson
+import io.github.wulkanowy.api.timetable.CompletedLessonsRequest
 import io.github.wulkanowy.api.school.School
 import io.github.wulkanowy.api.school.Teacher
 import io.github.wulkanowy.api.service.StudentService
@@ -37,8 +39,6 @@ import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.google.gson.internal.LinkedTreeMap
 import com.google.gson.reflect.TypeToken
-import io.github.wulkanowy.api.ApiResponse
-import io.github.wulkanowy.api.realized.RealizedRequest
 import org.threeten.bp.Month
 
 class StudentRepository(private val api: StudentService) {
@@ -238,16 +238,16 @@ class StudentRepository(private val api: StudentService) {
         }
     }
 
-    fun getRealized(start: LocalDate, endDate: LocalDate?): Single<List<Realized>> {
+    fun getCompletedLessons(start: LocalDate, endDate: LocalDate?): Single<List<CompletedLesson>> {
         val end = endDate ?: start.plusMonths(1)
-        return api.getRealizedLessons(
-            RealizedRequest(
-                start.toFormat("yyyy-MM-dd'T00:00:00'"),
-                end.toFormat("yyyy-MM-dd'T00:00:00'")
+        return api.getCompletedLessons(
+            CompletedLessonsRequest(
+                startDate = start.toFormat("yyyy-MM-dd'T00:00:00'"),
+                endDate = end.toFormat("yyyy-MM-dd'T00:00:00'")
             )
         ).map { res ->
             (gson.fromJson(res, ApiResponse::class.java).data as LinkedTreeMap<*, *>).map { list ->
-                gson.fromJson<List<Realized>>(Gson().toJson(list.value), object : TypeToken<ArrayList<Realized>>() {}.type)
+                gson.fromJson<List<CompletedLesson>>(Gson().toJson(list.value), object : TypeToken<ArrayList<CompletedLesson>>() {}.type)
             }.flatten().map {
                 it.apply {
                     teacherSymbol = teacher.substringAfter(" [").substringBefore("]")

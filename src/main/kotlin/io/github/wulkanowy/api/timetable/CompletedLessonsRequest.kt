@@ -1,8 +1,8 @@
-package io.github.wulkanowy.api.realized
+package io.github.wulkanowy.api.timetable
 
 import com.google.gson.annotations.SerializedName
 
-class RealizedRequest(
+class CompletedLessonsRequest(
 
     @SerializedName("poczatek")
     val startDate: String,

@@ -13,7 +13,7 @@ import io.github.wulkanowy.api.grades.GradesResponse
 import io.github.wulkanowy.api.homework.HomeworkResponse
 import io.github.wulkanowy.api.mobile.Device
 import io.github.wulkanowy.api.notes.NotesResponse
-import io.github.wulkanowy.api.realized.RealizedRequest
+import io.github.wulkanowy.api.timetable.CompletedLessonsRequest
 import io.github.wulkanowy.api.register.Diary
 import io.github.wulkanowy.api.school.SchoolAndTeachersResponse
 import io.github.wulkanowy.api.timetable.CacheResponse
@@ -72,7 +72,7 @@ interface StudentService {
     fun getRealizedSubjects()
 
     @POST("LekcjeZrealizowane.mvc/GetZrealizowane")
-    fun getRealizedLessons(@Body realizedRequest: RealizedRequest): Single<String>
+    fun getCompletedLessons(@Body completedLessonsRequest: CompletedLessonsRequest): Single<String>
 
     @POST("UwagiIOsiagniecia.mvc/Get")
     fun getNotes(): Single<ApiResponse<NotesResponse>>

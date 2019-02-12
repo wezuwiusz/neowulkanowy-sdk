@@ -13,7 +13,7 @@ import io.github.wulkanowy.api.homework.Homework
 import io.github.wulkanowy.api.mobile.Device
 import io.github.wulkanowy.api.mobile.TokenResponse
 import io.github.wulkanowy.api.notes.Note
-import io.github.wulkanowy.api.realized.Realized
+import io.github.wulkanowy.api.timetable.CompletedLesson
 import io.github.wulkanowy.api.school.School
 import io.github.wulkanowy.api.school.Teacher
 import io.github.wulkanowy.api.service.StudentAndParentService
@@ -203,9 +203,9 @@ class StudentAndParentRepository(private val api: StudentAndParentService) {
         }
     }
 
-    fun getRealized(start: LocalDate, endDate: LocalDate?): Single<List<Realized>> {
+    fun getCompletedLessons(start: LocalDate, endDate: LocalDate?): Single<List<CompletedLesson>> {
         val end = endDate ?: start.plusMonths(1)
-        return api.getRealized(start.toTick(), end.toTick(), null).map { res ->
+        return api.getCompletedLessons(start.toTick(), end.toTick(), null).map { res ->
             lateinit var lastDate: Date
             res.items.asSequence().mapNotNull {
                 if (it.subject.isBlank()) {

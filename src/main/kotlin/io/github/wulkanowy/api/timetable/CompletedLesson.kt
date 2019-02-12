@@ -1,11 +1,11 @@
-package io.github.wulkanowy.api.realized
+package io.github.wulkanowy.api.timetable
 
 import com.google.gson.annotations.SerializedName
 import pl.droidsonroids.jspoon.annotation.Format
 import pl.droidsonroids.jspoon.annotation.Selector
 import java.util.Date
 
-class Realized {
+class CompletedLesson {
 
     @SerializedName("Data")
     @Selector("h2", defValue = "01.01.1970")

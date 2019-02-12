@@ -9,7 +9,7 @@ import io.github.wulkanowy.api.homework.HomeworkResponse
 import io.github.wulkanowy.api.mobile.RegisteredDevicesResponse
 import io.github.wulkanowy.api.mobile.TokenResponse
 import io.github.wulkanowy.api.notes.NotesResponse
-import io.github.wulkanowy.api.realized.RealizedResponse
+import io.github.wulkanowy.api.timetable.RealizedResponse
 import io.github.wulkanowy.api.register.StudentAndParentResponse
 import io.github.wulkanowy.api.school.SchoolAndTeachersResponse
 import io.github.wulkanowy.api.student.StudentInfo
@@ -75,7 +75,7 @@ interface StudentAndParentService {
     fun getTimetable(@Query("data") date: String): Single<TimetableResponse>
 
     @GET("Lekcja.mvc/Zrealizowane")
-    fun getRealized(@Query("start") start: String, @Query("end") end: String?, @Query("idPrzedmiot") subjectId: Int?): Single<RealizedResponse>
+    fun getCompletedLessons(@Query("start") start: String, @Query("end") end: String?, @Query("idPrzedmiot") subjectId: Int?): Single<RealizedResponse>
 
     @GET("Uczen.mvc/DanePodstawowe")
     fun getStudentInfo(): Single<StudentInfo>

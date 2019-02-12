@@ -1,20 +1,20 @@
-package io.github.wulkanowy.api.realized
+package io.github.wulkanowy.api.timetable
 
 import io.github.wulkanowy.api.BaseLocalTest
 import org.junit.Assert.assertEquals
 import org.junit.Test
 
-class RealizedTest : BaseLocalTest() {
+class CompletedLessonsTest : BaseLocalTest() {
 
     private val snp by lazy {
-        getSnpRepo(RealizedTest::class.java, "Zrealizowane.html").getRealized(
+        getSnpRepo(CompletedLessonsTest::class.java, "Zrealizowane.html").getCompletedLessons(
             getLocalDate(2018, 9, 17),
             getLocalDate(2018, 9, 18)
         ).blockingGet()
     }
 
     private val student by lazy {
-        getStudentRepo(RealizedTest::class.java, "Zrealizowane.json").getRealized(
+        getStudentRepo(CompletedLessonsTest::class.java, "Zrealizowane.json").getCompletedLessons(
             getLocalDate(2018, 9, 17),
             getLocalDate(2018, 9, 18)
         ).blockingGet()
