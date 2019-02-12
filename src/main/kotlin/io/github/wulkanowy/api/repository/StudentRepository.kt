@@ -16,6 +16,7 @@ import io.github.wulkanowy.api.grades.GradeSummary
 import io.github.wulkanowy.api.grades.getGradeValueWithModifier
 import io.github.wulkanowy.api.grades.isGradeValid
 import io.github.wulkanowy.api.homework.Homework
+import io.github.wulkanowy.api.interceptor.FeatureDisabledException
 import io.github.wulkanowy.api.mobile.Device
 import io.github.wulkanowy.api.notes.Note
 import io.github.wulkanowy.api.timetable.CompletedLesson
@@ -246,8 +247,9 @@ class StudentRepository(private val api: StudentService) {
                 endDate = end.toFormat("yyyy-MM-dd'T00:00:00'"),
                 subject = subjectId
             )
-        ).map { res ->
-            (gson.fromJson(res, ApiResponse::class.java).data as LinkedTreeMap<*, *>).map { list ->
+        ).map { gson.fromJson(it, ApiResponse::class.java) }.map { res ->
+            if (!res.success) throw FeatureDisabledException(res.feedback.message)
+            (res.data as LinkedTreeMap<*, *>).map { list ->
                 gson.fromJson<List<CompletedLesson>>(Gson().toJson(list.value), object : TypeToken<ArrayList<CompletedLesson>>() {}.type)
             }.flatten().map {
                 it.apply {

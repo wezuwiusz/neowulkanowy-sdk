@@ -1,0 +1,15 @@
+{
+  "success": false,
+  "feedback": {
+    "Handled": false,
+    "FType": "Error",
+    "Message": "Widok lekcji zrealizowanych został wyłączony przez Administratora szkoły.",
+    "ExceptionType": null,
+    "ExceptionMessage": "",
+    "InnerExceptionMessage": "",
+    "Action": null,
+    "data": null,
+    "success": false,
+    "requestId": null
+  }
+}
