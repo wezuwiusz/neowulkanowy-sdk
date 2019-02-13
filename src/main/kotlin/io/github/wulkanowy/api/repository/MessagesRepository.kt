@@ -21,25 +21,19 @@ class MessagesRepository(private val api: MessagesService) {
     fun getReportingUnits(): Single<List<ReportingUnit>> {
         if (::reportingUnits.isInitialized) return Single.just(reportingUnits)
 
-        return api.getUserReportingUnits().map { it.data }.map { list ->
-            list.ifEmpty {
-                listOf(ReportingUnit())
-            }.apply {
-                reportingUnits = this
-            }
-        }
+        return api.getUserReportingUnits()
+            .map { it.data }
+            .map { it.apply { reportingUnits = this } }
     }
 
-    fun getRecipients(role: Int = 2): Single<List<Recipient>> {
+    fun getRecipients(role: Int = 2, unitId: Int = 0): Single<List<Recipient>> {
         if (::recipients.isInitialized) return Single.just(recipients)
 
-        return getReportingUnits().map { it.first() }.flatMap { unit ->
+        return (if (unitId == 0) getReportingUnits().map { it.firstOrNull()?.id ?: 0 } else Single.just(unitId)).flatMap { unit ->
             // invalid unit id produced error
-            if (unit.id == 0) return@flatMap Single.just(emptyList<Recipient>())
-            api.getRecipients(unit.id, role).map { it.data }.map { list ->
-                list.ifEmpty { listOf() }.map {
-                    it.copy(name = it.name.normalizeRecipient())
-                }.apply {
+            if (unit == 0) return@flatMap Single.just(emptyList<Recipient>())
+            api.getRecipients(unit, role).map { it.data }.map { list ->
+                list.map { it.copy(name = it.name.normalizeRecipient()) }.apply {
                     recipients = this
                 }
             }
