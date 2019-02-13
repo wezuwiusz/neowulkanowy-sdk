@@ -48,39 +48,39 @@ class MessagesRepository(private val api: MessagesService) {
 
     fun getReceivedMessages(startDate: LocalDateTime?, endDate: LocalDateTime?): Single<List<Message>> {
         return api.getReceived(getDate(startDate), getDate(endDate))
-                .map { res ->
-                    res.data?.asSequence()
-                            ?.map { it.copy(folderId = 1) }
-                            ?.sortedBy { it.date }?.toList()
-                }
+            .map { res ->
+                res.data?.asSequence()
+                    ?.map { it.copy(folderId = 1) }
+                    ?.sortedBy { it.date }?.toList()
+            }
     }
 
     fun getSentMessages(startDate: LocalDateTime?, endDate: LocalDateTime?): Single<List<Message>> {
         return api.getSent(getDate(startDate), getDate(endDate))
-                .map { res -> res.data?.asSequence()?.map { it.copy(folderId = 2) }?.sortedBy { it.date }?.toList() }
-                .flatMapObservable { Observable.fromIterable(it) }
-                .flatMap { message ->
-                    getRecipients().flatMapObservable {
-                        Observable.fromArray(message.recipient!!
-                                .split("; ")
-                                .map { recipient -> recipient.normalizeRecipient() }
-                                .replaceWithRecipients(it)
-                                .ifEmpty {
-                                    listOf(Recipient("0", message.recipient.normalizeRecipient(), 0, 0, 2, "unknown"))
-                                })
-                    }.map {
-                        message.copy(recipient = it.joinToString("; ") { recipient -> recipient.name }, messageId = message.id).apply {
-                            recipientId = it[0].loginId
-                            recipients = it
-                        }
+            .map { res -> res.data?.asSequence()?.map { it.copy(folderId = 2) }?.sortedBy { it.date }?.toList() }
+            .flatMapObservable { Observable.fromIterable(it) }
+            .flatMap { message ->
+                getRecipients().flatMapObservable {
+                    Observable.fromArray(message.recipient!!
+                        .split("; ")
+                        .map { recipient -> recipient.normalizeRecipient() }
+                        .replaceWithRecipients(it)
+                        .ifEmpty {
+                            listOf(Recipient("0", message.recipient.normalizeRecipient(), 0, 0, 2, "unknown"))
+                        })
+                }.map {
+                    message.copy(recipient = it.joinToString("; ") { recipient -> recipient.name }, messageId = message.id).apply {
+                        recipientId = it[0].loginId
+                        recipients = it
                     }
                 }
-                .toList()
+            }
+            .toList()
     }
 
     fun getDeletedMessages(startDate: LocalDateTime?, endDate: LocalDateTime?): Single<List<Message>> {
         return api.getDeleted(getDate(startDate), getDate(endDate))
-                .map { res -> res.data?.map { it.apply { removed = true } }?.sortedBy { it.date } }
+            .map { res -> res.data?.map { it.apply { removed = true } }?.sortedBy { it.date } }
     }
 
     fun getMessage(messageId: Int, folderId: Int, read: Boolean, id: Int?): Single<String> {
@@ -88,13 +88,15 @@ class MessagesRepository(private val api: MessagesService) {
     }
 
     fun sendMessage(subject: String, content: String, recipients: List<Recipient>): Single<SentMessage> {
-        return api.sendMessage(SendMessageRequest(
+        return api.sendMessage(
+            SendMessageRequest(
                 Incoming(
-                        recipients = recipients,
-                        subject = subject,
-                        content = content
+                    recipients = recipients,
+                    subject = subject,
+                    content = content
                 )
-        )).map { it.data }
+            )
+        ).map { it.data }
     }
 
     private fun String.normalizeRecipient(): String {
