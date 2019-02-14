@@ -1,0 +1,133 @@
+{
+  "data": [
+    {
+      "Subject": "Język polski",
+      "IsAverage": false,
+      "ClassSeries": {
+        "Average": null,
+        "IsEmpty": false,
+        "Items": [
+          {
+            "Label": "0",
+            "Value": 0
+          },
+          {
+            "Label": "24",
+            "Value": 24
+          },
+          {
+            "Label": "42",
+            "Value": 42
+          },
+          {
+            "Label": "63",
+            "Value": 63
+          },
+          {
+            "Label": "65",
+            "Value": 65
+          },
+          {
+            "Label": "60",
+            "Value": 60
+          }
+        ]
+      },
+      "StudentSeries": {
+        "Average": null,
+        "IsEmpty": false,
+        "Items": [
+          {
+            "Label": "0",
+            "Value": 0
+          },
+          {
+            "Label": "0",
+            "Value": 0
+          },
+          {
+            "Label": "0",
+            "Value": 0
+          },
+          {
+            "Label": "2",
+            "Value": 2
+          },
+          {
+            "Label": "4",
+            "Value": 4
+          },
+          {
+            "Label": "3",
+            "Value": 3
+          }
+        ]
+      }
+    },
+    {
+      "Subject": "Matematyka",
+      "IsAverage": false,
+      "ClassSeries": {
+        "Average": null,
+        "IsEmpty": false,
+        "Items": [
+          {
+            "Label": "2",
+            "Value": 2
+          },
+          {
+            "Label": "40",
+            "Value": 40
+          },
+          {
+            "Label": "26",
+            "Value": 26
+          },
+          {
+            "Label": "35",
+            "Value": 35
+          },
+          {
+            "Label": "55",
+            "Value": 55
+          },
+          {
+            "Label": "40",
+            "Value": 40
+          }
+        ]
+      },
+      "StudentSeries": {
+        "Average": null,
+        "IsEmpty": false,
+        "Items": [
+          {
+            "Label": "0",
+            "Value": 0
+          },
+          {
+            "Label": "1",
+            "Value": 1
+          },
+          {
+            "Label": "1",
+            "Value": 1
+          },
+          {
+            "Label": "1",
+            "Value": 1
+          },
+          {
+            "Label": "0",
+            "Value": 0
+          },
+          {
+            "Label": "3",
+            "Value": 3
+          }
+        ]
+      }
+    }
+  ],
+  "success": true
+}

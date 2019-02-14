@@ -50,7 +50,7 @@ interface StudentAndParentService {
     fun getGradesSummary(@Query("okres") semester: Int?): Single<GradesSummaryResponse>
 
     @GET("Statystyki.mvc/Uczen")
-    fun getGradesStatistics(@Query("rodzajWidoku") type: Int?, @Query("semestr") semesterId: Int?): Single<GradesStatisticsResponse>
+    fun getGradesStatistics(@Query("rodzajWidoku") type: Int?, @Query("semestr") semesterId: Int): Single<GradesStatisticsResponse>
 
     @GET("ZadaniaDomowe.mvc?rodzajWidoku=Dzien")
     fun getHomework(@Query("data") date: String): Single<HomeworkResponse>

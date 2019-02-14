@@ -1,5 +1,6 @@
 package io.github.wulkanowy.api.grades
 
+import com.google.gson.annotations.SerializedName
 import pl.droidsonroids.jspoon.annotation.Selector
 
 class GradeStatistics {
@@ -14,6 +15,7 @@ class GradeStatistics {
 
     var gradeValue: Int = 0
 
+    @SerializedName("Value")
     @Selector("td:last-of-type", regex = "Klasa ocen: ([^,]+)")
-    var amount: Int = 0
+    var amount: Int? = 0
 }

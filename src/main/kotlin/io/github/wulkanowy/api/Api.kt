@@ -209,8 +209,8 @@ class Api {
     fun getGradesSummary(semesterId: Int? = null) =
         if (useNewStudent) student.getGradesSummary(semesterId) else snp.getGradesSummary(semesterId)
 
-    fun getGradesStatistics(semesterId: Int? = null, annual: Boolean = false) =
-        snp.getGradesStatistics(semesterId, annual)
+    fun getGradesStatistics(semesterId: Int, annual: Boolean = false) =
+        if (useNewStudent) student.getGradesStatistics(semesterId, annual) else snp.getGradesStatistics(semesterId, annual)
 
     fun getHomework(startDate: LocalDate, endDate: LocalDate? = null) =
         if (useNewStudent) student.getHomework(startDate, endDate) else snp.getHomework(startDate, endDate)

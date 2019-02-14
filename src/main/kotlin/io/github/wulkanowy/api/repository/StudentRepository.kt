@@ -40,6 +40,8 @@ import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.google.gson.internal.LinkedTreeMap
 import com.google.gson.reflect.TypeToken
+import io.github.wulkanowy.api.grades.GradeStatistics
+import io.github.wulkanowy.api.grades.GradesStatisticsRequest
 import org.threeten.bp.Month
 
 class StudentRepository(private val api: StudentService) {
@@ -175,6 +177,32 @@ class StudentRepository(private val api: StudentService) {
                     }
                 }
             }?.flatten()?.sortedByDescending { it.date }
+        }
+    }
+
+    fun getGradesStatistics(semesterId: Int, annual: Boolean): Single<List<GradeStatistics>> {
+        return if (annual) api.getGradesAnnualStatistics(GradesStatisticsRequest(semesterId)).map { it.data }.map {
+            it.map { annualSubject ->
+                annualSubject.items?.reversed()?.mapIndexed { index, item ->
+                    item.apply {
+                        this.semesterId = semesterId
+                        gradeValue = index + 1
+                        grade = item.gradeValue.toString()
+                        subject = annualSubject.subject
+                    }
+                }.orEmpty()
+            }.flatten().reversed()
+        } else return api.getGradesPartialStatistics(GradesStatisticsRequest(semesterId)).map { it.data }.map {
+            it.map { partialSubject ->
+                partialSubject.classSeries.items?.reversed()?.mapIndexed { index, item ->
+                    item.apply {
+                        this.semesterId = semesterId
+                        gradeValue = index + 1
+                        grade = item.gradeValue.toString()
+                        subject = partialSubject.subject
+                    }
+                }?.reversed().orEmpty()
+            }.flatten()
         }
     }
 

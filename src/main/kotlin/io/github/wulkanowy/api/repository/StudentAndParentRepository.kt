@@ -113,10 +113,11 @@ class StudentAndParentRepository(private val api: StudentAndParentService) {
         }
     }
 
-    fun getGradesStatistics(semesterId: Int?, annual: Boolean): Single<List<GradeStatistics>> {
+    fun getGradesStatistics(semesterId: Int, annual: Boolean): Single<List<GradeStatistics>> {
         return api.getGradesStatistics(if (!annual) 1 else 2, semesterId).map { res ->
             res.items.map {
                 it.apply {
+                    this.grade = getGradeShortValue(this.grade)
                     this.gradeValue = getGradeShortValue(this.grade).toIntOrNull() ?: 0
                     this.semesterId = res.semesterId
                 }

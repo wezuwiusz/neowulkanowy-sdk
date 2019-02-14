@@ -10,6 +10,8 @@ import io.github.wulkanowy.api.exams.ExamRequest
 import io.github.wulkanowy.api.exams.ExamResponse
 import io.github.wulkanowy.api.grades.GradeRequest
 import io.github.wulkanowy.api.grades.GradesResponse
+import io.github.wulkanowy.api.grades.GradesStatisticsRequest
+import io.github.wulkanowy.api.grades.GradesStatisticsResponse
 import io.github.wulkanowy.api.homework.HomeworkResponse
 import io.github.wulkanowy.api.mobile.Device
 import io.github.wulkanowy.api.notes.NotesResponse
@@ -46,6 +48,12 @@ interface StudentService {
 
     @POST("Oceny.mvc/Get")
     fun getGrades(@Body gradeRequest: GradeRequest): Single<ApiResponse<GradesResponse>>
+
+    @POST("Statystyki.mvc/GetOcenyCzastkowe")
+    fun getGradesPartialStatistics(@Body gradesStatisticsRequest: GradesStatisticsRequest): Single<ApiResponse<List<GradesStatisticsResponse.Partial>>>
+
+    @POST("Statystyki.mvc/GetOcenyRoczne")
+    fun getGradesAnnualStatistics(@Body gradesStatisticsRequest: GradesStatisticsRequest): Single<ApiResponse<List<GradesStatisticsResponse.Annual>>>
 
     @POST("Frekwencja.mvc/Get")
     fun getAttendance(@Body attendanceRequest: AttendanceRequest): Single<ApiResponse<AttendanceResponse>>
