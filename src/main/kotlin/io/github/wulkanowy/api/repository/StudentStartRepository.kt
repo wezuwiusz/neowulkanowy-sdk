@@ -24,7 +24,9 @@ class StudentStartRepository(
                             semesterNumber = it.number,
                             start = it.start.toLocalDate(),
                             end = it.end.toLocalDate(),
-                            current = it.start.toLocalDate() <= now() && it.end.toLocalDate() >= now()
+                            current = it.start.toLocalDate() <= now() && it.end.toLocalDate() >= now(),
+                            classId = it.classId,
+                            unitId = it.unitId
                         )
                     }
                 }.flatten().sortedByDescending { it.semesterId }
