@@ -40,9 +40,11 @@ import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.google.gson.internal.LinkedTreeMap
 import com.google.gson.reflect.TypeToken
+import io.github.wulkanowy.api.attendance.AttendanceSummaryResponse
 import io.github.wulkanowy.api.grades.GradeStatistics
 import io.github.wulkanowy.api.grades.GradesStatisticsRequest
 import org.threeten.bp.Month
+import io.github.wulkanowy.api.attendance.AttendanceSummaryItemSerializer
 
 class StudentRepository(private val api: StudentService) {
 
@@ -50,7 +52,7 @@ class StudentRepository(private val api: StudentService) {
 
     private lateinit var times: List<CacheResponse.Time>
 
-    private val gson by lazy { GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create() }
+    private val gson by lazy { GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss") }
 
     private fun getCache(): Single<CacheResponse> {
         if (::cache.isInitialized) return Single.just(cache)
@@ -104,7 +106,12 @@ class StudentRepository(private val api: StudentService) {
     fun getAttendanceSummary(subjectId: Int?): Single<List<AttendanceSummary>> {
         return api.getAttendanceStatistics(AttendanceSummaryRequest(subjectId)).map { it.data }.map { res ->
             val stats = res.items.map {
-                (gson.fromJson<LinkedTreeMap<String, String?>>(gson.toJson(it), object : TypeToken<LinkedTreeMap<String, String?>>() {}.type))
+                (gson.create().fromJson<LinkedTreeMap<String, String?>>(
+                    gson.registerTypeAdapter(
+                        AttendanceSummaryResponse.Summary::class.java,
+                        AttendanceSummaryItemSerializer()
+                    ).create().toJson(it), object : TypeToken<LinkedTreeMap<String, String?>>() {}.type
+                ))
             }
 
             val getMonthValue = fun(type: Int, month: Int): Int {
@@ -275,10 +282,10 @@ class StudentRepository(private val api: StudentService) {
                 endDate = end.toFormat("yyyy-MM-dd'T00:00:00'"),
                 subject = subjectId
             )
-        ).map { gson.fromJson(it, ApiResponse::class.java) }.map { res ->
+        ).map { gson.create().fromJson(it, ApiResponse::class.java) }.map { res ->
             if (!res.success) throw FeatureDisabledException(res.feedback.message)
             (res.data as LinkedTreeMap<*, *>).map { list ->
-                gson.fromJson<List<CompletedLesson>>(Gson().toJson(list.value), object : TypeToken<ArrayList<CompletedLesson>>() {}.type)
+                gson.create().fromJson<List<CompletedLesson>>(Gson().toJson(list.value), object : TypeToken<ArrayList<CompletedLesson>>() {}.type)
             }.flatten().map {
                 it.apply {
                     teacherSymbol = teacher.substringAfter(" [").substringBefore("]")
