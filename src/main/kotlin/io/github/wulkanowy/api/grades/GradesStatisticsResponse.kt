@@ -29,7 +29,7 @@ class GradesStatisticsResponse {
         val subject: String,
 
         @SerializedName("IsAverage")
-        val isAverage: String,
+        val isAverage: Boolean,
 
         @SerializedName("ClassSeries")
         val classSeries: Series,
@@ -41,7 +41,7 @@ class GradesStatisticsResponse {
     data class Series(
 
         @SerializedName("Average")
-        val average: Int?,
+        val average: String?,
 
         @SerializedName("IsEmpty")
         val isEmpty: Boolean,

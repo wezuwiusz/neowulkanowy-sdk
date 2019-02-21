@@ -98,7 +98,7 @@
         ]
       },
       "StudentSeries": {
-        "Average": null,
+        "Average": "3,5",
         "IsEmpty": false,
         "Items": [
           {
@@ -126,6 +126,16 @@
             "Value": 3
           }
         ]
+      }
+    },
+    {
+      "Subject": "Fizyka",
+      "IsAverage": false,
+      "ClassSeries": {
+        "IsEmpty": true
+      },
+      "StudentSeries": {
+        "IsEmpty": true
       }
     }
   ],
