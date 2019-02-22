@@ -17,7 +17,7 @@ import retrofit2.http.Query
 
 interface MessagesService {
 
-    @GET("/")
+    @GET(".")
     fun getStart(): Single<String>
 
     @GET("NowaWiadomosc.mvc/GetJednostkiUzytkownika")
