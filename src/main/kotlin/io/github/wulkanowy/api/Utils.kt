@@ -35,7 +35,7 @@ fun getGradeShortValue(value: String?): String {
 }
 
 fun getScriptParam(name: String, content: String, fallback: String = ""): String {
-    return "$name: '(.)*',".toRegex().find(content).let { result ->
+    return "$name: '(.)*'".toRegex().find(content).let { result ->
         if (null !== result) Jsoup.parse(result.groupValues[0].substringAfter("'").substringBefore("'")).text() else fallback
     }
 }

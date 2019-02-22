@@ -11,10 +11,14 @@ import retrofit2.http.Body
 import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded
 import retrofit2.http.GET
+import retrofit2.http.Header
 import retrofit2.http.POST
 import retrofit2.http.Query
 
 interface MessagesService {
+
+    @GET("/")
+    fun getStart(): Single<String>
 
     @GET("NowaWiadomosc.mvc/GetJednostkiUzytkownika")
     fun getUserReportingUnits(): Single<ApiResponse<List<ReportingUnit>>>
@@ -41,5 +45,10 @@ interface MessagesService {
     ): Single<ApiResponse<Message>>
 
     @POST("NowaWiadomosc.mvc/InsertWiadomosc")
-    fun sendMessage(@Body sendMessageRequest: SendMessageRequest): Single<ApiResponse<SentMessage>>
+    fun sendMessage(
+        @Body sendMessageRequest: SendMessageRequest,
+        @Header("X-V-RequestVerificationToken") token: String,
+        @Header("X-V-AppGuid") appGuid: String,
+        @Header("X-V-AppVersion") appVersion: String
+    ): Single<ApiResponse<SentMessage>>
 }
