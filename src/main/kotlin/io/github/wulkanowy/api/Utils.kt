@@ -1,5 +1,6 @@
 package io.github.wulkanowy.api
 
+import org.jsoup.Jsoup
 import org.threeten.bp.DayOfWeek
 import org.threeten.bp.Instant
 import org.threeten.bp.LocalDate
@@ -30,5 +31,11 @@ fun getGradeShortValue(value: String?): String {
         "dopuszczający" -> "2"
         "niedostateczny" -> "1"
         else -> value ?: ""
+    }
+}
+
+fun getScriptParam(name: String, content: String, fallback: String = ""): String {
+    return "$name: '(.)*',".toRegex().find(content).let { result ->
+        if (null !== result) Jsoup.parse(result.groupValues[0].substringAfter("'").substringBefore("'")).text() else fallback
     }
 }

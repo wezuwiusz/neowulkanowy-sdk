@@ -45,6 +45,7 @@ import io.github.wulkanowy.api.grades.GradeStatistics
 import io.github.wulkanowy.api.grades.GradesStatisticsRequest
 import org.threeten.bp.Month
 import io.github.wulkanowy.api.attendance.AttendanceSummaryItemSerializer
+import io.github.wulkanowy.api.getScriptParam
 
 class StudentRepository(private val api: StudentService) {
 
@@ -59,9 +60,9 @@ class StudentRepository(private val api: StudentService) {
 
         return api.getStart("Start").flatMap {
             api.getUserCache(
-                getScriptParam("antiForgeryToken: '(.)*',".toRegex(), it),
-                getScriptParam("appGuid: '(.)*',".toRegex(), it),
-                getScriptParam("version: '(.)*',".toRegex(), it)
+                getScriptParam("antiForgeryToken", it),
+                getScriptParam("appGuid", it),
+                getScriptParam("version", it)
             )
         }.map { it.data }
     }
@@ -71,12 +72,6 @@ class StudentRepository(private val api: StudentService) {
 
         return getCache().map { res -> res.times }.map { list ->
             list.apply { times = this }
-        }
-    }
-
-    private fun getScriptParam(regex: Regex, content: String): String {
-        return regex.find(content).let { result ->
-            if (null !== result) result.groupValues[0].substringAfter("'").substringBefore("'") else ""
         }
     }
 

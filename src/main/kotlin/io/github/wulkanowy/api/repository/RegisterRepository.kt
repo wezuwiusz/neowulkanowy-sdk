@@ -2,6 +2,7 @@ package io.github.wulkanowy.api.repository
 
 import io.github.wulkanowy.api.Api
 import io.github.wulkanowy.api.ApiException
+import io.github.wulkanowy.api.getScriptParam
 import io.github.wulkanowy.api.login.AccountPermissionException
 import io.github.wulkanowy.api.login.CertificateResponse
 import io.github.wulkanowy.api.login.LoginHelper
@@ -75,17 +76,11 @@ class RegisterRepository(
                             StudentAndParentResponse.Student().apply {
                                 id = it.studentId
                                 name = "${it.studentName} ${it.studentSurname}"
-                                description = getScriptParam("organizationName: '(.)*',".toRegex(), startPage, it.symbol + " " + (it.year - it.level + 1))
+                                description = getScriptParam("organizationName", startPage, it.symbol + " " + (it.year - it.level + 1))
                             }
                         }
                     }
                 }
-    }
-
-    private fun getScriptParam(regex: Regex, content: String, fallback: String): String {
-        return regex.find(content).let { result ->
-            if (null !== result) Jsoup.parse(result.groupValues[0].substringAfter("'").substringBefore("'")).text() else fallback
-        }
     }
 
     private fun getSymbols(): Single<List<Pair<String, CertificateResponse>>> {
