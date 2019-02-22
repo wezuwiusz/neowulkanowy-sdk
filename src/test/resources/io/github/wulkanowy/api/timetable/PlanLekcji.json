@@ -1,0 +1,70 @@
+{
+  "data": {
+    "Data": "2019-09-24 00:00:00",
+    "Header": [
+      {
+        "Text": "Lekcja",
+        "Width": "85",
+        "Distinction": false,
+        "Flex": 0
+      },
+      {
+        "Text": "poniedziałek<br />24.09.2018",
+        "Width": null,
+        "Distinction": false,
+        "Flex": 1
+      },
+      {
+        "Text": "wtorek<br />25.09.2018",
+        "Width": null,
+        "Distinction": false,
+        "Flex": 1
+      },
+      {
+        "Text": "środa<br />26.09.2018",
+        "Width": null,
+        "Distinction": false,
+        "Flex": 1
+      },
+      {
+        "Text": "czwartek<br />27.09.2018",
+        "Width": null,
+        "Distinction": false,
+        "Flex": 1
+      },
+      {
+        "Text": "piątek<br />28.09.2018",
+        "Width": null,
+        "Distinction": false,
+        "Flex": 1
+      }
+    ],
+    "Rows": [
+      [
+        "0<br />07:10<br />07:55",
+        "<div><span class=''>Matematyka</span><span class=''>Rachunek Beata</span><span class=''>23</span></div>",
+        "<div><span class='x-treelabel-ppl x-treelabel-inv'>Język polski</span><span class='x-treelabel-ppl x-treelabel-inv'>Polonistka Joanna</span><span class='x-treelabel-ppl x-treelabel-inv'>W3</span><span class='x-treelabel-rlz'>(oddział nieobecny - Wycieczka warsztat)</span></div>",
+        "<div><span class=''>Język polski</span><span class=''>Polonistka Joanna</span><span class=''>5</span></div><div><span class='x-treelabel-ppl x-treelabel-inv'>Religia</span><span class='x-treelabel-ppl x-treelabel-inv'>Polonistka Joanna</span><span class='x-treelabel-ppl x-treelabel-inv'>3</span></div>",
+        "<div><span class=' x-treelabel-inv'>Religia</span><span class=' x-treelabel-inv'>Religijny Janusz</span><span class=' x-treelabel-inv'>3</span><span class='x-treelabel-ppl x-treelabel-zas'>Wychowanie do życia w rodzinie</span><span class='x-treelabel-ppl x-treelabel-zas'>Telichowska Aleksandra</span><span class='x-treelabel-ppl x-treelabel-zas'>5</span><span class='x-treelabel-rlz'>(zastępstwo)</span></div>",
+        "<div><span class=''>Fizyka [zaw2]</span><span class=''></span><span class=''>Fizyczny Janusz</span><span class=''>19</span></div>"
+      ],
+      [
+        "1<br />08:00<br />08:45",
+        "<div><span class='x-treelabel-ppl x-treelabel-inv'>Język angielski [J1]</span><span class='x-treelabel-ppl x-treelabel-inv'></span><span class='x-treelabel-ppl x-treelabel-inv'>Angielska Amerykanka</span><span class='x-treelabel-ppl x-treelabel-inv'>24</span><span class='x-treelabel-rlz'>(uczniowie przychodzą później)</span></div>",
+        "<div><span class=''>Wychowanie fizyczne [zaw2]</span><span class=''></span><span class=''>Wychowawczy Kazimierz</span><span class=''>WG</span></div><div><span class='x-treelabel-ppl x-treelabel-inv'>Naprawa komputera [zaw2]</span><span class='x-treelabel-ppl x-treelabel-inv'></span><span class='x-treelabel-ppl x-treelabel-inv'>Naprawowy Andrzej</span><span class='x-treelabel-ppl x-treelabel-inv'>32</span><span class='x-treelabel-rlz'>(okienko dla uczniów)</span></div>",
+        "<div><span class=' x-treelabel-inv'>Tworzenie i administrowanie bazami danych [zaw2]</span><span class=' x-treelabel-inv'></span><span class=' x-treelabel-inv'>Dębicki Robert</span><span class=' x-treelabel-inv'>34</span><span class='x-treelabel-ppl x-treelabel-zas'>Tworzenie i administrowanie bazami danych [zaw2]</span><span class='x-treelabel-ppl x-treelabel-zas'></span><span class='x-treelabel-ppl x-treelabel-zas'>Kobyliński Leszek</span><span class='x-treelabel-ppl x-treelabel-zas'>34</span><span class='x-treelabel-rlz'>(zastępstwo)</span></div><div><span class=''>Tworzenie aplikacji internetowych [zaw2]</span><span class=''></span><span class=''></span><span class=''></span></div>",
+        "<div><span class='x-treelabel-ppl x-treelabel-inv'>Język polski</span><span class='x-treelabel-ppl x-treelabel-inv'>Polonistka Joanna</span><span class='x-treelabel-ppl x-treelabel-inv'>16</span><span class='x-treelabel-rlz'>(oddział nieobecny)</span></div><button type='button' class='uwaga-btn'>Uwaga</button><div class='uwaga-panel'>egzamin</div>",
+        "<div><span class='x-treelabel-ppl x-treelabel-zas'>Wychowanie fizyczne [zaw2]</span><span class='x-treelabel-ppl x-treelabel-zas'></span><span class='x-treelabel-ppl x-treelabel-zas'></span><span class='x-treelabel-ppl x-treelabel-zas'>G3</span><span class='x-treelabel-rlz'>(przeniesiona z lekcji 7, 01.12.2017)</span></div><div><!--<span>WTF</span>--></div>"
+      ],
+      [
+        "2<br />08:50<br />09:35",
+        "<div><span class=''>Język polski</span><span class=''></span><span class=''></span></div><div><span class=' x-treelabel-inv'>Religia</span><span class=' x-treelabel-inv'>Religijny Janusz</span><span class=' x-treelabel-inv'>23</span><span class='x-treelabel-ppl x-treelabel-zas'>Geografia</span><span class='x-treelabel-ppl x-treelabel-zas'>Światowy Michał</span><span class='x-treelabel-ppl x-treelabel-zas'>23</span><span class='x-treelabel-rlz'>(zastępstwo)</span></div>",
+        "",
+        "",
+        "",
+        ""
+      ]
+    ]
+  },
+  "success": true
+}
