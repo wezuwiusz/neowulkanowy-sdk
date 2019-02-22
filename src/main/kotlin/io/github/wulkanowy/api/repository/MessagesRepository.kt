@@ -33,7 +33,7 @@ class MessagesRepository(private val api: MessagesService) {
             // invalid unit id produced error
             if (unit == 0) return@flatMap Single.just(emptyList<Recipient>())
             api.getRecipients(unit, role).map { it.data }.map { list ->
-                list.map { it.copy(name = it.name.normalizeRecipient()) }.apply {
+                list.map { it.copy().apply { name = it.realName.normalizeRecipient() } }.apply {
                     recipients = this
                 }
             }
@@ -112,7 +112,7 @@ class MessagesRepository(private val api: MessagesService) {
             recipients.filter { recipient ->
                 origin == recipient.name
             }.ifEmpty {
-                listOf(Recipient("0", origin, 0, 0, 2, "unknown"))
+                listOf(Recipient("0", "", 0, 0, 2, "unknown").apply { name = origin })
             }
         }.flatten()
     }

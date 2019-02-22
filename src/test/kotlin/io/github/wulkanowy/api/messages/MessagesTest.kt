@@ -27,6 +27,7 @@ class MessagesTest : BaseLocalTest() {
         recipients[0].run {
             assertEquals("18rPracownik", id)
             assertEquals("Tracz Janusz", name)
+            assertEquals("Tracz Janusz [TJ] - pracownik (Fake123456)", realName)
             assertEquals(18, loginId)
             assertEquals(6, reportingUnitId)
             assertEquals(2, role)
