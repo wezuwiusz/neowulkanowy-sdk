@@ -34,28 +34,28 @@ class RegisterRepository(
     fun getStudents(): Single<List<Student>> {
         return getSymbols().flatMapObservable { Observable.fromIterable(it) }.flatMap { symbol ->
             loginHelper.sendCertificate(symbol.second, symbol.second.action.replace(startSymbol, symbol.first))
-                    .onErrorResumeNext { t ->
-                        if (t is AccountPermissionException) Single.just(SendCertificateResponse())
-                        else Single.error(t)
-                    }
-                    .flatMapObservable { Observable.fromIterable(if (useNewStudent) it.studentSchools else it.oldStudentSchools) }
-                    .flatMapSingle { schoolUrl ->
-                        getLoginType(symbol.first).flatMap { loginType ->
-                            getStudents(symbol.first, schoolUrl).map {
-                                it.map { student ->
-                                    Student(
-                                            email = email,
-                                            symbol = symbol.first,
-                                            studentId = student.id,
-                                            studentName = student.name,
-                                            schoolSymbol = getExtractedSchoolSymbolFromUrl(schoolUrl),
-                                            schoolName = student.description,
-                                            loginType = loginType
-                                    )
-                                }
+                .onErrorResumeNext { t ->
+                    if (t is AccountPermissionException) Single.just(SendCertificateResponse())
+                    else Single.error(t)
+                }
+                .flatMapObservable { Observable.fromIterable(if (useNewStudent) it.studentSchools else it.oldStudentSchools) }
+                .flatMapSingle { schoolUrl ->
+                    getLoginType(symbol.first).flatMap { loginType ->
+                        getStudents(symbol.first, schoolUrl).map {
+                            it.map { student ->
+                                Student(
+                                    email = email,
+                                    symbol = symbol.first,
+                                    studentId = student.id,
+                                    studentName = student.name,
+                                    schoolSymbol = getExtractedSchoolSymbolFromUrl(schoolUrl),
+                                    schoolName = student.description,
+                                    loginType = loginType
+                                )
                             }
                         }
                     }
+                }
         }.toList().map { it.flatten().distinctBy { pupil -> pupil.studentId to pupil.schoolSymbol } }
     }
 
@@ -69,18 +69,18 @@ class RegisterRepository(
                 }
             }
         } else student.getSchoolInfo(url.generate(ServiceManager.UrlGenerator.Site.STUDENT) + "UczenDziennik.mvc/Get")
-                .map { diary -> diary.data?.distinctBy { it.studentId } }
-                .flatMap { diaries ->
-                    student.getStart(url.generate(ServiceManager.UrlGenerator.Site.STUDENT) + "Start").map { startPage ->
-                        diaries.map {
-                            StudentAndParentResponse.Student().apply {
-                                id = it.studentId
-                                name = "${it.studentName} ${it.studentSurname}"
-                                description = getScriptParam("organizationName", startPage, it.symbol + " " + (it.year - it.level + 1))
-                            }
+            .map { diary -> diary.data?.distinctBy { it.studentId } }
+            .flatMap { diaries ->
+                student.getStart(url.generate(ServiceManager.UrlGenerator.Site.STUDENT) + "Start").map { startPage ->
+                    diaries.map {
+                        StudentAndParentResponse.Student().apply {
+                            id = it.studentId
+                            name = "${it.studentName} ${it.studentSurname}"
+                            description = getScriptParam("organizationName", startPage, it.symbol + " " + (it.year - it.level + 1))
                         }
                     }
                 }
+            }
     }
 
     private fun getSymbols(): Single<List<Pair<String, CertificateResponse>>> {
@@ -89,11 +89,11 @@ class RegisterRepository(
         }.flatMap { login ->
             login.sendCredentials(email, password).flatMap { Single.just(it) }.flatMap { cert ->
                 Single.just(Jsoup.parse(cert.wresult.replace(":", ""), "", Parser.xmlParser())
-                        .select("[AttributeName$=\"Instance\"] samlAttributeValue")
-                        .map { it.text().trim() }
-                        .filter { it.matches("[a-zA-Z]*".toRegex()) } // early filter invalid symbols
-                        .ifEmpty { listOf("opole", "gdansk", "tarnow", "rzeszow") } // fallback
-                        .map { Pair(it, cert) }
+                    .select("[AttributeName$=\"Instance\"] samlAttributeValue")
+                    .map { it.text().trim() }
+                    .filter { it.matches("[a-zA-Z]*".toRegex()) } // early filter invalid symbols
+                    .ifEmpty { listOf("opole", "gdansk", "tarnow", "rzeszow") } // fallback
+                    .map { Pair(it, cert) }
                 )
             }
         }
