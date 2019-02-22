@@ -85,26 +85,26 @@ class TimetableParser {
 
     private fun getLesson(lesson: Timetable, spans: Elements, o: Int = 0): Timetable {
         return lesson.copy(
-                subject = getLessonAndGroupInfoFromSpan(spans[0])[0],
-                group = getLessonAndGroupInfoFromSpan(spans[0])[1],
-                teacher = spans[1 + o].text(),
-                room = spans[2 + o].text(),
-                info = getFormattedLessonInfo(spans.getOrNull(3 + o)?.text()),
-                canceled = spans.last().hasClass(CLASS_REALIZED)
+            subject = getLessonAndGroupInfoFromSpan(spans[0])[0],
+            group = getLessonAndGroupInfoFromSpan(spans[0])[1],
+            teacher = spans[1 + o].text(),
+            room = spans[2 + o].text(),
+            info = getFormattedLessonInfo(spans.getOrNull(3 + o)?.text()),
+            canceled = spans.last().hasClass(CLASS_REALIZED)
         )
     }
 
     private fun getLessonWithReplacement(lesson: Timetable, spans: Elements, o: Int = 0): Timetable {
         return lesson.copy(
-                subject = getLessonAndGroupInfoFromSpan(spans[3 + o])[0],
-                subjectOld = spans[0].text(),
-                group = getLessonAndGroupInfoFromSpan(spans[3 + o])[1],
-                teacher = spans[4 + o * 2].text(),
-                teacherOld = spans[1 + o].text(),
-                room = spans[5 + o * 2].text(),
-                roomOld = spans[2 + o].text(),
-                info = "${getFormattedLessonInfo(spans.last().text())}, poprzednio: ${spans[0].text()}",
-                changes = true
+            subject = getLessonAndGroupInfoFromSpan(spans[3 + o])[0],
+            subjectOld = spans[0].text(),
+            group = getLessonAndGroupInfoFromSpan(spans[3 + o])[1],
+            teacher = spans[4 + o * 2].text(),
+            teacherOld = spans[1 + o].text(),
+            room = spans[5 + o * 2].text(),
+            roomOld = spans[2 + o].text(),
+            info = "${getFormattedLessonInfo(spans.last().text())}, poprzednio: ${spans[0].text()}",
+            changes = true
         )
     }
 
@@ -114,16 +114,17 @@ class TimetableParser {
 
     private fun stripLessonInfo(info: String): String {
         return info
-                .replace("okienko dla uczniów", "")
-                .replace("zmiana organizacji zajęć", "")
-                .replace(" ,", "")
-                .removePrefix(", ")
+            .replace("okienko dla uczniów", "")
+            .replace("zmiana organizacji zajęć", "")
+            .replace(" ,", "")
+            .removePrefix(", ")
     }
 
     private fun getLessonAndGroupInfoFromSpan(span: Element): Array<String> {
         return span.text().run {
-            arrayOf(span.text().substringBefore(" ["),
-                    if (this.contains("[")) span.text().split(" [").last().removeSuffix("]") else ""
+            arrayOf(
+                span.text().substringBefore(" ["),
+                if (this.contains("[")) span.text().split(" [").last().removeSuffix("]") else ""
             )
         }
     }
