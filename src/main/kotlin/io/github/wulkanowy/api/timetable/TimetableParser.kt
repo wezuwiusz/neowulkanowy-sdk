@@ -23,9 +23,16 @@ class TimetableParser {
             divs.size == 2 && divs[1]?.selectFirst("span")?.hasClass(CLASS_MOVED_OR_CANCELED) ?: false -> {
                 when {
                     divs[1]?.selectFirst("span")?.hasClass(CLASS_PLANNED) == true -> getLessonInfo(lesson, divs[0]).run {
-                        copy(changes = true, info = getLessonInfo(lesson, divs[1]).run {
-                            stripLessonInfo("${getFormattedLessonInfo(this.info)}, $info, poprzednio: $subject")
-                        })
+                        val old = getLessonInfo(lesson, divs[1])
+                        copy(
+                            changes = true,
+                            subjectOld = old.subject,
+                            teacherOld = old.teacher,
+                            roomOld = old.room,
+                            info = old.run {
+                                stripLessonInfo("${getFormattedLessonInfo(this.info)}, $info, poprzednio: $subject")
+                            }
+                        )
                     }
                     else -> getLessonInfo(lesson, divs[1])
                 }
@@ -90,9 +97,12 @@ class TimetableParser {
     private fun getLessonWithReplacement(lesson: Timetable, spans: Elements, o: Int = 0): Timetable {
         return lesson.copy(
                 subject = getLessonAndGroupInfoFromSpan(spans[3 + o])[0],
+                subjectOld = spans[0].text(),
                 group = getLessonAndGroupInfoFromSpan(spans[3 + o])[1],
                 teacher = spans[4 + o * 2].text(),
+                teacherOld = spans[1 + o].text(),
                 room = spans[5 + o * 2].text(),
+                roomOld = spans[2 + o].text(),
                 info = "${getFormattedLessonInfo(spans.last().text())}, poprzednio: ${spans[0].text()}",
                 changes = true
         )
