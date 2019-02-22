@@ -15,6 +15,26 @@ class MessagesTest : BaseLocalTest() {
     }
 
     @Test
+    fun getRecipients() {
+        server.enqueue(MockResponse().setBody(MessagesTest::class.java.getResource("JednostkiUzytkownika.json").readText()))
+        server.enqueue(MockResponse().setBody(MessagesTest::class.java.getResource("Adresaci.json").readText()))
+        server.start(3000)
+
+        val recipients = api.getRecipients().blockingGet()
+
+        assertEquals(3, recipients.size)
+
+        recipients[0].run {
+            assertEquals("18rPracownik", id)
+            assertEquals("Tracz Janusz", name)
+            assertEquals(18, loginId)
+            assertEquals(6, reportingUnitId)
+            assertEquals(2, role)
+            assertEquals("NTVhNTQwMDhhZDFiYTU4OWFhMjEwZDI2MjljMWRmNDE=", hash)
+        }
+    }
+
+    @Test
     fun getReceivedMessagesTest() {
         server.enqueue(MockResponse().setBody(MessagesTest::class.java.getResource("WiadomosciOdebrane.json").readText()))
         server.start(3000)
