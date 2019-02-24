@@ -21,7 +21,7 @@ class Grade {
     @Selector("td", index = 1, converter = GradeModifierValueConverter::class)
     var modifier: Double = .0
 
-    @Selector("td", index = 1, regex = "\\(([^)]+)\\)")
+    @Selector("td", index = 1, regex = "\\((.+)\\)")
     var comment: String = ""
 
     @SerializedName("KolorOceny") // dec

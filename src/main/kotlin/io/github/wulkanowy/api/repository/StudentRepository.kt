@@ -165,7 +165,7 @@ class StudentRepository(private val api: StudentService) {
                     val values = getGradeValueWithModifier(it.entry)
                     it.apply {
                         this.subject = subject.name
-                        comment = entry.substringAfter(" (").removeSuffix(")")
+                        comment = entry.substringAfter(" (").substringBeforeLast(")")
                         entry = entry.substringBefore(" (")
                         if (comment == entry) comment = ""
                         value = values.first

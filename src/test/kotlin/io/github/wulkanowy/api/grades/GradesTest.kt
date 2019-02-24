@@ -148,7 +148,7 @@ class GradesTest : BaseLocalTest() {
                 assertEquals("5", entry)
                 assertEquals(5, value)
                 assertEquals(.0, modifier, .0)
-                assertEquals("pomoc przy tej uroczystości była wyjątkowa", comment)
+                assertEquals("pomoc przy tej uroczystości była wyjątkowa (naprawdę)", comment)
                 assertEquals("000000", color)
                 assertEquals("A1", symbol)
                 assertEquals("Dzień Kobiet w naszej klasie", description)
