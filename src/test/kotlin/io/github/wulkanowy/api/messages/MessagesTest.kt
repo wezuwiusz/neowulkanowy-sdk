@@ -62,7 +62,6 @@ class MessagesTest : BaseLocalTest() {
         messages[0].run {
             assertEquals(32798, id)
             assertEquals(32798, messageId)
-            assertEquals(getDate(2018, 6, 11, 9, 38, 35), date)
             assertEquals("Usprawiedliwienie nieobecności", subject)
             assertEquals("Tracz Janusz", recipient)
             assertEquals(1, unreadBy)
