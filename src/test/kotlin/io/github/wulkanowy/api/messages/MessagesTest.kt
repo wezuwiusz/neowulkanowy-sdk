@@ -55,7 +55,19 @@ class MessagesTest : BaseLocalTest() {
         server.enqueue(MockResponse().setBody(MessagesTest::class.java.getResource("WiadomosciWyslane.json").readText()))
         server.start(3000)
 
-        assertEquals(6, api.getSentMessages(null, null).blockingGet().size)
+        val messages = api.getSentMessages(null, null).blockingGet()
+
+        assertEquals(6, messages.size)
+
+        messages[0].run {
+            assertEquals(32798, id)
+            assertEquals(32798, messageId)
+            assertEquals(getDate(2018, 6, 11, 9, 38, 35), date)
+            assertEquals("Usprawiedliwienie nieobecności", subject)
+            assertEquals("Tracz Janusz", recipient)
+            assertEquals(1, unreadBy)
+            assertEquals(0, readBy)
+        }
     }
 
     @Test
@@ -113,8 +125,9 @@ class MessagesTest : BaseLocalTest() {
         server.enqueue(MockResponse().setBody(MessagesTest::class.java.getResource("WyslanaWiadomosc.json").readText()))
         server.start(3000)
 
-        api.sendMessage("Temat wiadomości", "Tak wygląda zawartość wiadomości.\nZazwyczaj ma wiele linijek.\n\nZ poważaniem,\nNazwisko Imię",
-                listOf(Recipient("0", "Kowalski Jan", 0, 0, 2, "hash"))
+        api.sendMessage(
+            "Temat wiadomości", "Tak wygląda zawartość wiadomości.\nZazwyczaj ma wiele linijek.\n\nZ poważaniem,\nNazwisko Imię",
+            listOf(Recipient("0", "Kowalski Jan", 0, 0, 2, "hash"))
         ).blockingGet()
 
         server.takeRequest()

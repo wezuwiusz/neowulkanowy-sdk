@@ -37,7 +37,13 @@ class MessagesRepository(private val api: MessagesService) {
         return api.getSent(getDate(startDate), getDate(endDate)).map { it.data }
             .map { res ->
                 res.asSequence()
-                    .map { m -> m.copy(folderId = 2, recipient = m.recipient?.split(";")?.joinToString("; ") { it.normalizeRecipient() }) }
+                    .map { message ->
+                        message.copy(
+                            messageId = message.id,
+                            folderId = 2,
+                            recipient = message.recipient?.split(";")?.joinToString("; ") { it.normalizeRecipient() }
+                        )
+                    }
                     .sortedBy { it.date }
                     .toList()
             }
