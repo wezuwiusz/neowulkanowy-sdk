@@ -20,5 +20,8 @@ data class Recipient(
     val role: Int,
 
     @SerializedName("Hash")
-    val hash: String
+    val hash: String,
+
+    @Transient
+    val shortName: String = ""
 )
