@@ -59,7 +59,7 @@ class MessagesRepository(private val api: MessagesService) {
 
     fun getMessageRecipients(messageId: Int, loginId: Int): Single<List<Recipient>> {
         return (if (0 == loginId) api.getMessageRecipients(messageId)
-        else api.getMessageSender(messageId, loginId)).map { it.data }
+        else api.getMessageSender(loginId, messageId)).map { it.data }
     }
 
     fun getMessage(messageId: Int, folderId: Int, read: Boolean, id: Int?): Single<String> {
