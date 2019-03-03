@@ -231,7 +231,7 @@ class Api {
 
     fun getReportingUnits() = messages.getReportingUnits()
 
-    fun getRecipients(role: Int = 2, unitId: Int = 0) = messages.getRecipients(role, unitId)
+    fun getRecipients(unitId: Int, role: Int = 2) = messages.getRecipients(unitId, role)
 
     fun getMessages(
         folder: Folder,

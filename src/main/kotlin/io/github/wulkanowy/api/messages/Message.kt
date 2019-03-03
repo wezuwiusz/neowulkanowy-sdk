@@ -41,9 +41,5 @@ data class Message(
     @SerializedName("Przeczytane")
     val readBy: Int?
 ) {
-    var recipientId: Int = 0
-
     var removed: Boolean = false
-
-    var recipients: List<Recipient> = emptyList()
 }

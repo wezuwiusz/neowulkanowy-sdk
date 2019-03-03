@@ -8,7 +8,7 @@ data class Recipient(
     val id: String,
 
     @SerializedName("Nazwa")
-    val realName: String,
+    val name: String,
 
     @SerializedName("IdLogin")
     val loginId: Int,
@@ -21,8 +21,4 @@ data class Recipient(
 
     @SerializedName("Hash")
     val hash: String
-) {
-
-    @Transient
-    var name: String = ""
-}
+)

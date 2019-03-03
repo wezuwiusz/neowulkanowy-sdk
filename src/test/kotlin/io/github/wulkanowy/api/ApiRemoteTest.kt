@@ -387,7 +387,7 @@ class ApiRemoteTest : BaseTest() {
         units.subscribe(unitsObserver)
         unitsObserver.assertComplete()
 
-        val recipients = api.getRecipients()
+        val recipients = api.getRecipients(6)
         val recipientsObserver = TestObserver<List<Recipient>>()
         recipients.subscribe(recipientsObserver)
         recipientsObserver.assertComplete()

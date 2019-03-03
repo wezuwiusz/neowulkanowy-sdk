@@ -7,74 +7,46 @@ import io.github.wulkanowy.api.messages.ReportingUnit
 import io.github.wulkanowy.api.messages.SendMessageRequest
 import io.github.wulkanowy.api.messages.SentMessage
 import io.github.wulkanowy.api.service.MessagesService
-import io.reactivex.Observable
 import io.reactivex.Single
 import org.threeten.bp.LocalDateTime
 import org.threeten.bp.format.DateTimeFormatter
 
 class MessagesRepository(private val api: MessagesService) {
 
-    private lateinit var recipients: List<Recipient>
-
-    private lateinit var reportingUnits: List<ReportingUnit>
-
     fun getReportingUnits(): Single<List<ReportingUnit>> {
-        if (::reportingUnits.isInitialized) return Single.just(reportingUnits)
-
-        return api.getUserReportingUnits()
-            .map { it.data }
-            .map { it.apply { reportingUnits = this } }
+        return api.getUserReportingUnits().map { it.data }
     }
 
-    fun getRecipients(role: Int = 2, unitId: Int = 0): Single<List<Recipient>> {
-        if (::recipients.isInitialized) return Single.just(recipients)
-
-        return (if (unitId == 0) getReportingUnits().map { it.firstOrNull()?.id ?: 0 } else Single.just(unitId)).flatMap { unit ->
-            // invalid unit id produced error
-            if (unit == 0) return@flatMap Single.just(emptyList<Recipient>())
-            api.getRecipients(unit, role).map { it.data }.map { list ->
-                list.map { it.copy().apply { name = it.realName.normalizeRecipient() } }.apply {
-                    recipients = this
-                }
-            }
-        }
+    fun getRecipients(unitId: Int, role: Int = 2): Single<List<Recipient>> {
+        return api.getRecipients(unitId, role).map { it.data }
     }
 
     fun getReceivedMessages(startDate: LocalDateTime?, endDate: LocalDateTime?): Single<List<Message>> {
-        return api.getReceived(getDate(startDate), getDate(endDate))
+        return api.getReceived(getDate(startDate), getDate(endDate)).map { it.data }
             .map { res ->
-                res.data?.asSequence()
-                    ?.map { it.copy(folderId = 1) }
-                    ?.sortedBy { it.date }?.toList()
+                res.asSequence()
+                    .map { it.copy(folderId = 1) }
+                    .sortedBy { it.date }
+                    .toList()
             }
     }
 
     fun getSentMessages(startDate: LocalDateTime?, endDate: LocalDateTime?): Single<List<Message>> {
-        return api.getSent(getDate(startDate), getDate(endDate))
-            .map { res -> res.data?.asSequence()?.map { it.copy(folderId = 2) }?.sortedBy { it.date }?.toList() }
-            .flatMapObservable { Observable.fromIterable(it) }
-            .flatMap { message ->
-                getRecipients().flatMapObservable {
-                    Observable.fromArray(message.recipient!!
-                        .split("; ")
-                        .map { recipient -> recipient.normalizeRecipient() }
-                        .replaceWithRecipients(it)
-                        .ifEmpty {
-                            listOf(Recipient("0", message.recipient.normalizeRecipient(), 0, 0, 2, "unknown"))
-                        })
-                }.map {
-                    message.copy(recipient = it.joinToString("; ") { recipient -> recipient.name }, messageId = message.id).apply {
-                        recipientId = it[0].loginId
-                        recipients = it
-                    }
-                }
+        return api.getSent(getDate(startDate), getDate(endDate)).map { it.data }
+            .map { res ->
+                res.asSequence()
+                    .map { m -> m.copy(folderId = 2, recipient = m.recipient?.split(";")?.joinToString("; ") { it.normalizeRecipient() }) }
+                    .sortedBy { it.date }
+                    .toList()
             }
-            .toList()
     }
 
     fun getDeletedMessages(startDate: LocalDateTime?, endDate: LocalDateTime?): Single<List<Message>> {
-        return api.getDeleted(getDate(startDate), getDate(endDate))
-            .map { res -> res.data?.map { it.apply { removed = true } }?.sortedBy { it.date } }
+        return api.getDeleted(getDate(startDate), getDate(endDate)).map { it.data }
+            .map { res ->
+                res.map { it.apply { removed = true } }
+                    .sortedBy { it.date }
+            }
     }
 
     fun getMessage(messageId: Int, folderId: Int, read: Boolean, id: Int?): Single<String> {
@@ -82,7 +54,7 @@ class MessagesRepository(private val api: MessagesService) {
     }
 
     fun sendMessage(subject: String, content: String, recipients: List<Recipient>): Single<SentMessage> {
-        return api.getStart().flatMap {
+        return api.getStart().flatMap { res ->
             api.sendMessage(
                 SendMessageRequest(
                     SendMessageRequest.Incoming(
@@ -91,9 +63,9 @@ class MessagesRepository(private val api: MessagesService) {
                         content = content
                     )
                 ),
-                getScriptParam("antiForgeryToken", it),
-                getScriptParam("appGuid", it),
-                getScriptParam("version", it)
+                getScriptParam("antiForgeryToken", res),
+                getScriptParam("appGuid", res),
+                getScriptParam("version", res)
             ).map { it.data }
         }
     }
@@ -105,15 +77,5 @@ class MessagesRepository(private val api: MessagesService) {
     private fun getDate(date: LocalDateTime?): String {
         if (date == null) return ""
         return date.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))
-    }
-
-    private fun List<String>.replaceWithRecipients(recipients: List<Recipient>): List<Recipient> {
-        return map { origin ->
-            recipients.filter { recipient ->
-                origin == recipient.name
-            }.ifEmpty {
-                listOf(Recipient("0", "", 0, 0, 2, "unknown").apply { name = origin })
-            }
-        }.flatten()
     }
 }
