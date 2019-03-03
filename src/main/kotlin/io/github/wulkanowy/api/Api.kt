@@ -195,19 +195,16 @@ class Api {
     fun getAttendance(startDate: LocalDate, endDate: LocalDate? = null) =
         if (useNewStudent) student.getAttendance(startDate, endDate) else snp.getAttendance(startDate, endDate)
 
-    fun getAttendanceSummary(subjectId: Int? = -1) =
-        if (useNewStudent) student.getAttendanceSummary(subjectId) else snp.getAttendanceSummary(subjectId)
+    fun getAttendanceSummary(subjectId: Int? = -1) = if (useNewStudent) student.getAttendanceSummary(subjectId) else snp.getAttendanceSummary(subjectId)
 
     fun getSubjects() = if (useNewStudent) student.getSubjects() else snp.getSubjects()
 
     fun getExams(startDate: LocalDate, endDate: LocalDate? = null) =
         if (useNewStudent) student.getExams(startDate, endDate) else snp.getExams(startDate, endDate)
 
-    fun getGrades(semesterId: Int? = null) =
-        if (useNewStudent) student.getGrades(semesterId) else snp.getGrades(semesterId)
+    fun getGrades(semesterId: Int? = null) = if (useNewStudent) student.getGrades(semesterId) else snp.getGrades(semesterId)
 
-    fun getGradesSummary(semesterId: Int? = null) =
-        if (useNewStudent) student.getGradesSummary(semesterId) else snp.getGradesSummary(semesterId)
+    fun getGradesSummary(semesterId: Int? = null) = if (useNewStudent) student.getGradesSummary(semesterId) else snp.getGradesSummary(semesterId)
 
     fun getGradesStatistics(semesterId: Int, annual: Boolean = false) =
         if (useNewStudent) student.getGradesStatistics(semesterId, annual) else snp.getGradesStatistics(semesterId, annual)
@@ -245,20 +242,15 @@ class Api {
         }
     }
 
-    fun getReceivedMessages(startDate: LocalDateTime? = null, endDate: LocalDateTime? = null) =
-        messages.getReceivedMessages(startDate, endDate)
+    fun getReceivedMessages(startDate: LocalDateTime? = null, endDate: LocalDateTime? = null) = messages.getReceivedMessages(startDate, endDate)
 
-    fun getSentMessages(startDate: LocalDateTime? = null, endDate: LocalDateTime? = null) =
-        messages.getSentMessages(startDate, endDate)
+    fun getSentMessages(startDate: LocalDateTime? = null, endDate: LocalDateTime? = null) = messages.getSentMessages(startDate, endDate)
 
-    fun getDeletedMessages(startDate: LocalDateTime? = null, endDate: LocalDateTime? = null) =
-        messages.getDeletedMessages(startDate, endDate)
+    fun getDeletedMessages(startDate: LocalDateTime? = null, endDate: LocalDateTime? = null) = messages.getDeletedMessages(startDate, endDate)
 
-    fun getMessageContent(messageId: Int, folderId: Int, read: Boolean = false, id: Int? = null) =
-        messages.getMessage(messageId, folderId, read, id)
+    fun getMessageContent(messageId: Int, folderId: Int, read: Boolean = false, id: Int? = null) = messages.getMessage(messageId, folderId, read, id)
 
-    fun sendMessage(subject: String, content: String, recipients: List<Recipient>) =
-        messages.sendMessage(subject, content, recipients)
+    fun sendMessage(subject: String, content: String, recipients: List<Recipient>) = messages.sendMessage(subject, content, recipients)
 
     fun getTimetable(startDate: LocalDate, endDate: LocalDate? = null) =
         if (useNewStudent) student.getTimetable(startDate, endDate) else snp.getTimetable(startDate, endDate)
