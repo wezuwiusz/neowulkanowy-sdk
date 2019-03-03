@@ -38,6 +38,9 @@ interface MessagesService {
     @GET("Wiadomosc.mvc/GetAdresaciWiadomosci")
     fun getMessageRecipients(@Query("idWiadomosci") messageId: Int): Single<ApiResponse<List<Recipient>>>
 
+    @GET("Wiadomosc.mvc/GetRoleUzytkownika")
+    fun getMessageSender(@Query("idLogin") loginId: Int, @Query("idWiadomosci") messageId: Int): Single<ApiResponse<List<Recipient>>>
+
     @POST("Wiadomosc.mvc/GetTrescWiadomosci")
     @FormUrlEncoded
     fun getMessage(

@@ -105,9 +105,20 @@ class MessagesTest : BaseLocalTest() {
         server.enqueue(MockResponse().setBody(MessagesTest::class.java.getResource("Adresaci.json").readText()))
         server.start(3000)
 
-        api.getMessageRecipients(421).blockingGet()[0].run {
+        api.getMessageRecipients(421, 0).blockingGet()[0].run {
             assertEquals("18rPracownik", id)
             assertEquals(18, loginId)
+        }
+    }
+
+    @Test
+    fun getMessageSenderTest() {
+        server.enqueue(MockResponse().setBody(MessagesTest::class.java.getResource("Adresaci.json").readText()))
+        server.start(3000)
+
+        api.getMessageRecipients(421, 94).blockingGet()[1].run {
+            assertEquals("94rPracownik", id)
+            assertEquals(94, loginId)
         }
     }
 
