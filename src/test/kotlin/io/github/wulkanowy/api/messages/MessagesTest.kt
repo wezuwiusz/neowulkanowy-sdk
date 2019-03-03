@@ -106,7 +106,12 @@ class MessagesTest : BaseLocalTest() {
 
         api.getMessageRecipients(421, 0).blockingGet()[0].run {
             assertEquals("18rPracownik", id)
+            assertEquals("Tracz Janusz [TJ] - pracownik (Fake123456)", name)
             assertEquals(18, loginId)
+//            assertEquals(null, reportingUnitId)
+            assertEquals(2, role)
+            assertEquals("NTVhNTQwMDhhZDFiYTU4OWFhMjEwZDI2MjljMWRmNDE=", hash)
+            assertEquals("Tracz Janusz", shortName)
         }
     }
 
