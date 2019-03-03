@@ -12,6 +12,7 @@ import io.github.wulkanowy.api.messages.Folder
 import io.github.wulkanowy.api.messages.Message
 import io.github.wulkanowy.api.messages.Recipient
 import io.github.wulkanowy.api.messages.ReportingUnit
+import io.github.wulkanowy.api.messages.SentMessage
 import io.github.wulkanowy.api.mobile.Device
 import io.github.wulkanowy.api.mobile.TokenResponse
 import io.github.wulkanowy.api.notes.Note
@@ -420,10 +421,22 @@ class ApiRemoteTest : BaseTest() {
 
         assertEquals(1, del.size)
 
+        val mRecipients = api.getMessageRecipients(del[0].messageId ?: 0)
+        val mRecipientsObserver = TestObserver<List<Recipient>>()
+        mRecipients.subscribe(mRecipientsObserver)
+        mRecipientsObserver.assertComplete()
+
         val m = api.getMessageContent(del[0].messageId ?: 0, del[0].folderId)
         val mObserver = TestObserver<String>()
         m.subscribe(mObserver)
         mObserver.assertComplete()
+
+        val send = api.sendMessage("Temat wiadomości", "Treść",
+            listOf(Recipient("0", "Kowalski Jan", 0, 0, 2, "hash"))
+        )
+        val sendObserver = TestObserver<SentMessage>()
+        send.subscribe(sendObserver)
+        sendObserver.assertComplete()
     }
 
     @Test

@@ -35,6 +35,9 @@ interface MessagesService {
     @GET("Wiadomosc.mvc/GetWiadomosciUsuniete")
     fun getDeleted(@Query("dataOd") dateStart: String, @Query("dataDo") dateEnd: String): Single<ApiResponse<List<Message>>>
 
+    @GET("Wiadomosc.mvc/GetAdresaciWiadomosci")
+    fun getMessageRecipients(@Query("idWiadomosci") messageId: Int): Single<ApiResponse<List<Recipient>>>
+
     @POST("Wiadomosc.mvc/GetTrescWiadomosci")
     @FormUrlEncoded
     fun getMessage(

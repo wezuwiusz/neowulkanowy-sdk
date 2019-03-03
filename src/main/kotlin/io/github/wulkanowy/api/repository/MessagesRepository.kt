@@ -49,6 +49,10 @@ class MessagesRepository(private val api: MessagesService) {
             }
     }
 
+    fun getMessageRecipients(messageId: Int): Single<List<Recipient>> {
+        return api.getMessageRecipients(messageId).map { it.data }
+    }
+
     fun getMessage(messageId: Int, folderId: Int, read: Boolean, id: Int?): Single<String> {
         return api.getMessage(messageId, folderId, read, id).map { it.data?.content }
     }

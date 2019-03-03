@@ -88,7 +88,18 @@ class MessagesTest : BaseLocalTest() {
     }
 
     @Test
-    fun getMessageTest() {
+    fun getMessageRecipientsTest() {
+        server.enqueue(MockResponse().setBody(MessagesTest::class.java.getResource("Adresaci.json").readText()))
+        server.start(3000)
+
+        api.getMessageRecipients(421).blockingGet()[0].run {
+            assertEquals("18rPracownik", id)
+            assertEquals(18, loginId)
+        }
+    }
+
+    @Test
+    fun getMessageContentTest() {
         server.enqueue(MockResponse().setBody(MessagesTest::class.java.getResource("Wiadomosc.json").readText()))
         server.start(3000)
 

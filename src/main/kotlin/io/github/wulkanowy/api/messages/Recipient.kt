@@ -14,7 +14,7 @@ data class Recipient(
     val loginId: Int,
 
     @SerializedName("IdJednostkaSprawozdawcza")
-    val reportingUnitId: Int,
+    val reportingUnitId: Int?,
 
     @SerializedName("Rola")
     val role: Int,
