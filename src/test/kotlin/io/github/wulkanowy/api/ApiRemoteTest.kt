@@ -254,7 +254,7 @@ class ApiRemoteTest : BaseTest() {
         values[5].run {
             assertEquals("Religia", subject)
             assertEquals("1", entry)
-            assertEquals("000000", color)
+            assertEquals("6ECD07", color)
             assertEquals("Kart", symbol)
             assertEquals("", description)
             assertEquals("3,00", weight)
