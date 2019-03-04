@@ -76,7 +76,7 @@ class ExamsTest : BaseLocalTest() {
             it.run {
                 assertEquals("Metodologia programowania", subject)
                 assertEquals("zaw2", group)
-                assertEquals("Sprawdzian", type)
+                assertEquals("Praca klasowa", type)
                 assertEquals("", description)
                 assertEquals("Małgorzata Nowacka", teacher)
                 assertEquals("MN", teacherSymbol)

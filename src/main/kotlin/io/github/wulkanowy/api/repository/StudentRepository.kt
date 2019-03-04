@@ -146,7 +146,11 @@ class StudentRepository(private val api: StudentService) {
                             subject = subject.substringBeforeLast(" ")
                             if (group.contains(" ")) group = ""
                             date = day.date
-                            type = if ("1" == type) "Sprawdzian" else "Kartkówka"
+                            type = when (type) {
+                                "1" -> "Sprawdzian"
+                                "2" -> "Kartkówka"
+                                else -> "Praca klasowa"
+                            }
                             teacherSymbol = teacher.split(" [").last().removeSuffix("]")
                             teacher = teacher.split(" [").first()
                         }

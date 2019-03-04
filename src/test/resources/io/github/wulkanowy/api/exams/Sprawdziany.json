@@ -36,14 +36,14 @@
               "PracownikModyfikujacyDisplay": "Małgorzata Nowacka [MN]",
               "DataModyfikacji": "2018-09-16 00:00:00",
               "Opis": "programowanie obiektowe",
-              "Rodzaj": 0
+              "Rodzaj": 2
             },
             {
               "DisplayValue": "Metodologia programowania 3Ti|zaw2",
               "PracownikModyfikujacyDisplay": "Małgorzata Nowacka [MN]",
               "DataModyfikacji": "2018-09-16 00:00:00",
               "Opis": "",
-              "Rodzaj": 1
+              "Rodzaj": 3
             }
           ],
           "Pokazuj": true
