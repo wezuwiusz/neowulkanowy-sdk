@@ -8,6 +8,7 @@ class TimetableParser {
     private companion object {
         const val CLASS_PLANNED = "x-treelabel-ppl"
         const val CLASS_REALIZED = "x-treelabel-rlz"
+        const val CLASS_CHANGES = "x-treelabel-zas"
         const val CLASS_MOVED_OR_CANCELED = "x-treelabel-inv"
     }
 
@@ -36,6 +37,16 @@ class TimetableParser {
                     }
                     else -> getLessonInfo(lesson, divs[1])
                 }
+            }
+            divs.size == 2 && divs[1]?.selectFirst("span")?.hasClass(CLASS_CHANGES) == true -> getLessonInfo(lesson, divs[1]).run {
+                val old = getLessonInfo(lesson, divs[0])
+                copy(
+                    changes = true,
+                    canceled = false,
+                    subjectOld = old.subject,
+                    teacherOld = old.teacher,
+                    roomOld = old.room
+                )
             }
             divs.size == 2 -> getLessonInfo(lesson, divs[0])
             divs.size == 3 -> getLessonInfo(lesson, divs[1])
