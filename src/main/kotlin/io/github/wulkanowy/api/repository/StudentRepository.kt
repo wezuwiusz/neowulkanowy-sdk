@@ -164,13 +164,16 @@ class StudentRepository(private val api: StudentService) {
 
     fun getGrades(semesterId: Int?): Single<List<Grade>> {
         return api.getGrades(GradeRequest(semesterId)).map { res ->
-            res.data?.gradesWithSubjects?.map { subject ->
-                subject.grades.map {
-                    val values = getGradeValueWithModifier(it.entry)
-                    it.apply {
-                        this.subject = subject.name
-                        comment = entry.substringAfter(" (").substringBeforeLast(")")
-                        entry = entry.substringBefore(" (")
+            res.data?.gradesWithSubjects?.map { gradesSubject ->
+                gradesSubject.grades.map { grade ->
+                    val values = getGradeValueWithModifier(grade.entry)
+                    grade.apply {
+                        subject = gradesSubject.name
+                        comment = entry.substringBefore(" (").run {
+                            if (length > 4) this
+                            else entry.substringBeforeLast(")").substringAfter(" (")
+                        }
+                        entry = entry.substringBefore(" (").run { if (length > 4) "..." else this }
                         if (comment == entry) comment = ""
                         value = values.first
                         date = privateDate

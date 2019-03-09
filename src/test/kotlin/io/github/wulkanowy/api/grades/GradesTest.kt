@@ -16,8 +16,8 @@ class GradesTest : BaseLocalTest() {
 
     @Test
     fun getAllTest() {
-        assertEquals(9, snp.size) // 2 items are skipped
-        assertEquals(9, student.size)
+        assertEquals(10, snp.size) // 2 items are skipped
+        assertEquals(10, student.size)
     }
 
     @Test
@@ -195,6 +195,26 @@ class GradesTest : BaseLocalTest() {
                 assertEquals("10,00", weight)
                 assertEquals(0, weightValue)
                 assertEquals(getDate(2018, 10, 4), date)
+                assertEquals("Jadwiga Czerwieńska", teacher)
+            }
+        }
+    }
+
+    @Test
+    fun getGrade_bracesWithoutSpace() {
+        listOf(snp[9], student[9]).map {
+            it.run {
+                assertEquals("Język angielski", subject)
+                assertEquals("...", entry)
+                assertEquals(0, value)
+                assertEquals(.0, modifier, .0)
+                assertEquals("dop(2.03)", comment)
+                assertEquals("F04C4C", color)
+                assertEquals("ZAL", symbol)
+                assertEquals("", description)
+                assertEquals("10,00", weight)
+                assertEquals(0, weightValue)
+                assertEquals(getDate(2018, 10, 3), date)
                 assertEquals("Jadwiga Czerwieńska", teacher)
             }
         }

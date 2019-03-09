@@ -95,6 +95,9 @@ class StudentAndParentRepository(private val api: StudentAndParentService) {
         return api.getGrades(semesterId).map { res ->
             res.grades.asSequence().map { grade ->
                 grade.apply {
+                    comment = if (entry.length > 4) "$entry ($comment)".replace(" ($comment)", "") else comment
+                    entry = entry.run { if (length > 4) "..." else this }
+
                     if (entry == comment) comment = ""
                     if (description == symbol) description = ""
                 }
