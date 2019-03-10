@@ -108,13 +108,13 @@ class TimetableParser {
     private fun getLessonWithReplacement(lesson: Timetable, spans: Elements, o: Int = 0): Timetable {
         return lesson.copy(
             subject = getLessonAndGroupInfoFromSpan(spans[3 + o])[0],
-            subjectOld = spans[0].text(),
+            subjectOld = getLessonAndGroupInfoFromSpan(spans[0])[0],
             group = getLessonAndGroupInfoFromSpan(spans[3 + o])[1],
             teacher = spans[4 + o * 2].text(),
             teacherOld = spans[1 + o].text(),
             room = spans[5 + o * 2].text(),
             roomOld = spans[2 + o].text(),
-            info = "${getFormattedLessonInfo(spans.last().text())}, poprzednio: ${spans[0].text()}",
+            info = "${getFormattedLessonInfo(spans.last().text())}, poprzednio: ${getLessonAndGroupInfoFromSpan(spans[0])[0]}",
             changes = true
         )
     }

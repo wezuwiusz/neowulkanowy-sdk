@@ -197,8 +197,8 @@ class TimetableTest : BaseLocalTest() {
                 assertEquals("Tworzenie i administrowanie bazami danych", subject)
                 assertEquals("Kobyliński Leszek", teacher)
                 assertEquals("34", room)
-                assertEquals("zastępstwo, poprzednio: Tworzenie i administrowanie bazami danych [zaw2]", info)
-                assertEquals("Tworzenie i administrowanie bazami danych [zaw2]", subjectOld)
+                assertEquals("zastępstwo, poprzednio: Tworzenie i administrowanie bazami danych", info)
+                assertEquals("Tworzenie i administrowanie bazami danych", subjectOld)
                 assertEquals("Dębicki Robert", teacherOld)
                 assertEquals("34", roomOld)
 
