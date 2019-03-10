@@ -21,13 +21,23 @@ class MessagesTest : BaseLocalTest() {
 
         val recipients = api.getRecipients(6).blockingGet()
 
-        assertEquals(3, recipients.size)
+        assertEquals(4, recipients.size)
 
         recipients[0].run {
             assertEquals("18rPracownik", id)
             assertEquals("Tracz Janusz [TJ] - pracownik (Fake123456)", name)
             assertEquals("Tracz Janusz", shortName)
             assertEquals(18, loginId)
+            assertEquals(6, reportingUnitId)
+            assertEquals(2, role)
+            assertEquals("NTVhNTQwMDhhZDFiYTU4OWFhMjEwZDI2MjljMWRmNDE=", hash)
+        }
+
+        recipients[3].run {
+            assertEquals("96rPracownik", id)
+            assertEquals("Kowalski Jan (JK) - pracownik [Fake123456]", name)
+            assertEquals("Kowalski Jan", shortName)
+            assertEquals(96, loginId)
             assertEquals(6, reportingUnitId)
             assertEquals(2, role)
             assertEquals("NTVhNTQwMDhhZDFiYTU4OWFhMjEwZDI2MjljMWRmNDE=", hash)

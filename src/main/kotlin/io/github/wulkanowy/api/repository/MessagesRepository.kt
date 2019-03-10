@@ -19,7 +19,7 @@ class MessagesRepository(private val api: MessagesService) {
 
     fun getRecipients(unitId: Int, role: Int = 2): Single<List<Recipient>> {
         return api.getRecipients(unitId, role).map { it.data }.map { res ->
-            res.map { it.copy(shortName = it.name.normalizeRecipient()) }
+            res.map { it.copy(shortName = it.name.normalizeRecipient().substringBeforeLast(" (")) }
         }
     }
 

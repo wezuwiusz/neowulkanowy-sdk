@@ -27,6 +27,15 @@
       "Rola": 2,
       "PushWiadomosc": null,
       "Hash": "NTVhNTQwMDhhZDFiYTU4OWFhMjEwZDI2MjljMWRmNDE="
+    },
+    {
+      "Id": "96rPracownik",
+      "Nazwa": "Kowalski Jan (JK) - pracownik [Fake123456]",
+      "IdLogin": 96,
+      "IdJednostkaSprawozdawcza": 6,
+      "Rola": 2,
+      "PushWiadomosc": null,
+      "Hash": "NTVhNTQwMDhhZDFiYTU4OWFhMjEwZDI2MjljMWRmNDE="
     }
   ]
 }
