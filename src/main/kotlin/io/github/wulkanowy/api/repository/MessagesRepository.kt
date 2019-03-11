@@ -19,7 +19,7 @@ class MessagesRepository(private val api: MessagesService) {
 
     fun getRecipients(unitId: Int, role: Int = 2): Single<List<Recipient>> {
         return api.getRecipients(unitId, role).map { it.data }.map { res ->
-            res.map { it.copy(shortName = it.name.normalizeRecipient().substringBeforeLast(" (")) }
+            res.map { it.copy(shortName = it.name.normalizeRecipient()) }
         }
     }
 
@@ -88,7 +88,7 @@ class MessagesRepository(private val api: MessagesService) {
     }
 
     private fun String.normalizeRecipient(): String {
-        return this.substringBeforeLast("-").substringBefore(" [").trim()
+        return this.substringBeforeLast("-").substringBefore(" [").substringBeforeLast(" (").trim()
     }
 
     private fun getDate(date: LocalDateTime?): String {

@@ -105,7 +105,7 @@ class MessagesTest : BaseLocalTest() {
         server.start(3000)
 
         api.getSentMessages(null, null).blockingGet()[5].run {
-            assertEquals("Tracz Antoni (TA); Kowalska Joanna", recipient)
+            assertEquals("Tracz Antoni; Kowalska Joanna", recipient)
         }
     }
 
