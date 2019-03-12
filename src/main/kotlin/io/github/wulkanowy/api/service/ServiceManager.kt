@@ -154,7 +154,7 @@ class ServiceManager(
         return LoginHelper(loginType, schema, host, symbol, cookies, getLoginService())
                 .login(email, password)
                 .toFlowable()
-//                .share()
+                .share()
     }
 
     class UrlGenerator(private val schema: String, private val host: String, var symbol: String, var schoolId: String) {
