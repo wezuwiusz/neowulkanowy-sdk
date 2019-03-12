@@ -52,7 +52,7 @@ dependencies {
 
     testImplementation "com.squareup.okhttp3:mockwebserver:$okhttp3"
     testImplementation "junit:junit:4.12"
-    ktlint "com.github.shyiko:ktlint:0.30.0"
+    ktlint "com.github.shyiko:ktlint:0.31.0"
 }
 
 task ktlint(type: JavaExec, group: "verification") {
