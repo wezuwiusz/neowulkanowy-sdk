@@ -1,6 +1,7 @@
 package io.github.wulkanowy.api.repository
 
 import io.github.wulkanowy.api.attendance.Attendance
+import io.github.wulkanowy.api.attendance.Attendance.Types
 import io.github.wulkanowy.api.attendance.AttendanceSummary
 import io.github.wulkanowy.api.attendance.Subject
 import io.github.wulkanowy.api.exams.Exam
@@ -41,11 +42,11 @@ class StudentAndParentRepository(private val api: StudentAndParentService) {
                     it.apply {
                         date = res.days[i]
                         number = row.number
-                        presence = it.type == Attendance.Types.PRESENCE || it.type == Attendance.Types.ABSENCE_FOR_SCHOOL_REASONS
-                        absence = it.type == Attendance.Types.ABSENCE_UNEXCUSED || it.type == Attendance.Types.ABSENCE_EXCUSED
-                        lateness = it.type == Attendance.Types.EXCUSED_LATENESS || it.type == Attendance.Types.UNEXCUSED_LATENESS
-                        excused = it.type == Attendance.Types.ABSENCE_EXCUSED || it.type == Attendance.Types.EXCUSED_LATENESS
-                        exemption = it.type == Attendance.Types.EXEMPTION
+                        presence = it.type == Types.PRESENCE || it.type == Types.ABSENCE_FOR_SCHOOL_REASONS
+                        absence = it.type == Types.ABSENCE_UNEXCUSED || it.type == Types.ABSENCE_EXCUSED
+                        lateness = it.type == Types.EXCUSED_LATENESS || it.type == Types.UNEXCUSED_LATENESS
+                        excused = it.type == Types.ABSENCE_EXCUSED || it.type == Types.EXCUSED_LATENESS
+                        exemption = it.type == Types.EXEMPTION
                     }
                 }
             }.asSequence().filter {
@@ -120,8 +121,8 @@ class StudentAndParentRepository(private val api: StudentAndParentService) {
         return api.getGradesStatistics(if (!annual) 1 else 2, semesterId).map { res ->
             res.items.map {
                 it.apply {
-                    this.grade = getGradeShortValue(this.grade)
-                    this.gradeValue = getGradeShortValue(this.grade).toIntOrNull() ?: 0
+                    grade = getGradeShortValue(grade)
+                    gradeValue = getGradeShortValue(grade).toIntOrNull() ?: 0
                     this.semesterId = res.semesterId
                 }
             }

@@ -1,24 +1,25 @@
 package io.github.wulkanowy.api
 
-import org.jsoup.Jsoup
-import org.threeten.bp.DayOfWeek
-import org.threeten.bp.Instant
+import org.jsoup.Jsoup.parse
 import org.threeten.bp.LocalDate
-import org.threeten.bp.ZoneId
-import org.threeten.bp.format.DateTimeFormatter
-import org.threeten.bp.temporal.TemporalAdjusters
+import org.threeten.bp.format.DateTimeFormatter.ofPattern
+import org.threeten.bp.temporal.TemporalAdjusters.previousOrSame
+import java.sql.Date.valueOf
 import java.text.SimpleDateFormat
+import org.threeten.bp.DayOfWeek.MONDAY
+import org.threeten.bp.Instant.ofEpochMilli
+import org.threeten.bp.ZoneId.systemDefault
 import java.util.Date
 
 fun String.toDate(format: String): Date = SimpleDateFormat(format).parse(this)
 
-fun Date.toLocalDate(): LocalDate = Instant.ofEpochMilli(time).atZone(ZoneId.systemDefault()).toLocalDate()
+fun Date.toLocalDate(): LocalDate = ofEpochMilli(time).atZone(systemDefault()).toLocalDate()
 
-fun LocalDate.toDate(): Date = java.sql.Date.valueOf(format(DateTimeFormatter.ofPattern("yyyy-MM-dd")))
+fun LocalDate.toDate(): Date = valueOf(format(ofPattern("yyyy-MM-dd")))
 
-fun LocalDate.toFormat(format: String): String = format(DateTimeFormatter.ofPattern(format))
+fun LocalDate.toFormat(format: String): String = format(ofPattern(format))
 
-fun LocalDate.getLastMonday(): LocalDate = with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY))
+fun LocalDate.getLastMonday(): LocalDate = with(previousOrSame(MONDAY))
 
 fun LocalDate.getSchoolYear(): Int = if (month.value > 8) year else year - 1
 
@@ -36,6 +37,6 @@ fun getGradeShortValue(value: String?): String {
 
 fun getScriptParam(name: String, content: String, fallback: String = ""): String {
     return "$name: '(.)*'".toRegex().find(content).let { result ->
-        if (null !== result) Jsoup.parse(result.groupValues[0].substringAfter("'").substringBefore("'")).text() else fallback
+        if (null !== result) parse(result.groupValues[0].substringAfter("'").substringBefore("'")).text() else fallback
     }
 }

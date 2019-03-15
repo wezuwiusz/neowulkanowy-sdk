@@ -2,6 +2,7 @@ package io.github.wulkanowy.api.repository
 
 import io.github.wulkanowy.api.ApiResponse
 import io.github.wulkanowy.api.attendance.Attendance
+import io.github.wulkanowy.api.attendance.Attendance.Category
 import io.github.wulkanowy.api.attendance.AttendanceRequest
 import io.github.wulkanowy.api.attendance.AttendanceSummary
 import io.github.wulkanowy.api.attendance.AttendanceSummaryRequest
@@ -55,6 +56,8 @@ class StudentRepository(private val api: StudentService) {
 
     private val gson by lazy { GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss") }
 
+    private fun LocalDate.toISOFormat(): String = toFormat("yyyy-MM-dd'T00:00:00'")
+
     private fun getCache(): Single<CacheResponse> {
         if (::cache.isInitialized) return Single.just(cache)
 
@@ -84,12 +87,12 @@ class StudentRepository(private val api: StudentService) {
                     Observable.fromIterable(times.filter { time -> time.id == a.number })
                 }.map {
                     a.apply {
-                        presence = a.categoryId == Attendance.Category.PRESENCE.id || a.categoryId == Attendance.Category.ABSENCE_FOR_SCHOOL_REASONS.id
-                        absence = a.categoryId == Attendance.Category.ABSENCE_UNEXCUSED.id || a.categoryId == Attendance.Category.ABSENCE_EXCUSED.id
-                        lateness = a.categoryId == Attendance.Category.EXCUSED_LATENESS.id || a.categoryId == Attendance.Category.UNEXCUSED_LATENESS.id
-                        excused = a.categoryId == Attendance.Category.ABSENCE_EXCUSED.id || a.categoryId == Attendance.Category.EXCUSED_LATENESS.id
-                        exemption = a.categoryId == Attendance.Category.EXEMPTION.id
-                        name = (Attendance.Category.values().singleOrNull { category -> category.id == categoryId } ?: Attendance.Category.UNKNOWN).title
+                        presence = a.categoryId == Category.PRESENCE.id || a.categoryId == Category.ABSENCE_FOR_SCHOOL_REASONS.id
+                        absence = a.categoryId == Category.ABSENCE_UNEXCUSED.id || a.categoryId == Category.ABSENCE_EXCUSED.id
+                        lateness = a.categoryId == Category.EXCUSED_LATENESS.id || a.categoryId == Category.UNEXCUSED_LATENESS.id
+                        excused = a.categoryId == Category.ABSENCE_EXCUSED.id || a.categoryId == Category.EXCUSED_LATENESS.id
+                        exemption = a.categoryId == Category.EXEMPTION.id
+                        name = (Category.values().singleOrNull { category -> category.id == categoryId } ?: Category.UNKNOWN).title
                         number = it.number
                     }
                 }
@@ -258,7 +261,7 @@ class StudentRepository(private val api: StudentService) {
     }
 
     fun getTimetable(startDate: LocalDate, endDate: LocalDate? = null): Single<List<Timetable>> {
-        return api.getTimetable(TimetableRequest(startDate.toFormat("yyyy-MM-dd'T00:00:00'"))).map { res ->
+        return api.getTimetable(TimetableRequest(startDate.toISOFormat())).map { res ->
             res.data?.rows2api?.flatMap { lessons ->
                 lessons.drop(1).mapIndexed { i, it ->
                     val times = lessons[0].split("<br />")
@@ -278,13 +281,9 @@ class StudentRepository(private val api: StudentService) {
 
     fun getCompletedLessons(start: LocalDate, endDate: LocalDate?, subjectId: Int): Single<List<CompletedLesson>> {
         val end = endDate ?: start.plusMonths(1)
-        return api.getCompletedLessons(
-            CompletedLessonsRequest(
-                startDate = start.toFormat("yyyy-MM-dd'T00:00:00'"),
-                endDate = end.toFormat("yyyy-MM-dd'T00:00:00'"),
-                subject = subjectId
-            )
-        ).map { gson.create().fromJson(it, ApiResponse::class.java) }.map { res ->
+        return api.getCompletedLessons(CompletedLessonsRequest(start.toISOFormat(), end.toISOFormat(), subjectId)).map {
+            gson.create().fromJson(it, ApiResponse::class.java)
+        }.map { res ->
             if (!res.success) throw FeatureDisabledException(res.feedback.message)
             (res.data as LinkedTreeMap<*, *>).map { list ->
                 gson.create().fromJson<List<CompletedLesson>>(Gson().toJson(list.value), object : TypeToken<ArrayList<CompletedLesson>>() {}.type)

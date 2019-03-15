@@ -53,6 +53,8 @@ class ApiRemoteTest : BaseTest() {
             studentId = 1
             diaryId = 101
             useNewStudent = true
+            androidVersion = "9.0"
+            buildTag = "Wulkanowy"
             setInterceptor(Interceptor {
                 println("Request event ${it.request().url().host()}")
                 it.proceed(it.request())
@@ -521,6 +523,6 @@ class ApiRemoteTest : BaseTest() {
         luckyNumber.subscribe(luckyNumberObserver)
         luckyNumberObserver.assertComplete()
 
-        assertTrue(luckyNumberObserver.values().size == 0 || luckyNumberObserver.values()[0] == 0)
+        assertTrue(luckyNumberObserver.values().size == 0 || luckyNumberObserver.values()[0] != 0)
     }
 }
