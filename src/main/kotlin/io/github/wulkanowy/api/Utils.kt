@@ -12,13 +12,13 @@ import java.util.Date
 
 fun String.toDate(format: String): Date = SimpleDateFormat(format).parse(this)
 
-fun Date.toLocalDate(): LocalDate = Instant.ofEpochMilli(this.time).atZone(ZoneId.systemDefault()).toLocalDate()
+fun Date.toLocalDate(): LocalDate = Instant.ofEpochMilli(time).atZone(ZoneId.systemDefault()).toLocalDate()
 
-fun LocalDate.toDate(): Date = java.sql.Date.valueOf(this.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")))
+fun LocalDate.toDate(): Date = java.sql.Date.valueOf(format(DateTimeFormatter.ofPattern("yyyy-MM-dd")))
 
-fun LocalDate.toFormat(format: String): String = this.format(DateTimeFormatter.ofPattern(format))
+fun LocalDate.toFormat(format: String): String = format(DateTimeFormatter.ofPattern(format))
 
-fun LocalDate.getLastMonday(): LocalDate = this.with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY))
+fun LocalDate.getLastMonday(): LocalDate = with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY))
 
 fun LocalDate.getSchoolYear(): Int = if (month.value > 8) year else year - 1
 
