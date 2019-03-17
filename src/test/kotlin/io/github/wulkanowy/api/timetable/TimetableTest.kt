@@ -16,8 +16,8 @@ class TimetableTest : BaseLocalTest() {
 
     @Test
     fun getTimetableTest() {
-        assertEquals(12, snp.size)
-        assertEquals(12, student.size)
+        assertEquals(13, snp.size)
+        assertEquals(13, student.size)
     }
 
     @Test
@@ -94,7 +94,7 @@ class TimetableTest : BaseLocalTest() {
 
     @Test
     fun getSimpleLesson_replacementDifferentTeacher() {
-        listOf(snp[8], student[8]).map {
+        listOf(snp[9], student[9]).map {
             it.run {
                 // czwartek, 0
                 assertEquals(0, number)
@@ -118,7 +118,7 @@ class TimetableTest : BaseLocalTest() {
 
     @Test
     fun getGroupLesson() {
-        listOf(snp[10], student[10]).map {
+        listOf(snp[11], student[11]).map {
             it.run {
                 // piątek, 0
                 assertEquals(0, number)
@@ -212,7 +212,7 @@ class TimetableTest : BaseLocalTest() {
 
     @Test
     fun getLesson_button() {
-        listOf(snp[9], student[9]).map {
+        listOf(snp[10], student[10]).map {
             it.run {
                 // czwartek, 1
                 assertEquals(1, number)
@@ -236,7 +236,7 @@ class TimetableTest : BaseLocalTest() {
 
     @Test
     fun getLesson_emptyOriginal() {
-        listOf(snp[11], student[11]).map {
+        listOf(snp[12], student[12]).map {
             it.run {
                 // piątek, 1
                 assertEquals(1, number)
@@ -284,7 +284,7 @@ class TimetableTest : BaseLocalTest() {
     fun getLesson_invAndChange() {
         listOf(snp[5], student[5]).map {
             it.run {
-                // poniedziałek, 2
+                // wtorek, 2
                 assertEquals(2, number)
                 assertEquals(getDate(2018, 9, 25, 8, 50, 0), start)
 
@@ -293,6 +293,29 @@ class TimetableTest : BaseLocalTest() {
                 assertEquals("", teacher)
                 assertEquals("", room)
                 assertEquals("przeniesiona z lekcji 4, 07.03.2019", info)
+                assertEquals("Matematyka", subjectOld)
+                assertEquals("", teacherOld)
+                assertEquals("", roomOld)
+
+                assertEquals(false, canceled)
+                assertEquals(true, changes)
+            }
+        }
+    }
+
+    @Test
+    fun getSimpleLesson_replacementDifferentTeacherv2() {
+        listOf(snp[8], student[8]).map {
+            it.run {
+                // środa, 2
+                assertEquals(2, number)
+                assertEquals(getDate(2018, 9, 26, 8, 50, 0), start)
+
+                assertEquals("Język angielski", subject)
+                assertEquals("", group)
+                assertEquals("", teacher)
+                assertEquals("", room)
+                assertEquals("Poprzednio: Matematyka (przeniesiona na lekcję 2, 07.03.2019)", info)
                 assertEquals("Matematyka", subjectOld)
                 assertEquals("", teacherOld)
                 assertEquals("", roomOld)

@@ -48,6 +48,21 @@ class TimetableParser {
                     roomOld = old.room
                 )
             }
+            divs.size == 2 && divs[0]?.selectFirst("span")?.hasClass(CLASS_MOVED_OR_CANCELED) == true &&
+                divs[0]?.selectFirst("span")?.hasClass(CLASS_PLANNED) == true &&
+                divs[1]?.selectFirst("span")?.attr("class")?.isEmpty() == true -> {
+                getLessonInfo(lesson, divs[1]).run {
+                    val old = getLessonInfo(lesson, divs[0])
+                    copy(
+                        changes = true,
+                        canceled = false,
+                        subjectOld = old.subject,
+                        teacherOld = old.teacher,
+                        roomOld = old.room,
+                        info = "Poprzednio: ${old.subject} (${old.info})"
+                    )
+                }
+            }
             divs.size == 2 -> getLessonInfo(lesson, divs[0])
             divs.size == 3 -> getLessonInfo(lesson, divs[1])
             else -> null
