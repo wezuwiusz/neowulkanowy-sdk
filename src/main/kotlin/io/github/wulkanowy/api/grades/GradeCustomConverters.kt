@@ -21,12 +21,12 @@ class GradeModifierValueConverter : ElementConverter<Double> {
     }
 }
 
-class GradeWeightValueConverter : ElementConverter<Int> {
+class GradeWeightValueConverter : ElementConverter<Double> {
 
-    override fun convert(node: Element, selector: Selector): Int {
+    override fun convert(node: Element, selector: Selector): Double {
         return if (isGradeValid(node.parent().select("td")[1].text().substringBefore(" ("))) {
-            node.text().substringBefore(",").toInt()
-        } else 0
+            node.text().replace(",", ".").toDouble()
+        } else .0
     }
 }
 

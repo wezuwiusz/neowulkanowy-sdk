@@ -72,7 +72,7 @@
           {
             "Nauczyciel": "Jadwiga Czerwieńska",
             "Wpis": "dop(2.03)",
-            "Waga": 5.50,
+            "Waga": 10.00,
             "NazwaKolumny": "",
             "KodKolumny": "ZAL",
             "DataOceny": "03.10.2018",
@@ -81,7 +81,7 @@
           {
             "Nauczyciel": "Jadwiga Czerwieńska",
             "Wpis": "nb",
-            "Waga": 10,
+            "Waga": 10.00,
             "NazwaKolumny": "słownictwo (człowiek) 4.10",
             "KodKolumny": "S2",
             "DataOceny": "04.10.2018",
@@ -156,7 +156,7 @@
           {
             "Nauczyciel": "Patryk Maciejewski",
             "Wpis": "5 (pomoc przy tej uroczystości była wyjątkowa (naprawdę))",
-            "Waga": 1,
+            "Waga": 1.50,
             "NazwaKolumny": "Dzień Kobiet w naszej klasie",
             "KodKolumny": "A1",
             "DataOceny": "31.10.2018",

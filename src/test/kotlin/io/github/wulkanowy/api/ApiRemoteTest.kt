@@ -261,7 +261,7 @@ class ApiRemoteTest : BaseTest() {
             assertEquals("Kart", symbol)
             assertEquals("", description)
             assertEquals("3,00", weight)
-            assertEquals(3, weightValue)
+            assertEquals(3.0, weightValue, .0)
             assertEquals(getDate(2018, 11, 19), date)
             assertEquals("Michał Mazur", teacher)
         }
