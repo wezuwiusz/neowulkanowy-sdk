@@ -181,8 +181,8 @@ class StudentRepository(private val api: StudentService) {
                         value = values.first
                         date = privateDate
                         modifier = values.second
-                        weight = "$weightValue,00"
-                        weightValue = if (isGradeValid(entry)) weightValue else 0
+                        weight = "%.2f".format(weightValue)
+                        weightValue = if (isGradeValid(entry)) weightValue else .0
                         color = if ("0" == color) "000000" else color.toInt().toString(16).toUpperCase()
                         symbol = symbol ?: ""
                         description = description ?: ""

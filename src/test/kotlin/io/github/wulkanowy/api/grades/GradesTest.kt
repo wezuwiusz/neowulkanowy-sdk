@@ -33,7 +33,7 @@ class GradesTest : BaseLocalTest() {
                 assertEquals("S1", symbol)
                 assertEquals("PIERWSZA POMOC I RESUSCYTACJA", description)
                 assertEquals("5,00", weight)
-                assertEquals(5, weightValue)
+                assertEquals(5.0, weightValue, .0)
                 assertEquals(getDate(2018, 12, 12), date)
                 assertEquals("Weronika Ratajczak", teacher)
             }
@@ -53,7 +53,7 @@ class GradesTest : BaseLocalTest() {
                 assertEquals("O", symbol)
                 assertEquals("Odpowiedź", description)
                 assertEquals("3,00", weight)
-                assertEquals(3, weightValue)
+                assertEquals(3.0, weightValue, .0)
                 assertEquals(getDate(2018, 12, 5), date)
                 assertEquals("Jakub Michalak", teacher)
             }
@@ -73,7 +73,7 @@ class GradesTest : BaseLocalTest() {
                 assertEquals("BW3", symbol)
                 assertEquals("Writing", description)
                 assertEquals("3,00", weight)
-                assertEquals(3, weightValue)
+                assertEquals(3.0, weightValue, .0)
                 assertEquals(getDate(2018, 11, 28), date)
                 assertEquals("Oliwia Woźniak", teacher)
             }
@@ -93,7 +93,7 @@ class GradesTest : BaseLocalTest() {
                 assertEquals("K", symbol)
                 assertEquals("Kordian", description)
                 assertEquals("5,00", weight)
-                assertEquals(5, weightValue)
+                assertEquals(5.0, weightValue, .0)
                 assertEquals(getDate(2018, 11, 21), date)
                 assertEquals("Amelia Stępień", teacher)
             }
@@ -113,7 +113,7 @@ class GradesTest : BaseLocalTest() {
                 assertEquals("STR", symbol)
                 assertEquals("", description)
                 assertEquals("8,00", weight)
-                assertEquals(8, weightValue)
+                assertEquals(8.0, weightValue, .0)
                 assertEquals(getDate(2018, 11, 14), date)
                 assertEquals("Klaudia Dziedzic", teacher)
             }
@@ -133,7 +133,7 @@ class GradesTest : BaseLocalTest() {
                 assertEquals("+Odp", symbol)
                 assertEquals("Kordian", description)
                 assertEquals("5,00", weight)
-                assertEquals(5, weightValue)
+                assertEquals(5.0, weightValue, .0)
                 assertEquals(getDate(2018, 11, 7), date)
                 assertEquals("Amelia Stępień", teacher)
             }
@@ -153,7 +153,7 @@ class GradesTest : BaseLocalTest() {
                 assertEquals("A1", symbol)
                 assertEquals("Dzień Kobiet w naszej klasie", description)
                 assertEquals("1,00", weight)
-                assertEquals(1, weightValue)
+                assertEquals(1.0, weightValue, .0)
                 assertEquals(getDate(2018, 10, 31), date)
                 assertEquals("Patryk Maciejewski", teacher)
             }
@@ -173,7 +173,7 @@ class GradesTest : BaseLocalTest() {
                 assertEquals("MP1", symbol)
                 assertEquals("matura próbna", description)
                 assertEquals("0,00", weight)
-                assertEquals(0, weightValue)
+                assertEquals(0.0, weightValue, .0)
                 assertEquals(getDate(2018, 10, 24), date)
                 assertEquals("Jadwiga Czerwieńska", teacher)
             }
@@ -193,7 +193,7 @@ class GradesTest : BaseLocalTest() {
                 assertEquals("S2", symbol)
                 assertEquals("słownictwo (człowiek) 4.10", description)
                 assertEquals("10,00", weight)
-                assertEquals(0, weightValue)
+                assertEquals(0.0, weightValue, .0)
                 assertEquals(getDate(2018, 10, 4), date)
                 assertEquals("Jadwiga Czerwieńska", teacher)
             }
@@ -212,8 +212,8 @@ class GradesTest : BaseLocalTest() {
                 assertEquals("F04C4C", color)
                 assertEquals("ZAL", symbol)
                 assertEquals("", description)
-                assertEquals("10,00", weight)
-                assertEquals(0, weightValue)
+                assertEquals("5,50", weight)
+                assertEquals(0.0, weightValue, .0)
                 assertEquals(getDate(2018, 10, 3), date)
                 assertEquals("Jadwiga Czerwieńska", teacher)
             }

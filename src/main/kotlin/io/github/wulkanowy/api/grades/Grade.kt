@@ -41,7 +41,7 @@ class Grade {
 
     @SerializedName("Waga")
     @Selector("td", index = 3, converter = GradeWeightValueConverter::class)
-    var weightValue: Int = 0
+    var weightValue: Double = .0
 
     @SerializedName("DataOceny")
     var privateDate: GradeDate = GradeDate()
