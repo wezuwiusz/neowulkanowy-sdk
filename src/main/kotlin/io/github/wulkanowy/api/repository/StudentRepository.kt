@@ -47,7 +47,8 @@ import io.github.wulkanowy.api.grades.GradesStatisticsRequest
 import org.threeten.bp.Month
 import io.github.wulkanowy.api.attendance.AttendanceSummaryItemSerializer
 import io.github.wulkanowy.api.getScriptParam
-import java.text.DecimalFormat
+import java.lang.String.format
+import java.util.Locale
 
 class StudentRepository(private val api: StudentService) {
 
@@ -182,7 +183,7 @@ class StudentRepository(private val api: StudentService) {
                         value = values.first
                         date = privateDate
                         modifier = values.second
-                        weight = DecimalFormat("##0.00").format(weightValue)
+                        weight = format(Locale.FRANCE, "%.2f", weightValue)
                         weightValue = if (isGradeValid(entry)) weightValue else .0
                         color = if ("0" == color) "000000" else color.toInt().toString(16).toUpperCase()
                         symbol = symbol ?: ""
