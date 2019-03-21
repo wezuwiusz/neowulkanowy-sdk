@@ -1,6 +1,7 @@
 package io.github.wulkanowy.api
 
 import com.google.gson.GsonBuilder
+import com.google.gson.JsonParser
 import io.github.wulkanowy.api.grades.DateDeserializer
 import io.github.wulkanowy.api.grades.GradeDate
 import io.github.wulkanowy.api.interceptor.ErrorInterceptor
@@ -23,6 +24,7 @@ import retrofit2.converter.scalars.ScalarsConverterFactory
 abstract class BaseLocalTest : BaseTest() {
 
     val server = MockWebServer()
+    val jsonParser = JsonParser()
 
     @After
     fun tearDown() {
