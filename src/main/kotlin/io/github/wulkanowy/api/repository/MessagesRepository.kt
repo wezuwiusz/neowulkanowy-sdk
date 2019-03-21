@@ -1,7 +1,6 @@
 package io.github.wulkanowy.api.repository
 
 import io.github.wulkanowy.api.getScriptParam
-import io.github.wulkanowy.api.messages.DeleteMessageRequest
 import io.github.wulkanowy.api.messages.Message
 import io.github.wulkanowy.api.messages.Recipient
 import io.github.wulkanowy.api.messages.ReportingUnit
@@ -85,22 +84,6 @@ class MessagesRepository(private val api: MessagesService) {
                 getScriptParam("appGuid", res),
                 getScriptParam("version", res)
             ).map { it.data }
-        }
-    }
-
-    fun deleteMessages(messages: List<Pair<Int, Int>>): Single<Boolean> {
-        return api.getStart().flatMap { res ->
-            api.deleteMessage(
-                messages.map { (messageId, folderId) ->
-                    DeleteMessageRequest(
-                        messageId = messageId,
-                        folderId = folderId
-                    )
-                },
-                getScriptParam("antiForgeryToken", res),
-                getScriptParam("appGuid", res),
-                getScriptParam("version", res)
-            ).map { it.success }
         }
     }
 
