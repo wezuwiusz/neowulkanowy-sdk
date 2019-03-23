@@ -16,8 +16,8 @@ class TimetableTest : BaseLocalTest() {
 
     @Test
     fun getTimetableTest() {
-        assertEquals(13, snp.size)
-        assertEquals(13, student.size)
+        assertEquals(14, snp.size)
+        assertEquals(14, student.size)
     }
 
     @Test
@@ -79,7 +79,7 @@ class TimetableTest : BaseLocalTest() {
                 assertEquals("Język polski", subject)
                 assertEquals("Polonistka Joanna", teacher)
                 assertEquals("5", room)
-                assertEquals("poprzednio: Religia", info)
+                assertEquals("", info)
                 assertEquals("Religia", subjectOld)
                 assertEquals("Polonistka Joanna", teacherOld)
                 assertEquals("3", roomOld)
@@ -118,7 +118,7 @@ class TimetableTest : BaseLocalTest() {
 
     @Test
     fun getGroupLesson() {
-        listOf(snp[11], student[11]).map {
+        listOf(snp[12], student[12]).map {
             it.run {
                 // piątek, 0
                 assertEquals(0, number)
@@ -175,7 +175,7 @@ class TimetableTest : BaseLocalTest() {
                 assertEquals("zaw2", group)
                 assertEquals("Wychowawczy Kazimierz", teacher)
                 assertEquals("WG", room)
-                assertEquals("poprzednio: Naprawa komputera", info)
+                assertEquals("", info)
                 assertEquals("Naprawa komputera", subjectOld)
                 assertEquals("Naprawowy Andrzej", teacherOld)
                 assertEquals("32", roomOld)
@@ -221,7 +221,7 @@ class TimetableTest : BaseLocalTest() {
                 assertEquals("Język polski", subject)
                 assertEquals("Polonistka Joanna", teacher)
                 assertEquals("16", room)
-                assertEquals("oddział nieobecny, egzamin", info)
+                assertEquals("oddział nieobecny: egzamin", info)
                 assertEquals("", subjectOld)
                 assertEquals("", teacherOld)
                 assertEquals("", roomOld)
@@ -236,7 +236,7 @@ class TimetableTest : BaseLocalTest() {
 
     @Test
     fun getLesson_emptyOriginal() {
-        listOf(snp[12], student[12]).map {
+        listOf(snp[13], student[13]).map {
             it.run {
                 // piątek, 1
                 assertEquals(1, number)
@@ -319,6 +319,29 @@ class TimetableTest : BaseLocalTest() {
                 assertEquals("Matematyka", subjectOld)
                 assertEquals("", teacherOld)
                 assertEquals("", roomOld)
+
+                assertEquals(false, canceled)
+                assertEquals(true, changes)
+            }
+        }
+    }
+
+    @Test
+    fun getSimpleLesson_movedWithButton() {
+        listOf(snp[11], student[11]).map {
+            it.run {
+                // czwartek, 2
+                assertEquals(2, number)
+                assertEquals(getDate(2018, 9, 27, 8, 50, 0), start)
+
+                assertEquals("Podstawy przedsiębiorczości", subject)
+                assertEquals("", group)
+                assertEquals("", teacher)
+                assertEquals("", room)
+                assertEquals("Przeniesiona: z 8 godz. z 25.03.", info)
+                assertEquals("Urządzenia techniki komputerowej", subjectOld)
+                assertEquals("Nowak Karolina", teacherOld)
+                assertEquals("43", roomOld)
 
                 assertEquals(false, canceled)
                 assertEquals(true, changes)

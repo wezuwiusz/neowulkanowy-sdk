@@ -18,6 +18,7 @@
       }
       table span {
         font-size: smaller;
+        display: block;
       }
       .x-treelabel-ppl {
         background: #99f;
@@ -36,6 +37,8 @@
       table span[class=""] {
         background: #999;
       }
+
+
     </style>
 </head>
 <body>
@@ -246,7 +249,23 @@
                         <span class=''></span>
                     </div>
                 </td>
-                <td></td>
+                <td>
+                    <!-- @see TimetableTest#getSimpleLesson_movedWithButton() -->
+                    <!--Lekcja z zastępstwem z informacją w przycisku-->
+                    <div>
+                        <span class="">Podstawy przedsiębiorczości</span>
+                        <span class=""></span>
+                        <span class=""></span>
+                    </div>
+                    <div>
+                        <span class="x-treelabel-ppl x-treelabel-inv">Urządzenia techniki komputerowej</span>
+                        <span class="x-treelabel-ppl x-treelabel-inv">Nowak Karolina</span>
+                        <span class="x-treelabel-ppl x-treelabel-inv">43</span>
+                        <span class="x-treelabel-rlz">(przeniesiona)</span>
+                    </div>
+                    <button type="button" class="uwaga-btn">Uwaga</button>
+                    <div class="uwaga-panel">Podstawy przedsiębiorczości z 8 godz. z 25.03.</div>
+                </td>
                 <td></td>
             </tr>
             </tbody>
