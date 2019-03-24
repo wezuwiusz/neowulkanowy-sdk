@@ -30,9 +30,7 @@ class TimetableParser {
                             subjectOld = old.subject,
                             teacherOld = old.teacher,
                             roomOld = old.room,
-                            info = old.run {
-                                stripLessonInfo("${getFormattedLessonInfo(this.info)}, $info, poprzednio: $subject")
-                            }
+                            info = stripLessonInfo("${getFormattedLessonInfo(info)}, ${old.info}").replace("$subject ", "").capitalize()
                         )
                     }
                     else -> getLessonInfo(lesson, divs[1])
@@ -73,8 +71,8 @@ class TimetableParser {
         e.select(".uwaga-panel").run {
             if (!isEmpty()) {
                 val original = e.select("span").last().text().removeSurrounding("(", ")")
-                e.select("span").last().addClass(CLASS_REALIZED).text("($original, ${text()})")
-                e.removeAt(1)
+                e.select("span").last().addClass(CLASS_REALIZED).text("($original: ${text()})")
+                e.removeAt(e.size - 1)
             }
         }
     }
