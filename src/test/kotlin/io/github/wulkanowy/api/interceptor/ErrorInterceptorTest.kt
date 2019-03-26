@@ -4,6 +4,7 @@ import io.github.wulkanowy.api.Api
 import io.github.wulkanowy.api.BaseLocalTest
 import io.github.wulkanowy.api.login.LoginTest
 import io.github.wulkanowy.api.login.NotLoggedInException
+import io.github.wulkanowy.api.login.PasswordChangeRequiredException
 import io.github.wulkanowy.api.notes.Note
 import io.reactivex.observers.TestObserver
 import org.junit.Test
@@ -56,5 +57,13 @@ class ErrorInterceptorTest : BaseLocalTest() {
         val observer = TestObserver<List<Note>>()
         notes.subscribe(observer)
         observer.assertError(ServiceUnavailableException::class.java)
+    }
+
+    @Test
+    fun passwordChangeRequired() {
+        val notes = getSnpRepo(LoginTest::class.java, "PrzywracanieDostepu.html", Api.LoginType.ADFSLight).getNotes()
+        val observer = TestObserver<List<Note>>()
+        notes.subscribe(observer)
+        observer.assertError(PasswordChangeRequiredException::class.java)
     }
 }

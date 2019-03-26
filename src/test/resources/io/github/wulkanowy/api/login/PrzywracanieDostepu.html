@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="utf-8">
+    <title>Zmiana hasła użytkownika</title>
+</head>
+<body>
+<form action="/AccountManage/SetNewPassword?username=jan123&amp;returnTo=/" method="post">
+    <div class="mainDiv">
+        <div class="innerDiv">
+            <div>
+                Mechanizm bezpieczeństwa (ochrona przeciwko robotom i robakom internetowym) może
+                poprosić Cię o dodatkowe potwierdzenie. Postępuj zgodnie ze wskazówkami na ekranie.
+            </div>
+            <table id="tblPassword" border="0" cellpadding="3" cellspacing="3">
+                <tr>
+                    <td align="right">Login:</td>
+                    <td colspan="2">
+                        <input name="__RequestVerificationToken" type="hidden" value=""/>
+                        <span style="font-weight : bold">jan123</span>
+                        <input data-val="true" id="Username" name="Username" type="hidden" value="jan123"/></td>
+                </tr>
+                <tr>
+                    <td align="right">Obecne hasło:</td>
+                    <td>
+                        <input aria-required="true" id="OldPassword" name="OldPassword" type="password"/>
+                        <span class="field-validation-valid">(wymagane)</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td align="right">Nowe hasło:</td>
+                    <td>
+                        <input aria-required="true" id="NewPassword" name="NewPassword" title="Wymagana właściwa złożoność hasła" type="password"/>
+                        <div id="PasswordTooltip">
+                            Hasło musi spełniać następujące wymagania: <br/>
+                            - długość hasła: co najmniej <b>8</b> <br/>
+                            - liczba wielkich liter: co najmniej <b>1</b><br/>
+                            - liczba cyfr: co najmniej <b>1</b> <br/>
+                            - ważność hasła (liczba dni po których hasło wygasa): <b>180</b> <br/>
+                            - unikalność hasła (liczba dni w których hasło nie może się powtórzyć): <b>191</b>
+                        </div>
+                        <span class="field-validation-valid">(wymagane)</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td align="right">Powtórz nowe hasło:</td>
+                    <td>
+                        <input aria-required="true" name="RepeatedNewPassword" type="password"/>
+                        <span class="field-validation-valid">(wymagane)</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td>&nbsp;</td>
+                    <td>
+                        <input type="image" alt="Ustaw nowe hasło"/>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</form>
+</body>
+</html>
