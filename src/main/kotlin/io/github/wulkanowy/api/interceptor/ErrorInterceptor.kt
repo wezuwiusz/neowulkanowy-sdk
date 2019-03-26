@@ -3,6 +3,7 @@ package io.github.wulkanowy.api.interceptor
 import io.github.wulkanowy.api.ApiException
 import io.github.wulkanowy.api.login.AccountPermissionException
 import io.github.wulkanowy.api.login.BadCredentialsException
+import io.github.wulkanowy.api.login.PasswordChangeRequiredException
 import okhttp3.Interceptor
 import okhttp3.Response
 import org.jsoup.Jsoup
@@ -43,6 +44,7 @@ class ErrorInterceptor : Interceptor {
             "Przerwa techniczna" -> throw ServiceUnavailableException(doc.title())
             "Strona nie została odnaleziona" -> throw ApiException(doc.title())
             "Strona nie znaleziona" -> throw ApiException(doc.selectFirst("div div").text())
+            "Zmiana hasła użytkownika" -> throw PasswordChangeRequiredException("Wymagana zmiana hasła użytkownika")
         }
 
         doc.select("h2").text().let {
