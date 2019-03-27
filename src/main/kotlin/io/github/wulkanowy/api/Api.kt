@@ -76,6 +76,12 @@ class Api {
             field = value
         }
 
+    var classId: Int = 0
+        set(value) {
+            if (field != value) changeManager.reset()
+            field = value
+        }
+
     var diaryId: Int = 0
         set(value) {
             if (field != value) changeManager.reset()
@@ -169,7 +175,8 @@ class Api {
 
     private val studentStart by resettableLazy(changeManager) {
         if (0 == studentId) throw ApiException("Student id is not set")
-        StudentStartRepository(studentId, serviceManager.getStudentService(withLogin = true, interceptor = false))
+        if (0 == classId) throw ApiException("Class id is not set")
+        StudentStartRepository(studentId, classId, serviceManager.getStudentService(withLogin = true, interceptor = false))
     }
 
     private val snp by resettableLazy(changeManager) {
