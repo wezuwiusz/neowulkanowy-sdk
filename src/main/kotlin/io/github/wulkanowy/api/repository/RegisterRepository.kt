@@ -50,13 +50,14 @@ class RegisterRepository(
                                     studentName = student.name,
                                     schoolSymbol = getExtractedSchoolSymbolFromUrl(schoolUrl),
                                     schoolName = student.description,
+                                    classId = student.classId,
                                     loginType = loginType
                                 )
                             }
                         }
                     }
                 }
-        }.toList().map { it.flatten().distinctBy { pupil -> pupil.studentId to pupil.schoolSymbol } }
+        }.toList().map { it.flatten().distinctBy { pupil -> listOf(pupil.studentId, pupil.classId, pupil.schoolSymbol) } }
     }
 
     private fun getStudents(symbol: String, schoolUrl: String): Single<List<StudentAndParentResponse.Student>> {
@@ -69,14 +70,16 @@ class RegisterRepository(
                 }
             }
         } else student.getSchoolInfo(url.generate(ServiceManager.UrlGenerator.Site.STUDENT) + "UczenDziennik.mvc/Get")
-            .map { diary -> diary.data?.distinctBy { it.studentId } }
+            .map { it.data }
+            .map { diary -> diary.distinctBy { listOf(it.studentId, it.semesters[0].classId) } }
             .flatMap { diaries ->
                 student.getStart(url.generate(ServiceManager.UrlGenerator.Site.STUDENT) + "Start").map { startPage ->
                     diaries.map {
                         StudentAndParentResponse.Student().apply {
                             id = it.studentId
                             name = "${it.studentName} ${it.studentSurname}"
-                            description = getScriptParam("organizationName", startPage, it.symbol + " " + (it.year - it.level + 1))
+                            description = "Klasa ${it.symbol} - " + getScriptParam("organizationName", startPage, it.symbol + " " + (it.year - it.level + 1))
+                            classId = it.semesters[0].classId
                         }
                     }
                 }

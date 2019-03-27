@@ -9,5 +9,6 @@ data class Student(
     val studentName: String,
     val schoolSymbol: String,
     val schoolName: String,
+    val classId: Int,
     val loginType: Api.LoginType
 )
