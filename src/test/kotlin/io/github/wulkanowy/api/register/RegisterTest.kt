@@ -24,12 +24,21 @@ class RegisterTest : BaseLocalTest() {
                 getService(LoginService::class.java, "http://fakelog.localhost:3000/", true, true, false, Api.LoginType.STANDARD))
     }
 
-    private val register by lazy {
+    private val registerSnp by lazy {
         RegisterRepository("default", "jan@fakelog.localhost", "jan123", false, login,
-                getService(RegisterService::class.java, "http://fakelog.localhost:3000/Default/", true, false, false),
-                getService(StudentAndParentService::class.java, "http://fakelog.localhost:3000/"),
-                getService(StudentService::class.java, "http://fakelog.localhost:3000"),
-                ServiceManager.UrlGenerator("", "", "", "")
+            getService(RegisterService::class.java, "http://fakelog.localhost:3000/Default/", true, false, false),
+            getService(StudentAndParentService::class.java, "http://fakelog.localhost:3000/"),
+            getService(StudentService::class.java, "http://fakelog.localhost:3000"),
+            ServiceManager.UrlGenerator("http", "fakelog.localhost:3000", "Default", "123")
+        )
+    }
+
+    private val registerStudent by lazy {
+        RegisterRepository("default", "jan@fakelog.localhost", "jan123", true, login,
+            getService(RegisterService::class.java, "http://fakelog.localhost:3000/Default/", true, false, false),
+            getService(StudentAndParentService::class.java, "http://fakelog.localhost:3000/"),
+            getService(StudentService::class.java, "http://fakelog.localhost:3000", false),
+            ServiceManager.UrlGenerator("http", "fakelog.localhost:3000", "default", "123")
         )
     }
 
@@ -39,7 +48,7 @@ class RegisterTest : BaseLocalTest() {
     }
 
     @Test
-    fun pupilsTest() {
+    fun pupilsTest_snp() {
         server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("LoginPage-standard.html").readText()))
         server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("Logowanie-uonet.html").readText()))
         server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("Login-success.html").readText()))
@@ -53,10 +62,45 @@ class RegisterTest : BaseLocalTest() {
         server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("Logowanie-brak-dostepu.html").readText()))
         server.start(3000)
 
-        val res = register.getStudents().blockingGet()
+        val res = registerSnp.getStudents().blockingGet()
 
         assertEquals(1, res.size)
         assertEquals("Jan Kowal", res[0].studentName)
+    }
+
+    @Test
+    fun filterStudentsByClass() {
+        server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("LoginPage-standard.html").readText()))
+        server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("Logowanie-uonet.html").readText()))
+        server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("Login-success.html").readText()))
+        server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("LoginPage-standard.html").readText()))
+        server.enqueue(MockResponse().setBody(RegisterTest::class.java.getResource("UczenDziennik-multi.json").readText()))
+        server.enqueue(MockResponse().setBody(RegisterTest::class.java.getResource("WitrynaUcznia.html").readText()))
+        // 4x symbol
+        server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("Logowanie-brak-dostepu.html").readText()))
+        server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("Logowanie-brak-dostepu.html").readText()))
+        server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("Logowanie-brak-dostepu.html").readText()))
+        server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("Logowanie-brak-dostepu.html").readText()))
+
+        server.start(3000)
+
+        val res = registerStudent.getStudents().blockingGet()
+
+        assertEquals(2, res.size)
+
+        res[0].run {
+            assertEquals(3881, studentId)
+            assertEquals("Jan Kowalski", studentName)
+            assertEquals(121, classId)
+            assertEquals("Klasa Te - Publiczna szkoła Wulkanowego nr 1 w fakelog.cf", schoolName)
+        }
+
+        res[1].run {
+            assertEquals(3881, studentId)
+            assertEquals("Jan Kowalski", studentName)
+            assertEquals(119, classId)
+            assertEquals("Klasa Ti - Publiczna szkoła Wulkanowego nr 1 w fakelog.cf", schoolName)
+        }
     }
 
     @Test
@@ -94,7 +138,7 @@ class RegisterTest : BaseLocalTest() {
         server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("Logowanie-brak-dostepu.html").readText()))
         server.start(3000)
 
-        val res = register.getStudents().blockingGet()
+        val res = registerSnp.getStudents().blockingGet()
         assertEquals(Api.LoginType.STANDARD, res[0].loginType)
     }
 
@@ -115,7 +159,7 @@ class RegisterTest : BaseLocalTest() {
         server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("Logowanie-brak-dostepu.html").readText()))
         server.start(3000)
 
-        val res = register.getStudents().blockingGet()
+        val res = registerSnp.getStudents().blockingGet()
         assertEquals(Api.LoginType.ADFS, res[0].loginType)
     }
 
@@ -137,7 +181,7 @@ class RegisterTest : BaseLocalTest() {
         server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("Logowanie-brak-dostepu.html").readText()))
         server.start(3000)
 
-        val res = register.getStudents().blockingGet()
+        val res = registerSnp.getStudents().blockingGet()
         assertEquals(Api.LoginType.ADFSCards, res[0].loginType)
     }
 
@@ -157,7 +201,7 @@ class RegisterTest : BaseLocalTest() {
         server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("Logowanie-brak-dostepu.html").readText()))
         server.start(3000)
 
-        val res = register.getStudents().blockingGet()
+        val res = registerSnp.getStudents().blockingGet()
         assertEquals(Api.LoginType.ADFSLight, res[0].loginType)
     }
 }

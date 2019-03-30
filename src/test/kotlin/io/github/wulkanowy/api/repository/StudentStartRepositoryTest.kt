@@ -32,6 +32,7 @@ class StudentStartRepositoryTest : BaseLocalTest() {
         server.start(3000) //
 
         api.studentId = 1
+        api.classId = 1
 
         val semesters = api.getSemesters()
         val semestersObserver = TestObserver<List<Semester>>()
@@ -49,11 +50,52 @@ class StudentStartRepositoryTest : BaseLocalTest() {
     }
 
     @Test
+    fun getSemesters_empty() {
+        server.enqueue(MockResponse().setBody(RegisterTest::class.java.getResource("UczenDziennik.json").readText()))
+        server.start(3000) //
+
+        api.studentId = 1
+        api.classId = 2 //
+
+        val semesters = api.getSemesters()
+        val semestersObserver = TestObserver<List<Semester>>()
+        semesters.subscribe(semestersObserver)
+        semestersObserver.assertComplete()
+
+        val items = semestersObserver.values()[0]
+
+        assertEquals(0, items.size)
+    }
+
+    @Test
+    fun getSemesters_studentWithMultiClasses() {
+        server.enqueue(MockResponse().setBody(RegisterTest::class.java.getResource("UczenDziennik-multi.json").readText()))
+        server.start(3000) //
+
+        api.studentId = 3881
+        api.classId = 121
+
+        val semesters = api.getSemesters()
+        val semestersObserver = TestObserver<List<Semester>>()
+        semesters.subscribe(semestersObserver)
+        semestersObserver.assertComplete()
+
+        val items = semestersObserver.values()[0]
+
+        assertEquals(2, items.size)
+
+        assertEquals(714, items[0].semesterId)
+        assertEquals(713, items[1].semesterId)
+        assertTrue(items.single { it.current }.current)
+    }
+
+    @Test
     fun getSemesters_graduate() {
         server.enqueue(MockResponse().setBody(RegisterTest::class.java.getResource("UczenDziennik.json").readText()))
         server.start(3000) //
 
         api.studentId = 2
+        api.classId = 2
 
         val semesters = api.getSemesters()
         val semestersObserver = TestObserver<List<Semester>>()

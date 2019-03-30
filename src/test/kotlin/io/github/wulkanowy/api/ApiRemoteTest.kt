@@ -52,6 +52,7 @@ class ApiRemoteTest : BaseTest() {
             schoolSymbol = "123456"
             studentId = 1
             diaryId = 101
+            classId = 1
             useNewStudent = true
             androidVersion = "9.0"
             buildTag = "Wulkanowy"
@@ -77,7 +78,8 @@ class ApiRemoteTest : BaseTest() {
             assertEquals("Jan Kowalski", studentName)
             assertEquals("123456", schoolSymbol)
             assertEquals(1, studentId)
-            assertEquals("Publiczna szkoła Wulkanowego nr 1 w fakelog.cf", schoolName)
+            assertEquals(1, classId)
+            assertEquals("Klasa A - Publiczna szkoła Wulkanowego nr 1 w fakelog.cf", schoolName)
         }
     }
 

@@ -27,6 +27,8 @@ class StudentAndParentResponse {
         lateinit var name: String
 
         lateinit var description: String
+
+        var classId: Int = 0
     }
 
     class Diary {

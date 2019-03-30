@@ -8,12 +8,18 @@ import org.threeten.bp.LocalDate.now
 
 class StudentStartRepository(
     private val studentId: Int,
+    private val classId: Int,
     private val api: StudentService
 ) {
 
     fun getSemesters(): Single<List<Semester>> {
         return api.getDiaries()
-            .map { it.data?.filter { diary -> diary.studentId == studentId } }
+            .map { it.data }
+            .map { diaries ->
+                diaries
+                    .filter { diary -> diary.studentId == studentId }
+                    .filter { diary -> diary.semesters[0].classId == classId }
+            }
             .map { diaries ->
                 diaries.map { diary ->
                     diary.semesters.map {
@@ -31,7 +37,7 @@ class StudentStartRepository(
                     }
                 }.flatten().sortedByDescending { it.semesterId }
             }.map {
-                if (it.singleOrNull { semester -> semester.current } == null) it.apply { first().current = true }
+                if (it.isNotEmpty() && it.singleOrNull { semester -> semester.current } == null) it.apply { first().current = true }
                 else it
             }
     }
