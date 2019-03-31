@@ -18,6 +18,7 @@ import io.reactivex.Single
 import org.jsoup.Jsoup
 import org.jsoup.parser.Parser
 import java.net.URL
+import java.text.Normalizer
 
 class RegisterRepository(
     private val startSymbol: String,
@@ -32,20 +33,20 @@ class RegisterRepository(
 ) {
 
     fun getStudents(): Single<List<Student>> {
-        return getSymbols().flatMapObservable { Observable.fromIterable(it) }.flatMap { symbol ->
-            loginHelper.sendCertificate(symbol.second, symbol.second.action.replace(startSymbol, symbol.first))
+        return getSymbols().flatMapObservable { Observable.fromIterable(it) }.flatMap { (symbol, certificate) ->
+            loginHelper.sendCertificate(certificate, certificate.action.replace(startSymbol.getNormalizedSymbol(), symbol))
                 .onErrorResumeNext { t ->
                     if (t is AccountPermissionException) Single.just(SendCertificateResponse())
                     else Single.error(t)
                 }
                 .flatMapObservable { Observable.fromIterable(if (useNewStudent) it.studentSchools else it.oldStudentSchools) }
                 .flatMapSingle { schoolUrl ->
-                    getLoginType(symbol.first).flatMap { loginType ->
-                        getStudents(symbol.first, schoolUrl).map {
+                    getLoginType(symbol).flatMap { loginType ->
+                        getStudents(symbol, schoolUrl).map {
                             it.map { student ->
                                 Student(
                                     email = email,
-                                    symbol = symbol.first,
+                                    symbol = symbol,
                                     studentId = student.id,
                                     studentName = student.name,
                                     schoolSymbol = getExtractedSchoolSymbolFromUrl(schoolUrl),
@@ -57,7 +58,11 @@ class RegisterRepository(
                         }
                     }
                 }
-        }.toList().map { it.flatten().distinctBy { pupil -> listOf(pupil.studentId, pupil.classId, pupil.schoolSymbol) } }
+        }.toList().map {
+            it.flatten().distinctBy { pupil ->
+                listOf(pupil.studentId, pupil.classId, pupil.schoolSymbol)
+            }
+        }
     }
 
     private fun getStudents(symbol: String, schoolUrl: String): Single<List<StudentAndParentResponse.Student>> {
@@ -87,7 +92,7 @@ class RegisterRepository(
     }
 
     private fun getSymbols(): Single<List<Pair<String, CertificateResponse>>> {
-        return getLoginType(startSymbol).map {
+        return getLoginType(startSymbol.getNormalizedSymbol()).map {
             loginHelper.apply { loginType = it }
         }.flatMap { login ->
             login.sendCredentials(email, password).flatMap { Single.just(it) }.flatMap { cert ->
@@ -122,5 +127,13 @@ class RegisterRepository(
         }
 
         return path[2]
+    }
+
+    private fun String.getNormalizedSymbol(): String {
+        return trim().toLowerCase().replace("default", "").run {
+            Normalizer.normalize(this, Normalizer.Form.NFD).run {
+                "\\p{InCombiningDiacriticalMarks}+".toRegex().replace(this, "")
+            }
+        }.replace("[^a-z]".toRegex(), "").ifBlank { "Default" }
     }
 }
