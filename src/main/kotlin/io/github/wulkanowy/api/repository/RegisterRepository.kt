@@ -51,6 +51,7 @@ class RegisterRepository(
                                     studentName = student.name,
                                     schoolSymbol = getExtractedSchoolSymbolFromUrl(schoolUrl),
                                     schoolName = student.description,
+                                    className = student.className,
                                     classId = student.classId,
                                     loginType = loginType
                                 )
@@ -72,11 +73,13 @@ class RegisterRepository(
             res.students.map { student ->
                 student.apply {
                     description = res.schoolName
+                    className = res.diaries[0].name
                 }
             }
         } else student.getSchoolInfo(url.generate(ServiceManager.UrlGenerator.Site.STUDENT) + "UczenDziennik.mvc/Get")
             .map { it.data }
             .map { it.filter { diary -> diary.semesters != null } }
+            .map { it.sortedByDescending { diary -> diary.level } }
             .map { diary -> diary.distinctBy { listOf(it.studentId, it.semesters!![0].classId) } }
             .flatMap { diaries ->
                 student.getStart(url.generate(ServiceManager.UrlGenerator.Site.STUDENT) + "Start").map { startPage ->
@@ -84,7 +87,8 @@ class RegisterRepository(
                         StudentAndParentResponse.Student().apply {
                             id = it.studentId
                             name = "${it.studentName} ${it.studentSurname}"
-                            description = "Klasa ${it.symbol} - " + getScriptParam("organizationName", startPage, it.symbol + " " + (it.year - it.level + 1))
+                            description = getScriptParam("organizationName", startPage, it.symbol + " " + (it.year - it.level + 1))
+                            className = it.level.toString() + it.symbol
                             classId = it.semesters!![0].classId
                         }
                     }

@@ -79,7 +79,8 @@ class ApiRemoteTest : BaseTest() {
             assertEquals("123456", schoolSymbol)
             assertEquals(1, studentId)
             assertEquals(1, classId)
-            assertEquals("Klasa A - Publiczna szkoła Wulkanowego nr 1 w fakelog.cf", schoolName)
+            assertEquals("4A", className)
+            assertEquals("Publiczna szkoła Wulkanowego nr 1 w fakelog.cf", schoolName)
         }
     }
 
