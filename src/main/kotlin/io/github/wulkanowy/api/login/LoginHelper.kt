@@ -49,7 +49,8 @@ class LoginHelper(
             Api.LoginType.AUTO -> throw ApiException("You must first specify LoginType before logging in")
             Api.LoginType.STANDARD -> sendStandard(email, password)
             Api.LoginType.ADFS -> sendAdfs(email, password)
-            Api.LoginType.ADFSLight -> sendADFSLight(email, password)
+            Api.LoginType.ADFSLight -> sendADFSLightGeneric(email, password, Api.LoginType.ADFSLight)
+            Api.LoginType.ADFSLightScoped -> sendADFSLightGeneric(email, password, Api.LoginType.ADFSLightScoped)
             Api.LoginType.ADFSCards -> sendADFSCards(email, password)
         }
     }
@@ -70,18 +71,22 @@ class LoginHelper(
         )).map { certificateAdapter.fromHtml(it) }
     }
 
-    private fun sendADFSLight(email: String, password: String): Single<CertificateResponse> {
-        return api.sendADFSForm(getADFSUrl(Api.LoginType.ADFSLight), mapOf(
+    private fun sendADFSLightGeneric(email: String, password: String, type: Api.LoginType): Single<CertificateResponse> {
+        return api.sendADFSForm(
+            getADFSUrl(type), mapOf(
                 "Username" to email,
                 "Password" to password,
                 "x" to "0",
                 "y" to "0"
-        )).map { certificateAdapter.fromHtml(it) }.flatMap {
-            api.sendADFSForm(it.action, mapOf(
+            )
+        ).map { certificateAdapter.fromHtml(it) }.flatMap {
+            api.sendADFSForm(
+                it.action, mapOf(
                     "wa" to it.wa,
                     "wresult" to it.wresult,
                     "wctx" to it.wctx
-            ))
+                )
+            )
         }.map { certificateAdapter.fromHtml(it) }
     }
 
@@ -140,6 +145,7 @@ class LoginHelper(
         val id = when (type) {
             Api.LoginType.ADFS -> "adfs"
             Api.LoginType.ADFSCards -> "eSzkola"
+            Api.LoginType.ADFSLightScoped -> "ADFSLight"
             else -> "ADFS"
         }
 
@@ -149,7 +155,8 @@ class LoginHelper(
                 "&wct=" + encode(now(ZoneId.of("UTC")).format(DateTimeFormatter.ISO_LOCAL_DATE_TIME) + "Z")
 
         return when (type) {
-            Api.LoginType.ADFSLight -> "$schema://adfslight.$host/LoginPage.aspx?ReturnUrl=" + encode("/") + encode(query)
+            Api.LoginType.ADFSLight -> "$schema://adfslight.$host/LoginPage.aspx?ReturnUrl=" + encode("/$query")
+            Api.LoginType.ADFSLightScoped -> "$schema://adfslight.$host/$symbol/LoginPage.aspx?ReturnUrl=" + encode("/$symbol/default.aspx$query")
             else -> "$schema://adfs.$host/adfs/ls/$query"
         }
     }

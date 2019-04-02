@@ -111,7 +111,8 @@ class Api {
         STANDARD,
         ADFS,
         ADFSCards,
-        ADFSLight
+        ADFSLight,
+        ADFSLightScoped
     }
 
     private val appInterceptors: MutableMap<Int, Pair<Interceptor, Boolean>> = mutableMapOf()

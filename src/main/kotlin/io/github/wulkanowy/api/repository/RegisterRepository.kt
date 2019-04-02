@@ -113,12 +113,20 @@ class RegisterRepository(
     }
 
     private fun getLoginType(symbol: String): Single<Api.LoginType> {
-        return register.getFormType("/$symbol/Account/LogOn").map {
+        return register.getFormType("/$symbol/Account/LogOn").map { it.page }.map {
             when {
-                it.page.select(".LogOnBoard input[type=submit]").isNotEmpty() -> Api.LoginType.STANDARD
-                it.page.select("form[name=form1] #SubmitButton").isNotEmpty() -> Api.LoginType.ADFS
-                it.page.select("form #SubmitButton").isNotEmpty() -> Api.LoginType.ADFSLight
-                it.page.select("#PassiveSignInButton").isNotEmpty() -> Api.LoginType.ADFSCards
+                it.select(".LogOnBoard input[type=submit]").isNotEmpty() -> Api.LoginType.STANDARD
+                it.select("form[name=form1] #SubmitButton").isNotEmpty() -> Api.LoginType.ADFS
+                it.select("form #SubmitButton").isNotEmpty() -> {
+                    it.selectFirst("form").attr("action").run {
+                        when {
+                            startsWith("/LoginPage.aspx") -> Api.LoginType.ADFSLight
+                            startsWith("/$symbol/LoginPage.aspx") -> Api.LoginType.ADFSLightScoped
+                            else -> throw ApiException("Nieznany typ dziennika ADFS")
+                        }
+                    }
+                }
+                it.select("#PassiveSignInButton").isNotEmpty() -> Api.LoginType.ADFSCards
                 else -> throw ApiException("Nieznany typ dziennika")
             }
         }
