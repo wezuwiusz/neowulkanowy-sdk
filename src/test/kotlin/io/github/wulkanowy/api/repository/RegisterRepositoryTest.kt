@@ -102,6 +102,23 @@ class RegisterRepositoryTest : BaseLocalTest() {
     }
 
     @Test
+    fun normalizeInvalidSymbol_trimMultipleSpaces() {
+        server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("LoginPage-standard.html").readText()))
+        server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("Logowanie-uonet.html").readText()))
+        server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("Logowanie-brak-dostepu.html").readText()))
+        server.enqueue(MockResponse().setBody(ErrorInterceptorTest::class.java.getResource("Offline.html").readText()))
+
+        server.start(3000)
+
+        val res = getRegisterRepository(" Niepoprawny    symbol no ale + ").getStudents()
+        val observer = TestObserver<List<Student>>()
+        res.subscribe(observer)
+        observer.assertTerminated()
+
+        assertEquals("/niepoprawnysymbolnoale/Account/LogOn", server.takeRequest().path)
+    }
+
+    @Test
     fun normalizeInvalidSymbol_emptyFallback() {
         server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("LoginPage-standard.html").readText()))
         server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("Logowanie-uonet.html").readText()))
