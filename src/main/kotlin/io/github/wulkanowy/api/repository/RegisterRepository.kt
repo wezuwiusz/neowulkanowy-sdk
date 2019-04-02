@@ -76,7 +76,8 @@ class RegisterRepository(
             }
         } else student.getSchoolInfo(url.generate(ServiceManager.UrlGenerator.Site.STUDENT) + "UczenDziennik.mvc/Get")
             .map { it.data }
-            .map { diary -> diary.distinctBy { listOf(it.studentId, it.semesters[0].classId) } }
+            .map { it.filter { diary -> diary.semesters != null } }
+            .map { diary -> diary.distinctBy { listOf(it.studentId, it.semesters!![0].classId) } }
             .flatMap { diaries ->
                 student.getStart(url.generate(ServiceManager.UrlGenerator.Site.STUDENT) + "Start").map { startPage ->
                     diaries.map {
@@ -84,7 +85,7 @@ class RegisterRepository(
                             id = it.studentId
                             name = "${it.studentName} ${it.studentSurname}"
                             description = "Klasa ${it.symbol} - " + getScriptParam("organizationName", startPage, it.symbol + " " + (it.year - it.level + 1))
-                            classId = it.semesters[0].classId
+                            classId = it.semesters!![0].classId
                         }
                     }
                 }

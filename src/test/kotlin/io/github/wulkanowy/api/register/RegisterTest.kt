@@ -12,6 +12,7 @@ import io.github.wulkanowy.api.service.RegisterService
 import io.github.wulkanowy.api.service.ServiceManager
 import io.github.wulkanowy.api.service.StudentAndParentService
 import io.github.wulkanowy.api.service.StudentService
+import io.reactivex.observers.TestObserver
 import okhttp3.mockwebserver.MockResponse
 import org.junit.Assert.assertEquals
 import org.junit.Test
@@ -100,6 +101,34 @@ class RegisterTest : BaseLocalTest() {
             assertEquals("Jan Kowalski", studentName)
             assertEquals(119, classId)
             assertEquals("Klasa Ti - Publiczna szkoła Wulkanowego nr 1 w fakelog.cf", schoolName)
+        }
+    }
+
+    @Test
+    fun getStudents_filterDiariesWithoutSemester() {
+        server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("LoginPage-standard.html").readText()))
+        server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("Logowanie-uonet.html").readText()))
+        server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("Login-success.html").readText()))
+        server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("LoginPage-standard.html").readText()))
+        server.enqueue(MockResponse().setBody(RegisterTest::class.java.getResource("UczenDziennik-no-semester.json").readText()))
+        server.enqueue(MockResponse().setBody(RegisterTest::class.java.getResource("WitrynaUcznia.html").readText()))
+        // 4x symbol
+        server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("Logowanie-brak-dostepu.html").readText()))
+        server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("Logowanie-brak-dostepu.html").readText()))
+        server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("Logowanie-brak-dostepu.html").readText()))
+        server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("Logowanie-brak-dostepu.html").readText()))
+
+        server.start(3000)
+
+        val res = registerStudent.getStudents().blockingGet()
+
+        assertEquals(1, res.size)
+
+        res[0].run {
+            assertEquals(1, studentId)
+            assertEquals("Jan Kowalski", studentName)
+            assertEquals(1, classId)
+            assertEquals("Klasa A - Publiczna szkoła Wulkanowego nr 1 w fakelog.cf", schoolName)
         }
     }
 
