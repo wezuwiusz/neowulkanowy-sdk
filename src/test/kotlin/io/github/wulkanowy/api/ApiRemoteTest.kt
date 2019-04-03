@@ -95,18 +95,20 @@ class ApiRemoteTest : BaseTest() {
 
         values[0].run {
             assertEquals(15, diaryId)
-            assertEquals("4A 2018", diaryName)
+            assertEquals("4A", diaryName)
 //            assertEquals(true, current)
         }
 
         values[3].run {
             assertEquals(13, diaryId)
-            assertEquals("3A 2017", diaryName)
+            assertEquals("3A", diaryName)
+            assertEquals(2017, schoolYear)
         }
 
         values[5].run {
             assertEquals(11, diaryId)
-            assertEquals("2A 2016", diaryName)
+            assertEquals("2A", diaryName)
+            assertEquals(2016, schoolYear)
 //            assertEquals(11, semesterId)
 //            assertEquals(1, semesterNumber)
         }

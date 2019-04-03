@@ -200,5 +200,7 @@ class StudentAndParentStartRepositoryTest : BaseLocalTest() {
 
         assertEquals(1234567, items[0].semesterId)
         assertEquals(1234568, items[1].semesterId)
+        assertEquals(2015, items[0].schoolYear)
+        assertEquals(2015, items[1].schoolYear)
     }
 }
