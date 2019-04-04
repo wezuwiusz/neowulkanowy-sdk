@@ -114,7 +114,8 @@ class TimetableParser {
             teacher = spans[1 + o].text(),
             room = spans[2 + o].text(),
             info = getFormattedLessonInfo(spans.getOrNull(3 + o)?.text()),
-            canceled = spans.last().hasClass(CLASS_REALIZED)
+            canceled = spans.first().hasClass(CLASS_MOVED_OR_CANCELED),
+            changes = spans.first().hasClass(CLASS_CHANGES)
         )
     }
 

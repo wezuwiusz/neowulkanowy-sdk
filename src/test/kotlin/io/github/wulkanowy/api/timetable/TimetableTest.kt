@@ -16,8 +16,8 @@ class TimetableTest : BaseLocalTest() {
 
     @Test
     fun getTimetableTest() {
-        assertEquals(14, snp.size)
-        assertEquals(14, student.size)
+        assertEquals(15, snp.size)
+        assertEquals(15, student.size)
     }
 
     @Test
@@ -251,8 +251,8 @@ class TimetableTest : BaseLocalTest() {
                 assertEquals("", teacherOld)
                 assertEquals("", roomOld)
 
-                assertEquals(true, canceled)
-                assertEquals(false, changes)
+                assertEquals(false, canceled)
+                assertEquals(true, changes)
             }
         }
     }
@@ -345,6 +345,29 @@ class TimetableTest : BaseLocalTest() {
 
                 assertEquals(false, canceled)
                 assertEquals(true, changes)
+            }
+        }
+    }
+
+    @Test
+    fun getSimpleLesson_canceledWithoutReason() {
+        listOf(snp[14], student[14]).map {
+            it.run {
+                // piątek, 2
+                assertEquals(2, number)
+                assertEquals(getDate(2018, 9, 28, 8, 50, 0), start)
+
+                assertEquals("Wychowanie fizyczne", subject)
+                assertEquals("CH", group)
+                assertEquals("Imię Nauczyciela", teacher)
+                assertEquals("", room)
+                assertEquals("", info)
+                assertEquals("", subjectOld)
+                assertEquals("", teacherOld)
+                assertEquals("", roomOld)
+
+                assertEquals(true, canceled)
+                assertEquals(false, changes)
             }
         }
     }
