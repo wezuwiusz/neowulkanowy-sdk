@@ -28,6 +28,8 @@ class StudentAndParentResponse {
 
         lateinit var description: String
 
+        lateinit var className: String
+
         var classId: Int = 0
     }
 

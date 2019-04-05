@@ -18,6 +18,7 @@ import io.reactivex.Single
 import org.jsoup.Jsoup
 import org.jsoup.parser.Parser
 import java.net.URL
+import java.text.Normalizer
 
 class RegisterRepository(
     private val startSymbol: String,
@@ -32,24 +33,25 @@ class RegisterRepository(
 ) {
 
     fun getStudents(): Single<List<Student>> {
-        return getSymbols().flatMapObservable { Observable.fromIterable(it) }.flatMap { symbol ->
-            loginHelper.sendCertificate(symbol.second, symbol.second.action.replace(startSymbol, symbol.first))
+        return getSymbols().flatMapObservable { Observable.fromIterable(it) }.flatMap { (symbol, certificate) ->
+            loginHelper.sendCertificate(certificate, certificate.action.replace(startSymbol.getNormalizedSymbol(), symbol))
                 .onErrorResumeNext { t ->
                     if (t is AccountPermissionException) Single.just(SendCertificateResponse())
                     else Single.error(t)
                 }
                 .flatMapObservable { Observable.fromIterable(if (useNewStudent) it.studentSchools else it.oldStudentSchools) }
                 .flatMapSingle { schoolUrl ->
-                    getLoginType(symbol.first).flatMap { loginType ->
-                        getStudents(symbol.first, schoolUrl).map {
+                    getLoginType(symbol).flatMap { loginType ->
+                        getStudents(symbol, schoolUrl).map {
                             it.map { student ->
                                 Student(
                                     email = email,
-                                    symbol = symbol.first,
+                                    symbol = symbol,
                                     studentId = student.id,
                                     studentName = student.name,
                                     schoolSymbol = getExtractedSchoolSymbolFromUrl(schoolUrl),
                                     schoolName = student.description,
+                                    className = student.className,
                                     classId = student.classId,
                                     loginType = loginType
                                 )
@@ -57,7 +59,11 @@ class RegisterRepository(
                         }
                     }
                 }
-        }.toList().map { it.flatten().distinctBy { pupil -> listOf(pupil.studentId, pupil.classId, pupil.schoolSymbol) } }
+        }.toList().map {
+            it.flatten().distinctBy { pupil ->
+                listOf(pupil.studentId, pupil.classId, pupil.schoolSymbol)
+            }
+        }
     }
 
     private fun getStudents(symbol: String, schoolUrl: String): Single<List<StudentAndParentResponse.Student>> {
@@ -67,19 +73,23 @@ class RegisterRepository(
             res.students.map { student ->
                 student.apply {
                     description = res.schoolName
+                    className = res.diaries[0].name
                 }
             }
         } else student.getSchoolInfo(url.generate(ServiceManager.UrlGenerator.Site.STUDENT) + "UczenDziennik.mvc/Get")
             .map { it.data }
-            .map { diary -> diary.distinctBy { listOf(it.studentId, it.semesters[0].classId) } }
+            .map { it.filter { diary -> diary.semesters != null } }
+            .map { it.sortedByDescending { diary -> diary.level } }
+            .map { diary -> diary.distinctBy { listOf(it.studentId, it.semesters!![0].classId) } }
             .flatMap { diaries ->
                 student.getStart(url.generate(ServiceManager.UrlGenerator.Site.STUDENT) + "Start").map { startPage ->
                     diaries.map {
                         StudentAndParentResponse.Student().apply {
                             id = it.studentId
                             name = "${it.studentName} ${it.studentSurname}"
-                            description = "Klasa ${it.symbol} - " + getScriptParam("organizationName", startPage, it.symbol + " " + (it.year - it.level + 1))
-                            classId = it.semesters[0].classId
+                            description = getScriptParam("organizationName", startPage, it.symbol + " " + (it.year - it.level + 1))
+                            className = it.level.toString() + it.symbol
+                            classId = it.semesters!![0].classId
                         }
                     }
                 }
@@ -87,7 +97,7 @@ class RegisterRepository(
     }
 
     private fun getSymbols(): Single<List<Pair<String, CertificateResponse>>> {
-        return getLoginType(startSymbol).map {
+        return getLoginType(startSymbol.getNormalizedSymbol()).map {
             loginHelper.apply { loginType = it }
         }.flatMap { login ->
             login.sendCredentials(email, password).flatMap { Single.just(it) }.flatMap { cert ->
@@ -103,12 +113,20 @@ class RegisterRepository(
     }
 
     private fun getLoginType(symbol: String): Single<Api.LoginType> {
-        return register.getFormType("/$symbol/Account/LogOn").map {
+        return register.getFormType("/$symbol/Account/LogOn").map { it.page }.map {
             when {
-                it.page.select(".LogOnBoard input[type=submit]").isNotEmpty() -> Api.LoginType.STANDARD
-                it.page.select("form[name=form1] #SubmitButton").isNotEmpty() -> Api.LoginType.ADFS
-                it.page.select("form #SubmitButton").isNotEmpty() -> Api.LoginType.ADFSLight
-                it.page.select("#PassiveSignInButton").isNotEmpty() -> Api.LoginType.ADFSCards
+                it.select(".LogOnBoard input[type=submit]").isNotEmpty() -> Api.LoginType.STANDARD
+                it.select("form[name=form1] #SubmitButton").isNotEmpty() -> Api.LoginType.ADFS
+                it.select("form #SubmitButton").isNotEmpty() -> {
+                    it.selectFirst("form").attr("action").run {
+                        when {
+                            startsWith("/LoginPage.aspx") -> Api.LoginType.ADFSLight
+                            startsWith("/$symbol/LoginPage.aspx") -> Api.LoginType.ADFSLightScoped
+                            else -> throw ApiException("Nieznany typ dziennika ADFS")
+                        }
+                    }
+                }
+                it.select("#PassiveSignInButton").isNotEmpty() -> Api.LoginType.ADFSCards
                 else -> throw ApiException("Nieznany typ dziennika")
             }
         }
@@ -122,5 +140,13 @@ class RegisterRepository(
         }
 
         return path[2]
+    }
+
+    private fun String.getNormalizedSymbol(): String {
+        return trim().toLowerCase().replace("default", "").run {
+            Normalizer.normalize(this, Normalizer.Form.NFD).run {
+                "\\p{InCombiningDiacriticalMarks}+".toRegex().replace(this, "")
+            }
+        }.replace("[^a-z]".toRegex(), "").ifBlank { "Default" }
     }
 }

@@ -42,7 +42,7 @@ data class Diary(
     val year: Int,
 
     @SerializedName("Okresy")
-    val semesters: List<Semester> = emptyList(),
+    val semesters: List<Semester>? = emptyList(),
 
     @SerializedName("UczenPelnaNazwa")
     val fullName: String

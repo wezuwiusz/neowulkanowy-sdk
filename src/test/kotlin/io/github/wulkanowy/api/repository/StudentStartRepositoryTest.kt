@@ -45,7 +45,12 @@ class StudentStartRepositoryTest : BaseLocalTest() {
 
         assertEquals(1234568, items[0].semesterId)
         assertEquals(1234567, items[1].semesterId)
+        assertEquals(2018, items[0].schoolYear)
+        assertEquals(2018, items[1].schoolYear)
+
         assertEquals(1234566, items[2].semesterId)
+        assertEquals(2017, items[2].schoolYear)
+        assertEquals(2017, items[3].schoolYear)
         assertTrue(items.single { it.current }.current)
     }
 

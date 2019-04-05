@@ -6,6 +6,7 @@ import org.threeten.bp.LocalDate.now
 data class Semester(
     val diaryId: Int,
     val diaryName: String,
+    val schoolYear: Int,
     val semesterId: Int,
     val semesterNumber: Int,
     var current: Boolean = false,

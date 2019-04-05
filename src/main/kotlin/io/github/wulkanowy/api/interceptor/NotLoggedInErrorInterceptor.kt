@@ -16,7 +16,7 @@ class NotLoggedInErrorInterceptor(private val loginType: Api.LoginType) : Interc
         if (when (loginType) {
                     Api.LoginType.STANDARD -> doc.select(".loginButton, .LogOnBoard input[type=submit]")
                     Api.LoginType.ADFS -> doc.select("form[name=form1] #SubmitButton")
-                    Api.LoginType.ADFSLight -> doc.select("form #SubmitButton")
+                    Api.LoginType.ADFSLight, Api.LoginType.ADFSLightScoped -> doc.select("form #SubmitButton")
                     Api.LoginType.ADFSCards -> doc.select("#PassiveSignInButton")
                     else -> Elements()
                 }.isNotEmpty()) {
