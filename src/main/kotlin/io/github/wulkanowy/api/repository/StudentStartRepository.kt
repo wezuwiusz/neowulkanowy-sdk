@@ -17,7 +17,7 @@ class StudentStartRepository(
             .map { it.data }
             .map { diaries ->
                 diaries.asSequence()
-                    .filter { it.semesters != null }
+                    .filter { diary -> diary.semesters?.isNotEmpty() ?: false }
                     .filter { diary -> diary.studentId == studentId }
                     .filter { diary -> diary.semesters!![0].classId == classId }
                     .map { diary ->

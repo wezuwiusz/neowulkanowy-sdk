@@ -78,7 +78,7 @@ class RegisterRepository(
             }
         } else student.getSchoolInfo(url.generate(ServiceManager.UrlGenerator.Site.STUDENT) + "UczenDziennik.mvc/Get")
             .map { it.data }
-            .map { it.filter { diary -> diary.semesters != null } }
+            .map { it.filter { diary -> diary.semesters?.isNotEmpty() ?: false } }
             .map { it.sortedByDescending { diary -> diary.level } }
             .map { diary -> diary.distinctBy { listOf(it.studentId, it.semesters!![0].classId) } }
             .flatMap { diaries ->
