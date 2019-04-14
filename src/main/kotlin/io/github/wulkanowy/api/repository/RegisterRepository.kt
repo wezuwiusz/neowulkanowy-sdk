@@ -66,36 +66,6 @@ class RegisterRepository(
         }
     }
 
-    private fun getStudents(symbol: String, schoolUrl: String): Single<List<StudentAndParentResponse.Student>> {
-        url.schoolId = getExtractedSchoolSymbolFromUrl(schoolUrl)
-        url.symbol = symbol
-        return if (!useNewStudent) snp.getSchoolInfo(schoolUrl).map { res ->
-            res.students.map { student ->
-                student.apply {
-                    description = res.schoolName
-                    className = res.diaries[0].name
-                }
-            }
-        } else student.getSchoolInfo(url.generate(ServiceManager.UrlGenerator.Site.STUDENT) + "UczenDziennik.mvc/Get")
-            .map { it.data }
-            .map { it.filter { diary -> diary.semesters?.isNotEmpty() ?: false } }
-            .map { it.sortedByDescending { diary -> diary.level } }
-            .map { diary -> diary.distinctBy { listOf(it.studentId, it.semesters!![0].classId) } }
-            .flatMap { diaries ->
-                student.getStart(url.generate(ServiceManager.UrlGenerator.Site.STUDENT) + "Start").map { startPage ->
-                    diaries.map {
-                        StudentAndParentResponse.Student().apply {
-                            id = it.studentId
-                            name = "${it.studentName} ${it.studentSurname}"
-                            description = getScriptParam("organizationName", startPage, it.symbol + " " + (it.year - it.level + 1))
-                            className = it.level.toString() + it.symbol
-                            classId = it.semesters!![0].classId
-                        }
-                    }
-                }
-            }
-    }
-
     private fun getSymbols(): Single<List<Pair<String, CertificateResponse>>> {
         return getLoginType(startSymbol.getNormalizedSymbol()).map {
             loginHelper.apply { loginType = it }
@@ -130,6 +100,36 @@ class RegisterRepository(
                 else -> throw ApiException("Nieznany typ dziennika")
             }
         }
+    }
+
+    private fun getStudents(symbol: String, schoolUrl: String): Single<List<StudentAndParentResponse.Student>> {
+        url.schoolId = getExtractedSchoolSymbolFromUrl(schoolUrl)
+        url.symbol = symbol
+        return if (!useNewStudent) snp.getSchoolInfo(schoolUrl).map { res ->
+            res.students.map { student ->
+                student.apply {
+                    description = res.schoolName
+                    className = res.diaries[0].name
+                }
+            }
+        } else student.getSchoolInfo(url.generate(ServiceManager.UrlGenerator.Site.STUDENT) + "UczenDziennik.mvc/Get")
+            .map { it.data }
+            .map { it.filter { diary -> diary.semesters?.isNotEmpty() ?: false } }
+            .map { it.sortedByDescending { diary -> diary.level } }
+            .map { diary -> diary.distinctBy { listOf(it.studentId, it.semesters!![0].classId) } }
+            .flatMap { diaries ->
+                student.getStart(url.generate(ServiceManager.UrlGenerator.Site.STUDENT) + "Start").map { startPage ->
+                    diaries.map {
+                        StudentAndParentResponse.Student().apply {
+                            id = it.studentId
+                            name = "${it.studentName} ${it.studentSurname}"
+                            description = getScriptParam("organizationName", startPage, it.symbol + " " + (it.year - it.level + 1))
+                            className = it.level.toString() + it.symbol
+                            classId = it.semesters!![0].classId
+                        }
+                    }
+                }
+            }
     }
 
     private fun getExtractedSchoolSymbolFromUrl(snpPageUrl: String): String {
