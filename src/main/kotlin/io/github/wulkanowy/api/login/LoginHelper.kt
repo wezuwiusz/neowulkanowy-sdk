@@ -59,7 +59,7 @@ class LoginHelper(
         }
     }
 
-    fun sendCertificate(certificate: CertificateResponse, url: String = certificate.action, email: String = ""): Single<SendCertificateResponse> {
+    fun sendCertificate(certificate: CertificateResponse, email: String = "", url: String = certificate.action): Single<SendCertificateResponse> {
         cookies.cookieStore.removeAll()
         return api.sendCertificate(url + if (email.isNotBlank()) "?rebuild=$email" else "", mapOf(
                 "wa" to certificate.wa,
