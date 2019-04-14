@@ -20,6 +20,9 @@ interface LoginService {
     @FormUrlEncoded
     fun sendCertificate(@Url url: String, @FieldMap certificate: Map<String, String>): Single<SendCertificateResponse>
 
+    @GET
+    fun switchLogin(@Url url: String): Single<SendCertificateResponse>
+
     // ADFS
 
     @GET

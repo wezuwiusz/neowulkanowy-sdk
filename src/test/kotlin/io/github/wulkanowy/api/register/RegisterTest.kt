@@ -25,7 +25,7 @@ class RegisterTest : BaseLocalTest() {
     }
 
     private val registerSnp by lazy {
-        RegisterRepository("default", "jan@fakelog.localhost", "jan123", false, login,
+        RegisterRepository("default", "janusz69", "jan123", false, login,
             getService(RegisterService::class.java, "http://fakelog.localhost:3000/Default/", true, false, false),
             getService(StudentAndParentService::class.java, "http://fakelog.localhost:3000/"),
             getService(StudentService::class.java, "http://fakelog.localhost:3000"),
@@ -45,6 +45,46 @@ class RegisterTest : BaseLocalTest() {
     private val snp by lazy {
         StudentAndParentStartRepository("default", "0012345", 123,
                 getService(StudentAndParentService::class.java, "http://fakelog.localhost:3000/"))
+    }
+
+    @Test
+    fun multiLogin_register() {
+        server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("ADFS-form-1.html").readText())) //
+        server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("ADFS-form-1.html").readText()))
+        server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("ADFS-form-2.html").readText()))
+        server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("Logowanie-cufs.html").readText()))
+        server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("Logowanie-uonet.html").readText()))
+        server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("Login-success-account-switch.html").readText()))
+
+        // first user
+        server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("Login-success-account-switch.html").readText()))
+        server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("ADFS-form-1.html").readText())) //
+        server.enqueue(MockResponse().setBody(RegisterTest::class.java.getResource("WitrynaUczniaIRodzica.html").readText()))
+
+        // second user
+        server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("Login-success-account-switch.html").readText()))
+        server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("ADFS-form-1.html").readText())) //
+        server.enqueue(MockResponse().setBody(RegisterTest::class.java.getResource("WitrynaUczniaIRodzica.html").readText().replace("&amp;id=100", "&amp;id=101")))
+
+        // 4x symbol
+        server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("Logowanie-brak-dostepu.html").readText()))
+        server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("Logowanie-brak-dostepu.html").readText()))
+        server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("Logowanie-brak-dostepu.html").readText()))
+        server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("Logowanie-brak-dostepu.html").readText()))
+        server.start(3000)
+
+        val res = registerSnp.getStudents().blockingGet()
+
+        assertEquals(2, res.size)
+
+        res[0].run {
+            assertEquals(Api.LoginType.ADFSCards, loginType)
+            assertEquals("janusz69||jan2@fakelog.cf", email)
+        }
+
+        res[1].run {
+            assertEquals("janusz69", email)
+        }
     }
 
     @Test

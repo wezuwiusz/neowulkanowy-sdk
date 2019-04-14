@@ -34,14 +34,18 @@ class LoginHelper(
 
     @Synchronized
     fun login(email: String, password: String): Single<SendCertificateResponse> {
-        return sendCredentials(email, password).flatMap {
+        return sendCredentials(email.substringBefore("||"), password).flatMap {
             when {
                 it.title.startsWith("Witryna ucznia i rodzica") -> return@flatMap Single.just(SendCertificateResponse())
                 it.action.isBlank() -> throw VulcanException("Invalid certificate page: '${it.title}'. Try again")
             }
 
-            sendCertificate(it)
+            sendCertificate(it, email.substringAfter("||", ""))
         }
+    }
+
+    fun switchLogin(email: String, symbol: String): Single<SendCertificateResponse> {
+        return api.switchLogin("$schema://uonetplus.$host/$symbol/LoginEndpoint.aspx?rebuild=$email")
     }
 
     fun sendCredentials(email: String, password: String): Single<CertificateResponse> {
@@ -55,9 +59,9 @@ class LoginHelper(
         }
     }
 
-    fun sendCertificate(certificate: CertificateResponse, url: String = certificate.action): Single<SendCertificateResponse> {
+    fun sendCertificate(certificate: CertificateResponse, url: String = certificate.action, email: String = ""): Single<SendCertificateResponse> {
         cookies.cookieStore.removeAll()
-        return api.sendCertificate(url, mapOf(
+        return api.sendCertificate(url + if (email.isNotBlank()) "?rebuild=$email" else "", mapOf(
                 "wa" to certificate.wa,
                 "wresult" to certificate.wresult,
                 "wctx" to certificate.wctx

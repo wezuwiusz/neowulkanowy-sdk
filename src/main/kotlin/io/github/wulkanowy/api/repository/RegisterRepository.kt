@@ -39,22 +39,24 @@ class RegisterRepository(
                     if (t is AccountPermissionException) Single.just(SendCertificateResponse())
                     else Single.error(t)
                 }
-                .flatMapObservable { Observable.fromIterable(if (useNewStudent) it.studentSchools else it.oldStudentSchools) }
-                .flatMapSingle { schoolUrl ->
-                    getLoginType(symbol).flatMap { loginType ->
-                        getStudents(symbol, schoolUrl).map {
-                            it.map { student ->
-                                Student(
-                                    email = email,
-                                    symbol = symbol,
-                                    studentId = student.id,
-                                    studentName = student.name,
-                                    schoolSymbol = getExtractedSchoolSymbolFromUrl(schoolUrl),
-                                    schoolName = student.description,
-                                    className = student.className,
-                                    classId = student.classId,
-                                    loginType = loginType
-                                )
+                .flatMapObservable { switchLogin(it, symbol) }
+                .flatMap { res ->
+                    Observable.fromIterable(if (useNewStudent) res.studentSchools else res.oldStudentSchools).flatMapSingle { moduleUrl ->
+                        getLoginType(symbol).flatMap { loginType ->
+                            getStudents(symbol, moduleUrl).map { students ->
+                                students.map { student ->
+                                    Student(
+                                        email = if (email == res.currentEmail) email else "$email||${res.currentEmail}",
+                                        symbol = symbol,
+                                        studentId = student.id,
+                                        studentName = student.name,
+                                        schoolSymbol = getExtractedSchoolSymbolFromUrl(moduleUrl),
+                                        schoolName = student.description,
+                                        className = student.className,
+                                        classId = student.classId,
+                                        loginType = loginType
+                                    )
+                                }
                             }
                         }
                     }
@@ -98,6 +100,18 @@ class RegisterRepository(
                 }
                 it.select("#PassiveSignInButton").isNotEmpty() -> Api.LoginType.ADFSCards
                 else -> throw ApiException("Nieznany typ dziennika")
+            }
+        }
+    }
+
+    private fun switchLogin(homeResponse: SendCertificateResponse, symbol: String): Observable<SendCertificateResponse> {
+        if (homeResponse.emails.isEmpty()) return Observable.just(homeResponse)
+
+        return Single.just(homeResponse.emails).flatMapObservable { Observable.fromIterable(it + email) }.flatMapSingle { email ->
+            loginHelper.switchLogin(email, symbol).map {
+                it.apply {
+                    currentEmail = email
+                }
             }
         }
     }

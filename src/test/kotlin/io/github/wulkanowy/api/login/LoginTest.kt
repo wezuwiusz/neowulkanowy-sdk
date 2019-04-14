@@ -9,6 +9,7 @@ import io.github.wulkanowy.api.register.SendCertificateResponse
 import io.github.wulkanowy.api.service.LoginService
 import io.reactivex.observers.TestObserver
 import okhttp3.mockwebserver.MockResponse
+import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Test
@@ -49,6 +50,32 @@ class LoginTest : BaseLocalTest() {
         val res = normal.login("jan@fakelog.cf", "jan123").blockingGet()
 
         assertTrue(res.oldStudentSchools.isNotEmpty())
+    }
+
+    @Test
+    fun multiLogin() {
+        server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("Logowanie-uonet.html").readText()))
+        server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("Login-success.html").readText()))
+        server.start(3000)
+
+        val res = normal.login("jan@fakelog.cf", "jan123").blockingGet()
+
+        assertEquals("jan@fakelog.localhost:3000", res.currentEmail)
+
+        assertEquals("[text=LoginName=jan%40fakelog.cf&Password=jan123]", server.takeRequest().body.toString())
+    }
+
+    @Test
+    fun multiLogin_withLogin() {
+        server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("Logowanie-uonet.html").readText()))
+        server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("Login-success-account-switch.html").readText()))
+        server.start(3000)
+
+        val res = normal.login("jan||jan@fakelog.cf", "jan123").blockingGet()
+
+        assertEquals("jan", res.currentEmail)
+
+        assertEquals("[text=LoginName=jan&Password=jan123]", server.takeRequest().body.toString())
     }
 
     @Test
