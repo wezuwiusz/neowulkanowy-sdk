@@ -34,7 +34,7 @@ class RegisterRepository(
 
     fun getStudents(): Single<List<Student>> {
         return getSymbols().flatMapObservable { Observable.fromIterable(it) }.flatMap { (symbol, certificate) ->
-            loginHelper.sendCertificate(certificate, "", certificate.action.replace(startSymbol.getNormalizedSymbol(), symbol))
+            loginHelper.sendCertificate(certificate, certificate.action.replace(startSymbol.getNormalizedSymbol(), symbol))
                 .onErrorResumeNext { t ->
                     if (t is AccountPermissionException) Single.just(SendCertificateResponse())
                     else Single.error(t)

@@ -40,7 +40,10 @@ class LoginHelper(
                 it.action.isBlank() -> throw VulcanException("Invalid certificate page: '${it.title}'. Try again")
             }
 
-            sendCertificate(it, email.substringAfter("||", ""))
+            sendCertificate(it)
+        }.flatMap {
+            if (email.contains("||"))  switchLogin(email.substringAfter("||", ""), symbol)
+            else Single.just(it)
         }
     }
 
@@ -59,9 +62,9 @@ class LoginHelper(
         }
     }
 
-    fun sendCertificate(certificate: CertificateResponse, email: String = "", url: String = certificate.action): Single<SendCertificateResponse> {
+    fun sendCertificate(certificate: CertificateResponse, url: String = certificate.action): Single<SendCertificateResponse> {
         cookies.cookieStore.removeAll()
-        return api.sendCertificate(url + if (email.isNotBlank()) "?rebuild=$email" else "", mapOf(
+        return api.sendCertificate(url, mapOf(
                 "wa" to certificate.wa,
                 "wresult" to certificate.wresult,
                 "wctx" to certificate.wctx

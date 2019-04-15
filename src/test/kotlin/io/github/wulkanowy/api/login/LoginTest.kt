@@ -69,6 +69,7 @@ class LoginTest : BaseLocalTest() {
     fun multiLogin_withLogin() {
         server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("Logowanie-uonet.html").readText()))
         server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("Login-success-account-switch.html").readText()))
+        server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("Login-success-account-switch.html").readText()))
         server.start(3000)
 
         val res = normal.login("jan||jan@fakelog.cf", "jan123").blockingGet()
