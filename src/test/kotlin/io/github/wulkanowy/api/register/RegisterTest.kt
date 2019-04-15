@@ -79,11 +79,11 @@ class RegisterTest : BaseLocalTest() {
 
         res[0].run {
             assertEquals(Api.LoginType.ADFSCards, loginType)
-            assertEquals("janusz69||jan2@fakelog.cf", email)
+            assertEquals("janusz69", email)
         }
 
         res[1].run {
-            assertEquals("janusz69", email)
+            assertEquals("janusz69||jan2@fakelog.cf", email)
         }
     }
 

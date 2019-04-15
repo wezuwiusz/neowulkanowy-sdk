@@ -42,7 +42,7 @@ class LoginHelper(
 
             sendCertificate(it)
         }.flatMap {
-            if (email.contains("||"))  switchLogin(email.substringAfter("||", ""), symbol)
+            if (email.contains("||")) switchLogin(email.substringAfter("||", ""), symbol)
             else Single.just(it)
         }
     }
