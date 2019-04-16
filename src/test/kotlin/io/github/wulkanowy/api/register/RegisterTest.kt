@@ -61,7 +61,7 @@ class RegisterTest : BaseLocalTest() {
         server.enqueue(MockResponse().setBody(RegisterTest::class.java.getResource("WitrynaUczniaIRodzica.html").readText()))
 
         // second user
-        server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("Login-success-account-switch.html").readText()))
+        server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("Login-success-account-switch.html").readText().replace("OpoleG8", "OpoleZSE")))
         server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("ADFS-form-1.html").readText())) //
         server.enqueue(MockResponse().setBody(RegisterTest::class.java.getResource("WitrynaUczniaIRodzica.html").readText().replace("&amp;id=100", "&amp;id=101")))
 

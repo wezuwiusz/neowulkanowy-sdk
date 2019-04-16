@@ -105,9 +105,7 @@ class RegisterRepository(
     }
 
     private fun switchLogin(homeResponse: SendCertificateResponse, symbol: String): Observable<SendCertificateResponse> {
-        if (homeResponse.emails.isEmpty()) return Observable.just(homeResponse)
-
-        return Single.just(homeResponse.emails).flatMapObservable { Observable.fromIterable(listOf(email).union(it)) }.flatMapSingle { item ->
+        return Observable.fromIterable(listOf(email).union(homeResponse.emails)).flatMapSingle { item ->
             (if (item == email) Single.just(homeResponse) else loginHelper.switchLogin(item, symbol)).map {
                 it.apply {
                     currentEmail = item

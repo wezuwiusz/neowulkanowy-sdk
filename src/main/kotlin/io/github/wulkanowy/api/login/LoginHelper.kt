@@ -11,6 +11,8 @@ import org.threeten.bp.ZoneId
 import org.threeten.bp.format.DateTimeFormatter
 import pl.droidsonroids.jspoon.Jspoon
 import java.net.CookieManager
+import java.net.HttpCookie
+import java.net.URI
 import java.net.URLEncoder
 
 class LoginHelper(
@@ -48,7 +50,22 @@ class LoginHelper(
     }
 
     fun switchLogin(email: String, symbol: String): Single<SendCertificateResponse> {
-        return api.switchLogin("$schema://uonetplus.$host/$symbol/LoginEndpoint.aspx?rebuild=$email")
+        return api.switchLogin("$schema://uonetplus.$host/$symbol/LoginEndpoint.aspx?rebuild=$email").map { res ->
+            var response = res.raw()
+            while (response.priorResponse() != null && response.request().url().queryParameterValues("rebuild").getOrNull(0) != email) {
+                response = response.priorResponse()!!
+            }
+
+            response.header("Set-Cookie")?.let { HttpCookie.parse(it) }?.singleOrNull { it.name == "EfebSsoAuthCookie" }?.let { cookie ->
+                cookies.cookieStore.add(URI("$schema://$host"), cookie.apply {
+                    path = "/"
+                    domain = ".$host"
+                    isHttpOnly = true
+                })
+            }
+
+            res.body()
+        }
     }
 
     fun sendCredentials(email: String, password: String): Single<CertificateResponse> {
