@@ -1,6 +1,6 @@
 plugins {
     id 'java'
-    id 'org.jetbrains.kotlin.jvm' version '1.3.21'
+    id 'org.jetbrains.kotlin.jvm' version '1.3.30'
     id 'jacoco'
     id 'com.jfrog.bintray' version '1.8.4'
     id 'com.github.dcendents.android-maven' version '2.1'
@@ -31,6 +31,7 @@ ext {
     jspoon = "1.3.2"
     okhttp3 = "3.12.1"
     retrofit = "2.5.0"
+    threetenbp = "1.3.8"
 }
 
 dependencies {
@@ -48,7 +49,8 @@ dependencies {
 
     implementation "com.github.jonyas:RxJava2Reauth:72abb94"
 
-    implementation "org.threeten:threetenbp:1.3.8"
+    compileOnly "org.threeten:threetenbp:$threetenbp:no-tzdb"
+    testImplementation "org.threeten:threetenbp:$threetenbp"
 
     testImplementation "com.squareup.okhttp3:mockwebserver:$okhttp3"
     testImplementation "junit:junit:4.12"
