@@ -34,19 +34,18 @@ class RegisterRepository(
 
     fun getStudents(): Single<List<Student>> {
         return getSymbols().flatMapObservable { Observable.fromIterable(it) }.flatMap { (symbol, certificate) ->
-            loginHelper.sendCertificate(certificate, certificate.action.replace(startSymbol.getNormalizedSymbol(), symbol))
+            loginHelper.sendCertificate(certificate, email, certificate.action.replace(startSymbol.getNormalizedSymbol(), symbol))
                 .onErrorResumeNext { t ->
                     if (t is AccountPermissionException) Single.just(SendCertificateResponse())
                     else Single.error(t)
                 }
-                .flatMapObservable { switchLogin(it, symbol) }
-                .flatMap { res ->
+                .flatMapObservable { res ->
                     Observable.fromIterable(if (useNewStudent) res.studentSchools else res.oldStudentSchools).flatMapSingle { moduleUrl ->
                         getLoginType(symbol).flatMap { loginType ->
                             getStudents(symbol, moduleUrl).map { students ->
                                 students.map { student ->
                                     Student(
-                                        email = if (email == res.currentEmail) email else "$email||${res.currentEmail}",
+                                        email = email,
                                         symbol = symbol,
                                         studentId = student.id,
                                         studentName = student.name,
@@ -100,16 +99,6 @@ class RegisterRepository(
                 }
                 it.select("#PassiveSignInButton").isNotEmpty() -> Api.LoginType.ADFSCards
                 else -> throw ApiException("Nieznany typ dziennika")
-            }
-        }
-    }
-
-    private fun switchLogin(homeResponse: SendCertificateResponse, symbol: String): Observable<SendCertificateResponse> {
-        return Observable.fromIterable(listOf(email).union(homeResponse.emails)).flatMapSingle { item ->
-            (if (item == email) Single.just(homeResponse) else loginHelper.switchLogin(item, symbol)).map {
-                it.apply {
-                    currentEmail = item
-                }
             }
         }
     }

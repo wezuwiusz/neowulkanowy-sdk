@@ -58,9 +58,7 @@ class LoginTest : BaseLocalTest() {
         server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("Login-success.html").readText()))
         server.start(3000)
 
-        val res = normal.login("jan@fakelog.cf", "jan123").blockingGet()
-
-        assertEquals("jan@fakelog.localhost:3000", res.currentEmail)
+        normal.login("jan@fakelog.cf", "jan123").blockingGet()
 
         assertEquals("[text=LoginName=jan%40fakelog.cf&Password=jan123]", server.takeRequest().body.toString())
     }
@@ -72,9 +70,7 @@ class LoginTest : BaseLocalTest() {
         server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("Login-success-account-switch.html").readText()))
         server.start(3000)
 
-        val res = normal.login("jan||jan@fakelog.cf", "jan123").blockingGet()
-
-        assertEquals("jan", res.currentEmail)
+        normal.login("jan||jan@fakelog.cf", "jan123").blockingGet()
 
         assertEquals("[text=LoginName=jan&Password=jan123]", server.takeRequest().body.toString())
     }

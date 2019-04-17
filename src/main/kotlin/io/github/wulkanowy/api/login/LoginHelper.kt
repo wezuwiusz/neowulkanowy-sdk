@@ -34,41 +34,39 @@ class LoginHelper(
 
     @Synchronized
     fun login(email: String, password: String): Single<SendCertificateResponse> {
-        return sendCredentials(email.substringBefore("||"), password).flatMap {
+        return sendCredentials(email, password).flatMap {
             when {
                 it.title.startsWith("Witryna ucznia i rodzica") -> return@flatMap Single.just(SendCertificateResponse())
                 it.action.isBlank() -> throw VulcanException("Invalid certificate page: '${it.title}'. Try again")
             }
 
-            sendCertificate(it)
-        }.flatMap {
-            if (email.contains("||")) switchLogin(email.substringAfter("||", ""), symbol)
-            else Single.just(it)
+            sendCertificate(it, email)
         }
-    }
-
-    fun switchLogin(email: String, symbol: String): Single<SendCertificateResponse> {
-        return api.switchLogin("$schema://uonetplus.$host/$symbol/LoginEndpoint.aspx?rebuild=$email")
     }
 
     fun sendCredentials(email: String, password: String): Single<CertificateResponse> {
-        return when (loginType) {
-            Api.LoginType.AUTO -> throw ApiException("You must first specify LoginType before logging in")
-            Api.LoginType.STANDARD -> sendStandard(email, password)
-            Api.LoginType.ADFS -> sendAdfs(email, password)
-            Api.LoginType.ADFSLight -> sendADFSLightGeneric(email, password, Api.LoginType.ADFSLight)
-            Api.LoginType.ADFSLightScoped -> sendADFSLightGeneric(email, password, Api.LoginType.ADFSLightScoped)
-            Api.LoginType.ADFSCards -> sendADFSCards(email, password)
+        email.substringBefore("||").let {
+            return when (loginType) {
+                Api.LoginType.AUTO -> throw ApiException("You must first specify LoginType before logging in")
+                Api.LoginType.STANDARD -> sendStandard(it, password)
+                Api.LoginType.ADFS -> sendAdfs(it, password)
+                Api.LoginType.ADFSLight -> sendADFSLightGeneric(it, password, Api.LoginType.ADFSLight)
+                Api.LoginType.ADFSLightScoped -> sendADFSLightGeneric(it, password, Api.LoginType.ADFSLightScoped)
+                Api.LoginType.ADFSCards -> sendADFSCards(it, password)
+            }
         }
     }
 
-    fun sendCertificate(certificate: CertificateResponse, url: String = certificate.action): Single<SendCertificateResponse> {
+    fun sendCertificate(certificate: CertificateResponse, email: String, url: String = certificate.action): Single<SendCertificateResponse> {
         cookies.cookieStore.removeAll()
         return api.sendCertificate(url, mapOf(
                 "wa" to certificate.wa,
                 "wresult" to certificate.wresult,
                 "wctx" to certificate.wctx
-        ))
+        )).flatMap {
+            if (email.contains("||")) api.switchLogin("$url?rebuild=${email.substringAfter("||", "")}")
+            else Single.just(it)
+        }
     }
 
     private fun sendStandard(email: String, password: String): Single<CertificateResponse> {
