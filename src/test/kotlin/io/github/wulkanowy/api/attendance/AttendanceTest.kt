@@ -10,6 +10,7 @@ import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Test
+import org.threeten.bp.LocalDateTime
 
 class AttendanceTest : BaseLocalTest() {
 
@@ -192,5 +193,35 @@ class AttendanceTest : BaseLocalTest() {
                 assertFalse(deleted)
             }
         }
+    }
+
+    @Test
+    fun excuseForAbsence() {
+        getStudentRepo(AttendanceTest::class.java, "Usprawiedliwione.json").excuseForAbsence(
+            absents = listOf(
+                Absent(
+                    date = LocalDateTime.of(2019, 2, 11, 15, 53, 9),
+                    timeId = 1
+                ),
+                Absent(
+                    date = LocalDateTime.of(2019, 2, 11, 15, 53, 9),
+                    timeId = 2
+                ),
+                Absent(
+                    date = LocalDateTime.of(2019, 2, 11, 15, 53, 9),
+                    timeId = 3
+                ),
+                Absent(
+                    date = LocalDateTime.of(2019, 2, 11, 15, 53, 9),
+                    timeId = 4
+                )
+            ),
+            content = "Test"
+        ).blockingGet()
+
+        val response = server.takeRequest()
+        val expected = jsonParser.parse(AttendanceTest::class.java.getResource("Usprawiedliwienie.json").readText())
+
+        assertEquals(expected, jsonParser.parse(response.body.readUtf8()))
     }
 }

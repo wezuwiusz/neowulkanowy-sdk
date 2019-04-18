@@ -1,6 +1,7 @@
 package io.github.wulkanowy.api.service
 
 import io.github.wulkanowy.api.ApiResponse
+import io.github.wulkanowy.api.attendance.AttendanceExcuseRequest
 import io.github.wulkanowy.api.attendance.AttendanceRequest
 import io.github.wulkanowy.api.attendance.AttendanceResponse
 import io.github.wulkanowy.api.attendance.AttendanceSummaryRequest
@@ -15,10 +16,10 @@ import io.github.wulkanowy.api.grades.GradesStatisticsResponse
 import io.github.wulkanowy.api.homework.HomeworkResponse
 import io.github.wulkanowy.api.mobile.Device
 import io.github.wulkanowy.api.notes.NotesResponse
-import io.github.wulkanowy.api.timetable.CompletedLessonsRequest
 import io.github.wulkanowy.api.register.Diary
 import io.github.wulkanowy.api.school.SchoolAndTeachersResponse
 import io.github.wulkanowy.api.timetable.CacheResponse
+import io.github.wulkanowy.api.timetable.CompletedLessonsRequest
 import io.github.wulkanowy.api.timetable.TimetableRequest
 import io.github.wulkanowy.api.timetable.TimetableResponse
 import io.reactivex.Single
@@ -63,6 +64,9 @@ interface StudentService {
 
     @POST("FrekwencjaStatystykiPrzedmioty.mvc/Get")
     fun getAttendanceSubjects(): Single<ApiResponse<List<Subject>>>
+
+    @POST("Usprawiedliwienia.mvc/Post")
+    fun excuseForAbsence(@Body attendanceExcuseRequest: AttendanceExcuseRequest): Single<ApiResponse<Nothing>>
 
     @POST("EgzaminyZewnetrzne.mvc/Get")
     fun getExternalExaminations()

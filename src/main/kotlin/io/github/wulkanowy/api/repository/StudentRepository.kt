@@ -1,31 +1,42 @@
 package io.github.wulkanowy.api.repository
 
+import com.google.gson.Gson
+import com.google.gson.GsonBuilder
+import com.google.gson.internal.LinkedTreeMap
+import com.google.gson.reflect.TypeToken
 import io.github.wulkanowy.api.ApiResponse
+import io.github.wulkanowy.api.attendance.Absent
 import io.github.wulkanowy.api.attendance.Attendance
 import io.github.wulkanowy.api.attendance.Attendance.Category
+import io.github.wulkanowy.api.attendance.AttendanceExcuseRequest
 import io.github.wulkanowy.api.attendance.AttendanceRequest
 import io.github.wulkanowy.api.attendance.AttendanceSummary
+import io.github.wulkanowy.api.attendance.AttendanceSummaryItemSerializer
 import io.github.wulkanowy.api.attendance.AttendanceSummaryRequest
+import io.github.wulkanowy.api.attendance.AttendanceSummaryResponse
 import io.github.wulkanowy.api.attendance.Subject
 import io.github.wulkanowy.api.exams.Exam
 import io.github.wulkanowy.api.exams.ExamRequest
 import io.github.wulkanowy.api.getGradeShortValue
 import io.github.wulkanowy.api.getSchoolYear
+import io.github.wulkanowy.api.getScriptParam
 import io.github.wulkanowy.api.grades.Grade
 import io.github.wulkanowy.api.grades.GradeRequest
+import io.github.wulkanowy.api.grades.GradeStatistics
 import io.github.wulkanowy.api.grades.GradeSummary
+import io.github.wulkanowy.api.grades.GradesStatisticsRequest
 import io.github.wulkanowy.api.grades.getGradeValueWithModifier
 import io.github.wulkanowy.api.grades.isGradeValid
 import io.github.wulkanowy.api.homework.Homework
 import io.github.wulkanowy.api.interceptor.FeatureDisabledException
 import io.github.wulkanowy.api.mobile.Device
 import io.github.wulkanowy.api.notes.Note
-import io.github.wulkanowy.api.timetable.CompletedLesson
-import io.github.wulkanowy.api.timetable.CompletedLessonsRequest
 import io.github.wulkanowy.api.school.School
 import io.github.wulkanowy.api.school.Teacher
 import io.github.wulkanowy.api.service.StudentService
 import io.github.wulkanowy.api.timetable.CacheResponse
+import io.github.wulkanowy.api.timetable.CompletedLesson
+import io.github.wulkanowy.api.timetable.CompletedLessonsRequest
 import io.github.wulkanowy.api.timetable.Timetable
 import io.github.wulkanowy.api.timetable.TimetableParser
 import io.github.wulkanowy.api.timetable.TimetableRequest
@@ -37,16 +48,7 @@ import io.reactivex.Observable
 import io.reactivex.Single
 import org.jsoup.Jsoup
 import org.threeten.bp.LocalDate
-import com.google.gson.Gson
-import com.google.gson.GsonBuilder
-import com.google.gson.internal.LinkedTreeMap
-import com.google.gson.reflect.TypeToken
-import io.github.wulkanowy.api.attendance.AttendanceSummaryResponse
-import io.github.wulkanowy.api.grades.GradeStatistics
-import io.github.wulkanowy.api.grades.GradesStatisticsRequest
 import org.threeten.bp.Month
-import io.github.wulkanowy.api.attendance.AttendanceSummaryItemSerializer
-import io.github.wulkanowy.api.getScriptParam
 import java.lang.String.format
 import java.util.Locale
 
@@ -134,6 +136,22 @@ class StudentRepository(private val api: StudentService) {
                     summary.presence == 0
             }
         }
+    }
+
+    fun excuseForAbsence(absents: List<Absent>, content: String?): Single<Boolean> {
+        return api.excuseForAbsence(
+            AttendanceExcuseRequest(
+                AttendanceExcuseRequest.Excuse(
+                    absents = absents.map {
+                        AttendanceExcuseRequest.Excuse.Absent(
+                            date = it.date.toFormat("yyyy-MM-dd'T'HH:mm:ss"),
+                            timeId = it.timeId
+                        )
+                    },
+                    content = content
+                )
+            )
+        ).map { it.success }
     }
 
     fun getSubjects(): Single<List<Subject>> {

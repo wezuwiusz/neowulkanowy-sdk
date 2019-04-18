@@ -1,5 +1,6 @@
 package io.github.wulkanowy.api
 
+import io.github.wulkanowy.api.attendance.Absent
 import io.github.wulkanowy.api.login.LoginHelper
 import io.github.wulkanowy.api.messages.Folder
 import io.github.wulkanowy.api.messages.Message
@@ -204,6 +205,8 @@ class Api {
         if (useNewStudent) student.getAttendance(startDate, endDate) else snp.getAttendance(startDate, endDate)
 
     fun getAttendanceSummary(subjectId: Int? = -1) = if (useNewStudent) student.getAttendanceSummary(subjectId) else snp.getAttendanceSummary(subjectId)
+
+    fun excuseForAbsence(absents: List<Absent>, content: String? = null) = student.excuseForAbsence(absents, content)
 
     fun getSubjects() = if (useNewStudent) student.getSubjects() else snp.getSubjects()
 
