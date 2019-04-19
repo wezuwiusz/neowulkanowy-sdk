@@ -11,7 +11,14 @@
       }
     ],
     "Id": 0,
-    "Nadawca": {},
+    "Nadawca": {
+      "Id": null,
+      "Nazwa": null,
+      "IdLogin": null,
+      "IdJednostkaSprawozdawcza": null,
+      "Rola": null,
+      "Hash": null
+    },
     "Temat": "Temat wiadomości",
     "Tresc": "Tak wygląda zawartość wiadomości.\nZazwyczaj ma wiele linijek.\n\nZ poważaniem,\nNazwisko Imię"
   }

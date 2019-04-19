@@ -61,6 +61,7 @@ abstract class BaseLocalTest : BaseTest() {
             .addConverterFactory(ScalarsConverterFactory.create())
             .addConverterFactory(if (!html) GsonConverterFactory.create(GsonBuilder()
                 .setDateFormat("yyyy-MM-dd HH:mm:ss")
+                .serializeNulls()
                 .registerTypeAdapter(GradeDate::class.java, DateDeserializer(GradeDate.DATE_FORMAT, GradeDate::class.java))
                 .create()) else JspoonConverterFactory.create())
             .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
