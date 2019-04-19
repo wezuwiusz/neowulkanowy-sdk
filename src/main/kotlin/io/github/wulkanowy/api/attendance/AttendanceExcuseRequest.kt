@@ -23,7 +23,7 @@ data class AttendanceExcuseRequest(
             val date: String,
 
             @SerializedName("IdPoraLekcji")
-            val timeId: Int
+            val timeId: Int?
         )
     }
 }

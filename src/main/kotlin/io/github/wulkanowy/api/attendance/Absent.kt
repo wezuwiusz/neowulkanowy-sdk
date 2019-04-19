@@ -5,5 +5,5 @@ import org.threeten.bp.LocalDateTime
 data class Absent(
 
     val date: LocalDateTime,
-    val timeId: Int
+    val timeId: Int?
 )

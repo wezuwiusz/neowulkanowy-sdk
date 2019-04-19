@@ -212,8 +212,8 @@ class AttendanceTest : BaseLocalTest() {
                     timeId = 3
                 ),
                 Absent(
-                    date = LocalDateTime.of(2019, 2, 11, 15, 53, 9),
-                    timeId = 4
+                    date = LocalDateTime.of(2019, 2, 12, 15, 53, 9),
+                    timeId = null
                 )
             ),
             content = "Test"
