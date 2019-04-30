@@ -13,11 +13,12 @@ class TimetableParser {
     }
 
     fun getTimetable(c: TimetableResponse.TimetableRow.TimetableCell): Timetable? {
-        return addLessonDetails(Timetable(c.number, c.start, c.end, c.date), c.td.select("div"))
+        return addLessonDetails(Timetable(c.number, c.start, c.end, c.date), c.td)
     }
 
-    private fun addLessonDetails(lesson: Timetable, divs: Elements): Timetable? {
-        moveWarningToLessonNode(divs)
+    private fun addLessonDetails(lesson: Timetable, td: Element): Timetable? {
+        val divs = td.select("div:not([class])")
+        moveWarningToLessonNode(td.selectFirst(".uwaga-panel"), divs)
 
         return when {
             divs.size == 1 -> getLessonInfo(lesson, divs[0])
@@ -67,12 +68,10 @@ class TimetableParser {
         }
     }
 
-    private fun moveWarningToLessonNode(e: Elements) {
-        e.select(".uwaga-panel").run {
-            if (!isEmpty()) {
-                val original = e.select("span").last().text().removeSurrounding("(", ")")
-                e.select("span").last().addClass(CLASS_REALIZED).text("($original: ${text()})")
-                e.removeAt(e.size - 1)
+    private fun moveWarningToLessonNode(warningElement: Element?, e: Elements) {
+        warningElement?.let { warn ->
+            e.select("span").last().run {
+                text("(${text().removeSurrounding("(", ")")}: ${warn.text()})")
             }
         }
     }
@@ -107,13 +106,13 @@ class TimetableParser {
         return getLessonWithReplacement(lesson, spans, 1)
     }
 
-    private fun getLesson(lesson: Timetable, spans: Elements, o: Int = 0): Timetable {
+    private fun getLesson(lesson: Timetable, spans: Elements, offset: Int = 0): Timetable {
         return lesson.copy(
             subject = getLessonAndGroupInfoFromSpan(spans[0])[0],
             group = getLessonAndGroupInfoFromSpan(spans[0])[1],
-            teacher = spans[1 + o].text(),
-            room = spans[2 + o].text(),
-            info = getFormattedLessonInfo(spans.getOrNull(3 + o)?.text()),
+            teacher = spans[1 + offset].text(),
+            room = spans[2 + offset].text(),
+            info = getFormattedLessonInfo(spans.getOrNull(3 + offset)?.text()),
             canceled = spans.first().hasClass(CLASS_MOVED_OR_CANCELED),
             changes = spans.first().hasClass(CLASS_CHANGES)
         )

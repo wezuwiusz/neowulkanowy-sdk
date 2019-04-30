@@ -2,6 +2,7 @@ package io.github.wulkanowy.api.timetable
 
 import io.github.wulkanowy.api.BaseLocalTest
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertTrue
 import org.junit.Test
 
 class TimetableTest : BaseLocalTest() {
@@ -16,8 +17,8 @@ class TimetableTest : BaseLocalTest() {
 
     @Test
     fun getTimetableTest() {
-        assertEquals(15, snp.size)
-        assertEquals(15, student.size)
+        assertEquals(16, snp.size)
+        assertEquals(16, student.size)
     }
 
     @Test
@@ -47,7 +48,7 @@ class TimetableTest : BaseLocalTest() {
 
     @Test
     fun getSimpleLesson_canceled() {
-        listOf(snp[3], student[3]).map {
+        listOf(snp[4], student[4]).map {
             it.run {
                 // wtorek, 0
                 assertEquals(0, number)
@@ -70,7 +71,7 @@ class TimetableTest : BaseLocalTest() {
 
     @Test
     fun getSimpleLesson_replacementSameTeacher() {
-        listOf(snp[6], student[6]).map {
+        listOf(snp[7], student[7]).map {
             it.run {
                 // środa, 0
                 assertEquals(0, number)
@@ -94,7 +95,7 @@ class TimetableTest : BaseLocalTest() {
 
     @Test
     fun getSimpleLesson_replacementDifferentTeacher() {
-        listOf(snp[9], student[9]).map {
+        listOf(snp[10], student[10]).map {
             it.run {
                 // czwartek, 0
                 assertEquals(0, number)
@@ -118,7 +119,7 @@ class TimetableTest : BaseLocalTest() {
 
     @Test
     fun getGroupLesson() {
-        listOf(snp[12], student[12]).map {
+        listOf(snp[13], student[13]).map {
             it.run {
                 // piątek, 0
                 assertEquals(0, number)
@@ -165,7 +166,7 @@ class TimetableTest : BaseLocalTest() {
 
     @Test
     fun getGroupLesson_replacementSameTeacher() {
-        listOf(snp[4], student[4]).map {
+        listOf(snp[5], student[5]).map {
             it.run {
                 // wtorek, 1
                 assertEquals(1, number)
@@ -188,7 +189,7 @@ class TimetableTest : BaseLocalTest() {
 
     @Test
     fun getGroupLesson_replacementDifferentTeacher() {
-        listOf(snp[7], student[7]).map {
+        listOf(snp[8], student[8]).map {
             it.run {
                 // środa, 1
                 assertEquals(1, number)
@@ -212,7 +213,7 @@ class TimetableTest : BaseLocalTest() {
 
     @Test
     fun getLesson_button() {
-        listOf(snp[10], student[10]).map {
+        listOf(snp[11], student[11]).map {
             it.run {
                 // czwartek, 1
                 assertEquals(1, number)
@@ -236,7 +237,7 @@ class TimetableTest : BaseLocalTest() {
 
     @Test
     fun getLesson_emptyOriginal() {
-        listOf(snp[13], student[13]).map {
+        listOf(snp[14], student[14]).map {
             it.run {
                 // piątek, 1
                 assertEquals(1, number)
@@ -282,7 +283,7 @@ class TimetableTest : BaseLocalTest() {
 
     @Test
     fun getLesson_invAndChange() {
-        listOf(snp[5], student[5]).map {
+        listOf(snp[6], student[6]).map {
             it.run {
                 // wtorek, 2
                 assertEquals(2, number)
@@ -305,7 +306,7 @@ class TimetableTest : BaseLocalTest() {
 
     @Test
     fun getSimpleLesson_replacementDifferentTeacherv2() {
-        listOf(snp[8], student[8]).map {
+        listOf(snp[9], student[9]).map {
             it.run {
                 // środa, 2
                 assertEquals(2, number)
@@ -328,7 +329,7 @@ class TimetableTest : BaseLocalTest() {
 
     @Test
     fun getSimpleLesson_movedWithButton() {
-        listOf(snp[11], student[11]).map {
+        listOf(snp[12], student[12]).map {
             it.run {
                 // czwartek, 2
                 assertEquals(2, number)
@@ -351,7 +352,7 @@ class TimetableTest : BaseLocalTest() {
 
     @Test
     fun getSimpleLesson_canceledWithoutReason() {
-        listOf(snp[14], student[14]).map {
+        listOf(snp[15], student[15]).map {
             it.run {
                 // piątek, 2
                 assertEquals(2, number)
@@ -368,6 +369,30 @@ class TimetableTest : BaseLocalTest() {
 
                 assertEquals(true, canceled)
                 assertEquals(false, changes)
+            }
+        }
+    }
+
+    @Test
+    fun getLesson_buttonWithChanges() {
+        listOf(snp[3], student[3]).map {
+            it.run {
+                // poniedziałek, 3
+                assertEquals(3, number)
+                assertEquals(getDate(2018, 9, 24, 9, 45, 0), start)
+                assertEquals(getDate(2018, 9, 24, 10, 40, 0), end)
+
+                assertEquals("Historia", subject)
+                assertEquals("", group)
+                assertEquals("", teacher)
+                assertEquals("6", room)
+                assertTrue("przeniesiona z lekcji 7, 30.04.2019: Historia z 7 godz. lekcyjnej.".startsWith(info)) // button doesn't exist in `student` ver
+                assertEquals("Podstawy przedsiębiorczości", subjectOld)
+                assertEquals("C Urszula", teacherOld)
+                assertEquals("4", roomOld)
+
+                assertEquals(false, canceled)
+                assertEquals(true, changes)
             }
         }
     }
