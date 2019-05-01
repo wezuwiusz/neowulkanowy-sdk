@@ -17,8 +17,8 @@ data class CertificateResponse(
         val tokenKey: String?,
 
         @SerializedName("TokenStatus")
-        val tokenStatus: String,
+        val tokenStatus: String?,
 
         @SerializedName("TokenCert")
-        val tokenCert: TokenCert
+        val tokenCert: TokenCert?
 )

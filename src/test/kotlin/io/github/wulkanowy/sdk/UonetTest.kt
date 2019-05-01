@@ -47,21 +47,20 @@ class UonetTest {
 
             val tokenCrt = certSubscriber.values()[0].tokenCert
 
-            register.signature = tokenCrt.certificatePfx
-            register.certificate = tokenCrt.certificateKey
+            register.certKey = tokenCrt!!.certificateKey
+            register.certificate = tokenCrt.certificatePfx
 
             val pupils = register.getPupils()
-            val pupilSubscriber = TestObserver<ApiResponse<List<Student>>>()
+            val pupilSubscriber = TestObserver<List<Student>>()
             pupils.subscribe(pupilSubscriber)
             pupilSubscriber.assertComplete()
             pupilSubscriber.assertNoErrors()
-            assertEquals("Ok", pupilSubscriber.values()[0].status)
-            assertEquals(2, pupilSubscriber.values()[0].data!!.size)
+            assertEquals(2, pupilSubscriber.values()[0].size)
 
-            student = pupilSubscriber.values()[0].data!![0]
+            student = pupilSubscriber.values()[0][0]
 
             // MobileRepository
-            mobile = MobileRepository(PASSWORD, HOST, SYMBOL, register.signature, register.certificate, student.reportingUnitSymbol)
+            mobile = MobileRepository(PASSWORD, HOST, SYMBOL, register.certKey, register.certificate, student.reportingUnitSymbol)
         }
     }
 

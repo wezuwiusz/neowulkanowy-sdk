@@ -18,16 +18,22 @@ repositories {
 ext {
     okhttp3 = "3.12.1"
     retrofit = "2.5.0"
+    threetenbp = "1.3.8"
 }
 
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
 
-    implementation 'com.github.wulkanowy:uonet-request-signer:d2f351a70e'
+    implementation 'io.github.wulkanowy:api:0.8.1'
+    implementation 'com.github.wulkanowy:uonet-request-signer:1f323ff'
+
+    compileOnly "org.threeten:threetenbp:$threetenbp:no-tzdb"
+    testImplementation "org.threeten:threetenbp:$threetenbp"
 
     implementation 'com.google.code.gson:gson:2.8.5'
     implementation "com.squareup.retrofit2:retrofit:$retrofit"
     implementation "com.squareup.retrofit2:converter-gson:$retrofit"
+    implementation "com.squareup.retrofit2:converter-scalars:$retrofit"
 
     implementation "com.squareup.retrofit2:retrofit:$retrofit"
     implementation "com.squareup.retrofit2:adapter-rxjava2:$retrofit"

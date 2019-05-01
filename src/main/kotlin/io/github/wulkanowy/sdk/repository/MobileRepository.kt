@@ -26,12 +26,12 @@ import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
 
 class MobileRepository(
-        private val password: String,
-        private val host: String,
-        private val symbol: String,
-        private val signature: String,
-        private val certificate: String,
-        private val reportingUnitSymbol: String
+    private val password: String,
+    private val host: String,
+    private val symbol: String,
+    private val certKey: String,
+    private val certificate: String,
+    private val reportingUnitSymbol: String
 ) {
 
     private val api by lazy { getMobileApi() }
@@ -72,7 +72,7 @@ class MobileRepository(
                 .addConverterFactory(GsonConverterFactory.create())
                 .client(OkHttpClient().newBuilder()
                         .addInterceptor(HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY))
-                        .addInterceptor(SignInterceptor(password, signature, certificate))
+                        .addInterceptor(SignInterceptor(password, certificate, certKey))
                         .build()
                 )
                 .build()
