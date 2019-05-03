@@ -42,7 +42,7 @@ class Sdk {
 
     var token = ""
 
-    var apiHost = "https://api.fakelog.cf"
+    var apiBaseUrl = "https://api.fakelog.cf"
 
     var deviceName = "Wulkanowy SDK"
 
@@ -114,7 +114,7 @@ class Sdk {
     private val resettableManager = resettableManager()
 
     private val mobile by resettableLazy(resettableManager) {
-        MobileRepository(apiKey, apiHost, symbol, certKey, certificate, schoolSymbol)
+        MobileRepository(apiKey, apiBaseUrl, symbol, certKey, certificate, schoolSymbol)
     }
 
     private fun getDictionaries() = mobile.getDictionaries(0, 0, 0)
@@ -180,7 +180,7 @@ class Sdk {
     }
 
     private fun getApiStudents(token: String, pin: String, symbol: String): Single<List<Student>> {
-        return RegisterRepository(apiKey, apiHost).run {
+        return RegisterRepository(apiKey, apiBaseUrl).run {
             getRouteByToken(token).flatMap {
                 baseHost = it
                 this.symbol = symbol
@@ -202,7 +202,7 @@ class Sdk {
                             schoolName = it.reportingUnitName,
                             loginType = Api.LoginType.STANDARD,
                             loginMode = Mode.API,
-                            apiHost = certificateResponse.tokenCert.apiEndpoint,
+                            apiHost = certificateResponse.tokenCert.apiEndpoint.removeSuffix("/"),
                             scrapperHost = "",
                             ssl = certificateResponse.tokenCert.apiEndpoint.startsWith("https"),
                             certificate = certificateResponse.tokenCert.certificatePfx,

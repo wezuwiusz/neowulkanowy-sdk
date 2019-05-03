@@ -69,7 +69,7 @@ class SdkRemoteTest {
             certKey = CERT_KEY
             certificate = CERTIFICATE
 
-            apiHost = "https://api.fakelog.cf"
+            apiBaseUrl = "https://api.fakelog.cf/Default"
             mode = Sdk.Mode.API
             symbol = "Default"
 

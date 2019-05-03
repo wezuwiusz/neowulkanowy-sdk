@@ -67,7 +67,7 @@ class MobileRepository(
 
     private fun getMobileApi(): MobileService {
         return Retrofit.Builder()
-                .baseUrl("$host/$symbol/$reportingUnitSymbol/mobile-api/Uczen.v3.Uczen/")
+                .baseUrl("$host/$reportingUnitSymbol/mobile-api/Uczen.v3.Uczen/")
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .addConverterFactory(GsonConverterFactory.create())
                 .client(OkHttpClient().newBuilder()
