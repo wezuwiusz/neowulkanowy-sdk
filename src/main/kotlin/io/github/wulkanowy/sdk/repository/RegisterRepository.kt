@@ -29,7 +29,7 @@ class RegisterRepository(private val apiKey: String) {
         if ("FK1" == tokenSymbol) return Single.just("https://api.fakelog.cf")
 
         return getRegisterApi().getRoutingRules().map { routes ->
-            routes.split("\n")
+            routes.split("\r?\n".toRegex())
                     .singleOrNull { tokenSymbol == it.substringBefore(",") }?.substringAfter(",")
         }
     }
