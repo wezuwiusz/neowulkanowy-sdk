@@ -1,6 +1,9 @@
 package io.github.wulkanowy.sdk
 
 import io.github.wulkanowy.api.Api
+import io.github.wulkanowy.api.attendance.Absent
+import io.github.wulkanowy.api.messages.Folder
+import io.github.wulkanowy.api.messages.Recipient
 import io.github.wulkanowy.sdk.pojo.Grade
 import io.github.wulkanowy.api.resettableLazy
 import io.github.wulkanowy.api.resettableManager
@@ -9,6 +12,8 @@ import io.github.wulkanowy.sdk.repository.MobileRepository
 import io.github.wulkanowy.sdk.repository.RegisterRepository
 import io.reactivex.Observable
 import io.reactivex.Single
+import org.threeten.bp.LocalDate
+import org.threeten.bp.LocalDateTime
 import java.time.Instant
 import java.util.*
 
@@ -20,33 +25,96 @@ class Sdk {
         HYBRID
     }
 
+    enum class ScrapperLoginType {
+        AUTO,
+        STANDARD,
+        ADFS,
+        ADFSCards,
+        ADFSLight,
+        ADFSLightScoped
+    }
+
     var mode = Mode.HYBRID
 
-    var apiHost = "https://api.fakelog.cf"
-    var ssl = true
-    var scrapperHost = "fakelog.cf"
-    var signature = ""
-    var certificate = ""
-
-    var email = ""
-    var password = ""
-
-    var schoolSymbol = ""
-    var classId = 0
-    var studentId = 0
-
     var apiKey = ""
+
     var pin = ""
+
     var token = ""
-    var symbol = ""
+
+    var apiHost = "https://api.fakelog.cf"
+
     var deviceName = "Wulkanowy SDK"
 
-    private val scrapper = Api()
+    var certKey = ""
+
+    var certificate = ""
+
+    var ssl = true
+        set(value) {
+            field = value
+            scrapper.ssl = value
+        }
+
+    var scrapperHost = "fakelog.cf"
+        set(value) {
+            field = value
+            scrapper.host = value
+        }
+
+    var email = ""
+        set(value) {
+            field = value
+            scrapper.email = value
+        }
+    var password = ""
+        set(value) {
+            field = value
+            scrapper.password = value
+        }
+
+    var schoolSymbol = ""
+        set(value) {
+            field = value
+            scrapper.schoolSymbol = value
+        }
+
+    var classId = 0
+        set(value) {
+            field = value
+            scrapper.classId = value
+        }
+
+    var studentId = 0
+        set(value) {
+            field = value
+            scrapper.studentId = value
+        }
+    var diaryId = 0
+        set(value) {
+            field = value
+            scrapper.diaryId = value
+        }
+    var symbol = ""
+        set(value) {
+            field = value
+            scrapper.symbol = value
+        }
+
+    var loginType = ScrapperLoginType.AUTO
+        set(value) {
+            field = value
+            scrapper.loginType = Api.LoginType.valueOf(value.name)
+        }
+
+    private val scrapper = Api().apply {
+        useNewStudent = true
+    }
 
     private val resettableManager = resettableManager()
 
     private val mobile by resettableLazy(resettableManager) {
-        MobileRepository(apiKey, apiHost, symbol, signature, certificate, schoolSymbol)
+        MobileRepository(apiKey, apiHost, symbol, certKey, certificate, schoolSymbol)
     }
 
     private fun getDictionaries() = mobile.getDictionaries(0, 0, 0)
@@ -146,6 +214,18 @@ class Sdk {
         }
     }
 
+    fun getSemesters() = scrapper.getSemesters()
+
+    fun getAttendance(startDate: LocalDate, endDate: LocalDate? = null) = scrapper.getAttendance(startDate, endDate)
+
+    fun getAttendanceSummary(subjectId: Int? = -1) = scrapper.getAttendanceSummary(subjectId)
+
+    fun excuseForAbsence(absents: List<Absent>, content: String? = null) = scrapper.excuseForAbsence(absents, content)
+
+    fun getSubjects() = scrapper.getSubjects()
+
+    fun getExams(startDate: LocalDate, endDate: LocalDate? = null) = scrapper.getExams(startDate, endDate)
+
     fun getGrades(semesterId: Int): Single<List<Grade>> {
         return when (mode) {
             Mode.API -> getApiGrades(semesterId)
@@ -193,4 +273,50 @@ class Sdk {
             }
         }
     }
+
+    fun getGradesSummary(semesterId: Int? = null) = scrapper.getGradesSummary(semesterId)
+
+    fun getGradesStatistics(semesterId: Int, annual: Boolean = false) = scrapper.getGradesStatistics(semesterId, annual)
+
+    fun getHomework(start: LocalDate, end: LocalDate? = null) = scrapper.getHomework(start, end)
+
+    fun getNotes() = scrapper.getNotes()
+
+    fun getRegisteredDevices() = scrapper.getRegisteredDevices()
+
+    fun getToken() = scrapper.getToken()
+
+    fun unregisterDevice(id: Int) = scrapper.unregisterDevice(id)
+
+    fun getTeachers() = scrapper.getTeachers()
+
+    fun getSchool() = scrapper.getSchool()
+
+    fun getStudentInfo() = scrapper.getStudentInfo()
+
+    fun getReportingUnits() = scrapper.getReportingUnits()
+
+    fun getRecipients(unitId: Int, role: Int = 2) = scrapper.getRecipients(unitId, role)
+
+    fun getMessages(folder: Folder, start: LocalDateTime? = null, end: LocalDateTime? = null) = scrapper.getMessages(folder, start, end)
+
+    fun getReceivedMessages(start: LocalDateTime? = null, end: LocalDateTime? = null) = scrapper.getReceivedMessages(start, end)
+
+    fun getSentMessages(start: LocalDateTime? = null, end: LocalDateTime? = null) = scrapper.getSentMessages(start, end)
+
+    fun getDeletedMessages(start: LocalDateTime? = null, end: LocalDateTime? = null) = scrapper.getDeletedMessages(start, end)
+
+    fun getMessageRecipients(messageId: Int, loginId: Int = 0) = scrapper.getMessageRecipients(messageId, loginId)
+
+    fun getMessageContent(messageId: Int, folderId: Int, read: Boolean = false, id: Int? = null) = scrapper.getMessageContent(messageId, folderId, read, id)
+
+    fun sendMessage(subject: String, content: String, recipients: List<Recipient>) = scrapper.sendMessage(subject, content, recipients)
+
+    fun deleteMessages(messages: List<Pair<Int, Int>>) = scrapper.deleteMessages(messages)
+
+    fun getTimetable(startDate: LocalDate, endDate: LocalDate? = null) = scrapper.getTimetable(startDate, endDate)
+
+    fun getCompletedLessons(start: LocalDate, end: LocalDate? = null, subjectId: Int = -1) = scrapper.getCompletedLessons(start, end, subjectId)
+
+    fun getLuckyNumber() = scrapper.getLuckyNumber()
 }
