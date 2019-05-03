@@ -60,7 +60,7 @@ class UonetTest {
             student = pupilSubscriber.values()[0][0]
 
             // MobileRepository
-            mobile = MobileRepository(PASSWORD, HOST, SYMBOL, register.certKey, register.certificate, student.reportingUnitSymbol)
+            mobile = MobileRepository(PASSWORD, "$HOST/Default", SYMBOL, register.certKey, register.certificate, student.reportingUnitSymbol)
         }
     }
 
