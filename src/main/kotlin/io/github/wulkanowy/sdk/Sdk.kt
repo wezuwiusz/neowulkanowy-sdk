@@ -41,7 +41,7 @@ class Sdk {
     var symbol = ""
     var deviceName = "Wulkanowy SDK"
 
-    private val api = Api()
+    private val scrapper = Api()
 
     private val resettableManager = resettableManager()
 
@@ -55,13 +55,13 @@ class Sdk {
         return when (mode) {
             Mode.API -> getApiStudents(token, pin, symbol)
             Mode.SCRAPPER -> {
-                api.run {
+                scrapper.run {
                     ssl = this@Sdk.ssl
                     host = this@Sdk.scrapperHost
                     email = this@Sdk.email
                     password = this@Sdk.password
                 }
-                api.getStudents().map { students ->
+                scrapper.getStudents().map { students ->
                     students.map {
                         Student(
                             email = it.email,
@@ -84,14 +84,14 @@ class Sdk {
                 }
             }
             Mode.HYBRID -> {
-                api.run {
+                scrapper.run {
                     ssl = this@Sdk.ssl
                     host = this@Sdk.scrapperHost
                     email = this@Sdk.email
                     password = this@Sdk.password
                 }
-                api.getStudents().flatMapObservable { Observable.fromIterable(it) }.flatMapSingle {
-                    api.run {
+                scrapper.getStudents().flatMapObservable { Observable.fromIterable(it) }.flatMapSingle {
+                    scrapper.run {
                         symbol = it.symbol
                         schoolSymbol = it.schoolSymbol
                         studentId = it.studentId
@@ -99,7 +99,7 @@ class Sdk {
                         classId = it.classId
                         loginType = it.loginType
                     }
-                    api.getToken().flatMap {
+                    scrapper.getToken().flatMap {
                         getApiStudents(it.token, it.pin, it.symbol)
                     }.map { apiStudents ->
                         apiStudents.map { apiStudent ->
@@ -149,7 +149,7 @@ class Sdk {
     fun getGrades(semesterId: Int): Single<List<Grade>> {
         return when (mode) {
             Mode.API -> getApiGrades(semesterId)
-            Mode.SCRAPPER -> api.getGrades(semesterId).map { grades ->
+            Mode.SCRAPPER -> scrapper.getGrades(semesterId).map { grades ->
                 grades.map {
                     Grade(
                         subject = it.subject,
