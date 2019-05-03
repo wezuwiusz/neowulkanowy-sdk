@@ -35,7 +35,9 @@ class UonetTest {
         @JvmStatic
         @BeforeClass fun setUp() {
             // RegisterRepository
-            val register = RegisterRepository(PASSWORD, HOST, SYMBOL)
+            val register = RegisterRepository(PASSWORD)
+            register.baseHost = HOST
+            register.symbol = SYMBOL
 
             val certificate = register.getCertificate(TOKEN, PIN, DEVICE_NAME)
             val certSubscriber = TestObserver<CertificateResponse>()

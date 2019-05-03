@@ -39,6 +39,7 @@ dependencies {
     implementation "com.squareup.retrofit2:adapter-rxjava2:$retrofit"
     implementation "com.squareup.okhttp3:logging-interceptor:$okhttp3"
 
+    testImplementation "com.squareup.okhttp3:mockwebserver:$okhttp3"
     testImplementation "junit:junit:4.12"
 }
 

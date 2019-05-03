@@ -14,7 +14,7 @@ import retrofit2.http.POST
 
 interface RegisterService {
 
-    @GET("http://komponenty.vulcan.net.pl/UonetPlusMobile/RoutingRules.txt")
+    @GET("/UonetPlusMobile/RoutingRules.txt")
     fun getRoutingRules(): Single<String>
 
     @POST("Certyfikat")

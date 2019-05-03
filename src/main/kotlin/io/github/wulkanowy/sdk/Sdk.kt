@@ -180,7 +180,7 @@ class Sdk {
     }
 
     private fun getApiStudents(token: String, pin: String, symbol: String): Single<List<Student>> {
-        return RegisterRepository(apiKey, apiBaseUrl).run {
+        return RegisterRepository(apiKey).run {
             getRouteByToken(token).flatMap {
                 baseHost = it
                 this.symbol = symbol
