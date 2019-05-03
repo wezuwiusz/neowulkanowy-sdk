@@ -60,26 +60,26 @@ class Sdk {
                     host = this@Sdk.scrapperHost
                     email = this@Sdk.email
                     password = this@Sdk.password
-                }
-                scrapper.getStudents().map { students ->
-                    students.map {
-                        Student(
-                            email = it.email,
-                            className = it.className,
-                            classId = it.classId,
-                            studentId = it.studentId,
-                            symbol = it.symbol,
-                            loginType = it.loginType,
-                            schoolName = it.schoolName,
-                            schoolSymbol = it.schoolSymbol,
-                            studentName = it.studentName,
-                            loginMode = Mode.SCRAPPER,
-                            ssl = ssl,
-                            apiHost = "",
-                            scrapperHost = scrapperHost,
-                            certificateKey = "",
-                            certificate = ""
-                        )
+                    getStudents().map { students ->
+                        students.map {
+                            Student(
+                                    email = it.email,
+                                    className = it.className,
+                                    classId = it.classId,
+                                    studentId = it.studentId,
+                                    symbol = it.symbol,
+                                    loginType = it.loginType,
+                                    schoolName = it.schoolName,
+                                    schoolSymbol = it.schoolSymbol,
+                                    studentName = it.studentName,
+                                    loginMode = Mode.SCRAPPER,
+                                    ssl = ssl,
+                                    apiHost = "",
+                                    scrapperHost = scrapperHost,
+                                    certificateKey = "",
+                                    certificate = ""
+                            )
+                        }
                     }
                 }
             }
@@ -89,24 +89,24 @@ class Sdk {
                     host = this@Sdk.scrapperHost
                     email = this@Sdk.email
                     password = this@Sdk.password
-                }
-                scrapper.getStudents().flatMapObservable { Observable.fromIterable(it) }.flatMapSingle {
-                    scrapper.run {
-                        symbol = it.symbol
-                        schoolSymbol = it.schoolSymbol
-                        studentId = it.studentId
-                        diaryId = -1
-                        classId = it.classId
-                        loginType = it.loginType
-                    }
-                    scrapper.getToken().flatMap {
-                        getApiStudents(it.token, it.pin, it.symbol)
-                    }.map { apiStudents ->
-                        apiStudents.map { apiStudent ->
-                            apiStudent.copy(loginMode = Mode.HYBRID, scrapperHost = scrapperHost)
+                    getStudents().flatMapObservable { Observable.fromIterable(it) }.flatMapSingle {
+                        scrapper.run {
+                            symbol = it.symbol
+                            schoolSymbol = it.schoolSymbol
+                            studentId = it.studentId
+                            diaryId = -1
+                            classId = it.classId
+                            loginType = it.loginType
                         }
-                    }
-                }.toList().map { it.flatten() }
+                        scrapper.getToken().flatMap {
+                            getApiStudents(it.token, it.pin, it.symbol)
+                        }.map { apiStudents ->
+                            apiStudents.map { apiStudent ->
+                                apiStudent.copy(loginMode = Mode.HYBRID, scrapperHost = scrapperHost)
+                            }
+                        }
+                    }.toList().map { it.flatten() }
+                }
             }
         }
     }
