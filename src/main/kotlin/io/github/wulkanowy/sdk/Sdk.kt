@@ -159,12 +159,12 @@ class Sdk {
         RoutingRulesRepository(getRetrofitBuilder().baseUrl("http://komponenty.vulcan.net.pl").build().create())
     }
 
-    private val register by lazy(resettableManager) {
-        RegisterRepository(getRetrofitBuilder().baseUrl("$apiBaseUrl/$symbol/mobile-api/Uczen.v3.UczenStart/").build().create())
-    }
-
     private val mobile by resettableLazy(resettableManager) {
         MobileRepository(getRetrofitBuilder().baseUrl("$apiBaseUrl/$schoolSymbol/mobile-api/Uczen.v3.Uczen/").build().create())
+    }
+
+    private fun getRegisterRepo(host: String, symbol: String): RegisterRepository {
+        return RegisterRepository(getRetrofitBuilder().baseUrl("$host/$symbol/mobile-api/Uczen.v3.UczenStart/").build().create())
     }
 
     private fun getRetrofitBuilder(): Retrofit.Builder {
@@ -260,12 +260,12 @@ class Sdk {
         return routes.getRouteByToken(token).flatMap {
             this@Sdk.apiBaseUrl = it
             this@Sdk.symbol = symbol
-            register.getCertificate(token, pin, deviceName)
+            getRegisterRepo(apiBaseUrl, symbol).getCertificate(token, pin, deviceName)
         }.flatMap { certificateResponse ->
             if (certificateResponse.isError) throw RuntimeException(certificateResponse.message)
             this@Sdk.certKey = certificateResponse.tokenCert!!.certificateKey
             this@Sdk.certificate = certificateResponse.tokenCert.certificatePfx
-            register.getPupils().map { students ->
+            getRegisterRepo(apiBaseUrl, this@Sdk.symbol).getPupils().map { students ->
                 students.map {
                     Student(
                             email = it.userLogin,
