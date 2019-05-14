@@ -14,6 +14,8 @@ import io.github.wulkanowy.sdk.repository.MobileRepository
 import io.github.wulkanowy.sdk.repository.RegisterRepository
 import io.reactivex.Observable
 import io.reactivex.Single
+import okhttp3.Interceptor
+import okhttp3.logging.HttpLoggingInterceptor
 import org.threeten.bp.Instant
 import org.threeten.bp.LocalDate
 import org.threeten.bp.LocalDateTime
@@ -109,6 +111,24 @@ class Sdk {
             scrapper.loginType = Api.LoginType.valueOf(value.name)
         }
 
+    var logLevel = HttpLoggingInterceptor.Level.BASIC
+        set(value) {
+            field = value
+            scrapper.logLevel = value
+        }
+
+    var androidVersion = ""
+        set(value) {
+            field = value
+            scrapper.androidVersion = value
+        }
+
+    var buildTag = ""
+        set(value) {
+            field = value
+            scrapper.buildTag = value
+        }
+
     private val scrapper = Api().apply {
         useNewStudent = true
     }
@@ -122,6 +142,10 @@ class Sdk {
     private fun Long.toLocalDate() = Instant.ofEpochMilli(this).atZone(ZoneId.systemDefault()).toLocalDate()
 
     private fun getDictionaries() = mobile.getDictionaries(0, 0, 0)
+
+    fun setInterceptor(interceptor: Interceptor, network: Boolean = false, index: Int = -1) {
+        scrapper.setInterceptor(interceptor, network, index)
+    }
 
     fun getStudents(): Single<List<Student>> {
         return when (mode) {
