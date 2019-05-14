@@ -281,10 +281,10 @@ class Sdk {
                         date = exam.date.toLocalDate(),
                         entryDate = exam.date.toLocalDate(),
                         description = exam.description,
-                        group = exam.divideName ?: "",
-                        teacher = dict.teachers.singleOrNull { it.loginId == exam.employeeId }?.run { "$name $surname" } ?: "",
-                        subject = dict.subjects.singleOrNull { it.id == exam.subjectId }?.name ?: "",
-                        teacherSymbol = dict.teachers.singleOrNull { it.loginId == exam.employeeId }?.code ?: "",
+                        group = exam.divideName.orEmpty(),
+                        teacher = dict.teachers.singleOrNull { it.loginId == exam.employeeId }?.run { "$name $surname" }.orEmpty(),
+                        subject = dict.subjects.singleOrNull { it.id == exam.subjectId }?.name.orEmpty(),
+                        teacherSymbol = dict.teachers.singleOrNull { it.loginId == exam.employeeId }?.code.orEmpty(),
                         type = if(exam.type) "Sprawdzian" else "Kartkówka"
                     )
                 }
@@ -299,8 +299,8 @@ class Sdk {
                 grades.map {
                     Grade(
                         subject = it.subject,
-                        description = it.description ?: "",
-                        symbol = it.symbol,
+                        description = it.description.orEmpty(),
+                        symbol = it.symbol.orEmpty(),
                         comment = it.comment,
                         date = it.date.toLocalDate(),
                         teacher = it.teacher,
@@ -322,12 +322,12 @@ class Sdk {
             mobile.getGrades(classId, semesterId, studentId).map { grades ->
                 grades.map { grade ->
                     Grade(
-                        subject = dict.subjects.singleOrNull { it.id == grade.subjectId }?.name ?: "",
-                        description = dict.gradeCategories.singleOrNull { it.id == grade.categoryId }?.name ?: "",
-                        symbol = dict.gradeCategories.singleOrNull { it.id == grade.categoryId }?.code ?: "",
-                        comment = grade.comment,
+                        subject = dict.subjects.singleOrNull { it.id == grade.subjectId }?.name.orEmpty(),
+                        description = dict.gradeCategories.singleOrNull { it.id == grade.categoryId }?.name.orEmpty(),
+                        symbol = dict.gradeCategories.singleOrNull { it.id == grade.categoryId }?.code.orEmpty(),
+                        comment = grade.comment.orEmpty(),
                         date = grade.creationDate.toLocalDate(),
-                        teacher = dict.teachers.singleOrNull { it.id == grade.employeeIdD }?.let { "${it.name} ${it.surname}" } ?: "",
+                        teacher = dict.teachers.singleOrNull { it.id == grade.employeeIdD }?.let { "${it.name} ${it.surname}" }.orEmpty(),
                         entry = grade.entry,
                         weightValue = grade.gradeWeight,
                         modifier = grade.modificationWeight ?: .0,
