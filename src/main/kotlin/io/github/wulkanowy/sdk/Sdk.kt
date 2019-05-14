@@ -329,9 +329,9 @@ class Sdk {
                             entryDate = exam.date.toLocalDate(),
                             description = exam.description,
                             group = exam.divideName.orEmpty(),
-                            teacher = dict.teachers.singleOrNull { it.loginId == exam.employeeId }?.run { "$name $surname" }.orEmpty(),
+                            teacher = dict.teachers.singleOrNull { it.id == exam.employeeId }?.run { "$name $surname" }.orEmpty(),
                             subject = dict.subjects.singleOrNull { it.id == exam.subjectId }?.name.orEmpty(),
-                            teacherSymbol = dict.teachers.singleOrNull { it.loginId == exam.employeeId }?.code.orEmpty(),
+                            teacherSymbol = dict.teachers.singleOrNull { it.id == exam.employeeId }?.code.orEmpty(),
                             type = if (exam.type) "Sprawdzian" else "Kartkówka"
                     )
                 }
