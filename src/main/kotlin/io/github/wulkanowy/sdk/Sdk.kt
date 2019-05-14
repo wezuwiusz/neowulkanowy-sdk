@@ -185,7 +185,7 @@ class Sdk {
                 )
     }
 
-    private fun Long.toLocalDate() = Instant.ofEpochMilli(this).atZone(ZoneId.systemDefault()).toLocalDate()
+    private fun Long.toLocalDate() = Instant.ofEpochMilli(this * 1000L).atZone(ZoneId.systemDefault()).toLocalDate()
 
     private fun getDictionaries() = mobile.getDictionaries(0, 0, 0)
 
