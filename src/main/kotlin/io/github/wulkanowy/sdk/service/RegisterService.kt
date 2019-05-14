@@ -14,9 +14,6 @@ import retrofit2.http.POST
 
 interface RegisterService {
 
-    @GET("/UonetPlusMobile/RoutingRules.txt")
-    fun getRoutingRules(): Single<String>
-
     @POST("Certyfikat")
     @Headers("RequestMobileType: RegisterDevice")
     fun getCertificate(@Body certificateRequest: CertificateRequest): Single<CertificateResponse>

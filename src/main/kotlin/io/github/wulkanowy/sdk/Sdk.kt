@@ -8,18 +8,26 @@ import io.github.wulkanowy.sdk.pojo.Grade
 import io.github.wulkanowy.api.resettableLazy
 import io.github.wulkanowy.api.resettableManager
 import io.github.wulkanowy.api.toLocalDate
+import io.github.wulkanowy.sdk.interceptor.SignInterceptor
 import io.github.wulkanowy.sdk.pojo.Exam
 import io.github.wulkanowy.sdk.pojo.Student
 import io.github.wulkanowy.sdk.repository.MobileRepository
 import io.github.wulkanowy.sdk.repository.RegisterRepository
+import io.github.wulkanowy.sdk.repository.RoutingRulesRepository
 import io.reactivex.Observable
 import io.reactivex.Single
 import okhttp3.Interceptor
+import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import org.threeten.bp.Instant
 import org.threeten.bp.LocalDate
 import org.threeten.bp.LocalDateTime
 import org.threeten.bp.ZoneId
+import retrofit2.Retrofit
+import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
+import retrofit2.converter.gson.GsonConverterFactory
+import retrofit2.converter.scalars.ScalarsConverterFactory
+import retrofit2.create
 
 class Sdk {
 
@@ -46,13 +54,25 @@ class Sdk {
 
     var token = ""
 
-    var apiBaseUrl = "https://api.fakelog.cf"
+    var apiBaseUrl = ""
+        set(value) {
+            field = value
+            resettableManager.reset()
+        }
 
     var deviceName = "Wulkanowy SDK"
 
     var certKey = ""
+        set(value) {
+            field = value
+            resettableManager.reset()
+        }
 
     var certificate = ""
+        set(value) {
+            field = value
+            resettableManager.reset()
+        }
 
     var ssl = true
         set(value) {
@@ -135,16 +155,45 @@ class Sdk {
 
     private val resettableManager = resettableManager()
 
+    private val routes by lazy {
+        RoutingRulesRepository(getRetrofitBuilder().baseUrl("http://komponenty.vulcan.net.pl").build().create())
+    }
+
+    private val register by lazy(resettableManager) {
+        RegisterRepository(getRetrofitBuilder().baseUrl("$apiBaseUrl/$symbol/mobile-api/Uczen.v3.UczenStart/").build().create())
+    }
+
     private val mobile by resettableLazy(resettableManager) {
-        MobileRepository(apiKey, apiBaseUrl, certKey, certificate, schoolSymbol)
+        MobileRepository(getRetrofitBuilder().baseUrl("$apiBaseUrl/$schoolSymbol/mobile-api/Uczen.v3.Uczen/").build().create())
+    }
+
+    private fun getRetrofitBuilder(): Retrofit.Builder {
+        return Retrofit.Builder()
+                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+                .addConverterFactory(ScalarsConverterFactory.create())
+                .addConverterFactory(GsonConverterFactory.create())
+                .client(OkHttpClient().newBuilder()
+                        .addInterceptor(HttpLoggingInterceptor().setLevel(logLevel))
+                        .addInterceptor(SignInterceptor(apiKey, certificate, certKey))
+                        .apply {
+                            interceptors.forEach {
+                                if (it.second) addNetworkInterceptor(it.first)
+                                else addInterceptor(it.first)
+                            }
+                        }
+                        .build()
+                )
     }
 
     private fun Long.toLocalDate() = Instant.ofEpochMilli(this).atZone(ZoneId.systemDefault()).toLocalDate()
 
     private fun getDictionaries() = mobile.getDictionaries(0, 0, 0)
 
+    private val interceptors: MutableList<Pair<Interceptor, Boolean>> = mutableListOf()
+
     fun setInterceptor(interceptor: Interceptor, network: Boolean = false, index: Int = -1) {
         scrapper.setInterceptor(interceptor, network, index)
+        interceptors.add(interceptor to network)
     }
 
     fun getStudents(): Single<List<Student>> {
@@ -208,18 +257,17 @@ class Sdk {
     }
 
     private fun getApiStudents(token: String, pin: String, symbol: String): Single<List<Student>> {
-        return RegisterRepository(apiKey).run {
-            getRouteByToken(token).flatMap {
-                baseHost = it
-                this.symbol = symbol
-                getCertificate(token, pin, deviceName)
-            }.flatMap { certificateResponse ->
-                if (certificateResponse.isError) throw RuntimeException(certificateResponse.message)
-                certKey = certificateResponse.tokenCert!!.certificateKey
-                certificate = certificateResponse.tokenCert.certificatePfx
-                getPupils().map { students ->
-                    students.map {
-                        Student(
+        return routes.getRouteByToken(token).flatMap {
+            this@Sdk.apiBaseUrl = it
+            this@Sdk.symbol = symbol
+            register.getCertificate(token, pin, deviceName)
+        }.flatMap { certificateResponse ->
+            if (certificateResponse.isError) throw RuntimeException(certificateResponse.message)
+            this@Sdk.certKey = certificateResponse.tokenCert!!.certificateKey
+            this@Sdk.certificate = certificateResponse.tokenCert.certificatePfx
+            register.getPupils().map { students ->
+                students.map {
+                    Student(
                             email = it.userLogin,
                             symbol = symbol,
                             studentId = it.id,
@@ -235,8 +283,7 @@ class Sdk {
                             ssl = certificateResponse.tokenCert.apiEndpoint.startsWith("https"),
                             certificate = certificateResponse.tokenCert.certificatePfx,
                             certificateKey = certificateResponse.tokenCert.certificateKey
-                        )
-                    }
+                    )
                 }
             }
         }
@@ -253,19 +300,19 @@ class Sdk {
     fun getSubjects() = scrapper.getSubjects()
 
     fun getExams(startDate: LocalDate, endDate: LocalDate): Single<List<Exam>> {
-        return when(mode) {
+        return when (mode) {
             Mode.API -> getApiExams(startDate, endDate)
             Mode.SCRAPPER -> scrapper.getExams(startDate, endDate).map { exams ->
                 exams.map {
                     Exam(
-                        date = it.date.toLocalDate(),
-                        entryDate = it.entryDate.toLocalDate(),
-                        description = it.description,
-                        group = it.group,
-                        teacherSymbol = it.teacherSymbol,
-                        teacher = it.teacher,
-                        subject = it.subject,
-                        type = it.type
+                            date = it.date.toLocalDate(),
+                            entryDate = it.entryDate.toLocalDate(),
+                            description = it.description,
+                            group = it.group,
+                            teacherSymbol = it.teacherSymbol,
+                            teacher = it.teacher,
+                            subject = it.subject,
+                            type = it.type
                     )
                 }
             }
@@ -278,14 +325,14 @@ class Sdk {
             mobile.getExams(start, end, classId, 1, studentId).map { exams ->
                 exams.map { exam ->
                     Exam(
-                        date = exam.date.toLocalDate(),
-                        entryDate = exam.date.toLocalDate(),
-                        description = exam.description,
-                        group = exam.divideName.orEmpty(),
-                        teacher = dict.teachers.singleOrNull { it.loginId == exam.employeeId }?.run { "$name $surname" }.orEmpty(),
-                        subject = dict.subjects.singleOrNull { it.id == exam.subjectId }?.name.orEmpty(),
-                        teacherSymbol = dict.teachers.singleOrNull { it.loginId == exam.employeeId }?.code.orEmpty(),
-                        type = if(exam.type) "Sprawdzian" else "Kartkówka"
+                            date = exam.date.toLocalDate(),
+                            entryDate = exam.date.toLocalDate(),
+                            description = exam.description,
+                            group = exam.divideName.orEmpty(),
+                            teacher = dict.teachers.singleOrNull { it.loginId == exam.employeeId }?.run { "$name $surname" }.orEmpty(),
+                            subject = dict.subjects.singleOrNull { it.id == exam.subjectId }?.name.orEmpty(),
+                            teacherSymbol = dict.teachers.singleOrNull { it.loginId == exam.employeeId }?.code.orEmpty(),
+                            type = if (exam.type) "Sprawdzian" else "Kartkówka"
                     )
                 }
             }
@@ -298,18 +345,18 @@ class Sdk {
             Mode.SCRAPPER -> scrapper.getGrades(semesterId).map { grades ->
                 grades.map {
                     Grade(
-                        subject = it.subject,
-                        description = it.description.orEmpty(),
-                        symbol = it.symbol.orEmpty(),
-                        comment = it.comment,
-                        date = it.date.toLocalDate(),
-                        teacher = it.teacher,
-                        entry = it.entry,
-                        weight = it.weight,
-                        weightValue = it.weightValue,
-                        color = it.color,
-                        value = it.value.toDouble(),
-                        modifier = it.modifier
+                            subject = it.subject,
+                            description = it.description.orEmpty(),
+                            symbol = it.symbol.orEmpty(),
+                            comment = it.comment,
+                            date = it.date.toLocalDate(),
+                            teacher = it.teacher,
+                            entry = it.entry,
+                            weight = it.weight,
+                            weightValue = it.weightValue,
+                            color = it.color,
+                            value = it.value.toDouble(),
+                            modifier = it.modifier
                     )
                 }
             }
@@ -322,18 +369,18 @@ class Sdk {
             mobile.getGrades(classId, semesterId, studentId).map { grades ->
                 grades.map { grade ->
                     Grade(
-                        subject = dict.subjects.singleOrNull { it.id == grade.subjectId }?.name.orEmpty(),
-                        description = dict.gradeCategories.singleOrNull { it.id == grade.categoryId }?.name.orEmpty(),
-                        symbol = dict.gradeCategories.singleOrNull { it.id == grade.categoryId }?.code.orEmpty(),
-                        comment = grade.comment.orEmpty(),
-                        date = grade.creationDate.toLocalDate(),
-                        teacher = dict.teachers.singleOrNull { it.id == grade.employeeIdD }?.let { "${it.name} ${it.surname}" }.orEmpty(),
-                        entry = grade.entry,
-                        weightValue = grade.gradeWeight,
-                        modifier = grade.modificationWeight ?: .0,
-                        value = grade.value,
-                        weight = grade.weight,
-                        color = "0"
+                            subject = dict.subjects.singleOrNull { it.id == grade.subjectId }?.name.orEmpty(),
+                            description = dict.gradeCategories.singleOrNull { it.id == grade.categoryId }?.name.orEmpty(),
+                            symbol = dict.gradeCategories.singleOrNull { it.id == grade.categoryId }?.code.orEmpty(),
+                            comment = grade.comment.orEmpty(),
+                            date = grade.creationDate.toLocalDate(),
+                            teacher = dict.teachers.singleOrNull { it.id == grade.employeeIdD }?.let { "${it.name} ${it.surname}" }.orEmpty(),
+                            entry = grade.entry,
+                            weightValue = grade.gradeWeight,
+                            modifier = grade.modificationWeight ?: .0,
+                            value = grade.value,
+                            weight = grade.weight,
+                            color = "0"
                     )
                 }
             }
