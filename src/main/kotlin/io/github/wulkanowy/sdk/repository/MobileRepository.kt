@@ -1,5 +1,6 @@
 package io.github.wulkanowy.sdk.repository
 
+import io.github.wulkanowy.api.toFormat
 import io.github.wulkanowy.sdk.attendance.Attendance
 import io.github.wulkanowy.sdk.attendance.AttendanceRequest
 import io.github.wulkanowy.sdk.base.ApiRequest
@@ -21,6 +22,7 @@ import io.github.wulkanowy.sdk.timetable.TimetableRequest
 import io.reactivex.Single
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
+import org.threeten.bp.LocalDate
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
@@ -28,7 +30,6 @@ import retrofit2.converter.gson.GsonConverterFactory
 class MobileRepository(
     private val password: String,
     private val host: String,
-    private val symbol: String,
     private val certKey: String,
     private val certificate: String,
     private val reportingUnitSymbol: String
@@ -41,29 +42,31 @@ class MobileRepository(
     fun getDictionaries(userId: Int, classificationPeriodId: Int, classId: Int): Single<Dictionaries>
             = api.getDictionaries(DictionariesRequest(userId, classificationPeriodId, classId)).map { it.data }
 
-    fun getTimetable(startDate: String, endDate: String, classId: Int, classificationPeriodId: Int, studentId: Int): Single<List<Lesson>> {
-        return getMobileApi().getTimetable(TimetableRequest(startDate, endDate, classId, classificationPeriodId, studentId)).map { it.data }
+    fun getTimetable(start: LocalDate, end: LocalDate, classId: Int, classificationPeriodId: Int, studentId: Int): Single<List<Lesson>> {
+        return getMobileApi().getTimetable(TimetableRequest(start.toFormat(), end.toFormat(), classId, classificationPeriodId, studentId)).map { it.data }
     }
 
     fun getGrades(classId: Int, classificationPeriodId: Int, studentId: Int): Single<List<Grade>> {
         return getMobileApi().getGrades(GradesRequest(classId, classificationPeriodId, studentId)).map { it.data }
     }
 
-    fun getExams(startDate: String, endDate: String, classId: Int, classificationPeriodId: Int, studentId: Int): Single<List<Exam>> {
-        return getMobileApi().getExams(ExamsRequest(startDate, endDate, classId, classificationPeriodId, studentId)).map { it.data }
+    fun getExams(start: LocalDate, end: LocalDate, classId: Int, classificationPeriodId: Int, studentId: Int): Single<List<Exam>> {
+        return getMobileApi().getExams(ExamsRequest(start.toFormat(), end.toFormat(), classId, classificationPeriodId, studentId)).map { it.data }
     }
 
     fun getNotes(classificationPeriodId: Int, studentId: Int): Single<List<Note>> {
         return getMobileApi().getNotes(NotesRequest(classificationPeriodId, studentId)).map { it.data }
     }
 
-    fun getAttendance(startDate: String, endDate: String, classId: Int, classificationPeriodId: Int, studentId: Int): Single<List<Attendance>> {
-        return getMobileApi().getAttendance(AttendanceRequest(startDate, endDate, classId, classificationPeriodId, studentId)).map { it.data?.data }
+    fun getAttendance(start: LocalDate, end: LocalDate, classId: Int, classificationPeriodId: Int, studentId: Int): Single<List<Attendance>> {
+        return getMobileApi().getAttendance(AttendanceRequest(start.toFormat(), end.toFormat(), classId, classificationPeriodId, studentId)).map { it.data?.data }
     }
 
-    fun getHomework(startDate: String, endDate: String, classId: Int, classificationPeriodId: Int, studentId: Int): Single<List<Homework>> {
-        return getMobileApi().getHomework(HomeworkRequest(startDate, endDate, classId, classificationPeriodId, studentId)).map { it.data }
+    fun getHomework(start: LocalDate, end: LocalDate, classId: Int, classificationPeriodId: Int, studentId: Int): Single<List<Homework>> {
+        return getMobileApi().getHomework(HomeworkRequest(start.toFormat(), end.toFormat(), classId, classificationPeriodId, studentId)).map { it.data }
     }
+
+    private fun LocalDate.toFormat() = toFormat("yyyy-MM-dd")
 
     private fun getMobileApi(): MobileService {
         return Retrofit.Builder()

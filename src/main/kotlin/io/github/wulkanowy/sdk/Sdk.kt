@@ -7,15 +7,17 @@ import io.github.wulkanowy.api.messages.Recipient
 import io.github.wulkanowy.sdk.pojo.Grade
 import io.github.wulkanowy.api.resettableLazy
 import io.github.wulkanowy.api.resettableManager
+import io.github.wulkanowy.api.toLocalDate
+import io.github.wulkanowy.sdk.pojo.Exam
 import io.github.wulkanowy.sdk.pojo.Student
 import io.github.wulkanowy.sdk.repository.MobileRepository
 import io.github.wulkanowy.sdk.repository.RegisterRepository
 import io.reactivex.Observable
 import io.reactivex.Single
+import org.threeten.bp.Instant
 import org.threeten.bp.LocalDate
 import org.threeten.bp.LocalDateTime
-import java.time.Instant
-import java.util.*
+import org.threeten.bp.ZoneId
 
 class Sdk {
 
@@ -114,8 +116,10 @@ class Sdk {
     private val resettableManager = resettableManager()
 
     private val mobile by resettableLazy(resettableManager) {
-        MobileRepository(apiKey, apiBaseUrl, symbol, certKey, certificate, schoolSymbol)
+        MobileRepository(apiKey, apiBaseUrl, certKey, certificate, schoolSymbol)
     }
+
+    private fun Long.toLocalDate() = Instant.ofEpochMilli(this).atZone(ZoneId.systemDefault()).toLocalDate()
 
     private fun getDictionaries() = mobile.getDictionaries(0, 0, 0)
 
@@ -224,7 +228,45 @@ class Sdk {
 
     fun getSubjects() = scrapper.getSubjects()
 
-    fun getExams(startDate: LocalDate, endDate: LocalDate? = null) = scrapper.getExams(startDate, endDate)
+    fun getExams(startDate: LocalDate, endDate: LocalDate): Single<List<Exam>> {
+        return when(mode) {
+            Mode.API -> getApiExams(startDate, endDate)
+            Mode.SCRAPPER -> scrapper.getExams(startDate, endDate).map { exams ->
+                exams.map {
+                    Exam(
+                        date = it.date.toLocalDate(),
+                        entryDate = it.entryDate.toLocalDate(),
+                        description = it.description,
+                        group = it.group,
+                        teacherSymbol = it.teacherSymbol,
+                        teacher = it.teacher,
+                        subject = it.subject,
+                        type = it.type
+                    )
+                }
+            }
+            Mode.HYBRID -> getApiExams(startDate, endDate)
+        }
+    }
+
+    private fun getApiExams(start: LocalDate, end: LocalDate): Single<List<Exam>> {
+        return getDictionaries().flatMap { dict ->
+            mobile.getExams(start, end, classId, 1, studentId).map { exams ->
+                exams.map { exam ->
+                    Exam(
+                        date = exam.date.toLocalDate(),
+                        entryDate = exam.date.toLocalDate(),
+                        description = exam.description,
+                        group = exam.divideName ?: "",
+                        teacher = dict.teachers.singleOrNull { it.loginId == exam.employeeId }?.run { "$name $surname" } ?: "",
+                        subject = dict.subjects.singleOrNull { it.id == exam.subjectId }?.name ?: "",
+                        teacherSymbol = dict.teachers.singleOrNull { it.loginId == exam.employeeId }?.code ?: "",
+                        type = if(exam.type) "Sprawdzian" else "Kartkówka"
+                    )
+                }
+            }
+        }
+    }
 
     fun getGrades(semesterId: Int): Single<List<Grade>> {
         return when (mode) {
@@ -236,7 +278,7 @@ class Sdk {
                         description = it.description ?: "",
                         symbol = it.symbol,
                         comment = it.comment,
-                        date = it.date,
+                        date = it.date.toLocalDate(),
                         teacher = it.teacher,
                         entry = it.entry,
                         weight = it.weight,
@@ -260,7 +302,7 @@ class Sdk {
                         description = dict.gradeCategories.singleOrNull { it.id == grade.categoryId }?.name ?: "",
                         symbol = dict.gradeCategories.singleOrNull { it.id == grade.categoryId }?.code ?: "",
                         comment = grade.comment,
-                        date = Date.from(Instant.ofEpochSecond(grade.creationDate.toLong())),
+                        date = grade.creationDate.toLocalDate(),
                         teacher = dict.teachers.singleOrNull { it.id == grade.employeeIdD }?.let { "${it.name} ${it.surname}" } ?: "",
                         entry = grade.entry,
                         weightValue = grade.gradeWeight,

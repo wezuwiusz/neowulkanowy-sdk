@@ -16,6 +16,7 @@ import io.reactivex.observers.TestObserver
 import junit.framework.TestCase.assertEquals
 import org.junit.BeforeClass
 import org.junit.Test
+import org.threeten.bp.LocalDate.of
 
 const val PASSWORD = "012345678901234567890123456789AB"
 const val DEVICE_NAME = "Wulkanowy#client"
@@ -62,7 +63,7 @@ class UonetTest {
             student = pupilSubscriber.values()[0][0]
 
             // MobileRepository
-            mobile = MobileRepository(PASSWORD, "$HOST/Default", SYMBOL, register.certKey, register.certificate, student.reportingUnitSymbol)
+            mobile = MobileRepository(PASSWORD, "$HOST/Default", register.certKey, register.certificate, student.reportingUnitSymbol)
         }
     }
 
@@ -84,7 +85,7 @@ class UonetTest {
     }
 
     @Test fun timetableTest() {
-        val lessons = mobile.getTimetable("2018-04-23", "2018-04-24", student.classId, student.classificationPeriodId, student.id)
+        val lessons = mobile.getTimetable(of(2018, 4, 23), of(2018, 4, 24), student.classId, student.classificationPeriodId, student.id)
         val lessonsSubscriber = TestObserver<List<Lesson>>()
         lessons.subscribe(lessonsSubscriber)
         lessonsSubscriber.assertComplete()
@@ -100,7 +101,7 @@ class UonetTest {
     }
 
     @Test fun examsTest() {
-        val exams = mobile.getExams("2018-05-28", "2018-06-03", student.classId, student.classificationPeriodId, student.id)
+        val exams = mobile.getExams(of(2018, 5, 28), of(2018, 6, 3), student.classId, student.classificationPeriodId, student.id)
         val examsSubscriber = TestObserver<List<Exam>>()
         exams.subscribe(examsSubscriber)
         examsSubscriber.assertComplete()
@@ -116,7 +117,7 @@ class UonetTest {
     }
 
     @Test fun attendanceTest() {
-        val attendance = mobile.getAttendance("2018-04-23", "2018-04-24", student.classId, student.classificationPeriodId, student.id)
+        val attendance = mobile.getAttendance(of(2018, 4, 23), of(2018, 4, 24), student.classId, student.classificationPeriodId, student.id)
         val attendanceSubscriber = TestObserver<List<Attendance>>()
         attendance.subscribe(attendanceSubscriber)
         attendanceSubscriber.assertComplete()
@@ -124,7 +125,7 @@ class UonetTest {
     }
 
     @Test fun homeworkTest() {
-        val homework = mobile.getHomework("2017-10-23", "2017-10-27", student.classId, student.classificationPeriodId, student.id)
+        val homework = mobile.getHomework(of(2017, 10, 23), of(2017, 10, 27), student.classId, student.classificationPeriodId, student.id)
         val homeworkSubscriber = TestObserver<List<Homework>>()
         homework.subscribe(homeworkSubscriber)
         homeworkSubscriber.assertComplete()

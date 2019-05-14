@@ -1,6 +1,6 @@
 package io.github.wulkanowy.sdk.pojo
 
-import java.util.*
+import org.threeten.bp.LocalDate
 
 data class Grade(
         val subject: String,
@@ -14,7 +14,7 @@ data class Grade(
         val description: String,
         val color: String,
         val teacher: String,
-        val date: Date
+        val date: LocalDate
 
 //        val counter: Int?,
 //        val denominator: Int?,

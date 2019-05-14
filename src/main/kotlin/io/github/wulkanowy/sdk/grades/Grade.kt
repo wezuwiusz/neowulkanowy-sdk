@@ -47,13 +47,13 @@ data class Grade(
         val description: String,
 
         @SerializedName("DataUtworzenia")
-        val creationDate: Int,
+        val creationDate: Long,
 
         @SerializedName("DataUtworzeniaTekst")
         val creationDateText: String,
 
         @SerializedName("DataModyfikacji")
-        val modificationDate: Int,
+        val modificationDate: Long,
 
         @SerializedName("DataModyfikacjiTekst")
         val modificationDateText: String,
