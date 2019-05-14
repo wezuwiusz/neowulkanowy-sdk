@@ -197,7 +197,7 @@ class Sdk {
                             studentId = it.id,
                             classId = it.classId,
                             className = it.classCode,
-                            studentName = it.userName,
+                            studentName = "${it.name} ${it.surname}",
                             schoolSymbol = it.reportingUnitSymbol,
                             schoolName = it.reportingUnitName,
                             loginType = Api.LoginType.STANDARD,
