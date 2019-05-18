@@ -475,11 +475,11 @@ class ApiRemoteTest : BaseTest() {
     @Test
     fun unregisterTest() {
         val unregister = api.unregisterDevice(1234)
-        val unregisterObserver = TestObserver<List<Device>>()
+        val unregisterObserver = TestObserver<Boolean>()
         unregister.subscribe(unregisterObserver)
         unregisterObserver.assertComplete()
 
-        assertEquals(2, unregisterObserver.values()[0].size)
+        assertEquals(true, unregisterObserver.values()[0])
     }
 
     @Test

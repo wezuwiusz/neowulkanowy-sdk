@@ -229,7 +229,7 @@ class Api {
 
     fun getToken() = snp.getToken()
 
-    fun unregisterDevice(id: Int) = snp.unregisterDevice(id)
+    fun unregisterDevice(id: Int) = if (useNewStudent) student.unregisterDevice(id) else snp.unregisterDevice(id)
 
     fun getTeachers() = if (useNewStudent) student.getTeachers() else snp.getTeachers()
 

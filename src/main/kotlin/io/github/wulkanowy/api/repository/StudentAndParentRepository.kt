@@ -161,8 +161,8 @@ class StudentAndParentRepository(private val api: StudentAndParentService) {
         return api.getToken()
     }
 
-    fun unregisterDevice(id: Int): Single<List<Device>> {
-        return api.unregisterDevice(id).map { it.devices }
+    fun unregisterDevice(id: Int): Single<Boolean> {
+        return api.unregisterDevice(id).map { !it.devices.any { device -> device.id == id } }
     }
 
     fun getTeachers(): Single<List<Teacher>> {

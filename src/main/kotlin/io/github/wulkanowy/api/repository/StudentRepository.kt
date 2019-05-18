@@ -29,7 +29,9 @@ import io.github.wulkanowy.api.grades.getGradeValueWithModifier
 import io.github.wulkanowy.api.grades.isGradeValid
 import io.github.wulkanowy.api.homework.Homework
 import io.github.wulkanowy.api.interceptor.FeatureDisabledException
+import io.github.wulkanowy.api.interceptor.VulcanException
 import io.github.wulkanowy.api.mobile.Device
+import io.github.wulkanowy.api.mobile.UnregisterDeviceRequest
 import io.github.wulkanowy.api.notes.Note
 import io.github.wulkanowy.api.school.School
 import io.github.wulkanowy.api.school.Teacher
@@ -339,5 +341,19 @@ class StudentRepository(private val api: StudentService) {
 
     fun getRegisteredDevices(): Single<List<Device>> {
         return api.getRegisteredDevices().map { it.data }
+    }
+
+    fun unregisterDevice(id: Int): Single<Boolean> {
+        return api.getStart("Start").flatMap {
+            api.unregisterDevice(
+                getScriptParam("antiForgeryToken", it),
+                getScriptParam("appGuid", it),
+                getScriptParam("version", it),
+                UnregisterDeviceRequest(id)
+            )
+        }.map {
+            if (!it.success) throw VulcanException(it.feedback.message)
+            it.success
+        }
     }
 }
