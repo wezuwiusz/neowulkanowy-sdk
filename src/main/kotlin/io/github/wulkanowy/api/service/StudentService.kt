@@ -15,6 +15,7 @@ import io.github.wulkanowy.api.grades.GradesStatisticsRequest
 import io.github.wulkanowy.api.grades.GradesStatisticsResponse
 import io.github.wulkanowy.api.homework.HomeworkResponse
 import io.github.wulkanowy.api.mobile.Device
+import io.github.wulkanowy.api.mobile.TokenResponse
 import io.github.wulkanowy.api.mobile.UnregisterDeviceRequest
 import io.github.wulkanowy.api.notes.NotesResponse
 import io.github.wulkanowy.api.register.Diary
@@ -94,7 +95,7 @@ interface StudentService {
     fun getRegisteredDevices(): Single<ApiResponse<List<Device>>>
 
     @POST("RejestracjaUrzadzeniaToken.mvc/Get")
-    fun getToken()
+    fun getToken(): Single<ApiResponse<TokenResponse>>
 
     @POST("ZarejestrowaneUrzadzenia.mvc/Delete")
     fun unregisterDevice(
