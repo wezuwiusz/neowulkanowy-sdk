@@ -154,7 +154,7 @@ class Api {
                 loginType,
                 schema,
                 host,
-                normalizedSymbol,
+                normalizedSymbol.getNormalizedSymbol(),
                 serviceManager.getCookieManager(),
                 serviceManager.getLoginService()
             ),

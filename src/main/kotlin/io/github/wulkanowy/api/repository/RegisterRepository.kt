@@ -2,6 +2,7 @@ package io.github.wulkanowy.api.repository
 
 import io.github.wulkanowy.api.Api
 import io.github.wulkanowy.api.ApiException
+import io.github.wulkanowy.api.getNormalizedSymbol
 import io.github.wulkanowy.api.getScriptParam
 import io.github.wulkanowy.api.login.AccountPermissionException
 import io.github.wulkanowy.api.login.CertificateResponse
@@ -18,7 +19,6 @@ import io.reactivex.Single
 import org.jsoup.Jsoup
 import org.jsoup.parser.Parser
 import java.net.URL
-import java.text.Normalizer
 
 class RegisterRepository(
     private val startSymbol: String,
@@ -141,13 +141,5 @@ class RegisterRepository(
         }
 
         return path[2]
-    }
-
-    private fun String.getNormalizedSymbol(): String {
-        return trim().toLowerCase().replace("default", "").run {
-            Normalizer.normalize(this, Normalizer.Form.NFD).run {
-                "\\p{InCombiningDiacriticalMarks}+".toRegex().replace(this, "")
-            }
-        }.replace("[^a-z]".toRegex(), "").ifBlank { "Default" }
     }
 }

@@ -9,6 +9,7 @@ import org.threeten.bp.ZoneId.systemDefault
 import org.threeten.bp.format.DateTimeFormatter.ofPattern
 import org.threeten.bp.temporal.TemporalAdjusters.previousOrSame
 import java.sql.Date.valueOf
+import java.text.Normalizer
 import java.text.SimpleDateFormat
 import java.util.Date
 
@@ -42,4 +43,12 @@ fun getScriptParam(name: String, content: String, fallback: String = ""): String
     return "$name: '(.)*'".toRegex().find(content).let { result ->
         if (null !== result) parse(result.groupValues[0].substringAfter("'").substringBefore("'")).text() else fallback
     }
+}
+
+fun String.getNormalizedSymbol(): String {
+    return trim().toLowerCase().replace("default", "").run {
+        Normalizer.normalize(this, Normalizer.Form.NFD).run {
+            "\\p{InCombiningDiacriticalMarks}+".toRegex().replace(this, "")
+        }
+    }.replace("[^a-z]".toRegex(), "").ifBlank { "Default" }
 }
