@@ -74,7 +74,10 @@ class StudentRepository(private val api: StudentService) {
                 getScriptParam("appGuid", it),
                 getScriptParam("version", it)
             )
-        }.map { it.data }
+        }.map {
+            if (!it.success) throw VulcanException(it.feedback.message)
+            it.data
+        }
     }
 
     private fun getTimes(): Single<List<CacheResponse.Time>> {
@@ -87,29 +90,33 @@ class StudentRepository(private val api: StudentService) {
 
     fun getAttendance(startDate: LocalDate, endDate: LocalDate? = null): Single<List<Attendance>> {
         val end = endDate ?: startDate.plusDays(4)
-        return api.getAttendance(AttendanceRequest(startDate.toDate())).map { it.data?.lessons }
-            .flatMapObservable { Observable.fromIterable(it) }
-            .flatMap { a ->
-                getTimes().flatMapObservable { times ->
-                    Observable.fromIterable(times.filter { time -> time.id == a.number })
-                }.map {
-                    a.apply {
-                        presence = a.categoryId == Category.PRESENCE.id || a.categoryId == Category.ABSENCE_FOR_SCHOOL_REASONS.id
-                        absence = a.categoryId == Category.ABSENCE_UNEXCUSED.id || a.categoryId == Category.ABSENCE_EXCUSED.id
-                        lateness = a.categoryId == Category.EXCUSED_LATENESS.id || a.categoryId == Category.UNEXCUSED_LATENESS.id
-                        excused = a.categoryId == Category.ABSENCE_EXCUSED.id || a.categoryId == Category.EXCUSED_LATENESS.id
-                        exemption = a.categoryId == Category.EXEMPTION.id
-                        name = (Category.values().singleOrNull { category -> category.id == categoryId } ?: Category.UNKNOWN).title
-                        number = it.number
-                    }
+        return api.getAttendance(AttendanceRequest(startDate.toDate())).map {
+            if (!it.success) throw VulcanException(it.feedback.message)
+            it.data?.lessons
+        }.flatMapObservable { Observable.fromIterable(it) }.flatMap { a ->
+            getTimes().flatMapObservable { times ->
+                Observable.fromIterable(times.filter { time -> time.id == a.number })
+            }.map {
+                a.apply {
+                    presence = a.categoryId == Category.PRESENCE.id || a.categoryId == Category.ABSENCE_FOR_SCHOOL_REASONS.id
+                    absence = a.categoryId == Category.ABSENCE_UNEXCUSED.id || a.categoryId == Category.ABSENCE_EXCUSED.id
+                    lateness = a.categoryId == Category.EXCUSED_LATENESS.id || a.categoryId == Category.UNEXCUSED_LATENESS.id
+                    excused = a.categoryId == Category.ABSENCE_EXCUSED.id || a.categoryId == Category.EXCUSED_LATENESS.id
+                    exemption = a.categoryId == Category.EXEMPTION.id
+                    name = (Category.values().singleOrNull { category -> category.id == categoryId } ?: Category.UNKNOWN).title
+                    number = it.number
                 }
-            }.filter {
-                it.date.toLocalDate() >= startDate && it.date.toLocalDate() <= end
-            }.toList().map { list -> list.sortedWith(compareBy({ it.date }, { it.number })) }
+            }
+        }.filter {
+            it.date.toLocalDate() >= startDate && it.date.toLocalDate() <= end
+        }.toList().map { list -> list.sortedWith(compareBy({ it.date }, { it.number })) }
     }
 
     fun getAttendanceSummary(subjectId: Int?): Single<List<AttendanceSummary>> {
-        return api.getAttendanceStatistics(AttendanceSummaryRequest(subjectId)).map { it.data }.map { res ->
+        return api.getAttendanceStatistics(AttendanceSummaryRequest(subjectId)).map {
+            if (!it.success) throw VulcanException(it.feedback.message)
+            it.data
+        }.map { res ->
             val stats = res.items.map {
                 (gson.create().fromJson<LinkedTreeMap<String, String?>>(
                     gson.registerTypeAdapter(
@@ -154,17 +161,26 @@ class StudentRepository(private val api: StudentService) {
                     content = content
                 )
             )
-        ).map { it.success }
+        ).map {
+            if (!it.success) throw VulcanException(it.feedback.message)
+            it.success
+        }
     }
 
     fun getSubjects(): Single<List<Subject>> {
-        return api.getAttendanceSubjects().map { it.data }
+        return api.getAttendanceSubjects().map {
+            if (!it.success) throw VulcanException(it.feedback.message)
+            it.data
+        }
     }
 
     fun getExams(startDate: LocalDate, endDate: LocalDate? = null): Single<List<Exam>> {
         val end = endDate ?: startDate.plusDays(4)
-        return api.getExams(ExamRequest(startDate.toDate(), startDate.getSchoolYear())).map { res ->
-            res.data?.asSequence()?.map { weeks ->
+        return api.getExams(ExamRequest(startDate.toDate(), startDate.getSchoolYear())).map {
+            if (!it.success) throw VulcanException(it.feedback.message)
+            it.data
+        }.map { res ->
+            res.asSequence().map { weeks ->
                 weeks.weeks.map { day ->
                     day.exams.map { exam ->
                         exam.apply {
@@ -182,15 +198,18 @@ class StudentRepository(private val api: StudentService) {
                         }
                     }
                 }.flatten()
-            }?.flatten()?.filter {
+            }.flatten().filter {
                 it.date.toLocalDate() >= startDate && it.date.toLocalDate() <= end
-            }?.sortedBy { it.date }?.toList()
+            }.sortedBy { it.date }.toList()
         }
     }
 
     fun getGrades(semesterId: Int?): Single<List<Grade>> {
-        return api.getGrades(GradeRequest(semesterId)).map { res ->
-            res.data?.gradesWithSubjects?.map { gradesSubject ->
+        return api.getGrades(GradeRequest(semesterId)).map {
+            if (!it.success) throw VulcanException(it.feedback.message)
+            it.data
+        }.map { res ->
+            res.gradesWithSubjects.map { gradesSubject ->
                 gradesSubject.grades.map { grade ->
                     val values = getGradeValueWithModifier(grade.entry)
                     grade.apply {
@@ -211,12 +230,15 @@ class StudentRepository(private val api: StudentService) {
                         description = description ?: ""
                     }
                 }
-            }?.flatten()?.sortedByDescending { it.date }
+            }.flatten().sortedByDescending { it.date }
         }
     }
 
     fun getGradesStatistics(semesterId: Int, annual: Boolean): Single<List<GradeStatistics>> {
-        return if (annual) api.getGradesAnnualStatistics(GradesStatisticsRequest(semesterId)).map { it.data }.map {
+        return if (annual) api.getGradesAnnualStatistics(GradesStatisticsRequest(semesterId)).map {
+            if (!it.success) throw VulcanException(it.feedback.message)
+            it.data
+        }.map {
             it.map { annualSubject ->
                 annualSubject.items?.reversed()?.mapIndexed { index, item ->
                     item.apply {
@@ -227,7 +249,10 @@ class StudentRepository(private val api: StudentService) {
                     }
                 }.orEmpty()
             }.flatten().reversed()
-        } else return api.getGradesPartialStatistics(GradesStatisticsRequest(semesterId)).map { it.data }.map {
+        } else return api.getGradesPartialStatistics(GradesStatisticsRequest(semesterId)).map {
+            if (!it.success) throw VulcanException(it.feedback.message)
+            it.data
+        }.map {
             it.map { partialSubject ->
                 partialSubject.classSeries.items?.reversed()?.mapIndexed { index, item ->
                     item.apply {
@@ -242,21 +267,27 @@ class StudentRepository(private val api: StudentService) {
     }
 
     fun getGradesSummary(semesterId: Int?): Single<List<GradeSummary>> {
-        return api.getGrades(GradeRequest(semesterId)).map { res ->
-            res.data?.gradesWithSubjects?.map { subject ->
+        return api.getGrades(GradeRequest(semesterId)).map {
+            if (!it.success) throw VulcanException(it.feedback.message)
+            it.data
+        }.map { res ->
+            res.gradesWithSubjects.map { subject ->
                 GradeSummary().apply {
                     name = subject.name
                     predicted = getGradeShortValue(subject.proposed)
                     final = getGradeShortValue(subject.annual)
                 }
-            }?.sortedBy { it.name }?.toList()
+            }.sortedBy { it.name }.toList()
         }
     }
 
     fun getHomework(startDate: LocalDate, endDate: LocalDate? = null): Single<List<Homework>> {
         val end = endDate ?: startDate
-        return api.getHomework(ExamRequest(startDate.toDate(), startDate.getSchoolYear())).map { res ->
-            res.data?.asSequence()?.map { day ->
+        return api.getHomework(ExamRequest(startDate.toDate(), startDate.getSchoolYear())).map {
+            if (!it.success) throw VulcanException(it.feedback.message)
+            it.data
+        }.map { res ->
+            res.asSequence().map { day ->
                 day.items.map {
                     val teacherAndDate = it.teacher.split(", ")
                     it.apply {
@@ -266,39 +297,45 @@ class StudentRepository(private val api: StudentService) {
                         teacherSymbol = teacherAndDate.first().split(" [").last().removeSuffix("]")
                     }
                 }
-            }?.flatten()?.filter {
+            }.flatten().filter {
                 it.date.toLocalDate() in startDate..end
-            }?.sortedWith(compareBy({ it.date }, { it.subject }))?.toList()
+            }.sortedWith(compareBy({ it.date }, { it.subject })).toList()
         }
     }
 
     fun getNotes(): Single<List<Note>> {
-        return api.getNotes().map { res ->
-            res.data?.notes?.map {
+        return api.getNotes().map {
+            if (!it.success) throw VulcanException(it.feedback.message)
+            it.data
+        }.map { res ->
+            res.notes.map {
                 it.apply {
                     teacherSymbol = teacher.split(" [").last().removeSuffix("]")
                     teacher = teacher.split(" [").first()
                 }
-            }?.sortedWith(compareBy({ it.date }, { it.category }))
+            }.sortedWith(compareBy({ it.date }, { it.category }))
         }
     }
 
     fun getTimetable(startDate: LocalDate, endDate: LocalDate? = null): Single<List<Timetable>> {
-        return api.getTimetable(TimetableRequest(startDate.toISOFormat())).map { res ->
-            res.data?.rows2api?.flatMap { lessons ->
+        return api.getTimetable(TimetableRequest(startDate.toISOFormat())).map {
+            if (!it.success) throw VulcanException(it.feedback.message)
+            it.data
+        }.map { res ->
+            res.rows2api.flatMap { lessons ->
                 lessons.drop(1).mapIndexed { i, it ->
                     val times = lessons[0].split("<br />")
                     TimetableResponse.TimetableRow.TimetableCell().apply {
-                        date = res.data.header.drop(1)[i].date.split("<br />")[1].toDate("dd.MM.yyyy")
+                        date = res.header.drop(1)[i].date.split("<br />")[1].toDate("dd.MM.yyyy")
                         start = "${date.toLocalDate().toFormat("yyyy-MM-dd")} ${times[1]}".toDate("yyyy-MM-dd HH:mm")
                         end = "${date.toLocalDate().toFormat("yyyy-MM-dd")} ${times[2]}".toDate("yyyy-MM-dd HH:mm")
                         number = times[0].toInt()
                         td = Jsoup.parse(it)
                     }
                 }.mapNotNull { TimetableParser().getTimetable(it) }
-            }?.asSequence()?.filter {
+            }.asSequence().filter {
                 it.date.toLocalDate() >= startDate && it.date.toLocalDate() <= endDate ?: startDate.plusDays(4)
-            }?.sortedWith(compareBy({ it.date }, { it.number }))?.toList()
+            }.sortedWith(compareBy({ it.date }, { it.number })).toList()
         }
     }
 
@@ -322,30 +359,38 @@ class StudentRepository(private val api: StudentService) {
     }
 
     fun getTeachers(): Single<List<Teacher>> {
-        return api.getSchoolAndTeachers()
-            .map { it.data }
-            .map { res ->
-                res.teachers.map {
-                    it.copy(
-                        short = it.name.substringAfter("[").substringBefore("]"),
-                        name = it.name.substringBefore(" [")
-                    )
-                }.sortedWith(compareBy({ it.subject }, { it.name }))
-            }
+        return api.getSchoolAndTeachers().map {
+            if (!it.success) throw VulcanException(it.feedback.message)
+            it.data
+        }.map { res ->
+            res.teachers.map {
+                it.copy(
+                    short = it.name.substringAfter("[").substringBefore("]"),
+                    name = it.name.substringBefore(" [")
+                )
+            }.sortedWith(compareBy({ it.subject }, { it.name }))
+        }
     }
 
     fun getSchool(): Single<School> {
-        return api.getSchoolAndTeachers()
-            .map { it.data }
-            .map { it.school }
+        return api.getSchoolAndTeachers().map {
+            if (!it.success) throw VulcanException(it.feedback.message)
+            it.data
+        }.map { it.school }
     }
 
     fun getRegisteredDevices(): Single<List<Device>> {
-        return api.getRegisteredDevices().map { it.data }
+        return api.getRegisteredDevices().map {
+            if (!it.success) throw VulcanException(it.feedback.message)
+            it.data
+        }
     }
 
     fun getToken(): Single<TokenResponse> {
-        return api.getToken().map { it.data }
+        return api.getToken().map {
+            if (!it.success) throw VulcanException(it.feedback.message)
+            it.data
+        }
     }
 
     fun unregisterDevice(id: Int): Single<Boolean> {
