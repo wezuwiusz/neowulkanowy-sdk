@@ -124,7 +124,7 @@ class Api {
 
     private val schema by resettableLazy(changeManager) { "http" + if (ssl) "s" else "" }
 
-    private val normalizedSymbol by resettableLazy(changeManager) { if (symbol.isBlank()) "Default" else symbol }
+    private val normalizedSymbol by resettableLazy(changeManager) { if (symbol.isBlank()) "Default" else symbol.getNormalizedSymbol() }
 
     private val serviceManager by resettableLazy(changeManager) {
         ServiceManager(
@@ -154,7 +154,7 @@ class Api {
                 loginType,
                 schema,
                 host,
-                normalizedSymbol.getNormalizedSymbol(),
+                normalizedSymbol,
                 serviceManager.getCookieManager(),
                 serviceManager.getLoginService()
             ),
