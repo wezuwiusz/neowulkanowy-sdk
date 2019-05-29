@@ -273,9 +273,14 @@ class StudentRepository(private val api: StudentService) {
         }.map { res ->
             res.gradesWithSubjects.map { subject ->
                 GradeSummary().apply {
+                    visibleSubject = subject.visibleSubject
+                    order = subject.order
                     name = subject.name
+                    average = subject.average
                     predicted = getGradeShortValue(subject.proposed)
                     final = getGradeShortValue(subject.annual)
+                    pointsSum = subject.pointsSum.orEmpty()
+                    proposedPoints = subject.proposedPoints.orEmpty()
                 }
             }.sortedBy { it.name }.toList()
         }
