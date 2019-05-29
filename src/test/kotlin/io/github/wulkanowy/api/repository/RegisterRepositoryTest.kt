@@ -134,4 +134,21 @@ class RegisterRepositoryTest : BaseLocalTest() {
 
         assertEquals("/Default/Account/LogOn", server.takeRequest().path)
     }
+
+    @Test
+    fun normalizeInvalidSymbol_digits() {
+        server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("LoginPage-standard.html").readText()))
+        server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("Logowanie-uonet.html").readText()))
+        server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("Logowanie-brak-dostepu.html").readText()))
+        server.enqueue(MockResponse().setBody(ErrorInterceptorTest::class.java.getResource("Offline.html").readText()))
+
+        server.start(3000)
+
+        val res = getRegisterRepository(" glubczyce2").getStudents()
+        val observer = TestObserver<List<Student>>()
+        res.subscribe(observer)
+        observer.assertTerminated()
+
+        assertEquals("/glubczyce2/Account/LogOn", server.takeRequest().path)
+    }
 }

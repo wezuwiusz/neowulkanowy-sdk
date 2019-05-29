@@ -50,5 +50,5 @@ fun String.getNormalizedSymbol(): String {
         Normalizer.normalize(this, Normalizer.Form.NFD).run {
             "\\p{InCombiningDiacriticalMarks}+".toRegex().replace(this, "")
         }
-    }.replace("[^a-z]".toRegex(), "").ifBlank { "Default" }
+    }.replace("[^a-z0-9]".toRegex(), "").ifBlank { "Default" }
 }
