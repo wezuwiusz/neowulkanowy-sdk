@@ -1,11 +1,18 @@
 package io.github.wulkanowy.api.attendance
 
 import com.google.gson.annotations.SerializedName
+import org.jsoup.nodes.Element
 import pl.droidsonroids.jspoon.annotation.Format
 import pl.droidsonroids.jspoon.annotation.Selector
 import java.util.Date
 
 class AttendanceResponse {
+
+    @SerializedName("UsprawiedliwieniaAktywne")
+    var excuseActive: Boolean = false
+
+    @Selector(".excuse")
+    var excuseActiveSnp: List<Element> = emptyList()
 
     @Selector(".presentData thead th:not(:first-of-type)", regex = "\\s(.*)", defValue = "01.01.1970")
     @Format("dd.MM.yyyy")

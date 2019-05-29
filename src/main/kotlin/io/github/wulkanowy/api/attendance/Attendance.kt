@@ -37,6 +37,8 @@ class Attendance {
 
     var deleted: Boolean = false
 
+    var excusable: Boolean = false
+
     object Types {
         const val PRESENCE = "x-obecnosc"
         const val ABSENCE_UNEXCUSED = "x-nieobecnosc-nieuspr"

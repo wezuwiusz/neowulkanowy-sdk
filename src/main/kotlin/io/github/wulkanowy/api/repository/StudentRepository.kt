@@ -90,9 +90,13 @@ class StudentRepository(private val api: StudentService) {
 
     fun getAttendance(startDate: LocalDate, endDate: LocalDate? = null): Single<List<Attendance>> {
         val end = endDate ?: startDate.plusDays(4)
+        var excuseActive = false
         return api.getAttendance(AttendanceRequest(startDate.toDate())).map {
             if (!it.success) throw VulcanException(it.feedback.message)
-            it.data?.lessons
+            it.data?.run {
+                excuseActive = this.excuseActive
+                lessons
+            }
         }.flatMapObservable { Observable.fromIterable(it) }.flatMap { a ->
             getTimes().flatMapObservable { times ->
                 Observable.fromIterable(times.filter { time -> time.id == a.number })
@@ -103,6 +107,7 @@ class StudentRepository(private val api: StudentService) {
                     lateness = a.categoryId == Category.EXCUSED_LATENESS.id || a.categoryId == Category.UNEXCUSED_LATENESS.id
                     excused = a.categoryId == Category.ABSENCE_EXCUSED.id || a.categoryId == Category.EXCUSED_LATENESS.id
                     exemption = a.categoryId == Category.EXEMPTION.id
+                    excusable = excuseActive && (absence || lateness) && !excused
                     name = (Category.values().singleOrNull { category -> category.id == categoryId } ?: Category.UNKNOWN).title
                     number = it.number
                 }

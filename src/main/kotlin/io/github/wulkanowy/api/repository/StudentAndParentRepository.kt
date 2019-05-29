@@ -47,6 +47,7 @@ class StudentAndParentRepository(private val api: StudentAndParentService) {
                         lateness = it.type == Types.EXCUSED_LATENESS || it.type == Types.UNEXCUSED_LATENESS
                         excused = it.type == Types.ABSENCE_EXCUSED || it.type == Types.EXCUSED_LATENESS
                         exemption = it.type == Types.EXEMPTION
+                        excusable = res.excuseActiveSnp.isNotEmpty() && (absence || lateness) && !excused
                     }
                 }
             }.asSequence().filter {

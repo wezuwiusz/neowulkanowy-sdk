@@ -51,6 +51,7 @@ class AttendanceTest : BaseLocalTest() {
                 assertFalse(lateness)
                 assertFalse(excused)
                 assertFalse(deleted)
+                assertFalse(excusable)
             }
         }
     }
@@ -71,6 +72,7 @@ class AttendanceTest : BaseLocalTest() {
                 assertFalse(presence)
                 assertFalse(lateness)
                 assertFalse(deleted)
+                assertTrue(excusable)
             }
         }
     }
@@ -91,6 +93,7 @@ class AttendanceTest : BaseLocalTest() {
                 assertFalse(presence)
                 assertFalse(lateness)
                 assertFalse(deleted)
+                assertFalse(excusable)
             }
         }
     }
@@ -111,6 +114,7 @@ class AttendanceTest : BaseLocalTest() {
                 assertFalse(presence)
                 assertFalse(absence)
                 assertFalse(deleted)
+                assertTrue(excusable)
             }
         }
     }
@@ -131,6 +135,7 @@ class AttendanceTest : BaseLocalTest() {
                 assertFalse(presence)
                 assertFalse(absence)
                 assertFalse(deleted)
+                assertFalse(excusable)
             }
         }
     }
@@ -151,6 +156,7 @@ class AttendanceTest : BaseLocalTest() {
                 assertFalse(exemption)
                 assertFalse(absence)
                 assertFalse(deleted)
+                assertFalse(excusable)
             }
         }
     }
@@ -171,6 +177,7 @@ class AttendanceTest : BaseLocalTest() {
                 assertFalse(presence)
                 assertFalse(absence)
                 assertFalse(deleted)
+                assertFalse(excusable)
             }
         }
     }
@@ -191,6 +198,7 @@ class AttendanceTest : BaseLocalTest() {
                 assertFalse(presence)
                 assertFalse(absence)
                 assertFalse(deleted)
+                assertFalse(excusable)
             }
         }
     }
