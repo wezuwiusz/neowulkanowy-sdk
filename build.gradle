@@ -115,7 +115,7 @@ install {
         pom {
             project {
                 packaging 'aar'
-                name 'Bintray publish Gradle aar'
+                name 'Scraping API for VULCAN UONET+'
                 url SITE_URL
                 licenses {
                     license {
