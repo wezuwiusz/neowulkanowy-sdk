@@ -9,17 +9,19 @@ class GradeSummary {
     @Selector("td", index = 0)
     var name: String = ""
 
+    var average: Double = .0
+
     @Selector("td:nth-last-of-type(2)")
     var predicted: String = ""
 
     @Selector("td:nth-last-of-type(1)")
     var final: String = ""
 
-    var proposedPoints: String = ""
-
     var pointsSum: String = ""
 
-    var average: Double = .0
+    var proposedPoints: String = ""
+
+    var finalPoints: String = ""
 
     var visibleSubject: Boolean = false
 }

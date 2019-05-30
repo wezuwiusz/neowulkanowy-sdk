@@ -37,6 +37,9 @@ class GradesResponse {
         @SerializedName("ProponowanaOcenaRocznaPunkty")
         val proposedPoints: String? = ""
 
+        @SerializedName("OcenaRocznaPunkty")
+        val finalPoints: String? = ""
+
         @SerializedName("OcenyCzastkowe")
         val grades: List<Grade> = emptyList()
     }

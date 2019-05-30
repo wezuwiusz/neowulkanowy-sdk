@@ -286,6 +286,7 @@ class StudentRepository(private val api: StudentService) {
                     final = getGradeShortValue(subject.annual)
                     pointsSum = subject.pointsSum.orEmpty()
                     proposedPoints = subject.proposedPoints.orEmpty()
+                    finalPoints = subject.finalPoints.orEmpty()
                 }
             }.sortedBy { it.name }.toList()
         }
