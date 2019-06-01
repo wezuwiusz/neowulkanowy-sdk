@@ -398,9 +398,11 @@ class StudentRepository(private val api: StudentService) {
     }
 
     fun getToken(): Single<TokenResponse> {
-        return api.getToken().map {
-            if (!it.success) throw VulcanException(it.feedback.message)
-            it.data
+        return api.getToken().map { res ->
+            if (!res.success) throw VulcanException(res.feedback.message)
+            res.data?.apply {
+                qrCodeImage = Jsoup.parse(qrCodeImage).select("img").attr("src").split("data:image/png;base64,")[1]
+            }
         }
     }
 

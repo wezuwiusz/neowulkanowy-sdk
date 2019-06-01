@@ -1,0 +1,15 @@
+{
+  "data": [
+    {
+      "NazwaUrzadzenia": "google Android SDK built for x86 (Android 8.1.0)",
+      "DataUtworzenia": "2018-01-20 22:35:30",
+      "Id": 321
+    },
+    {
+      "NazwaUrzadzenia": "google (Android SDK) built for x86 (Android 8.1.0)",
+      "DataUtworzenia": "2018-01-20 00:00:00",
+      "Id": 213
+    }
+  ],
+  "success": true
+}

@@ -16,4 +16,8 @@ class TokenResponse {
     @SerializedName("PIN")
     @Selector("#rejestracja-formularz .blockElement:nth-last-child(1)", regex = ": (.*)")
     lateinit var pin: String
+
+    @SerializedName("QrCodeImage")
+    @Selector("#rejestracja-formularz img", attr = "src", regex = "data:image\\/png;base64,(.+)")
+    lateinit var qrCodeImage: String
 }
