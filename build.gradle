@@ -24,7 +24,7 @@ ext {
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
 
-    implementation 'io.github.wulkanowy:api:0.8.1'
+    implementation 'com.github.wulkanowy:api:d08b71b'
     implementation 'com.github.wulkanowy:uonet-request-signer:1f323ff'
 
     compileOnly "org.threeten:threetenbp:$threetenbp:no-tzdb"
