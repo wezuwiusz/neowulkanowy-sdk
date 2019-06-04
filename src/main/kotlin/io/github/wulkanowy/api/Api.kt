@@ -225,6 +225,12 @@ class Api {
 
     fun getNotes() = if (useNewStudent) student.getNotes() else snp.getNotes()
 
+    fun getTimetable(startDate: LocalDate, endDate: LocalDate? = null) =
+        if (useNewStudent) student.getTimetable(startDate, endDate) else snp.getTimetable(startDate, endDate)
+
+    fun getCompletedLessons(startDate: LocalDate, endDate: LocalDate? = null, subjectId: Int = -1) =
+        if (useNewStudent) student.getCompletedLessons(startDate, endDate, subjectId) else snp.getCompletedLessons(startDate, endDate, subjectId)
+
     fun getRegisteredDevices() = if (useNewStudent) student.getRegisteredDevices() else snp.getRegisteredDevices()
 
     fun getToken() = if (useNewStudent) student.getToken() else snp.getToken()
@@ -266,12 +272,6 @@ class Api {
     fun sendMessage(subject: String, content: String, recipients: List<Recipient>) = messages.sendMessage(subject, content, recipients)
 
     fun deleteMessages(messages: List<Pair<Int, Int>>) = this.messages.deleteMessages(messages)
-
-    fun getTimetable(startDate: LocalDate, endDate: LocalDate? = null) =
-        if (useNewStudent) student.getTimetable(startDate, endDate) else snp.getTimetable(startDate, endDate)
-
-    fun getCompletedLessons(startDate: LocalDate, endDate: LocalDate? = null, subjectId: Int = -1) =
-        if (useNewStudent) student.getCompletedLessons(startDate, endDate, subjectId) else snp.getCompletedLessons(startDate, endDate, subjectId)
 
     fun getLuckyNumber() = homepage.getLuckyNumber()
 }
