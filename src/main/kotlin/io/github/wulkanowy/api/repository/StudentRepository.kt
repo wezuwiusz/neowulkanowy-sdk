@@ -355,7 +355,12 @@ class StudentRepository(private val api: StudentService) {
         return api.getCompletedLessons(CompletedLessonsRequest(start.toISOFormat(), end.toISOFormat(), subjectId)).map {
             gson.create().fromJson(it, ApiResponse::class.java)
         }.map { res ->
-            if (!res.success) throw FeatureDisabledException(res.feedback.message)
+            if (!res.success) res.feedback.run {
+                when {
+                    message.contains("wyłączony") -> throw FeatureDisabledException(message)
+                    else -> throw VulcanException(message)
+                }
+            }
             (res.data as LinkedTreeMap<*, *>).map { list ->
                 gson.create().fromJson<List<CompletedLesson>>(Gson().toJson(list.value), object : TypeToken<ArrayList<CompletedLesson>>() {}.type)
             }.flatten().map {
