@@ -1,5 +1,6 @@
 package io.github.wulkanowy.api.repository
 
+import io.github.wulkanowy.api.interceptor.ErrorHandlerTransformer
 import io.github.wulkanowy.api.register.Semester
 import io.github.wulkanowy.api.service.StudentService
 import io.github.wulkanowy.api.toLocalDate
@@ -14,6 +15,7 @@ class StudentStartRepository(
 
     fun getSemesters(): Single<List<Semester>> {
         return api.getDiaries()
+            .compose(ErrorHandlerTransformer())
             .map { it.data }
             .map { diaries ->
                 diaries.asSequence()

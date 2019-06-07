@@ -4,6 +4,7 @@ import io.github.wulkanowy.api.Api
 import io.github.wulkanowy.api.ApiException
 import io.github.wulkanowy.api.getNormalizedSymbol
 import io.github.wulkanowy.api.getScriptParam
+import io.github.wulkanowy.api.interceptor.ErrorHandlerTransformer
 import io.github.wulkanowy.api.login.AccountPermissionException
 import io.github.wulkanowy.api.login.CertificateResponse
 import io.github.wulkanowy.api.login.LoginHelper
@@ -114,6 +115,7 @@ class RegisterRepository(
                 }
             }
         } else student.getSchoolInfo(url.generate(ServiceManager.UrlGenerator.Site.STUDENT) + "UczenDziennik.mvc/Get")
+            .compose(ErrorHandlerTransformer())
             .map { it.data }
             .map { it.filter { diary -> diary.semesters?.isNotEmpty() ?: false } }
             .map { it.sortedByDescending { diary -> diary.level } }
