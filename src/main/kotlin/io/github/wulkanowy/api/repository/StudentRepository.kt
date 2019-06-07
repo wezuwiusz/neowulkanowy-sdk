@@ -10,6 +10,7 @@ import io.github.wulkanowy.api.attendance.Attendance
 import io.github.wulkanowy.api.attendance.Attendance.Category
 import io.github.wulkanowy.api.attendance.AttendanceExcuseRequest
 import io.github.wulkanowy.api.attendance.AttendanceRequest
+import io.github.wulkanowy.api.attendance.AttendanceResponse
 import io.github.wulkanowy.api.attendance.AttendanceSummary
 import io.github.wulkanowy.api.attendance.AttendanceSummaryItemSerializer
 import io.github.wulkanowy.api.attendance.AttendanceSummaryRequest
@@ -17,6 +18,7 @@ import io.github.wulkanowy.api.attendance.AttendanceSummaryResponse
 import io.github.wulkanowy.api.attendance.Subject
 import io.github.wulkanowy.api.exams.Exam
 import io.github.wulkanowy.api.exams.ExamRequest
+import io.github.wulkanowy.api.exams.ExamResponse
 import io.github.wulkanowy.api.getGradeShortValue
 import io.github.wulkanowy.api.getSchoolYear
 import io.github.wulkanowy.api.getScriptParam
@@ -24,17 +26,23 @@ import io.github.wulkanowy.api.grades.Grade
 import io.github.wulkanowy.api.grades.GradeRequest
 import io.github.wulkanowy.api.grades.GradeStatistics
 import io.github.wulkanowy.api.grades.GradeSummary
+import io.github.wulkanowy.api.grades.GradesResponse
 import io.github.wulkanowy.api.grades.GradesStatisticsRequest
+import io.github.wulkanowy.api.grades.GradesStatisticsResponse
 import io.github.wulkanowy.api.grades.getGradeValueWithModifier
 import io.github.wulkanowy.api.grades.isGradeValid
 import io.github.wulkanowy.api.homework.Homework
+import io.github.wulkanowy.api.homework.HomeworkResponse
+import io.github.wulkanowy.api.interceptor.ErrorHandlerTransformer
 import io.github.wulkanowy.api.interceptor.FeatureDisabledException
 import io.github.wulkanowy.api.interceptor.VulcanException
 import io.github.wulkanowy.api.mobile.Device
 import io.github.wulkanowy.api.mobile.TokenResponse
 import io.github.wulkanowy.api.mobile.UnregisterDeviceRequest
 import io.github.wulkanowy.api.notes.Note
+import io.github.wulkanowy.api.notes.NotesResponse
 import io.github.wulkanowy.api.school.School
+import io.github.wulkanowy.api.school.SchoolAndTeachersResponse
 import io.github.wulkanowy.api.school.Teacher
 import io.github.wulkanowy.api.service.StudentService
 import io.github.wulkanowy.api.timetable.CacheResponse
@@ -74,10 +82,7 @@ class StudentRepository(private val api: StudentService) {
                 getScriptParam("appGuid", it),
                 getScriptParam("version", it)
             )
-        }.map {
-            if (!it.success) throw VulcanException(it.feedback.message)
-            it.data
-        }
+        }.compose(ErrorHandlerTransformer())
     }
 
     private fun getTimes(): Single<List<CacheResponse.Time>> {
@@ -91,9 +96,8 @@ class StudentRepository(private val api: StudentService) {
     fun getAttendance(startDate: LocalDate, endDate: LocalDate? = null): Single<List<Attendance>> {
         val end = endDate ?: startDate.plusDays(4)
         var excuseActive = false
-        return api.getAttendance(AttendanceRequest(startDate.toDate())).map {
-            if (!it.success) throw VulcanException(it.feedback.message)
-            it.data?.run {
+        return api.getAttendance(AttendanceRequest(startDate.toDate())).compose<AttendanceResponse>(ErrorHandlerTransformer()).map {
+            it.run {
                 excuseActive = this.excuseActive
                 lessons
             }
@@ -118,10 +122,7 @@ class StudentRepository(private val api: StudentService) {
     }
 
     fun getAttendanceSummary(subjectId: Int?): Single<List<AttendanceSummary>> {
-        return api.getAttendanceStatistics(AttendanceSummaryRequest(subjectId)).map {
-            if (!it.success) throw VulcanException(it.feedback.message)
-            it.data
-        }.map { res ->
+        return api.getAttendanceStatistics(AttendanceSummaryRequest(subjectId)).compose<AttendanceSummaryResponse>(ErrorHandlerTransformer()).map { res ->
             val stats = res.items.map {
                 (gson.create().fromJson<LinkedTreeMap<String, String?>>(
                     gson.registerTypeAdapter(
@@ -166,25 +167,16 @@ class StudentRepository(private val api: StudentService) {
                     content = content
                 )
             )
-        ).map {
-            if (!it.success) throw VulcanException(it.feedback.message)
-            it.success
-        }
+        ).compose(ErrorHandlerTransformer())
     }
 
     fun getSubjects(): Single<List<Subject>> {
-        return api.getAttendanceSubjects().map {
-            if (!it.success) throw VulcanException(it.feedback.message)
-            it.data
-        }
+        return api.getAttendanceSubjects().compose(ErrorHandlerTransformer())
     }
 
     fun getExams(startDate: LocalDate, endDate: LocalDate? = null): Single<List<Exam>> {
         val end = endDate ?: startDate.plusDays(4)
-        return api.getExams(ExamRequest(startDate.toDate(), startDate.getSchoolYear())).map {
-            if (!it.success) throw VulcanException(it.feedback.message)
-            it.data
-        }.map { res ->
+        return api.getExams(ExamRequest(startDate.toDate(), startDate.getSchoolYear())).compose<List<ExamResponse>>(ErrorHandlerTransformer()).map { res ->
             res.asSequence().map { weeks ->
                 weeks.weeks.map { day ->
                     day.exams.map { exam ->
@@ -210,10 +202,7 @@ class StudentRepository(private val api: StudentService) {
     }
 
     fun getGrades(semesterId: Int?): Single<List<Grade>> {
-        return api.getGrades(GradeRequest(semesterId)).map {
-            if (!it.success) throw VulcanException(it.feedback.message)
-            it.data
-        }.map { res ->
+        return api.getGrades(GradeRequest(semesterId)).compose<GradesResponse>(ErrorHandlerTransformer()).map { res ->
             res.gradesWithSubjects.map { gradesSubject ->
                 gradesSubject.grades.map { grade ->
                     val values = getGradeValueWithModifier(grade.entry)
@@ -240,10 +229,7 @@ class StudentRepository(private val api: StudentService) {
     }
 
     fun getGradesStatistics(semesterId: Int, annual: Boolean): Single<List<GradeStatistics>> {
-        return if (annual) api.getGradesAnnualStatistics(GradesStatisticsRequest(semesterId)).map {
-            if (!it.success) throw VulcanException(it.feedback.message)
-            it.data
-        }.map {
+        return if (annual) api.getGradesAnnualStatistics(GradesStatisticsRequest(semesterId)).compose<List<GradesStatisticsResponse.Annual>>(ErrorHandlerTransformer()).map {
             it.map { annualSubject ->
                 annualSubject.items?.reversed()?.mapIndexed { index, item ->
                     item.apply {
@@ -254,10 +240,7 @@ class StudentRepository(private val api: StudentService) {
                     }
                 }.orEmpty()
             }.flatten().reversed()
-        } else return api.getGradesPartialStatistics(GradesStatisticsRequest(semesterId)).map {
-            if (!it.success) throw VulcanException(it.feedback.message)
-            it.data
-        }.map {
+        } else return api.getGradesPartialStatistics(GradesStatisticsRequest(semesterId)).compose<List<GradesStatisticsResponse.Partial>>(ErrorHandlerTransformer()).map {
             it.map { partialSubject ->
                 partialSubject.classSeries.items?.reversed()?.mapIndexed { index, item ->
                     item.apply {
@@ -272,10 +255,7 @@ class StudentRepository(private val api: StudentService) {
     }
 
     fun getGradesSummary(semesterId: Int?): Single<List<GradeSummary>> {
-        return api.getGrades(GradeRequest(semesterId)).map {
-            if (!it.success) throw VulcanException(it.feedback.message)
-            it.data
-        }.map { res ->
+        return api.getGrades(GradeRequest(semesterId)).compose<GradesResponse>(ErrorHandlerTransformer()).map { res ->
             res.gradesWithSubjects.map { subject ->
                 GradeSummary().apply {
                     visibleSubject = subject.visibleSubject
@@ -294,10 +274,7 @@ class StudentRepository(private val api: StudentService) {
 
     fun getHomework(startDate: LocalDate, endDate: LocalDate? = null): Single<List<Homework>> {
         val end = endDate ?: startDate
-        return api.getHomework(ExamRequest(startDate.toDate(), startDate.getSchoolYear())).map {
-            if (!it.success) throw VulcanException(it.feedback.message)
-            it.data
-        }.map { res ->
+        return api.getHomework(ExamRequest(startDate.toDate(), startDate.getSchoolYear())).compose<List<HomeworkResponse>>(ErrorHandlerTransformer()).map { res ->
             res.asSequence().map { day ->
                 day.items.map {
                     val teacherAndDate = it.teacher.split(", ")
@@ -315,10 +292,7 @@ class StudentRepository(private val api: StudentService) {
     }
 
     fun getNotes(): Single<List<Note>> {
-        return api.getNotes().map {
-            if (!it.success) throw VulcanException(it.feedback.message)
-            it.data
-        }.map { res ->
+        return api.getNotes().compose<NotesResponse>(ErrorHandlerTransformer()).map { res ->
             res.notes.map {
                 it.apply {
                     teacherSymbol = teacher.split(" [").last().removeSuffix("]")
@@ -329,10 +303,7 @@ class StudentRepository(private val api: StudentService) {
     }
 
     fun getTimetable(startDate: LocalDate, endDate: LocalDate? = null): Single<List<Timetable>> {
-        return api.getTimetable(TimetableRequest(startDate.toISOFormat())).map {
-            if (!it.success) throw VulcanException(it.feedback.message)
-            it.data
-        }.map { res ->
+        return api.getTimetable(TimetableRequest(startDate.toISOFormat())).compose<TimetableResponse>(ErrorHandlerTransformer()).map { res ->
             res.rows2api.flatMap { lessons ->
                 lessons.drop(1).mapIndexed { i, it ->
                     val times = lessons[0].split("<br />")
@@ -375,10 +346,7 @@ class StudentRepository(private val api: StudentService) {
     }
 
     fun getTeachers(): Single<List<Teacher>> {
-        return api.getSchoolAndTeachers().map {
-            if (!it.success) throw VulcanException(it.feedback.message)
-            it.data
-        }.map { res ->
+        return api.getSchoolAndTeachers().compose<SchoolAndTeachersResponse>(ErrorHandlerTransformer()).map { res ->
             res.teachers.map {
                 it.copy(
                     short = it.name.substringAfter("[").substringBefore("]"),
@@ -389,23 +357,17 @@ class StudentRepository(private val api: StudentService) {
     }
 
     fun getSchool(): Single<School> {
-        return api.getSchoolAndTeachers().map {
-            if (!it.success) throw VulcanException(it.feedback.message)
-            it.data
-        }.map { it.school }
+        return api.getSchoolAndTeachers().compose<SchoolAndTeachersResponse>(ErrorHandlerTransformer())
+            .map { it.school }
     }
 
     fun getRegisteredDevices(): Single<List<Device>> {
-        return api.getRegisteredDevices().map {
-            if (!it.success) throw VulcanException(it.feedback.message)
-            it.data
-        }
+        return api.getRegisteredDevices().compose(ErrorHandlerTransformer())
     }
 
     fun getToken(): Single<TokenResponse> {
-        return api.getToken().map { res ->
-            if (!res.success) throw VulcanException(res.feedback.message)
-            res.data?.apply {
+        return api.getToken().compose<TokenResponse>(ErrorHandlerTransformer()).map { res ->
+            res.apply {
                 qrCodeImage = Jsoup.parse(qrCodeImage).select("img").attr("src").split("data:image/png;base64,")[1]
             }
         }
@@ -419,9 +381,6 @@ class StudentRepository(private val api: StudentService) {
                 getScriptParam("version", it),
                 UnregisterDeviceRequest(id)
             )
-        }.map {
-            if (!it.success) throw VulcanException(it.feedback.message)
-            it.success
-        }
+        }.compose(ErrorHandlerTransformer())
     }
 }
