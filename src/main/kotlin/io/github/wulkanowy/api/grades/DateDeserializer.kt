@@ -23,6 +23,8 @@ class DateDeserializer<T : Date>(private val mSimpleDateFormat: SimpleDateFormat
             throw JsonParseException(e.message, e)
         } catch (e: ParseException) {
             throw JsonParseException(e.message, e)
+        } catch (e: ArrayIndexOutOfBoundsException) {
+            throw IllegalArgumentException("Invalid date format: $dateString", e)
         }
     }
 }
