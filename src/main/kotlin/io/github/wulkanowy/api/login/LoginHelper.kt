@@ -97,10 +97,11 @@ class LoginHelper(
 
     private fun sendAdfs(email: String, password: String): Single<CertificateResponse> {
         return api.getForm(getADFSUrl(Api.LoginType.ADFS)).flatMap {
+            if (it.formAction.isBlank()) throw VulcanException("Invalid ADFS login page: '${it.title}'. Try again")
             api.sendADFSForm("$schema://adfs.$host/${it.formAction.removePrefix("/")}", mapOf(
                     "__db" to it.db,
                     "__VIEWSTATE" to it.viewstate,
-                    "__VIEWSTATEGENERATOR" to it.viewstateGenerator,
+                    "__VIEWSTATEGENERATOR" to it.viewStateGenerator,
                     "__EVENTVALIDATION" to it.eventValidation,
                     "UsernameTextBox" to email,
                     "PasswordTextBox" to password,
@@ -121,7 +122,7 @@ class LoginHelper(
             api.sendADFSFormStandardChoice("$schema://adfs.$host/${it.formAction.removePrefix("/")}", mapOf(
                     "__db" to it.db,
                     "__VIEWSTATE" to it.viewstate,
-                    "__VIEWSTATEGENERATOR" to it.viewstateGenerator,
+                    "__VIEWSTATEGENERATOR" to it.viewStateGenerator,
                     "__EVENTVALIDATION" to it.eventValidation,
                     "PassiveSignInButton.x" to "0",
                     "PassiveSignInButton.y" to "0"
@@ -130,7 +131,7 @@ class LoginHelper(
             api.sendADFSForm("$schema://adfs.$host/${it.formAction.removePrefix("/")}", mapOf(
                     "__db" to it.db,
                     "__VIEWSTATE" to it.viewstate,
-                    "__VIEWSTATEGENERATOR" to it.viewstateGenerator,
+                    "__VIEWSTATEGENERATOR" to it.viewStateGenerator,
                     "__EVENTVALIDATION" to it.eventValidation,
                     "SubmitButton.x" to "0",
                     "SubmitButton.y" to "0",
