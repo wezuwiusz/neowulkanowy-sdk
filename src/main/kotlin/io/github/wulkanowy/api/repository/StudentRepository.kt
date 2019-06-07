@@ -80,7 +80,7 @@ class StudentRepository(private val api: StudentService) {
                 getScriptParam("appGuid", it),
                 getScriptParam("version", it)
             )
-        }.compose(ErrorHandlerTransformer())
+        }.compose(ErrorHandlerTransformer()).map { it.data }
     }
 
     private fun getTimes(): Single<List<CacheResponse.Time>> {
@@ -95,7 +95,7 @@ class StudentRepository(private val api: StudentService) {
         val end = endDate ?: startDate.plusDays(4)
         var excuseActive = false
         return api.getAttendance(AttendanceRequest(startDate.toDate()))
-            .compose<AttendanceResponse>(ErrorHandlerTransformer())
+            .compose<ApiResponse<AttendanceResponse>>(ErrorHandlerTransformer()).map { it.data }
             .map {
                 it.run {
                     excuseActive = this.excuseActive
@@ -123,7 +123,7 @@ class StudentRepository(private val api: StudentService) {
 
     fun getAttendanceSummary(subjectId: Int?): Single<List<AttendanceSummary>> {
         return api.getAttendanceStatistics(AttendanceSummaryRequest(subjectId))
-            .compose<AttendanceSummaryResponse>(ErrorHandlerTransformer())
+            .compose<ApiResponse<AttendanceSummaryResponse>>(ErrorHandlerTransformer()).map { it.data }
             .map { res ->
                 val stats = res.items.map {
                     (gson.create().fromJson<LinkedTreeMap<String, String?>>(
@@ -169,18 +169,18 @@ class StudentRepository(private val api: StudentService) {
                     content = content
                 )
             )
-        ).compose(ErrorHandlerTransformer())
+        ).compose(ErrorHandlerTransformer()).map { it.success }
     }
 
     fun getSubjects(): Single<List<Subject>> {
         return api.getAttendanceSubjects()
-            .compose(ErrorHandlerTransformer())
+            .compose(ErrorHandlerTransformer()).map { it.data }
     }
 
     fun getExams(startDate: LocalDate, endDate: LocalDate? = null): Single<List<Exam>> {
         val end = endDate ?: startDate.plusDays(4)
         return api.getExams(ExamRequest(startDate.toDate(), startDate.getSchoolYear()))
-            .compose<List<ExamResponse>>(ErrorHandlerTransformer())
+            .compose<ApiResponse<List<ExamResponse>>>(ErrorHandlerTransformer()).map { it.data }
             .map { res ->
                 res.asSequence().map { weeks ->
                     weeks.weeks.map { day ->
@@ -208,7 +208,7 @@ class StudentRepository(private val api: StudentService) {
 
     fun getGrades(semesterId: Int?): Single<List<Grade>> {
         return api.getGrades(GradeRequest(semesterId))
-            .compose<GradesResponse>(ErrorHandlerTransformer())
+            .compose<ApiResponse<GradesResponse>>(ErrorHandlerTransformer()).map { it.data }
             .map { res ->
                 res.gradesWithSubjects.map { gradesSubject ->
                     gradesSubject.grades.map { grade ->
@@ -237,7 +237,7 @@ class StudentRepository(private val api: StudentService) {
 
     fun getGradesStatistics(semesterId: Int, annual: Boolean): Single<List<GradeStatistics>> {
         return if (annual) api.getGradesAnnualStatistics(GradesStatisticsRequest(semesterId))
-            .compose<List<GradesStatisticsResponse.Annual>>(ErrorHandlerTransformer())
+            .compose<ApiResponse<List<GradesStatisticsResponse.Annual>>>(ErrorHandlerTransformer()).map { it.data }
             .map {
                 it.map { annualSubject ->
                     annualSubject.items?.reversed()?.mapIndexed { index, item ->
@@ -250,7 +250,7 @@ class StudentRepository(private val api: StudentService) {
                     }.orEmpty()
                 }.flatten().reversed()
             } else return api.getGradesPartialStatistics(GradesStatisticsRequest(semesterId))
-            .compose<List<GradesStatisticsResponse.Partial>>(ErrorHandlerTransformer())
+            .compose<ApiResponse<List<GradesStatisticsResponse.Partial>>>(ErrorHandlerTransformer()).map { it.data }
             .map {
                 it.map { partialSubject ->
                     partialSubject.classSeries.items?.reversed()?.mapIndexed { index, item ->
@@ -267,7 +267,7 @@ class StudentRepository(private val api: StudentService) {
 
     fun getGradesSummary(semesterId: Int?): Single<List<GradeSummary>> {
         return api.getGrades(GradeRequest(semesterId))
-            .compose<GradesResponse>(ErrorHandlerTransformer())
+            .compose<ApiResponse<GradesResponse>>(ErrorHandlerTransformer()).map { it.data }
             .map { res ->
                 res.gradesWithSubjects.map { subject ->
                     GradeSummary().apply {
@@ -288,7 +288,7 @@ class StudentRepository(private val api: StudentService) {
     fun getHomework(startDate: LocalDate, endDate: LocalDate? = null): Single<List<Homework>> {
         val end = endDate ?: startDate
         return api.getHomework(ExamRequest(startDate.toDate(), startDate.getSchoolYear()))
-            .compose<List<HomeworkResponse>>(ErrorHandlerTransformer())
+            .compose<ApiResponse<List<HomeworkResponse>>>(ErrorHandlerTransformer()).map { it.data }
             .map { res ->
                 res.asSequence().map { day ->
                     day.items.map {
@@ -308,7 +308,7 @@ class StudentRepository(private val api: StudentService) {
 
     fun getNotes(): Single<List<Note>> {
         return api.getNotes()
-            .compose<NotesResponse>(ErrorHandlerTransformer())
+            .compose<ApiResponse<NotesResponse>>(ErrorHandlerTransformer()).map { it.data }
             .map { res ->
                 res.notes.map {
                     it.apply {
@@ -321,7 +321,7 @@ class StudentRepository(private val api: StudentService) {
 
     fun getTimetable(startDate: LocalDate, endDate: LocalDate? = null): Single<List<Timetable>> {
         return api.getTimetable(TimetableRequest(startDate.toISOFormat()))
-            .compose<TimetableResponse>(ErrorHandlerTransformer())
+            .compose<ApiResponse<TimetableResponse>>(ErrorHandlerTransformer()).map { it.data }
             .map { res ->
                 res.rows2api.flatMap { lessons ->
                     lessons.drop(1).mapIndexed { i, it ->
@@ -344,8 +344,8 @@ class StudentRepository(private val api: StudentService) {
         val end = endDate ?: start.plusMonths(1)
         return api.getCompletedLessons(CompletedLessonsRequest(start.toISOFormat(), end.toISOFormat(), subjectId)).map {
             gson.create().fromJson(it, ApiResponse::class.java)
-        }.compose<Any>(ErrorHandlerTransformer()).map { data ->
-            (data as LinkedTreeMap<*, *>).map { list ->
+        }.compose<ApiResponse<*>>(ErrorHandlerTransformer()).map { res ->
+            (res.data as LinkedTreeMap<*, *>).map { list ->
                 gson.create().fromJson<List<CompletedLesson>>(Gson().toJson(list.value), object : TypeToken<ArrayList<CompletedLesson>>() {}.type)
             }.flatten().map {
                 it.apply {
@@ -360,7 +360,7 @@ class StudentRepository(private val api: StudentService) {
 
     fun getTeachers(): Single<List<Teacher>> {
         return api.getSchoolAndTeachers()
-            .compose<SchoolAndTeachersResponse>(ErrorHandlerTransformer())
+            .compose<ApiResponse<SchoolAndTeachersResponse>>(ErrorHandlerTransformer()).map { it.data }
             .map { res ->
                 res.teachers.map {
                     it.copy(
@@ -373,18 +373,18 @@ class StudentRepository(private val api: StudentService) {
 
     fun getSchool(): Single<School> {
         return api.getSchoolAndTeachers()
-            .compose<SchoolAndTeachersResponse>(ErrorHandlerTransformer())
+            .compose<ApiResponse<SchoolAndTeachersResponse>>(ErrorHandlerTransformer()).map { it.data }
             .map { it.school }
     }
 
     fun getRegisteredDevices(): Single<List<Device>> {
         return api.getRegisteredDevices()
-            .compose(ErrorHandlerTransformer())
+            .compose(ErrorHandlerTransformer()).map { it.data }
     }
 
     fun getToken(): Single<TokenResponse> {
         return api.getToken()
-            .compose<TokenResponse>(ErrorHandlerTransformer())
+            .compose<ApiResponse<TokenResponse>>(ErrorHandlerTransformer()).map { it.data }
             .map { res ->
                 res.apply {
                     qrCodeImage = Jsoup.parse(qrCodeImage).select("img").attr("src").split("data:image/png;base64,")[1]
@@ -400,6 +400,6 @@ class StudentRepository(private val api: StudentService) {
                 getScriptParam("version", it),
                 UnregisterDeviceRequest(id)
             )
-        }.compose(ErrorHandlerTransformer())
+        }.compose(ErrorHandlerTransformer()).map { it.success }
     }
 }
