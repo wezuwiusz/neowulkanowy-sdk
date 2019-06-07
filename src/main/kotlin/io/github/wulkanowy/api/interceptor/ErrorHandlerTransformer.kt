@@ -5,7 +5,7 @@ import io.reactivex.Single
 import io.reactivex.SingleSource
 import io.reactivex.SingleTransformer
 
-class ErrorHandlerTransformer<T : Any> : SingleTransformer<ApiResponse<T>, T> {
+class ErrorHandlerTransformer<T : Any?> : SingleTransformer<ApiResponse<T>, T> {
 
     override fun apply(upstream: Single<ApiResponse<T>>): SingleSource<T> {
         return upstream.flatMap { res ->

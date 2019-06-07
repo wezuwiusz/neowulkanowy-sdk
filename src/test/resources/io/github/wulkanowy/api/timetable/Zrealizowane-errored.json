@@ -1,0 +1,15 @@
+{
+  "success": false,
+  "feedback": {
+    "Handled": false,
+    "FType": "Error",
+    "Message": "DB_ERROR",
+    "ExceptionType": null,
+    "ExceptionMessage": "",
+    "InnerExceptionMessage": "",
+    "Action": null,
+    "data": null,
+    "success": false,
+    "requestId": null
+  }
+}

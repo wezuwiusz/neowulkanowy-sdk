@@ -34,8 +34,6 @@ import io.github.wulkanowy.api.grades.isGradeValid
 import io.github.wulkanowy.api.homework.Homework
 import io.github.wulkanowy.api.homework.HomeworkResponse
 import io.github.wulkanowy.api.interceptor.ErrorHandlerTransformer
-import io.github.wulkanowy.api.interceptor.FeatureDisabledException
-import io.github.wulkanowy.api.interceptor.VulcanException
 import io.github.wulkanowy.api.mobile.Device
 import io.github.wulkanowy.api.mobile.TokenResponse
 import io.github.wulkanowy.api.mobile.UnregisterDeviceRequest
@@ -325,14 +323,8 @@ class StudentRepository(private val api: StudentService) {
         val end = endDate ?: start.plusMonths(1)
         return api.getCompletedLessons(CompletedLessonsRequest(start.toISOFormat(), end.toISOFormat(), subjectId)).map {
             gson.create().fromJson(it, ApiResponse::class.java)
-        }.map { res ->
-            if (!res.success) res.feedback.run {
-                when {
-                    message.contains("wyłączony") -> throw FeatureDisabledException(message)
-                    else -> throw VulcanException(message)
-                }
-            }
-            (res.data as LinkedTreeMap<*, *>).map { list ->
+        }.compose<Any>(ErrorHandlerTransformer()).map { data ->
+            (data as LinkedTreeMap<*, *>).map { list ->
                 gson.create().fromJson<List<CompletedLesson>>(Gson().toJson(list.value), object : TypeToken<ArrayList<CompletedLesson>>() {}.type)
             }.flatten().map {
                 it.apply {

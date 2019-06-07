@@ -2,6 +2,7 @@ package io.github.wulkanowy.api.timetable
 
 import io.github.wulkanowy.api.BaseLocalTest
 import io.github.wulkanowy.api.interceptor.FeatureDisabledException
+import io.github.wulkanowy.api.interceptor.VulcanException
 import io.reactivex.observers.TestObserver
 import org.junit.Assert.assertEquals
 import org.junit.Test
@@ -41,6 +42,19 @@ class CompletedLessonsTest : BaseLocalTest() {
         lessons.subscribe(lessonsObserver)
         lessonsObserver.assertError(FeatureDisabledException::class.java)
         lessonsObserver.assertErrorMessage("Widok lekcji zrealizowanych został wyłączony przez Administratora szkoły.")
+    }
+
+    @Test
+    fun getRealized_errored() {
+        val lessons = getStudentRepo(CompletedLessonsTest::class.java, "Zrealizowane-errored.json").getCompletedLessons(
+            getLocalDate(2018, 9, 17),
+            getLocalDate(2018, 9, 18),
+            -1
+        )
+        val lessonsObserver = TestObserver<List<CompletedLesson>>()
+        lessons.subscribe(lessonsObserver)
+        lessonsObserver.assertError(VulcanException::class.java)
+        lessonsObserver.assertErrorMessage("DB_ERROR")
     }
 
     @Test
