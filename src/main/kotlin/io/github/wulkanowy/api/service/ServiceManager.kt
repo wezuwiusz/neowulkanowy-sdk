@@ -70,7 +70,9 @@ class ServiceManager(
     }
 
     fun getLoginService(): LoginService {
-        if (email.isBlank() || password.isBlank()) throw ApiException("Email or/and password are not set")
+        if (email.isBlank() && password.isBlank()) throw ApiException("Email and password are not set")
+        if (email.isBlank()) throw ApiException("Email is not set")
+        if (password.isBlank()) throw ApiException("Password is not set")
         return getRetrofit(getClientBuilder(loginInterceptor = false), urlGenerator.generate(UrlGenerator.Site.LOGIN), false).create()
     }
 
