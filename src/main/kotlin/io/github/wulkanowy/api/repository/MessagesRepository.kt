@@ -1,6 +1,7 @@
 package io.github.wulkanowy.api.repository
 
 import io.github.wulkanowy.api.getScriptParam
+import io.github.wulkanowy.api.interceptor.ErrorHandlerTransformer
 import io.github.wulkanowy.api.messages.DeleteMessageRequest
 import io.github.wulkanowy.api.messages.Message
 import io.github.wulkanowy.api.messages.Recipient
@@ -19,13 +20,16 @@ class MessagesRepository(private val api: MessagesService) {
     }
 
     fun getRecipients(unitId: Int, role: Int = 2): Single<List<Recipient>> {
-        return api.getRecipients(unitId, role).map { it.data }.map { res ->
-            res.map { it.copy(shortName = it.name.normalizeRecipient()) }
-        }
+        return api.getRecipients(unitId, role)
+            .compose(ErrorHandlerTransformer()).map { it.data }
+            .map { res ->
+                res.map { it.copy(shortName = it.name.normalizeRecipient()) }
+            }
     }
 
     fun getReceivedMessages(startDate: LocalDateTime?, endDate: LocalDateTime?): Single<List<Message>> {
-        return api.getReceived(getDate(startDate), getDate(endDate)).map { it.data }
+        return api.getReceived(getDate(startDate), getDate(endDate))
+            .compose(ErrorHandlerTransformer()).map { it.data }
             .map { res ->
                 res.asSequence()
                     .map { it.copy(folderId = 1) }
@@ -35,7 +39,8 @@ class MessagesRepository(private val api: MessagesService) {
     }
 
     fun getSentMessages(startDate: LocalDateTime?, endDate: LocalDateTime?): Single<List<Message>> {
-        return api.getSent(getDate(startDate), getDate(endDate)).map { it.data }
+        return api.getSent(getDate(startDate), getDate(endDate))
+            .compose(ErrorHandlerTransformer()).map { it.data }
             .map { res ->
                 res.asSequence()
                     .map { message ->
@@ -51,24 +56,31 @@ class MessagesRepository(private val api: MessagesService) {
     }
 
     fun getDeletedMessages(startDate: LocalDateTime?, endDate: LocalDateTime?): Single<List<Message>> {
-        return api.getDeleted(getDate(startDate), getDate(endDate)).map { it.data }
+        return api.getDeleted(getDate(startDate), getDate(endDate))
+            .compose(ErrorHandlerTransformer()).map { it.data }
             .map { res ->
-                res.map { it.apply { removed = true } }
+                res.asSequence()
+                    .map { it.apply { removed = true } }
                     .sortedBy { it.date }
+                    .toList()
             }
     }
 
     fun getMessageRecipients(messageId: Int, loginId: Int): Single<List<Recipient>> {
         return (if (0 == loginId) api.getMessageRecipients(messageId)
-        else api.getMessageSender(loginId, messageId)).map { it.data }.map {
-            it.map { message ->
-                message.copy(shortName = message.name.normalizeRecipient())
+        else api.getMessageSender(loginId, messageId))
+            .compose(ErrorHandlerTransformer()).map { it.data }
+            .map {
+                it.map { message ->
+                    message.copy(shortName = message.name.normalizeRecipient())
+                }
             }
-        }
     }
 
     fun getMessage(messageId: Int, folderId: Int, read: Boolean, id: Int?): Single<String> {
-        return api.getMessage(messageId, folderId, read, id).map { it.data?.content }
+        return api.getMessage(messageId, folderId, read, id)
+            .compose(ErrorHandlerTransformer()).map { it.data }
+            .map { it.content }
     }
 
     fun sendMessage(subject: String, content: String, recipients: List<Recipient>): Single<SentMessage> {
@@ -84,8 +96,8 @@ class MessagesRepository(private val api: MessagesService) {
                 getScriptParam("antiForgeryToken", res),
                 getScriptParam("appGuid", res),
                 getScriptParam("version", res)
-            ).map { it.data }
-        }
+            )
+        }.compose(ErrorHandlerTransformer()).map { it.data }
     }
 
     fun deleteMessages(messages: List<Pair<Int, Int>>): Single<Boolean> {
@@ -100,8 +112,8 @@ class MessagesRepository(private val api: MessagesService) {
                 getScriptParam("antiForgeryToken", res),
                 getScriptParam("appGuid", res),
                 getScriptParam("version", res)
-            ).map { it.success }
-        }
+            )
+        }.compose(ErrorHandlerTransformer()).map { it.success }
     }
 
     private fun String.normalizeRecipient(): String {
