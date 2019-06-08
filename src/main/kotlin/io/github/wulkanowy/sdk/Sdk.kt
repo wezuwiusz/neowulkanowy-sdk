@@ -2,14 +2,15 @@ package io.github.wulkanowy.sdk
 
 import io.github.wulkanowy.api.Api
 import io.github.wulkanowy.api.attendance.Absent
+import io.github.wulkanowy.api.grades.isGradeValid
 import io.github.wulkanowy.api.messages.Folder
 import io.github.wulkanowy.api.messages.Recipient
-import io.github.wulkanowy.sdk.pojo.Grade
 import io.github.wulkanowy.api.resettableLazy
 import io.github.wulkanowy.api.resettableManager
 import io.github.wulkanowy.api.toLocalDate
 import io.github.wulkanowy.sdk.interceptor.SignInterceptor
 import io.github.wulkanowy.sdk.pojo.Exam
+import io.github.wulkanowy.sdk.pojo.Grade
 import io.github.wulkanowy.sdk.pojo.Student
 import io.github.wulkanowy.sdk.repository.MobileRepository
 import io.github.wulkanowy.sdk.repository.RegisterRepository
@@ -375,8 +376,8 @@ class Sdk {
                             comment = grade.comment.orEmpty(),
                             date = grade.creationDate.toLocalDate(),
                             teacher = dict.teachers.singleOrNull { it.id == grade.employeeIdD }?.let { "${it.name} ${it.surname}" }.orEmpty(),
-                            entry = grade.entry,
-                            weightValue = grade.gradeWeight,
+                            entry = if (grade.entry.isNotBlank()) grade.entry else "...",
+                            weightValue = if (isGradeValid(grade.entry)) grade.gradeWeight else .0,
                             modifier = grade.modificationWeight ?: .0,
                             value = grade.value,
                             weight = grade.weight,
