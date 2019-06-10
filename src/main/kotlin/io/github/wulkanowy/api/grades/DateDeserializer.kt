@@ -4,18 +4,18 @@ import com.google.gson.JsonDeserializationContext
 import com.google.gson.JsonDeserializer
 import com.google.gson.JsonElement
 import com.google.gson.JsonParseException
+import io.github.wulkanowy.api.toDate
 import java.lang.reflect.Type
 import java.text.ParseException
-import java.text.SimpleDateFormat
 import java.util.Date
 
-class DateDeserializer<T : Date>(private val mSimpleDateFormat: SimpleDateFormat, private val mClazz: Class<T>) : JsonDeserializer<T> {
+class DateDeserializer<T : Date>(private val mClazz: Class<T>) : JsonDeserializer<T> {
 
     override fun deserialize(element: JsonElement, arg1: Type, context: JsonDeserializationContext): T {
         val dateString = element.asString
         try {
             return mClazz.newInstance().apply {
-                time = mSimpleDateFormat.parse(dateString).time
+                time = dateString.toDate(GradeDate.FORMAT).time
             }
         } catch (e: InstantiationException) {
             throw JsonParseException(e.message, e)

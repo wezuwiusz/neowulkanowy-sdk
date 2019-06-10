@@ -3,7 +3,6 @@ package io.github.wulkanowy.api.grades
 import com.google.gson.annotations.SerializedName
 import pl.droidsonroids.jspoon.annotation.Format
 import pl.droidsonroids.jspoon.annotation.Selector
-import java.text.SimpleDateFormat
 import java.util.Date
 
 class Grade {
@@ -58,6 +57,5 @@ class Grade {
 class GradeDate : Date() {
     companion object {
         const val FORMAT = "dd.MM.yyyy"
-        val DATE_FORMAT = SimpleDateFormat(FORMAT)
     }
 }
