@@ -2,7 +2,7 @@ version: 2
 
 references:
   workspace_root: &workspace_root
-                    ~/api
+      ~/api
 
   container_config: &container_config
     docker:
@@ -23,6 +23,7 @@ jobs:
     <<: *container_config
     steps:
       - *attach_workspace
+      - checkout
       - restore_cache:
           <<: *general_cache_key
 
@@ -47,6 +48,7 @@ jobs:
     <<: *container_config
     steps:
       - *attach_workspace
+      - checkout
       - restore_cache:
           <<: *general_cache_key
 
