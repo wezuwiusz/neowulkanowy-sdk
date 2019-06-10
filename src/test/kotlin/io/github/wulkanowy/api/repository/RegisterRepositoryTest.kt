@@ -15,6 +15,7 @@ import io.github.wulkanowy.api.service.StudentService
 import io.reactivex.observers.TestObserver
 import okhttp3.mockwebserver.MockResponse
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertTrue
 import org.junit.Test
 import java.net.CookieManager
 
@@ -144,11 +145,14 @@ class RegisterRepositoryTest : BaseLocalTest() {
 
         server.start(3000)
 
-        val res = getRegisterRepository(" glubczyce2").getStudents()
+        val res = getRegisterRepository("Default").getStudents()
         val observer = TestObserver<List<Student>>()
         res.subscribe(observer)
         observer.assertTerminated()
 
-        assertEquals("/glubczyce2/Account/LogOn", server.takeRequest().path)
+        assertEquals("/Default/Account/LogOn", server.takeRequest().path)
+        assertTrue(server.takeRequest().path.startsWith("/Account/LogOn?ReturnUrl=%2FDefault"))
+        assertEquals("/default/LoginEndpoint.aspx", server.takeRequest().path)
+        assertEquals("/glubczyce2/LoginEndpoint.aspx", server.takeRequest().path)
     }
 }
