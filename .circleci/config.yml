@@ -1,41 +1,54 @@
 version: 2
 
-jobs:
-  test:
-    working_directory: ~/api
+references:
+  workspace_root: &workspace_root
+                    ~/api
+
+  container_config: &container_config
     docker:
       - image: circleci/openjdk:8-jdk-stretch
+    working_directory: *workspace_root
 
+  attach_workspace: &attach_workspace
+    attach_workspace:
+      at: *workspace_root
+
+  general_cache_key: &general_cache_key
+    key: cache-{{ checksum "build.gradle" }}
+
+jobs:
+  test:
+    <<: *container_config
     steps:
-      - checkout
-
+      - *attach_workspace
       - restore_cache:
-          key: cache-{{ checksum "build.gradle" }}
+          <<: *general_cache_key
 
       - run: ./.circleci/host-hotfix.sh
-
       - run: ./gradlew build -x check --no-daemon --stacktrace --console=plain -PdisablePreDex
-
       - run: ./gradlew check jacocoTestReport --no-daemon --stacktrace --console=plain -PdisablePreDex
 
       - save_cache:
-          paths:
-          - ~/.gradle
-          key: cache-{{ checksum "build.gradle" }}
+          <<: *general_cache_key
 
       - run: bash <(curl -s https://codecov.io/bash)
 
       - store_test_results:
           path: ./build/test-results
-
       - store_artifacts:
           path: ./build/reports/jacoco/test
-
       - store_artifacts:
           path: ./build/reports/tests/test
-
       - store_artifacts:
-          path: ./build/libs/api-0.1.0-SNAPSHOT.jar
+          path: ./build/libs/api-0.9.2.jar
+  deploy:
+    <<: *container_config
+    steps:
+      - *attach_workspace
+      - restore_cache:
+          <<: *general_cache_key
+
+      - run: ./gradlew bintrayUpload --no-daemon --stacktrace --console=plain -PdisablePreDex
 
 workflows:
   version: 2
@@ -43,3 +56,11 @@ workflows:
   test:
     jobs:
       - test
+      - deploy:
+          requires:
+            - test
+          filters:
+            tags:
+              only: /\d+\.\d+\.\d+/
+            branches:
+              ignore: /.*/
