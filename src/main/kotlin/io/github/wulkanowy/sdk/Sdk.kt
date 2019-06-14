@@ -2,16 +2,17 @@ package io.github.wulkanowy.sdk
 
 import io.github.wulkanowy.api.Api
 import io.github.wulkanowy.api.attendance.Absent
-import io.github.wulkanowy.api.grades.isGradeValid
 import io.github.wulkanowy.api.messages.Folder
 import io.github.wulkanowy.api.messages.Recipient
 import io.github.wulkanowy.api.resettableLazy
 import io.github.wulkanowy.api.resettableManager
-import io.github.wulkanowy.api.toLocalDate
+import io.github.wulkanowy.sdk.exams.mapExams
+import io.github.wulkanowy.sdk.grades.mapGrades
 import io.github.wulkanowy.sdk.interceptor.SignInterceptor
 import io.github.wulkanowy.sdk.pojo.Exam
 import io.github.wulkanowy.sdk.pojo.Grade
 import io.github.wulkanowy.sdk.pojo.Student
+import io.github.wulkanowy.sdk.register.mapStudents
 import io.github.wulkanowy.sdk.repository.MobileRepository
 import io.github.wulkanowy.sdk.repository.RegisterRepository
 import io.github.wulkanowy.sdk.repository.RoutingRulesRepository
@@ -20,10 +21,8 @@ import io.reactivex.Single
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
-import org.threeten.bp.Instant
 import org.threeten.bp.LocalDate
 import org.threeten.bp.LocalDateTime
-import org.threeten.bp.ZoneId
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
@@ -186,8 +185,6 @@ class Sdk {
                 )
     }
 
-    private fun Long.toLocalDate() = Instant.ofEpochMilli(this * 1000L).atZone(ZoneId.systemDefault()).toLocalDate()
-
     private fun getDictionaries() = mobile.getDictionaries(0, 0, 0)
 
     private val interceptors: MutableList<Pair<Interceptor, Boolean>> = mutableListOf()
@@ -206,27 +203,7 @@ class Sdk {
                     host = this@Sdk.scrapperHost
                     email = this@Sdk.email
                     password = this@Sdk.password
-                    getStudents().map { students ->
-                        students.map {
-                            Student(
-                                    email = it.email,
-                                    className = it.className,
-                                    classId = it.classId,
-                                    studentId = it.studentId,
-                                    symbol = it.symbol,
-                                    loginType = it.loginType,
-                                    schoolName = it.schoolName,
-                                    schoolSymbol = it.schoolSymbol,
-                                    studentName = it.studentName,
-                                    loginMode = Mode.SCRAPPER,
-                                    ssl = ssl,
-                                    apiHost = "",
-                                    scrapperHost = scrapperHost,
-                                    certificateKey = "",
-                                    certificate = ""
-                            )
-                        }
-                    }
+                    getStudents().map { it.mapStudents(ssl, scrapperHost) }
                 }
             }
             Mode.HYBRID -> {
@@ -266,27 +243,7 @@ class Sdk {
             if (certificateResponse.isError) throw RuntimeException(certificateResponse.message)
             this@Sdk.certKey = certificateResponse.tokenCert!!.certificateKey
             this@Sdk.certificate = certificateResponse.tokenCert.certificatePfx
-            getRegisterRepo(apiBaseUrl, this@Sdk.symbol).getPupils().map { students ->
-                students.map {
-                    Student(
-                            email = it.userLogin,
-                            symbol = symbol,
-                            studentId = it.id,
-                            classId = it.classId,
-                            className = it.classCode,
-                            studentName = "${it.name} ${it.surname}",
-                            schoolSymbol = it.reportingUnitSymbol,
-                            schoolName = it.reportingUnitName,
-                            loginType = Api.LoginType.STANDARD,
-                            loginMode = Mode.API,
-                            apiHost = certificateResponse.tokenCert.apiEndpoint.removeSuffix("/"),
-                            scrapperHost = "",
-                            ssl = certificateResponse.tokenCert.apiEndpoint.startsWith("https"),
-                            certificate = certificateResponse.tokenCert.certificatePfx,
-                            certificateKey = certificateResponse.tokenCert.certificateKey
-                    )
-                }
-            }
+            getRegisterRepo(apiBaseUrl, this@Sdk.symbol).getPupils().map { it.mapStudents(symbol, certificateResponse) }
         }
     }
 
@@ -300,90 +257,20 @@ class Sdk {
 
     fun getSubjects() = scrapper.getSubjects()
 
-    fun getExams(startDate: LocalDate, endDate: LocalDate): Single<List<Exam>> {
+    fun getExams(start: LocalDate, end: LocalDate): Single<List<Exam>> {
         return when (mode) {
-            Mode.API -> getApiExams(startDate, endDate)
-            Mode.SCRAPPER -> scrapper.getExams(startDate, endDate).map { exams ->
-                exams.map {
-                    Exam(
-                            date = it.date.toLocalDate(),
-                            entryDate = it.entryDate.toLocalDate(),
-                            description = it.description,
-                            group = it.group,
-                            teacherSymbol = it.teacherSymbol,
-                            teacher = it.teacher,
-                            subject = it.subject,
-                            type = it.type
-                    )
-                }
-            }
-            Mode.HYBRID -> getApiExams(startDate, endDate)
-        }
-    }
-
-    private fun getApiExams(start: LocalDate, end: LocalDate): Single<List<Exam>> {
-        return getDictionaries().flatMap { dict ->
-            mobile.getExams(start, end, classId, 1, studentId).map { exams ->
-                exams.map { exam ->
-                    Exam(
-                            date = exam.date.toLocalDate(),
-                            entryDate = exam.date.toLocalDate(),
-                            description = exam.description,
-                            group = exam.divideName.orEmpty(),
-                            teacher = dict.teachers.singleOrNull { it.id == exam.employeeId }?.run { "$name $surname" }.orEmpty(),
-                            subject = dict.subjects.singleOrNull { it.id == exam.subjectId }?.name.orEmpty(),
-                            teacherSymbol = dict.teachers.singleOrNull { it.id == exam.employeeId }?.code.orEmpty(),
-                            type = if (exam.type) "Sprawdzian" else "Kartkówka"
-                    )
-                }
+            Mode.SCRAPPER -> scrapper.getExams(start, end).map { it.mapExams() }
+            Mode.HYBRID, Mode.API -> getDictionaries().flatMap { dict ->
+                mobile.getExams(start, end, classId, 1, studentId).map { it.mapExams(dict) }
             }
         }
     }
 
     fun getGrades(semesterId: Int): Single<List<Grade>> {
         return when (mode) {
-            Mode.API -> getApiGrades(semesterId)
-            Mode.SCRAPPER -> scrapper.getGrades(semesterId).map { grades ->
-                grades.map {
-                    Grade(
-                            subject = it.subject,
-                            description = it.description.orEmpty(),
-                            symbol = it.symbol.orEmpty(),
-                            comment = it.comment,
-                            date = it.date.toLocalDate(),
-                            teacher = it.teacher,
-                            entry = it.entry,
-                            weight = it.weight,
-                            weightValue = it.weightValue,
-                            color = it.color,
-                            value = it.value.toDouble(),
-                            modifier = it.modifier
-                    )
-                }
-            }
-            Mode.HYBRID -> getApiGrades(semesterId)
-        }
-    }
-
-    private fun getApiGrades(semesterId: Int): Single<List<Grade>> {
-        return getDictionaries().flatMap { dict ->
-            mobile.getGrades(classId, semesterId, studentId).map { grades ->
-                grades.map { grade ->
-                    Grade(
-                            subject = dict.subjects.singleOrNull { it.id == grade.subjectId }?.name.orEmpty(),
-                            description = dict.gradeCategories.singleOrNull { it.id == grade.categoryId }?.name.orEmpty(),
-                            symbol = dict.gradeCategories.singleOrNull { it.id == grade.categoryId }?.code.orEmpty(),
-                            comment = grade.comment.orEmpty(),
-                            date = grade.creationDate.toLocalDate(),
-                            teacher = dict.teachers.singleOrNull { it.id == grade.employeeIdD }?.let { "${it.name} ${it.surname}" }.orEmpty(),
-                            entry = if (grade.entry.isNotBlank()) grade.entry else "...",
-                            weightValue = if (isGradeValid(grade.entry)) grade.gradeWeight else .0,
-                            modifier = grade.modificationWeight ?: .0,
-                            value = grade.value,
-                            weight = grade.weight,
-                            color = "0"
-                    )
-                }
+            Mode.SCRAPPER -> scrapper.getGrades(semesterId).map { grades -> grades.mapGrades() }
+            Mode.HYBRID, Mode.API -> getDictionaries().flatMap { dict ->
+                mobile.getGrades(classId, semesterId, studentId).map { it.mapGrades(dict) }
             }
         }
     }
