@@ -105,4 +105,25 @@ class SdkRemoteTest {
         val grades = sdk.getGrades(1).blockingGet()
         assertEquals(21, grades.size)
     }
+
+    @Test
+    fun getGradesSummary_api() {
+        val sdk = Sdk().apply {
+            apiKey = API_KEY
+
+            certKey = CERT_KEY
+            certificate = CERTIFICATE
+
+            apiBaseUrl = "https://api.fakelog.cf/Default"
+            mode = Sdk.Mode.API
+            symbol = "Default"
+
+            schoolSymbol = "123456"
+            studentId = 15
+            classId = 14
+        }
+
+        val grades = sdk.getGradesSummary(1).blockingGet()
+        assertEquals(4, grades.size)
+    }
 }

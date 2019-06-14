@@ -9,6 +9,7 @@ import io.github.wulkanowy.api.resettableManager
 import io.github.wulkanowy.sdk.dictionaries.Dictionaries
 import io.github.wulkanowy.sdk.exams.mapExams
 import io.github.wulkanowy.sdk.grades.mapGrades
+import io.github.wulkanowy.sdk.grades.mapGradesSummary
 import io.github.wulkanowy.sdk.interceptor.SignInterceptor
 import io.github.wulkanowy.sdk.pojo.Exam
 import io.github.wulkanowy.sdk.pojo.Grade
@@ -284,7 +285,14 @@ class Sdk {
         }
     }
 
-    fun getGradesSummary(semesterId: Int? = null) = scrapper.getGradesSummary(semesterId)
+    fun getGradesSummary(semesterId: Int): Single<List<io.github.wulkanowy.sdk.pojo.GradeSummary>> {
+        return when (mode) {
+            Mode.SCRAPPER -> scrapper.getGradesSummary(semesterId).map { it.mapGradesSummary() }
+            Mode.HYBRID, Mode.API -> getDictionaries().flatMap { dict ->
+                mobile.getGradesSummary(classId, semesterId, studentId).map { it.mapGradesSummary(dict) }
+            }
+        }
+    }
 
     fun getGradesStatistics(semesterId: Int, annual: Boolean = false) = scrapper.getGradesStatistics(semesterId, annual)
 

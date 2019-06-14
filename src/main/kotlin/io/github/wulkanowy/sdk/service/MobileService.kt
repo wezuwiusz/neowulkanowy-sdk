@@ -9,6 +9,7 @@ import io.github.wulkanowy.sdk.dictionaries.DictionariesRequest
 import io.github.wulkanowy.sdk.exams.Exam
 import io.github.wulkanowy.sdk.exams.ExamsRequest
 import io.github.wulkanowy.sdk.grades.Grade
+import io.github.wulkanowy.sdk.grades.GradesSummaryResponse
 import io.github.wulkanowy.sdk.grades.GradesRequest
 import io.github.wulkanowy.sdk.homework.Homework
 import io.github.wulkanowy.sdk.homework.HomeworkRequest
@@ -33,6 +34,9 @@ interface MobileService {
 
     @POST("Oceny")
     fun getGrades(@Body gradesRequest: GradesRequest): Single<ApiResponse<List<Grade>>>
+
+    @POST("OcenyPodsumowanie")
+    fun getGradesSummary(@Body gradesRequest: GradesRequest): Single<ApiResponse<GradesSummaryResponse>>
 
     @POST("Sprawdziany")
     fun getExams(@Body examsRequest: ExamsRequest): Single<ApiResponse<List<Exam>>>

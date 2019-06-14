@@ -10,6 +10,7 @@ import io.github.wulkanowy.sdk.dictionaries.DictionariesRequest
 import io.github.wulkanowy.sdk.exams.Exam
 import io.github.wulkanowy.sdk.exams.ExamsRequest
 import io.github.wulkanowy.sdk.grades.Grade
+import io.github.wulkanowy.sdk.grades.GradesSummaryResponse
 import io.github.wulkanowy.sdk.grades.GradesRequest
 import io.github.wulkanowy.sdk.homework.Homework
 import io.github.wulkanowy.sdk.homework.HomeworkRequest
@@ -37,6 +38,10 @@ class MobileRepository(private val api: MobileService) {
 
     fun getGrades(classId: Int, classificationPeriodId: Int, studentId: Int): Single<List<Grade>> {
         return api.getGrades(GradesRequest(classId, classificationPeriodId, studentId)).map { it.data }
+    }
+
+    fun getGradesSummary(classId: Int, classificationPeriodId: Int, studentId: Int): Single<GradesSummaryResponse> {
+        return api.getGradesSummary(GradesRequest(classId, classificationPeriodId, studentId)).map { it.data }
     }
 
     fun getExams(start: LocalDate, end: LocalDate, classId: Int, classificationPeriodId: Int, studentId: Int): Single<List<Exam>> {
