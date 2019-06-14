@@ -11,13 +11,13 @@ data class LessonTime(
         val number: Int,
 
         @SerializedName("Poczatek")
-        val start: Int,
+        val start: Long,
 
         @SerializedName("PoczatekTekst")
         val startText: String,
 
         @SerializedName("Koniec")
-        val end: Int,
+        val end: Long,
 
         @SerializedName("KoniecTekst")
         val endText: String

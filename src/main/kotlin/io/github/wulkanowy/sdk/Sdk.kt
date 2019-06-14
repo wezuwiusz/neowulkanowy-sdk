@@ -19,6 +19,7 @@ import io.github.wulkanowy.sdk.register.mapStudents
 import io.github.wulkanowy.sdk.repository.MobileRepository
 import io.github.wulkanowy.sdk.repository.RegisterRepository
 import io.github.wulkanowy.sdk.repository.RoutingRulesRepository
+import io.github.wulkanowy.sdk.timetable.mapTimetable
 import io.reactivex.Observable
 import io.reactivex.Single
 import okhttp3.Interceptor
@@ -354,7 +355,14 @@ class Sdk {
 
     fun deleteMessages(messages: List<Pair<Int, Int>>) = scrapper.deleteMessages(messages)
 
-    fun getTimetable(startDate: LocalDate, endDate: LocalDate? = null) = scrapper.getTimetable(startDate, endDate)
+    fun getTimetable(start: LocalDate, end: LocalDate): Single<List<Timetable>> {
+        return when (mode) {
+            Mode.SCRAPPER -> scrapper.getTimetable(start, end).map { it.mapTimetable() }
+            Mode.HYBRID, Mode.API ->  getDictionaries().flatMap { dict ->
+                mobile.getTimetable(start, end, classId, 0, studentId).map { it.mapTimetable(dict) }
+            }
+        }
+    }
 
     fun getCompletedLessons(start: LocalDate, end: LocalDate? = null, subjectId: Int = -1) = scrapper.getCompletedLessons(start, end, subjectId)
 

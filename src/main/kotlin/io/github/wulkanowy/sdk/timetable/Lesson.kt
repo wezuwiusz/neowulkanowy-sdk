@@ -23,7 +23,7 @@ data class Lesson(
         val subjectName: String,
 
         @SerializedName("PodzialSkrot")
-        val divisionShort: String,
+        val divisionShort: String?,
 
         @SerializedName("Sala")
         val room: String,
@@ -32,13 +32,13 @@ data class Lesson(
         val employeeId: Int,
 
         @SerializedName("IdPracownikWspomagajacy")
-        val employeeSupporterId: Int,
+        val employeeSupporterId: Int?,
 
         @SerializedName("IdPracownikOld")
-        val employeeOldId: Int,
+        val employeeOldId: Int?,
 
         @SerializedName("IdPracownikWspomagajacyOld")
-        val employeeSupporterOldId: Int,
+        val employeeSupporterOldId: Int?,
 
         @SerializedName("IdPlanLekcji")
         val timetableId: Int,
