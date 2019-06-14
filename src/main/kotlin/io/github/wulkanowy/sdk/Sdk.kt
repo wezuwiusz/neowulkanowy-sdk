@@ -6,6 +6,7 @@ import io.github.wulkanowy.api.messages.Folder
 import io.github.wulkanowy.api.messages.Recipient
 import io.github.wulkanowy.api.resettableLazy
 import io.github.wulkanowy.api.resettableManager
+import io.github.wulkanowy.sdk.dictionaries.Dictionaries
 import io.github.wulkanowy.sdk.exams.mapExams
 import io.github.wulkanowy.sdk.grades.mapGrades
 import io.github.wulkanowy.sdk.interceptor.SignInterceptor
@@ -185,7 +186,15 @@ class Sdk {
                 )
     }
 
-    private fun getDictionaries() = mobile.getDictionaries(0, 0, 0)
+    private lateinit var dictionaries: Dictionaries
+
+    private fun getDictionaries(): Single<Dictionaries> {
+        if (::dictionaries.isInitialized) return Single.just(dictionaries)
+
+        return mobile.getDictionaries(0, 0, 0).map {
+            it.apply { dictionaries = this }
+        }
+    }
 
     private val interceptors: MutableList<Pair<Interceptor, Boolean>> = mutableListOf()
 
