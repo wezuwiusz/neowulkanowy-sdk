@@ -54,7 +54,7 @@ class RegisterRepositoryTest : BaseLocalTest() {
         server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("LoginPage-standard.html").readText()))
         server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("Logowanie-uonet.html").readText()))
 
-        (0..4).onEach {
+        (0..5).onEach {
             server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("Login-success-old.html").readText()))
             server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("LoginPage-standard.html").readText()))
             server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("SnP-start.html").readText()))
