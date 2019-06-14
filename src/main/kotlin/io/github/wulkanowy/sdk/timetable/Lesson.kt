@@ -26,7 +26,7 @@ data class Lesson(
         val divisionShort: String?,
 
         @SerializedName("Sala")
-        val room: String,
+        val room: String?,
 
         @SerializedName("IdPracownik")
         val employeeId: Int,

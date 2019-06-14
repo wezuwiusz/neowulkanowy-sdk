@@ -21,7 +21,7 @@ fun List<ApiTimetable>.mapTimetable(dictionaries: Dictionaries): List<Timetable>
             group = it.divisionShort.orEmpty(),
             info = it.annotationAboutChange.substringAfter("(").substringBefore(")"),
             number = it.lessonNumber,
-            room = it.room,
+            room = it.room.orEmpty(),
             roomOld = "",
             start = time.start.toLocalDateTime(),
             subject = it.subjectName,
