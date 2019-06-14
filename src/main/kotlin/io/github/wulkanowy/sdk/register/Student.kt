@@ -50,7 +50,7 @@ data class Student(
         val classSymbol: String,
 
         @SerializedName("OddzialKod")
-        val classCode: String,
+        val classCode: String?,
 
         @SerializedName("UzytkownikRola")
         val userRole: String,

@@ -13,7 +13,7 @@ fun List<ApiStudent>.mapStudents(symbol: String, certificateResponse: Certificat
             symbol = symbol,
             studentId = it.id,
             classId = it.classId,
-            className = it.classCode,
+            className = it.classCode.orEmpty(),
             studentName = "${it.name} ${it.surname}",
             schoolSymbol = it.reportingUnitSymbol,
             schoolName = it.reportingUnitName,
