@@ -29,7 +29,7 @@ data class Note(
         val employeeSurname: String,
 
         @SerializedName("DataWpisu")
-        val entryDate: String,
+        val entryDate: Long,
 
         @SerializedName("DataWpisuTekst")
         val entryDateText: String,

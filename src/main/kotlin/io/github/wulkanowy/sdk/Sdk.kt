@@ -2,7 +2,6 @@ package io.github.wulkanowy.sdk
 
 import io.github.wulkanowy.api.Api
 import io.github.wulkanowy.api.attendance.Absent
-import io.github.wulkanowy.sdk.pojo.Attendance
 import io.github.wulkanowy.api.messages.Folder
 import io.github.wulkanowy.api.messages.Recipient
 import io.github.wulkanowy.api.resettableLazy
@@ -13,9 +12,8 @@ import io.github.wulkanowy.sdk.exams.mapExams
 import io.github.wulkanowy.sdk.grades.mapGrades
 import io.github.wulkanowy.sdk.grades.mapGradesSummary
 import io.github.wulkanowy.sdk.interceptor.SignInterceptor
-import io.github.wulkanowy.sdk.pojo.Exam
-import io.github.wulkanowy.sdk.pojo.Grade
-import io.github.wulkanowy.sdk.pojo.Student
+import io.github.wulkanowy.sdk.notes.mapNotes
+import io.github.wulkanowy.sdk.pojo.*
 import io.github.wulkanowy.sdk.register.mapStudents
 import io.github.wulkanowy.sdk.repository.MobileRepository
 import io.github.wulkanowy.sdk.repository.RegisterRepository
@@ -294,7 +292,7 @@ class Sdk {
         }
     }
 
-    fun getGradesSummary(semesterId: Int): Single<List<io.github.wulkanowy.sdk.pojo.GradeSummary>> {
+    fun getGradesSummary(semesterId: Int): Single<List<GradeSummary>> {
         return when (mode) {
             Mode.SCRAPPER -> scrapper.getGradesSummary(semesterId).map { it.mapGradesSummary() }
             Mode.HYBRID, Mode.API -> getDictionaries().flatMap { dict ->
@@ -307,7 +305,14 @@ class Sdk {
 
     fun getHomework(start: LocalDate, end: LocalDate? = null) = scrapper.getHomework(start, end)
 
-    fun getNotes() = scrapper.getNotes()
+    fun getNotes(semesterId: Int): Single<List<Note>> {
+        return when (mode) {
+            Mode.SCRAPPER -> scrapper.getNotes().map { it.mapNotes() }
+            Mode.HYBRID, Mode.API -> getDictionaries().flatMap { dict ->
+                mobile.getNotes(semesterId, studentId).map { it.mapNotes(dict) }
+            }
+        }
+    }
 
     fun getRegisteredDevices() = scrapper.getRegisteredDevices()
 
