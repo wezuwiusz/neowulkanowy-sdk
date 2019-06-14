@@ -2,10 +2,12 @@ package io.github.wulkanowy.sdk
 
 import io.github.wulkanowy.api.Api
 import io.github.wulkanowy.api.attendance.Absent
+import io.github.wulkanowy.sdk.pojo.Attendance
 import io.github.wulkanowy.api.messages.Folder
 import io.github.wulkanowy.api.messages.Recipient
 import io.github.wulkanowy.api.resettableLazy
 import io.github.wulkanowy.api.resettableManager
+import io.github.wulkanowy.sdk.attendance.mapAttendance
 import io.github.wulkanowy.sdk.dictionaries.Dictionaries
 import io.github.wulkanowy.sdk.exams.mapExams
 import io.github.wulkanowy.sdk.grades.mapGrades
@@ -259,7 +261,14 @@ class Sdk {
 
     fun getSemesters() = scrapper.getSemesters()
 
-    fun getAttendance(startDate: LocalDate, endDate: LocalDate? = null) = scrapper.getAttendance(startDate, endDate)
+    fun getAttendance(startDate: LocalDate, endDate: LocalDate, semesterId: Int): Single<List<Attendance>> {
+        return when (mode) {
+            Mode.SCRAPPER -> scrapper.getAttendance(startDate, endDate).map { it.mapAttendance() }
+            Mode.HYBRID, Mode.API -> getDictionaries().flatMap { dict ->
+                mobile.getAttendance(startDate, endDate, classId, semesterId, studentId).map { it.mapAttendance(dict) }
+            }
+        }
+    }
 
     fun getAttendanceSummary(subjectId: Int? = -1) = scrapper.getAttendanceSummary(subjectId)
 

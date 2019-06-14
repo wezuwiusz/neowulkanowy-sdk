@@ -2,6 +2,7 @@ package io.github.wulkanowy.sdk
 
 import org.junit.Assert.assertEquals
 import org.junit.Test
+import org.threeten.bp.LocalDate.of
 
 class SdkRemoteTest {
 
@@ -125,5 +126,26 @@ class SdkRemoteTest {
 
         val grades = sdk.getGradesSummary(1).blockingGet()
         assertEquals(4, grades.size)
+    }
+
+    @Test
+    fun getAttendance_api() {
+        val sdk = Sdk().apply {
+            apiKey = API_KEY
+
+            certKey = CERT_KEY
+            certificate = CERTIFICATE
+
+            apiBaseUrl = "https://api.fakelog.cf/Default"
+            mode = Sdk.Mode.API
+            symbol = "Default"
+
+            schoolSymbol = "123456"
+            studentId = 15
+            classId = 14
+        }
+
+        val attendance = sdk.getAttendance(of(2018, 1, 1), of(2018, 1, 2), 1).blockingGet()
+        assertEquals(24, attendance.size)
     }
 }
