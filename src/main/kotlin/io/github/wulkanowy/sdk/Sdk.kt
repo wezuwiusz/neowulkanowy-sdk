@@ -11,6 +11,7 @@ import io.github.wulkanowy.sdk.dictionaries.Dictionaries
 import io.github.wulkanowy.sdk.exams.mapExams
 import io.github.wulkanowy.sdk.grades.mapGrades
 import io.github.wulkanowy.sdk.grades.mapGradesSummary
+import io.github.wulkanowy.sdk.homework.mapHomework
 import io.github.wulkanowy.sdk.interceptor.SignInterceptor
 import io.github.wulkanowy.sdk.notes.mapNotes
 import io.github.wulkanowy.sdk.pojo.*
@@ -303,7 +304,14 @@ class Sdk {
 
     fun getGradesStatistics(semesterId: Int, annual: Boolean = false) = scrapper.getGradesStatistics(semesterId, annual)
 
-    fun getHomework(start: LocalDate, end: LocalDate? = null) = scrapper.getHomework(start, end)
+    fun getHomework(start: LocalDate, end: LocalDate, semesterId: Int = 0): Single<List<Homework>> {
+        return when (mode) {
+            Mode.SCRAPPER -> scrapper.getHomework(start, end).map { it.mapHomework() }
+            Mode.HYBRID, Mode.API -> getDictionaries().flatMap { dict ->
+                mobile.getHomework(start, end, classId, semesterId, studentId).map { it.mapHomework(dict) }
+            }
+        }
+    }
 
     fun getNotes(semesterId: Int): Single<List<Note>> {
         return when (mode) {

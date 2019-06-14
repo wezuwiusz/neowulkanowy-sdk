@@ -23,5 +23,5 @@ data class Homework(
         val subjectId: Int,
 
         @SerializedName("Opis")
-        val description: String
+        val content: String
 )
