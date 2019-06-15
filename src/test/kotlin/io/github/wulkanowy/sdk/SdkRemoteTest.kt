@@ -169,7 +169,7 @@ class SdkRemoteTest {
         }
 
         val subjects = sdk.getSubjects().blockingGet()
-        assertEquals(24, subjects.size)
+        assertEquals(14, subjects.size)
     }
 
     @Test
