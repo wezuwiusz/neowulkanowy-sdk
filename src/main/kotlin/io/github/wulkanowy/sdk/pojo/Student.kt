@@ -7,6 +7,7 @@ data class Student(
     val email: String,
     val symbol: String,
     val studentId: Int,
+    val userLoginId: Int,
     val studentName: String,
     val schoolSymbol: String,
     val schoolName: String,
