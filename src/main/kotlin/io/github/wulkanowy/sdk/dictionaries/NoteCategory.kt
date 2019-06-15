@@ -4,12 +4,12 @@ import com.google.gson.annotations.SerializedName
 
 data class NoteCategory(
 
-        @SerializedName("Id")
-        val id: Int,
+    @SerializedName("Id")
+    val id: Int,
 
-        @SerializedName("Kod")
-        val code: String,
+    @SerializedName("Kod")
+    val code: String,
 
-        @SerializedName("Nazwa")
-        val name: String
+    @SerializedName("Nazwa")
+    val name: String
 )

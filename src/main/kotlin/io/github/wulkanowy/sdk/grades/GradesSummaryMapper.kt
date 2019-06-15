@@ -2,8 +2,8 @@ package io.github.wulkanowy.sdk.grades
 
 import io.github.wulkanowy.sdk.dictionaries.Dictionaries
 import io.github.wulkanowy.sdk.pojo.GradeSummary
-import io.github.wulkanowy.sdk.grades.GradeSummary as ApiGradeSummary
 import io.github.wulkanowy.api.grades.GradeSummary as ScrapperGradeSummary
+import io.github.wulkanowy.sdk.grades.GradeSummary as ApiGradeSummary
 
 fun GradesSummaryResponse.mapGradesSummary(dict: Dictionaries): List<GradeSummary> {
     return average.union(predicted).union(evaluative).map { it.subjectId }.distinct().sorted().map { subjectId ->

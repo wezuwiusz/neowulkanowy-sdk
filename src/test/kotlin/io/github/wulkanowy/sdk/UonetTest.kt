@@ -1,7 +1,6 @@
 package io.github.wulkanowy.sdk
 
 import io.github.wulkanowy.sdk.attendance.Attendance
-import io.github.wulkanowy.sdk.base.ApiResponse
 import io.github.wulkanowy.sdk.dictionaries.Dictionaries
 import io.github.wulkanowy.sdk.exams.Exam
 import io.github.wulkanowy.sdk.grades.Grade

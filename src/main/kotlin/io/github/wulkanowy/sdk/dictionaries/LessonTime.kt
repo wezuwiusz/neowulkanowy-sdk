@@ -4,21 +4,21 @@ import com.google.gson.annotations.SerializedName
 
 data class LessonTime(
 
-        @SerializedName("Id")
-        val id: Int,
+    @SerializedName("Id")
+    val id: Int,
 
-        @SerializedName("Numer")
-        val number: Int,
+    @SerializedName("Numer")
+    val number: Int,
 
-        @SerializedName("Poczatek")
-        val start: Long,
+    @SerializedName("Poczatek")
+    val start: Long,
 
-        @SerializedName("PoczatekTekst")
-        val startText: String,
+    @SerializedName("PoczatekTekst")
+    val startText: String,
 
-        @SerializedName("Koniec")
-        val end: Long,
+    @SerializedName("Koniec")
+    val end: Long,
 
-        @SerializedName("KoniecTekst")
-        val endText: String
+    @SerializedName("KoniecTekst")
+    val endText: String
 )

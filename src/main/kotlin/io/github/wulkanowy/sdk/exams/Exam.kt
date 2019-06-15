@@ -4,33 +4,33 @@ import com.google.gson.annotations.SerializedName
 
 data class Exam(
 
-        @SerializedName("Id")
-        val id: Int,
+    @SerializedName("Id")
+    val id: Int,
 
-        @SerializedName("IdPrzedmiot")
-        val subjectId: Int,
+    @SerializedName("IdPrzedmiot")
+    val subjectId: Int,
 
-        @SerializedName("IdPracownik")
-        val employeeId: Int,
+    @SerializedName("IdPracownik")
+    val employeeId: Int,
 
-        @SerializedName("IdOddzial")
-        val classId: Int?,
+    @SerializedName("IdOddzial")
+    val classId: Int?,
 
-        @SerializedName("IdPodzial")
-        val divideId: Int?,
+    @SerializedName("IdPodzial")
+    val divideId: Int?,
 
-        @SerializedName("PodzialNazwa")
-        val divideName: String?,
+    @SerializedName("PodzialNazwa")
+    val divideName: String?,
 
-        @SerializedName("Rodzaj")
-        val type: Boolean, // false - quiz, true - test
+    @SerializedName("Rodzaj")
+    val type: Boolean, // false - quiz, true - test
 
-        @SerializedName("Opis")
-        val description: String,
+    @SerializedName("Opis")
+    val description: String,
 
-        @SerializedName("Data")
-        val date: Long,
+    @SerializedName("Data")
+    val date: Long,
 
-        @SerializedName("DataTekst")
-        val dateText: String
+    @SerializedName("DataTekst")
+    val dateText: String
 )

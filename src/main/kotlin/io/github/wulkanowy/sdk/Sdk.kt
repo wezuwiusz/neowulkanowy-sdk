@@ -173,20 +173,20 @@ class Sdk {
 
     private fun getRetrofitBuilder(): Retrofit.Builder {
         return Retrofit.Builder()
-                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-                .addConverterFactory(ScalarsConverterFactory.create())
-                .addConverterFactory(GsonConverterFactory.create())
-                .client(OkHttpClient().newBuilder()
-                        .addInterceptor(HttpLoggingInterceptor().setLevel(logLevel))
-                        .addInterceptor(SignInterceptor(apiKey, certificate, certKey))
-                        .apply {
-                            interceptors.forEach {
-                                if (it.second) addNetworkInterceptor(it.first)
-                                else addInterceptor(it.first)
-                            }
-                        }
-                        .build()
-                )
+            .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+            .addConverterFactory(ScalarsConverterFactory.create())
+            .addConverterFactory(GsonConverterFactory.create())
+            .client(OkHttpClient().newBuilder()
+                .addInterceptor(HttpLoggingInterceptor().setLevel(logLevel))
+                .addInterceptor(SignInterceptor(apiKey, certificate, certKey))
+                .apply {
+                    interceptors.forEach {
+                        if (it.second) addNetworkInterceptor(it.first)
+                        else addInterceptor(it.first)
+                    }
+                }
+                .build()
+            )
     }
 
     private lateinit var dictionaries: Dictionaries
@@ -358,7 +358,7 @@ class Sdk {
     fun getTimetable(start: LocalDate, end: LocalDate): Single<List<Timetable>> {
         return when (mode) {
             Mode.SCRAPPER -> scrapper.getTimetable(start, end).map { it.mapTimetable() }
-            Mode.HYBRID, Mode.API ->  getDictionaries().flatMap { dict ->
+            Mode.HYBRID, Mode.API -> getDictionaries().flatMap { dict ->
                 mobile.getTimetable(start, end, classId, 0, studentId).map { it.mapTimetable(dict) }
             }
         }

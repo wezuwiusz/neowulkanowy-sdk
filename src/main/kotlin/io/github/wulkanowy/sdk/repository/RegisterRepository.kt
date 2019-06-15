@@ -1,6 +1,6 @@
 package io.github.wulkanowy.sdk.repository
 
-import io.github.wulkanowy.sdk.base.ApiRequest
+import io.github.wulkanowy.sdk.ApiRequest
 import io.github.wulkanowy.sdk.register.CertificateRequest
 import io.github.wulkanowy.sdk.register.CertificateResponse
 import io.github.wulkanowy.sdk.register.Student

@@ -4,24 +4,24 @@ import com.google.gson.annotations.SerializedName
 
 data class Employee(
 
-        @SerializedName("Id")
-        val id: Int,
+    @SerializedName("Id")
+    val id: Int,
 
-        @SerializedName("Imie")
-        val name: String,
+    @SerializedName("Imie")
+    val name: String,
 
-        @SerializedName("Nazwisko")
-        val surname: String,
+    @SerializedName("Nazwisko")
+    val surname: String,
 
-        @SerializedName("Kod")
-        val code: String,
+    @SerializedName("Kod")
+    val code: String,
 
-        @SerializedName("Aktywny")
-        val active: Boolean,
+    @SerializedName("Aktywny")
+    val active: Boolean,
 
-        @SerializedName("Nauczyciel")
-        val teacher: Boolean,
+    @SerializedName("Nauczyciel")
+    val teacher: Boolean,
 
-        @SerializedName("LoginId")
-        val loginId: Int
+    @SerializedName("LoginId")
+    val loginId: Int
 )

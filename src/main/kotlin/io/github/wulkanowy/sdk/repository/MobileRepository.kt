@@ -1,17 +1,16 @@
 package io.github.wulkanowy.sdk.repository
 
-import io.github.wulkanowy.api.toFormat
+import io.github.wulkanowy.sdk.ApiRequest
+import io.github.wulkanowy.sdk.ApiResponse
 import io.github.wulkanowy.sdk.attendance.Attendance
 import io.github.wulkanowy.sdk.attendance.AttendanceRequest
-import io.github.wulkanowy.sdk.base.ApiRequest
-import io.github.wulkanowy.sdk.base.ApiResponse
 import io.github.wulkanowy.sdk.dictionaries.Dictionaries
 import io.github.wulkanowy.sdk.dictionaries.DictionariesRequest
 import io.github.wulkanowy.sdk.exams.Exam
 import io.github.wulkanowy.sdk.exams.ExamsRequest
 import io.github.wulkanowy.sdk.grades.Grade
-import io.github.wulkanowy.sdk.grades.GradesSummaryResponse
 import io.github.wulkanowy.sdk.grades.GradesRequest
+import io.github.wulkanowy.sdk.grades.GradesSummaryResponse
 import io.github.wulkanowy.sdk.homework.Homework
 import io.github.wulkanowy.sdk.homework.HomeworkRequest
 import io.github.wulkanowy.sdk.notes.Note
@@ -19,12 +18,11 @@ import io.github.wulkanowy.sdk.notes.NotesRequest
 import io.github.wulkanowy.sdk.service.MobileService
 import io.github.wulkanowy.sdk.timetable.Lesson
 import io.github.wulkanowy.sdk.timetable.TimetableRequest
+import io.github.wulkanowy.sdk.toFormat
 import io.reactivex.Single
 import org.threeten.bp.LocalDate
 
 class MobileRepository(private val api: MobileService) {
-
-    private fun LocalDate.toFormat() = toFormat("yyyy-MM-dd")
 
     fun logStart(): Single<ApiResponse<String>> = api.logAppStart(object : ApiRequest() {})
 

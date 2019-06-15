@@ -11,7 +11,7 @@ class RoutingRulesRepository(private val api: RoutingRulesService) {
 
         return api.getRoutingRules().map { routes ->
             routes.split("\r?\n".toRegex())
-                    .singleOrNull { tokenSymbol == it.substringBefore(",") }?.substringAfter(",")
+                .singleOrNull { tokenSymbol == it.substringBefore(",") }?.substringAfter(",")
         }
     }
 }

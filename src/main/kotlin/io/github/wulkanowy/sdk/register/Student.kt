@@ -4,90 +4,90 @@ import com.google.gson.annotations.SerializedName
 
 data class Student(
 
-        @SerializedName("IdOkresKlasyfikacyjny")
-        val classificationPeriodId: Int,
+    @SerializedName("IdOkresKlasyfikacyjny")
+    val classificationPeriodId: Int,
 
-        @SerializedName("OkresPoziom")
-        val periodLevel: Int,
+    @SerializedName("OkresPoziom")
+    val periodLevel: Int,
 
-        @SerializedName("OkresNumer")
-        val periodNumber: Int,
+    @SerializedName("OkresNumer")
+    val periodNumber: Int,
 
-        @SerializedName("OkresDataOd")
-        val periodDateFrom: Int,
+    @SerializedName("OkresDataOd")
+    val periodDateFrom: Int,
 
-        @SerializedName("OkresDataDo")
-        val periodDateTo: Int,
+    @SerializedName("OkresDataDo")
+    val periodDateTo: Int,
 
-        @SerializedName("OkresDataOdTekst")
-        val periodDateFromText: String,
+    @SerializedName("OkresDataOdTekst")
+    val periodDateFromText: String,
 
-        @SerializedName("OkresDataDoTekst")
-        val periodDateToText: String,
+    @SerializedName("OkresDataDoTekst")
+    val periodDateToText: String,
 
-        @SerializedName("IdJednostkaSprawozdawcza")
-        val reportingUnitId: Int,
+    @SerializedName("IdJednostkaSprawozdawcza")
+    val reportingUnitId: Int,
 
-        @SerializedName("JednostkaSprawozdawczaSkrot")
-        val reportingUnitShortcut: String,
+    @SerializedName("JednostkaSprawozdawczaSkrot")
+    val reportingUnitShortcut: String,
 
-        @SerializedName("JednostkaSprawozdawczaNazwa")
-        val reportingUnitName: String,
+    @SerializedName("JednostkaSprawozdawczaNazwa")
+    val reportingUnitName: String,
 
-        @SerializedName("JednostkaSprawozdawczaSymbol")
-        val reportingUnitSymbol: String,
+    @SerializedName("JednostkaSprawozdawczaSymbol")
+    val reportingUnitSymbol: String,
 
-        @SerializedName("IdJednostka")
-        val unitId: Int,
+    @SerializedName("IdJednostka")
+    val unitId: Int,
 
-        @SerializedName("JednostkaNazwa")
-        val unitName: String,
+    @SerializedName("JednostkaNazwa")
+    val unitName: String,
 
-        @SerializedName("JednostkaSkrot")
-        val unitShortcut: String,
+    @SerializedName("JednostkaSkrot")
+    val unitShortcut: String,
 
-        @SerializedName("OddzialSymbol")
-        val classSymbol: String,
+    @SerializedName("OddzialSymbol")
+    val classSymbol: String,
 
-        @SerializedName("OddzialKod")
-        val classCode: String?,
+    @SerializedName("OddzialKod")
+    val classCode: String?,
 
-        @SerializedName("UzytkownikRola")
-        val userRole: String,
+    @SerializedName("UzytkownikRola")
+    val userRole: String,
 
-        @SerializedName("UzytkownikLogin")
-        val userLogin: String,
+    @SerializedName("UzytkownikLogin")
+    val userLogin: String,
 
-        @SerializedName("UzytkownikLoginId")
-        val userLoginId: Int,
+    @SerializedName("UzytkownikLoginId")
+    val userLoginId: Int,
 
-        @SerializedName("UzytkownikNazwa")
-        val userName: String,
+    @SerializedName("UzytkownikNazwa")
+    val userName: String,
 
-        @SerializedName("Id")
-        val id: Int,
+    @SerializedName("Id")
+    val id: Int,
 
-        @SerializedName("IdOddzial")
-        val classId: Int,
+    @SerializedName("IdOddzial")
+    val classId: Int,
 
-        @SerializedName("Imie")
-        val name: String,
+    @SerializedName("Imie")
+    val name: String,
 
-        @SerializedName("Imie2")
-        val nameSecond: String,
+    @SerializedName("Imie2")
+    val nameSecond: String,
 
-        @SerializedName("Nazwisko")
-        val surname: String,
+    @SerializedName("Nazwisko")
+    val surname: String,
 
-        @SerializedName("Pseudonim")
-        val nick: String,
+    @SerializedName("Pseudonim")
+    val nick: String,
 
-        @SerializedName("UczenPlec")
-        val pupilGender: Int,
+    @SerializedName("UczenPlec")
+    val pupilGender: Int,
 
-        @SerializedName("Pozycja")
-        val position: Int,
+    @SerializedName("Pozycja")
+    val position: Int,
 
-        @SerializedName("LoginId")
-        val loginId: Int?
+    @SerializedName("LoginId")
+    val loginId: Int?
 )

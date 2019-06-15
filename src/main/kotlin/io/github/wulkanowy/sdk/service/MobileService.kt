@@ -1,16 +1,16 @@
 package io.github.wulkanowy.sdk.service
 
+import io.github.wulkanowy.sdk.ApiRequest
+import io.github.wulkanowy.sdk.ApiResponse
 import io.github.wulkanowy.sdk.attendance.AttendanceRequest
 import io.github.wulkanowy.sdk.attendance.AttendanceResponse
-import io.github.wulkanowy.sdk.base.ApiRequest
-import io.github.wulkanowy.sdk.base.ApiResponse
 import io.github.wulkanowy.sdk.dictionaries.Dictionaries
 import io.github.wulkanowy.sdk.dictionaries.DictionariesRequest
 import io.github.wulkanowy.sdk.exams.Exam
 import io.github.wulkanowy.sdk.exams.ExamsRequest
 import io.github.wulkanowy.sdk.grades.Grade
-import io.github.wulkanowy.sdk.grades.GradesSummaryResponse
 import io.github.wulkanowy.sdk.grades.GradesRequest
+import io.github.wulkanowy.sdk.grades.GradesSummaryResponse
 import io.github.wulkanowy.sdk.homework.Homework
 import io.github.wulkanowy.sdk.homework.HomeworkRequest
 import io.github.wulkanowy.sdk.notes.Note

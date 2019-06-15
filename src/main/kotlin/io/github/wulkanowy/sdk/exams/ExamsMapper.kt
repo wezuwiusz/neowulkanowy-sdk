@@ -2,10 +2,10 @@ package io.github.wulkanowy.sdk.exams
 
 import io.github.wulkanowy.api.toLocalDate
 import io.github.wulkanowy.sdk.dictionaries.Dictionaries
-import io.github.wulkanowy.sdk.toLocalDate
 import io.github.wulkanowy.sdk.pojo.Exam
-import io.github.wulkanowy.sdk.exams.Exam as ApiExam
+import io.github.wulkanowy.sdk.toLocalDate
 import io.github.wulkanowy.api.exams.Exam as ScrapperExam
+import io.github.wulkanowy.sdk.exams.Exam as ApiExam
 
 fun List<ApiExam>.mapExams(dict: Dictionaries): List<Exam> {
     return map { exam ->

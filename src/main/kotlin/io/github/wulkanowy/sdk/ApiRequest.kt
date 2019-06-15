@@ -1,16 +1,17 @@
-package io.github.wulkanowy.sdk.base
+package io.github.wulkanowy.sdk
 
 import com.google.gson.annotations.SerializedName
-import java.time.Instant
+import java.time.Instant.now
 import java.util.*
 
+@Suppress("unused")
 abstract class ApiRequest(
 
     @SerializedName("RemoteMobileTimeKey")
-    val remoteMobileTimeKey: Long = Instant.now().epochSecond,
+    val remoteMobileTimeKey: Long = now().epochSecond,
 
     @SerializedName("TimeKey")
-    val timeKey: Long = Instant.now().epochSecond - 1,
+    val timeKey: Long = now().epochSecond - 1,
 
     @SerializedName("RequestId")
     val requestId: String = UUID.randomUUID().toString(),
