@@ -8,6 +8,7 @@ import io.github.wulkanowy.api.resettableLazy
 import io.github.wulkanowy.api.resettableManager
 import io.github.wulkanowy.sdk.attendance.mapAttendance
 import io.github.wulkanowy.sdk.dictionaries.Dictionaries
+import io.github.wulkanowy.sdk.dictionaries.mapSubjects
 import io.github.wulkanowy.sdk.exams.mapExams
 import io.github.wulkanowy.sdk.grades.mapGrades
 import io.github.wulkanowy.sdk.grades.mapGradesSummary
@@ -275,7 +276,12 @@ class Sdk {
 
     fun excuseForAbsence(absents: List<Absent>, content: String? = null) = scrapper.excuseForAbsence(absents, content)
 
-    fun getSubjects() = scrapper.getSubjects()
+    fun getSubjects(): Single<List<Subject>> {
+        return when (mode) {
+            Mode.SCRAPPER -> scrapper.getSubjects().map { it.mapSubjects() }
+            Mode.HYBRID, Mode.API -> getDictionaries().map { it.subjects }.map { it.mapSubjects() }
+        }
+    }
 
     fun getExams(start: LocalDate, end: LocalDate): Single<List<Exam>> {
         return when (mode) {
