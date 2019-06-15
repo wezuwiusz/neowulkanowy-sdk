@@ -283,11 +283,11 @@ class Sdk {
         }
     }
 
-    fun getExams(start: LocalDate, end: LocalDate): Single<List<Exam>> {
+    fun getExams(start: LocalDate, end: LocalDate, semesterId: Int): Single<List<Exam>> {
         return when (mode) {
             Mode.SCRAPPER -> scrapper.getExams(start, end).map { it.mapExams() }
             Mode.HYBRID, Mode.API -> getDictionaries().flatMap { dict ->
-                mobile.getExams(start, end, classId, 1, studentId).map { it.mapExams(dict) }
+                mobile.getExams(start, end, classId, semesterId, studentId).map { it.mapExams(dict) }
             }
         }
     }
