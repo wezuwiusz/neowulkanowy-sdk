@@ -1,8 +1,10 @@
 package io.github.wulkanowy.sdk
 
+import io.github.wulkanowy.api.messages.Folder
 import org.junit.Assert.assertEquals
 import org.junit.Test
 import org.threeten.bp.LocalDate.of
+import org.threeten.bp.LocalDateTime
 
 class SdkRemoteTest {
 
@@ -210,5 +212,32 @@ class SdkRemoteTest {
 
         val timetable = sdk.getTimetable(of(2018, 1, 1), of(2018, 1, 2)).blockingGet()
         assertEquals(24, timetable.size)
+    }
+
+    @Test
+    fun getMessages_api() {
+        val sdk = Sdk().apply {
+            apiKey = API_KEY
+
+            certKey = CERT_KEY
+            certificate = CERTIFICATE
+
+            apiBaseUrl = "https://api.fakelog.cf/Default"
+            mode = Sdk.Mode.API
+            symbol = "Default"
+
+            schoolSymbol = "123456"
+            studentId = 15
+            classId = 14
+        }
+
+        val messages = sdk.getMessages(Folder.RECEIVED, LocalDateTime.of(2018, 1, 1, 0, 0, 0), LocalDateTime.of(2018, 1, 2, 0, 0, 0), 0).blockingGet()
+        assertEquals(2, messages.size)
+
+        val messagesSent = sdk.getMessages(Folder.SENT, LocalDateTime.of(2018, 1, 1, 0, 0, 0), LocalDateTime.of(2018, 1, 2, 0, 0, 0), 0).blockingGet()
+        assertEquals(1, messagesSent.size)
+
+        val messagesTrashed = sdk.getMessages(Folder.TRASHED, LocalDateTime.of(2018, 1, 1, 0, 0, 0), LocalDateTime.of(2018, 1, 2, 0, 0, 0), 0).blockingGet()
+        assertEquals(1, messagesTrashed.size)
     }
 }

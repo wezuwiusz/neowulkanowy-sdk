@@ -19,3 +19,7 @@ fun Date.toLocalDateTime(): LocalDateTime = DateTimeUtils.toLocalDateTime(Timest
 
 
 fun LocalDate.toFormat() = toFormat("yyyy-MM-dd")
+
+fun LocalDateTime.toFormat() = toFormat("yyyy-MM-dd")
+
+fun String.normalizeRecipient() = substringBeforeLast("-").substringBefore(" [").substringBeforeLast(" (").trim()

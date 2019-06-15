@@ -13,6 +13,8 @@ import io.github.wulkanowy.sdk.grades.GradesRequest
 import io.github.wulkanowy.sdk.grades.GradesSummaryResponse
 import io.github.wulkanowy.sdk.homework.Homework
 import io.github.wulkanowy.sdk.homework.HomeworkRequest
+import io.github.wulkanowy.sdk.messages.Message
+import io.github.wulkanowy.sdk.messages.MessagesRequest
 import io.github.wulkanowy.sdk.notes.Note
 import io.github.wulkanowy.sdk.notes.NotesRequest
 import io.github.wulkanowy.sdk.service.MobileService
@@ -21,6 +23,7 @@ import io.github.wulkanowy.sdk.timetable.TimetableRequest
 import io.github.wulkanowy.sdk.toFormat
 import io.reactivex.Single
 import org.threeten.bp.LocalDate
+import org.threeten.bp.LocalDateTime
 
 class MobileRepository(private val api: MobileService) {
 
@@ -56,5 +59,17 @@ class MobileRepository(private val api: MobileService) {
 
     fun getHomework(start: LocalDate, end: LocalDate, classId: Int, classificationPeriodId: Int, studentId: Int): Single<List<Homework>> {
         return api.getHomework(HomeworkRequest(start.toFormat(), end.toFormat(), classId, classificationPeriodId, studentId)).map { it.data }
+    }
+
+    fun getMessages(start: LocalDateTime, end: LocalDateTime, loginId: Int, studentId: Int): Single<List<Message>> {
+        return api.getMessages(MessagesRequest(start.toFormat(), end.toFormat(), loginId, studentId)).map { it.data }
+    }
+
+    fun getMessagesDeleted(start: LocalDateTime, end: LocalDateTime, loginId: Int, studentId: Int): Single<List<Message>> {
+        return api.getMessagesDeleted(MessagesRequest(start.toFormat(), end.toFormat(), loginId, studentId)).map { it.data }
+    }
+
+    fun getMessagesSent(start: LocalDateTime, end: LocalDateTime, loginId: Int, studentId: Int): Single<List<Message>> {
+        return api.getMessagesSent(MessagesRequest(start.toFormat(), end.toFormat(), loginId, studentId)).map { it.data }
     }
 }

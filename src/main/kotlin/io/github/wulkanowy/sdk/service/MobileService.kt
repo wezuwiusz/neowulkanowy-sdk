@@ -13,6 +13,8 @@ import io.github.wulkanowy.sdk.grades.GradesRequest
 import io.github.wulkanowy.sdk.grades.GradesSummaryResponse
 import io.github.wulkanowy.sdk.homework.Homework
 import io.github.wulkanowy.sdk.homework.HomeworkRequest
+import io.github.wulkanowy.sdk.messages.Message
+import io.github.wulkanowy.sdk.messages.MessagesRequest
 import io.github.wulkanowy.sdk.notes.Note
 import io.github.wulkanowy.sdk.notes.NotesRequest
 import io.github.wulkanowy.sdk.timetable.Lesson
@@ -49,4 +51,13 @@ interface MobileService {
 
     @POST("ZadaniaDomowe")
     fun getHomework(@Body homeworkRequest: HomeworkRequest): Single<ApiResponse<List<Homework>>>
+
+    @POST("WiadomosciOdebrane")
+    fun getMessages(@Body messagesRequest: MessagesRequest): Single<ApiResponse<List<Message>>>
+
+    @POST("WiadomosciWyslane")
+    fun getMessagesSent(@Body messagesRequest: MessagesRequest): Single<ApiResponse<List<Message>>>
+
+    @POST("WiadomosciUsuniete")
+    fun getMessagesDeleted(@Body messagesRequest: MessagesRequest): Single<ApiResponse<List<Message>>>
 }

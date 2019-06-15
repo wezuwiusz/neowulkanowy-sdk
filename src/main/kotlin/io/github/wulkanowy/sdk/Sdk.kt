@@ -13,6 +13,7 @@ import io.github.wulkanowy.sdk.grades.mapGrades
 import io.github.wulkanowy.sdk.grades.mapGradesSummary
 import io.github.wulkanowy.sdk.homework.mapHomework
 import io.github.wulkanowy.sdk.interceptor.SignInterceptor
+import io.github.wulkanowy.sdk.messages.mapMessages
 import io.github.wulkanowy.sdk.notes.mapNotes
 import io.github.wulkanowy.sdk.pojo.*
 import io.github.wulkanowy.sdk.register.mapStudents
@@ -339,13 +340,34 @@ class Sdk {
 
     fun getRecipients(unitId: Int, role: Int = 2) = scrapper.getRecipients(unitId, role)
 
-    fun getMessages(folder: Folder, start: LocalDateTime? = null, end: LocalDateTime? = null) = scrapper.getMessages(folder, start, end)
+    fun getMessages(folder: Folder, start: LocalDateTime, end: LocalDateTime, loginId: Int): Single<List<Message>> {
+        return when (folder) {
+            Folder.RECEIVED -> getReceivedMessages(start, end, loginId)
+            Folder.SENT -> getSentMessages(start, end, loginId)
+            Folder.TRASHED -> getDeletedMessages(start, end, loginId)
+        }
+    }
 
-    fun getReceivedMessages(start: LocalDateTime? = null, end: LocalDateTime? = null) = scrapper.getReceivedMessages(start, end)
+    fun getReceivedMessages(start: LocalDateTime, end: LocalDateTime, loginId: Int): Single<List<Message>> {
+        return when (mode) {
+            Mode.SCRAPPER -> scrapper.getReceivedMessages(start, end).map { it.mapMessages() }
+            Mode.HYBRID, Mode.API -> mobile.getMessages(start, end, loginId, studentId).map { it.mapMessages() }
+        }
+    }
 
-    fun getSentMessages(start: LocalDateTime? = null, end: LocalDateTime? = null) = scrapper.getSentMessages(start, end)
+    fun getSentMessages(start: LocalDateTime, end: LocalDateTime, loginId: Int): Single<List<Message>> {
+        return when (mode) {
+            Mode.SCRAPPER -> scrapper.getSentMessages(start, end).map { it.mapMessages() }
+            Mode.HYBRID, Mode.API -> mobile.getMessagesSent(start, end, loginId, studentId).map { it.mapMessages() }
+        }
+    }
 
-    fun getDeletedMessages(start: LocalDateTime? = null, end: LocalDateTime? = null) = scrapper.getDeletedMessages(start, end)
+    fun getDeletedMessages(start: LocalDateTime, end: LocalDateTime, loginId: Int): Single<List<Message>> {
+        return when (mode) {
+            Mode.SCRAPPER -> scrapper.getDeletedMessages(start, end).map { it.mapMessages() }
+            Mode.HYBRID, Mode.API -> mobile.getMessagesDeleted(start, end, loginId, studentId).map { it.mapMessages() }
+        }
+    }
 
     fun getMessageRecipients(messageId: Int, loginId: Int = 0) = scrapper.getMessageRecipients(messageId, loginId)
 
