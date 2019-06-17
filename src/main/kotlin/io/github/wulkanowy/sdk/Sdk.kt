@@ -379,7 +379,7 @@ class Sdk {
         }
     }
 
-    fun getMessageRecipients(messageId: Int) = scrapper.getMessageRecipients(messageId, loginId)
+    fun getMessageRecipients(messageId: Int, senderId: Int) = scrapper.getMessageRecipients(messageId, senderId)
 
     fun getMessageContent(messageId: Int, folderId: Int, read: Boolean = false, id: Int? = null): Single<String> {
         return when (mode) {
