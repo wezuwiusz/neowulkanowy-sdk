@@ -275,6 +275,7 @@ class SdkRemoteTest {
             symbol = "Default"
 
             schoolSymbol = "123456"
+            loginId = 16
             studentId = 15
             classId = 14
         }
@@ -296,6 +297,7 @@ class SdkRemoteTest {
             symbol = "Default"
 
             schoolSymbol = "123456"
+            loginId = 16
             studentId = 15
             classId = 14
         }
