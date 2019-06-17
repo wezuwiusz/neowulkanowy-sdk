@@ -13,7 +13,7 @@ fun List<ApiMessage>.mapMessages(): List<Message> {
             id = it.messageId,
             sender = it.senderName,
             unreadBy = it.unread?.toInt(),
-            unread = it.unread != "0" || it.readDateTime == null,
+            unread = it.readDateTime == null,
             senderId = it.senderId,
             removed = it.status == "Usunieta",
             recipient = it.recipients?.joinToString(", ") { recipient -> recipient.name.normalizeRecipient() },
