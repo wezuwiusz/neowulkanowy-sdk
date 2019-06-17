@@ -280,7 +280,7 @@ class SdkRemoteTest {
             classId = 14
         }
 
-        val message = sdk.getMessageContent(1, 2, true, 1, 1).blockingGet()
+        val message = sdk.getMessageContent(1, 2, true, 1).blockingGet()
         assertEquals("Zmiana statusu wiadomości.", message)
     }
 

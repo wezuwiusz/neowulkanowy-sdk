@@ -123,9 +123,6 @@ class Sdk {
         }
 
     var loginId = 0
-        set(value) {
-            field = value
-        }
 
     var diaryId = 0
         set(value) {
@@ -382,9 +379,9 @@ class Sdk {
         }
     }
 
-    fun getMessageRecipients(messageId: Int, loginId: Int = 0) = scrapper.getMessageRecipients(messageId, loginId)
+    fun getMessageRecipients(messageId: Int) = scrapper.getMessageRecipients(messageId, loginId)
 
-    fun getMessageContent(messageId: Int, folderId: Int, read: Boolean = false, id: Int? = null, loginId: Int): Single<String> {
+    fun getMessageContent(messageId: Int, folderId: Int, read: Boolean = false, id: Int? = null): Single<String> {
         return when (mode) {
             Mode.SCRAPPER -> scrapper.getMessageContent(messageId, folderId, read, id)
             Mode.HYBRID, Mode.API -> mobile.changeMessageStatus(messageId, when (folderId) {
