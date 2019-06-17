@@ -22,6 +22,7 @@ import io.github.wulkanowy.sdk.repository.MobileRepository
 import io.github.wulkanowy.sdk.repository.RegisterRepository
 import io.github.wulkanowy.sdk.repository.RoutingRulesRepository
 import io.github.wulkanowy.sdk.timetable.mapTimetable
+import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.Single
 import okhttp3.Interceptor
@@ -120,6 +121,12 @@ class Sdk {
             field = value
             scrapper.studentId = value
         }
+
+    var loginId = 0
+        set(value) {
+            field = value
+        }
+
     var diaryId = 0
         set(value) {
             field = value
@@ -346,29 +353,29 @@ class Sdk {
 
     fun getRecipients(unitId: Int, role: Int = 2) = scrapper.getRecipients(unitId, role)
 
-    fun getMessages(folder: Folder, start: LocalDateTime, end: LocalDateTime, loginId: Int): Single<List<Message>> {
+    fun getMessages(folder: Folder, start: LocalDateTime, end: LocalDateTime): Single<List<Message>> {
         return when (folder) {
-            Folder.RECEIVED -> getReceivedMessages(start, end, loginId)
-            Folder.SENT -> getSentMessages(start, end, loginId)
-            Folder.TRASHED -> getDeletedMessages(start, end, loginId)
+            Folder.RECEIVED -> getReceivedMessages(start, end)
+            Folder.SENT -> getSentMessages(start, end)
+            Folder.TRASHED -> getDeletedMessages(start, end)
         }
     }
 
-    fun getReceivedMessages(start: LocalDateTime, end: LocalDateTime, loginId: Int): Single<List<Message>> {
+    fun getReceivedMessages(start: LocalDateTime, end: LocalDateTime): Single<List<Message>> {
         return when (mode) {
             Mode.SCRAPPER -> scrapper.getReceivedMessages(start, end).map { it.mapMessages() }
             Mode.HYBRID, Mode.API -> mobile.getMessages(start, end, loginId, studentId).map { it.mapMessages() }
         }
     }
 
-    fun getSentMessages(start: LocalDateTime, end: LocalDateTime, loginId: Int): Single<List<Message>> {
+    fun getSentMessages(start: LocalDateTime, end: LocalDateTime): Single<List<Message>> {
         return when (mode) {
             Mode.SCRAPPER -> scrapper.getSentMessages(start, end).map { it.mapMessages() }
             Mode.HYBRID, Mode.API -> mobile.getMessagesSent(start, end, loginId, studentId).map { it.mapMessages() }
         }
     }
 
-    fun getDeletedMessages(start: LocalDateTime, end: LocalDateTime, loginId: Int): Single<List<Message>> {
+    fun getDeletedMessages(start: LocalDateTime, end: LocalDateTime): Single<List<Message>> {
         return when (mode) {
             Mode.SCRAPPER -> scrapper.getDeletedMessages(start, end).map { it.mapMessages() }
             Mode.HYBRID, Mode.API -> mobile.getMessagesDeleted(start, end, loginId, studentId).map { it.mapMessages() }
@@ -377,11 +384,31 @@ class Sdk {
 
     fun getMessageRecipients(messageId: Int, loginId: Int = 0) = scrapper.getMessageRecipients(messageId, loginId)
 
-    fun getMessageContent(messageId: Int, folderId: Int, read: Boolean = false, id: Int? = null) = scrapper.getMessageContent(messageId, folderId, read, id)
+    fun getMessageContent(messageId: Int, folderId: Int, read: Boolean = false, id: Int? = null, loginId: Int): Single<String> {
+        return when (mode) {
+            Mode.SCRAPPER -> scrapper.getMessageContent(messageId, folderId, read, id)
+            Mode.HYBRID, Mode.API -> mobile.changeMessageStatus(messageId, when (folderId) {
+                1 -> "Odebrane"
+                2 -> "Wysłane"
+                else -> "Usunięte"
+            }, "Widoczna", loginId, studentId)
+        }
+    }
 
     fun sendMessage(subject: String, content: String, recipients: List<Recipient>) = scrapper.sendMessage(subject, content, recipients)
 
-    fun deleteMessages(messages: List<Pair<Int, Int>>) = scrapper.deleteMessages(messages)
+    fun deleteMessages(messages: List<Pair<Int, Int>>): Single<Boolean> {
+        return when (mode) {
+            Mode.SCRAPPER -> scrapper.deleteMessages(messages)
+            Mode.HYBRID, Mode.API -> Completable.mergeDelayError(messages.map { (messageId, folderId) ->
+                mobile.changeMessageStatus(messageId, when (folderId) {
+                    1 -> "Odebrane"
+                    2 -> "Wysłane"
+                    else -> "Usunięte"
+                }, "Usunieta", loginId, studentId).toMaybe().ignoreElement()
+            }).toSingleDefault(true).onErrorReturnItem(false)
+        }
+    }
 
     fun getTimetable(start: LocalDate, end: LocalDate): Single<List<Timetable>> {
         return when (mode) {

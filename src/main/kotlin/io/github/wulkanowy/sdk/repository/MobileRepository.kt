@@ -14,6 +14,7 @@ import io.github.wulkanowy.sdk.grades.GradesSummaryResponse
 import io.github.wulkanowy.sdk.homework.Homework
 import io.github.wulkanowy.sdk.homework.HomeworkRequest
 import io.github.wulkanowy.sdk.messages.Message
+import io.github.wulkanowy.sdk.messages.MessageStatusChangeRequest
 import io.github.wulkanowy.sdk.messages.MessagesRequest
 import io.github.wulkanowy.sdk.notes.Note
 import io.github.wulkanowy.sdk.notes.NotesRequest
@@ -71,5 +72,9 @@ class MobileRepository(private val api: MobileService) {
 
     fun getMessagesSent(start: LocalDateTime, end: LocalDateTime, loginId: Int, studentId: Int): Single<List<Message>> {
         return api.getMessagesSent(MessagesRequest(start.toFormat(), end.toFormat(), loginId, studentId)).map { it.data }
+    }
+
+    fun changeMessageStatus(messageId: Int, folder: String, status: String, loginId: Int, studentId: Int): Single<String> {
+        return api.changeMessageStatus(MessageStatusChangeRequest(messageId, folder, status, loginId, studentId)).map { it.data }
     }
 }

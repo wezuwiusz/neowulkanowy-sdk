@@ -14,6 +14,7 @@ import io.github.wulkanowy.sdk.grades.GradesSummaryResponse
 import io.github.wulkanowy.sdk.homework.Homework
 import io.github.wulkanowy.sdk.homework.HomeworkRequest
 import io.github.wulkanowy.sdk.messages.Message
+import io.github.wulkanowy.sdk.messages.MessageStatusChangeRequest
 import io.github.wulkanowy.sdk.messages.MessagesRequest
 import io.github.wulkanowy.sdk.notes.Note
 import io.github.wulkanowy.sdk.notes.NotesRequest
@@ -60,4 +61,7 @@ interface MobileService {
 
     @POST("WiadomosciUsuniete")
     fun getMessagesDeleted(@Body messagesRequest: MessagesRequest): Single<ApiResponse<List<Message>>>
+
+    @POST(".")
+    fun changeMessageStatus(@Body messageStatusChangeRequest: MessageStatusChangeRequest): Single<ApiResponse<String>>
 }

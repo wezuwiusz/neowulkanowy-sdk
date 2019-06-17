@@ -252,13 +252,55 @@ class SdkRemoteTest {
             classId = 14
         }
 
-        val messages = sdk.getMessages(Folder.RECEIVED, LocalDateTime.of(2018, 1, 1, 0, 0, 0), LocalDateTime.of(2018, 1, 2, 0, 0, 0), 0).blockingGet()
+        val messages = sdk.getMessages(Folder.RECEIVED, LocalDateTime.of(2018, 1, 1, 0, 0, 0), LocalDateTime.of(2018, 1, 2, 0, 0, 0)).blockingGet()
         assertEquals(2, messages.size)
 
-        val messagesSent = sdk.getMessages(Folder.SENT, LocalDateTime.of(2018, 1, 1, 0, 0, 0), LocalDateTime.of(2018, 1, 2, 0, 0, 0), 0).blockingGet()
+        val messagesSent = sdk.getMessages(Folder.SENT, LocalDateTime.of(2018, 1, 1, 0, 0, 0), LocalDateTime.of(2018, 1, 2, 0, 0, 0)).blockingGet()
         assertEquals(1, messagesSent.size)
 
-        val messagesTrashed = sdk.getMessages(Folder.TRASHED, LocalDateTime.of(2018, 1, 1, 0, 0, 0), LocalDateTime.of(2018, 1, 2, 0, 0, 0), 0).blockingGet()
+        val messagesTrashed = sdk.getMessages(Folder.TRASHED, LocalDateTime.of(2018, 1, 1, 0, 0, 0), LocalDateTime.of(2018, 1, 2, 0, 0, 0)).blockingGet()
         assertEquals(1, messagesTrashed.size)
+    }
+
+    @Test
+    fun readMessage_api() {
+        val sdk = Sdk().apply {
+            apiKey = API_KEY
+
+            certKey = CERT_KEY
+            certificate = CERTIFICATE
+
+            apiBaseUrl = "https://api.fakelog.cf/Default"
+            mode = Sdk.Mode.API
+            symbol = "Default"
+
+            schoolSymbol = "123456"
+            studentId = 15
+            classId = 14
+        }
+
+        val message = sdk.getMessageContent(1, 2, true, 1, 1).blockingGet()
+        assertEquals("Zmiana statusu wiadomości.", message)
+    }
+
+    @Test
+    fun deleteMessage_api() {
+        val sdk = Sdk().apply {
+            apiKey = API_KEY
+
+            certKey = CERT_KEY
+            certificate = CERTIFICATE
+
+            apiBaseUrl = "https://api.fakelog.cf/Default"
+            mode = Sdk.Mode.API
+            symbol = "Default"
+
+            schoolSymbol = "123456"
+            studentId = 15
+            classId = 14
+        }
+
+        val isDeleted = sdk.deleteMessages(listOf(1 to 1, 2 to 2)).blockingGet()
+        assertEquals(true, isDeleted)
     }
 }
