@@ -13,28 +13,20 @@ import io.github.wulkanowy.sdk.exams.mapExams
 import io.github.wulkanowy.sdk.grades.mapGrades
 import io.github.wulkanowy.sdk.grades.mapGradesSummary
 import io.github.wulkanowy.sdk.homework.mapHomework
-import io.github.wulkanowy.sdk.interceptor.SignInterceptor
 import io.github.wulkanowy.sdk.messages.mapMessages
 import io.github.wulkanowy.sdk.notes.mapNotes
 import io.github.wulkanowy.sdk.pojo.*
 import io.github.wulkanowy.sdk.register.mapStudents
-import io.github.wulkanowy.sdk.repository.MobileRepository
 import io.github.wulkanowy.sdk.repository.RegisterRepository
-import io.github.wulkanowy.sdk.repository.RoutingRulesRepository
+import io.github.wulkanowy.sdk.repository.RepositoryManager
 import io.github.wulkanowy.sdk.timetable.mapTimetable
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.Single
 import okhttp3.Interceptor
-import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import org.threeten.bp.LocalDate
 import org.threeten.bp.LocalDateTime
-import retrofit2.Retrofit
-import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
-import retrofit2.converter.gson.GsonConverterFactory
-import retrofit2.converter.scalars.ScalarsConverterFactory
-import retrofit2.create
 
 class Sdk {
 
@@ -165,34 +157,20 @@ class Sdk {
 
     private val resettableManager = resettableManager()
 
-    private val routes by lazy {
-        RoutingRulesRepository(getRetrofitBuilder().baseUrl("http://komponenty.vulcan.net.pl").build().create())
+    private val serviceManager by resettableLazy(resettableManager) {
+        RepositoryManager(logLevel, apiKey, certificate, certKey, interceptors, apiBaseUrl, schoolSymbol)
+    }
+
+    private val routes by resettableLazy(resettableManager) {
+        serviceManager.getRoutesRepository()
     }
 
     private val mobile by resettableLazy(resettableManager) {
-        MobileRepository(getRetrofitBuilder().baseUrl("$apiBaseUrl/$schoolSymbol/mobile-api/Uczen.v3.Uczen/").build().create())
+        serviceManager.getMobileRepository()
     }
 
     private fun getRegisterRepo(host: String, symbol: String): RegisterRepository {
-        return RegisterRepository(getRetrofitBuilder().baseUrl("$host/$symbol/mobile-api/Uczen.v3.UczenStart/").build().create())
-    }
-
-    private fun getRetrofitBuilder(): Retrofit.Builder {
-        return Retrofit.Builder()
-            .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-            .addConverterFactory(ScalarsConverterFactory.create())
-            .addConverterFactory(GsonConverterFactory.create())
-            .client(OkHttpClient().newBuilder()
-                .addInterceptor(HttpLoggingInterceptor().setLevel(logLevel))
-                .addInterceptor(SignInterceptor(apiKey, certificate, certKey))
-                .apply {
-                    interceptors.forEach {
-                        if (it.second) addNetworkInterceptor(it.first)
-                        else addInterceptor(it.first)
-                    }
-                }
-                .build()
-            )
+        return serviceManager.getRegisterRepository(host, symbol)
     }
 
     private lateinit var dictionaries: Dictionaries
