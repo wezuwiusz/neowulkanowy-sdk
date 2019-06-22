@@ -16,6 +16,7 @@ data class Timetable(
     val teacher: String,
     val teacherOld: String,
     val info: String,
+    val studentPlan: Boolean,
     val changes: Boolean,
     val canceled: Boolean
 )

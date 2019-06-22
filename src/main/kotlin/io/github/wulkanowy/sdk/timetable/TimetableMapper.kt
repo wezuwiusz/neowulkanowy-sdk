@@ -26,6 +26,7 @@ fun List<ApiTimetable>.mapTimetable(dictionaries: Dictionaries): List<Timetable>
             start = time.start.toLocalDateTime(),
             subject = it.subjectName,
             subjectOld = "",
+            studentPlan = it.studentPlan,
             teacher = teacher?.run { "$name $surname" }.orEmpty(),
             teacherOld = teacherOld?.run { "$name $surname" }.orEmpty()
         )
@@ -47,6 +48,7 @@ fun List<ScrapperTimetable>.mapTimetable(): List<Timetable> {
             start = it.start.toLocalDateTime(),
             subject = it.subject,
             subjectOld = it.subjectOld,
+            studentPlan = true,
             teacher = it.teacher,
             teacherOld = it.teacherOld
         )
