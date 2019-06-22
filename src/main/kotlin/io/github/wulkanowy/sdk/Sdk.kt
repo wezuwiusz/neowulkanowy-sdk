@@ -2,10 +2,21 @@ package io.github.wulkanowy.sdk
 
 import io.github.wulkanowy.api.Api
 import io.github.wulkanowy.api.attendance.Absent
+import io.github.wulkanowy.api.attendance.AttendanceSummary
+import io.github.wulkanowy.api.grades.GradeStatistics
 import io.github.wulkanowy.api.messages.Folder
 import io.github.wulkanowy.api.messages.Recipient
+import io.github.wulkanowy.api.messages.ReportingUnit
+import io.github.wulkanowy.api.messages.SentMessage
+import io.github.wulkanowy.api.mobile.Device
+import io.github.wulkanowy.api.mobile.TokenResponse
+import io.github.wulkanowy.api.register.Semester
 import io.github.wulkanowy.api.resettableLazy
 import io.github.wulkanowy.api.resettableManager
+import io.github.wulkanowy.api.school.School
+import io.github.wulkanowy.api.school.Teacher
+import io.github.wulkanowy.api.student.StudentInfo
+import io.github.wulkanowy.api.timetable.CompletedLesson
 import io.github.wulkanowy.sdk.attendance.mapAttendance
 import io.github.wulkanowy.sdk.dictionaries.Dictionaries
 import io.github.wulkanowy.sdk.dictionaries.mapSubjects
@@ -21,6 +32,7 @@ import io.github.wulkanowy.sdk.repository.RegisterRepository
 import io.github.wulkanowy.sdk.repository.RepositoryManager
 import io.github.wulkanowy.sdk.timetable.mapTimetable
 import io.reactivex.Completable
+import io.reactivex.Maybe
 import io.reactivex.Observable
 import io.reactivex.Single
 import okhttp3.Interceptor
@@ -243,7 +255,7 @@ class Sdk {
         }
     }
 
-    fun getSemesters() = scrapper.getSemesters()
+    fun getSemesters(): Single<List<Semester>> = scrapper.getSemesters()
 
     fun getAttendance(startDate: LocalDate, endDate: LocalDate, semesterId: Int): Single<List<Attendance>> {
         return when (mode) {
@@ -254,9 +266,9 @@ class Sdk {
         }
     }
 
-    fun getAttendanceSummary(subjectId: Int? = -1) = scrapper.getAttendanceSummary(subjectId)
+    fun getAttendanceSummary(subjectId: Int? = -1): Single<List<AttendanceSummary>> = scrapper.getAttendanceSummary(subjectId)
 
-    fun excuseForAbsence(absents: List<Absent>, content: String? = null) = scrapper.excuseForAbsence(absents, content)
+    fun excuseForAbsence(absents: List<Absent>, content: String? = null): Single<Boolean> = scrapper.excuseForAbsence(absents, content)
 
     fun getSubjects(): Single<List<Subject>> {
         return when (mode) {
@@ -292,7 +304,7 @@ class Sdk {
         }
     }
 
-    fun getGradesStatistics(semesterId: Int, annual: Boolean = false) = scrapper.getGradesStatistics(semesterId, annual)
+    fun getGradesStatistics(semesterId: Int, annual: Boolean = false): Single<List<GradeStatistics>> = scrapper.getGradesStatistics(semesterId, annual)
 
     fun getHomework(start: LocalDate, end: LocalDate, semesterId: Int = 0): Single<List<Homework>> {
         return when (mode) {
@@ -312,21 +324,21 @@ class Sdk {
         }
     }
 
-    fun getRegisteredDevices() = scrapper.getRegisteredDevices()
+    fun getRegisteredDevices(): Single<List<Device>> = scrapper.getRegisteredDevices()
 
-    fun getToken() = scrapper.getToken()
+    fun getToken(): Single<TokenResponse> = scrapper.getToken()
 
-    fun unregisterDevice(id: Int) = scrapper.unregisterDevice(id)
+    fun unregisterDevice(id: Int): Single<Boolean> = scrapper.unregisterDevice(id)
 
-    fun getTeachers() = scrapper.getTeachers()
+    fun getTeachers(): Single<List<Teacher>> = scrapper.getTeachers()
 
-    fun getSchool() = scrapper.getSchool()
+    fun getSchool(): Single<School> = scrapper.getSchool()
 
-    fun getStudentInfo() = scrapper.getStudentInfo()
+    fun getStudentInfo(): Single<StudentInfo> = scrapper.getStudentInfo()
 
-    fun getReportingUnits() = scrapper.getReportingUnits()
+    fun getReportingUnits(): Single<List<ReportingUnit>> = scrapper.getReportingUnits()
 
-    fun getRecipients(unitId: Int, role: Int = 2) = scrapper.getRecipients(unitId, role)
+    fun getRecipients(unitId: Int, role: Int = 2): Single<List<Recipient>> = scrapper.getRecipients(unitId, role)
 
     fun getMessages(folder: Folder, start: LocalDateTime, end: LocalDateTime): Single<List<Message>> {
         return when (folder) {
@@ -357,7 +369,7 @@ class Sdk {
         }
     }
 
-    fun getMessageRecipients(messageId: Int, senderId: Int) = scrapper.getMessageRecipients(messageId, senderId)
+    fun getMessageRecipients(messageId: Int, senderId: Int): Single<List<Recipient>> = scrapper.getMessageRecipients(messageId, senderId)
 
     fun getMessageContent(messageId: Int, folderId: Int, read: Boolean = false, id: Int? = null): Single<String> {
         return when (mode) {
@@ -370,7 +382,7 @@ class Sdk {
         }
     }
 
-    fun sendMessage(subject: String, content: String, recipients: List<Recipient>) = scrapper.sendMessage(subject, content, recipients)
+    fun sendMessage(subject: String, content: String, recipients: List<Recipient>): Single<SentMessage> = scrapper.sendMessage(subject, content, recipients)
 
     fun deleteMessages(messages: List<Pair<Int, Int>>): Single<Boolean> {
         return when (mode) {
@@ -394,7 +406,7 @@ class Sdk {
         }
     }
 
-    fun getCompletedLessons(start: LocalDate, end: LocalDate? = null, subjectId: Int = -1) = scrapper.getCompletedLessons(start, end, subjectId)
+    fun getCompletedLessons(start: LocalDate, end: LocalDate? = null, subjectId: Int = -1): Single<List<CompletedLesson>> = scrapper.getCompletedLessons(start, end, subjectId)
 
-    fun getLuckyNumber() = scrapper.getLuckyNumber()
+    fun getLuckyNumber(): Maybe<Int> = scrapper.getLuckyNumber()
 }
