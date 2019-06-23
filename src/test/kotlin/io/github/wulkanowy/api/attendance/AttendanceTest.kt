@@ -19,7 +19,7 @@ class AttendanceTest : BaseLocalTest() {
     }
 
     private val student by lazy {
-        getStudentRepo(AttendanceTest::class.java, "Frekwencja.json").getAttendance(getLocalDate(2018, 10, 1)).blockingGet()
+        getStudentRepo(AttendanceTest::class.java, "Frekwencja.json").getAttendance(getLocalDate(2018, 10, 1), null).blockingGet()
     }
 
     override fun getStudentRepo(testClass: Class<*>, fixture: String, loginType: Api.LoginType): StudentRepository {

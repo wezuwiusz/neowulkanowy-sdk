@@ -7,14 +7,13 @@ import com.google.gson.reflect.TypeToken
 import io.github.wulkanowy.api.ApiResponse
 import io.github.wulkanowy.api.attendance.Absent
 import io.github.wulkanowy.api.attendance.Attendance
-import io.github.wulkanowy.api.attendance.Attendance.Category
 import io.github.wulkanowy.api.attendance.AttendanceExcuseRequest
 import io.github.wulkanowy.api.attendance.AttendanceRequest
 import io.github.wulkanowy.api.attendance.AttendanceSummary
-import io.github.wulkanowy.api.attendance.AttendanceSummaryItemSerializer
 import io.github.wulkanowy.api.attendance.AttendanceSummaryRequest
-import io.github.wulkanowy.api.attendance.AttendanceSummaryResponse
 import io.github.wulkanowy.api.attendance.Subject
+import io.github.wulkanowy.api.attendance.mapAttendanceSummaryList
+import io.github.wulkanowy.api.attendance.mapAttendanceList
 import io.github.wulkanowy.api.exams.Exam
 import io.github.wulkanowy.api.exams.ExamRequest
 import io.github.wulkanowy.api.getGradeShortValue
@@ -46,11 +45,9 @@ import io.github.wulkanowy.api.timetable.TimetableResponse
 import io.github.wulkanowy.api.toDate
 import io.github.wulkanowy.api.toFormat
 import io.github.wulkanowy.api.toLocalDate
-import io.reactivex.Observable
 import io.reactivex.Single
 import org.jsoup.Jsoup
 import org.threeten.bp.LocalDate
-import org.threeten.bp.Month
 import java.lang.String.format
 import java.util.Locale
 
@@ -84,69 +81,16 @@ class StudentRepository(private val api: StudentService) {
         }
     }
 
-    fun getAttendance(startDate: LocalDate, endDate: LocalDate? = null): Single<List<Attendance>> {
-        val end = endDate ?: startDate.plusDays(4)
-        var excuseActive = false
+    fun getAttendance(startDate: LocalDate, endDate: LocalDate?): Single<List<Attendance>> {
         return api.getAttendance(AttendanceRequest(startDate.toDate()))
             .compose(ErrorHandlerTransformer()).map { it.data }
-            .map {
-                it.run {
-                    excuseActive = this.excuseActive
-                    lessons
-                }
-            }.flatMapObservable { Observable.fromIterable(it) }.flatMap { a ->
-                getTimes().flatMapObservable { times ->
-                    Observable.fromIterable(times.filter { time -> time.id == a.number })
-                }.map {
-                    a.apply {
-                        presence = a.categoryId == Category.PRESENCE.id || a.categoryId == Category.ABSENCE_FOR_SCHOOL_REASONS.id
-                        absence = a.categoryId == Category.ABSENCE_UNEXCUSED.id || a.categoryId == Category.ABSENCE_EXCUSED.id
-                        lateness = a.categoryId == Category.EXCUSED_LATENESS.id || a.categoryId == Category.UNEXCUSED_LATENESS.id
-                        excused = a.categoryId == Category.ABSENCE_EXCUSED.id || a.categoryId == Category.EXCUSED_LATENESS.id
-                        exemption = a.categoryId == Category.EXEMPTION.id
-                        excusable = excuseActive && (absence || lateness) && !excused
-                        name = (Category.values().singleOrNull { category -> category.id == categoryId } ?: Category.UNKNOWN).title
-                        number = it.number
-                    }
-                }
-            }.filter {
-                it.date.toLocalDate() >= startDate && it.date.toLocalDate() <= end
-            }.toList().map { list -> list.sortedWith(compareBy({ it.date }, { it.number })) }
+            .mapAttendanceList(startDate, endDate, ::getTimes)
     }
 
     fun getAttendanceSummary(subjectId: Int?): Single<List<AttendanceSummary>> {
         return api.getAttendanceStatistics(AttendanceSummaryRequest(subjectId))
             .compose(ErrorHandlerTransformer()).map { it.data }
-            .map { res ->
-                val stats = res.items.map {
-                    (gson.create().fromJson<LinkedTreeMap<String, String?>>(
-                        gson.registerTypeAdapter(
-                            AttendanceSummaryResponse.Summary::class.java,
-                            AttendanceSummaryItemSerializer()
-                        ).create().toJson(it), object : TypeToken<LinkedTreeMap<String, String?>>() {}.type
-                    ))
-                }
-
-                val getMonthValue = fun(type: Int, month: Int): Int {
-                    return stats[type][stats[0].keys.toTypedArray()[month + 1]]?.toInt() ?: 0
-                }
-
-                (1..12).map {
-                    AttendanceSummary(
-                        Month.of(if (it < 5) 8 + it else it - 4),
-                        getMonthValue(0, it), getMonthValue(1, it), getMonthValue(2, it), getMonthValue(3, it),
-                        getMonthValue(4, it), getMonthValue(5, it), getMonthValue(6, it)
-                    )
-                }.filterNot { summary ->
-                    summary.absence == 0 &&
-                        summary.absenceExcused == 0 &&
-                        summary.absenceForSchoolReasons == 0 &&
-                        summary.exemption == 0 &&
-                        summary.lateness == 0 &&
-                        summary.latenessExcused == 0 &&
-                        summary.presence == 0
-                }
-            }
+            .map { it.mapAttendanceSummaryList(gson) }
     }
 
     fun excuseForAbsence(absents: List<Absent>, content: String?): Single<Boolean> {
