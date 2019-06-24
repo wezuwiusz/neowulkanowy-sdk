@@ -12,10 +12,11 @@ import io.github.wulkanowy.api.attendance.AttendanceRequest
 import io.github.wulkanowy.api.attendance.AttendanceSummary
 import io.github.wulkanowy.api.attendance.AttendanceSummaryRequest
 import io.github.wulkanowy.api.attendance.Subject
-import io.github.wulkanowy.api.attendance.mapAttendanceSummaryList
 import io.github.wulkanowy.api.attendance.mapAttendanceList
+import io.github.wulkanowy.api.attendance.mapAttendanceSummaryList
 import io.github.wulkanowy.api.exams.Exam
 import io.github.wulkanowy.api.exams.ExamRequest
+import io.github.wulkanowy.api.exams.mapExamsList
 import io.github.wulkanowy.api.getGradeShortValue
 import io.github.wulkanowy.api.getSchoolYear
 import io.github.wulkanowy.api.getScriptParam
@@ -115,32 +116,9 @@ class StudentRepository(private val api: StudentService) {
     }
 
     fun getExams(startDate: LocalDate, endDate: LocalDate? = null): Single<List<Exam>> {
-        val end = endDate ?: startDate.plusDays(4)
         return api.getExams(ExamRequest(startDate.toDate(), startDate.getSchoolYear()))
             .compose(ErrorHandlerTransformer()).map { it.data }
-            .map { res ->
-                res.asSequence().map { weeks ->
-                    weeks.weeks.map { day ->
-                        day.exams.map { exam ->
-                            exam.apply {
-                                group = subject.split("|").last()
-                                subject = subject.substringBeforeLast(" ")
-                                if (group.contains(" ")) group = ""
-                                date = day.date
-                                type = when (type) {
-                                    "1" -> "Sprawdzian"
-                                    "2" -> "Kartkówka"
-                                    else -> "Praca klasowa"
-                                }
-                                teacherSymbol = teacher.split(" [").last().removeSuffix("]")
-                                teacher = teacher.split(" [").first()
-                            }
-                        }
-                    }.flatten()
-                }.flatten().filter {
-                    it.date.toLocalDate() >= startDate && it.date.toLocalDate() <= end
-                }.sortedBy { it.date }.toList()
-            }
+            .map { it.mapExamsList(startDate, endDate) }
     }
 
     fun getGrades(semesterId: Int?): Single<List<Grade>> {
