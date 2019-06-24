@@ -1,5 +1,6 @@
 package io.github.wulkanowy.api.grades
 
+import io.github.wulkanowy.api.getGradeShortValue
 import kotlin.String
 import java.util.Locale
 
@@ -26,4 +27,46 @@ fun GradesResponse.mapGradesList(): List<Grade> {
             }
         }
     }.flatten().sortedByDescending { it.date }
+}
+
+fun GradesResponse.mapGradesSummary(): List<GradeSummary> {
+    return gradesWithSubjects.map { subject ->
+        GradeSummary().apply {
+            visibleSubject = subject.visibleSubject
+            order = subject.order
+            name = subject.name
+            average = subject.average
+            predicted = getGradeShortValue(subject.proposed)
+            final = getGradeShortValue(subject.annual)
+            pointsSum = subject.pointsSum.orEmpty()
+            proposedPoints = subject.proposedPoints.orEmpty()
+            finalPoints = subject.finalPoints.orEmpty()
+        }
+    }.sortedBy { it.name }.toList()
+}
+
+fun List<GradesStatisticsResponse.Annual>.mapGradesStatisticsAnnual(semesterId: Int): List<GradeStatistics> {
+    return map { annualSubject ->
+        annualSubject.items?.reversed()?.mapIndexed { index, item ->
+            item.apply {
+                this.semesterId = semesterId
+                gradeValue = index + 1
+                grade = item.gradeValue.toString()
+                subject = annualSubject.subject
+            }
+        }.orEmpty()
+    }.flatten().reversed()
+}
+
+fun List<GradesStatisticsResponse.Partial>.mapGradesStatisticsPartial(semesterId: Int): List<GradeStatistics> {
+    return map { partialSubject ->
+        partialSubject.classSeries.items?.reversed()?.mapIndexed { index, item ->
+            item.apply {
+                this.semesterId = semesterId
+                gradeValue = index + 1
+                grade = item.gradeValue.toString()
+                subject = partialSubject.subject
+            }
+        }?.reversed().orEmpty()
+    }.flatten()
 }

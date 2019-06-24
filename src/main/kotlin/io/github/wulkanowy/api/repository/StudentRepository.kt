@@ -14,7 +14,6 @@ import io.github.wulkanowy.api.attendance.mapAttendanceSummaryList
 import io.github.wulkanowy.api.exams.Exam
 import io.github.wulkanowy.api.exams.ExamRequest
 import io.github.wulkanowy.api.exams.mapExamsList
-import io.github.wulkanowy.api.getGradeShortValue
 import io.github.wulkanowy.api.getSchoolYear
 import io.github.wulkanowy.api.getScriptParam
 import io.github.wulkanowy.api.grades.Grade
@@ -23,6 +22,9 @@ import io.github.wulkanowy.api.grades.GradeStatistics
 import io.github.wulkanowy.api.grades.GradeSummary
 import io.github.wulkanowy.api.grades.GradesStatisticsRequest
 import io.github.wulkanowy.api.grades.mapGradesList
+import io.github.wulkanowy.api.grades.mapGradesStatisticsAnnual
+import io.github.wulkanowy.api.grades.mapGradesStatisticsPartial
+import io.github.wulkanowy.api.grades.mapGradesSummary
 import io.github.wulkanowy.api.homework.Homework
 import io.github.wulkanowy.api.interceptor.ErrorHandlerTransformer
 import io.github.wulkanowy.api.mobile.Device
@@ -124,51 +126,16 @@ class StudentRepository(private val api: StudentService) {
     fun getGradesStatistics(semesterId: Int, annual: Boolean): Single<List<GradeStatistics>> {
         return if (annual) api.getGradesAnnualStatistics(GradesStatisticsRequest(semesterId))
             .compose(ErrorHandlerTransformer()).map { it.data }
-            .map {
-                it.map { annualSubject ->
-                    annualSubject.items?.reversed()?.mapIndexed { index, item ->
-                        item.apply {
-                            this.semesterId = semesterId
-                            gradeValue = index + 1
-                            grade = item.gradeValue.toString()
-                            subject = annualSubject.subject
-                        }
-                    }.orEmpty()
-                }.flatten().reversed()
-            } else return api.getGradesPartialStatistics(GradesStatisticsRequest(semesterId))
+            .map { it.mapGradesStatisticsAnnual(semesterId) }
+        else return api.getGradesPartialStatistics(GradesStatisticsRequest(semesterId))
             .compose(ErrorHandlerTransformer()).map { it.data }
-            .map {
-                it.map { partialSubject ->
-                    partialSubject.classSeries.items?.reversed()?.mapIndexed { index, item ->
-                        item.apply {
-                            this.semesterId = semesterId
-                            gradeValue = index + 1
-                            grade = item.gradeValue.toString()
-                            subject = partialSubject.subject
-                        }
-                    }?.reversed().orEmpty()
-                }.flatten()
-            }
+            .map { it.mapGradesStatisticsPartial(semesterId) }
     }
 
     fun getGradesSummary(semesterId: Int?): Single<List<GradeSummary>> {
         return api.getGrades(GradeRequest(semesterId))
             .compose(ErrorHandlerTransformer()).map { it.data }
-            .map { res ->
-                res.gradesWithSubjects.map { subject ->
-                    GradeSummary().apply {
-                        visibleSubject = subject.visibleSubject
-                        order = subject.order
-                        name = subject.name
-                        average = subject.average
-                        predicted = getGradeShortValue(subject.proposed)
-                        final = getGradeShortValue(subject.annual)
-                        pointsSum = subject.pointsSum.orEmpty()
-                        proposedPoints = subject.proposedPoints.orEmpty()
-                        finalPoints = subject.finalPoints.orEmpty()
-                    }
-                }.sortedBy { it.name }.toList()
-            }
+            .map { it.mapGradesSummary() }
     }
 
     fun getHomework(startDate: LocalDate, endDate: LocalDate? = null): Single<List<Homework>> {
