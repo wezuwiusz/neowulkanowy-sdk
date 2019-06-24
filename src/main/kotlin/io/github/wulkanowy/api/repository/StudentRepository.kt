@@ -26,6 +26,7 @@ import io.github.wulkanowy.api.grades.mapGradesStatisticsAnnual
 import io.github.wulkanowy.api.grades.mapGradesStatisticsPartial
 import io.github.wulkanowy.api.grades.mapGradesSummary
 import io.github.wulkanowy.api.homework.Homework
+import io.github.wulkanowy.api.homework.mapHomeworkList
 import io.github.wulkanowy.api.interceptor.ErrorHandlerTransformer
 import io.github.wulkanowy.api.mobile.Device
 import io.github.wulkanowy.api.mobile.TokenResponse
@@ -43,7 +44,6 @@ import io.github.wulkanowy.api.timetable.mapCompletedLessonsList
 import io.github.wulkanowy.api.timetable.mapTimetableList
 import io.github.wulkanowy.api.toDate
 import io.github.wulkanowy.api.toFormat
-import io.github.wulkanowy.api.toLocalDate
 import io.reactivex.Single
 import org.jsoup.Jsoup
 import org.threeten.bp.LocalDate
@@ -139,24 +139,9 @@ class StudentRepository(private val api: StudentService) {
     }
 
     fun getHomework(startDate: LocalDate, endDate: LocalDate? = null): Single<List<Homework>> {
-        val end = endDate ?: startDate
         return api.getHomework(ExamRequest(startDate.toDate(), startDate.getSchoolYear()))
             .compose(ErrorHandlerTransformer()).map { it.data }
-            .map { res ->
-                res.asSequence().map { day ->
-                    day.items.map {
-                        val teacherAndDate = it.teacher.split(", ")
-                        it.apply {
-                            date = day.date
-                            entryDate = teacherAndDate.last().toDate("dd.MM.yyyy")
-                            teacher = teacherAndDate.first().split(" [").first()
-                            teacherSymbol = teacherAndDate.first().split(" [").last().removeSuffix("]")
-                        }
-                    }
-                }.flatten().filter {
-                    it.date.toLocalDate() in startDate..end
-                }.sortedWith(compareBy({ it.date }, { it.subject })).toList()
-            }
+            .map { it.mapHomeworkList(startDate, endDate) }
     }
 
     fun getNotes(): Single<List<Note>> {
