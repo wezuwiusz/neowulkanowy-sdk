@@ -25,8 +25,7 @@ import io.github.wulkanowy.api.grades.GradeRequest
 import io.github.wulkanowy.api.grades.GradeStatistics
 import io.github.wulkanowy.api.grades.GradeSummary
 import io.github.wulkanowy.api.grades.GradesStatisticsRequest
-import io.github.wulkanowy.api.grades.getGradeValueWithModifier
-import io.github.wulkanowy.api.grades.isGradeValid
+import io.github.wulkanowy.api.grades.mapGradesList
 import io.github.wulkanowy.api.homework.Homework
 import io.github.wulkanowy.api.interceptor.ErrorHandlerTransformer
 import io.github.wulkanowy.api.mobile.Device
@@ -49,8 +48,6 @@ import io.github.wulkanowy.api.toLocalDate
 import io.reactivex.Single
 import org.jsoup.Jsoup
 import org.threeten.bp.LocalDate
-import java.lang.String.format
-import java.util.Locale
 
 class StudentRepository(private val api: StudentService) {
 
@@ -124,30 +121,7 @@ class StudentRepository(private val api: StudentService) {
     fun getGrades(semesterId: Int?): Single<List<Grade>> {
         return api.getGrades(GradeRequest(semesterId))
             .compose(ErrorHandlerTransformer()).map { it.data }
-            .map { res ->
-                res.gradesWithSubjects.map { gradesSubject ->
-                    gradesSubject.grades.map { grade ->
-                        val values = getGradeValueWithModifier(grade.entry)
-                        grade.apply {
-                            subject = gradesSubject.name
-                            comment = entry.substringBefore(" (").run {
-                                if (length > 4) this
-                                else entry.substringBeforeLast(")").substringAfter(" (")
-                            }
-                            entry = entry.substringBefore(" (").run { if (length > 4) "..." else this }
-                            if (comment == entry) comment = ""
-                            value = values.first
-                            date = privateDate
-                            modifier = values.second
-                            weight = format(Locale.FRANCE, "%.2f", weightValue)
-                            weightValue = if (isGradeValid(entry)) weightValue else .0
-                            color = if ("0" == color) "000000" else color.toInt().toString(16).toUpperCase()
-                            symbol = symbol ?: ""
-                            description = description ?: ""
-                        }
-                    }
-                }.flatten().sortedByDescending { it.date }
-            }
+            .map { it.mapGradesList() }
     }
 
     fun getGradesStatistics(semesterId: Int, annual: Boolean): Single<List<GradeStatistics>> {
