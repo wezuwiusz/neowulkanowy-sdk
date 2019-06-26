@@ -271,9 +271,19 @@ class Sdk {
         }
     }
 
-    fun getAttendanceSummary(subjectId: Int? = -1): Single<List<AttendanceSummary>> = scrapper.getAttendanceSummary(subjectId)
+    fun getAttendanceSummary(subjectId: Int? = -1): Single<List<AttendanceSummary>> {
+        return when (mode) {
+            Mode.HYBRID, Mode.SCRAPPER -> scrapper.getAttendanceSummary(subjectId)
+            Mode.API -> throw FeatureNotAvailable("Attendance summary is not available in API mode")
+        }
+    }
 
-    fun excuseForAbsence(absents: List<Absent>, content: String? = null): Single<Boolean> = scrapper.excuseForAbsence(absents, content)
+    fun excuseForAbsence(absents: List<Absent>, content: String? = null): Single<Boolean> {
+        return when (mode) {
+            Mode.HYBRID, Mode.SCRAPPER -> scrapper.excuseForAbsence(absents, content)
+            Mode.API -> throw FeatureNotAvailable("Absence excusing is not available in API mode")
+        }
+    }
 
     fun getSubjects(): Single<List<Subject>> {
         return when (mode) {
@@ -309,7 +319,12 @@ class Sdk {
         }
     }
 
-    fun getGradesStatistics(semesterId: Int, annual: Boolean = false): Single<List<GradeStatistics>> = scrapper.getGradesStatistics(semesterId, annual)
+    fun getGradesStatistics(semesterId: Int, annual: Boolean = false): Single<List<GradeStatistics>> {
+        return when (mode) {
+            Mode.HYBRID, Mode.SCRAPPER -> scrapper.getGradesStatistics(semesterId, annual)
+            Mode.API -> throw FeatureNotAvailable("Class grade statistics is not available in API mode")
+        }
+    }
 
     fun getHomework(start: LocalDate, end: LocalDate, semesterId: Int = 0): Single<List<Homework>> {
         return when (mode) {
@@ -329,21 +344,61 @@ class Sdk {
         }
     }
 
-    fun getRegisteredDevices(): Single<List<Device>> = scrapper.getRegisteredDevices()
+    fun getRegisteredDevices(): Single<List<Device>> {
+        return when (mode) {
+            Mode.HYBRID, Mode.SCRAPPER -> scrapper.getRegisteredDevices()
+            Mode.API -> throw FeatureNotAvailable("Devices management is not available in API mode")
+        }
+    }
 
-    fun getToken(): Single<TokenResponse> = scrapper.getToken()
+    fun getToken(): Single<TokenResponse> {
+        return when (mode) {
+            Mode.HYBRID, Mode.SCRAPPER -> scrapper.getToken()
+            Mode.API -> throw FeatureNotAvailable("Devices management is not available in API mode")
+        }
+    }
 
-    fun unregisterDevice(id: Int): Single<Boolean> = scrapper.unregisterDevice(id)
+    fun unregisterDevice(id: Int): Single<Boolean> {
+        return when (mode) {
+            Mode.HYBRID, Mode.SCRAPPER -> scrapper.unregisterDevice(id)
+            Mode.API -> throw FeatureNotAvailable("Devices management is not available in API mode")
+        }
+    }
 
-    fun getTeachers(): Single<List<Teacher>> = scrapper.getTeachers()
+    fun getTeachers(): Single<List<Teacher>> {
+        return when (mode) {
+            Mode.HYBRID, Mode.SCRAPPER -> scrapper.getTeachers()
+            Mode.API -> TODO()
+        }
+    }
 
-    fun getSchool(): Single<School> = scrapper.getSchool()
+    fun getSchool(): Single<School> {
+        return when (mode) {
+            Mode.HYBRID, Mode.SCRAPPER -> scrapper.getSchool()
+            Mode.API -> throw FeatureNotAvailable("School info is not available in API mode")
+        }
+    }
 
-    fun getStudentInfo(): Single<StudentInfo> = scrapper.getStudentInfo()
+    fun getStudentInfo(): Single<StudentInfo> {
+        return when (mode) {
+            Mode.HYBRID, Mode.SCRAPPER -> scrapper.getStudentInfo()
+            Mode.API -> throw FeatureNotAvailable("Student info is not available in API mode")
+        }
+    }
 
-    fun getReportingUnits(): Single<List<ReportingUnit>> = scrapper.getReportingUnits()
+    fun getReportingUnits(): Single<List<ReportingUnit>> {
+        return when (mode) {
+            Mode.HYBRID, Mode.SCRAPPER -> scrapper.getReportingUnits()
+            Mode.API -> TODO()
+        }
+    }
 
-    fun getRecipients(unitId: Int, role: Int = 2): Single<List<Recipient>> = scrapper.getRecipients(unitId, role)
+    fun getRecipients(unitId: Int, role: Int = 2): Single<List<Recipient>> {
+        return when (mode) {
+            Mode.HYBRID, Mode.SCRAPPER -> scrapper.getRecipients(unitId, role)
+            Mode.API -> TODO()
+        }
+    }
 
     fun getMessages(folder: Folder, start: LocalDateTime, end: LocalDateTime): Single<List<Message>> {
         return when (folder) {
@@ -374,7 +429,12 @@ class Sdk {
         }
     }
 
-    fun getMessageRecipients(messageId: Int, senderId: Int): Single<List<Recipient>> = scrapper.getMessageRecipients(messageId, senderId)
+    fun getMessageRecipients(messageId: Int, senderId: Int): Single<List<Recipient>> {
+        return when (mode) {
+            Mode.HYBRID, Mode.SCRAPPER -> scrapper.getMessageRecipients(messageId, senderId)
+            Mode.API -> TODO()
+        }
+    }
 
     fun getMessageContent(messageId: Int, folderId: Int, read: Boolean = false, id: Int? = null): Single<String> {
         return when (mode) {
@@ -387,7 +447,12 @@ class Sdk {
         }
     }
 
-    fun sendMessage(subject: String, content: String, recipients: List<Recipient>): Single<SentMessage> = scrapper.sendMessage(subject, content, recipients)
+    fun sendMessage(subject: String, content: String, recipients: List<Recipient>): Single<SentMessage> {
+        return when (mode) {
+            Mode.HYBRID, Mode.SCRAPPER -> scrapper.sendMessage(subject, content, recipients)
+            Mode.API -> TODO()
+        }
+    }
 
     fun deleteMessages(messages: List<Pair<Int, Int>>): Single<Boolean> {
         return when (mode) {
@@ -411,7 +476,17 @@ class Sdk {
         }
     }
 
-    fun getCompletedLessons(start: LocalDate, end: LocalDate? = null, subjectId: Int = -1): Single<List<CompletedLesson>> = scrapper.getCompletedLessons(start, end, subjectId)
+    fun getCompletedLessons(start: LocalDate, end: LocalDate? = null, subjectId: Int = -1): Single<List<CompletedLesson>> {
+        return when (mode) {
+            Mode.HYBRID, Mode.SCRAPPER -> scrapper.getCompletedLessons(start, end, subjectId)
+            Mode.API -> throw FeatureNotAvailable("Completed lessons are not available in API mode")
+        }
+    }
 
-    fun getLuckyNumber(): Maybe<Int> = scrapper.getLuckyNumber()
+    fun getLuckyNumber(): Maybe<Int> {
+        return when (mode) {
+            Mode.HYBRID, Mode.SCRAPPER -> scrapper.getLuckyNumber()
+            Mode.API -> throw FeatureNotAvailable("Lucky number is not available in API mode")
+        }
+    }
 }
