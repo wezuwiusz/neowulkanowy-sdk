@@ -2,8 +2,6 @@ package io.github.wulkanowy.sdk
 
 import io.github.wulkanowy.api.Api
 import io.github.wulkanowy.api.attendance.Absent
-import io.github.wulkanowy.api.attendance.AttendanceSummary
-import io.github.wulkanowy.api.grades.GradeStatistics
 import io.github.wulkanowy.api.messages.Folder
 import io.github.wulkanowy.api.messages.Recipient
 import io.github.wulkanowy.api.messages.ReportingUnit
@@ -13,13 +11,14 @@ import io.github.wulkanowy.api.mobile.TokenResponse
 import io.github.wulkanowy.api.resettableLazy
 import io.github.wulkanowy.api.resettableManager
 import io.github.wulkanowy.api.school.School
-import io.github.wulkanowy.api.school.Teacher
 import io.github.wulkanowy.api.student.StudentInfo
-import io.github.wulkanowy.api.timetable.CompletedLesson
 import io.github.wulkanowy.sdk.attendance.mapAttendance
+import io.github.wulkanowy.sdk.attendance.mapAttendanceSummary
 import io.github.wulkanowy.sdk.dictionaries.Dictionaries
 import io.github.wulkanowy.sdk.dictionaries.mapSubjects
+import io.github.wulkanowy.sdk.school.mapTeachers
 import io.github.wulkanowy.sdk.exams.mapExams
+import io.github.wulkanowy.sdk.grades.mapGradeStatistics
 import io.github.wulkanowy.sdk.grades.mapGrades
 import io.github.wulkanowy.sdk.grades.mapGradesSummary
 import io.github.wulkanowy.sdk.homework.mapHomework
@@ -30,6 +29,7 @@ import io.github.wulkanowy.sdk.register.mapSemesters
 import io.github.wulkanowy.sdk.register.mapStudents
 import io.github.wulkanowy.sdk.repository.RegisterRepository
 import io.github.wulkanowy.sdk.repository.RepositoryManager
+import io.github.wulkanowy.sdk.timetable.mapCompletedLessons
 import io.github.wulkanowy.sdk.timetable.mapTimetable
 import io.reactivex.Completable
 import io.reactivex.Maybe
@@ -273,7 +273,7 @@ class Sdk {
 
     fun getAttendanceSummary(subjectId: Int? = -1): Single<List<AttendanceSummary>> {
         return when (mode) {
-            Mode.HYBRID, Mode.SCRAPPER -> scrapper.getAttendanceSummary(subjectId)
+            Mode.HYBRID, Mode.SCRAPPER -> scrapper.getAttendanceSummary(subjectId).map { it.mapAttendanceSummary() }
             Mode.API -> throw FeatureNotAvailable("Attendance summary is not available in API mode")
         }
     }
@@ -321,7 +321,7 @@ class Sdk {
 
     fun getGradesStatistics(semesterId: Int, annual: Boolean = false): Single<List<GradeStatistics>> {
         return when (mode) {
-            Mode.HYBRID, Mode.SCRAPPER -> scrapper.getGradesStatistics(semesterId, annual)
+            Mode.HYBRID, Mode.SCRAPPER -> scrapper.getGradesStatistics(semesterId, annual).map { it.mapGradeStatistics() }
             Mode.API -> throw FeatureNotAvailable("Class grade statistics is not available in API mode")
         }
     }
@@ -365,10 +365,12 @@ class Sdk {
         }
     }
 
-    fun getTeachers(): Single<List<Teacher>> {
+    fun getTeachers(semesterId: Int): Single<List<Teacher>> {
         return when (mode) {
-            Mode.HYBRID, Mode.SCRAPPER -> scrapper.getTeachers()
-            Mode.API -> TODO()
+            Mode.SCRAPPER -> scrapper.getTeachers().map { it.mapTeachers() }
+            Mode.HYBRID, Mode.API -> getDictionaries().flatMap { dict ->
+                mobile.getTeachers(studentId, semesterId).map { it.mapTeachers(dict) }
+            }
         }
     }
 
@@ -478,7 +480,7 @@ class Sdk {
 
     fun getCompletedLessons(start: LocalDate, end: LocalDate? = null, subjectId: Int = -1): Single<List<CompletedLesson>> {
         return when (mode) {
-            Mode.HYBRID, Mode.SCRAPPER -> scrapper.getCompletedLessons(start, end, subjectId)
+            Mode.HYBRID, Mode.SCRAPPER -> scrapper.getCompletedLessons(start, end, subjectId).map { it.mapCompletedLessons() }
             Mode.API -> throw FeatureNotAvailable("Completed lessons are not available in API mode")
         }
     }

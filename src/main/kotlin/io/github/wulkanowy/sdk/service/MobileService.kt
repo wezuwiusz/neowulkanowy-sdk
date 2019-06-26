@@ -18,6 +18,8 @@ import io.github.wulkanowy.sdk.messages.MessageStatusChangeRequest
 import io.github.wulkanowy.sdk.messages.MessagesRequest
 import io.github.wulkanowy.sdk.notes.Note
 import io.github.wulkanowy.sdk.notes.NotesRequest
+import io.github.wulkanowy.sdk.school.TeachersRequest
+import io.github.wulkanowy.sdk.school.TeachersResponse
 import io.github.wulkanowy.sdk.timetable.Lesson
 import io.github.wulkanowy.sdk.timetable.TimetableRequest
 import io.reactivex.Single
@@ -31,6 +33,9 @@ interface MobileService {
 
     @POST("Slowniki")
     fun getDictionaries(@Body dictionariesRequest: DictionariesRequest): Single<ApiResponse<Dictionaries>>
+
+    @POST("Nauczyciele")
+    fun getTeachers(@Body teachersRequest: TeachersRequest): Single<ApiResponse<TeachersResponse>>
 
     @POST("PlanLekcjiZeZmianami")
     fun getTimetable(@Body timetableRequest: TimetableRequest): Single<ApiResponse<List<Lesson>>>

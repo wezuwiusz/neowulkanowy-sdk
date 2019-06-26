@@ -1,5 +1,7 @@
 package io.github.wulkanowy.sdk.timetable
 
+import io.github.wulkanowy.api.timetable.CompletedLesson as ScrapperCompletedLesson
+import io.github.wulkanowy.sdk.pojo.CompletedLesson
 import io.github.wulkanowy.api.toLocalDate
 import io.github.wulkanowy.sdk.dictionaries.Dictionaries
 import io.github.wulkanowy.sdk.pojo.Timetable
@@ -51,6 +53,22 @@ fun List<ScrapperTimetable>.mapTimetable(): List<Timetable> {
             studentPlan = true,
             teacher = it.teacher,
             teacherOld = it.teacherOld
+        )
+    }
+}
+
+fun List<ScrapperCompletedLesson>.mapCompletedLessons(): List<CompletedLesson> {
+    return map {
+        CompletedLesson(
+            date = it.date.toLocalDate(),
+            number = it.number,
+            subject = it.subject,
+            topic = it.topic,
+            teacher = it.teacher,
+            teacherSymbol = it.teacherSymbol,
+            substitution = it.substitution,
+            absence = it.absence,
+            resources = it.resources
         )
     }
 }

@@ -1,9 +1,10 @@
 package io.github.wulkanowy.sdk.grades
 
+import io.github.wulkanowy.api.grades.GradeStatistics as ScrapperGradeStatistics
+import io.github.wulkanowy.sdk.pojo.GradeStatistics
 import io.github.wulkanowy.sdk.dictionaries.Dictionaries
 import io.github.wulkanowy.sdk.pojo.GradeSummary
 import io.github.wulkanowy.api.grades.GradeSummary as ScrapperGradeSummary
-import io.github.wulkanowy.sdk.grades.GradeSummary as ApiGradeSummary
 
 fun GradesSummaryResponse.mapGradesSummary(dict: Dictionaries): List<GradeSummary> {
     return average.union(predicted).union(evaluative).map { it.subjectId }.distinct().sorted().map { subjectId ->
@@ -29,6 +30,18 @@ fun List<ScrapperGradeSummary>.mapGradesSummary(): List<GradeSummary> {
             average = it.average,
             final = it.final,
             predicted = it.predicted
+        )
+    }
+}
+
+fun List<ScrapperGradeStatistics>.mapGradeStatistics(): List<GradeStatistics> {
+    return map {
+        GradeStatistics(
+            semesterId = it.semesterId,
+            subject = it.subject,
+            grade = it.grade,
+            gradeValue = it.gradeValue,
+            amount = it.amount ?: 0
         )
     }
 }

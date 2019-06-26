@@ -18,6 +18,8 @@ import io.github.wulkanowy.sdk.messages.MessageStatusChangeRequest
 import io.github.wulkanowy.sdk.messages.MessagesRequest
 import io.github.wulkanowy.sdk.notes.Note
 import io.github.wulkanowy.sdk.notes.NotesRequest
+import io.github.wulkanowy.sdk.school.Teacher
+import io.github.wulkanowy.sdk.school.TeachersRequest
 import io.github.wulkanowy.sdk.service.MobileService
 import io.github.wulkanowy.sdk.timetable.Lesson
 import io.github.wulkanowy.sdk.timetable.TimetableRequest
@@ -32,6 +34,12 @@ class MobileRepository(private val api: MobileService) {
 
     fun getDictionaries(userId: Int, classificationPeriodId: Int, classId: Int): Single<Dictionaries> {
         return api.getDictionaries(DictionariesRequest(userId, classificationPeriodId, classId)).map { it.data }
+    }
+
+    fun getTeachers(studentId: Int, semesterId: Int): Single<List<Teacher>> {
+        return api.getTeachers(TeachersRequest(studentId, semesterId)).map { it.data }.map {
+            it?.schoolTeachers?.union(it.teachersSubjects)?.toList()
+        }
     }
 
     fun getTimetable(start: LocalDate, end: LocalDate, classId: Int, classificationPeriodId: Int, studentId: Int): Single<List<Lesson>> {

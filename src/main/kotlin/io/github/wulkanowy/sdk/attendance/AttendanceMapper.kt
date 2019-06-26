@@ -1,5 +1,7 @@
 package io.github.wulkanowy.sdk.attendance
 
+import io.github.wulkanowy.api.attendance.AttendanceSummary as ScrapperAttendanceSummary
+import io.github.wulkanowy.sdk.pojo.AttendanceSummary
 import io.github.wulkanowy.api.toLocalDate
 import io.github.wulkanowy.sdk.dictionaries.Dictionaries
 import io.github.wulkanowy.sdk.pojo.Attendance
@@ -42,6 +44,21 @@ fun List<ScrapperAttendance>.mapAttendance(): List<Attendance> {
             exemption = it.exemption,
             lateness = it.lateness,
             presence = it.presence
+        )
+    }
+}
+
+fun List<ScrapperAttendanceSummary>.mapAttendanceSummary(): List<AttendanceSummary> {
+    return map {
+        AttendanceSummary(
+            month = it.month,
+            presence = it.presence,
+            absence = it.absence,
+            absenceExcused = it.absenceExcused,
+            absenceForSchoolReasons = it.absenceForSchoolReasons,
+            lateness = it.lateness,
+            latenessExcused = it.latenessExcused,
+            exemption = it.exemption
         )
     }
 }
