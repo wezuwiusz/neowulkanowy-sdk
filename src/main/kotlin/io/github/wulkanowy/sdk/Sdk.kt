@@ -6,8 +6,6 @@ import io.github.wulkanowy.api.messages.Folder
 import io.github.wulkanowy.api.messages.Recipient
 import io.github.wulkanowy.api.messages.ReportingUnit
 import io.github.wulkanowy.api.messages.SentMessage
-import io.github.wulkanowy.api.mobile.Device
-import io.github.wulkanowy.api.mobile.TokenResponse
 import io.github.wulkanowy.api.resettableLazy
 import io.github.wulkanowy.api.resettableManager
 import io.github.wulkanowy.api.school.School
@@ -23,6 +21,8 @@ import io.github.wulkanowy.sdk.grades.mapGrades
 import io.github.wulkanowy.sdk.grades.mapGradesSummary
 import io.github.wulkanowy.sdk.homework.mapHomework
 import io.github.wulkanowy.sdk.messages.mapMessages
+import io.github.wulkanowy.sdk.mobile.mapDevices
+import io.github.wulkanowy.sdk.mobile.mapToken
 import io.github.wulkanowy.sdk.notes.mapNotes
 import io.github.wulkanowy.sdk.pojo.*
 import io.github.wulkanowy.sdk.register.mapSemesters
@@ -346,14 +346,14 @@ class Sdk {
 
     fun getRegisteredDevices(): Single<List<Device>> {
         return when (mode) {
-            Mode.HYBRID, Mode.SCRAPPER -> scrapper.getRegisteredDevices()
+            Mode.HYBRID, Mode.SCRAPPER -> scrapper.getRegisteredDevices().map { it.mapDevices() }
             Mode.API -> throw FeatureNotAvailable("Devices management is not available in API mode")
         }
     }
 
-    fun getToken(): Single<TokenResponse> {
+    fun getToken(): Single<Token> {
         return when (mode) {
-            Mode.HYBRID, Mode.SCRAPPER -> scrapper.getToken()
+            Mode.HYBRID, Mode.SCRAPPER -> scrapper.getToken().map { it.mapToken() }
             Mode.API -> throw FeatureNotAvailable("Devices management is not available in API mode")
         }
     }
