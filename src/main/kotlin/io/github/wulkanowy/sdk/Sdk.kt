@@ -10,7 +10,6 @@ import io.github.wulkanowy.api.messages.ReportingUnit
 import io.github.wulkanowy.api.messages.SentMessage
 import io.github.wulkanowy.api.mobile.Device
 import io.github.wulkanowy.api.mobile.TokenResponse
-import io.github.wulkanowy.api.register.Semester
 import io.github.wulkanowy.api.resettableLazy
 import io.github.wulkanowy.api.resettableManager
 import io.github.wulkanowy.api.school.School
@@ -27,6 +26,7 @@ import io.github.wulkanowy.sdk.homework.mapHomework
 import io.github.wulkanowy.sdk.messages.mapMessages
 import io.github.wulkanowy.sdk.notes.mapNotes
 import io.github.wulkanowy.sdk.pojo.*
+import io.github.wulkanowy.sdk.register.mapSemesters
 import io.github.wulkanowy.sdk.register.mapStudents
 import io.github.wulkanowy.sdk.repository.RegisterRepository
 import io.github.wulkanowy.sdk.repository.RepositoryManager
@@ -255,7 +255,12 @@ class Sdk {
         }
     }
 
-    fun getSemesters(): Single<List<Semester>> = scrapper.getSemesters()
+    fun getSemesters(): Single<List<Semester>> {
+        return when (mode) {
+            Mode.HYBRID, Mode.SCRAPPER -> scrapper.getSemesters().map { it.mapSemesters() }
+            Mode.API -> getRegisterRepo(apiBaseUrl.replace("/$symbol", ""), symbol).getPupils().map { it.mapSemesters(studentId) }
+        }
+    }
 
     fun getAttendance(startDate: LocalDate, endDate: LocalDate, semesterId: Int): Single<List<Attendance>> {
         return when (mode) {

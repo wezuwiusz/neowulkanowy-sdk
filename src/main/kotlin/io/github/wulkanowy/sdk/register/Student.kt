@@ -14,10 +14,10 @@ data class Student(
     val periodNumber: Int,
 
     @SerializedName("OkresDataOd")
-    val periodDateFrom: Int,
+    val periodDateFrom: Long,
 
     @SerializedName("OkresDataDo")
-    val periodDateTo: Int,
+    val periodDateTo: Long,
 
     @SerializedName("OkresDataOdTekst")
     val periodDateFromText: String,

@@ -65,6 +65,27 @@ class SdkRemoteTest {
     }
 
     @Test
+    fun getSemesters_api() {
+        val sdk = Sdk().apply {
+            apiKey = API_KEY
+
+            certKey = CERT_KEY
+            certificate = CERTIFICATE
+
+            apiBaseUrl = "https://api.fakelog.cf/Default"
+            mode = Sdk.Mode.API
+            symbol = "Default"
+
+            schoolSymbol = "123456"
+            studentId = 1
+            classId = 14
+        }
+
+        val semesters = sdk.getSemesters().blockingGet()
+        assertEquals(1, semesters.size)
+    }
+
+    @Test
     fun getGrades_api() {
         val sdk = Sdk().apply {
             apiKey = API_KEY
