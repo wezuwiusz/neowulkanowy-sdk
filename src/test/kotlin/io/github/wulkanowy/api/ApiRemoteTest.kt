@@ -521,13 +521,13 @@ class ApiRemoteTest : BaseTest() {
         }
     }
 
-    @Test
-    fun luckyNumberTest() {
-        val luckyNumber = api.getLuckyNumber()
-        val luckyNumberObserver = TestObserver<Int>()
-        luckyNumber.subscribe(luckyNumberObserver)
-        luckyNumberObserver.assertComplete()
-
-        assertTrue(luckyNumberObserver.values().size == 0 || luckyNumberObserver.values()[0] != 0)
-    }
+    // @Test
+    // fun luckyNumberTest() {
+    //     val luckyNumber = api.getLuckyNumber()
+    //     val luckyNumberObserver = TestObserver<Int>()
+    //     luckyNumber.subscribe(luckyNumberObserver)
+    //     luckyNumberObserver.assertComplete()
+    //
+    //     assertTrue(luckyNumberObserver.values().size == 0 || luckyNumberObserver.values()[0] != 0)
+    // }
 }

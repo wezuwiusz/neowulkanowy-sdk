@@ -273,5 +273,24 @@ class Api {
 
     fun deleteMessages(messages: List<Pair<Int, Int>>) = this.messages.deleteMessages(messages)
 
+    @Deprecated("Deprecated due to VULCAN homepage update 19.06", ReplaceWith("getKidsLuckyNumbers()"))
     fun getLuckyNumber() = homepage.getLuckyNumber()
+
+    fun getSelfGovernments() = homepage.getSelfGovernments()
+
+    fun getStudentsTrips() = homepage.getStudentsTrips()
+
+    fun getLastGrades() = homepage.getLastGrades()
+
+    fun getFreeDays() = homepage.getFreeDays()
+
+    fun getKidsLuckyNumbers() = homepage.getKidsLuckyNumbers()
+
+    fun getKidsLessonPlan() = homepage.getKidsLessonPlan()
+
+    fun getLastHomework() = homepage.getLastHomework()
+
+    fun getLastTests() = homepage.getLastTests()
+
+    fun getLastStudentLessons() = homepage.getLastStudentLessons()
 }

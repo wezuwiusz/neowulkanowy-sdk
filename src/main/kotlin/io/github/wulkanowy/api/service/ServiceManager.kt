@@ -114,7 +114,7 @@ class ServiceManager(
     fun getHomepageService(): HomepageService {
         return getRetrofit(getClientBuilder(), urlGenerator.generate(UrlGenerator.Site.HOME),
             login = true,
-            gson = false
+            gson = true
         ).create()
     }
 

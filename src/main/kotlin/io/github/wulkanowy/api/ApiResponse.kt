@@ -8,7 +8,9 @@ data class ApiResponse<out T>(
 
     val data: T?,
 
-    val feedback: Feedback
+    val feedback: Feedback,
+
+    val errorMessage: String = ""
 ) {
 
     data class Feedback(
