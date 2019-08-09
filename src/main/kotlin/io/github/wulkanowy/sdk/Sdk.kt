@@ -14,7 +14,6 @@ import io.github.wulkanowy.sdk.attendance.mapAttendance
 import io.github.wulkanowy.sdk.attendance.mapAttendanceSummary
 import io.github.wulkanowy.sdk.dictionaries.Dictionaries
 import io.github.wulkanowy.sdk.dictionaries.mapSubjects
-import io.github.wulkanowy.sdk.school.mapTeachers
 import io.github.wulkanowy.sdk.exams.mapExams
 import io.github.wulkanowy.sdk.grades.mapGradeStatistics
 import io.github.wulkanowy.sdk.grades.mapGrades
@@ -29,6 +28,7 @@ import io.github.wulkanowy.sdk.register.mapSemesters
 import io.github.wulkanowy.sdk.register.mapStudents
 import io.github.wulkanowy.sdk.repository.RegisterRepository
 import io.github.wulkanowy.sdk.repository.RepositoryManager
+import io.github.wulkanowy.sdk.school.mapTeachers
 import io.github.wulkanowy.sdk.timetable.mapCompletedLessons
 import io.github.wulkanowy.sdk.timetable.mapTimetable
 import io.reactivex.Completable
@@ -485,10 +485,74 @@ class Sdk {
         }
     }
 
+    @Deprecated("Deprecated due to VULCAN homepage update 19.06", ReplaceWith("getKidsLuckyNumbers()"))
     fun getLuckyNumber(): Maybe<Int> {
         return when (mode) {
             Mode.HYBRID, Mode.SCRAPPER -> scrapper.getLuckyNumber()
             Mode.API -> throw FeatureNotAvailable("Lucky number is not available in API mode")
+        }
+    }
+
+    fun getSelfGovernments(): Single<List<String>> {
+        return when (mode) {
+            Mode.HYBRID, Mode.SCRAPPER -> scrapper.getSelfGovernments()
+            Mode.API -> throw FeatureNotAvailable("Self governments is not available in API mode")
+        }
+    }
+
+    fun getStudentsTrips(): Single<List<String>> {
+        return when (mode) {
+            Mode.HYBRID, Mode.SCRAPPER -> scrapper.getStudentsTrips()
+            Mode.API -> throw FeatureNotAvailable("Students trips is not available in API mode")
+        }
+    }
+
+    fun getLastGrades(): Single<List<String>> {
+        return when (mode) {
+            Mode.HYBRID, Mode.SCRAPPER -> scrapper.getLastGrades()
+            Mode.API -> throw FeatureNotAvailable("Last grades is not available in API mode")
+        }
+    }
+
+    fun getFreeDays(): Single<List<String>> {
+        return when (mode) {
+            Mode.HYBRID, Mode.SCRAPPER -> scrapper.getFreeDays()
+            Mode.API -> throw FeatureNotAvailable("Free days is not available in API mode")
+        }
+    }
+
+    fun getKidsLuckyNumbers(): Single<List<String>> {
+        return when (mode) {
+            Mode.HYBRID, Mode.SCRAPPER -> scrapper.getKidsLuckyNumbers()
+            Mode.API -> throw FeatureNotAvailable("Kids Lucky number is not available in API mode")
+        }
+    }
+
+    fun getKidsTimetable(): Single<List<String>> {
+        return when (mode) {
+            Mode.HYBRID, Mode.SCRAPPER -> scrapper.getKidsLessonPlan()
+            Mode.API -> throw FeatureNotAvailable("Kids timetable is not available in API mode")
+        }
+    }
+
+    fun getLastHomework(): Single<List<String>> {
+        return when (mode) {
+            Mode.HYBRID, Mode.SCRAPPER -> scrapper.getLastHomework()
+            Mode.API -> throw FeatureNotAvailable("Last homework is not available in API mode")
+        }
+    }
+
+    fun getLastExams(): Single<List<String>> {
+        return when (mode) {
+            Mode.HYBRID, Mode.SCRAPPER -> scrapper.getLastTests()
+            Mode.API -> throw FeatureNotAvailable("Last exams is not available in API mode")
+        }
+    }
+
+    fun getLastStudentLessons(): Single<List<String>> {
+        return when (mode) {
+            Mode.HYBRID, Mode.SCRAPPER -> scrapper.getLastStudentLessons()
+            Mode.API -> throw FeatureNotAvailable("Last student lesson is not available in API mode")
         }
     }
 }
