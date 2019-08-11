@@ -13,6 +13,12 @@ class NotLoggedInErrorInterceptor(private val loginType: Api.LoginType) : Interc
         val response = chain.proceed(chain.request())
         val doc = Jsoup.parse(response.peekBody(Long.MAX_VALUE).string())
 
+        if (chain.request().url().toString().contains("/Start.mvc/")) {
+            doc.select(".errorBlock").let {
+                if (it.isNotEmpty()) throw NotLoggedInException("${it.select(".errorTitle").text()}}")
+            }
+        }
+
         if (when (loginType) {
                     Api.LoginType.STANDARD -> doc.select(".loginButton, .LogOnBoard input[type=submit]")
                     Api.LoginType.ADFS -> doc.select("form[name=form1] #SubmitButton")

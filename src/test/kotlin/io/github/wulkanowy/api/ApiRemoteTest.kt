@@ -530,4 +530,10 @@ class ApiRemoteTest : BaseTest() {
     //
     //     assertTrue(luckyNumberObserver.values().size == 0 || luckyNumberObserver.values()[0] != 0)
     // }
+
+    @Test
+    fun freeDays() {
+        val freeDays = api.getFreeDays().blockingGet()
+        assertEquals(1, freeDays.size)
+    }
 }
