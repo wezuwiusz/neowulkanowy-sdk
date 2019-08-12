@@ -1,15 +1,5 @@
 {
-  "data": [
-    {
-      "IkonkaNazwa": null,
-      "Num": null,
-      "Zawartosc": [],
-      "Nazwa": "",
-      "Url": null,
-      "Symbol": null,
-      "Nieaktywny": false
-    }
-  ],
+  "data": [],
   "success": true,
   "errorMessage": null,
   "feedback": null

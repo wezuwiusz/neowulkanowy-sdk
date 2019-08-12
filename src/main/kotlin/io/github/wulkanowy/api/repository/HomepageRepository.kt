@@ -64,6 +64,7 @@ class HomepageRepository(private val api: HomepageService) {
     @Deprecated("Deprecated due to VULCAN homepage update 19.06", ReplaceWith("getKidsLuckyNumbers()"))
     fun getLuckyNumber(): Maybe<Int> {
         return api.getKidsLuckyNumbers().compose(ErrorHandlerTransformer()).map { it.data }
+            .filter { it.isNotEmpty() }
             .map { it[0].content }
             .filter { it.isNotEmpty() }
             .map { it[0].name }
