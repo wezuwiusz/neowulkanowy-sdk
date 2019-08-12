@@ -1,0 +1,26 @@
+{
+  "data": [
+    {
+      "IkonkaNazwa": null,
+      "Num": null,
+      "Zawartosc": [
+        {
+          "IkonkaNazwa": null,
+          "Num": null,
+          "Zawartosc": [],
+          "Nazwa": "Szczęśliwy numer w dzienniku: 18",
+          "Url": null,
+          "Symbol": null,
+          "Nieaktywny": false
+        }
+      ],
+      "Nazwa": "",
+      "Url": null,
+      "Symbol": null,
+      "Nieaktywny": false
+    }
+  ],
+  "success": true,
+  "errorMessage": null,
+  "feedback": null
+}

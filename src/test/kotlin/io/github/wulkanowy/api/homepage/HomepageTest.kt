@@ -69,4 +69,13 @@ class HomepageTest : BaseLocalTest() {
     @Test
     fun getLastStudentLessons() {
     }
+
+    @Test
+    fun getLuckyNumber() {
+        server.enqueue(MockResponse().setBody(HomepageTest::class.java.getResource("GetKidsLuckyNumbers.json").readText()))
+        server.start(3000)
+
+        val number = repo.getLuckyNumber().blockingGet()
+        assertEquals(18, number)
+    }
 }
