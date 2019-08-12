@@ -78,4 +78,13 @@ class HomepageTest : BaseLocalTest() {
         val number = repo.getLuckyNumber().blockingGet()
         assertEquals(18, number)
     }
+
+    @Test
+    fun getLuckyNumber_empty() {
+        server.enqueue(MockResponse().setBody(HomepageTest::class.java.getResource("GetEmpty.json").readText()))
+        server.start(3000)
+
+        val number = repo.getLuckyNumber().blockingGet()
+        assertEquals(null, number)
+    }
 }
