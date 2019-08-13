@@ -49,6 +49,10 @@ class ServiceManager(
         }
     }
 
+    private val loginHelper by lazy {
+        LoginHelper(loginType, schema, host, symbol, cookies, getLoginService())
+    }
+
     val urlGenerator by lazy {
         UrlGenerator(schema, host, symbol, schoolSymbol)
     }
@@ -154,7 +158,7 @@ class ServiceManager(
     }
 
     private fun getLoginHelper(): Flowable<SendCertificateResponse> {
-        return LoginHelper(loginType, schema, host, symbol, cookies, getLoginService())
+        return loginHelper
                 .login(email, password)
                 .toFlowable()
                 .share()
