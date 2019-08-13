@@ -18,7 +18,7 @@ class NotLoggedInErrorInterceptor(private val loginType: LoginType) : Intercepto
         val response = chain.proceed(chain.request())
         val doc = Jsoup.parse(response.peekBody(Long.MAX_VALUE).string())
 
-        if (chain.request().url().toString().contains("/Start.mvc/")) {
+        if (chain.request().url().toString().contains("/Start.mvc/Get")) {
             doc.select(".errorBlock").let {
                 if (it.isNotEmpty()) throw NotLoggedInException("${it.select(".errorTitle").text()}}")
             }
