@@ -1,7 +1,6 @@
 package io.github.wulkanowy.api.grades
 
 import io.github.wulkanowy.api.getGradeShortValue
-import kotlin.String
 import java.util.Locale
 
 fun GradesResponse.mapGradesList(): List<Grade> {

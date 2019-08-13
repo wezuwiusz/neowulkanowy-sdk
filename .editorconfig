@@ -1,3 +1,13 @@
-[*.{kt,kts}]
+[*]
+charset=utf-8
+end_of_line=lf
+insert_final_newline=false
+indent_style=space
+indent_size=4
 
-disabled_rules=import-ordering
+[*.json]
+indent_size=2
+
+[*.{kt,kts}]
+disabled_rules=import-orderin
+max_line_length=155

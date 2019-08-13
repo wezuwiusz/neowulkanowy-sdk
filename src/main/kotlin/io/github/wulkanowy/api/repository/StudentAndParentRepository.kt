@@ -14,11 +14,11 @@ import io.github.wulkanowy.api.homework.Homework
 import io.github.wulkanowy.api.mobile.Device
 import io.github.wulkanowy.api.mobile.TokenResponse
 import io.github.wulkanowy.api.notes.Note
-import io.github.wulkanowy.api.timetable.CompletedLesson
 import io.github.wulkanowy.api.school.School
 import io.github.wulkanowy.api.school.Teacher
 import io.github.wulkanowy.api.service.StudentAndParentService
 import io.github.wulkanowy.api.student.StudentInfo
+import io.github.wulkanowy.api.timetable.CompletedLesson
 import io.github.wulkanowy.api.timetable.Timetable
 import io.github.wulkanowy.api.timetable.TimetableParser
 import io.github.wulkanowy.api.toDate
@@ -61,13 +61,13 @@ class StudentAndParentRepository(private val api: StudentAndParentService) {
             res.months.mapIndexedNotNull { i, month ->
                 if (res.summaryRows.all { it.value[i].isBlank() }) return@mapIndexedNotNull null
                 AttendanceSummary(romanToMonthEnum(month),
-                        res.summaryRows[0].value[i].toIntOrNull() ?: 0,
-                        res.summaryRows[1].value[i].toIntOrNull() ?: 0,
-                        res.summaryRows[2].value[i].toIntOrNull() ?: 0,
-                        res.summaryRows[3].value[i].toIntOrNull() ?: 0,
-                        res.summaryRows[4].value[i].toIntOrNull() ?: 0,
-                        res.summaryRows[5].value[i].toIntOrNull() ?: 0,
-                        res.summaryRows[6].value[i].toIntOrNull() ?: 0
+                    res.summaryRows[0].value[i].toIntOrNull() ?: 0,
+                    res.summaryRows[1].value[i].toIntOrNull() ?: 0,
+                    res.summaryRows[2].value[i].toIntOrNull() ?: 0,
+                    res.summaryRows[3].value[i].toIntOrNull() ?: 0,
+                    res.summaryRows[4].value[i].toIntOrNull() ?: 0,
+                    res.summaryRows[5].value[i].toIntOrNull() ?: 0,
+                    res.summaryRows[6].value[i].toIntOrNull() ?: 0
                 )
             }
         }

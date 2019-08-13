@@ -16,12 +16,12 @@ class UserAgentInterceptor(
 
     override fun intercept(chain: Interceptor.Chain): Response {
         return chain.proceed(chain.request().newBuilder()
-                .addHeader("User-Agent",
-                        "Mozilla/5.0 (Linux; $androidVersion; $buildTag) " +
-                                "AppleWebKit/$webKitRev (KHTML, like Gecko) " +
-                                "Chrome/$chromeRev Mobile " +
-                                "Safari/$webKitRev")
-                .build()
+            .addHeader("User-Agent",
+                "Mozilla/5.0 (Linux; $androidVersion; $buildTag) " +
+                    "AppleWebKit/$webKitRev (KHTML, like Gecko) " +
+                    "Chrome/$chromeRev Mobile " +
+                    "Safari/$webKitRev")
+            .build()
         )
     }
 }

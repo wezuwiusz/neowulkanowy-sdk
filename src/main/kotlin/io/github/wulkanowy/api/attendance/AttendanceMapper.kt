@@ -19,8 +19,8 @@ import io.reactivex.Single
 import org.threeten.bp.LocalDate
 import org.threeten.bp.Month
 
-fun Single<AttendanceResponse?>.mapAttendanceList(startDate: LocalDate, endDate: LocalDate?, getTimes: () -> Single<List<Time>>): Single<List<Attendance>> {
-    val end = endDate ?: startDate.plusDays(4)
+fun Single<AttendanceResponse?>.mapAttendanceList(start: LocalDate, end: LocalDate?, getTimes: () -> Single<List<Time>>): Single<List<Attendance>> {
+    val endDate = end ?: start.plusDays(4)
     var excuseActive = false
     return map {
         it.run {
@@ -43,7 +43,7 @@ fun Single<AttendanceResponse?>.mapAttendanceList(startDate: LocalDate, endDate:
             }
         }
     }.filter {
-        it.date.toLocalDate() >= startDate && it.date.toLocalDate() <= end
+        it.date.toLocalDate() >= start && it.date.toLocalDate() <= endDate
     }.toList().map { list -> list.sortedWith(compareBy({ it.date }, { it.number })) }
 }
 

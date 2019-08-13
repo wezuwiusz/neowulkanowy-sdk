@@ -22,7 +22,12 @@ class StudentAndParentStartRepository(
             api.getDiaryInfo(diary.id, "/$symbol/$schoolSymbol/Oceny.mvc/Wszystkie").map { res ->
                 if (!res.title.endsWith("Oceny")) throw VulcanException("Unknow page with title: ${res.title}")
                 res.semesters.map {
-                    Semester(diary.id, diary.name, diary.name.substringAfter(" ").toInt(), it.semesterId, it.semesterNumber, "selected" == it.current && "selected" == diary.current)
+                    Semester(diary.id,
+                        diary.name,
+                        diary.name.substringAfter(" ").toInt(),
+                        it.semesterId,
+                        it.semesterNumber,
+                        "selected" == it.current && "selected" == diary.current)
                 }
             }
         }.toList().map { it.flatten() }

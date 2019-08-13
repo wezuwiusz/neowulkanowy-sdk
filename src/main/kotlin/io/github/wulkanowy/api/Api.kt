@@ -127,37 +127,18 @@ class Api {
     private val normalizedSymbol by resettableLazy(changeManager) { if (symbol.isBlank()) "Default" else symbol.getNormalizedSymbol() }
 
     private val serviceManager by resettableLazy(changeManager) {
-        ServiceManager(
-            logLevel,
-            loginType,
-            schema,
-            host,
-            normalizedSymbol,
-            email,
-            password,
-            schoolSymbol,
-            studentId,
-            diaryId,
-            androidVersion,
-            buildTag
-        ).apply {
-            appInterceptors.forEach {
-                setInterceptor(it.value.first, it.value.second, it.key)
+        ServiceManager(logLevel, loginType, schema, host, normalizedSymbol, email, password, schoolSymbol, studentId, diaryId, androidVersion, buildTag)
+            .apply {
+                appInterceptors.forEach {
+                    setInterceptor(it.value.first, it.value.second, it.key)
+                }
             }
-        }
     }
 
     private val register by resettableLazy(changeManager) {
         RegisterRepository(
             normalizedSymbol, email, password, useNewStudent,
-            LoginHelper(
-                loginType,
-                schema,
-                host,
-                normalizedSymbol,
-                serviceManager.getCookieManager(),
-                serviceManager.getLoginService()
-            ),
+            LoginHelper(loginType, schema, host, normalizedSymbol, serviceManager.getCookieManager(), serviceManager.getLoginService()),
             serviceManager.getRegisterService(),
             serviceManager.getSnpService(withLogin = false, interceptor = false),
             serviceManager.getStudentService(withLogin = false, interceptor = false),
@@ -167,12 +148,7 @@ class Api {
 
     private val snpStart by resettableLazy(changeManager) {
         if (0 == studentId) throw ApiException("Student id is not set")
-        StudentAndParentStartRepository(
-            normalizedSymbol,
-            schoolSymbol,
-            studentId,
-            serviceManager.getSnpService(withLogin = true, interceptor = false)
-        )
+        StudentAndParentStartRepository(normalizedSymbol, schoolSymbol, studentId, serviceManager.getSnpService(withLogin = true, interceptor = false))
     }
 
     private val studentStart by resettableLazy(changeManager) {

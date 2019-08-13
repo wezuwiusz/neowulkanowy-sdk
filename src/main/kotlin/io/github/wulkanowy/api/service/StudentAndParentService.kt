@@ -9,10 +9,10 @@ import io.github.wulkanowy.api.homework.HomeworkResponse
 import io.github.wulkanowy.api.mobile.RegisteredDevicesResponse
 import io.github.wulkanowy.api.mobile.TokenResponse
 import io.github.wulkanowy.api.notes.NotesResponse
-import io.github.wulkanowy.api.timetable.RealizedResponse
 import io.github.wulkanowy.api.register.StudentAndParentResponse
 import io.github.wulkanowy.api.school.SchoolAndTeachersResponse
 import io.github.wulkanowy.api.student.StudentInfo
+import io.github.wulkanowy.api.timetable.RealizedResponse
 import io.github.wulkanowy.api.timetable.TimetableResponse
 import io.reactivex.Single
 import retrofit2.http.Field
