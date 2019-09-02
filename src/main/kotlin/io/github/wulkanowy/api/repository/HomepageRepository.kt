@@ -1,5 +1,6 @@
 package io.github.wulkanowy.api.repository
 
+import io.github.wulkanowy.api.home.LuckyNumber
 import io.github.wulkanowy.api.interceptor.ErrorHandlerTransformer
 import io.github.wulkanowy.api.service.HomepageService
 import io.reactivex.Maybe
@@ -31,10 +32,20 @@ class HomepageRepository(private val api: HomepageService) {
         }
     }
 
-    fun getKidsLuckyNumbers(): Single<List<String>> {
-        return api.getKidsLuckyNumbers().compose(ErrorHandlerTransformer()).map { it.data }.map { it[0].content }.map { res ->
-            res.map { it.name }
-        }
+    fun getKidsLuckyNumbers(): Single<List<LuckyNumber>> {
+        return api.getKidsLuckyNumbers().compose(ErrorHandlerTransformer()).map { it.data }
+            .map { it[0].content }
+            .map { res ->
+                res.map { item ->
+                    item.content.map { number ->
+                        LuckyNumber(
+                            originalContent = number.name,
+                            schoolName = item.name,
+                            number = number.name.substringAfterLast(": ").toInt()
+                        )
+                    }
+                }.flatten()
+            }
     }
 
     fun getKidsLessonPlan(): Single<List<String>> {

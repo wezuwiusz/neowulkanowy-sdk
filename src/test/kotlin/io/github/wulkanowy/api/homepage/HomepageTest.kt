@@ -1,6 +1,7 @@
 package io.github.wulkanowy.api.homepage
 
 import io.github.wulkanowy.api.BaseLocalTest
+import io.github.wulkanowy.api.home.LuckyNumber
 import io.github.wulkanowy.api.repository.HomepageRepository
 import io.github.wulkanowy.api.service.HomepageService
 import okhttp3.mockwebserver.MockResponse
@@ -86,5 +87,18 @@ class HomepageTest : BaseLocalTest() {
 
         val number = repo.getLuckyNumber().blockingGet()
         assertEquals(null, number)
+    }
+
+    @Test
+    fun getLuckyNumber_list() {
+        server.enqueue(MockResponse().setBody(HomepageTest::class.java.getResource("GetKidsLuckyNumbers.json").readText()))
+        server.start(3000)
+
+        val numbers = repo.getKidsLuckyNumbers().blockingGet()
+        assertEquals(listOf(
+            LuckyNumber("Szczęśliwy numer w dzienniku: 18", "SPL", 18),
+            LuckyNumber("Szczęśliwy numer w dzienniku: 42", "T1", 42),
+            LuckyNumber("Szczęśliwy numer w dzienniku bo nigdy nie wiadomo: 41", "T1", 41)
+        ), numbers)
     }
 }
