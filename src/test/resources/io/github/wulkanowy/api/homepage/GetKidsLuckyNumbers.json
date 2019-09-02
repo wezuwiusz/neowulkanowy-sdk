@@ -7,8 +7,18 @@
         {
           "IkonkaNazwa": null,
           "Num": null,
-          "Zawartosc": [],
-          "Nazwa": "Szczęśliwy numer w dzienniku: 18",
+          "Zawartosc": [
+            {
+              "IkonkaNazwa": null,
+              "Num": null,
+              "Zawartosc": [],
+              "Nazwa": "Szczęśliwy numer w dzienniku: 18",
+              "Url": null,
+              "Symbol": null,
+              "Nieaktywny": false
+            }
+          ],
+          "Nazwa": "SPL",
           "Url": null,
           "Symbol": null,
           "Nieaktywny": false

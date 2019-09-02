@@ -67,6 +67,8 @@ class HomepageRepository(private val api: HomepageService) {
             .filter { it.isNotEmpty() }
             .map { it[0].content }
             .filter { it.isNotEmpty() }
+            .map { it[0].content }
+            .filter { it.isNotEmpty() }
             .map { it[0].name }
             .filter { it.isNotBlank() }
             .map { it.substringAfterLast(": ").toInt() }
