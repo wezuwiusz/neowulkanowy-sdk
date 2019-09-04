@@ -21,7 +21,7 @@
 - timetable
 - messages
 
-... and more. Check it out [full public api](https://github.com/wulkanowy/api/blob/0.9.4/src/main/kotlin/io/github/wulkanowy/api/Api.kt).
+... and more. Check it out [full public api](https://github.com/wulkanowy/api/blob/0.10.0/src/main/kotlin/io/github/wulkanowy/api/Api.kt).
 
 
 ## Download
@@ -35,7 +35,7 @@ allprojects {
 }
 
 dependencies {
-    implementation 'io.github.wulkanowy:api:0.9.4'
+    implementation 'io.github.wulkanowy:api:0.10.0'
 }
 ```
 
