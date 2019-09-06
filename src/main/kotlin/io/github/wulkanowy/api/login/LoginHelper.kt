@@ -12,6 +12,7 @@ import io.github.wulkanowy.api.interceptor.VulcanException
 import io.github.wulkanowy.api.register.SendCertificateResponse
 import io.github.wulkanowy.api.service.LoginService
 import io.reactivex.Single
+import org.slf4j.LoggerFactory
 import org.threeten.bp.LocalDateTime.now
 import org.threeten.bp.ZoneId
 import org.threeten.bp.format.DateTimeFormatter
@@ -28,6 +29,14 @@ class LoginHelper(
     private val api: LoginService
 ) {
 
+    companion object {
+        @JvmStatic private val logger = LoggerFactory.getLogger(this::class.java)
+    }
+
+    init {
+        logger.debug(toString())
+    }
+
     private val firstStepReturnUrl by lazy {
         encode("$schema://uonetplus.$host/$symbol/LoginEndpoint.aspx").let {
             "/$symbol/FS/LS?wa=wsignin1.0&wtrealm=$it&wctx=$it"
@@ -40,6 +49,7 @@ class LoginHelper(
 
     @Synchronized
     fun login(email: String, password: String): Single<SendCertificateResponse> {
+        logger.info("Login started")
         return sendCredentials(email, password).flatMap {
             when {
                 it.title.startsWith("Witryna ucznia i rodzica") -> return@flatMap Single.just(SendCertificateResponse())
@@ -47,6 +57,8 @@ class LoginHelper(
             }
 
             sendCertificate(it, email)
+        }.also {
+            logger.debug("Login completed")
         }
     }
 
