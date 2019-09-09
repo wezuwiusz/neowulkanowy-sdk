@@ -32,7 +32,7 @@ ext {
     okhttp3 = "3.12.4"
     retrofit = "2.6.1"
     threetenbp = "1.4.0"
-    slf4j = "1.7.25"
+    slf4j = "1.7.28"
 }
 
 dependencies {
