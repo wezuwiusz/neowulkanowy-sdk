@@ -2,6 +2,7 @@ package io.github.wulkanowy.sdk
 
 import io.github.wulkanowy.api.Api
 import io.github.wulkanowy.api.attendance.Absent
+import io.github.wulkanowy.api.home.LuckyNumber
 import io.github.wulkanowy.api.messages.Folder
 import io.github.wulkanowy.api.messages.Recipient
 import io.github.wulkanowy.api.messages.ReportingUnit
@@ -521,7 +522,7 @@ class Sdk {
         }
     }
 
-    fun getKidsLuckyNumbers(): Single<List<String>> {
+    fun getKidsLuckyNumbers(): Single<List<LuckyNumber>> {
         return when (mode) {
             Mode.HYBRID, Mode.SCRAPPER -> scrapper.getKidsLuckyNumbers()
             Mode.API -> throw FeatureNotAvailable("Kids Lucky number is not available in API mode")
