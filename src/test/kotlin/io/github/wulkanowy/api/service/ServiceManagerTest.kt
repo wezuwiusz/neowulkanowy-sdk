@@ -3,6 +3,7 @@ package io.github.wulkanowy.api.service
 import io.github.wulkanowy.api.Api
 import io.github.wulkanowy.api.ApiException
 import io.github.wulkanowy.api.BaseTest
+import io.github.wulkanowy.api.OkHttpClientBuilderFactory
 import io.github.wulkanowy.api.interceptor.ErrorInterceptorTest
 import io.github.wulkanowy.api.login.LoginTest
 import io.github.wulkanowy.api.notes.NotesResponse
@@ -36,7 +37,7 @@ class ServiceManagerTest : BaseTest() {
 
     @Test
     fun interceptorTest() {
-        val manager = ServiceManager(HttpLoggingInterceptor.Level.NONE,
+        val manager = ServiceManager(OkHttpClientBuilderFactory(), HttpLoggingInterceptor.Level.NONE,
                 Api.LoginType.STANDARD, "http", "fakelog.localhost:3000", "default", "email", "password",
                 "schoolSymbol", 123, 101, "", ""
         )
@@ -56,7 +57,7 @@ class ServiceManagerTest : BaseTest() {
     fun interceptorTest_prepend() {
         server.enqueue(MockResponse().setBody(NotesTest::class.java.getResource("UwagiOsiagniecia-filled.html").readText()))
         server.start(3000)
-        val manager = ServiceManager(HttpLoggingInterceptor.Level.NONE,
+        val manager = ServiceManager(OkHttpClientBuilderFactory(), HttpLoggingInterceptor.Level.NONE,
                 Api.LoginType.STANDARD, "http", "fakelog.localhost:3000", "default", "email", "password",
                 "schoolSymbol", 123, 101, "", ""
         )

@@ -126,8 +126,10 @@ class Api {
 
     private val normalizedSymbol by resettableLazy(changeManager) { if (symbol.isBlank()) "Default" else symbol.getNormalizedSymbol() }
 
+    private val okHttpFactory by lazy { OkHttpClientBuilderFactory() }
+
     private val serviceManager by resettableLazy(changeManager) {
-        ServiceManager(logLevel, loginType, schema, host, normalizedSymbol, email, password, schoolSymbol, studentId, diaryId, androidVersion, buildTag)
+        ServiceManager(okHttpFactory, logLevel, loginType, schema, host, normalizedSymbol, email, password, schoolSymbol, studentId, diaryId, androidVersion, buildTag)
             .apply {
                 appInterceptors.forEach {
                     setInterceptor(it.value.first, it.value.second, it.key)

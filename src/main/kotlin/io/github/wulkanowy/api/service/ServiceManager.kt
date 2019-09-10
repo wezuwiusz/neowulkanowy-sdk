@@ -4,6 +4,7 @@ import RxJava2ReauthCallAdapterFactory
 import com.google.gson.GsonBuilder
 import io.github.wulkanowy.api.Api
 import io.github.wulkanowy.api.ApiException
+import io.github.wulkanowy.api.OkHttpClientBuilderFactory
 import io.github.wulkanowy.api.grades.DateDeserializer
 import io.github.wulkanowy.api.grades.GradeDate
 import io.github.wulkanowy.api.interceptor.ErrorInterceptor
@@ -29,6 +30,7 @@ import java.net.CookiePolicy
 import java.util.concurrent.TimeUnit.SECONDS
 
 class ServiceManager(
+    private val okHttpClientBuilderFactory: OkHttpClientBuilderFactory,
     logLevel: HttpLoggingInterceptor.Level,
     private val loginType: Api.LoginType,
     private val schema: String,
@@ -138,7 +140,7 @@ class ServiceManager(
     }
 
     private fun getClientBuilder(errIntercept: Boolean = true, loginIntercept: Boolean = true, separateJar: Boolean = false): OkHttpClient.Builder {
-        return OkHttpClient().newBuilder()
+        return okHttpClientBuilderFactory.create()
             .callTimeout(25, SECONDS)
             .cookieJar(if (!separateJar) JavaNetCookieJar(cookies) else JavaNetCookieJar(CookieManager()))
             .apply {
