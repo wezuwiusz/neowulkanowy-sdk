@@ -234,7 +234,14 @@ class Sdk {
                             getApiStudents(it.token, it.pin, it.symbol)
                         }.map { apiStudents ->
                             apiStudents.map { apiStudent ->
-                                apiStudent.copy(loginMode = Mode.HYBRID, scrapperHost = scrapperHost)
+                                apiStudent.copy(
+                                    loginMode = Mode.HYBRID,
+                                    scrapperHost = scrapperHost,
+
+                                    // used if student graduated
+                                    classId = it.classId,
+                                    className = it.className
+                                )
                             }
                         }
                     }.toList().map { it.flatten() }
