@@ -69,3 +69,14 @@ fun List<GradesStatisticsResponse.Partial>.mapGradesStatisticsPartial(semesterId
         }?.reversed().orEmpty()
     }.flatten()
 }
+
+fun List<GradesStatisticsResponse.Points>.mapGradesStatisticsPoints(semesterId: Int): List<GradeStatistics> {
+    return map {
+        // TODO: use different class
+        GradeStatistics().apply {
+            this.semesterId = semesterId
+            grade = it.percentage
+            subject = it.subject
+        }
+    }
+}
