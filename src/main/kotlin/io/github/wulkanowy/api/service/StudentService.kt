@@ -55,6 +55,9 @@ interface StudentService {
     @POST("Statystyki.mvc/GetOcenyCzastkowe")
     fun getGradesPartialStatistics(@Body gradesStatisticsRequest: GradesStatisticsRequest): Single<ApiResponse<List<GradesStatisticsResponse.Partial>>>
 
+    @POST("Statystyki.mvc/GetPunkty")
+    fun getGradesPointsStatistics(@Body gradesStatisticsRequest: GradesStatisticsRequest): Single<ApiResponse<List<GradesStatisticsResponse.Annual>>>
+
     @POST("Statystyki.mvc/GetOcenyRoczne")
     fun getGradesAnnualStatistics(@Body gradesStatisticsRequest: GradesStatisticsRequest): Single<ApiResponse<List<GradesStatisticsResponse.Annual>>>
 

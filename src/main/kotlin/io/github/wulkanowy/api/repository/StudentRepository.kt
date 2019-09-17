@@ -124,7 +124,7 @@ class StudentRepository(private val api: StudentService) {
     }
 
     fun getGradesStatistics(semesterId: Int, annual: Boolean): Single<List<GradeStatistics>> {
-        return if (annual) api.getGradesAnnualStatistics(GradesStatisticsRequest(semesterId))
+        return if (annual) api.getGradesPointsStatistics(GradesStatisticsRequest(semesterId))
             .compose(ErrorHandlerTransformer()).map { it.data }
             .map { it.mapGradesStatisticsAnnual(semesterId) }
         else return api.getGradesPartialStatistics(GradesStatisticsRequest(semesterId))
