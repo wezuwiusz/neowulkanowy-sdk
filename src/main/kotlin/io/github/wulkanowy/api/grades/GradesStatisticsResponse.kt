@@ -23,15 +23,6 @@ class GradesStatisticsResponse {
         val items: List<GradeStatistics>?
     )
 
-    data class Points(
-
-        @SerializedName("Subject")
-        val subject: String,
-
-        @SerializedName("Label1")
-        val percentage: String
-    )
-
     data class Partial(
 
         @SerializedName("Subject")

@@ -70,13 +70,8 @@ fun List<GradesStatisticsResponse.Partial>.mapGradesStatisticsPartial(semesterId
     }.flatten()
 }
 
-fun List<GradesStatisticsResponse.Points>.mapGradesStatisticsPoints(semesterId: Int): List<GradeStatistics> {
+fun List<GradePointsSummary>.mapGradesStatisticsPoints(semesterId: Int): List<GradePointsSummary> {
     return map {
-        // TODO: use different class
-        GradeStatistics().apply {
-            this.semesterId = semesterId
-            grade = it.percentage
-            subject = it.subject
-        }
+        it.copy(semesterId = semesterId)
     }
 }

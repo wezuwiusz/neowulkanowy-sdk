@@ -75,7 +75,8 @@ class GradesStatisticsTest : BaseLocalTest() {
     fun getGradeStatisticsPoints() {
         with(points[0]) {
             assertEquals("Edukacja dla bezpieczeństwa", subject)
-            assertEquals("78,18", grade)
+            assertEquals(80.0, student, .0)
+            assertEquals(78.18, others, .0)
         }
     }
 }

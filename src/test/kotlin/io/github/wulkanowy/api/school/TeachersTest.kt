@@ -20,7 +20,6 @@ class TeachersTest : BaseLocalTest() {
         assertEquals(3, student.size)
     }
 
-
     @Test
     fun getTeacher_std() {
         listOf(snp[2], student[2]).map {

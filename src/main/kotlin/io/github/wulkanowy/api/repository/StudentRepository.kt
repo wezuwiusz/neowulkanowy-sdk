@@ -17,6 +17,7 @@ import io.github.wulkanowy.api.exams.mapExamsList
 import io.github.wulkanowy.api.getSchoolYear
 import io.github.wulkanowy.api.getScriptParam
 import io.github.wulkanowy.api.grades.Grade
+import io.github.wulkanowy.api.grades.GradePointsSummary
 import io.github.wulkanowy.api.grades.GradeRequest
 import io.github.wulkanowy.api.grades.GradeStatistics
 import io.github.wulkanowy.api.grades.GradeSummary
@@ -137,7 +138,7 @@ class StudentRepository(private val api: StudentService) {
             .map { it.mapGradesStatisticsPartial(semesterId) }
     }
 
-    fun getGradesPointsStatistics(semesterId: Int): Single<List<GradeStatistics>> {
+    fun getGradesPointsStatistics(semesterId: Int): Single<List<GradePointsSummary>> {
         return api.getGradesPointsStatistics(GradesStatisticsRequest(semesterId))
             .compose(ErrorHandlerTransformer()).map { it.data }
             .map { it.mapGradesStatisticsPoints(semesterId) }
