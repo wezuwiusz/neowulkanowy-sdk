@@ -14,6 +14,10 @@ class GradesTest : BaseLocalTest() {
         getStudentRepo(GradesTest::class.java, "Oceny.json").getGrades(0).blockingGet()
     }
 
+    private val studentPoints by lazy {
+        getStudentRepo(GradesTest::class.java, "Oceny-points.json").getGrades(0).blockingGet()
+    }
+
     @Test
     fun getAllTest() {
         assertEquals(10, snp.size) // 2 items are skipped
@@ -217,6 +221,24 @@ class GradesTest : BaseLocalTest() {
                 assertEquals(getDate(2018, 10, 3), date)
                 assertEquals("Jadwiga Czerwieńska", teacher)
             }
+        }
+    }
+
+    @Test
+    fun getGrade_pointsEntry() {
+        with(studentPoints[0]) {
+            assertEquals("Edukacja dla bezpieczeństwa", subject)
+            assertEquals("85/100", entry)
+            assertEquals(0, value)
+            assertEquals(.0, modifier, .0)
+            assertEquals("", comment)
+            assertEquals("6ECD07", color)
+            assertEquals("", symbol)
+            assertEquals("diagnoza", description)
+            assertEquals("0,00", weight)
+            assertEquals(0.0, weightValue, .0)
+            assertEquals(getDate(2019, 9, 10), date)
+            assertEquals("Weronika Ratajczak", teacher)
         }
     }
 }

@@ -8,6 +8,12 @@ class GradesResponse {
     @Selector(".ocenySzczegoly-table tbody tr:has(td:nth-of-type(2):not(:contains(Brak ocen)))")
     var grades: List<Grade> = emptyList()
 
+    @SerializedName("IsSrednia")
+    var isAverage: Boolean = false
+
+    @SerializedName("IsPunkty")
+    var isPoints: Boolean = false
+
     @SerializedName("Oceny")
     var gradesWithSubjects: List<Subject> = emptyList()
 

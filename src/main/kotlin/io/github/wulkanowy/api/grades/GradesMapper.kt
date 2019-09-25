@@ -13,7 +13,11 @@ fun GradesResponse.mapGradesList(): List<Grade> {
                     if (length > 4) this
                     else entry.substringBeforeLast(")").substringAfter(" (")
                 }
-                entry = entry.substringBefore(" (").run { if (length > 4) "..." else this }
+                entry = entry.substringBefore(" (").run {
+                    if (isPoints && matches("\\d+/\\d+".toRegex())) this
+                    else if (length > 4) "..."
+                    else this
+                }
                 if (comment == entry) comment = ""
                 value = values.first
                 date = privateDate
