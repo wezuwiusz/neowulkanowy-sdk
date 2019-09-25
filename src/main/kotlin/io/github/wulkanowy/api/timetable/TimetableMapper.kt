@@ -37,6 +37,6 @@ fun ApiResponse<*>.mapCompletedLessonsList(start: LocalDate, endDate: LocalDate?
             teacher = teacher.substringBefore(" [")
         }
     }.sortedWith(compareBy({ it.date }, { it.number })).toList().filter {
-        it.date.toLocalDate() >= start && it.date.toLocalDate() <= endDate
+        it.date.toLocalDate() >= start && it.date.toLocalDate() <= endDate ?: start.plusDays(4)
     }
 }

@@ -35,6 +35,7 @@ import io.github.wulkanowy.api.mobile.UnregisterDeviceRequest
 import io.github.wulkanowy.api.notes.Note
 import io.github.wulkanowy.api.school.School
 import io.github.wulkanowy.api.school.Teacher
+import io.github.wulkanowy.api.school.mapToTeachers
 import io.github.wulkanowy.api.service.StudentService
 import io.github.wulkanowy.api.timetable.CacheResponse
 import io.github.wulkanowy.api.timetable.CompletedLesson
@@ -189,14 +190,7 @@ class StudentRepository(private val api: StudentService) {
     fun getTeachers(): Single<List<Teacher>> {
         return api.getSchoolAndTeachers()
             .compose(ErrorHandlerTransformer()).map { it.data }
-            .map { res ->
-                res.teachers.map {
-                    it.copy(
-                        short = it.name.substringAfter("[").substringBefore("]"),
-                        name = it.name.substringBefore(" [")
-                    )
-                }.sortedWith(compareBy({ it.subject }, { it.name }))
-            }
+            .map { it.mapToTeachers() }
     }
 
     fun getSchool(): Single<School> {

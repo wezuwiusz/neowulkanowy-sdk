@@ -171,7 +171,16 @@ class StudentAndParentRepository(private val api: StudentAndParentService) {
             res.subjects.flatMap { subject ->
                 subject.teachers.split(", ").map { teacher ->
                     teacher.split(" [").run {
-                        Teacher(first(), last().removeSuffix("]"), subject.name)
+                        Teacher(first().let {
+                            if (it == "-") null
+                            else it
+                        }, last().removeSuffix("]").let {
+                            if (it == "-") null
+                            else it
+                        }, subject.name.let {
+                            if (it.isBlank()) null
+                            else it
+                        })
                     }
                 }
             }.sortedWith(compareBy({ it.subject }, { it.name }))

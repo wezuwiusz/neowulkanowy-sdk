@@ -6,37 +6,51 @@ import org.junit.Test
 
 class TeachersTest : BaseLocalTest() {
 
-    private val teachers by lazy {
+    private val snp by lazy {
         getSnpRepo(TeachersTest::class.java, "Szkola.html").getTeachers().blockingGet()
+    }
+
+    private val student by lazy {
+        getStudentRepo(TeachersTest::class.java, "Szkola.json").getTeachers().blockingGet()
     }
 
     @Test
     fun getTeachersSizeTest() {
-        assertEquals(21, teachers.size)
+        assertEquals(3, snp.size)
+        assertEquals(3, student.size)
+    }
+
+
+    @Test
+    fun getTeacher_std() {
+        listOf(snp[2], student[2]).map {
+            with(it) {
+                assertEquals("Karolina Kowalska", name)
+                assertEquals("AN", short)
+                assertEquals("Zajęcia z wychowawcą", subject)
+            }
+        }
     }
 
     @Test
-    fun getSubjectTest() {
-        assertEquals("Biologia", teachers[0].subject)
+    fun getTeacher_emptyTeacher() {
+        listOf(snp[1], student[1]).map {
+            with(it) {
+                assertEquals(null, name)
+                assertEquals(null, short)
+                assertEquals("Podstawy przedsiębiorczości", subject)
+            }
+        }
     }
 
     @Test
-    fun getSubjectFromManyTeachersTest() {
-        assertEquals("Język angielski", teachers[6].subject)
-        assertEquals("Język angielski", teachers[7].subject)
-    }
-
-    @Test
-    fun getTeacherNameTest() {
-        assertEquals("Karolina Kowalska", teachers[0].name)
-        assertEquals("Karolina Kowalska", teachers[7].name)
-        assertEquals("Mateusz Kowal", teachers[8].name)
-    }
-
-    @Test
-    fun getTeacherShortTest() {
-        assertEquals("AN", teachers[0].short)
-        assertEquals("AM", teachers[6].short)
-        assertEquals("MK", teachers[8].short)
+    fun getTeacher_emptySubject() {
+        listOf(snp[0], student[0]).map {
+            with(it) {
+                assertEquals("Zbigniew Niedochodowicz", name)
+                assertEquals("ZN", short)
+                assertEquals(null, subject)
+            }
+        }
     }
 }
