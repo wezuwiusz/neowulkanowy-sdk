@@ -1,5 +1,6 @@
 package io.github.wulkanowy.api.grades
 
+import io.github.wulkanowy.api.getGradePointPercent
 import io.github.wulkanowy.api.getGradeShortValue
 import java.util.Locale
 
@@ -14,7 +15,7 @@ fun GradesResponse.mapGradesList(): List<Grade> {
                     else entry.substringBeforeLast(")").substringAfter(" (")
                 }
                 entry = entry.substringBefore(" (").run {
-                    if (isPoints && matches("\\d+/\\d+".toRegex())) this
+                    if (isPoints && matches("\\d+/\\d+".toRegex())) getGradePointPercent()
                     else if (length > 4) "..."
                     else this
                 }

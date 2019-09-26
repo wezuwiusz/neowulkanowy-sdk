@@ -228,10 +228,10 @@ class GradesTest : BaseLocalTest() {
     fun getGrade_pointsEntry() {
         with(studentPoints[0]) {
             assertEquals("Edukacja dla bezpieczeństwa", subject)
-            assertEquals("85/100", entry)
+            assertEquals("85%", entry)
             assertEquals(0, value)
             assertEquals(.0, modifier, .0)
-            assertEquals("", comment)
+            assertEquals("85/100", comment)
             assertEquals("6ECD07", color)
             assertEquals("", symbol)
             assertEquals("diagnoza", description)

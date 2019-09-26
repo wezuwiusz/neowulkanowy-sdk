@@ -12,6 +12,7 @@ import org.threeten.bp.temporal.TemporalAdjusters.previousOrSame
 import java.text.Normalizer
 import java.text.SimpleDateFormat
 import java.util.Date
+import kotlin.math.roundToInt
 
 fun String.toDate(format: String): Date = SimpleDateFormat(format).parse(this)
 
@@ -36,6 +37,12 @@ fun getGradeShortValue(value: String?): String {
         "dopuszczający" -> "2"
         "niedostateczny" -> "1"
         else -> value ?: ""
+    }
+}
+
+fun String.getGradePointPercent(): String {
+    return split("/").let { (student, max) ->
+        "${(student.toDouble() / max.toDouble() * 100).roundToInt()}%"
     }
 }
 
