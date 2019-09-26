@@ -71,6 +71,7 @@ class StudentRepository(private val api: StudentService) {
                 getScriptParam("version", it)
             )
         }.compose(ErrorHandlerTransformer()).map { it.data }
+            .map { it.apply { cache = this } }
     }
 
     private fun getTimes(): Single<List<CacheResponse.Time>> {

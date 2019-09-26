@@ -3,34 +3,49 @@ package io.github.wulkanowy.api.service
 import io.github.wulkanowy.api.ApiResponse
 import io.github.wulkanowy.api.home.HomepageTileResponse
 import io.reactivex.Single
+import retrofit2.http.Field
+import retrofit2.http.FormUrlEncoded
 import retrofit2.http.GET
+import retrofit2.http.POST
 
 interface HomepageService {
 
-    @GET("Start.mvc/GetSelfGovernments")
-    fun getSelfGovernments(): Single<ApiResponse<List<HomepageTileResponse>>>
+    @GET("Start.mvc/Index")
+    fun getStart(): Single<String>
 
-    @GET("Start.mvc/GetStudentTrips")
-    fun getStudentsTrips(): Single<ApiResponse<List<HomepageTileResponse>>>
+    @FormUrlEncoded
+    @POST("Start.mvc/GetSelfGovernments")
+    fun getSelfGovernments(@Field("permissions") token: String): Single<ApiResponse<List<HomepageTileResponse>>>
 
-    @GET("Start.mvc/GetLastNotes")
-    fun getLastGrades(): Single<ApiResponse<List<HomepageTileResponse>>>
+    @FormUrlEncoded
+    @POST("Start.mvc/GetStudentTrips")
+    fun getStudentsTrips(@Field("permissions") token: String): Single<ApiResponse<List<HomepageTileResponse>>>
 
-    @GET("Start.mvc/GetFreeDays")
-    fun getFreeDays(): Single<ApiResponse<List<HomepageTileResponse>>>
+    @FormUrlEncoded
+    @POST("Start.mvc/GetLastNotes")
+    fun getLastGrades(@Field("permissions") token: String): Single<ApiResponse<List<HomepageTileResponse>>>
 
-    @GET("Start.mvc/GetKidsLuckyNumbers")
-    fun getKidsLuckyNumbers(): Single<ApiResponse<List<HomepageTileResponse>>>
+    @FormUrlEncoded
+    @POST("Start.mvc/GetFreeDays")
+    fun getFreeDays(@Field("permissions") token: String): Single<ApiResponse<List<HomepageTileResponse>>>
 
-    @GET("Start.mvc/GetKidsLessonPlan")
-    fun getKidsLessonPlan(): Single<ApiResponse<List<HomepageTileResponse>>>
+    @FormUrlEncoded
+    @POST("Start.mvc/GetKidsLuckyNumbers")
+    fun getKidsLuckyNumbers(@Field("permissions") token: String): Single<ApiResponse<List<HomepageTileResponse>>>
 
-    @GET("Start.mvc/GetLastHomeworks")
-    fun getLastHomework(): Single<ApiResponse<List<HomepageTileResponse>>>
+    @FormUrlEncoded
+    @POST("Start.mvc/GetKidsLessonPlan")
+    fun getKidsLessonPlan(@Field("permissions") token: String): Single<ApiResponse<List<HomepageTileResponse>>>
 
-    @GET("Start.mvc/GetLastTests")
-    fun getLastTests(): Single<ApiResponse<List<HomepageTileResponse>>>
+    @FormUrlEncoded
+    @POST("Start.mvc/GetLastHomeworks")
+    fun getLastHomework(@Field("permissions") token: String): Single<ApiResponse<List<HomepageTileResponse>>>
 
-    @GET("Start.mvc/GetLastStudentLessons")
-    fun getLastStudentLessons(): Single<ApiResponse<List<HomepageTileResponse>>>
+    @FormUrlEncoded
+    @POST("Start.mvc/GetLastTests")
+    fun getLastTests(@Field("permissions") token: String): Single<ApiResponse<List<HomepageTileResponse>>>
+
+    @FormUrlEncoded
+    @POST("Start.mvc/GetLastStudentLessons")
+    fun getLastStudentLessons(@Field("permissions") token: String): Single<ApiResponse<List<HomepageTileResponse>>>
 }
