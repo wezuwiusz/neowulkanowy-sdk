@@ -16,13 +16,24 @@ class TeachersTest : BaseLocalTest() {
 
     @Test
     fun getTeachersSizeTest() {
-        assertEquals(3, snp.size)
-        assertEquals(3, student.size)
+        assertEquals(4, snp.size)
+        assertEquals(4, student.size)
     }
 
 
     @Test
     fun getTeacher_std() {
+        listOf(snp[3], student[3]).map {
+            with(it) {
+                assertEquals("Zbigniew Niedochodowicz", name)
+                assertEquals("ZN", short)
+                assertEquals("Zajęcia z wychowawcą", subject)
+            }
+        }
+    }
+
+    @Test
+    fun getTeacher_stdSpliced() {
         listOf(snp[2], student[2]).map {
             with(it) {
                 assertEquals("Karolina Kowalska", name)
