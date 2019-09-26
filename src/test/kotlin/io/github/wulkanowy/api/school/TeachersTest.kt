@@ -20,7 +20,6 @@ class TeachersTest : BaseLocalTest() {
         assertEquals(4, student.size)
     }
 
-
     @Test
     fun getTeacher_std() {
         listOf(snp[3], student[3]).map {
@@ -47,8 +46,8 @@ class TeachersTest : BaseLocalTest() {
     fun getTeacher_emptyTeacher() {
         listOf(snp[1], student[1]).map {
             with(it) {
-                assertEquals(null, name)
-                assertEquals(null, short)
+                assertEquals("", name)
+                assertEquals("", short)
                 assertEquals("Podstawy przedsiębiorczości", subject)
             }
         }
@@ -60,7 +59,7 @@ class TeachersTest : BaseLocalTest() {
             with(it) {
                 assertEquals("Zbigniew Niedochodowicz", name)
                 assertEquals("ZN", short)
-                assertEquals(null, subject)
+                assertEquals("", subject)
             }
         }
     }

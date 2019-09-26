@@ -39,6 +39,11 @@ fun getGradeShortValue(value: String?): String {
     }
 }
 
+fun String.getEmptyIfDash(): String {
+    return if (this == "-") ""
+    else this
+}
+
 fun getScriptParam(name: String, content: String, fallback: String = ""): String {
     return "$name: '(.)*'".toRegex().find(content).let { result ->
         if (null !== result) parse(result.groupValues[0].substringAfter("'").substringBefore("'")).text() else fallback

@@ -1,26 +1,15 @@
 package io.github.wulkanowy.api.school
 
+import io.github.wulkanowy.api.getEmptyIfDash
+
 fun SchoolAndTeachersResponse.mapToTeachers(): List<Teacher> {
     return teachers.map { item ->
-        item.name?.split(",")?.map { namePart ->
-            val name = namePart.substringBefore(" [").getNullIfDash()
-            val short = namePart.substringAfter("[").substringBefore("]").getNullIfDash()
-
-            val subject = item.subject.let {
-                if (it.isNullOrBlank()) null
-                else it
-            }
-
+        item.name.split(",").map { namePart ->
             item.copy(
-                name = name?.trim(),
-                short = short,
-                subject = subject
+                name = namePart.substringBefore(" [").getEmptyIfDash().trim(),
+                short = namePart.substringAfter("[").substringBefore("]").getEmptyIfDash(),
+                subject = item.subject.trim()
             )
-        }?.asReversed() ?: listOf(item)
+        }.asReversed()
     }.flatten().sortedWith(compareBy({ it.subject }, { it.name }))
-}
-
-private fun String.getNullIfDash(): String? {
-    return if (this == "-") null
-    else this
 }

@@ -5,6 +5,7 @@ import io.github.wulkanowy.api.attendance.Attendance.Types
 import io.github.wulkanowy.api.attendance.AttendanceSummary
 import io.github.wulkanowy.api.attendance.Subject
 import io.github.wulkanowy.api.exams.Exam
+import io.github.wulkanowy.api.getEmptyIfDash
 import io.github.wulkanowy.api.getGradeShortValue
 import io.github.wulkanowy.api.getLastMonday
 import io.github.wulkanowy.api.grades.Grade
@@ -171,14 +172,8 @@ class StudentAndParentRepository(private val api: StudentAndParentService) {
             res.subjects.flatMap { subject ->
                 subject.teachers.split(", ").map { teacher ->
                     teacher.split(" [").run {
-                        Teacher(first().let {
-                            if (it == "-") null
-                            else it
-                        }, last().removeSuffix("]").let {
-                            if (it == "-") null
-                            else it
-                        }, subject.name.let {
-                            if (it.isBlank()) null
+                        Teacher(first().getEmptyIfDash(), last().removeSuffix("]").getEmptyIfDash(), subject.name.let {
+                            if (it.isBlank()) ""
                             else it
                         })
                     }
