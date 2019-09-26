@@ -6,6 +6,7 @@ import io.github.wulkanowy.api.repository.HomepageRepository
 import io.github.wulkanowy.api.service.HomepageService
 import okhttp3.mockwebserver.MockResponse
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertTrue
 import org.junit.Test
 
 class HomepageTest : BaseLocalTest() {
@@ -24,6 +25,7 @@ class HomepageTest : BaseLocalTest() {
 
     @Test
     fun getLastGrades() {
+        server.enqueue(MockResponse().setBody(HomepageTest::class.java.getResource("Index.html").readText()))
         server.enqueue(MockResponse().setBody(HomepageTest::class.java.getResource("GetLastNotes.json").readText()))
         server.start(3000)
 
@@ -39,6 +41,7 @@ class HomepageTest : BaseLocalTest() {
 
     @Test
     fun getFreeDays() {
+        server.enqueue(MockResponse().setBody(HomepageTest::class.java.getResource("Index.html").readText()))
         server.enqueue(MockResponse().setBody(HomepageTest::class.java.getResource("GetFreeDays.json").readText()))
         server.start(3000)
 
@@ -73,6 +76,7 @@ class HomepageTest : BaseLocalTest() {
 
     @Test
     fun getLuckyNumber() {
+        server.enqueue(MockResponse().setBody(HomepageTest::class.java.getResource("Index.html").readText()))
         server.enqueue(MockResponse().setBody(HomepageTest::class.java.getResource("GetKidsLuckyNumbers.json").readText()))
         server.start(3000)
 
@@ -82,6 +86,7 @@ class HomepageTest : BaseLocalTest() {
 
     @Test
     fun getLuckyNumber_empty() {
+        server.enqueue(MockResponse().setBody(HomepageTest::class.java.getResource("Index.html").readText()))
         server.enqueue(MockResponse().setBody(HomepageTest::class.java.getResource("GetEmpty.json").readText()))
         server.start(3000)
 
@@ -91,6 +96,7 @@ class HomepageTest : BaseLocalTest() {
 
     @Test
     fun getLuckyNumber_list() {
+        server.enqueue(MockResponse().setBody(HomepageTest::class.java.getResource("Index.html").readText()))
         server.enqueue(MockResponse().setBody(HomepageTest::class.java.getResource("GetKidsLuckyNumbers.json").readText()))
         server.start(3000)
 
@@ -100,5 +106,11 @@ class HomepageTest : BaseLocalTest() {
             LuckyNumber("Szczęśliwy numer w dzienniku: 42", "T1", 42),
             LuckyNumber("Szczęśliwy numer w dzienniku bo nigdy nie wiadomo: 41", "T1", 41)
         ), numbers)
+
+        server.takeRequest()
+        with(server.takeRequest().body.readUtf8()) {
+            assertTrue(startsWith("permissions=YRQQQJH"))
+            assertTrue(endsWith("XzKdrhz9Ke9dkHzx"))
+        }
     }
 }
