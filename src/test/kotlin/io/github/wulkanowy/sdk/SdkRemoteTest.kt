@@ -103,7 +103,7 @@ class SdkRemoteTest {
         }
 
         val grades = sdk.getGrades(1).blockingGet()
-        assertEquals(21, grades.size)
+        assertEquals(22, grades.size)
     }
 
     @Test
@@ -127,7 +127,7 @@ class SdkRemoteTest {
         }
 
         val grades = sdk.getGrades(1).blockingGet()
-        assertEquals(21, grades.size)
+        assertEquals(22, grades.size)
     }
 
     @Test
