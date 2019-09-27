@@ -16,15 +16,15 @@ repositories {
 }
 
 ext {
-    okhttp3 = "3.12.3"
-    retrofit = "2.6.1"
+    okhttp3 = "3.12.5"
+    retrofit = "2.6.2"
     threetenbp = "1.4.0"
 }
 
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
 
-    implementation "io.github.wulkanowy:api:0.10.2"
+    implementation "io.github.wulkanowy:api:23ae9f6"
     implementation "io.github.wulkanowy:uonet-request-signer:eeb50c7"
 
     compileOnly "org.threeten:threetenbp:$threetenbp:no-tzdb"
