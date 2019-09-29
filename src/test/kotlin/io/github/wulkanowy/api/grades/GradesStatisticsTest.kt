@@ -15,11 +15,15 @@ class GradesStatisticsTest : BaseLocalTest() {
     }
 
     private val studentPartial by lazy {
-        getStudentRepo(GradesStatisticsTest::class.java, "Statystyki-czastkowe.json").getGradesStatistics(123, false).blockingGet()
+        getStudentRepo(GradesStatisticsTest::class.java, "Statystyki-czastkowe.json").getGradesPartialStatistics(123).blockingGet()
     }
 
     private val studentAnnual by lazy {
-        getStudentRepo(GradesStatisticsTest::class.java, "Statystyki-roczne.json").getGradesStatistics(321, true).blockingGet()
+        getStudentRepo(GradesStatisticsTest::class.java, "Statystyki-roczne.json").getGradesAnnualStatistics(321).blockingGet()
+    }
+
+    private val points by lazy {
+        getStudentRepo(GradesStatisticsTest::class.java, "Statystyki-punkty.json").getGradesPointsStatistics(420).blockingGet()
     }
 
     @Test
@@ -28,6 +32,7 @@ class GradesStatisticsTest : BaseLocalTest() {
         assertEquals(12, studentPartial.size)
         assertEquals(6, snpAnnual.size)
         assertEquals(6, studentAnnual.size)
+        assertEquals(3, points.size)
     }
 
     @Test
@@ -63,6 +68,15 @@ class GradesStatisticsTest : BaseLocalTest() {
                 assertEquals(5, gradeValue)
                 assertEquals(4, amount)
             }
+        }
+    }
+
+    @Test
+    fun getGradeStatisticsPoints() {
+        with(points[0]) {
+            assertEquals("Edukacja dla bezpieczeństwa", subject)
+            assertEquals(80.0, student, .0)
+            assertEquals(78.18, others, .0)
         }
     }
 }
