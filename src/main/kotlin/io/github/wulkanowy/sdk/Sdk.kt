@@ -2,7 +2,6 @@ package io.github.wulkanowy.sdk
 
 import io.github.wulkanowy.api.Api
 import io.github.wulkanowy.api.attendance.Absent
-import io.github.wulkanowy.api.home.LuckyNumber
 import io.github.wulkanowy.api.messages.Folder
 import io.github.wulkanowy.api.messages.SentMessage
 import io.github.wulkanowy.api.resettableLazy
@@ -15,6 +14,7 @@ import io.github.wulkanowy.sdk.exams.mapExams
 import io.github.wulkanowy.sdk.grades.mapGradeStatistics
 import io.github.wulkanowy.sdk.grades.mapGrades
 import io.github.wulkanowy.sdk.grades.mapGradesSummary
+import io.github.wulkanowy.sdk.homepage.mapLuckyNumbers
 import io.github.wulkanowy.sdk.homework.mapHomework
 import io.github.wulkanowy.sdk.messages.mapFromRecipients
 import io.github.wulkanowy.sdk.messages.mapRecipients
@@ -533,7 +533,7 @@ class Sdk {
 
     fun getKidsLuckyNumbers(): Single<List<LuckyNumber>> {
         return when (mode) {
-            Mode.HYBRID, Mode.SCRAPPER -> scrapper.getKidsLuckyNumbers()
+            Mode.HYBRID, Mode.SCRAPPER -> scrapper.getKidsLuckyNumbers().map { it.mapLuckyNumbers() }
             Mode.API -> throw FeatureNotAvailable("Kids Lucky number is not available in API mode")
         }
     }
