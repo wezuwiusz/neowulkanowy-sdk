@@ -4,7 +4,6 @@ import io.github.wulkanowy.api.Api
 import io.github.wulkanowy.api.attendance.Absent
 import io.github.wulkanowy.api.home.LuckyNumber
 import io.github.wulkanowy.api.messages.Folder
-import io.github.wulkanowy.api.messages.ReportingUnit
 import io.github.wulkanowy.api.messages.SentMessage
 import io.github.wulkanowy.api.resettableLazy
 import io.github.wulkanowy.api.resettableManager
@@ -20,6 +19,7 @@ import io.github.wulkanowy.sdk.homework.mapHomework
 import io.github.wulkanowy.sdk.messages.mapFromRecipients
 import io.github.wulkanowy.sdk.messages.mapRecipients
 import io.github.wulkanowy.sdk.messages.mapMessages
+import io.github.wulkanowy.sdk.messages.mapReportingUnits
 import io.github.wulkanowy.sdk.mobile.mapDevices
 import io.github.wulkanowy.sdk.mobile.mapToken
 import io.github.wulkanowy.sdk.notes.mapNotes
@@ -399,8 +399,9 @@ class Sdk {
 
     fun getReportingUnits(): Single<List<ReportingUnit>> {
         return when (mode) {
-            Mode.HYBRID, Mode.SCRAPPER -> scrapper.getReportingUnits()
-            Mode.API -> TODO()
+            Mode.HYBRID, Mode.SCRAPPER -> scrapper.getReportingUnits().map { it.mapReportingUnits() }
+            Mode.API -> getRegisterRepo(apiBaseUrl.replace("/$symbol", ""), symbol).getPupils()
+                .map { it.mapReportingUnits(studentId) }
         }
     }
 
