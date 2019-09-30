@@ -4,7 +4,6 @@ import io.github.wulkanowy.api.Api
 import io.github.wulkanowy.api.attendance.Absent
 import io.github.wulkanowy.api.home.LuckyNumber
 import io.github.wulkanowy.api.messages.Folder
-import io.github.wulkanowy.api.messages.Recipient
 import io.github.wulkanowy.api.messages.ReportingUnit
 import io.github.wulkanowy.api.messages.SentMessage
 import io.github.wulkanowy.api.resettableLazy
@@ -18,6 +17,8 @@ import io.github.wulkanowy.sdk.grades.mapGradeStatistics
 import io.github.wulkanowy.sdk.grades.mapGrades
 import io.github.wulkanowy.sdk.grades.mapGradesSummary
 import io.github.wulkanowy.sdk.homework.mapHomework
+import io.github.wulkanowy.sdk.messages.mapFromRecipients
+import io.github.wulkanowy.sdk.messages.mapRecipients
 import io.github.wulkanowy.sdk.messages.mapMessages
 import io.github.wulkanowy.sdk.mobile.mapDevices
 import io.github.wulkanowy.sdk.mobile.mapToken
@@ -405,8 +406,8 @@ class Sdk {
 
     fun getRecipients(unitId: Int, role: Int = 2): Single<List<Recipient>> {
         return when (mode) {
-            Mode.HYBRID, Mode.SCRAPPER -> scrapper.getRecipients(unitId, role)
-            Mode.API -> TODO()
+            Mode.HYBRID, Mode.SCRAPPER -> scrapper.getRecipients(unitId, role).map { it.mapRecipients() }
+            Mode.API -> getDictionaries().map { it.teachers }.map { it.mapRecipients(unitId) }
         }
     }
 
@@ -441,7 +442,7 @@ class Sdk {
 
     fun getMessageRecipients(messageId: Int, senderId: Int): Single<List<Recipient>> {
         return when (mode) {
-            Mode.HYBRID, Mode.SCRAPPER -> scrapper.getMessageRecipients(messageId, senderId)
+            Mode.HYBRID, Mode.SCRAPPER -> scrapper.getMessageRecipients(messageId, senderId).map { it.mapRecipients() }
             Mode.API -> TODO()
         }
     }
@@ -459,7 +460,7 @@ class Sdk {
 
     fun sendMessage(subject: String, content: String, recipients: List<Recipient>): Single<SentMessage> {
         return when (mode) {
-            Mode.HYBRID, Mode.SCRAPPER -> scrapper.sendMessage(subject, content, recipients)
+            Mode.HYBRID, Mode.SCRAPPER -> scrapper.sendMessage(subject, content, recipients.mapFromRecipients())
             Mode.API -> TODO()
         }
     }
