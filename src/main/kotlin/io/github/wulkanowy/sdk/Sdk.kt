@@ -9,7 +9,6 @@ import io.github.wulkanowy.api.messages.ReportingUnit
 import io.github.wulkanowy.api.messages.SentMessage
 import io.github.wulkanowy.api.resettableLazy
 import io.github.wulkanowy.api.resettableManager
-import io.github.wulkanowy.api.school.School
 import io.github.wulkanowy.sdk.attendance.mapAttendance
 import io.github.wulkanowy.sdk.attendance.mapAttendanceSummary
 import io.github.wulkanowy.sdk.dictionaries.Dictionaries
@@ -28,6 +27,7 @@ import io.github.wulkanowy.sdk.register.mapSemesters
 import io.github.wulkanowy.sdk.register.mapStudents
 import io.github.wulkanowy.sdk.repository.RegisterRepository
 import io.github.wulkanowy.sdk.repository.RepositoryManager
+import io.github.wulkanowy.sdk.school.mapSchool
 import io.github.wulkanowy.sdk.school.mapTeachers
 import io.github.wulkanowy.sdk.student.mapStudent
 import io.github.wulkanowy.sdk.timetable.mapCompletedLessons
@@ -384,7 +384,7 @@ class Sdk {
 
     fun getSchool(): Single<School> {
         return when (mode) {
-            Mode.HYBRID, Mode.SCRAPPER -> scrapper.getSchool()
+            Mode.HYBRID, Mode.SCRAPPER -> scrapper.getSchool().map { it.mapSchool() }
             Mode.API -> throw FeatureNotAvailable("School info is not available in API mode")
         }
     }
