@@ -30,7 +30,7 @@ configurations {
 ext {
     jspoon = "1.3.2"
     okhttp3 = "3.12.6"
-    retrofit = "2.6.1"
+    retrofit = "2.6.2"
     threetenbp = "1.4.0"
     slf4j = "1.7.28"
 }
