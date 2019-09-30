@@ -3,7 +3,6 @@ package io.github.wulkanowy.sdk
 import io.github.wulkanowy.api.Api
 import io.github.wulkanowy.api.attendance.Absent
 import io.github.wulkanowy.api.messages.Folder
-import io.github.wulkanowy.api.messages.SentMessage
 import io.github.wulkanowy.api.resettableLazy
 import io.github.wulkanowy.api.resettableManager
 import io.github.wulkanowy.sdk.attendance.mapAttendance
@@ -16,14 +15,13 @@ import io.github.wulkanowy.sdk.grades.mapGrades
 import io.github.wulkanowy.sdk.grades.mapGradesSummary
 import io.github.wulkanowy.sdk.homepage.mapLuckyNumbers
 import io.github.wulkanowy.sdk.homework.mapHomework
-import io.github.wulkanowy.sdk.messages.mapFromRecipients
-import io.github.wulkanowy.sdk.messages.mapRecipients
-import io.github.wulkanowy.sdk.messages.mapMessages
-import io.github.wulkanowy.sdk.messages.mapReportingUnits
+import io.github.wulkanowy.sdk.messages.*
 import io.github.wulkanowy.sdk.mobile.mapDevices
 import io.github.wulkanowy.sdk.mobile.mapToken
 import io.github.wulkanowy.sdk.notes.mapNotes
 import io.github.wulkanowy.sdk.pojo.*
+import io.github.wulkanowy.sdk.pojo.Message
+import io.github.wulkanowy.sdk.pojo.Recipient
 import io.github.wulkanowy.sdk.register.mapSemesters
 import io.github.wulkanowy.sdk.register.mapStudents
 import io.github.wulkanowy.sdk.repository.RegisterRepository
@@ -461,7 +459,7 @@ class Sdk {
 
     fun sendMessage(subject: String, content: String, recipients: List<Recipient>): Single<SentMessage> {
         return when (mode) {
-            Mode.HYBRID, Mode.SCRAPPER -> scrapper.sendMessage(subject, content, recipients.mapFromRecipients())
+            Mode.HYBRID, Mode.SCRAPPER -> scrapper.sendMessage(subject, content, recipients.mapFromRecipients()).map { it.mapSentMessage() }
             Mode.API -> TODO()
         }
     }
