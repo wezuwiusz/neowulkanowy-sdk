@@ -1,5 +1,6 @@
 package io.github.wulkanowy.sdk
 
+import io.github.wulkanowy.api.login.BadCredentialsException as ScrapperBadCredentialsException
 import io.github.wulkanowy.sdk.exception.*
 import io.github.wulkanowy.api.interceptor.ServiceUnavailableException as ScrapperServiceUnavailableException
 import io.github.wulkanowy.api.interceptor.FeatureDisabledException as ScrapperFeatureDisabledException
@@ -17,6 +18,7 @@ class ScrapperExceptionTransformer<T : Any?> : SingleTransformer<T, T> {
                 is ScrapperFeatureDisabledException -> FeatureDisabledException(it.message ?: "")
                 is ScrapperNotLoggedInException -> NotLoggedInException(it.message ?: "")
                 is ScrapperServiceUnavailableException -> ServiceUnavailableException(it.message ?: "")
+                is ScrapperBadCredentialsException -> BadCredentialsException(it.message ?: "")
                 else -> VulcanException(it.message ?: "")
             })
             else Single.error(it)

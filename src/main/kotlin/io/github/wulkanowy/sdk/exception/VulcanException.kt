@@ -1,5 +1,5 @@
 package io.github.wulkanowy.sdk.exception
 
-import io.github.wulkanowy.api.interceptor.VulcanException
+import java.io.IOException
 
-open class VulcanException(message: String) : VulcanException(message)
+open class VulcanException(message: String) : IOException(message)
