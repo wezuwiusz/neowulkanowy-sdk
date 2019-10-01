@@ -1,6 +1,5 @@
 package io.github.wulkanowy.sdk.register
 
-import io.github.wulkanowy.api.Api
 import io.github.wulkanowy.sdk.Sdk
 import io.github.wulkanowy.sdk.pojo.Student
 import io.github.wulkanowy.api.register.Student as ScrapperStudent
@@ -18,7 +17,7 @@ fun List<ApiStudent>.mapStudents(symbol: String, certificateResponse: Certificat
             studentName = "${it.name} ${it.surname}",
             schoolSymbol = it.reportingUnitSymbol,
             schoolName = it.reportingUnitName,
-            loginType = Api.LoginType.STANDARD,
+            loginType = Sdk.ScrapperLoginType.STANDARD,
             loginMode = Sdk.Mode.API,
             apiHost = certificateResponse.tokenCert!!.apiEndpoint.removeSuffix("/"),
             scrapperHost = "",
@@ -38,7 +37,7 @@ fun List<ScrapperStudent>.mapStudents(ssl: Boolean, scrapperHost: String): List<
             studentId = it.studentId,
             userLoginId = 0,
             symbol = it.symbol,
-            loginType = it.loginType,
+            loginType = Sdk.ScrapperLoginType.valueOf(it.loginType.name),
             schoolName = it.schoolName,
             schoolSymbol = it.schoolSymbol,
             studentName = it.studentName,
