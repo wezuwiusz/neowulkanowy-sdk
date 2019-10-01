@@ -14,10 +14,6 @@ import org.threeten.bp.LocalDateTime
 
 class AttendanceTest : BaseLocalTest() {
 
-    private val snp by lazy {
-        getSnpRepo(AttendanceTest::class.java, "Frekwencja.html").getAttendance(getLocalDate(2018, 10, 1)).blockingGet()
-    }
-
     private val student by lazy {
         getStudentRepo(AttendanceTest::class.java, "Frekwencja.json").getAttendance(getLocalDate(2018, 10, 1), null).blockingGet()
     }
@@ -31,175 +27,166 @@ class AttendanceTest : BaseLocalTest() {
 
     @Test
     fun getAttendance() {
-        assertEquals(7, snp.size)
         assertEquals(8, student.size)
     }
 
     @Test
     fun getAttendance_presence() {
-        listOf(snp[0], student[0]).map {
-            it.run {
-                // wtorek, 1
-                assertEquals(1, number)
-                assertEquals(getDate(2018, 10, 2), date)
-                assertEquals("Zajęcia artystyczne", subject)
-                assertEquals("Obecność", name)
-                assertTrue(presence)
+        student[0].run {
+            // wtorek, 1
+            assertEquals(1, number)
+            assertEquals(76, timeId)
+            assertEquals(getDate(2018, 10, 2), date)
+            assertEquals("Zajęcia artystyczne", subject)
+            assertEquals("Obecność", name)
+            assertTrue(presence)
 
-                assertFalse(absence)
-                assertFalse(exemption)
-                assertFalse(lateness)
-                assertFalse(excused)
-                assertFalse(deleted)
-                assertFalse(excusable)
-            }
+            assertFalse(absence)
+            assertFalse(exemption)
+            assertFalse(lateness)
+            assertFalse(excused)
+            assertFalse(deleted)
+            assertFalse(excusable)
         }
     }
 
     @Test
     fun getAttendance_absence() {
-        listOf(snp[1], student[1]).map {
-            it.run {
-                // wtorek, 2
-                assertEquals(2, number)
-                assertEquals(getDate(2018, 10, 2), date)
-                assertEquals("Informatyka", subject)
-                assertEquals("Nieobecność nieusprawiedliwiona", name)
-                assertTrue(absence)
-                assertFalse(excused)
+        student[1].run {
+            // wtorek, 2
+            assertEquals(2, number)
+            assertEquals(77, timeId)
+            assertEquals(getDate(2018, 10, 2), date)
+            assertEquals("Informatyka", subject)
+            assertEquals("Nieobecność nieusprawiedliwiona", name)
+            assertTrue(absence)
+            assertFalse(excused)
 
-                assertFalse(exemption)
-                assertFalse(presence)
-                assertFalse(lateness)
-                assertFalse(deleted)
-                assertTrue(excusable)
-            }
+            assertFalse(exemption)
+            assertFalse(presence)
+            assertFalse(lateness)
+            assertFalse(deleted)
+            assertTrue(excusable)
         }
     }
 
     @Test
     fun getAttendance_absenceExcused() {
-        listOf(snp[2], student[2]).map {
-            it.run {
-                // środa, 1
-                assertEquals(1, number)
-                assertEquals(getDate(2018, 10, 3), date)
-                assertEquals("Matematyka", subject)
-                assertEquals("Nieobecność usprawiedliwiona", name)
-                assertTrue(absence)
-                assertTrue(excused)
+        student[2].run {
+            // środa, 1
+            assertEquals(1, number)
+            assertEquals(76, timeId)
+            assertEquals(getDate(2018, 10, 3), date)
+            assertEquals("Matematyka", subject)
+            assertEquals("Nieobecność usprawiedliwiona", name)
+            assertTrue(absence)
+            assertTrue(excused)
 
-                assertFalse(exemption)
-                assertFalse(presence)
-                assertFalse(lateness)
-                assertFalse(deleted)
-                assertFalse(excusable)
-            }
+            assertFalse(exemption)
+            assertFalse(presence)
+            assertFalse(lateness)
+            assertFalse(deleted)
+            assertFalse(excusable)
         }
     }
 
     @Test
     fun getAttendance_lateness() {
-        listOf(snp[3], student[3]).map {
-            it.run {
-                // środa, 2
-                assertEquals(2, number)
-                assertEquals(getDate(2018, 10, 3), date)
-                assertEquals("Godzina wychowawcza", subject)
-                assertEquals("Spóźnienie nieusprawiedliwione", name)
-                assertTrue(lateness)
-                assertFalse(excused)
+        student[3].run {
+            // środa, 2
+            assertEquals(2, number)
+            assertEquals(77, timeId)
+            assertEquals(getDate(2018, 10, 3), date)
+            assertEquals("Godzina wychowawcza", subject)
+            assertEquals("Spóźnienie nieusprawiedliwione", name)
+            assertTrue(lateness)
+            assertFalse(excused)
 
-                assertFalse(exemption)
-                assertFalse(presence)
-                assertFalse(absence)
-                assertFalse(deleted)
-                assertTrue(excusable)
-            }
+            assertFalse(exemption)
+            assertFalse(presence)
+            assertFalse(absence)
+            assertFalse(deleted)
+            assertTrue(excusable)
         }
     }
 
     @Test
     fun getAttendance_latenessExcused() {
-        listOf(snp[4], student[4]).map {
-            it.run {
-                // czwartek, 1
-                assertEquals(1, number)
-                assertEquals(getDate(2018, 10, 4), date)
-                assertEquals("Historia", subject)
-                assertEquals("Spóźnienie usprawiedliwione", name)
-                assertTrue(lateness)
-                assertTrue(excused)
+        student[4].run {
+            // czwartek, 1
+            assertEquals(1, number)
+            assertEquals(76, timeId)
+            assertEquals(getDate(2018, 10, 4), date)
+            assertEquals("Historia", subject)
+            assertEquals("Spóźnienie usprawiedliwione", name)
+            assertTrue(lateness)
+            assertTrue(excused)
 
-                assertFalse(exemption)
-                assertFalse(presence)
-                assertFalse(absence)
-                assertFalse(deleted)
-                assertFalse(excusable)
-            }
+            assertFalse(exemption)
+            assertFalse(presence)
+            assertFalse(absence)
+            assertFalse(deleted)
+            assertFalse(excusable)
         }
     }
 
     @Test
     fun getAttendance_absenceForSchoolReason() {
-        listOf(snp[5], student[5]).map {
-            it.run {
-                // czwartek, 2
-                assertEquals(2, number)
-                assertEquals(getDate(2018, 10, 4), date)
-                assertEquals("Język angielski", subject)
-                assertEquals("Nieobecność z przyczyn szkolnych", name)
-                assertTrue(presence)
+        student[5].run {
+            // czwartek, 2
+            assertEquals(2, number)
+            assertEquals(77, timeId)
+            assertEquals(getDate(2018, 10, 4), date)
+            assertEquals("Język angielski", subject)
+            assertEquals("Nieobecność z przyczyn szkolnych", name)
+            assertTrue(presence)
 
-                assertFalse(excused)
-                assertFalse(lateness)
-                assertFalse(exemption)
-                assertFalse(absence)
-                assertFalse(deleted)
-                assertFalse(excusable)
-            }
+            assertFalse(excused)
+            assertFalse(lateness)
+            assertFalse(exemption)
+            assertFalse(absence)
+            assertFalse(deleted)
+            assertFalse(excusable)
         }
     }
 
     @Test
     fun getAttendance_exemption() {
-        listOf(snp[6], student[6]).map {
-            it.run {
-                // piątek, 1
-                assertEquals(1, number)
-                assertEquals(getDate(2018, 10, 5), date)
-                assertEquals("Informatyka", subject)
-                assertEquals("Zwolnienie", name)
-                assertTrue(exemption)
+        student[6].run {
+            // piątek, 1
+            assertEquals(1, number)
+            assertEquals(76, timeId)
+            assertEquals(getDate(2018, 10, 5), date)
+            assertEquals("Informatyka", subject)
+            assertEquals("Zwolnienie", name)
+            assertTrue(exemption)
 
-                assertFalse(lateness)
-                assertFalse(excused)
-                assertFalse(presence)
-                assertFalse(absence)
-                assertFalse(deleted)
-                assertFalse(excusable)
-            }
+            assertFalse(lateness)
+            assertFalse(excused)
+            assertFalse(presence)
+            assertFalse(absence)
+            assertFalse(deleted)
+            assertFalse(excusable)
         }
     }
 
     @Test
     fun getAttendance_unknown() {
-        listOf(student[7]).map {
-            it.run {
-                // piątek, 2
-                assertEquals(2, number)
-                assertEquals(getDate(2018, 10, 5), date)
-                assertEquals("Informatyka", subject)
-                assertEquals("Nieznany", name)
-                assertFalse(exemption)
+        student[7].run {
+            // piątek, 2
+            assertEquals(2, number)
+            assertEquals(77, timeId)
+            assertEquals(getDate(2018, 10, 5), date)
+            assertEquals("Informatyka", subject)
+            assertEquals("Nieznany", name)
+            assertFalse(exemption)
 
-                assertFalse(lateness)
-                assertFalse(excused)
-                assertFalse(presence)
-                assertFalse(absence)
-                assertFalse(deleted)
-                assertFalse(excusable)
-            }
+            assertFalse(lateness)
+            assertFalse(excused)
+            assertFalse(presence)
+            assertFalse(absence)
+            assertFalse(deleted)
+            assertFalse(excusable)
         }
     }
 

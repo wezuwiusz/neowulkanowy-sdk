@@ -6,8 +6,10 @@ import java.util.Date
 
 class Attendance {
 
-    @SerializedName("IdPoraLekcji")
     var number: Int = 0
+
+    @SerializedName("IdPoraLekcji")
+    var timeId: Int = 0
 
     @SerializedName("Data")
     lateinit var date: Date

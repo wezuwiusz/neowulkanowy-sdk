@@ -29,7 +29,7 @@ fun Single<AttendanceResponse?>.mapAttendanceList(start: LocalDate, end: LocalDa
         }
     }.flatMapObservable { Observable.fromIterable(it) }.flatMap { a ->
         getTimes().flatMapObservable { times ->
-            Observable.fromIterable(times.filter { time -> time.id == a.number })
+            Observable.fromIterable(times.filter { time -> time.id == a.timeId })
         }.map {
             a.apply {
                 presence = a.categoryId == PRESENCE.id || a.categoryId == ABSENCE_FOR_SCHOOL_REASONS.id
