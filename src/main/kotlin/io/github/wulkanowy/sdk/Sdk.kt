@@ -211,7 +211,7 @@ class Sdk {
                     host = this@Sdk.scrapperHost
                     email = this@Sdk.email
                     password = this@Sdk.password
-                    getStudents().map { it.mapStudents(ssl, scrapperHost) }
+                    getStudents().compose(ScrapperExceptionTransformer()).map { it.mapStudents(ssl, scrapperHost) }
                 }
             }
             Mode.HYBRID -> {
@@ -220,7 +220,7 @@ class Sdk {
                     host = this@Sdk.scrapperHost
                     email = this@Sdk.email
                     password = this@Sdk.password
-                    getStudents().flatMapObservable { Observable.fromIterable(it) }.flatMapSingle {
+                    getStudents().compose(ScrapperExceptionTransformer()).flatMapObservable { Observable.fromIterable(it) }.flatMapSingle {
                         scrapper.run {
                             symbol = it.symbol
                             schoolSymbol = it.schoolSymbol
