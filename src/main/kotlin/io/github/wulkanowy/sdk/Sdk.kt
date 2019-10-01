@@ -2,7 +2,6 @@ package io.github.wulkanowy.sdk
 
 import io.github.wulkanowy.api.Api
 import io.github.wulkanowy.api.attendance.Absent
-import io.github.wulkanowy.api.messages.Folder
 import io.github.wulkanowy.api.resettableLazy
 import io.github.wulkanowy.api.resettableManager
 import io.github.wulkanowy.sdk.attendance.mapAttendance

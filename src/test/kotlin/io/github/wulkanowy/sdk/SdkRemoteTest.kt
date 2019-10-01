@@ -1,6 +1,6 @@
 package io.github.wulkanowy.sdk
 
-import io.github.wulkanowy.api.messages.Folder
+import io.github.wulkanowy.sdk.messages.Folder
 import org.junit.Assert.assertEquals
 import org.junit.Test
 import org.threeten.bp.LocalDate.of
