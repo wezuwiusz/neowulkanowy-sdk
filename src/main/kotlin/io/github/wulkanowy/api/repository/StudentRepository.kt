@@ -95,19 +95,24 @@ class StudentRepository(private val api: StudentService) {
     }
 
     fun excuseForAbsence(absents: List<Absent>, content: String?): Single<Boolean> {
-        return api.excuseForAbsence(
-            AttendanceExcuseRequest(
-                AttendanceExcuseRequest.Excuse(
-                    absents = absents.map {
-                        AttendanceExcuseRequest.Excuse.Absent(
-                            date = it.date.toFormat("yyyy-MM-dd'T'HH:mm:ss"),
-                            timeId = it.timeId
-                        )
-                    },
-                    content = content
+        return api.getStart("Start").flatMap {
+            api.excuseForAbsence(
+                getScriptParam("antiForgeryToken", it),
+                getScriptParam("appGuid", it),
+                getScriptParam("version", it),
+                AttendanceExcuseRequest(
+                    AttendanceExcuseRequest.Excuse(
+                        absents = absents.map { absence ->
+                            AttendanceExcuseRequest.Excuse.Absent(
+                                date = absence.date.toFormat("yyyy-MM-dd'T'HH:mm:ss"),
+                                timeId = absence.timeId
+                            )
+                        },
+                        content = content
+                    )
                 )
             )
-        ).compose(ErrorHandlerTransformer()).map { it.success }
+        }.compose(ErrorHandlerTransformer()).map { it.success }
     }
 
     fun getSubjects(): Single<List<Subject>> {
