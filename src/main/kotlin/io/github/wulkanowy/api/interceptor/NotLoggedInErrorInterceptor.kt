@@ -20,7 +20,7 @@ class NotLoggedInErrorInterceptor(private val loginType: LoginType) : Intercepto
 
         if (chain.request().url().toString().contains("/Start.mvc/Get")) {
             doc.select(".errorBlock").let {
-                if (it.isNotEmpty()) throw NotLoggedInException("${it.select(".errorTitle").text()}}")
+                if (it.isNotEmpty()) throw NotLoggedInException(it.select(".errorTitle").text())
             }
         }
 
