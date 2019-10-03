@@ -50,4 +50,7 @@ class AttendanceResponse {
         @Selector("td:not(:first-of-type):not(:last-of-type)", defValue = "0")
         var value: List<String> = emptyList()
     }
+
+    @SerializedName("UsprawiedliwieniaWyslane")
+    var sentExcuses: List<SentExcuse> = emptyList()
 }

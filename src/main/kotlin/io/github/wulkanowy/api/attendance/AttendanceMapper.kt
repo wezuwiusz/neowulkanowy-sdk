@@ -22,24 +22,29 @@ import org.threeten.bp.Month
 fun Single<AttendanceResponse?>.mapAttendanceList(start: LocalDate, end: LocalDate?, getTimes: () -> Single<List<Time>>): Single<List<Attendance>> {
     val endDate = end ?: start.plusDays(4)
     var excuseActive = false
+    var sentExcuses = emptyList<SentExcuse>()
     return map {
         it.run {
             excuseActive = this.excuseActive
+            sentExcuses = this.sentExcuses
             lessons
         }
     }.flatMapObservable { Observable.fromIterable(it) }.flatMap { a ->
         getTimes().flatMapObservable { times ->
             Observable.fromIterable(times.filter { time -> time.id == a.timeId })
         }.map {
+            val sentExcuse = sentExcuses.firstOrNull { excuse -> excuse.date == a.date && excuse.timeId == a.timeId }
             a.apply {
                 presence = a.categoryId == PRESENCE.id || a.categoryId == ABSENCE_FOR_SCHOOL_REASONS.id
                 absence = a.categoryId == ABSENCE_UNEXCUSED.id || a.categoryId == ABSENCE_EXCUSED.id
                 lateness = a.categoryId == EXCUSED_LATENESS.id || a.categoryId == UNEXCUSED_LATENESS.id
                 excused = a.categoryId == ABSENCE_EXCUSED.id || a.categoryId == EXCUSED_LATENESS.id
                 exemption = a.categoryId == EXEMPTION.id
-                excusable = excuseActive && (absence || lateness) && !excused
+                excusable = excuseActive && (absence || lateness) && !excused && sentExcuse == null
                 name = (values().singleOrNull { category -> category.id == categoryId } ?: UNKNOWN).title
                 number = it.number
+                if (sentExcuse != null)
+                    excuseStatus = SentExcuse.Status.getByValue(sentExcuse.status)
             }
         }
     }.filter {

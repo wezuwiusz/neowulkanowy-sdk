@@ -8,6 +8,7 @@ import io.github.wulkanowy.api.service.StudentService
 import okhttp3.mockwebserver.MockResponse
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
+import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
 import org.junit.Test
 import org.threeten.bp.LocalDateTime
@@ -40,11 +41,12 @@ class AttendanceTest : BaseLocalTest() {
             assertEquals("Zajęcia artystyczne", subject)
             assertEquals("Obecność", name)
             assertTrue(presence)
+            assertFalse(excused)
+            assertEquals(SentExcuse.Status.WAITING, excuseStatus)
 
             assertFalse(absence)
             assertFalse(exemption)
             assertFalse(lateness)
-            assertFalse(excused)
             assertFalse(deleted)
             assertFalse(excusable)
         }
@@ -61,12 +63,13 @@ class AttendanceTest : BaseLocalTest() {
             assertEquals("Nieobecność nieusprawiedliwiona", name)
             assertTrue(absence)
             assertFalse(excused)
+            assertEquals(SentExcuse.Status.ACCEPTED, excuseStatus)
 
             assertFalse(exemption)
             assertFalse(presence)
             assertFalse(lateness)
             assertFalse(deleted)
-            assertTrue(excusable)
+            assertFalse(excusable)
         }
     }
 
@@ -81,6 +84,7 @@ class AttendanceTest : BaseLocalTest() {
             assertEquals("Nieobecność usprawiedliwiona", name)
             assertTrue(absence)
             assertTrue(excused)
+            assertEquals(SentExcuse.Status.DENIED, excuseStatus)
 
             assertFalse(exemption)
             assertFalse(presence)
@@ -101,6 +105,7 @@ class AttendanceTest : BaseLocalTest() {
             assertEquals("Spóźnienie nieusprawiedliwione", name)
             assertTrue(lateness)
             assertFalse(excused)
+            assertNull(excuseStatus)
 
             assertFalse(exemption)
             assertFalse(presence)
@@ -121,6 +126,7 @@ class AttendanceTest : BaseLocalTest() {
             assertEquals("Spóźnienie usprawiedliwione", name)
             assertTrue(lateness)
             assertTrue(excused)
+            assertNull(excuseStatus)
 
             assertFalse(exemption)
             assertFalse(presence)
@@ -140,8 +146,9 @@ class AttendanceTest : BaseLocalTest() {
             assertEquals("Język angielski", subject)
             assertEquals("Nieobecność z przyczyn szkolnych", name)
             assertTrue(presence)
-
             assertFalse(excused)
+            assertNull(excuseStatus)
+
             assertFalse(lateness)
             assertFalse(exemption)
             assertFalse(absence)
@@ -160,9 +167,10 @@ class AttendanceTest : BaseLocalTest() {
             assertEquals("Informatyka", subject)
             assertEquals("Zwolnienie", name)
             assertTrue(exemption)
+            assertFalse(excused)
+            assertNull(excuseStatus)
 
             assertFalse(lateness)
-            assertFalse(excused)
             assertFalse(presence)
             assertFalse(absence)
             assertFalse(deleted)
@@ -180,9 +188,10 @@ class AttendanceTest : BaseLocalTest() {
             assertEquals("Informatyka", subject)
             assertEquals("Nieznany", name)
             assertFalse(exemption)
+            assertFalse(excused)
+            assertNull(excuseStatus)
 
             assertFalse(lateness)
-            assertFalse(excused)
             assertFalse(presence)
             assertFalse(absence)
             assertFalse(deleted)

@@ -2,7 +2,23 @@
   "data": {
     "UsprawiedliwieniaAktywne": true,
     "Dni": [],
-    "UsprawiedliwieniaWyslane": [],
+    "UsprawiedliwieniaWyslane": [
+      {
+        "Status": 0,
+        "Dzien": "2018-10-02 00:00:00",
+        "IdPoraLekcji": 76
+      },
+      {
+        "Status": 1,
+        "Dzien": "2018-10-02 00:00:00",
+        "IdPoraLekcji": 77
+      },
+      {
+        "Status": 2,
+        "Dzien": "2018-10-03 00:00:00",
+        "IdPoraLekcji": 76
+      }
+    ],
     "Frekwencje": [
       {
         "IdKategoria": 1,
