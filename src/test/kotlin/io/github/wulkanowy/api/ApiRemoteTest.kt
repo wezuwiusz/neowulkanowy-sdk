@@ -310,6 +310,7 @@ class ApiRemoteTest : BaseTest() {
         val stats = api.getGradesStatistics(321, false)
         val statsObserver = TestObserver<List<GradeStatistics>>()
         stats.subscribe(statsObserver)
+        statsObserver.assertComplete()
 
         val values = statsObserver.values()[0]
 

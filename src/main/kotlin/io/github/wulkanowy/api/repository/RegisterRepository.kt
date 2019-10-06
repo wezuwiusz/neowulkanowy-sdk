@@ -89,7 +89,7 @@ class RegisterRepository(
             when {
                 it.select(".LogOnBoard input[type=submit]").isNotEmpty() -> Api.LoginType.STANDARD
                 it.select("form[name=form1] #SubmitButton").isNotEmpty() -> Api.LoginType.ADFS
-                it.select("form #SubmitButton").isNotEmpty() -> {
+                it.select(".submit-button, form #SubmitButton").isNotEmpty() -> {
                     it.selectFirst("form").attr("action").run {
                         when {
                             startsWith("/LoginPage.aspx") -> Api.LoginType.ADFSLight
