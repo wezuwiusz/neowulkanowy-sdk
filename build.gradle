@@ -30,7 +30,7 @@ dependencies {
     compileOnly "org.threeten:threetenbp:$threetenbp:no-tzdb"
     testImplementation "org.threeten:threetenbp:$threetenbp"
 
-    implementation 'com.google.code.gson:gson:2.8.5'
+    implementation 'com.google.code.gson:gson:2.8.6'
     implementation "com.squareup.retrofit2:retrofit:$retrofit"
     implementation "com.squareup.retrofit2:converter-gson:$retrofit"
     implementation "com.squareup.retrofit2:converter-scalars:$retrofit"
