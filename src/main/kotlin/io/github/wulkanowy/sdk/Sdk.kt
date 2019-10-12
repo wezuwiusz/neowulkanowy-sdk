@@ -10,6 +10,7 @@ import io.github.wulkanowy.sdk.dictionaries.Dictionaries
 import io.github.wulkanowy.sdk.dictionaries.mapSubjects
 import io.github.wulkanowy.sdk.exams.mapExams
 import io.github.wulkanowy.sdk.exception.FeatureNotAvailableException
+import io.github.wulkanowy.sdk.grades.mapGradePointsStatistics
 import io.github.wulkanowy.sdk.grades.mapGradeStatistics
 import io.github.wulkanowy.sdk.grades.mapGrades
 import io.github.wulkanowy.sdk.grades.mapGradesSummary
@@ -326,10 +327,24 @@ class Sdk {
         }
     }
 
-    fun getGradesStatistics(semesterId: Int, annual: Boolean = false): Single<List<GradeStatistics>> {
+    fun getGradesAnnualStatistics(semesterId: Int): Single<List<GradeStatistics>> {
         return when (mode) {
-            Mode.HYBRID, Mode.SCRAPPER -> scrapper.getGradesStatistics(semesterId, annual).compose(ScrapperExceptionTransformer()).map { it.mapGradeStatistics() }
-            Mode.API -> throw FeatureNotAvailableException("Class grade statistics is not available in API mode")
+            Mode.HYBRID, Mode.SCRAPPER -> scrapper.getGradesAnnualStatistics(semesterId).compose(ScrapperExceptionTransformer()).map { it.mapGradeStatistics() }
+            Mode.API -> throw FeatureNotAvailableException("Class grades annual statistics is not available in API mode")
+        }
+    }
+
+    fun getGradesPartialStatistics(semesterId: Int): Single<List<GradeStatistics>> {
+        return when (mode) {
+            Mode.HYBRID, Mode.SCRAPPER -> scrapper.getGradesPartialStatistics(semesterId).compose(ScrapperExceptionTransformer()).map { it.mapGradeStatistics() }
+            Mode.API -> throw FeatureNotAvailableException("Class grades partial statistics is not available in API mode")
+        }
+    }
+
+    fun getGradesPointsStatistics(semesterId: Int): Single<List<GradePointsStatistics>> {
+        return when (mode) {
+            Mode.HYBRID, Mode.SCRAPPER -> scrapper.getGradesPointsStatistics(semesterId).compose(ScrapperExceptionTransformer()).map { it.mapGradePointsStatistics() }
+            Mode.API -> throw FeatureNotAvailableException("Class grades points statistics is not available in API mode")
         }
     }
 
