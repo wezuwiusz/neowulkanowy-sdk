@@ -58,7 +58,7 @@ dependencies {
 
     testImplementation "com.squareup.okhttp3:mockwebserver:$okhttp3"
     testImplementation "junit:junit:4.12"
-    ktlint "com.pinterest:ktlint:0.34.2"
+    ktlint "com.pinterest:ktlint:0.35.0"
 }
 
 task ktlint(type: JavaExec, group: "verification") {
