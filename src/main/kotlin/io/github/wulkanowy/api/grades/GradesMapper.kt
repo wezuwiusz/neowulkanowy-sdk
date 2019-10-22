@@ -11,7 +11,7 @@ fun GradesResponse.mapGradesList(): List<Grade> {
             grade.apply {
                 subject = gradesSubject.name
                 comment = entry.substringBefore(" (").run {
-                    if (length > 4) this
+                    if (length > 4) entry
                     else entry.substringBeforeLast(")").substringAfter(" (")
                 }
                 entry = entry.substringBefore(" (").run {

@@ -22,6 +22,7 @@ class GradesTest : BaseLocalTest() {
     fun getAllTest() {
         assertEquals(10, snp.size) // 2 items are skipped
         assertEquals(10, student.size)
+        assertEquals(2, studentPoints.size)
     }
 
     @Test
@@ -239,6 +240,24 @@ class GradesTest : BaseLocalTest() {
             assertEquals(0.0, weightValue, .0)
             assertEquals(getDate(2019, 9, 10), date)
             assertEquals("Weronika Ratajczak", teacher)
+        }
+    }
+
+    @Test
+    fun getGrade_noRealPointsEntry() {
+        with(studentPoints[1]) {
+            assertEquals("Fizyka", subject)
+            assertEquals("0/0", entry)
+            assertEquals(0, value)
+            assertEquals(.0, modifier, .0)
+            assertEquals("komentarz", comment)
+            assertEquals("000000", color)
+            assertEquals("O", symbol)
+            assertEquals("Odpowiedź", description)
+            assertEquals("0,00", weight)
+            assertEquals(0.0, weightValue, .0)
+            assertEquals(getDate(2018, 12, 5), date)
+            assertEquals("Jakub Michalak", teacher)
         }
     }
 }
