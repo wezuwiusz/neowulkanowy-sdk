@@ -92,6 +92,7 @@ class RegisterRepository(
                 it.select(".submit-button, form #SubmitButton").isNotEmpty() -> {
                     it.selectFirst("form").attr("action").run {
                         when {
+                            contains("cufs.edu.lublin.eu") -> Api.LoginType.ADFSLightCufs
                             startsWith("/LoginPage.aspx") -> Api.LoginType.ADFSLight
                             startsWith("/$symbol/LoginPage.aspx") -> Api.LoginType.ADFSLightScoped
                             else -> throw ApiException("Nieznany typ dziennika ADFS")

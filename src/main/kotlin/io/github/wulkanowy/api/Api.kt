@@ -107,13 +107,15 @@ class Api {
             field = value
         }
 
+    // TODO: refactor
     enum class LoginType {
         AUTO,
         STANDARD,
         ADFS,
         ADFSCards,
         ADFSLight,
-        ADFSLightScoped
+        ADFSLightScoped,
+        ADFSLightCufs
     }
 
     private val appInterceptors: MutableMap<Int, Pair<Interceptor, Boolean>> = mutableMapOf()

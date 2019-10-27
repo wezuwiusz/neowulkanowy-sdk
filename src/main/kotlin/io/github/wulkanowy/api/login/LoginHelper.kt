@@ -4,6 +4,7 @@ import io.github.wulkanowy.api.Api
 import io.github.wulkanowy.api.Api.LoginType.ADFS
 import io.github.wulkanowy.api.Api.LoginType.ADFSCards
 import io.github.wulkanowy.api.Api.LoginType.ADFSLight
+import io.github.wulkanowy.api.Api.LoginType.ADFSLightCufs
 import io.github.wulkanowy.api.Api.LoginType.ADFSLightScoped
 import io.github.wulkanowy.api.Api.LoginType.AUTO
 import io.github.wulkanowy.api.Api.LoginType.STANDARD
@@ -68,8 +69,7 @@ class LoginHelper(
                 AUTO -> throw ApiException("You must first specify Api.loginType before logging in")
                 STANDARD -> sendStandard(it, password)
                 ADFS -> sendADFS(it, password)
-                ADFSLight -> sendADFSLightGeneric(it, password, ADFSLight)
-                ADFSLightScoped -> sendADFSLightGeneric(it, password, ADFSLightScoped)
+                ADFSLight, ADFSLightScoped, ADFSLightCufs -> sendADFSLightGeneric(it, password, loginType)
                 ADFSCards -> sendADFSCards(it, password)
             }
         }
@@ -170,6 +170,7 @@ class LoginHelper(
             ADFS -> "adfs"
             ADFSCards -> "eSzkola"
             ADFSLightScoped -> "ADFSLight"
+            ADFSLightCufs -> "AdfsLight"
             else -> "ADFS"
         }
 
@@ -180,6 +181,7 @@ class LoginHelper(
 
         return when (type) {
             ADFSLight -> "$schema://adfslight.$host/LoginPage.aspx?ReturnUrl=" + encode("/$query")
+            ADFSLightCufs -> "$schema://logowanie.$host/LoginPage.aspx?ReturnUrl=" + encode("/$query")
             ADFSLightScoped -> "$schema://adfslight.$host/$symbol/LoginPage.aspx?ReturnUrl=" + encode("/$symbol/default.aspx$query")
             else -> "$schema://adfs.$host/adfs/ls/$query"
         }
