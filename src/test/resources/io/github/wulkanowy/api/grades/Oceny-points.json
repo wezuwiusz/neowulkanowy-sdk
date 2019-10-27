@@ -37,6 +37,15 @@
             "KodKolumny": "O",
             "DataOceny": "05.12.2018",
             "KolorOceny": 0
+          },
+          {
+            "Nauczyciel": "Jakub Michalak",
+            "Wpis": "1/0 (komentarz)",
+            "Waga": 0.00,
+            "NazwaKolumny": "Odpowiedź",
+            "KodKolumny": "O",
+            "DataOceny": "04.12.2018",
+            "KolorOceny": 0
           }
         ],
         "ProponowanaOcenaRoczna": "",
