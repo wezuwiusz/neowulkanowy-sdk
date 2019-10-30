@@ -25,7 +25,7 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
 
     implementation "io.github.wulkanowy:api:0.12.0"
-    implementation "io.github.wulkanowy:uonet-request-signer:6d7aebf"
+    implementation "io.github.wulkanowy:uonet-request-signer:6d7aebf0e9"
 
     compileOnly "org.threeten:threetenbp:$threetenbp:no-tzdb"
     testImplementation "org.threeten:threetenbp:$threetenbp"
