@@ -92,7 +92,7 @@ class ServiceManager(
     fun getStudentService(withLogin: Boolean = true, interceptor: Boolean = true): StudentService {
         if (withLogin && schoolSymbol.isBlank()) throw ApiException("School id is not set")
 
-        val client = getClientBuilder()
+        val client = getClientBuilder(loginIntercept = withLogin)
         if (interceptor) {
             if (0 == diaryId || 0 == studentId) throw ApiException("Student or/and diaryId id are not set")
             client.addInterceptor(StudentAndParentInterceptor(cookies, schema, host, diaryId, studentId))
