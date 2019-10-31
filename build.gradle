@@ -48,7 +48,7 @@ dependencies {
     implementation "com.squareup.okhttp3:logging-interceptor:$okhttp3"
     implementation "com.squareup.okhttp3:okhttp-urlconnection:$okhttp3"
 
-    implementation "com.github.jonyas:RxJava2Reauth:72abb94"
+    implementation "com.github.jonyas:RxJava2Reauth:master"
 
     implementation "org.slf4j:slf4j-api:$slf4j"
     testImplementation "org.slf4j:slf4j-simple:$slf4j"
