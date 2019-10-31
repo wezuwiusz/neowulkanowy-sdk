@@ -307,7 +307,7 @@ class ApiRemoteTest : BaseTest() {
 
     @Test
     fun gradesStatisticsTest() {
-        val stats = api.getGradesStatistics(321, false)
+        val stats = api.getGradesPartialStatistics(321)
         val statsObserver = TestObserver<List<GradeStatistics>>()
         stats.subscribe(statsObserver)
         statsObserver.assertComplete()
@@ -317,7 +317,7 @@ class ApiRemoteTest : BaseTest() {
         assertEquals("Język polski", values[0].subject)
         assertEquals("Matematyka", values[7].subject)
 
-        val annual = api.getGradesStatistics(123, true)
+        val annual = api.getGradesAnnualStatistics(123)
         val annualObserver = TestObserver<List<GradeStatistics>>()
         annual.subscribe(annualObserver)
 

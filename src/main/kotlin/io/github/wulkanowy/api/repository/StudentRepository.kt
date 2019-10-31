@@ -132,12 +132,6 @@ class StudentRepository(private val api: StudentService) {
             .map { it.mapGradesList() }
     }
 
-    @Deprecated("due to add support for points statistics, use methods below")
-    fun getGradesStatistics(semesterId: Int, annual: Boolean): Single<List<GradeStatistics>> {
-        return if (annual) getGradesAnnualStatistics(semesterId)
-        else return getGradesPartialStatistics(semesterId)
-    }
-
     fun getGradesPartialStatistics(semesterId: Int): Single<List<GradeStatistics>> {
         return api.getGradesPartialStatistics(GradesStatisticsRequest(semesterId))
             .compose(ErrorHandlerTransformer()).map { it.data }

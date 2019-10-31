@@ -197,10 +197,6 @@ class Api {
 
     fun getGradesSummary(semesterId: Int? = null) = if (useNewStudent) student.getGradesSummary(semesterId) else snp.getGradesSummary(semesterId)
 
-    @Deprecated("due to add support for points statistics, use methods below")
-    fun getGradesStatistics(semesterId: Int, annual: Boolean = false) =
-        if (useNewStudent) student.getGradesStatistics(semesterId, annual) else snp.getGradesStatistics(semesterId, annual)
-
     fun getGradesPartialStatistics(semesterId: Int) =
         if (useNewStudent) student.getGradesPartialStatistics(semesterId) else snp.getGradesStatistics(semesterId, false)
 
