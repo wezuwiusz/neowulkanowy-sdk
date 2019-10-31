@@ -8,18 +8,22 @@ import okhttp3.Interceptor
 import okhttp3.Response
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
+import org.slf4j.LoggerFactory
 
 class ErrorInterceptor : Interceptor {
 
+    companion object {
+        @JvmStatic private val logger = LoggerFactory.getLogger(this::class.java)
+    }
     override fun intercept(chain: Interceptor.Chain): Response {
         val response = chain.proceed(chain.request())
 
-        checkForError(Jsoup.parse(response.peekBody(Long.MAX_VALUE).string()))
+        checkForError(Jsoup.parse(response.peekBody(Long.MAX_VALUE).string()), response.request().url().toString())
 
         return response
     }
 
-    private fun checkForError(doc: Document) {
+    private fun checkForError(doc: Document, redirectUrl: String) {
         doc.select(".errorBlock").let {
             if (it.isNotEmpty()) throw VulcanException("${it.select(".errorTitle").text()}. ${it.select(".errorMessage").text()}")
         }
@@ -44,7 +48,7 @@ class ErrorInterceptor : Interceptor {
             "Przerwa techniczna" -> throw ServiceUnavailableException(doc.title())
             "Strona nie została odnaleziona" -> throw ApiException(doc.title())
             "Strona nie znaleziona" -> throw ApiException(doc.selectFirst("div div").text())
-            "Zmiana hasła użytkownika" -> throw PasswordChangeRequiredException("Wymagana zmiana hasła użytkownika")
+            "Zmiana hasła użytkownika" -> { logger.debug(redirectUrl); throw PasswordChangeRequiredException("Wymagana zmiana hasła użytkownika", redirectUrl) }
         }
 
         doc.select("h2").text().let {
