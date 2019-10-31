@@ -50,16 +50,17 @@ class LoginHelper(
 
     @Synchronized
     fun login(email: String, password: String): Single<SendCertificateResponse> {
-        logger.info("Login started")
         return sendCredentials(email, password).flatMap {
+            logger.info("Login started")
             when {
                 it.title.startsWith("Witryna ucznia i rodzica") -> return@flatMap Single.just(SendCertificateResponse())
                 it.action.isBlank() -> throw VulcanException("Invalid certificate page: '${it.title}'. Try again")
             }
 
             sendCertificate(it, email)
-        }.also {
+        }.map {
             logger.debug("Login completed")
+            it
         }
     }
 
