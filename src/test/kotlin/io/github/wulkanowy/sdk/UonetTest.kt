@@ -12,6 +12,7 @@ import io.github.wulkanowy.sdk.register.Student
 import io.github.wulkanowy.sdk.repository.MobileRepository
 import io.github.wulkanowy.sdk.repository.RegisterRepository
 import io.github.wulkanowy.sdk.timetable.Lesson
+import io.github.wulkanowy.signer.getPrivateKeyFromCert
 import io.reactivex.observers.TestObserver
 import junit.framework.TestCase.assertEquals
 import okhttp3.OkHttpClient
@@ -40,14 +41,14 @@ class UonetTest {
 
         private lateinit var student: Student
 
-        private fun getRetrofitBuilder(certificate: String, certKey: String): Retrofit.Builder {
+        private fun getRetrofitBuilder(privateKey: String, certKey: String): Retrofit.Builder {
             return Retrofit.Builder()
                     .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                     .addConverterFactory(ScalarsConverterFactory.create())
                     .addConverterFactory(GsonConverterFactory.create())
                     .client(OkHttpClient().newBuilder()
                             .addInterceptor(HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BASIC))
-                            .addInterceptor(SignInterceptor(PASSWORD, certificate, certKey))
+                            .addInterceptor(SignInterceptor(privateKey, certKey))
                             .build()
                     )
         }
@@ -74,6 +75,8 @@ class UonetTest {
             val certKey = tokenCrt!!.certificateKey
             val cert = tokenCrt.certificatePfx
 
+            val privateKey = getPrivateKeyFromCert(PASSWORD, cert)
+
             val pupils = register.getPupils()
             val pupilSubscriber = TestObserver<List<Student>>()
             pupils.subscribe(pupilSubscriber)
@@ -84,7 +87,7 @@ class UonetTest {
             student = pupilSubscriber.values()[0][0]
 
             // MobileRepository
-            mobile = MobileRepository(getRetrofitBuilder(cert, certKey)
+            mobile = MobileRepository(getRetrofitBuilder(privateKey, certKey)
                     .baseUrl("$HOST/Default/${student.reportingUnitSymbol}/mobile-api/Uczen.v3.Uczen/")
                     .build().create()
             )

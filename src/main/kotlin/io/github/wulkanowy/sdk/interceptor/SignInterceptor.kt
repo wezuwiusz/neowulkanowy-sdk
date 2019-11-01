@@ -7,8 +7,7 @@ import okio.Buffer
 import java.nio.charset.Charset
 
 class SignInterceptor(
-    private val password: String,
-    private val certificate: String,
+    private val privateKey: String,
     private val certKey: String
 ) : Interceptor {
 
@@ -18,11 +17,11 @@ class SignInterceptor(
 
         request.header("User-Agent", "MobileUserAgent")
 
-        if (certificate.isNotBlank() || certKey.isNotBlank()) {
+        if (privateKey.isNotBlank()) {
 
             val signature = Buffer().run {
                 original.body()?.writeTo(this)
-                signContent(password, certificate, readString(Charset.defaultCharset()))
+                signContent(privateKey, readString(Charset.defaultCharset()))
             }
 
             request.header("RequestCertificateKey", certKey)

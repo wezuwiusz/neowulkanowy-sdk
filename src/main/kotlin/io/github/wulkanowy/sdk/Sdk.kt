@@ -32,6 +32,7 @@ import io.github.wulkanowy.sdk.school.mapTeachers
 import io.github.wulkanowy.sdk.student.mapStudent
 import io.github.wulkanowy.sdk.timetable.mapCompletedLessons
 import io.github.wulkanowy.sdk.timetable.mapTimetable
+import io.github.wulkanowy.signer.getPrivateKeyFromCert
 import io.reactivex.Completable
 import io.reactivex.Maybe
 import io.reactivex.Observable
@@ -81,6 +82,12 @@ class Sdk {
         }
 
     var certificate = ""
+        set(value) {
+            field = value
+            resettableManager.reset()
+        }
+
+    var privateKey = ""
         set(value) {
             field = value
             resettableManager.reset()
@@ -171,7 +178,7 @@ class Sdk {
     private val resettableManager = resettableManager()
 
     private val serviceManager by resettableLazy(resettableManager) {
-        RepositoryManager(logLevel, apiKey, certificate, certKey, interceptors, apiBaseUrl, schoolSymbol)
+        RepositoryManager(logLevel, privateKey, certKey, interceptors, apiBaseUrl, schoolSymbol)
     }
 
     private val routes by resettableLazy(resettableManager) {
@@ -258,8 +265,8 @@ class Sdk {
         }.flatMap { certificateResponse ->
             if (certificateResponse.isError) throw RuntimeException(certificateResponse.message)
             this@Sdk.certKey = certificateResponse.tokenCert!!.certificateKey
-            this@Sdk.certificate = certificateResponse.tokenCert.certificatePfx
-            getRegisterRepo(apiBaseUrl, this@Sdk.symbol).getPupils().map { it.mapStudents(symbol, certificateResponse) }
+            this@Sdk.privateKey = getPrivateKeyFromCert(apiKey, certificateResponse.tokenCert.certificatePfx)
+            getRegisterRepo(apiBaseUrl, this@Sdk.symbol).getPupils().map { it.mapStudents(symbol, certificateResponse, this@Sdk.privateKey) }
         }
     }
 

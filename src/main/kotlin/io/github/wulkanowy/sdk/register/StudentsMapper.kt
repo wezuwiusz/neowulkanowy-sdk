@@ -5,7 +5,7 @@ import io.github.wulkanowy.sdk.pojo.Student
 import io.github.wulkanowy.api.register.Student as ScrapperStudent
 import io.github.wulkanowy.sdk.register.Student as ApiStudent
 
-fun List<ApiStudent>.mapStudents(symbol: String, certificateResponse: CertificateResponse): List<Student> {
+fun List<ApiStudent>.mapStudents(symbol: String, certificateResponse: CertificateResponse, privateKey: String): List<Student> {
     return map {
         Student(
             email = it.userLogin,
@@ -22,7 +22,7 @@ fun List<ApiStudent>.mapStudents(symbol: String, certificateResponse: Certificat
             apiHost = certificateResponse.tokenCert!!.apiEndpoint.removeSuffix("/"),
             scrapperHost = "",
             ssl = certificateResponse.tokenCert.apiEndpoint.startsWith("https"),
-            certificate = certificateResponse.tokenCert.certificatePfx,
+            privateKey = privateKey,
             certificateKey = certificateResponse.tokenCert.certificateKey
         )
     }
@@ -46,7 +46,7 @@ fun List<ScrapperStudent>.mapStudents(ssl: Boolean, scrapperHost: String): List<
             apiHost = "",
             scrapperHost = scrapperHost,
             certificateKey = "",
-            certificate = ""
+            privateKey = ""
         )
     }
 }

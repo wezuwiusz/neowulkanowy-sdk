@@ -18,5 +18,5 @@ data class Student(
     val scrapperHost: String,
     val ssl: Boolean,
     val certificateKey: String,
-    val certificate: String
+    val privateKey: String
 )
