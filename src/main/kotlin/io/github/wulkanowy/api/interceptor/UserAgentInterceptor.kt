@@ -11,7 +11,7 @@ class UserAgentInterceptor(
     private val androidVersion: String,
     private val buildTag: String,
     private val webKitRev: String = "537.36",
-    private val chromeRev: String = "71.0.3578.98"
+    private val chromeRev: String = "78.0.3904.62"
 ) : Interceptor {
 
     override fun intercept(chain: Interceptor.Chain): Response {
