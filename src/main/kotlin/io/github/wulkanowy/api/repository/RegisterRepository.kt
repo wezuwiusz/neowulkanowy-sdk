@@ -19,6 +19,7 @@ import io.reactivex.Observable
 import io.reactivex.Single
 import org.jsoup.Jsoup
 import org.jsoup.parser.Parser
+import org.slf4j.LoggerFactory
 import java.net.URL
 
 class RegisterRepository(
@@ -32,6 +33,10 @@ class RegisterRepository(
     private val student: StudentService,
     private val url: ServiceManager.UrlGenerator
 ) {
+
+    companion object {
+        @JvmStatic private val logger = LoggerFactory.getLogger(this::class.java)
+    }
 
     fun getStudents(): Single<List<Student>> {
         return getSymbols().flatMapObservable { Observable.fromIterable(it) }.flatMap { (symbol, certificate) ->
@@ -76,6 +81,7 @@ class RegisterRepository(
                 Single.just(Jsoup.parse(cert.wresult.replace(":", ""), "", Parser.xmlParser())
                     .select("[AttributeName$=\"Instance\"] samlAttributeValue")
                     .map { it.text().trim() }
+                    .apply { logger.debug("$this") }
                     .filter { it.matches("[a-zA-Z0-9]*".toRegex()) } // early filter invalid symbols
                     .ifEmpty { listOf("opole", "gdansk", "tarnow", "rzeszow") } // fallback
                     .map { Pair(it, cert) }
