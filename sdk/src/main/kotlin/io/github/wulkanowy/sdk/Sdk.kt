@@ -187,7 +187,7 @@ class Sdk {
 
     fun getStudents(): Single<List<Student>> {
         return when (mode) {
-            Mode.API -> mobile.getApiStudents(token, pin, symbol).map { it.mapStudents() }
+            Mode.API -> mobile.getApiStudents(token, pin, symbol).map { it.mapStudents(symbol) }
             Mode.SCRAPPER -> {
                 scrapper.run {
                     ssl = this@Sdk.ssl
@@ -215,7 +215,7 @@ class Sdk {
                         scrapper.getToken().compose(ScrapperExceptionTransformer()).flatMap {
                             mobile.getApiStudents(it.token, it.pin, it.symbol)
                         }.map { apiStudents ->
-                            apiStudents.mapStudents().map { apiStudent ->
+                            apiStudents.mapStudents(symbol).map { apiStudent ->
                                 apiStudent.copy(
                                     loginMode = Mode.HYBRID,
                                     scrapperHost = scrapperHost,

@@ -5,11 +5,11 @@ import io.github.wulkanowy.sdk.pojo.Student
 import io.github.wulkanowy.api.register.Student as ScrapperStudent
 import io.github.wulkanowy.sdk.mobile.register.Student as ApiStudent
 
-fun List<ApiStudent>.mapStudents(): List<Student> {
+fun List<ApiStudent>.mapStudents(symbol: String): List<Student> {
     return map {
         Student(
             email = it.userLogin,
-            symbol = it.reportingUnitSymbol,
+            symbol = symbol,
             studentId = it.id,
             userLoginId = it.userLoginId,
             classId = it.classId,
