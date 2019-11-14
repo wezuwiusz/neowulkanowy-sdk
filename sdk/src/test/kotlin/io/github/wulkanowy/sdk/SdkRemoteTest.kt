@@ -20,7 +20,7 @@ class SdkRemoteTest {
             apiKey = API_KEY
 
             mode = Sdk.Mode.API
-            symbol = "Default"
+            symbol = "powiatwulkanowy"
 
             token = "FK100000"
             pin = "999999"
@@ -34,7 +34,7 @@ class SdkRemoteTest {
     fun getStudents_scrapper() {
         val sdk = Sdk().apply {
             mode = Sdk.Mode.SCRAPPER
-            symbol = "Default"
+            symbol = "powiatwulkanowy"
 
             ssl = false
             scrapperHost = "fakelog.cf"
@@ -52,7 +52,7 @@ class SdkRemoteTest {
             apiKey = API_KEY
 
             mode = Sdk.Mode.HYBRID
-            symbol = "Default"
+            symbol = "powiatwulkanowy"
 
             ssl = false
             scrapperHost = "fakelog.cf"
@@ -72,9 +72,9 @@ class SdkRemoteTest {
             certKey = CERT_KEY
             certificate = CERTIFICATE
 
-            apiBaseUrl = "https://api.fakelog.cf/Default"
+            apiBaseUrl = "https://api.fakelog.cf/powiatwulkanowy"
             mode = Sdk.Mode.API
-            symbol = "Default"
+            symbol = "powiatwulkanowy"
 
             schoolSymbol = "123456"
             studentId = 1
@@ -93,9 +93,9 @@ class SdkRemoteTest {
             certKey = CERT_KEY
             certificate = CERTIFICATE
 
-            apiBaseUrl = "https://api.fakelog.cf/Default"
+            apiBaseUrl = "https://api.fakelog.cf/powiatwulkanowy"
             mode = Sdk.Mode.API
-            symbol = "Default"
+            symbol = "powiatwulkanowy"
 
             schoolSymbol = "123456"
             studentId = 15
@@ -112,7 +112,7 @@ class SdkRemoteTest {
             apiKey = API_KEY
 
             mode = Sdk.Mode.SCRAPPER
-            symbol = "Default"
+            symbol = "powiatwulkanowy"
 
             schoolSymbol = "123456"
 
@@ -138,9 +138,9 @@ class SdkRemoteTest {
             certKey = CERT_KEY
             certificate = CERTIFICATE
 
-            apiBaseUrl = "https://api.fakelog.cf/Default"
+            apiBaseUrl = "https://api.fakelog.cf/powiatwulkanowy"
             mode = Sdk.Mode.API
-            symbol = "Default"
+            symbol = "powiatwulkanowy"
 
             schoolSymbol = "123456"
             studentId = 15
@@ -159,9 +159,9 @@ class SdkRemoteTest {
             certKey = CERT_KEY
             certificate = CERTIFICATE
 
-            apiBaseUrl = "https://api.fakelog.cf/Default"
+            apiBaseUrl = "https://api.fakelog.cf/powiatwulkanowy"
             mode = Sdk.Mode.API
-            symbol = "Default"
+            symbol = "powiatwulkanowy"
 
             schoolSymbol = "123456"
             studentId = 15
@@ -180,9 +180,9 @@ class SdkRemoteTest {
             certKey = CERT_KEY
             certificate = CERTIFICATE
 
-            apiBaseUrl = "https://api.fakelog.cf/Default"
+            apiBaseUrl = "https://api.fakelog.cf/powiatwulkanowy"
             mode = Sdk.Mode.API
-            symbol = "Default"
+            symbol = "powiatwulkanowy"
 
             schoolSymbol = "123456"
             studentId = 15
@@ -201,9 +201,9 @@ class SdkRemoteTest {
             certKey = CERT_KEY
             certificate = CERTIFICATE
 
-            apiBaseUrl = "https://api.fakelog.cf/Default"
+            apiBaseUrl = "https://api.fakelog.cf/powiatwulkanowy"
             mode = Sdk.Mode.API
-            symbol = "Default"
+            symbol = "powiatwulkanowy"
 
             schoolSymbol = "123456"
             studentId = 15
@@ -222,9 +222,9 @@ class SdkRemoteTest {
             certKey = CERT_KEY
             certificate = CERTIFICATE
 
-            apiBaseUrl = "https://api.fakelog.cf/Default"
+            apiBaseUrl = "https://api.fakelog.cf/powiatwulkanowy"
             mode = Sdk.Mode.API
-            symbol = "Default"
+            symbol = "powiatwulkanowy"
 
             schoolSymbol = "123456"
             studentId = 15
@@ -243,9 +243,9 @@ class SdkRemoteTest {
             certKey = CERT_KEY
             certificate = CERTIFICATE
 
-            apiBaseUrl = "https://api.fakelog.cf/Default"
+            apiBaseUrl = "https://api.fakelog.cf/powiatwulkanowy"
             mode = Sdk.Mode.API
-            symbol = "Default"
+            symbol = "powiatwulkanowy"
 
             schoolSymbol = "123456"
             studentId = 15
@@ -264,9 +264,9 @@ class SdkRemoteTest {
             certKey = CERT_KEY
             certificate = CERTIFICATE
 
-            apiBaseUrl = "https://api.fakelog.cf/Default"
+            apiBaseUrl = "https://api.fakelog.cf/powiatwulkanowy"
             mode = Sdk.Mode.API
-            symbol = "Default"
+            symbol = "powiatwulkanowy"
 
             schoolSymbol = "123456"
             studentId = 15
@@ -285,9 +285,9 @@ class SdkRemoteTest {
             certKey = CERT_KEY
             certificate = CERTIFICATE
 
-            apiBaseUrl = "https://api.fakelog.cf/Default"
+            apiBaseUrl = "https://api.fakelog.cf/powiatwulkanowy"
             mode = Sdk.Mode.API
-            symbol = "Default"
+            symbol = "powiatwulkanowy"
 
             schoolSymbol = "123456"
             studentId = 15
@@ -312,9 +312,9 @@ class SdkRemoteTest {
             certKey = CERT_KEY
             certificate = CERTIFICATE
 
-            apiBaseUrl = "https://api.fakelog.cf/Default"
+            apiBaseUrl = "https://api.fakelog.cf/powiatwulkanowy"
             mode = Sdk.Mode.API
-            symbol = "Default"
+            symbol = "powiatwulkanowy"
 
             schoolSymbol = "123456"
             loginId = 16
@@ -334,9 +334,9 @@ class SdkRemoteTest {
             certKey = CERT_KEY
             certificate = CERTIFICATE
 
-            apiBaseUrl = "https://api.fakelog.cf/Default"
+            apiBaseUrl = "https://api.fakelog.cf/powiatwulkanowy"
             mode = Sdk.Mode.API
-            symbol = "Default"
+            symbol = "powiatwulkanowy"
 
             schoolSymbol = "123456"
             loginId = 16

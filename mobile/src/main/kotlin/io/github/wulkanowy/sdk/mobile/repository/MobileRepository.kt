@@ -1,6 +1,5 @@
 package io.github.wulkanowy.sdk.mobile.repository
 
-import io.github.wulkanowy.api.toFormat
 import io.github.wulkanowy.sdk.mobile.ApiRequest
 import io.github.wulkanowy.sdk.mobile.ApiResponse
 import io.github.wulkanowy.sdk.mobile.attendance.Attendance
@@ -27,13 +26,14 @@ import io.github.wulkanowy.sdk.mobile.timetable.TimetableRequest
 import io.reactivex.Single
 import org.threeten.bp.LocalDate
 import org.threeten.bp.LocalDateTime
+import org.threeten.bp.format.DateTimeFormatter
 
 class MobileRepository(private val api: MobileService) {
 
     // TODO move these to utils
-    private fun LocalDate.toFormat() = toFormat("yyyy-MM-dd")
+    private fun LocalDate.toFormat() = format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
 
-    private fun LocalDateTime.toFormat() = toFormat("yyyy-MM-dd")
+    private fun LocalDateTime.toFormat() = format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
 
     fun logStart(): Single<ApiResponse<String>> = api.logAppStart(object : ApiRequest() {})
 

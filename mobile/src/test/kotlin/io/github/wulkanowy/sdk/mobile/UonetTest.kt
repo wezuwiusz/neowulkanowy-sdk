@@ -29,7 +29,7 @@ import retrofit2.create
 const val PASSWORD = "012345678901234567890123456789AB"
 const val DEVICE_NAME = "Wulkanowy#client"
 const val HOST = "https://api.fakelog.cf"
-const val SYMBOL = "Default"
+const val SYMBOL = "powiatwulkanowy"
 const val TOKEN = "FK100000"
 const val PIN = "999999"
 
@@ -88,7 +88,7 @@ class UonetTest {
 
             // MobileRepository
             mobile = MobileRepository(getRetrofitBuilder(privateKey, certKey)
-                .baseUrl("$HOST/Default/${student.reportingUnitSymbol}/mobile-api/Uczen.v3.Uczen/")
+                .baseUrl("$HOST/powiatwulkanowy/${student.reportingUnitSymbol}/mobile-api/Uczen.v3.Uczen/")
                 .build().create()
             )
         }
