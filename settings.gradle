@@ -1,5 +1,3 @@
-rootProject.name = 'sdk'
-
 include 'mobile'
 include 'scrapper'
 include 'sdk'

@@ -6,15 +6,6 @@ plugins {
     id 'com.github.dcendents.android-maven' version '2.1'
 }
 
-ext {
-    PUBLISH_VERSION = '0.12.0'
-    SITE_URL = 'https://github.com/wulkanowy/api'
-    GIT_URL = 'https://github.com/wulkanowy/api.git'
-}
-
-group 'io.github.wulkanowy'
-version PUBLISH_VERSION
-
 configurations {
     ktlint
 }
@@ -62,69 +53,54 @@ jacocoTestReport {
     }
 }
 
-bintray {
-    user = System.getenv('BINTRAY_USER')
-    key = System.getenv('BINTRAY_KEY')
-    configurations = ['archives']
-    pkg {
-        repo = 'wulkanowy'
-        name = 'api'
-        userOrg = 'wulkanowy'
-        licenses = ['Apache-2.0']
-        vcsUrl = GIT_URL
-        labels = ['aar', 'wulkanowy', 'api']
-        publicDownloadNumbers = true
-        publish = true
+//bintray {
+//    user = System.getenv('BINTRAY_USER')
+//    key = System.getenv('BINTRAY_KEY')
+//    configurations = ['archives']
+//    pkg {
+//        repo = 'wulkanowy'
+//        name = 'api'
+//        userOrg = 'wulkanowy'
+//        licenses = ['Apache-2.0']
+//        vcsUrl = GIT_URL
+//        labels = ['aar', 'wulkanowy', 'api']
+//        publicDownloadNumbers = true
+//        publish = true
+//
+//        version {
+//            name = PUBLISH_VERSION
+//            vcsTag = PUBLISH_VERSION
+//            released  = new Date()
+//        }
+//    }
+//}
 
-        version {
-            name = PUBLISH_VERSION
-            vcsTag = PUBLISH_VERSION
-            released  = new Date()
-        }
-    }
-}
-
-install {
-    repositories.mavenInstaller {
-        pom {
-            project {
-                packaging 'aar'
-                name 'Scraping API for VULCAN UONET+'
-                url SITE_URL
-                licenses {
-                    license {
-                        name 'The Apache Software License, Version 2.0'
-                        url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
-                    }
-                }
-                developers {
-                    developer {
-                        id 'mklkj'
-                        name 'Mikołaj Pich'
-                        email 'm.pich@outlook.com'
-                    }
-                }
-                scm {
-                    connection GIT_URL
-                    developerConnection GIT_URL
-                    url SITE_URL
-                }
-            }
-        }
-    }
-}
-
-task sourcesJar(type: Jar, dependsOn: classes) {
-    classifier = 'sources'
-    from sourceSets.main.allSource
-}
-
-task javadocJar(type: Jar, dependsOn: javadoc) {
-    classifier = 'javadoc'
-    from javadoc.destinationDir
-}
-
-artifacts {
-    archives sourcesJar
-    archives javadocJar
-}
+//install {
+//    repositories.mavenInstaller {
+//        pom {
+//            project {
+//                packaging 'aar'
+//                name 'Scraping API for VULCAN UONET+'
+//                url SITE_URL
+//                licenses {
+//                    license {
+//                        name 'The Apache Software License, Version 2.0'
+//                        url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+//                    }
+//                }
+//                developers {
+//                    developer {
+//                        id 'mklkj'
+//                        name 'Mikołaj Pich'
+//                        email 'm.pich@outlook.com'
+//                    }
+//                }
+//                scm {
+//                    connection GIT_URL
+//                    developerConnection GIT_URL
+//                    url SITE_URL
+//                }
+//            }
+//        }
+//    }
+//}
