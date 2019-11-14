@@ -1,7 +1,7 @@
 package io.github.wulkanowy.sdk.mapper
 
 import io.github.wulkanowy.sdk.pojo.Subject
-import io.github.wulkanowy.api.attendance.Subject as ScrapperSubject
+import io.github.wulkanowy.sdk.scrapper.attendance.Subject as ScrapperSubject
 import io.github.wulkanowy.sdk.mobile.dictionaries.Subject as ApiSubject
 
 @JvmName("mapApiSubjects")

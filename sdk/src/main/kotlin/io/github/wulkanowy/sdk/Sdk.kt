@@ -1,8 +1,9 @@
 package io.github.wulkanowy.sdk
 
-import io.github.wulkanowy.api.Api
-import io.github.wulkanowy.api.attendance.Absent
+import io.github.wulkanowy.sdk.scrapper.Scrapper
+import io.github.wulkanowy.sdk.scrapper.attendance.Absent
 import io.github.wulkanowy.sdk.exception.FeatureNotAvailableException
+import io.github.wulkanowy.sdk.exception.ScrapperExceptionTransformer
 import io.github.wulkanowy.sdk.mapper.*
 import io.github.wulkanowy.sdk.mobile.Mobile
 import io.github.wulkanowy.sdk.pojo.*
@@ -34,7 +35,7 @@ class Sdk {
 
     private val mobile = Mobile()
 
-    private val scrapper = Api().apply {
+    private val scrapper = Scrapper().apply {
         useNewStudent = true
     }
 
@@ -155,7 +156,7 @@ class Sdk {
     var loginType = ScrapperLoginType.AUTO
         set(value) {
             field = value
-            scrapper.loginType = Api.LoginType.valueOf(value.name)
+            scrapper.loginType = Scrapper.LoginType.valueOf(value.name)
         }
 
     var logLevel = HttpLoggingInterceptor.Level.BASIC

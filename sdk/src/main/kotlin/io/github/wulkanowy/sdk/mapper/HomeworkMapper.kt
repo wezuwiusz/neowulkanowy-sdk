@@ -1,10 +1,10 @@
 package io.github.wulkanowy.sdk.mapper
 
-import io.github.wulkanowy.api.toLocalDate
+import io.github.wulkanowy.sdk.scrapper.toLocalDate
 import io.github.wulkanowy.sdk.mobile.dictionaries.Dictionaries
 import io.github.wulkanowy.sdk.pojo.Homework
 import io.github.wulkanowy.sdk.toLocalDate
-import io.github.wulkanowy.api.homework.Homework as ScrapperHomework
+import io.github.wulkanowy.sdk.scrapper.homework.Homework as ScrapperHomework
 import io.github.wulkanowy.sdk.mobile.homework.Homework as ApiHomework
 
 fun List<ApiHomework>.mapHomework(dictionaries: Dictionaries): List<Homework> {

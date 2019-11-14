@@ -3,7 +3,7 @@ package io.github.wulkanowy.sdk.mapper
 import io.github.wulkanowy.sdk.normalizeRecipient
 import io.github.wulkanowy.sdk.pojo.Message
 import io.github.wulkanowy.sdk.toLocalDateTime
-import io.github.wulkanowy.api.messages.Message as ScrapperMessage
+import io.github.wulkanowy.sdk.scrapper.messages.Message as ScrapperMessage
 import io.github.wulkanowy.sdk.mobile.messages.Message as ApiMessage
 
 @JvmName("mapApiMessages")

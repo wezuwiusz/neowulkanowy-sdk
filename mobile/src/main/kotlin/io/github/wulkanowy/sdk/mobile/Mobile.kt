@@ -115,7 +115,7 @@ class Mobile {
     private val interceptors: MutableList<Pair<Interceptor, Boolean>> = mutableListOf()
 
     fun setInterceptor(interceptor: Interceptor, network: Boolean = false, index: Int = -1) {
-        interceptors.add(interceptor to network)
+        interceptors[index] = interceptor to network
     }
 
     fun getApiStudents(token: String, pin: String, symbol: String): Single<List<Student>> {

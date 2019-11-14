@@ -5,7 +5,7 @@ import io.github.wulkanowy.sdk.mobile.register.Student
 import io.github.wulkanowy.sdk.toLocalDate
 import org.threeten.bp.LocalDate.now
 import org.threeten.bp.Month
-import io.github.wulkanowy.api.register.Semester as ScrapperSemester
+import io.github.wulkanowy.sdk.scrapper.register.Semester as ScrapperSemester
 
 @JvmName("mapScrapperSemesters")
 fun List<ScrapperSemester>.mapSemesters(): List<Semester> {

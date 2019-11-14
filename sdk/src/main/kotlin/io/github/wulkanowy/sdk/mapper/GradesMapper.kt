@@ -1,11 +1,11 @@
 package io.github.wulkanowy.sdk.mapper
 
-import io.github.wulkanowy.api.grades.isGradeValid
-import io.github.wulkanowy.api.toLocalDate
+import io.github.wulkanowy.sdk.scrapper.grades.isGradeValid
+import io.github.wulkanowy.sdk.scrapper.toLocalDate
 import io.github.wulkanowy.sdk.mobile.dictionaries.Dictionaries
 import io.github.wulkanowy.sdk.pojo.Grade
 import io.github.wulkanowy.sdk.toLocalDate
-import io.github.wulkanowy.api.grades.Grade as ScrapperGrade
+import io.github.wulkanowy.sdk.scrapper.grades.Grade as ScrapperGrade
 import io.github.wulkanowy.sdk.mobile.grades.Grade as ApiGrade
 
 fun List<ApiGrade>.mapGrades(dict: Dictionaries): List<Grade> {

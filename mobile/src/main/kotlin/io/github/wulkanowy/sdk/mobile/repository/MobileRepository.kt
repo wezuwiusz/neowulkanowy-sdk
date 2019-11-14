@@ -43,7 +43,7 @@ class MobileRepository(private val api: MobileService) {
 
     fun getTeachers(studentId: Int, semesterId: Int): Single<List<Teacher>> {
         return api.getTeachers(TeachersRequest(studentId, semesterId)).map { it.data }.map {
-            it?.schoolTeachers?.union(it.teachersSubjects)?.toList()
+            it.schoolTeachers.union(it.teachersSubjects).toList()
         }
     }
 

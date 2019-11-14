@@ -1,13 +1,13 @@
 package io.github.wulkanowy.sdk.mapper
 
-import io.github.wulkanowy.api.timetable.CompletedLesson as ScrapperCompletedLesson
+import io.github.wulkanowy.sdk.scrapper.timetable.CompletedLesson as ScrapperCompletedLesson
 import io.github.wulkanowy.sdk.pojo.CompletedLesson
-import io.github.wulkanowy.api.toLocalDate
+import io.github.wulkanowy.sdk.scrapper.toLocalDate
 import io.github.wulkanowy.sdk.mobile.dictionaries.Dictionaries
 import io.github.wulkanowy.sdk.pojo.Timetable
 import io.github.wulkanowy.sdk.toLocalDate
 import io.github.wulkanowy.sdk.toLocalDateTime
-import io.github.wulkanowy.api.timetable.Timetable as ScrapperTimetable
+import io.github.wulkanowy.sdk.scrapper.timetable.Timetable as ScrapperTimetable
 import io.github.wulkanowy.sdk.mobile.timetable.Lesson as ApiTimetable
 
 fun List<ApiTimetable>.mapTimetable(dictionaries: Dictionaries): List<Timetable> {

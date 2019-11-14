@@ -2,7 +2,7 @@ package io.github.wulkanowy.sdk.mapper
 
 import io.github.wulkanowy.sdk.pojo.Sender
 import io.github.wulkanowy.sdk.pojo.SentMessage
-import io.github.wulkanowy.api.messages.SentMessage as ScrapperSentMessage
+import io.github.wulkanowy.sdk.scrapper.messages.SentMessage as ScrapperSentMessage
 
 fun ScrapperSentMessage.mapSentMessage(): SentMessage {
     return SentMessage(

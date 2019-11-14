@@ -1,10 +1,10 @@
 package io.github.wulkanowy.sdk.mapper
 
-import io.github.wulkanowy.api.toLocalDate
+import io.github.wulkanowy.sdk.scrapper.toLocalDate
 import io.github.wulkanowy.sdk.mobile.dictionaries.Dictionaries
 import io.github.wulkanowy.sdk.pojo.Note
 import io.github.wulkanowy.sdk.toLocalDate
-import io.github.wulkanowy.api.notes.Note as ScrapperNote
+import io.github.wulkanowy.sdk.scrapper.notes.Note as ScrapperNote
 import io.github.wulkanowy.sdk.mobile.notes.Note as ApiNote
 
 fun List<ApiNote>.mapNotes(dictionaries: Dictionaries): List<Note> {

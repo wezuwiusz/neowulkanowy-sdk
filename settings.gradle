@@ -1,5 +1,5 @@
 rootProject.name = 'sdk'
 
-include 'sdk'
 include 'mobile'
-include "api"
+include 'scrapper'
+include 'sdk'

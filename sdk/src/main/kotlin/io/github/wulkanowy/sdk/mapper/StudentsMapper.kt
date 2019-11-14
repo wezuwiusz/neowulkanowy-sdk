@@ -2,7 +2,7 @@ package io.github.wulkanowy.sdk.mapper
 
 import io.github.wulkanowy.sdk.Sdk
 import io.github.wulkanowy.sdk.pojo.Student
-import io.github.wulkanowy.api.register.Student as ScrapperStudent
+import io.github.wulkanowy.sdk.scrapper.register.Student as ScrapperStudent
 import io.github.wulkanowy.sdk.mobile.register.Student as ApiStudent
 
 fun List<ApiStudent>.mapStudents(symbol: String): List<Student> {

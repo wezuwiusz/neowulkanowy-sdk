@@ -2,7 +2,7 @@ package io.github.wulkanowy.sdk.mapper
 
 import io.github.wulkanowy.sdk.mobile.dictionaries.Dictionaries
 import io.github.wulkanowy.sdk.pojo.Teacher
-import io.github.wulkanowy.api.school.Teacher as ScrapperTeacher
+import io.github.wulkanowy.sdk.scrapper.school.Teacher as ScrapperTeacher
 import io.github.wulkanowy.sdk.mobile.school.Teacher as ApiTeacher
 
 fun List<ApiTeacher>.mapTeachers(dictionaries: Dictionaries): List<Teacher> {

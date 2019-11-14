@@ -1,13 +1,13 @@
 package io.github.wulkanowy.sdk.mapper
 
-import io.github.wulkanowy.api.grades.GradePointsSummary
-import io.github.wulkanowy.api.grades.GradeStatistics as ScrapperGradeStatistics
+import io.github.wulkanowy.sdk.scrapper.grades.GradePointsSummary
+import io.github.wulkanowy.sdk.scrapper.grades.GradeStatistics as ScrapperGradeStatistics
 import io.github.wulkanowy.sdk.pojo.GradeStatistics
 import io.github.wulkanowy.sdk.mobile.dictionaries.Dictionaries
 import io.github.wulkanowy.sdk.mobile.grades.GradesSummaryResponse
 import io.github.wulkanowy.sdk.pojo.GradePointsStatistics
 import io.github.wulkanowy.sdk.pojo.GradeSummary
-import io.github.wulkanowy.api.grades.GradeSummary as ScrapperGradeSummary
+import io.github.wulkanowy.sdk.scrapper.grades.GradeSummary as ScrapperGradeSummary
 
 fun GradesSummaryResponse.mapGradesSummary(dict: Dictionaries): List<GradeSummary> {
     return average.union(predicted).union(evaluative).map { it.subjectId }.distinct().sorted().map { subjectId ->
