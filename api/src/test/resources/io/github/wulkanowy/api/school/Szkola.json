@@ -1,0 +1,31 @@
+{
+  "data": {
+    "Szkola": {
+      "Nazwa": "Publiczna szkoła Wulkanowego nr 1 w fakelog.cf",
+      "Adres": "",
+      "Kontakt": "",
+      "Dyrektor": "Karolina Kowalska",
+      "Pedagog": "Stanisław Krupa",
+      "Id": 0
+    },
+    "Nauczyciele": [
+      {
+        "Nazwa": "Podstawy przedsiębiorczości",
+        "Nauczyciel": "-",
+        "Id": 0
+      },
+      {
+        "Nazwa": "Zajęcia z wychowawcą",
+        "Nauczyciel": "Karolina Kowalska [AN], Zbigniew Niedochodowicz [ZN]",
+        "Id": 0
+      },
+      {
+        "Nazwa": " ",
+        "Nauczyciel": "Zbigniew Niedochodowicz [ZN]",
+        "Id": 0
+      }
+    ],
+    "Klasa": "Klasa 8A"
+  },
+  "success": true
+}

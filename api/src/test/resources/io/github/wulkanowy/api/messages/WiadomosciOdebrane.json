@@ -1,0 +1,25 @@
+{
+  "success": true,
+  "data": [
+    {
+      "Nieprzeczytana": false,
+      "Data": "2018-03-01T13:31:16.000Z",
+      "Tresc": null,
+      "Temat": "Temat wiadomości",
+      "NadawcaNazwa": "Nazwisko Imię",
+      "IdWiadomosci": 27214,
+      "IdNadawca": 3617,
+      "Id": 1
+    },
+    {
+      "Nieprzeczytana": true,
+      "Data": "2018-04-05T09:51:15.000Z",
+      "Tresc": null,
+      "Temat": "Tytuł",
+      "NadawcaNazwa": "Kowalski Jan",
+      "IdWiadomosci": 28973,
+      "IdNadawca": 2137,
+      "Id": 2
+    }
+  ]
+}

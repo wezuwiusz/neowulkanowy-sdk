@@ -1,0 +1,59 @@
+{
+  "data": {
+    "17.09.2018": [
+      {
+        "Data": "2018-09-17 00:00:00",
+        "Przedmiot": "Język angielski",
+        "NrLekcji": 1,
+        "Temat": "Human - vocabulary practice",
+        "Nauczyciel": "Angielska Amerykanka [An]",
+        "Zastepstwo": "",
+        "Nieobecnosc": "",
+        "PseudonimUcznia": null,
+        "ZasobyPubliczne": "",
+        "PrzedmiotDisplay": "Język angielski"
+      },
+      {
+        "Data": "2018-09-17 00:00:00",
+        "Przedmiot": "Historia i społeczeństwo",
+        "NrLekcji": 2,
+        "Temat": "Powstanie listopadowe, Napoleon, i inne przecinki",
+        "Nauczyciel": "Histeryczna Jadwiga [Hi]",
+        "Zastepstwo": "",
+        "Nieobecnosc": "",
+        "PseudonimUcznia": null,
+        "ZasobyPubliczne": "",
+        "PrzedmiotDisplay": "Historia i społeczeństwo"
+      }
+    ],
+    "18.09.2018": [
+      {
+        "Data": "2018-09-18 00:00:00",
+        "Przedmiot": "Język polski",
+        "NrLekcji": 4,
+        "Temat": "Inspiracje krajobrazem gór w poezji",
+        "Nauczyciel": "Polonistka Joanna [Po]",
+        "Zastepstwo": "",
+        "Nieobecnosc": "Nieobecność nieusprawiedliwiona",
+        "PseudonimUcznia": null,
+        "ZasobyPubliczne": "",
+        "PrzedmiotDisplay": "Język polski"
+      }
+    ],
+    "19.09.2018": [
+      {
+        "Data": "2018-09-19 00:00:00",
+        "Przedmiot": "Język angielski",
+        "NrLekcji": 5,
+        "Temat": "Human - vocabulary practice",
+        "Nauczyciel": "Angielska Amerykanka [An]",
+        "Zastepstwo": "",
+        "Nieobecnosc": null,
+        "PseudonimUcznia": null,
+        "ZasobyPubliczne": "",
+        "PrzedmiotDisplay": "Język angielski"
+      }
+    ]
+  },
+  "success": true
+}

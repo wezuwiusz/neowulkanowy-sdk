@@ -13,6 +13,6 @@ ext {
 }
 
 subprojects {
-    version = "0.1.0-SNAPSHOT"
+    version = "0.12.0-SNAPSHOT"
     group = "io.github.wulkanowy"
 }

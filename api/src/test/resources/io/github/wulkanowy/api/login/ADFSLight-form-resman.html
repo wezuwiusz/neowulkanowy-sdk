@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="utf-8">
+    <title>Logowanie do systemu</title>
+</head>
+<body>
+<div class="panel" id="panel">
+    <div class="content" id="content">
+        <form action="/LoginPage.aspx?ReturnUrl=%2f%3fwa" method="post">
+            <div class="label">Zaloguj się</div>
+            <div class="box" id="box">
+                <div class="box-h">Proszę podać nazwę użytkownika i hasło</div>
+                <div class="box-p">
+                    <label class="box-line" for="Username">Nazwa użytkownika:</label>
+                    <input class="box-line" id="Username" name="Username" type="text"/>
+                    <span class="field-validation-valid box-line"></span>
+                </div>
+                <div class="box-p">
+                    <label class="box-line" for="Password">Hasło:</label>
+                    <input class="box-line" id="Password" name="Password" type="password"/>
+                    <span class="field-validation-valid box-line"></span>
+                </div>
+                <div class="box-p box-right">
+                    <button type="submit" class="submit-button box-line">Zaloguj się</button>
+                </div>
+                <div>
+                    <a class="box-line box-link" id="aUnlock" href="/AccountManage/UnlockAccountRequest"
+                       title="Pierwsze logowanie lub odzyskiwanie hasła">Przywracanie dostępu do konta</a>
+                </div>
+
+                <div class="box-p"></div>
+                <div class="box-p box-right box-small" style="display:none">
+                    <a href="#" id="hpReturnHyperlink">Powrót</a>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <div class="footer">
+        <div>&copy; VULCAN sp. z o.o. 2011-2019</div>
+        <div>CRUSTS 19.9.0.7949</div>
+    </div>
+</div>
+</body>
+</html>

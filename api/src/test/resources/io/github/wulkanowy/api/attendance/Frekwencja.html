@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Witryna ucznia i rodzica – Frekwencja</title>
+    <style>
+      td div::before {
+        display: block;
+      }
+      .x-obecnosc:before {
+        content: 'obecność';
+        background: green;
+      }
+      .x-nieobecnosc-nieuspr:before {
+        content: 'nieobecność nieusprawiedliwiona';
+        background: red;
+      }
+      .x-nieobecnosc-uspr:before {
+        content: 'nieobecność usprawiedliwiona';
+        background: orange;
+      }
+      .x-nieobecnosc-przycz-szkol:before {
+        content: 'nieobecność z przyczyn szkolnych';
+        background: lightblue;
+      }
+      .x-sp-nieusprawiedliwione:before {
+        content: 'spóźnienie nieusprawiedliwione';
+        background: yellow;
+      }
+      .x-sp-spr:before {
+        content: 'spóźnienie usprawiedliwione';
+        background: black;
+        color: white;
+      }
+      .x-sp-zwolnienie:before {
+        content: 'zwolnienie';
+        background: purple;
+      }
+      .x-sp-nieobecny-w-oddziale:before {
+        content: 'nieobecny w oddziale';
+        background: grey;
+      }
+      .x-obecnosc:before {
+        content: 'obecność';
+        background: green;
+      }
+      .presentData td:not(.padding-zero):not(.x-sp-nieobecny-w-oddziale):not(:first-child):before {
+        content: 'pusta';
+        background: grey;
+      }
+      table img {
+        margin: 0 auto;
+        display: block;
+      }
+
+    </style>
+</head>
+<body>
+<main class="mainContainer">
+    <h1>Frekwencja</h1>
+    <div class="tableForm">
+        <table class="presentData">
+            <thead>
+            <tr>
+                <th class="lesson">Lekcja</th>
+                <th>poniedziałek<br>01.10.2018</th>
+                <th>wtorek<br>02.10.2018</th>
+                <th>środa<br>03.10.2018</th>
+                <th>czwartek<br>04.10.2018</th>
+                <th>piątek<br>05.10.2018</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>1</td>
+                <td></td>
+                <td class="padding-zero">
+                    <!-- @see AttendanceTest#getAttendance_present() -->
+                    <!--Obecność-->
+                    <div class="x-obecnosc">
+                        <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAUCAYAAADPym6aAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAACHSURBVFhH7ZZBCoAgEEW9pgfoEq47hLsu4aZLCJ3CbvGL1ELQosDI+A9m5QjzkD8oCCH1gRuhZAe51QALIBxlASbovb+Hcef9r+FF7g/09F41KNKKCDDDqHIWmhGxOkrEShdBEyLpZjpKryahhS9SjdJAv8nIFRSphR8on4Mcn/2iEPJbhFgAXyJEEWgRs3YAAAAASUVORK5CYII=" alt="Obecność" title="Obecność">
+                        <span>Zajęcia artystyczne</span>
+                    </div>
+                </td>
+                <td class="padding-zero">
+                    <!-- @see AttendanceTest#getAttendance_absenceExcused() -->
+                    <!--Obecność usprawiedliwiona-->
+                    <div class="x-nieobecnosc-uspr">
+                        <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAUCAYAAADPym6aAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAACOSURBVFhHY/hzMOD/cMCjHhlseNQjcLwp+n9lZOr/SDCO+38GmxoMHP5/OlxP0v/Nm7CpIQ1TySNkOoYSvWh41CNwjM0xlIiRiUc9AsejHsEhRiYe9QgcY3UMpJ6YvgghdqYeS50x+D0CxIvioBUeBE+fOCRjhEg8+DwCC/mh3EQZJHjUI4MNDxOPBPwHAHpBr9UG/Y9xAAAAAElFTkSuQmCC" alt="Nieobecność usprawiedliwiona" title="Nieobecność usprawiedliwiona">
+                        <span>Matematyka</span>
+                    </div>
+                </td>
+                <td class="padding-zero">
+                    <!-- @see AttendanceTest#getAttendance_latenessExcused() -->
+                    <!--Spóźnienie (usprawiedliwione)-->
+                    <div class="x-sp-spr">
+                        <!--TODO:update this img src-->
+                        <img src="data:image/gif;base64,R0lGODlhAQABAIAAAMLCwgAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==" alt="Spóźnienie usprawiedliwione" title="Spóźnienie usprawiedliwione">
+                        <span>Historia</span>
+                    </div>
+                </td>
+                <td class="padding-zero">
+                    <!-- @see AttendanceTest#getAttendance_exemption() -->
+                    <!--Zwolnienie-->
+                    <div class="x-sp-zwolnienie">
+                        <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAUCAYAAADPym6aAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAACrSURBVFhHY7i7++n/4YBHPTLY8KhHUPCaVf+LIlP/R4Lx1P/bsKmB433/u+Bq6/4vXINNDemYih4h0VHk6MGDRz2CgrE5au5UaPJBwtmr/p/Cp4cCTKcYgeSLrrlIYkPPI5f+L8wGxkbtPlTxoeaRU311qEkKhoeUR8D5BEdxPHQ8giVfIOOh4hFwkkIusUB46JdaWPDg9Qgs5IdyE2UQ4FGPDDY8TDzy9D8ABeBQSeVMqv4AAAAASUVORK5CYII=" alt="Zwolnienie" title="Zwolnienie">
+                        <span>Informatyka</span>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td>2</td>
+                <td></td>
+                <td class="padding-zero">
+                    <!-- @see AttendanceTest#getAttendance_absence() -->
+                    <!--Nieobecność (nieusprawiedliwiona)-->
+                    <div class="x-nieobecnosc-nieuspr">
+                        <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAUCAYAAADPym6aAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAB3SURBVFhHY/i/rP3/cMCjHhlseNQjYDyr/H9VZOr/SDAu/H8OmxqcuOb/DLje7P9bZmFTQzymgkcodAQ1zADiUY+A8ahHkPBg9Qgk8+LHhMwgB496BIyp4YhRj6DiUY+A8fDyCCwTD+UmyiDCox4ZbHiYeKT9PwD3fSQpoN7BnAAAAABJRU5ErkJggg==" alt="Nieobecność nieusprawiedliwiona" title="Nieobecność nieusprawiedliwiona">
+                        <span>Informatyka</span>
+                    </div>
+                </td>
+                <td class="padding-zero">
+                    <!-- @see AttendanceTest#getAttendance_lateness() -->
+                    <!--Spóźnienie (nieusprawiedliwione)-->
+                    <div class="x-sp-nieusprawiedliwione">
+                        <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAUCAYAAADPym6aAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAACySURBVFhHY3j7wPP/cMCjHhlseNQjKPhM+P+yyNT/kWAc8/8gNjUoOPj/BLj6xP+rzmBTQxqmokfIcBC5+rDgUY+gYFwO2hEDTT5Q3BOMKj80PALKB8hivv9X9YT/vw6XB+Ih4RGwWOr/CTuQxNDx0IgRIEZLWhieGjIeQcZgT6EVzUPCI0CHly32RVMzFD0CFkMqsbA5eEh4hBg8OD0CC/mh3EQZBHjUI4MNDxOPeP4HAAbs0vtNjLFcAAAAAElFTkSuQmCC" alt="Spóźnienie nieusprawiedliwione" title="Spóźnienie nieusprawiedliwione">
+                        <span>Godzina wychowawcza</span>
+                    </div>
+                </td>
+                <td class="padding-zero">
+                    <!-- @see AttendanceTest#getAttendance_absenceForSchoolReason() -->
+                    <!--Nieobecność z przyczyn szkolnych-->
+                    <div class="x-nieobecnosc-przycz-szkol">
+                        <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAUCAYAAADPym6aAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAADBSURBVFhHY1h58u//4YBHPTLY8Aj2yI4d/9MjU/9HgvG8/xOwqSEJn/9fCjev+X/LDmxqCGMyPUK+hTgxheaOegTFQpjYtHnQJALBpcuR1CxHlYtsPo+QQzZj4D2C5jiww2F5CJQPkPU8/9/SvOP/XJhaEB48HsEjBvUoSgyh4yHhERAfLWlheGrIeAQZoyQ7KB4SHgE6PH3aczS5oegRMBuRrLBWfIPCI9TAA+MRWMgO5SbKIMWjHhlseJh45O9/AH/u/uJdUzaTAAAAAElFTkSuQmCC" alt="Nieobecność z przyczyn szkolnych" title="Nieobecność z przyczyn szkolnych">
+                        <span>Język angielski</span>
+                    </div>
+                </td>
+                <td class="x-sp-nieobecny-w-oddziale"></td>
+            </tr>
+            </tbody>
+        </table>
+
+        <div class="excuse">
+            <input id="excuseBtn" class="button-excuse" value="Usprawiedliw" readonly="readonly">
+            <div>
+                <input type="checkbox" id="sampleCheckbox"/>
+                <label for="sampleCheckbox" id="sampleCheckboxLabel">zaznaczenie dni lub lekcji, które mają być usprawiedliwione</label>
+            </div>
+            <div>
+                <label class="labelInfo">Usprawiedliwienie czeka na zatwierdzenie przez wychowawcę</label>
+            </div>
+            <div>
+                <label class="labelInfo">Usprawiedliwienie zatwierdzone przez wychowawcę</label>
+            </div>
+            <div>
+                <label class="labelInfo">Usprawiedliwienie odrzucone przez wychowawcę</label>
+            </div>
+        </div>
+    </div>
+
+    <h1 id="statystyki">Statystyki</h1>
+    <div>
+        <label for="idPrzedmiot">Przedmiot:</label>
+        <select id="idPrzedmiot" name="idPrzedmiot">
+            <option value="-1">Wszystkie</option>
+            <option value="300">Zajęcia z wychowawcą</option>
+            <option value="301">Język polski</option>
+            <option value="302">Historia</option>
+            <option value="303">Etyka</option>
+            <option value="304">Język angielski</option>
+            <option value="305">Język niemiecki</option>
+            <option value="306">Metodologia programowania</option>
+            <option value="307">Matematyka</option>
+            <option value="308">Fizyka</option>
+            <option value="309">Chemia</option>
+            <option value="310">Biologia</option>
+            <option value="311">Geografia</option>
+            <option value="312">Informatyka</option>
+            <option value="313">Religia</option>
+            <option value="0">Brak opisu lekcji</option>
+            <option value="492">Opieka nad uczniami</option>
+        </select>
+    </div>
+    <h2>Frekwencja od początku roku szkolnego: 80,94%</h2>
+    <table>
+        <thead>
+        <tr>
+            <th></th>
+            <th>IX</th>
+            <th>X</th>
+            <th>XI</th>
+            <th>XII</th>
+            <th>I</th>
+            <th>II</th>
+            <th>III</th>
+            <th>IV</th>
+            <th>V</th>
+            <th>VI</th>
+            <th>VII</th>
+            <th>VIII</th>
+            <th>Razem</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td class="text-center">Obecność</td>
+            <td>32</td>
+            <td>64</td>
+            <td>99</td>
+            <td>55</td>
+            <td>88</td>
+            <td>44</td>
+            <td>33</td>
+            <td>88</td>
+            <td>99</td>
+            <td>124</td>
+            <td></td>
+            <td></td>
+            <td class="text-center">726</td>
+        </tr>
+        <tr>
+            <td class="text-center">Nieobecność nieusprawiedliwiona</td>
+            <td>1</td>
+            <td>2</td>
+            <td>3</td>
+            <td></td>
+            <td></td>
+            <td>3</td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td>6</td>
+            <td></td>
+            <td></td>
+            <td class="text-center">15</td>
+        </tr>
+        <tr>
+            <td class="text-center">Nieobecność usprawiedliwiona</td>
+            <td>2</td>
+            <td>55</td>
+            <td>2</td>
+            <td>33</td>
+            <td>2</td>
+            <td>2</td>
+            <td>2</td>
+            <td>2</td>
+            <td>2</td>
+            <td>2</td>
+            <td></td>
+            <td></td>
+            <td class="text-center">104</td>
+        </tr>
+        <tr>
+            <td class="text-center">Nieobecność z przyczyn szkolnych</td>
+            <td>3</td>
+            <td>8</td>
+            <td></td>
+            <td></td>
+            <td>5</td>
+            <td></td>
+            <td></td>
+            <td>6</td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td class="text-center">22</td>
+        </tr>
+        <tr>
+            <td class="text-center">Spóźnienie nieusprawiedliwione</td>
+            <td>4</td>
+            <td>16</td>
+            <td>5</td>
+            <td>5</td>
+            <td>5</td>
+            <td>5</td>
+            <td>5</td>
+            <td>5</td>
+            <td>5</td>
+            <td>5</td>
+            <td></td>
+            <td></td>
+            <td class="text-center">60</td>
+        </tr>
+        <tr>
+            <td class="text-center">Spóźnienie usprawiedliwione</td>
+            <td>5</td>
+            <td>24</td>
+            <td>6</td>
+            <td></td>
+            <td></td>
+            <td>8</td>
+            <td>2</td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td class="text-center">45</td>
+        </tr>
+        <tr>
+            <td class="text-center">Zwolnienie</td>
+            <td>6</td>
+            <td>32</td>
+            <td></td>
+            <td></td>
+            <td>4</td>
+            <td></td>
+            <td>9</td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td class="text-center">51</td>
+        </tr>
+        </tbody>
+    </table>
+</main>
+<footer>wersja: 18.04.0003.29139</footer>
+</body>
+</html>

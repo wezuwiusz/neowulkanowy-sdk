@@ -1,0 +1,35 @@
+{
+  "data": [
+    {
+      "IkonkaNazwa": null,
+      "Num": null,
+      "Zawartosc": [
+        {
+          "IkonkaNazwa": null,
+          "Num": null,
+          "Zawartosc": [],
+          "Nazwa": "Czwartek (20.06.2019) - Sobota (31.08.2019) - Ferie letnie",
+          "Url": null,
+          "Symbol": null,
+          "Nieaktywny": false
+        },
+        {
+          "IkonkaNazwa": null,
+          "Num": null,
+          "Zawartosc": [],
+          "Nazwa": "Czwartek (15.08.2019) - Wniebowzięcie Najświętszej Maryi Panny",
+          "Url": null,
+          "Symbol": null,
+          "Nieaktywny": false
+        }
+      ],
+      "Nazwa": "",
+      "Url": null,
+      "Symbol": null,
+      "Nieaktywny": false
+    }
+  ],
+  "success": true,
+  "errorMessage": null,
+  "feedback": null
+}

@@ -1,0 +1,64 @@
+{
+  "data": {
+    "IsSrednia": false,
+    "IsPunkty": true,
+    "Oceny": [
+      {
+        "Przedmiot": "Edukacja dla bezpieczeństwa",
+        "Pozycja": 0,
+        "OcenyCzastkowe": [
+          {
+            "Nauczyciel": "Weronika Ratajczak",
+            "Wpis": "85/100",
+            "Waga": 0.00,
+            "NazwaKolumny": "diagnoza",
+            "KodKolumny": "",
+            "DataOceny": "10.09.2019",
+            "KolorOceny": 7261447
+          }
+        ],
+        "ProponowanaOcenaRoczna": "",
+        "OcenaRoczna": "",
+        "ProponowanaOcenaRocznaPunkty": null,
+        "OcenaRocznaPunkty": null,
+        "Srednia": 0,
+        "SumaPunktow": "-",
+        "WidocznyPrzedmiot": false
+      },
+      {
+        "Przedmiot": "Fizyka",
+        "Pozycja": 1,
+        "OcenyCzastkowe": [
+          {
+            "Nauczyciel": "Jakub Michalak",
+            "Wpis": "0/0 (komentarz)",
+            "Waga": 0.00,
+            "NazwaKolumny": "Odpowiedź",
+            "KodKolumny": "O",
+            "DataOceny": "05.12.2018",
+            "KolorOceny": 0
+          },
+          {
+            "Nauczyciel": "Jakub Michalak",
+            "Wpis": "1/0 (komentarz)",
+            "Waga": 0.00,
+            "NazwaKolumny": "Odpowiedź",
+            "KodKolumny": "O",
+            "DataOceny": "04.12.2018",
+            "KolorOceny": 0
+          }
+        ],
+        "ProponowanaOcenaRoczna": "",
+        "OcenaRoczna": "dobry",
+        "Srednia": 0.0,
+        "SumaPunktow": "-",
+        "WidocznyPrzedmiot": false
+      }
+    ],
+    "OcenyOpisowe": [],
+    "TypOcen": 2,
+    "IsOstatniSemestr": false,
+    "IsDlaDoroslych": false
+  },
+  "success": true
+}

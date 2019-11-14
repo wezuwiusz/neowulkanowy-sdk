@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Logowanie do systemu e-Szkoła</title>
+</head>
+
+<body>
+<form id="form1" name="form1" method="post" action="/adfs/ls/?wa=wsignin1.0&amp;wtrealm=http%3a%2f%2fcufs.fakelog.localhost:3000%2fdefault%2fAccount%2fLogOn&amp;wctx=rm%3d0%26id%3deSzkola%26ru%3d%252fdefault%252fFS%252fLS%253fwa%253dwsignin1.0%2526wtrealm%253dhttps%25253a%25252f%25252fuonetplus.fakelog.localhost:3000%25252fdefault%25252fLoginEndpoint.aspx%2526wctx%253dhttps%25253a%25252f%25252fuonetplus.fakelog.localhost:3000%25252fdefault%25252fLoginEndpoint.aspx&amp;wct=2018-01-01T11%3a26%3a33Z">
+    <input type="hidden" name="__VIEWSTATE" id="__VIEWSTATE" value="base64">
+    <input type="hidden" name="__VIEWSTATEGENERATOR" id="__VIEWSTATEGENERATOR" value="01234567">
+    <input type="hidden" name="__EVENTVALIDATION" id="__EVENTVALIDATION" value="base64">
+    <input type="hidden" name="__db" value="10">
+
+    <div class="mainDiv">
+        <div>
+            <table class="UsernamePasswordTable" id="tableUserCredentials">
+                <tr><td colspan="2">Wpisz nazwę użytkownika i hasło</td></tr>
+                <tr><td>Nazwa użytkownika:</td><td><input name="UsernameTextBox" type="text" id="UsernameTextBox"></td></tr>
+                <tr>
+                    <td>Hasło:</td>
+                    <td><input name="PasswordTextBox" type="password" id="PasswordTextBox"></td>
+                </tr>
+                <tr>
+                    <td colspan="2" align="right">
+                        <input type="image" name="SubmitButton" id="SubmitButton" src="/adfs/ls/Resources/g-zaloguj-1.png">
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</form>
+
+</body>
+</html>

@@ -1,0 +1,41 @@
+{
+  "data": [
+    {
+      "Subject": "Język angielski",
+      "IsEmpty": false,
+      "Items": [
+        {
+          "Label": "0",
+          "Description": "",
+          "Value": 0
+        },
+        {
+          "Label": "4",
+          "Description": "",
+          "Value": 4
+        },
+        {
+          "Label": "8",
+          "Description": "Tu jesteś",
+          "Value": 8
+        },
+        {
+          "Label": "9",
+          "Description": "",
+          "Value": 9
+        },
+        {
+          "Label": "7",
+          "Description": "",
+          "Value": 7
+        },
+        {
+          "Label": "3",
+          "Description": "",
+          "Value": 3
+        }
+      ]
+    }
+  ],
+  "success": true
+}

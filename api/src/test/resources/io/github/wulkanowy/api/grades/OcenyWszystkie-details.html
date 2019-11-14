@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="pl">
+  <head>
+    <meta charset="utf-8">
+    <title>Witryna ucznia i rodzica – Oceny</title>
+  </head>
+  <body>
+    <main class="mainContainer">
+      <h1>Oceny</h1>
+      <div class="filters">
+        <div>
+          <label for="okresyKlasyfikacyjneDropDownList">Okres klasyfikacyjny:</label>
+          <select id="okresyKlasyfikacyjneDropDownList" name="okresyKlasyfikacyjneDropDownList">
+            <option value="1234567">1</option>
+            <option selected="selected" value="1234568">2</option>
+          </select>
+        </div>
+      </div>
+      <table class="ocenySzczegoly-table">
+        <thead>
+          <tr>
+            <th>Przedmiot</th>
+            <th>Ocena cząstkowa</th>
+            <th>Opis</th>
+            <th>Waga</th>
+            <th>Data</th>
+            <th>Nauczyciel</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Zachowanie</td>
+            <td>Brak ocen</td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+          </tr>
+          <tr>
+            <td>Wiedza o społeczeństwie</td>
+            <td>Brak ocen</td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+          </tr>
+          <tr>
+            <!--@see GradesTest#getGrade()-->
+            <!--Zwykła ocena ze zwykłym symbolem i opisem-->
+            <td>Edukacja dla bezpieczeństwa</td>
+            <td class="break-word">
+              <span class="ocenaCzastkowa" style="color:#F04C4C;">4</span>
+            </td>
+            <td class="break-word">S1, PIERWSZA POMOC I RESUSCYTACJA</td>
+            <td>5,00</td>
+            <td>12.12.2018</td>
+            <td>Weronika Ratajczak</td>
+          </tr>
+          <tr>
+            <!--@see GradesTest#getGrade_modifier()-->
+            <!--Ocena z modifikatorem i zwykłym symbolem i opisem-->
+            <td>Fizyka</td>
+            <td class="break-word">
+              <span class="ocenaCzastkowa" style="color:#6ECD07;">2+</span>
+            </td>
+            <td class="break-word">O, Odpowiedź</td>
+            <td>3,00</td>
+            <td>05.12.2018</td>
+            <td>Jakub Michalak</td>
+          </tr>
+          <tr>
+            <!--@see GradesTest#getGrade_modifierInverse()-->
+            <!--Ocena z odwróconym (po drugiej stronie że w sensie) modifikatorem i zwykłym symbolem i opisem-->
+            <td>Język angielski</td>
+            <td class="break-word">
+              <span class="ocenaCzastkowa" style="color:#1289F7;">-5</span>
+            </td>
+            <td class="break-word">BW3, Writing</td>
+            <td>3,00</td>
+            <td>28.11.2018</td>
+            <td>Oliwia Woźniak</td>
+          </tr>
+          <tr>
+            <!--@see GradesTest#getGrade_shortDoubleModifier()-->
+            <!--Ocena z podwójnym skróconym modifikatorem i zwykłym symbolem i opisem-->
+            <td>Język polski</td>
+            <td class="break-word"><span class="ocenaCzastkowa" style="color:#6ECD07;">2=</span></td>
+            <td class="break-word">K, Kordian</td>
+            <td>5,00</td>
+            <td>21.11.2018</td>
+            <td>Amelia Stępień</td>
+          </tr>
+          <tr>
+            <!--@see GradesTest#getGrade_noDescription()-->
+            <!--Ocena z modifikatorem i zwykłym symbolem bez opisu-->
+            <td>Wychowanie fizyczne</td>
+            <td class="break-word"><span class="ocenaCzastkowa" style="color:#6ECD07;">1+</span></td>
+            <td class="break-word">STR</td>
+            <td>8,00</td>
+            <td>14.11.2018</td>
+            <td>Klaudia Dziedzic</td>
+          </tr>
+          <tr>
+            <!--@see GradesTest#getGrade_symbolSpecialChar()-->
+            <!--Ocena z modifikatorem i symbolem ze znakiem specjalnym z opisem-->
+            <td>Język polski</td>
+            <td class="break-word"><span class="ocenaCzastkowa" style="color:#6ECD07;">5+</span></td>
+            <td class="break-word">+Odp, Kordian</td>
+            <td>5,00</td>
+            <td>07.11.2018</td>
+            <td>Amelia Stępień</td>
+          </tr>
+          <tr>
+            <!--@see GradesTest#getGrade_comment()-->
+            <!--Ocena z komentarzem ze zwykłym symbolem i opisem-->
+            <td>Zajęcia z wychowawcą</td>
+            <td class="break-word">
+              <span class="ocenaCzastkowa" style="color:#000000;">5 (pomoc przy tej uroczystości była wyjątkowa (naprawdę))</span>
+            </td>
+            <td class="break-word">A1, Dzień Kobiet w naszej klasie</td>
+            <td>1,50</td>
+            <td>31.10.2018</td>
+            <td>Patryk Maciejewski</td>
+          </tr>
+          <tr>
+            <!--@see GradesTest#getGrade_noNumeric()-->
+            <!--Ocena poza zakresem 0-6 z komentarzem ze zwykłym symbolem i opisem z wagą 0-->
+            <td>Język angielski</td>
+            <td class="break-word"><span class="ocenaCzastkowa" style="color:#20A4F7">65 (%)</span></td>
+            <td class="break-word">MP1, matura próbna</td>
+            <td>0,00</td>
+            <td>24.10.2018</td>
+            <td>Jadwiga Czerwieńska</td>
+          </tr>
+          <tr>
+            <!--@see GradesTest#getGrade_noNumericWithWeight()-->
+            <!--Ocena poza zakresem 0-6 ze zwykłym symbolem i opisem (z nawiasem) z wagą 10-->
+            <td>Język angielski</td>
+            <td class="break-word"><span class="ocenaCzastkowa" style="color:#F04C4C;">nb</span></td>
+            <td class="break-word">S2, słownictwo (człowiek) 4.10</td>
+            <td>10,00</td>
+            <td>04.10.2018</td>
+            <td>Jadwiga Czerwieńska</td>
+          </tr>
+          <tr>
+            <!--@see GradesTest#getGrade_bracesWithoutSpace()-->
+            <!--Ocena poza zakresem 0-6, traktowaną jako komentarz, ze zwykłym symbolem bez opisem (z nawiasem) z wagą 5.50-->
+            <td>Język angielski</td>
+            <td class="break-word"><span class="ocenaCzastkowa" style="color:#F04C4C;">dop(2.03)</span></td>
+            <td class="break-word">ZAL</td>
+            <td>10,00</td>
+            <td>03.10.2018</td>
+            <td>Jadwiga Czerwieńska</td>
+          </tr>
+        </tbody>
+      </table>
+    </main>
+    <footer>wersja: 18.05.0002.29606</footer>
+  </body>
+</html>

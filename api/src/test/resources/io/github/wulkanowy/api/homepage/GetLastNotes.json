@@ -1,0 +1,44 @@
+{
+  "data": [
+    {
+      "IkonkaNazwa": null,
+      "Num": null,
+      "Zawartosc": [
+        {
+          "IkonkaNazwa": null,
+          "Num": null,
+          "Zawartosc": [],
+          "Nazwa": "j. angielski: 1, 6",
+          "Url": null,
+          "Symbol": null,
+          "Nieaktywny": false
+        },
+        {
+          "IkonkaNazwa": null,
+          "Num": null,
+          "Zawartosc": [],
+          "Nazwa": "j. polski: 6, 1",
+          "Url": null,
+          "Symbol": null,
+          "Nieaktywny": false
+        },
+        {
+          "IkonkaNazwa": null,
+          "Num": null,
+          "Zawartosc": [],
+          "Nazwa": "matematyka: 4+, -",
+          "Url": null,
+          "Symbol": null,
+          "Nieaktywny": false
+        }
+      ],
+      "Nazwa": "",
+      "Url": null,
+      "Symbol": null,
+      "Nieaktywny": false
+    }
+  ],
+  "success": true,
+  "errorMessage": null,
+  "feedback": null
+}
