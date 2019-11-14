@@ -6,6 +6,13 @@ allprojects {
     }
 }
 
+ext {
+    okhttp3 = "3.12.5"
+    retrofit = "2.6.2"
+    threetenbp = "1.4.0"
+}
+
 subprojects {
-    version = '0.1.0'
+    version = "0.1.0-SNAPSHOT"
+    group = "io.github.wulkanowy"
 }

@@ -2,37 +2,10 @@ package io.github.wulkanowy.sdk
 
 import io.github.wulkanowy.api.Api
 import io.github.wulkanowy.api.attendance.Absent
-import io.github.wulkanowy.api.resettableLazy
-import io.github.wulkanowy.api.resettableManager
-import io.github.wulkanowy.sdk.attendance.mapAttendance
-import io.github.wulkanowy.sdk.attendance.mapAttendanceSummary
-import io.github.wulkanowy.sdk.dictionaries.Dictionaries
-import io.github.wulkanowy.sdk.dictionaries.mapSubjects
-import io.github.wulkanowy.sdk.exams.mapExams
 import io.github.wulkanowy.sdk.exception.FeatureNotAvailableException
-import io.github.wulkanowy.sdk.grades.mapGradePointsStatistics
-import io.github.wulkanowy.sdk.grades.mapGradeStatistics
-import io.github.wulkanowy.sdk.grades.mapGrades
-import io.github.wulkanowy.sdk.grades.mapGradesSummary
-import io.github.wulkanowy.sdk.homepage.mapLuckyNumbers
-import io.github.wulkanowy.sdk.homework.mapHomework
-import io.github.wulkanowy.sdk.messages.*
-import io.github.wulkanowy.sdk.mobile.mapDevices
-import io.github.wulkanowy.sdk.mobile.mapToken
-import io.github.wulkanowy.sdk.notes.mapNotes
+import io.github.wulkanowy.sdk.mapper.*
+import io.github.wulkanowy.sdk.mobile.Mobile
 import io.github.wulkanowy.sdk.pojo.*
-import io.github.wulkanowy.sdk.pojo.Message
-import io.github.wulkanowy.sdk.pojo.Recipient
-import io.github.wulkanowy.sdk.register.mapSemesters
-import io.github.wulkanowy.sdk.register.mapStudents
-import io.github.wulkanowy.sdk.repository.RegisterRepository
-import io.github.wulkanowy.sdk.repository.RepositoryManager
-import io.github.wulkanowy.sdk.school.mapSchool
-import io.github.wulkanowy.sdk.school.mapTeachers
-import io.github.wulkanowy.sdk.student.mapStudent
-import io.github.wulkanowy.sdk.timetable.mapCompletedLessons
-import io.github.wulkanowy.sdk.timetable.mapTimetable
-import io.github.wulkanowy.signer.getPrivateKeyFromCert
 import io.reactivex.Completable
 import io.reactivex.Maybe
 import io.reactivex.Observable
@@ -59,38 +32,60 @@ class Sdk {
         ADFSLightScoped
     }
 
+    private val mobile = Mobile()
+
+    private val scrapper = Api().apply {
+        useNewStudent = true
+    }
+
     var mode = Mode.HYBRID
 
     var apiKey = ""
+        set(value) {
+            field = value
+            mobile.apiKey = value
+        }
 
     var pin = ""
+        set(value) {
+            field = value
+            mobile.pin = value
+        }
 
     var token = ""
+        set(value) {
+            field = value
+            mobile.token = value
+        }
 
     var apiBaseUrl = ""
         set(value) {
             field = value
-            resettableManager.reset()
+            mobile.apiBaseUrl = value
         }
 
     var deviceName = "Wulkanowy SDK"
+        set(value) {
+            field = value
+            mobile.deviceName = value
+        }
 
     var certKey = ""
         set(value) {
             field = value
-            resettableManager.reset()
+            mobile.certKey = value
         }
 
     var certificate = ""
         set(value) {
             field = value
-            resettableManager.reset()
+            mobile.certificate = value
         }
 
     var privateKey = ""
         set(value) {
             field = value
-            resettableManager.reset()
+            mobile.privateKey = privateKey
         }
 
     var ssl = true
@@ -120,31 +115,41 @@ class Sdk {
         set(value) {
             field = value
             scrapper.schoolSymbol = value
+            mobile.schoolSymbol = value
         }
 
     var classId = 0
         set(value) {
             field = value
             scrapper.classId = value
+            mobile.classId = value
         }
 
     var studentId = 0
         set(value) {
             field = value
             scrapper.studentId = value
+            mobile.studentId = value
         }
 
     var loginId = 0
+        set(value) {
+            field = value
+            mobile.loginId = value
+        }
 
     var diaryId = 0
         set(value) {
             field = value
             scrapper.diaryId = value
+            mobile.diaryId = value
         }
+
     var symbol = ""
         set(value) {
             field = value
             scrapper.symbol = value
+            mobile.symbol = value
         }
 
     var loginType = ScrapperLoginType.AUTO
@@ -157,6 +162,7 @@ class Sdk {
         set(value) {
             field = value
             scrapper.logLevel = value
+            mobile.logLevel = value
         }
 
     var androidVersion = ""
@@ -171,48 +177,17 @@ class Sdk {
             scrapper.buildTag = value
         }
 
-    private val scrapper = Api().apply {
-        useNewStudent = true
-    }
-
-    private val resettableManager = resettableManager()
-
-    private val serviceManager by resettableLazy(resettableManager) {
-        RepositoryManager(logLevel, privateKey, certKey, interceptors, apiBaseUrl, schoolSymbol)
-    }
-
-    private val routes by resettableLazy(resettableManager) {
-        serviceManager.getRoutesRepository()
-    }
-
-    private val mobile by resettableLazy(resettableManager) {
-        serviceManager.getMobileRepository()
-    }
-
-    private fun getRegisterRepo(host: String, symbol: String): RegisterRepository {
-        return serviceManager.getRegisterRepository(host, symbol)
-    }
-
-    private lateinit var dictionaries: Dictionaries
-
-    private fun getDictionaries(): Single<Dictionaries> {
-        if (::dictionaries.isInitialized) return Single.just(dictionaries)
-
-        return mobile.getDictionaries(0, 0, 0).map {
-            it.apply { dictionaries = this }
-        }
-    }
-
     private val interceptors: MutableList<Pair<Interceptor, Boolean>> = mutableListOf()
 
     fun setInterceptor(interceptor: Interceptor, network: Boolean = false, index: Int = -1) {
         scrapper.setInterceptor(interceptor, network, index)
+        mobile.setInterceptor(interceptor, network, index)
         interceptors.add(interceptor to network)
     }
 
     fun getStudents(): Single<List<Student>> {
         return when (mode) {
-            Mode.API -> getApiStudents(token, pin, symbol)
+            Mode.API -> mobile.getApiStudents(token, pin, symbol).map { it.mapStudents() }
             Mode.SCRAPPER -> {
                 scrapper.run {
                     ssl = this@Sdk.ssl
@@ -238,9 +213,9 @@ class Sdk {
                             loginType = it.loginType
                         }
                         scrapper.getToken().compose(ScrapperExceptionTransformer()).flatMap {
-                            getApiStudents(it.token, it.pin, it.symbol)
+                            mobile.getApiStudents(it.token, it.pin, it.symbol)
                         }.map { apiStudents ->
-                            apiStudents.map { apiStudent ->
+                            apiStudents.mapStudents().map { apiStudent ->
                                 apiStudent.copy(
                                     loginMode = Mode.HYBRID,
                                     scrapperHost = scrapperHost,
@@ -257,30 +232,17 @@ class Sdk {
         }
     }
 
-    private fun getApiStudents(token: String, pin: String, symbol: String): Single<List<Student>> {
-        return routes.getRouteByToken(token).flatMap {
-            this@Sdk.apiBaseUrl = it
-            this@Sdk.symbol = symbol
-            getRegisterRepo(apiBaseUrl, symbol).getCertificate(token, pin, deviceName)
-        }.flatMap { certificateResponse ->
-            if (certificateResponse.isError) throw RuntimeException(certificateResponse.message)
-            this@Sdk.certKey = certificateResponse.tokenCert!!.certificateKey
-            this@Sdk.privateKey = getPrivateKeyFromCert(apiKey, certificateResponse.tokenCert.certificatePfx)
-            getRegisterRepo(apiBaseUrl, this@Sdk.symbol).getPupils().map { it.mapStudents(symbol, certificateResponse, this@Sdk.privateKey) }
-        }
-    }
-
     fun getSemesters(): Single<List<Semester>> {
         return when (mode) {
             Mode.HYBRID, Mode.SCRAPPER -> scrapper.getSemesters().compose(ScrapperExceptionTransformer()).map { it.mapSemesters() }
-            Mode.API -> getRegisterRepo(apiBaseUrl.replace("/$symbol", ""), symbol).getPupils().map { it.mapSemesters(studentId) }
+            Mode.API -> mobile.getRegisterRepo(apiBaseUrl.replace("/$symbol", ""), symbol).getPupils().map { it.mapSemesters(studentId) }
         }
     }
 
     fun getAttendance(startDate: LocalDate, endDate: LocalDate, semesterId: Int): Single<List<Attendance>> {
         return when (mode) {
             Mode.SCRAPPER -> scrapper.getAttendance(startDate, endDate).compose(ScrapperExceptionTransformer()).map { it.mapAttendance() }
-            Mode.HYBRID, Mode.API -> getDictionaries().flatMap { dict ->
+            Mode.HYBRID, Mode.API -> mobile.getDictionaries().flatMap { dict ->
                 mobile.getAttendance(startDate, endDate, classId, semesterId, studentId).map { it.mapAttendance(dict) }
             }
         }
@@ -303,14 +265,14 @@ class Sdk {
     fun getSubjects(): Single<List<Subject>> {
         return when (mode) {
             Mode.SCRAPPER -> scrapper.getSubjects().compose(ScrapperExceptionTransformer()).map { it.mapSubjects() }
-            Mode.HYBRID, Mode.API -> getDictionaries().map { it.subjects }.map { it.mapSubjects() }
+            Mode.HYBRID, Mode.API -> mobile.getDictionaries().map { it.subjects }.map { it.mapSubjects() }
         }
     }
 
     fun getExams(start: LocalDate, end: LocalDate, semesterId: Int): Single<List<Exam>> {
         return when (mode) {
             Mode.SCRAPPER -> scrapper.getExams(start, end).compose(ScrapperExceptionTransformer()).map { it.mapExams() }
-            Mode.HYBRID, Mode.API -> getDictionaries().flatMap { dict ->
+            Mode.HYBRID, Mode.API -> mobile.getDictionaries().flatMap { dict ->
                 mobile.getExams(start, end, classId, semesterId, studentId).map { it.mapExams(dict) }
             }
         }
@@ -319,7 +281,7 @@ class Sdk {
     fun getGrades(semesterId: Int): Single<List<Grade>> {
         return when (mode) {
             Mode.SCRAPPER -> scrapper.getGrades(semesterId).compose(ScrapperExceptionTransformer()).map { grades -> grades.mapGrades() }
-            Mode.HYBRID, Mode.API -> getDictionaries().flatMap { dict ->
+            Mode.HYBRID, Mode.API -> mobile.getDictionaries().flatMap { dict ->
                 mobile.getGrades(classId, semesterId, studentId).map { it.mapGrades(dict) }
             }
         }
@@ -328,7 +290,7 @@ class Sdk {
     fun getGradesSummary(semesterId: Int): Single<List<GradeSummary>> {
         return when (mode) {
             Mode.SCRAPPER -> scrapper.getGradesSummary(semesterId).compose(ScrapperExceptionTransformer()).map { it.mapGradesSummary() }
-            Mode.HYBRID, Mode.API -> getDictionaries().flatMap { dict ->
+            Mode.HYBRID, Mode.API -> mobile.getDictionaries().flatMap { dict ->
                 mobile.getGradesSummary(classId, semesterId, studentId).map { it.mapGradesSummary(dict) }
             }
         }
@@ -358,7 +320,7 @@ class Sdk {
     fun getHomework(start: LocalDate, end: LocalDate, semesterId: Int = 0): Single<List<Homework>> {
         return when (mode) {
             Mode.SCRAPPER -> scrapper.getHomework(start, end).compose(ScrapperExceptionTransformer()).map { it.mapHomework() }
-            Mode.HYBRID, Mode.API -> getDictionaries().flatMap { dict ->
+            Mode.HYBRID, Mode.API -> mobile.getDictionaries().flatMap { dict ->
                 mobile.getHomework(start, end, classId, semesterId, studentId).map { it.mapHomework(dict) }
             }
         }
@@ -367,7 +329,7 @@ class Sdk {
     fun getNotes(semesterId: Int): Single<List<Note>> {
         return when (mode) {
             Mode.SCRAPPER -> scrapper.getNotes().compose(ScrapperExceptionTransformer()).map { it.mapNotes() }
-            Mode.HYBRID, Mode.API -> getDictionaries().flatMap { dict ->
+            Mode.HYBRID, Mode.API -> mobile.getDictionaries().flatMap { dict ->
                 mobile.getNotes(semesterId, studentId).map { it.mapNotes(dict) }
             }
         }
@@ -397,7 +359,7 @@ class Sdk {
     fun getTeachers(semesterId: Int): Single<List<Teacher>> {
         return when (mode) {
             Mode.SCRAPPER -> scrapper.getTeachers().compose(ScrapperExceptionTransformer()).map { it.mapTeachers() }
-            Mode.HYBRID, Mode.API -> getDictionaries().flatMap { dict ->
+            Mode.HYBRID, Mode.API -> mobile.getDictionaries().flatMap { dict ->
                 mobile.getTeachers(studentId, semesterId).map { it.mapTeachers(dict) }
             }
         }
@@ -420,15 +382,14 @@ class Sdk {
     fun getReportingUnits(): Single<List<ReportingUnit>> {
         return when (mode) {
             Mode.HYBRID, Mode.SCRAPPER -> scrapper.getReportingUnits().compose(ScrapperExceptionTransformer()).map { it.mapReportingUnits() }
-            Mode.API -> getRegisterRepo(apiBaseUrl.replace("/$symbol", ""), symbol).getPupils()
-                .map { it.mapReportingUnits(studentId) }
+            Mode.API -> mobile.getPupils().map { it.mapReportingUnits(studentId) }
         }
     }
 
     fun getRecipients(unitId: Int, role: Int = 2): Single<List<Recipient>> {
         return when (mode) {
             Mode.HYBRID, Mode.SCRAPPER -> scrapper.getRecipients(unitId, role).compose(ScrapperExceptionTransformer()).map { it.mapRecipients() }
-            Mode.API -> getDictionaries().map { it.teachers }.map { it.mapRecipients(unitId) }
+            Mode.API -> mobile.getDictionaries().map { it.teachers }.map { it.mapRecipients(unitId) }
         }
     }
 
@@ -502,7 +463,7 @@ class Sdk {
     fun getTimetable(start: LocalDate, end: LocalDate): Single<List<Timetable>> {
         return when (mode) {
             Mode.SCRAPPER -> scrapper.getTimetable(start, end).compose(ScrapperExceptionTransformer()).map { it.mapTimetable() }
-            Mode.HYBRID, Mode.API -> getDictionaries().flatMap { dict ->
+            Mode.HYBRID, Mode.API -> mobile.getDictionaries().flatMap { dict ->
                 mobile.getTimetable(start, end, classId, 0, studentId).map { it.mapTimetable(dict) }
             }
         }

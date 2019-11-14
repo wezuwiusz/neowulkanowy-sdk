@@ -1,2 +1,3 @@
 rootProject.name = 'sdk'
 include 'sdk'
+include 'mobile'

@@ -9,13 +9,19 @@ sourceCompatibility = 1.8
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
 
-    implementation project(":mobile")
     implementation "io.github.wulkanowy:api:02e3190"
+    implementation "io.github.wulkanowy:uonet-request-signer:6d7aebf0e9"
 
     compileOnly "org.threeten:threetenbp:$threetenbp:no-tzdb"
     testImplementation "org.threeten:threetenbp:$threetenbp"
 
-    implementation "io.reactivex.rxjava2:rxjava:2.2.14"
+    implementation 'com.google.code.gson:gson:2.8.6'
+    implementation "com.squareup.retrofit2:retrofit:$retrofit"
+    implementation "com.squareup.retrofit2:converter-gson:$retrofit"
+    implementation "com.squareup.retrofit2:converter-scalars:$retrofit"
+
+    implementation "com.squareup.retrofit2:retrofit:$retrofit"
+    implementation "com.squareup.retrofit2:adapter-rxjava2:$retrofit"
     implementation "com.squareup.okhttp3:logging-interceptor:$okhttp3"
 
     testImplementation "com.squareup.okhttp3:mockwebserver:$okhttp3"

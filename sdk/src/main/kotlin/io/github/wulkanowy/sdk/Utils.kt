@@ -1,6 +1,5 @@
 package io.github.wulkanowy.sdk
 
-import io.github.wulkanowy.api.toFormat
 import org.threeten.bp.*
 import java.sql.Timestamp
 import java.util.*
@@ -16,10 +15,5 @@ fun Long.toLocalDateTime(): LocalDateTime = Instant
     .toLocalDateTime()
 
 fun Date.toLocalDateTime(): LocalDateTime = DateTimeUtils.toLocalDateTime(Timestamp(time))
-
-
-fun LocalDate.toFormat() = toFormat("yyyy-MM-dd")
-
-fun LocalDateTime.toFormat() = toFormat("yyyy-MM-dd")
 
 fun String.normalizeRecipient() = substringBeforeLast("-").substringBefore(" [").substringBeforeLast(" (").trim()
