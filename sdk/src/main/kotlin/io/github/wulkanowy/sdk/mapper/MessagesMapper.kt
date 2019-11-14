@@ -13,15 +13,15 @@ fun List<ApiMessage>.mapMessages(): List<Message> {
             id = it.messageId,
             sender = it.senderName,
             unreadBy = it.unread?.toInt(),
-            unread = it.readDateTime == null,
+            unread = it.folder == "Odebrane" && it.readDateTime == null,
             senderId = it.senderId,
             removed = it.status == "Usunieta",
             recipient = it.recipients?.joinToString(", ") { recipient -> recipient.name.normalizeRecipient() },
             readBy = it.read?.toInt(),
             messageId = it.messageId,
-            folderId = when {
-                it.folder == "Odebrane" -> 1
-                it.folder == "Wyslane" -> 2
+            folderId = when (it.folder) {
+                "Odebrane" -> 1
+                "Wyslane" -> 2
                 else -> 1
             },
             content = it.content,
