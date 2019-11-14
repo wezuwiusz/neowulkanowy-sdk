@@ -182,7 +182,7 @@ class Sdk {
 
     fun setInterceptor(interceptor: Interceptor, network: Boolean = false, index: Int = -1) {
         scrapper.setInterceptor(interceptor, network, index)
-        mobile.setInterceptor(interceptor, network, index)
+        mobile.setInterceptor(interceptor, network)
         interceptors.add(interceptor to network)
     }
 
