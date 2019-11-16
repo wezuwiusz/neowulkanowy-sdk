@@ -22,8 +22,6 @@ import org.threeten.bp.LocalDateTime
 
 class Mobile {
 
-    var deviceName = "Wulkanowy SDK"
-
     var classId = 0
 
     var studentId = 0
@@ -79,14 +77,14 @@ class Mobile {
     fun getDictionaries(): Single<Dictionaries> {
         if (::dictionaries.isInitialized) return Single.just(dictionaries)
 
-        return mobile.getDictionaries(0, 0, 0).map {
+        return mobile.getDictionaries(0, 0, classId).map {
             it.apply { dictionaries = this }
         }
     }
 
-    fun getCertificate(token: String, pin: String, symbol: String): Single<CertificateResponse> {
+    fun getCertificate(token: String, pin: String, symbol: String, deviceName: String, androidVersion: String): Single<CertificateResponse> {
         return routes.getRouteByToken(token).flatMap { baseUrl ->
-            serviceManager.getRegisterRepository(baseUrl, symbol).getCertificate(token, pin, deviceName)
+            serviceManager.getRegisterRepository(baseUrl, symbol).getCertificate(token, pin, deviceName, androidVersion)
         }
     }
 

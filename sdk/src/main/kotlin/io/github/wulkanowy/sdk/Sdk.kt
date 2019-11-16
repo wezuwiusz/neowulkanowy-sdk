@@ -47,12 +47,6 @@ class Sdk {
             mobile.apiBaseUrl = value
         }
 
-    var deviceName = "Wulkanowy SDK"
-        set(value) {
-            field = value
-            mobile.deviceName = value
-        }
-
     var certKey = ""
         set(value) {
             field = value
@@ -140,13 +134,13 @@ class Sdk {
             mobile.logLevel = value
         }
 
-    var androidVersion = ""
+    var androidVersion = "8.1.0"
         set(value) {
             field = value
             scrapper.androidVersion = value
         }
 
-    var buildTag = ""
+    var buildTag = "SM-J500H Build/LMY48B"
         set(value) {
             field = value
             scrapper.buildTag = value
@@ -161,7 +155,7 @@ class Sdk {
     }
 
     fun getStudentsFromMobileApi(token: String, pin: String, symbol: String, apiKey: String): Single<List<Student>> {
-        return mobile.getCertificate(token, pin, symbol)
+        return mobile.getCertificate(token, pin, symbol, buildTag, androidVersion)
             .flatMap { mobile.getStudents(it, apiKey) }
             .map { it.mapStudents(symbol) }
     }
@@ -173,7 +167,7 @@ class Sdk {
             this.email = email
             this.password = password
             this.symbol = symbol
-            getStudents().compose(ScrapperExceptionTransformer()).map { it.mapStudents(ssl, scrapperHost) }
+            getStudents().compose(ScrapperExceptionTransformer()).map { it.mapStudents(ssl, host) }
         }
     }
 
