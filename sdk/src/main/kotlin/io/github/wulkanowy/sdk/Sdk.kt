@@ -35,9 +35,7 @@ class Sdk {
 
     private val mobile = Mobile()
 
-    private val scrapper = Scrapper().apply {
-        useNewStudent = true
-    }
+    private val scrapper = Scrapper()
 
     var mode = Mode.HYBRID
 

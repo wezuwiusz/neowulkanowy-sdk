@@ -89,7 +89,7 @@ class Scrapper {
             field = value
         }
 
-    var useNewStudent: Boolean = false
+    var useNewStudent: Boolean = true
 
     /**
      * @see <a href="https://deviceatlas.com/blog/most-popular-android-smartphones#poland">The most popular Android phones - 2018</a>
