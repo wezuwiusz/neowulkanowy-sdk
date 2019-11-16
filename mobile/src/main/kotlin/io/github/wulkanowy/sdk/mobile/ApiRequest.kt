@@ -17,8 +17,12 @@ abstract class ApiRequest(
     val requestId: String = UUID.randomUUID().toString(),
 
     @SerializedName("RemoteMobileAppVersion")
-    val remoteMobileAppVersion: String = "18.4.1.388",
+    val remoteMobileAppVersion: String = MOBILE_APP_VERSION,
 
     @SerializedName("RemoteMobileAppName")
     val remoteMobileAppName: String = "VULCAN-Android-ModulUcznia"
-)
+) {
+    companion object {
+        const val MOBILE_APP_VERSION = "18.10.1.435"
+    }
+}

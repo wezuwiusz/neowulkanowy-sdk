@@ -13,7 +13,7 @@ data class CertificateRequest(
     val tokenKey: String,
 
     @SerializedName("AppVersion")
-    val appVersion: String = "18.4.1.388",
+    val appVersion: String = MOBILE_APP_VERSION,
 
     @SerializedName("DeviceId")
     val deviceId: String = UUID.randomUUID().toString(),
