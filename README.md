@@ -10,8 +10,8 @@
 
 ## Features
 
-Check it out [full public api](https://github.com/wulkanowy/sdk/blob/master/src/main/kotlin/io/github/wulkanowy/sdk/Sdk.kt)
-and [test examples](https://github.com/wulkanowy/sdk/blob/master/src/test/kotlin/io/github/wulkanowy/sdk/SdkRemoteTest.kt).
+Check it out [full public api](https://github.com/wulkanowy/sdk/blob/master/sdk/src/main/kotlin/io/github/wulkanowy/sdk/Sdk.kt)
+and [test examples](https://github.com/wulkanowy/sdk/blob/master/sdk/src/test/kotlin/io/github/wulkanowy/sdk/SdkRemoteTest.kt).
 
 
 ## Download
@@ -19,7 +19,7 @@ and [test examples](https://github.com/wulkanowy/sdk/blob/master/src/test/kotlin
 ```gradle
 allprojects {
     repositories {
-		...
+        ...
         maven { url 'https://jitpack.io' }
     }
 }
