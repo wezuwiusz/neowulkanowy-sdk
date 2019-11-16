@@ -22,15 +22,17 @@ import org.threeten.bp.LocalDateTime
 
 class Mobile {
 
-    var apiBaseUrl = ""
-        set(value) {
-            field = value
-            resettableManager.reset()
-        }
-
     var deviceName = "Wulkanowy SDK"
 
-    var certKey = ""
+    var classId = 0
+
+    var studentId = 0
+
+    var loginId = 0
+
+    private val resettableManager = resettableManager()
+
+    var logLevel = HttpLoggingInterceptor.Level.BASIC
         set(value) {
             field = value
             resettableManager.reset()
@@ -42,12 +44,17 @@ class Mobile {
             resettableManager.reset()
         }
 
-    var classId = 0
+    var certKey = ""
         set(value) {
             field = value
+            resettableManager.reset()
         }
 
-    var studentId = 0
+    var apiBaseUrl = ""
+        set(value) {
+            field = value
+            resettableManager.reset()
+        }
 
     var schoolSymbol = ""
         set(value) {
@@ -55,30 +62,16 @@ class Mobile {
             resettableManager.reset()
         }
 
-    var loginId = 0
+    private val serviceManager by resettableLazy(resettableManager) { RepositoryManager(logLevel, privateKey, certKey, interceptors, apiBaseUrl, schoolSymbol) }
 
-    var diaryId = 0
+    private val routes by resettableLazy(resettableManager) { serviceManager.getRoutesRepository() }
 
-    var symbol = ""
+    private val mobile by resettableLazy(resettableManager) { serviceManager.getMobileRepository() }
 
-    var logLevel = HttpLoggingInterceptor.Level.BASIC
-        set(value) {
-            field = value
-            resettableManager.reset()
-        }
+    private val interceptors: MutableList<Pair<Interceptor, Boolean>> = mutableListOf()
 
-    private val resettableManager = resettableManager()
-
-    private val serviceManager by resettableLazy(resettableManager) {
-        RepositoryManager(logLevel, privateKey, certKey, interceptors, apiBaseUrl, schoolSymbol)
-    }
-
-    private val routes by resettableLazy(resettableManager) {
-        serviceManager.getRoutesRepository()
-    }
-
-    private val mobile by resettableLazy(resettableManager) {
-        serviceManager.getMobileRepository()
+    fun setInterceptor(interceptor: Interceptor, network: Boolean = false) {
+        interceptors.add(interceptor to network)
     }
 
     private lateinit var dictionaries: Dictionaries
@@ -89,12 +82,6 @@ class Mobile {
         return mobile.getDictionaries(0, 0, 0).map {
             it.apply { dictionaries = this }
         }
-    }
-
-    private val interceptors: MutableList<Pair<Interceptor, Boolean>> = mutableListOf()
-
-    fun setInterceptor(interceptor: Interceptor, network: Boolean = false) {
-        interceptors.add(interceptor to network)
     }
 
     fun getCertificate(token: String, pin: String, symbol: String): Single<CertificateResponse> {
@@ -123,27 +110,27 @@ class Mobile {
         return serviceManager.getRegisterRepository(apiBaseUrl).getStudents()
     }
 
-    fun getAttendance(start: LocalDate, end: LocalDate, classId: Int, classificationPeriodId: Int, studentId: Int): Single<List<Attendance>> {
+    fun getAttendance(start: LocalDate, end: LocalDate, classificationPeriodId: Int): Single<List<Attendance>> {
         return mobile.getAttendance(start, end, classId, classificationPeriodId, studentId)
     }
 
-    fun getExams(start: LocalDate, end: LocalDate, classId: Int, classificationPeriodId: Int, studentId: Int): Single<List<Exam>> {
+    fun getExams(start: LocalDate, end: LocalDate, classificationPeriodId: Int): Single<List<Exam>> {
         return mobile.getExams(start, end, classId, classificationPeriodId, studentId)
     }
 
-    fun getGrades(classId: Int, classificationPeriodId: Int, studentId: Int): Single<List<Grade>> {
+    fun getGrades(classificationPeriodId: Int): Single<List<Grade>> {
         return mobile.getGrades(classId, classificationPeriodId, studentId)
     }
 
-    fun getGradesSummary(classId: Int, classificationPeriodId: Int, studentId: Int): Single<GradesSummaryResponse> {
+    fun getGradesSummary(classificationPeriodId: Int): Single<GradesSummaryResponse> {
         return mobile.getGradesSummary(classId, classificationPeriodId, studentId)
     }
 
-    fun getHomework(start: LocalDate, end: LocalDate, classId: Int, classificationPeriodId: Int, studentId: Int): Single<List<Homework>> {
+    fun getHomework(start: LocalDate, end: LocalDate, classificationPeriodId: Int): Single<List<Homework>> {
         return mobile.getHomework(start, end, classId, classificationPeriodId, studentId)
     }
 
-    fun getNotes(classificationPeriodId: Int, studentId: Int): Single<List<Note>> {
+    fun getNotes(classificationPeriodId: Int): Single<List<Note>> {
         return mobile.getNotes(classificationPeriodId, studentId)
     }
 
@@ -151,23 +138,23 @@ class Mobile {
         return mobile.getTeachers(studentId, semesterId)
     }
 
-    fun getMessages(start: LocalDateTime, end: LocalDateTime, loginId: Int, studentId: Int): Single<List<Message>> {
+    fun getMessages(start: LocalDateTime, end: LocalDateTime): Single<List<Message>> {
         return mobile.getMessages(start, end, loginId, studentId)
     }
 
-    fun getMessagesSent(start: LocalDateTime, end: LocalDateTime, loginId: Int, studentId: Int): Single<List<Message>> {
+    fun getMessagesSent(start: LocalDateTime, end: LocalDateTime): Single<List<Message>> {
         return mobile.getMessagesSent(start, end, loginId, studentId)
     }
 
-    fun getMessagesDeleted(start: LocalDateTime, end: LocalDateTime, loginId: Int, studentId: Int): Single<List<Message>> {
+    fun getMessagesDeleted(start: LocalDateTime, end: LocalDateTime): Single<List<Message>> {
         return mobile.getMessagesDeleted(start, end, loginId, studentId)
     }
 
-    fun changeMessageStatus(messageId: Int, folder: String, status: String, loginId: Int, studentId: Int): Single<String> {
+    fun changeMessageStatus(messageId: Int, folder: String, status: String): Single<String> {
         return mobile.changeMessageStatus(messageId, folder, status, loginId, studentId)
     }
 
-    fun getTimetable(start: LocalDate, end: LocalDate, classId: Int, classificationPeriodId: Int, studentId: Int): Single<List<Lesson>> {
+    fun getTimetable(start: LocalDate, end: LocalDate, classificationPeriodId: Int): Single<List<Lesson>> {
         return mobile.getTimetable(start, end, classId, classificationPeriodId, studentId)
     }
 }

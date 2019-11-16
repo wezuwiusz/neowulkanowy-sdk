@@ -41,7 +41,7 @@ fun List<Teacher>.mapRecipients(reportingUnitId: Int): List<Recipient> {
             reportingUnitId = reportingUnitId,
             name = "${it.name} ${it.surname}",
             loginId = it.loginId,
-            hash = "NIE UŻYWAJ NADAWCÓW POBRANYCH W TRYBIE API DO WYSYŁANIA WIADOMOŚCI W TRYBIE SCRAPPER ANI ODWROTNIE"
+            hash = "NIE UŻYWAJ NADAWCÓW POBRANYCH W TRYBIE API DO WYSYŁANIA WIADOMOŚCI W TRYBIE SCRAPPER ANI ODWROTNIE" // TODO: throw exception then
         )
     }
 }
