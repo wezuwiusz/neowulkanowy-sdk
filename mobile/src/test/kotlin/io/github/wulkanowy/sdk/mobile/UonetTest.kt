@@ -77,7 +77,7 @@ class UonetTest {
 
             val privateKey = getPrivateKeyFromCert(PASSWORD, cert)
 
-            val pupils = register.getPupils()
+            val pupils = register.getStudents()
             val pupilSubscriber = TestObserver<List<Student>>()
             pupils.subscribe(pupilSubscriber)
             pupilSubscriber.assertComplete()

@@ -8,8 +8,8 @@ import io.github.wulkanowy.sdk.mobile.grades.GradesSummaryResponse
 import io.github.wulkanowy.sdk.mobile.homework.Homework
 import io.github.wulkanowy.sdk.mobile.messages.Message
 import io.github.wulkanowy.sdk.mobile.notes.Note
+import io.github.wulkanowy.sdk.mobile.register.CertificateResponse
 import io.github.wulkanowy.sdk.mobile.register.Student
-import io.github.wulkanowy.sdk.mobile.repository.RegisterRepository
 import io.github.wulkanowy.sdk.mobile.repository.RepositoryManager
 import io.github.wulkanowy.sdk.mobile.school.Teacher
 import io.github.wulkanowy.sdk.mobile.timetable.Lesson
@@ -21,12 +21,6 @@ import org.threeten.bp.LocalDate
 import org.threeten.bp.LocalDateTime
 
 class Mobile {
-
-    var apiKey = ""
-
-    var pin = ""
-
-    var token = ""
 
     var apiBaseUrl = ""
         set(value) {
@@ -42,46 +36,35 @@ class Mobile {
             resettableManager.reset()
         }
 
-    var certificate = ""
-        set(value) {
-            field = value
-            resettableManager.reset()
-        }
-
     var privateKey = ""
         set(value) {
             field = value
             resettableManager.reset()
         }
+
     var classId = 0
         set(value) {
             field = value
         }
 
     var studentId = 0
-        set(value) {
-            field = value
-        }
 
     var schoolSymbol = ""
         set(value) {
             field = value
+            resettableManager.reset()
         }
 
     var loginId = 0
 
     var diaryId = 0
-        set(value) {
-            field = value
-        }
+
     var symbol = ""
-        set(value) {
-            field = value
-        }
 
     var logLevel = HttpLoggingInterceptor.Level.BASIC
         set(value) {
             field = value
+            resettableManager.reset()
         }
 
     private val resettableManager = resettableManager()
@@ -96,10 +79,6 @@ class Mobile {
 
     private val mobile by resettableLazy(resettableManager) {
         serviceManager.getMobileRepository()
-    }
-
-    fun getRegisterRepo(host: String, symbol: String): RegisterRepository {
-        return serviceManager.getRegisterRepository(host, symbol)
     }
 
     private lateinit var dictionaries: Dictionaries
@@ -118,30 +97,30 @@ class Mobile {
         interceptors.add(interceptor to network)
     }
 
-    fun getApiStudents(token: String, pin: String, symbol: String): Single<List<Student>> {
-        return routes.getRouteByToken(token).flatMap {
-            this@Mobile.apiBaseUrl = it
-            this@Mobile.symbol = symbol
-            getRegisterRepo(apiBaseUrl, symbol).getCertificate(token, pin, deviceName)
-        }.flatMap { certificateResponse ->
-            if (certificateResponse.isError) throw RuntimeException(certificateResponse.message)
-            this@Mobile.certKey = certificateResponse.tokenCert!!.certificateKey
-            this@Mobile.privateKey = getPrivateKeyFromCert(apiKey, certificateResponse.tokenCert.certificatePfx)
-            getRegisterRepo(apiBaseUrl, this@Mobile.symbol).getPupils().map { students ->
-                students.map {
-                    it.copy().apply {
-                        privateKey = this@Mobile.privateKey
-                        ssl = certificateResponse.tokenCert.apiEndpoint.startsWith("https")
-                        certificateKey = certificateResponse.tokenCert.certificateKey
-                        apiHost = certificateResponse.tokenCert.apiEndpoint.removeSuffix("/")
-                    }
+    fun getCertificate(token: String, pin: String, symbol: String): Single<CertificateResponse> {
+        return routes.getRouteByToken(token).flatMap { baseUrl ->
+            serviceManager.getRegisterRepository(baseUrl, symbol).getCertificate(token, pin, deviceName)
+        }
+    }
+
+    fun getStudents(certificateResponse: CertificateResponse, apiKey: String): Single<List<Student>> {
+        if (certificateResponse.isError) throw RuntimeException(certificateResponse.message)
+
+        val cert = certificateResponse.tokenCert!!
+        return serviceManager.getRegisterRepository(cert.apiEndpoint).getStudents().map { students ->
+            students.map {
+                it.copy().apply {
+                    certificateKey = cert.certificateKey
+                    privateKey = getPrivateKeyFromCert(apiKey, cert.certificatePfx)
+                    apiHost = cert.apiEndpoint.removeSuffix("/")
+                    ssl = cert.apiEndpoint.startsWith("https")
                 }
             }
         }
     }
 
-    fun getPupils(): Single<List<Student>> {
-        return getRegisterRepo(apiBaseUrl.replace("/$symbol", ""), symbol).getPupils()
+    fun getStudents(): Single<List<Student>> {
+        return serviceManager.getRegisterRepository(apiBaseUrl).getStudents()
     }
 
     fun getAttendance(start: LocalDate, end: LocalDate, classId: Int, classificationPeriodId: Int, studentId: Int): Single<List<Attendance>> {

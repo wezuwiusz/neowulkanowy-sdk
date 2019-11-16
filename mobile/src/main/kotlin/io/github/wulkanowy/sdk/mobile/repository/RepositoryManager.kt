@@ -27,8 +27,10 @@ class RepositoryManager(
         return MobileRepository(getRetrofitBuilder(interceptors).baseUrl("$apiBaseUrl/$schoolSymbol/mobile-api/Uczen.v3.Uczen/").build().create())
     }
 
-    fun getRegisterRepository(host: String, symbol: String): RegisterRepository {
-        return RegisterRepository(getRetrofitBuilder(interceptors).baseUrl("$host/$symbol/mobile-api/Uczen.v3.UczenStart/").build().create())
+    fun getRegisterRepository(baseUrl: String, symbol: String) = getRegisterRepository("${baseUrl.removeSuffix("/")}/$symbol")
+
+    fun getRegisterRepository(baseUrl: String): RegisterRepository {
+        return RegisterRepository(getRetrofitBuilder(interceptors).baseUrl("${baseUrl.removeSuffix("/")}/mobile-api/Uczen.v3.UczenStart/").build().create())
     }
 
     private fun getRetrofitBuilder(interceptors: MutableList<Pair<Interceptor, Boolean>>): Retrofit.Builder {

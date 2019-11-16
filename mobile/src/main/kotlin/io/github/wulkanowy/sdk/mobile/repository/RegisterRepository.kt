@@ -13,5 +13,5 @@ class RegisterRepository(private val api: RegisterService) {
         return api.getCertificate(CertificateRequest(tokenKey = token, pin = pin, deviceName = deviceName))
     }
 
-    fun getPupils(): Single<List<Student>> = api.getPupils(object : ApiRequest() {}).map { it.data }
+    fun getStudents(): Single<List<Student>> = api.getPupils(object : ApiRequest() {}).map { it.data }
 }

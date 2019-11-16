@@ -1,12 +1,12 @@
 package io.github.wulkanowy.sdk
 
-import io.github.wulkanowy.sdk.scrapper.Scrapper
-import io.github.wulkanowy.sdk.scrapper.attendance.Absent
 import io.github.wulkanowy.sdk.exception.FeatureNotAvailableException
 import io.github.wulkanowy.sdk.exception.ScrapperExceptionTransformer
 import io.github.wulkanowy.sdk.mapper.*
 import io.github.wulkanowy.sdk.mobile.Mobile
 import io.github.wulkanowy.sdk.pojo.*
+import io.github.wulkanowy.sdk.scrapper.Scrapper
+import io.github.wulkanowy.sdk.scrapper.attendance.Absent
 import io.reactivex.Completable
 import io.reactivex.Maybe
 import io.reactivex.Observable
@@ -41,24 +41,6 @@ class Sdk {
 
     var mode = Mode.HYBRID
 
-    var apiKey = ""
-        set(value) {
-            field = value
-            mobile.apiKey = value
-        }
-
-    var pin = ""
-        set(value) {
-            field = value
-            mobile.pin = value
-        }
-
-    var token = ""
-        set(value) {
-            field = value
-            mobile.token = value
-        }
-
     var apiBaseUrl = ""
         set(value) {
             field = value
@@ -75,12 +57,6 @@ class Sdk {
         set(value) {
             field = value
             mobile.certKey = value
-        }
-
-    var certificate = ""
-        set(value) {
-            field = value
-            mobile.certificate = value
         }
 
     var privateKey = ""
@@ -186,57 +162,56 @@ class Sdk {
         interceptors.add(interceptor to network)
     }
 
-    fun getStudents(): Single<List<Student>> {
-        return when (mode) {
-            Mode.API -> mobile.getApiStudents(token, pin, symbol).map { it.mapStudents(symbol) }
-            Mode.SCRAPPER -> {
-                scrapper.run {
-                    ssl = this@Sdk.ssl
-                    host = this@Sdk.scrapperHost
-                    email = this@Sdk.email
-                    password = this@Sdk.password
-                    getStudents().compose(ScrapperExceptionTransformer()).map { it.mapStudents(ssl, scrapperHost) }
-                }
-            }
-            Mode.HYBRID -> {
-                scrapper.run {
-                    ssl = this@Sdk.ssl
-                    host = this@Sdk.scrapperHost
-                    email = this@Sdk.email
-                    password = this@Sdk.password
-                    getStudents().compose(ScrapperExceptionTransformer()).flatMapObservable { Observable.fromIterable(it) }.flatMapSingle {
-                        scrapper.run {
-                            symbol = it.symbol
-                            schoolSymbol = it.schoolSymbol
-                            studentId = it.studentId
-                            diaryId = -1
-                            classId = it.classId
-                            loginType = it.loginType
-                        }
-                        scrapper.getToken().compose(ScrapperExceptionTransformer()).flatMap {
-                            mobile.getApiStudents(it.token, it.pin, it.symbol)
-                        }.map { apiStudents ->
-                            apiStudents.mapStudents(symbol).map { apiStudent ->
-                                apiStudent.copy(
-                                    loginMode = Mode.HYBRID,
-                                    scrapperHost = scrapperHost,
+    fun getStudentsFromMobileApi(token: String, pin: String, symbol: String, apiKey: String): Single<List<Student>> {
+        return mobile.getCertificate(token, pin, symbol)
+            .flatMap { mobile.getStudents(it, apiKey) }
+            .map { it.mapStudents(symbol) }
+    }
 
-                                    // used if student graduated
-                                    classId = it.classId,
-                                    className = it.className
-                                )
-                            }
-                        }
-                    }.toList().map { it.flatten() }
-                }
-            }
+    fun getStudentsFromScrapper(email: String, password: String, ssl: Boolean, host: String, symbol: String = "Default"): Single<List<Student>> {
+        return scrapper.run {
+            this.ssl = ssl
+            this.host = host
+            this.email = email
+            this.password = password
+            this.symbol = symbol
+            getStudents().compose(ScrapperExceptionTransformer()).map { it.mapStudents(ssl, scrapperHost) }
         }
+    }
+
+    fun getStudentsHybrid(email: String, password: String, apiKey: String, ssl: Boolean, host: String, startSymbol: String = "Default"): Single<List<Student>> {
+        return getStudentsFromScrapper(email, password, ssl, host, startSymbol)
+            .compose(ScrapperExceptionTransformer())
+            .flatMapObservable { Observable.fromIterable(it) }
+            .flatMapSingle { scrapperStudent ->
+                scrapper.run {
+                    symbol = scrapperStudent.symbol
+                    schoolSymbol = scrapperStudent.schoolSymbol
+                    studentId = scrapperStudent.studentId
+                    diaryId = -1
+                    classId = scrapperStudent.classId
+                    loginType = Scrapper.LoginType.valueOf(scrapperStudent.loginType.name)
+                }
+                scrapper.getToken().compose(ScrapperExceptionTransformer())
+                    .flatMap { getStudentsFromMobileApi(it.token, it.pin, it.symbol, apiKey) }
+                    .map { apiStudents ->
+                        apiStudents.map { student ->
+                            student.copy(
+                                loginMode = Mode.HYBRID,
+                                scrapperHost = scrapperStudent.scrapperHost,
+
+                                classId = scrapperStudent.classId,
+                                className = scrapperStudent.className
+                            )
+                        }
+                    }
+            }.toList().map { it.flatten() }
     }
 
     fun getSemesters(): Single<List<Semester>> {
         return when (mode) {
             Mode.HYBRID, Mode.SCRAPPER -> scrapper.getSemesters().compose(ScrapperExceptionTransformer()).map { it.mapSemesters() }
-            Mode.API -> mobile.getRegisterRepo(apiBaseUrl.replace("/$symbol", ""), symbol).getPupils().map { it.mapSemesters(studentId) }
+            Mode.API -> mobile.getStudents().map { it.mapSemesters(studentId) }
         }
     }
 
@@ -383,7 +358,7 @@ class Sdk {
     fun getReportingUnits(): Single<List<ReportingUnit>> {
         return when (mode) {
             Mode.HYBRID, Mode.SCRAPPER -> scrapper.getReportingUnits().compose(ScrapperExceptionTransformer()).map { it.mapReportingUnits() }
-            Mode.API -> mobile.getPupils().map { it.mapReportingUnits(studentId) }
+            Mode.API -> mobile.getStudents().map { it.mapReportingUnits(studentId) }
         }
     }
 
@@ -443,7 +418,9 @@ class Sdk {
 
     fun sendMessage(subject: String, content: String, recipients: List<Recipient>): Single<SentMessage> {
         return when (mode) {
-            Mode.HYBRID, Mode.SCRAPPER -> scrapper.sendMessage(subject, content, recipients.mapFromRecipients()).compose(ScrapperExceptionTransformer()).map { it.mapSentMessage() }
+            Mode.HYBRID, Mode.SCRAPPER -> scrapper.sendMessage(subject,
+                content,
+                recipients.mapFromRecipients()).compose(ScrapperExceptionTransformer()).map { it.mapSentMessage() }
             Mode.API -> TODO()
         }
     }

@@ -91,8 +91,12 @@ data class Student(
     @SerializedName("LoginId")
     val loginId: Int?
 ) {
+
     var privateKey = ""
+
     var certificateKey = ""
+
     var apiHost = ""
+
     var ssl = false
 }
