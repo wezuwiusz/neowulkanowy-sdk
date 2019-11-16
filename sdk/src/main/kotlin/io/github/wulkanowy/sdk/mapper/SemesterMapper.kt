@@ -4,6 +4,7 @@ import io.github.wulkanowy.sdk.pojo.Semester
 import io.github.wulkanowy.sdk.mobile.register.Student
 import io.github.wulkanowy.sdk.toLocalDate
 import org.threeten.bp.LocalDate.now
+import org.threeten.bp.LocalDate.of
 import org.threeten.bp.Month
 import io.github.wulkanowy.sdk.scrapper.register.Semester as ScrapperSemester
 
@@ -39,5 +40,16 @@ fun List<Student>.mapSemesters(studentId: Int): List<Semester> {
             classId = it.classId,
             unitId = it.reportingUnitId
         )
+    }.let {
+        if (it.size == 1) {
+            val semesterNumber = it.single().semesterNumber
+            listOf(it.single(), it.single().copy(
+                current = false,
+                semesterNumber = if (semesterNumber == 1) 2 else 1,
+                semesterId = if (semesterNumber == 1) it.single().semesterId + 1 else it.single().semesterId - 1,
+                start = if (semesterNumber == 1) it.single().end.plusDays(1) else of(it.single().schoolYear, 9, 1),
+                end = if (semesterNumber == 1) of(it.single().schoolYear + 1, 6, 30) else it.single().start.plusDays(1)
+            ))
+        } else it
     }
 }

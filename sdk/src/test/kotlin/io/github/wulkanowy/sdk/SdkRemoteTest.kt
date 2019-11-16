@@ -58,7 +58,7 @@ class SdkRemoteTest {
         }
 
         val semesters = sdk.getSemesters().blockingGet()
-        assertEquals(1, semesters.size)
+        assertEquals(2, semesters.size)
     }
 
     @Test
