@@ -172,6 +172,7 @@ class Sdk {
     fun getStudentsHybrid(email: String, password: String, apiKey: String, ssl: Boolean, host: String, startSymbol: String = "Default"): Single<List<Student>> {
         return getStudentsFromScrapper(email, password, ssl, host, startSymbol)
             .compose(ScrapperExceptionTransformer())
+            .map { students -> students.distinctBy { it.symbol to it.schoolSymbol } }
             .flatMapObservable { Observable.fromIterable(it) }
             .flatMapSingle { scrapperStudent ->
                 scrapper.run {

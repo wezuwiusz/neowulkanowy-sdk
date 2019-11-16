@@ -39,7 +39,7 @@ class SdkRemoteTest {
         }
 
         val students = sdk.getStudentsHybrid(email = "jan@fakelog.cf", password = "jan123", apiKey = API_KEY, ssl = false, host = "fakelog.cf", startSymbol = "powiatwulkanowy").blockingGet()
-        assertEquals(12, students.size)
+        assertEquals(6, students.size)
     }
 
     @Test
