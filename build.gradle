@@ -1,5 +1,7 @@
 plugins {
+    id 'jacoco'
     id 'org.jetbrains.kotlin.jvm' version '1.3.50' apply false
+    id "org.jlleitschuh.gradle.ktlint" version "9.1.1"
 }
 
 subprojects {
@@ -22,6 +24,16 @@ ext {
 allprojects {
     apply plugin: 'java'
     apply plugin: 'kotlin'
+    apply plugin: "org.jlleitschuh.gradle.ktlint"
+
+    ktlint {
+        additionalEditorconfigFile = file(".editorconfig")
+        disabledRules = [
+            "no-wildcard-imports",
+            "import-ordering",
+            "max-line-length"
+        ]
+    }
 
     sourceCompatibility = 1.8
 
@@ -49,6 +61,12 @@ allprojects {
 
         testImplementation "com.squareup.okhttp3:mockwebserver:$okhttp3"
         testImplementation "junit:junit:4.12"
+    }
+
+    jacocoTestReport {
+        reports {
+            xml.enabled true
+        }
     }
 
     task sourcesJar(type: Jar, dependsOn: classes) {

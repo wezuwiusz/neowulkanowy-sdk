@@ -2,7 +2,7 @@ package io.github.wulkanowy.sdk.mobile.register
 
 import com.google.gson.annotations.SerializedName
 import io.github.wulkanowy.sdk.mobile.ApiRequest
-import java.util.*
+import java.util.UUID
 
 data class CertificateRequest(
 

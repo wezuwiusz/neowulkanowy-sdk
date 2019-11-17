@@ -1,7 +1,6 @@
 package io.github.wulkanowy.sdk.mobile.school
 
 import com.google.gson.annotations.SerializedName
-import io.github.wulkanowy.sdk.mobile.school.Teacher
 
 data class TeachersResponse(
 

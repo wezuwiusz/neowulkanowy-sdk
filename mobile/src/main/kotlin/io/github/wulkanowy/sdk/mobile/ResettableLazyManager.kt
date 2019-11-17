@@ -1,6 +1,5 @@
 package io.github.wulkanowy.sdk.mobile
 
-
 import java.util.LinkedList
 import kotlin.reflect.KProperty
 

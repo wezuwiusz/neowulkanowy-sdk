@@ -1,7 +1,6 @@
 package io.github.wulkanowy.sdk.mobile.attendance
 
 import com.google.gson.annotations.SerializedName
-import io.github.wulkanowy.sdk.mobile.attendance.Attendance
 
 data class AttendanceResponse(
 

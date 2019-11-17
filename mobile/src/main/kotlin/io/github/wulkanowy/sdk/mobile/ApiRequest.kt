@@ -2,7 +2,7 @@ package io.github.wulkanowy.sdk.mobile
 
 import com.google.gson.annotations.SerializedName
 import java.time.Instant.now
-import java.util.*
+import java.util.UUID
 
 @Suppress("unused")
 abstract class ApiRequest(
