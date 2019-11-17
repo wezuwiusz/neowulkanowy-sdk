@@ -9,12 +9,3 @@ dependencies {
     implementation project(":mobile")
     implementation project(":scrapper")
 }
-
-jacocoTestReport {
-    reports {
-        xml.enabled true
-    }
-}
-test {
-    testLogging.showStandardStreams = true
-}

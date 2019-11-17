@@ -1,8 +1,8 @@
 plugins {
     id 'java'
     id 'org.jetbrains.kotlin.jvm'
-    id 'jacoco'
     id 'maven'
+    id 'jacoco'
 //    id 'com.jfrog.bintray' version '1.8.4'
 }
 

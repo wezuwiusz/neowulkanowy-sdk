@@ -16,12 +16,3 @@ dependencies {
     implementation "com.squareup.retrofit2:retrofit:$retrofit"
     implementation "com.squareup.retrofit2:adapter-rxjava2:$retrofit"
 }
-
-jacocoTestReport {
-    reports {
-        xml.enabled true
-    }
-}
-test {
-    testLogging.showStandardStreams = true
-}
