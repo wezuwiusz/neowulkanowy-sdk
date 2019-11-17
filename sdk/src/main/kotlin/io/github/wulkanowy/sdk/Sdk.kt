@@ -189,10 +189,7 @@ class Sdk {
                         apiStudents.map { student ->
                             student.copy(
                                 loginMode = Mode.HYBRID,
-                                scrapperHost = scrapperStudent.scrapperHost,
-
-                                classId = scrapperStudent.classId,
-                                className = scrapperStudent.className
+                                scrapperHost = scrapperStudent.scrapperHost
                             )
                         }
                     }
