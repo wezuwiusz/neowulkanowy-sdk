@@ -23,17 +23,12 @@ import io.github.wulkanowy.sdk.mobile.school.TeachersRequest
 import io.github.wulkanowy.sdk.mobile.service.MobileService
 import io.github.wulkanowy.sdk.mobile.timetable.Lesson
 import io.github.wulkanowy.sdk.mobile.timetable.TimetableRequest
+import io.github.wulkanowy.sdk.mobile.toFormat
 import io.reactivex.Single
 import org.threeten.bp.LocalDate
 import org.threeten.bp.LocalDateTime
-import org.threeten.bp.format.DateTimeFormatter
 
 class MobileRepository(private val api: MobileService) {
-
-    // TODO move these to utils
-    private fun LocalDate.toFormat() = format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
-
-    private fun LocalDateTime.toFormat() = format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
 
     fun logStart(): Single<ApiResponse<String>> = api.logAppStart(object : ApiRequest() {})
 
