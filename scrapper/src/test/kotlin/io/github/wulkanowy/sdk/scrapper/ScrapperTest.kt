@@ -10,7 +10,7 @@ class ScrapperTest : BaseLocalTest() {
 
     @Test
     fun changeTest() {
-        server.enqueue(MockResponse().setBody(AttendanceSummaryTest::class.java.getResource("Frekwencja.html").readText()))
+        server.enqueue(MockResponse().setBody(AttendanceSummaryTest::class.java.getResource("Przedmioty.json").readText()))
         server.start(3000) //
 
         val api = Scrapper().apply {

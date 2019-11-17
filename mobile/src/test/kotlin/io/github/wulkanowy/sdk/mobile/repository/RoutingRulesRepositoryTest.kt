@@ -20,9 +20,9 @@ class RoutingRulesRepositoryTest {
     @Test
     fun getRouteByToken() {
         server.enqueue(MockResponse().setBody(RoutingRulesRepositoryTest::class.java.getResource("RoutingRules.txt").readText()))
-        server.start(3000)
+        server.start(3030)
 
-        val repo = RoutingRulesRepository(getRetrofitBuilder().baseUrl("http://localhost:3000").build().create())
+        val repo = RoutingRulesRepository(getRetrofitBuilder().baseUrl("http://localhost:3030").build().create())
         val route = repo.getRouteByToken("KA200000").blockingGet()
 
         assertEquals("https://uonetplus-komunikacja-test.mcuw.katowice.eu", route)
