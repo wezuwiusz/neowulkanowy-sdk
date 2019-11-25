@@ -28,7 +28,7 @@ class SdkRemoteTest {
             // mode = Sdk.Mode.SCRAPPER
         }
 
-        val students = sdk.getStudentsFromScrapper(email = "jan@fakelog.cf", password = "jan123", ssl = false, host = "fakelog.cf", symbol = "powiatwulkanowy").blockingGet()
+        val students = sdk.getStudentsFromScrapper(email = "jan@fakelog.cf", password = "jan123", scrapperBaseUrl = "http://fakelog.cf", symbol = "powiatwulkanowy").blockingGet()
         assertEquals(6, students.size)
     }
 
@@ -38,7 +38,7 @@ class SdkRemoteTest {
             // mode = Sdk.Mode.HYBRID
         }
 
-        val students = sdk.getStudentsHybrid(email = "jan@fakelog.cf", password = "jan123", apiKey = API_KEY, ssl = false, host = "fakelog.cf", startSymbol = "powiatwulkanowy").blockingGet()
+        val students = sdk.getStudentsHybrid(email = "jan@fakelog.cf", password = "jan123", apiKey = API_KEY, scrapperBaseUrl = "http://fakelog.cf", startSymbol = "powiatwulkanowy").blockingGet()
         assertEquals(6, students.size)
     }
 

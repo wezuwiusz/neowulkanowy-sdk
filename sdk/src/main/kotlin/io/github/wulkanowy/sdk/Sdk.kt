@@ -15,6 +15,7 @@ import okhttp3.Interceptor
 import okhttp3.logging.HttpLoggingInterceptor
 import org.threeten.bp.LocalDate
 import org.threeten.bp.LocalDateTime
+import java.net.URL
 
 class Sdk {
 
@@ -56,6 +57,14 @@ class Sdk {
         set(value) {
             field = value
             mobile.privateKey = privateKey
+        }
+
+    var scrapperBaseUrl = ""
+        set(value) {
+            field = value
+            if (value.isBlank()) return
+            scrapperHost = URL(value).run { "$host:$port".removeSuffix(":-1") }
+            ssl = value.startsWith("https")
         }
 
     var ssl = true
@@ -159,10 +168,10 @@ class Sdk {
             .map { it.mapStudents(symbol) }
     }
 
-    fun getStudentsFromScrapper(email: String, password: String, ssl: Boolean, host: String, symbol: String = "Default"): Single<List<Student>> {
+    fun getStudentsFromScrapper(email: String, password: String, scrapperBaseUrl: String, symbol: String = "Default"): Single<List<Student>> {
         return scrapper.run {
-            this.ssl = ssl
-            this.host = host
+            this.ssl = scrapperBaseUrl.startsWith("https")
+            this.host = URL(scrapperBaseUrl).let { "${it.host}:${it.port}".removeSuffix(":-1") }
             this.email = email
             this.password = password
             this.symbol = symbol
@@ -170,8 +179,8 @@ class Sdk {
         }
     }
 
-    fun getStudentsHybrid(email: String, password: String, apiKey: String, ssl: Boolean, host: String, startSymbol: String = "Default"): Single<List<Student>> {
-        return getStudentsFromScrapper(email, password, ssl, host, startSymbol)
+    fun getStudentsHybrid(email: String, password: String, apiKey: String, scrapperBaseUrl: String, startSymbol: String = "Default"): Single<List<Student>> {
+        return getStudentsFromScrapper(email, password, scrapperBaseUrl, startSymbol)
             .compose(ScrapperExceptionTransformer())
             .map { students -> students.distinctBy { it.symbol to it.schoolSymbol } }
             .flatMapObservable { Observable.fromIterable(it) }
