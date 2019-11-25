@@ -96,7 +96,5 @@ data class Student(
 
     var certificateKey = ""
 
-    var apiHost = ""
-
-    var ssl = false
+    var mobileBaseUrl = ""
 }

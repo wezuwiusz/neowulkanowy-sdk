@@ -59,6 +59,7 @@ class RegisterRepository(
                                         schoolName = student.description,
                                         className = student.className,
                                         classId = student.classId,
+                                        baseUrl = url.generate(ServiceManager.UrlGenerator.Site.BASE),
                                         loginType = loginType
                                     )
                                 }

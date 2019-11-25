@@ -97,8 +97,7 @@ class Mobile {
                 it.copy().apply {
                     certificateKey = cert.certificateKey
                     privateKey = getPrivateKeyFromCert(apiKey, cert.certificatePfx)
-                    apiHost = cert.apiEndpoint.removeSuffix("/")
-                    ssl = cert.apiEndpoint.startsWith("https")
+                    mobileBaseUrl = cert.apiEndpoint.removeSuffix("/")
                 }
             }
         }

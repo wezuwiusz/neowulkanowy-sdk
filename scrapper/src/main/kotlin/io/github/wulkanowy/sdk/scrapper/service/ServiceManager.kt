@@ -161,10 +161,11 @@ class ServiceManager(
     class UrlGenerator(private val schema: String, private val host: String, var symbol: String, var schoolId: String) {
 
         enum class Site {
-            LOGIN, HOME, SNP, STUDENT, MESSAGES
+            BASE, LOGIN, HOME, SNP, STUDENT, MESSAGES
         }
 
         fun generate(type: Site): String {
+            if (type == Site.BASE) return "$schema://$host"
             return "$schema://${getSubDomain(type)}.$host/$symbol/${if (type == Site.SNP || type == Site.STUDENT) "$schoolId/" else ""}"
         }
 
@@ -175,6 +176,7 @@ class ServiceManager(
                 Site.SNP -> "uonetplus-opiekun"
                 Site.STUDENT -> "uonetplus-uczen"
                 Site.MESSAGES -> "uonetplus-uzytkownik"
+                else -> "unknow"
             }
         }
     }
