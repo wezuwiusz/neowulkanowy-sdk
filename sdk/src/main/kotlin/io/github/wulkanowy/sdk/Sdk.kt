@@ -30,7 +30,8 @@ class Sdk {
         ADFS,
         ADFSCards,
         ADFSLight,
-        ADFSLightScoped
+        ADFSLightScoped,
+        ADFSLightCufs
     }
 
     private val mobile = Mobile()
