@@ -64,25 +64,12 @@ class Sdk {
             scrapper.baseUrl = value
         }
 
-    var ssl = true
-        get() = scrapper.ssl
-        set(value) {
-            field = value
-            scrapper.ssl = value
-        }
-
-    var scrapperHost = "fakelog.cf"
-        get() = scrapper.host
-        set(value) {
-            field = value
-            scrapper.host = value
-        }
-
     var email = ""
         set(value) {
             field = value
             scrapper.email = value
         }
+
     var password = ""
         set(value) {
             field = value
@@ -173,7 +160,7 @@ class Sdk {
             this.email = email
             this.password = password
             this.symbol = symbol
-            getStudents().compose(ScrapperExceptionTransformer()).map { it.mapStudents(ssl, host) }
+            getStudents().compose(ScrapperExceptionTransformer()).map { it.mapStudents() }
         }
     }
 
@@ -197,7 +184,7 @@ class Sdk {
                         apiStudents.map { student ->
                             student.copy(
                                 loginMode = Mode.HYBRID,
-                                scrapperHost = scrapperStudent.scrapperHost
+                                scrapperBaseUrl = scrapperStudent.scrapperBaseUrl
                             )
                         }
                     }

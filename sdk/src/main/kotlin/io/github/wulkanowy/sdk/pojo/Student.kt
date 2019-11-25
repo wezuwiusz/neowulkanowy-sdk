@@ -14,10 +14,8 @@ data class Student(
     val classId: Int,
     val loginType: Sdk.ScrapperLoginType,
     val loginMode: Sdk.Mode,
-    val mobileBaseUrl: String,
     val scrapperBaseUrl: String,
-    val scrapperHost: String,
-    val ssl: Boolean,
+    val mobileBaseUrl: String,
     val certificateKey: String,
     val privateKey: String
 )

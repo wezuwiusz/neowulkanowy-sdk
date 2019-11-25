@@ -19,17 +19,15 @@ fun List<ApiStudent>.mapStudents(symbol: String): List<Student> {
             schoolName = it.reportingUnitName,
             loginType = Sdk.ScrapperLoginType.STANDARD,
             loginMode = Sdk.Mode.API,
-            mobileBaseUrl = it.mobileBaseUrl,
             scrapperBaseUrl = "",
-            ssl = false,
-            scrapperHost = "",
+            mobileBaseUrl = it.mobileBaseUrl,
             privateKey = it.privateKey,
             certificateKey = it.certificateKey
         )
     }
 }
 
-fun List<ScrapperStudent>.mapStudents(ssl: Boolean, scrapperHost: String): List<Student> {
+fun List<ScrapperStudent>.mapStudents(): List<Student> {
     return map {
         Student(
             email = it.email,
@@ -43,10 +41,8 @@ fun List<ScrapperStudent>.mapStudents(ssl: Boolean, scrapperHost: String): List<
             schoolSymbol = it.schoolSymbol,
             studentName = it.studentName,
             loginMode = Sdk.Mode.SCRAPPER,
-            mobileBaseUrl = "",
             scrapperBaseUrl = it.baseUrl,
-            ssl = ssl,
-            scrapperHost = scrapperHost,
+            mobileBaseUrl = "",
             certificateKey = "",
             privateKey = ""
         )

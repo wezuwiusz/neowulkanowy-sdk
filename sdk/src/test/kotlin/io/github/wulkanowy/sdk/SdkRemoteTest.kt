@@ -94,8 +94,7 @@ class SdkRemoteTest {
             studentId = 1
 
             loginType = Sdk.ScrapperLoginType.STANDARD
-            ssl = false
-            scrapperHost = "fakelog.cf"
+            scrapperBaseUrl = "http://fakelog.cf"
             email = "jan@fakelog.cf"
             password = "jan123"
         }
