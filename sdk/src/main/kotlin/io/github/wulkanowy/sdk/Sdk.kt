@@ -15,7 +15,6 @@ import okhttp3.Interceptor
 import okhttp3.logging.HttpLoggingInterceptor
 import org.threeten.bp.LocalDate
 import org.threeten.bp.LocalDateTime
-import java.net.URL
 
 class Sdk {
 
@@ -62,18 +61,18 @@ class Sdk {
     var scrapperBaseUrl = ""
         set(value) {
             field = value
-            if (value.isBlank()) return
-            scrapperHost = URL(value).run { "$host:$port".removeSuffix(":-1") }
-            ssl = value.startsWith("https")
+            scrapper.baseUrl = value
         }
 
     var ssl = true
+        get() = scrapper.ssl
         set(value) {
             field = value
             scrapper.ssl = value
         }
 
     var scrapperHost = "fakelog.cf"
+        get() = scrapper.host
         set(value) {
             field = value
             scrapper.host = value
@@ -170,8 +169,7 @@ class Sdk {
 
     fun getStudentsFromScrapper(email: String, password: String, scrapperBaseUrl: String, symbol: String = "Default"): Single<List<Student>> {
         return scrapper.run {
-            this.ssl = scrapperBaseUrl.startsWith("https")
-            this.host = URL(scrapperBaseUrl).let { "${it.host}:${it.port}".removeSuffix(":-1") }
+            this.baseUrl = scrapperBaseUrl
             this.email = email
             this.password = password
             this.symbol = symbol

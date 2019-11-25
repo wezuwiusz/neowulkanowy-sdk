@@ -18,6 +18,7 @@ import okhttp3.Interceptor
 import okhttp3.logging.HttpLoggingInterceptor
 import org.threeten.bp.LocalDate
 import org.threeten.bp.LocalDateTime
+import java.net.URL
 
 class Scrapper {
 
@@ -27,6 +28,13 @@ class Scrapper {
         set(value) {
             if (field != value) changeManager.reset()
             field = value
+        }
+
+    var baseUrl: String = "https://fakelog.cf"
+        set(value) {
+            field = value
+            ssl = baseUrl.startsWith("https")
+            host = URL(value).let { "${it.host}:${it.port}".removeSuffix(":-1") }
         }
 
     var ssl: Boolean = true
