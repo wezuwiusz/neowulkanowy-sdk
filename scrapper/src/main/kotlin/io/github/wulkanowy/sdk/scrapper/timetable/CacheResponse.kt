@@ -5,6 +5,9 @@ import java.util.Date
 
 class CacheResponse {
 
+    @SerializedName("czyOpiekun")
+    var isParent: Boolean = false
+
     @SerializedName("poryLekcji")
     lateinit var times: List<Time>
 

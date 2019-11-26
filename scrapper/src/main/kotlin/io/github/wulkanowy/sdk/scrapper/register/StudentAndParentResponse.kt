@@ -31,6 +31,8 @@ class StudentAndParentResponse {
         lateinit var className: String
 
         var classId: Int = 0
+
+        var isParent = false
     }
 
     class Diary {

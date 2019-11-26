@@ -5,6 +5,7 @@ import io.github.wulkanowy.sdk.Sdk
 data class Student(
     val email: String,
     val symbol: String,
+    val isParent: Boolean,
     val studentId: Int,
     val userLoginId: Int,
     val studentName: String,

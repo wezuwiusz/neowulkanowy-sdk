@@ -37,6 +37,14 @@ interface StudentService {
     @GET
     fun getStart(@Url url: String): Single<String>
 
+    @POST
+    fun getUserCache(
+        @Url url: String,
+        @Header("X-V-RequestVerificationToken") token: String,
+        @Header("X-V-AppGuid") appGuid: String,
+        @Header("X-V-AppVersion") appVersion: String
+    ): Single<ApiResponse<CacheResponse>>
+
     @POST("UczenCache.mvc/Get")
     fun getUserCache(
         @Header("X-V-RequestVerificationToken") token: String,

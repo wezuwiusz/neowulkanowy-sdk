@@ -9,6 +9,7 @@ fun List<ApiStudent>.mapStudents(symbol: String): List<Student> {
     return map {
         Student(
             email = it.userLogin,
+            isParent = it.userRole != "uczeń",
             symbol = symbol,
             studentId = it.id,
             userLoginId = it.userLoginId,
@@ -31,6 +32,7 @@ fun List<ScrapperStudent>.mapStudents(): List<Student> {
     return map {
         Student(
             email = it.email,
+            isParent = it.isParent,
             className = it.className,
             classId = it.classId,
             studentId = it.studentId,

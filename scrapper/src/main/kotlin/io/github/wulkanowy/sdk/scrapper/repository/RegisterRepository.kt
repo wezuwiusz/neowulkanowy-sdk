@@ -35,7 +35,8 @@ class RegisterRepository(
 ) {
 
     companion object {
-        @JvmStatic private val logger = LoggerFactory.getLogger(this::class.java)
+        @JvmStatic
+        private val logger = LoggerFactory.getLogger(this::class.java)
     }
 
     fun getStudents(): Single<List<Student>> {
@@ -60,7 +61,8 @@ class RegisterRepository(
                                         className = student.className,
                                         classId = student.classId,
                                         baseUrl = url.generate(ServiceManager.UrlGenerator.Site.BASE),
-                                        loginType = loginType
+                                        loginType = loginType,
+                                        isParent = student.isParent
                                     )
                                 }
                             }
@@ -129,14 +131,22 @@ class RegisterRepository(
             .map { it.sortedByDescending { diary -> diary.level } }
             .map { diary -> diary.distinctBy { listOf(it.studentId, it.semesters!![0].classId) } }
             .flatMap { diaries ->
-                student.getStart(url.generate(ServiceManager.UrlGenerator.Site.STUDENT) + "Start").map { startPage ->
-                    diaries.map {
-                        StudentAndParentResponse.Student().apply {
-                            id = it.studentId
-                            name = "${it.studentName} ${it.studentSurname}"
-                            description = getScriptParam("organizationName", startPage, it.symbol + " " + (it.year - it.level + 1))
-                            className = it.level.toString() + it.symbol
-                            classId = it.semesters!![0].classId
+                student.getStart(url.generate(ServiceManager.UrlGenerator.Site.STUDENT) + "Start").flatMap { startPage ->
+                    student.getUserCache(
+                        url.generate(ServiceManager.UrlGenerator.Site.STUDENT) + "UczenCache.mvc/Get",
+                        getScriptParam("antiForgeryToken", startPage),
+                        getScriptParam("appGuid", startPage),
+                        getScriptParam("version", startPage)
+                    ).map { cache ->
+                        diaries.map {
+                            StudentAndParentResponse.Student().apply {
+                                id = it.studentId
+                                name = "${it.studentName} ${it.studentSurname}"
+                                description = getScriptParam("organizationName", startPage, it.symbol + " " + (it.year - it.level + 1))
+                                className = it.level.toString() + it.symbol
+                                classId = it.semesters!![0].classId
+                                isParent = cache.data?.isParent ?: false
+                            }
                         }
                     }
                 }
