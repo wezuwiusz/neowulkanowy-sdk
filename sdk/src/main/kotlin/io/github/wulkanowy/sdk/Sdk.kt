@@ -40,10 +40,10 @@ class Sdk {
 
     var mode = Mode.HYBRID
 
-    var apiBaseUrl = ""
+    var mobileBaseUrl = ""
         set(value) {
             field = value
-            mobile.apiBaseUrl = value
+            mobile.baseUrl = value
         }
 
     var certKey = ""

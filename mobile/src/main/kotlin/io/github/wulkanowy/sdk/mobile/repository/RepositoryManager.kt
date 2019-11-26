@@ -15,7 +15,7 @@ class RepositoryManager(
     private val privateKey: String,
     private val certKey: String,
     private val interceptors: MutableList<Pair<Interceptor, Boolean>>,
-    private val apiBaseUrl: String,
+    private val baseUrl: String,
     private val schoolSymbol: String
 ) {
 
@@ -24,7 +24,7 @@ class RepositoryManager(
     }
 
     fun getMobileRepository(): MobileRepository {
-        return MobileRepository(getRetrofitBuilder(interceptors).baseUrl("$apiBaseUrl/$schoolSymbol/mobile-api/Uczen.v3.Uczen/").build().create())
+        return MobileRepository(getRetrofitBuilder(interceptors).baseUrl("$baseUrl/$schoolSymbol/mobile-api/Uczen.v3.Uczen/").build().create())
     }
 
     fun getRegisterRepository(baseUrl: String, symbol: String) = getRegisterRepository("${baseUrl.removeSuffix("/")}/$symbol")

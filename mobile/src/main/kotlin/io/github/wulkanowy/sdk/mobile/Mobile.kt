@@ -48,7 +48,7 @@ class Mobile {
             resettableManager.reset()
         }
 
-    var apiBaseUrl = ""
+    var baseUrl = ""
         set(value) {
             field = value
             resettableManager.reset()
@@ -60,7 +60,7 @@ class Mobile {
             resettableManager.reset()
         }
 
-    private val serviceManager by resettableLazy(resettableManager) { RepositoryManager(logLevel, privateKey, certKey, interceptors, apiBaseUrl, schoolSymbol) }
+    private val serviceManager by resettableLazy(resettableManager) { RepositoryManager(logLevel, privateKey, certKey, interceptors, baseUrl, schoolSymbol) }
 
     private val routes by resettableLazy(resettableManager) { serviceManager.getRoutesRepository() }
 
@@ -104,7 +104,7 @@ class Mobile {
     }
 
     fun getStudents(): Single<List<Student>> {
-        return serviceManager.getRegisterRepository(apiBaseUrl).getStudents()
+        return serviceManager.getRegisterRepository(baseUrl).getStudents()
     }
 
     fun getAttendance(start: LocalDate, end: LocalDate, classificationPeriodId: Int): Single<List<Attendance>> {

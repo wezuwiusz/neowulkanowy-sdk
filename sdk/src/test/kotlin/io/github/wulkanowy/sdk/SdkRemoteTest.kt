@@ -48,7 +48,7 @@ class SdkRemoteTest {
             privateKey = PRIVATE_KEY
             certKey = CERT_KEY
 
-            apiBaseUrl = "https://api.fakelog.cf/powiatwulkanowy"
+            mobileBaseUrl = "https://api.fakelog.cf/powiatwulkanowy"
             mode = Sdk.Mode.API
             symbol = "powiatwulkanowy"
 
@@ -67,7 +67,7 @@ class SdkRemoteTest {
             privateKey = PRIVATE_KEY
             certKey = CERT_KEY
 
-            apiBaseUrl = "https://api.fakelog.cf/powiatwulkanowy"
+            mobileBaseUrl = "https://api.fakelog.cf/powiatwulkanowy"
             mode = Sdk.Mode.API
             symbol = "powiatwulkanowy"
 
@@ -109,7 +109,7 @@ class SdkRemoteTest {
             privateKey = PRIVATE_KEY
             certKey = CERT_KEY
 
-            apiBaseUrl = "https://api.fakelog.cf/powiatwulkanowy"
+            mobileBaseUrl = "https://api.fakelog.cf/powiatwulkanowy"
             mode = Sdk.Mode.API
             symbol = "powiatwulkanowy"
 
@@ -128,7 +128,7 @@ class SdkRemoteTest {
             privateKey = PRIVATE_KEY
             certKey = CERT_KEY
 
-            apiBaseUrl = "https://api.fakelog.cf/powiatwulkanowy"
+            mobileBaseUrl = "https://api.fakelog.cf/powiatwulkanowy"
             mode = Sdk.Mode.API
             symbol = "powiatwulkanowy"
 
@@ -147,7 +147,7 @@ class SdkRemoteTest {
             privateKey = PRIVATE_KEY
             certKey = CERT_KEY
 
-            apiBaseUrl = "https://api.fakelog.cf/powiatwulkanowy"
+            mobileBaseUrl = "https://api.fakelog.cf/powiatwulkanowy"
             mode = Sdk.Mode.API
             symbol = "powiatwulkanowy"
 
@@ -166,7 +166,7 @@ class SdkRemoteTest {
             privateKey = PRIVATE_KEY
             certKey = CERT_KEY
 
-            apiBaseUrl = "https://api.fakelog.cf/powiatwulkanowy"
+            mobileBaseUrl = "https://api.fakelog.cf/powiatwulkanowy"
             mode = Sdk.Mode.API
             symbol = "powiatwulkanowy"
 
@@ -185,7 +185,7 @@ class SdkRemoteTest {
             privateKey = PRIVATE_KEY
             certKey = CERT_KEY
 
-            apiBaseUrl = "https://api.fakelog.cf/powiatwulkanowy"
+            mobileBaseUrl = "https://api.fakelog.cf/powiatwulkanowy"
             mode = Sdk.Mode.API
             symbol = "powiatwulkanowy"
 
@@ -204,7 +204,7 @@ class SdkRemoteTest {
             privateKey = PRIVATE_KEY
             certKey = CERT_KEY
 
-            apiBaseUrl = "https://api.fakelog.cf/powiatwulkanowy"
+            mobileBaseUrl = "https://api.fakelog.cf/powiatwulkanowy"
             mode = Sdk.Mode.API
             symbol = "powiatwulkanowy"
 
@@ -223,7 +223,7 @@ class SdkRemoteTest {
             privateKey = PRIVATE_KEY
             certKey = CERT_KEY
 
-            apiBaseUrl = "https://api.fakelog.cf/powiatwulkanowy"
+            mobileBaseUrl = "https://api.fakelog.cf/powiatwulkanowy"
             mode = Sdk.Mode.API
             symbol = "powiatwulkanowy"
 
@@ -242,7 +242,7 @@ class SdkRemoteTest {
             privateKey = PRIVATE_KEY
             certKey = CERT_KEY
 
-            apiBaseUrl = "https://api.fakelog.cf/powiatwulkanowy"
+            mobileBaseUrl = "https://api.fakelog.cf/powiatwulkanowy"
             mode = Sdk.Mode.API
             symbol = "powiatwulkanowy"
 
@@ -267,7 +267,7 @@ class SdkRemoteTest {
             privateKey = PRIVATE_KEY
             certKey = CERT_KEY
 
-            apiBaseUrl = "https://api.fakelog.cf/powiatwulkanowy"
+            mobileBaseUrl = "https://api.fakelog.cf/powiatwulkanowy"
             mode = Sdk.Mode.API
             symbol = "powiatwulkanowy"
 
@@ -287,7 +287,7 @@ class SdkRemoteTest {
             privateKey = PRIVATE_KEY
             certKey = CERT_KEY
 
-            apiBaseUrl = "https://api.fakelog.cf/powiatwulkanowy"
+            mobileBaseUrl = "https://api.fakelog.cf/powiatwulkanowy"
             mode = Sdk.Mode.API
             symbol = "powiatwulkanowy"
 
