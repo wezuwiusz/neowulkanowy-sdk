@@ -148,6 +148,13 @@ class Sdk {
 
     private val interceptors: MutableList<Pair<Interceptor, Boolean>> = mutableListOf()
 
+    fun setSimpleHttpLogger(logger: (String) -> Unit) {
+        logLevel = HttpLoggingInterceptor.Level.NONE
+        addInterceptor(HttpLoggingInterceptor(HttpLoggingInterceptor.Logger {
+            logger(it)
+        }).setLevel(HttpLoggingInterceptor.Level.BASIC))
+    }
+
     fun addInterceptor(interceptor: Interceptor, network: Boolean = false) {
         scrapper.addInterceptor(interceptor, network)
         mobile.setInterceptor(interceptor, network)

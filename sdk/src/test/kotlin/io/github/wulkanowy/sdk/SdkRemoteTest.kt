@@ -18,6 +18,7 @@ class SdkRemoteTest {
     @Test
     fun getStudents_api() {
         val sdk = Sdk()
+        sdk.setSimpleHttpLogger { println(it) }
         val students = sdk.getStudentsFromMobileApi(token = "FK100000", pin = "999999", symbol = "powiatwulkanowy", apiKey = API_KEY).blockingGet()
         assertEquals(2, students.size)
     }
