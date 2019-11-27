@@ -18,7 +18,7 @@ class TimetableParser {
 
     private fun addLessonDetails(lesson: Timetable, td: Element): Timetable? {
         val divs = td.select("div:not([class])")
-        moveWarningToLessonNode(td.selectFirst(".uwaga-panel"), divs)
+        val warnElement = td.select(".uwaga-panel").getOrNull(0)
 
         return when {
             divs.size == 1 -> getLessonInfo(lesson, divs[0])
@@ -65,14 +65,11 @@ class TimetableParser {
             divs.size == 2 -> getLessonInfo(lesson, divs[0])
             divs.size == 3 -> getLessonInfo(lesson, divs[1])
             else -> null
-        }
-    }
-
-    private fun moveWarningToLessonNode(warningElement: Element?, e: Elements) {
-        warningElement?.let { warn ->
-            e.select("span").last().run {
-                text("(${text().removeSurrounding("(", ")")}: ${warn.text()})")
-            }
+        }?.let {
+            warnElement?.let { warn ->
+                if (it.info.isBlank()) it.copy(info = warn.text())
+                else it.copy(info = "${it.info}: ${warn.text()}")
+            } ?: it
         }
     }
 
