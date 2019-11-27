@@ -18,7 +18,6 @@ import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
-import java.io.IOException
 import java.net.URL
 
 class ServiceManagerTest : BaseTest() {
@@ -62,11 +61,12 @@ class ServiceManagerTest : BaseTest() {
                 "schoolSymbol", 123, 101, 2019, "", ""
         )
         manager.setInterceptor(Interceptor {
-            throw IOException("Test")
+            // throw IOException("Test")
+            it.proceed(it.request())
         })
         manager.setInterceptor(Interceptor {
             throw ScrapperException("Test")
-        }, false, 0)
+        }, false)
 
         val notes = manager.getSnpService().getNotes()
         val observer = TestObserver<NotesResponse>()

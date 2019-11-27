@@ -59,7 +59,7 @@ class ScrapperRemoteTest : BaseTest() {
             addInterceptor(Interceptor {
                 println("Request event ${it.request().url().host()}")
                 it.proceed(it.request())
-            }, true, 0)
+            }, true)
         }
     }
 

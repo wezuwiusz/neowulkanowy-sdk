@@ -69,12 +69,10 @@ class ServiceManager(
     )
 
     fun setInterceptor(interceptor: Interceptor, network: Boolean = false) {
-        interceptors.add(interceptor to network)
+        interceptors.add(0, interceptor to network)
     }
 
-    fun getCookieManager(): CookieManager {
-        return cookies
-    }
+    fun getCookieManager() = cookies
 
     fun getLoginService(): LoginService {
         if (email.isBlank() && password.isBlank()) throw ScrapperException("Email and password are not set")
