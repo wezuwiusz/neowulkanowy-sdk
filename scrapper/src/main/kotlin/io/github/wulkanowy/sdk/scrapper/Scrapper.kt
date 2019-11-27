@@ -97,6 +97,12 @@ class Scrapper {
             field = value
         }
 
+    var schoolYear: Int = 0
+        set(value) {
+            if (field != value) changeManager.reset()
+            field = value
+        }
+
     var useNewStudent: Boolean = true
 
     /**
@@ -139,7 +145,7 @@ class Scrapper {
     private val okHttpFactory by lazy { OkHttpClientBuilderFactory() }
 
     private val serviceManager by resettableLazy(changeManager) {
-        ServiceManager(okHttpFactory, logLevel, loginType, schema, host, normalizedSymbol, email, password, schoolSymbol, studentId, diaryId, androidVersion, buildTag)
+        ServiceManager(okHttpFactory, logLevel, loginType, schema, host, normalizedSymbol, email, password, schoolSymbol, studentId, diaryId, schoolYear, androidVersion, buildTag)
             .apply {
                 appInterceptors.forEach {
                     setInterceptor(it.value.first, it.value.second, it.key)

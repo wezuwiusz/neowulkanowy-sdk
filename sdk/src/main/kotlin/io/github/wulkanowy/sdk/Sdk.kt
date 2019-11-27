@@ -109,6 +109,12 @@ class Sdk {
             scrapper.diaryId = value
         }
 
+    var schoolYear = 0
+        set(value) {
+            field = value
+            scrapper.schoolYear = value
+        }
+
     var symbol = ""
         set(value) {
             field = value

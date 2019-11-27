@@ -91,6 +91,7 @@ class SdkRemoteTest {
             schoolSymbol = "123456"
 
             diaryId = 15
+            schoolYear = 2019
             studentId = 1
 
             loginType = Sdk.ScrapperLoginType.STANDARD

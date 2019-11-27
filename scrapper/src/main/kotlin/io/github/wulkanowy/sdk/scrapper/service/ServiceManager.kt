@@ -19,6 +19,7 @@ import okhttp3.Interceptor
 import okhttp3.JavaNetCookieJar
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
+import org.threeten.bp.LocalDate
 import pl.droidsonroids.retrofit2.JspoonConverterFactory
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
@@ -41,6 +42,7 @@ class ServiceManager(
     private val schoolSymbol: String,
     private val studentId: Int,
     private val diaryId: Int,
+    private val schoolYear: Int,
     androidVersion: String,
     buildTag: String
 ) {
@@ -103,7 +105,11 @@ class ServiceManager(
         val client = getClientBuilder(loginIntercept = withLogin)
         if (interceptor) {
             if (0 == diaryId || 0 == studentId) throw ScrapperException("Student or/and diaryId id are not set")
-            client.addInterceptor(StudentAndParentInterceptor(cookies, schema, host, diaryId, studentId))
+
+            client.addInterceptor(StudentAndParentInterceptor(cookies, schema, host, diaryId, studentId, when (schoolYear) {
+                0 -> if (LocalDate.now().monthValue < 9) LocalDate.now().year - 1 else LocalDate.now().year // fallback
+                else -> schoolYear
+            }))
         }
         return client
     }
