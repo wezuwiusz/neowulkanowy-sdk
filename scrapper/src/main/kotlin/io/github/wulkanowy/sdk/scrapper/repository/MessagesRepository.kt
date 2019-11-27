@@ -71,8 +71,8 @@ class MessagesRepository(private val api: MessagesService) {
         else api.getMessageSender(loginId, messageId))
             .compose(ErrorHandlerTransformer()).map { it.data }
             .map {
-                it.map { message ->
-                    message.copy(shortName = message.name.normalizeRecipient())
+                it.map { recipient ->
+                    recipient.copy(shortName = recipient.name.normalizeRecipient())
                 }
             }
     }

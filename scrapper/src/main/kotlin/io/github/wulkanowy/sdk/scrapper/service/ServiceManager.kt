@@ -62,15 +62,14 @@ class ServiceManager(
     }
 
     private val interceptors: MutableList<Pair<Interceptor, Boolean>> = mutableListOf(
-        Pair(HttpLoggingInterceptor().setLevel(logLevel), true),
-        Pair(ErrorInterceptor(), false),
-        Pair(NotLoggedInErrorInterceptor(loginType), false),
-        Pair(UserAgentInterceptor(androidVersion, buildTag), false)
+        HttpLoggingInterceptor().setLevel(logLevel) to true,
+        ErrorInterceptor() to false,
+        NotLoggedInErrorInterceptor(loginType) to false,
+        UserAgentInterceptor(androidVersion, buildTag) to false
     )
 
-    fun setInterceptor(interceptor: Interceptor, network: Boolean = false, index: Int = -1) {
-        if (index == -1) interceptors.add(Pair(interceptor, network))
-        else interceptors.add(index, Pair(interceptor, network))
+    fun setInterceptor(interceptor: Interceptor, network: Boolean = false) {
+        interceptors.add(interceptor to network)
     }
 
     fun getCookieManager(): CookieManager {

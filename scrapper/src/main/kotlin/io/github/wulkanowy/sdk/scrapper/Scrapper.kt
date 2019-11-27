@@ -22,6 +22,17 @@ import java.net.URL
 
 class Scrapper {
 
+    // TODO: refactor
+    enum class LoginType {
+        AUTO,
+        STANDARD,
+        ADFS,
+        ADFSCards,
+        ADFSLight,
+        ADFSLightScoped,
+        ADFSLightCufs
+    }
+
     private val changeManager = resettableManager()
 
     var logLevel: HttpLoggingInterceptor.Level = HttpLoggingInterceptor.Level.BASIC
@@ -121,21 +132,10 @@ class Scrapper {
             field = value
         }
 
-    // TODO: refactor
-    enum class LoginType {
-        AUTO,
-        STANDARD,
-        ADFS,
-        ADFSCards,
-        ADFSLight,
-        ADFSLightScoped,
-        ADFSLightCufs
-    }
+    private val appInterceptors: MutableList<Pair<Interceptor, Boolean>> = mutableListOf()
 
-    private val appInterceptors: MutableMap<Int, Pair<Interceptor, Boolean>> = mutableMapOf()
-
-    fun setInterceptor(interceptor: Interceptor, network: Boolean = false, index: Int = -1) {
-        appInterceptors[index] = Pair(interceptor, network)
+    fun addInterceptor(interceptor: Interceptor, network: Boolean = false) {
+        appInterceptors.add(interceptor to network)
     }
 
     private val schema by resettableLazy(changeManager) { "http" + if (ssl) "s" else "" }
@@ -147,8 +147,8 @@ class Scrapper {
     private val serviceManager by resettableLazy(changeManager) {
         ServiceManager(okHttpFactory, logLevel, loginType, schema, host, normalizedSymbol, email, password, schoolSymbol, studentId, diaryId, schoolYear, androidVersion, buildTag)
             .apply {
-                appInterceptors.forEach {
-                    setInterceptor(it.value.first, it.value.second, it.key)
+                appInterceptors.forEach { (interceptor, isNetwork) ->
+                    setInterceptor(interceptor, isNetwork)
                 }
             }
     }

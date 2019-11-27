@@ -148,8 +148,8 @@ class Sdk {
 
     private val interceptors: MutableList<Pair<Interceptor, Boolean>> = mutableListOf()
 
-    fun setInterceptor(interceptor: Interceptor, network: Boolean = false, index: Int = -1) {
-        scrapper.setInterceptor(interceptor, network, index)
+    fun addInterceptor(interceptor: Interceptor, network: Boolean = false) {
+        scrapper.addInterceptor(interceptor, network)
         mobile.setInterceptor(interceptor, network)
         interceptors.add(interceptor to network)
     }
@@ -161,12 +161,12 @@ class Sdk {
     }
 
     fun getStudentsFromScrapper(email: String, password: String, scrapperBaseUrl: String, symbol: String = "Default"): Single<List<Student>> {
-        return scrapper.run {
-            this.baseUrl = scrapperBaseUrl
-            this.email = email
-            this.password = password
-            this.symbol = symbol
-            getStudents().compose(ScrapperExceptionTransformer()).map { it.mapStudents() }
+        return scrapper.let {
+            it.baseUrl = scrapperBaseUrl
+            it.email = email
+            it.password = password
+            it.symbol = symbol
+            it.getStudents().compose(ScrapperExceptionTransformer()).map { students -> students.mapStudents() }
         }
     }
 
@@ -176,13 +176,13 @@ class Sdk {
             .map { students -> students.distinctBy { it.symbol to it.schoolSymbol } }
             .flatMapObservable { Observable.fromIterable(it) }
             .flatMapSingle { scrapperStudent ->
-                scrapper.run {
-                    symbol = scrapperStudent.symbol
-                    schoolSymbol = scrapperStudent.schoolSymbol
-                    studentId = scrapperStudent.studentId
-                    diaryId = -1
-                    classId = scrapperStudent.classId
-                    loginType = Scrapper.LoginType.valueOf(scrapperStudent.loginType.name)
+                scrapper.let {
+                    it.symbol = scrapperStudent.symbol
+                    it.schoolSymbol = scrapperStudent.schoolSymbol
+                    it.studentId = scrapperStudent.studentId
+                    it.diaryId = -1
+                    it.classId = scrapperStudent.classId
+                    it.loginType = Scrapper.LoginType.valueOf(scrapperStudent.loginType.name)
                 }
                 scrapper.getToken().compose(ScrapperExceptionTransformer())
                     .flatMap { getStudentsFromMobileApi(it.token, it.pin, it.symbol, apiKey) }
@@ -407,8 +407,7 @@ class Sdk {
 
     fun sendMessage(subject: String, content: String, recipients: List<Recipient>): Single<SentMessage> {
         return when (mode) {
-            Mode.HYBRID, Mode.SCRAPPER -> scrapper.sendMessage(subject,
-                content,
+            Mode.HYBRID, Mode.SCRAPPER -> scrapper.sendMessage(subject, content,
                 recipients.mapFromRecipients()).compose(ScrapperExceptionTransformer()).map { it.mapSentMessage() }
             Mode.API -> TODO()
         }
