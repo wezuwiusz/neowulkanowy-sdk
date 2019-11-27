@@ -1,3 +1,3 @@
 package io.github.wulkanowy.sdk.exception
 
-class FeatureDisabledException(message: String) : VulcanException(message)
+class FeatureDisabledException internal constructor(message: String) : VulcanException(message)

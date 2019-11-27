@@ -1,3 +1,3 @@
 package io.github.wulkanowy.sdk.exception
 
-class BadCredentialsException(message: String) : VulcanException(message)
+class BadCredentialsException internal constructor(message: String) : VulcanException(message)
