@@ -154,7 +154,7 @@ class Sdk {
         interceptors.add(interceptor to network)
     }
 
-    fun getStudentsFromMobileApi(token: String, pin: String, symbol: String, apiKey: String): Single<List<Student>> {
+    fun getStudentsFromMobileApi(token: String, pin: String, symbol: String, apiKey: String = ""): Single<List<Student>> {
         return mobile.getCertificate(token, pin, symbol, buildTag, androidVersion)
             .flatMap { mobile.getStudents(it, apiKey) }
             .map { it.mapStudents(symbol) }
@@ -170,7 +170,7 @@ class Sdk {
         }
     }
 
-    fun getStudentsHybrid(email: String, password: String, apiKey: String, scrapperBaseUrl: String, startSymbol: String = "Default"): Single<List<Student>> {
+    fun getStudentsHybrid(email: String, password: String, scrapperBaseUrl: String, startSymbol: String = "Default", apiKey: String = ""): Single<List<Student>> {
         return getStudentsFromScrapper(email, password, scrapperBaseUrl, startSymbol)
             .compose(ScrapperExceptionTransformer())
             .map { students -> students.distinctBy { it.symbol to it.schoolSymbol } }

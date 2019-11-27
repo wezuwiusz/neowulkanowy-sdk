@@ -17,8 +17,10 @@ import io.github.wulkanowy.signer.getPrivateKeyFromCert
 import io.reactivex.Single
 import okhttp3.Interceptor
 import okhttp3.logging.HttpLoggingInterceptor
+import org.apache.commons.codec.binary.Base64
 import org.threeten.bp.LocalDate
 import org.threeten.bp.LocalDateTime
+import java.nio.charset.Charset
 
 class Mobile {
 
@@ -88,16 +90,20 @@ class Mobile {
         }
     }
 
-    fun getStudents(certificateResponse: CertificateResponse, apiKey: String): Single<List<Student>> {
+    fun getStudents(certificateResponse: CertificateResponse, apiKey: String = ""): Single<List<Student>> {
         if (certificateResponse.isError) throw RuntimeException(certificateResponse.message)
 
         val cert = certificateResponse.tokenCert!!
-        return serviceManager.getRegisterRepository(cert.apiEndpoint).getStudents().map { students ->
+        return serviceManager.getRegisterRepository(cert.baseUrl).getStudents().map { students ->
             students.map {
                 it.copy().apply {
                     certificateKey = cert.certificateKey
-                    privateKey = getPrivateKeyFromCert(apiKey, cert.certificatePfx)
-                    mobileBaseUrl = cert.apiEndpoint.removeSuffix("/")
+                    privateKey = getPrivateKeyFromCert(apiKey.ifEmpty {
+                        Base64.decodeBase64(if (cert.baseUrl.contains("fakelog")) "KDAxMjM0NTY3ODkwMTIzNDU2Nzg5MDEyMzQ1Njc4OUFCKQ==" else "KENFNzVFQTU5OEM3NzQzQUQ5QjBCNzMyOERFRDg1QjA2KQ==")
+                            .toString(Charset.defaultCharset())
+                            .removeSurrounding("(", ")")
+                    }, cert.certificatePfx)
+                    mobileBaseUrl = cert.baseUrl.removeSuffix("/")
                 }
             }
         }

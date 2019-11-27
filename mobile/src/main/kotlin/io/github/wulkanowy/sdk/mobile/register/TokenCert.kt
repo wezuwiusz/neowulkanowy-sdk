@@ -23,7 +23,7 @@ data class TokenCert(
     val symbol: String,
 
     @SerializedName("AdresBazowyRestApi")
-    val apiEndpoint: String,
+    val baseUrl: String,
 
     @SerializedName("UzytkownikLogin")
     val userLogin: String,
