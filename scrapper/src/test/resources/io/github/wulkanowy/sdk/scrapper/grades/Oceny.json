@@ -37,6 +37,15 @@
             "KodKolumny": "O",
             "DataOceny": "05.12.2018",
             "KolorOceny": 7261447
+          },
+          {
+            "Nauczyciel": "Anonimus Max",
+            "Wpis": "(BK,3)",
+            "Waga": 3,
+            "NazwaKolumny": "Sprawozdanie - wyznaczanie przyspieczenia.",
+            "KodKolumny": "d1",
+            "DataOceny": "23.11.2017",
+            "KolorOceny": 0
           }
         ],
         "ProponowanaOcenaRoczna": "3",

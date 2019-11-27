@@ -10,6 +10,7 @@ fun GradesResponse.mapGradesList(): List<Grade> {
             val values = getGradeValueWithModifier(grade.entry)
             grade.apply {
                 subject = gradesSubject.name
+                entry = entry.removeSurrounding("(", ")")
                 comment = entry.substringBefore(" (").run {
                     if (length > 4) entry
                     else entry.substringBeforeLast(")").substringAfter(" (")

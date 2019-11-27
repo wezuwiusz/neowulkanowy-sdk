@@ -21,7 +21,7 @@ class GradesTest : BaseLocalTest() {
     @Test
     fun getAllTest() {
         assertEquals(10, snp.size) // 2 items are skipped
-        assertEquals(10, student.size)
+        assertEquals(11, student.size)
         assertEquals(3, studentPoints.size)
     }
 
@@ -222,6 +222,24 @@ class GradesTest : BaseLocalTest() {
                 assertEquals(getDate(2018, 10, 3), date)
                 assertEquals("Jadwiga Czerwieńska", teacher)
             }
+        }
+    }
+
+    @Test
+    fun getGrade_onlyCommentEntry() {
+        with(student[10]) {
+            assertEquals("Fizyka", subject)
+            assertEquals("BK,3", entry)
+            assertEquals(0, value)
+            assertEquals(.0, modifier, .0)
+            assertEquals("", comment)
+            assertEquals("000000", color)
+            assertEquals("d1", symbol)
+            assertEquals("Sprawozdanie - wyznaczanie przyspieczenia.", description)
+            assertEquals("3,00", weight)
+            assertEquals(0.0, weightValue, .0)
+            assertEquals(getDate(2017, 11, 23), date)
+            assertEquals("Anonimus Max", teacher)
         }
     }
 
