@@ -161,6 +161,13 @@ class Sdk {
         interceptors.add(interceptor to network)
     }
 
+    fun switchDiary(diaryId: Int, schoolYear: Int): Sdk {
+        return also {
+            it.diaryId = diaryId
+            it.schoolYear = schoolYear
+        }
+    }
+
     fun getStudentsFromMobileApi(token: String, pin: String, symbol: String, apiKey: String = ""): Single<List<Student>> {
         return mobile.getCertificate(token, pin, symbol, buildTag, androidVersion)
             .flatMap { mobile.getStudents(it, apiKey) }
