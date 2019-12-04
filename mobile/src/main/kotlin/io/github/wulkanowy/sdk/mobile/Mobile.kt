@@ -94,16 +94,20 @@ class Mobile {
         if (certificateResponse.isError) throw RuntimeException(certificateResponse.message)
 
         val cert = certificateResponse.tokenCert!!
+        certKey = cert.certificateKey
+        baseUrl = cert.baseUrl.removeSuffix("/")
+        privateKey = getPrivateKeyFromCert(apiKey.ifEmpty {
+            Base64.decodeBase64(if (cert.baseUrl.contains("fakelog")) "KDAxMjM0NTY3ODkwMTIzNDU2Nzg5MDEyMzQ1Njc4OUFCKQ==" else "KENFNzVFQTU5OEM3NzQzQUQ5QjBCNzMyOERFRDg1QjA2KQ==")
+                .toString(Charset.defaultCharset())
+                .removeSurrounding("(", ")")
+        }, cert.certificatePfx)
+
         return serviceManager.getRegisterRepository(cert.baseUrl).getStudents().map { students ->
             students.map {
                 it.copy().apply {
-                    certificateKey = cert.certificateKey
-                    privateKey = getPrivateKeyFromCert(apiKey.ifEmpty {
-                        Base64.decodeBase64(if (cert.baseUrl.contains("fakelog")) "KDAxMjM0NTY3ODkwMTIzNDU2Nzg5MDEyMzQ1Njc4OUFCKQ==" else "KENFNzVFQTU5OEM3NzQzQUQ5QjBCNzMyOERFRDg1QjA2KQ==")
-                            .toString(Charset.defaultCharset())
-                            .removeSurrounding("(", ")")
-                    }, cert.certificatePfx)
-                    mobileBaseUrl = cert.baseUrl.removeSuffix("/")
+                    certificateKey = this@Mobile.certKey
+                    privateKey = this@Mobile.privateKey
+                    mobileBaseUrl = this@Mobile.baseUrl
                 }
             }
         }
