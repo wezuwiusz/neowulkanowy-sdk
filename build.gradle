@@ -1,16 +1,16 @@
 plugins {
     id 'jacoco'
-    id 'org.jetbrains.kotlin.jvm' version '1.3.60' apply false
+    id 'org.jetbrains.kotlin.jvm' version '1.3.61' apply false
     id "org.jlleitschuh.gradle.ktlint" version "9.1.1"
 }
 
 subprojects {
-    version = "0.12.0-SNAPSHOT"
+    version = "0.13.0-SNAPSHOT"
     group = "io.github.wulkanowy"
 }
 
 ext {
-    PUBLISH_VERSION = '0.12.0'
+    PUBLISH_VERSION = '0.13.0'
     SITE_URL = 'https://github.com/wulkanowy/sdk'
     GIT_URL = 'https://github.com/wulkanowy/sdk.git'
 
