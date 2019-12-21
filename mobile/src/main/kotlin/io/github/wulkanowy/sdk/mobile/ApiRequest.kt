@@ -1,17 +1,18 @@
 package io.github.wulkanowy.sdk.mobile
 
 import com.google.gson.annotations.SerializedName
-import java.time.Instant.now
+import org.threeten.bp.LocalDateTime.now
+import org.threeten.bp.ZoneOffset
 import java.util.UUID
 
 @Suppress("unused")
 abstract class ApiRequest(
 
     @SerializedName("RemoteMobileTimeKey")
-    val remoteMobileTimeKey: Long = now().epochSecond,
+    val remoteMobileTimeKey: Long = now().toEpochSecond(ZoneOffset.UTC),
 
     @SerializedName("TimeKey")
-    val timeKey: Long = now().epochSecond - 1,
+    val timeKey: Long = now().toEpochSecond(ZoneOffset.UTC) - 1,
 
     @SerializedName("RequestId")
     val requestId: String = UUID.randomUUID().toString(),
