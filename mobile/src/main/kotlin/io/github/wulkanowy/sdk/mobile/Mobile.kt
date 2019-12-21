@@ -1,5 +1,6 @@
 package io.github.wulkanowy.sdk.mobile
 
+import com.migcomponents.migbase64.Base64
 import io.github.wulkanowy.sdk.mobile.attendance.Attendance
 import io.github.wulkanowy.sdk.mobile.dictionaries.Dictionaries
 import io.github.wulkanowy.sdk.mobile.exams.Exam
@@ -17,7 +18,6 @@ import io.github.wulkanowy.signer.getPrivateKeyFromCert
 import io.reactivex.Single
 import okhttp3.Interceptor
 import okhttp3.logging.HttpLoggingInterceptor
-import org.apache.commons.codec.binary.Base64
 import org.threeten.bp.LocalDate
 import org.threeten.bp.LocalDateTime
 import java.nio.charset.Charset
@@ -97,7 +97,7 @@ class Mobile {
         certKey = cert.certificateKey
         baseUrl = cert.baseUrl.removeSuffix("/")
         privateKey = getPrivateKeyFromCert(apiKey.ifEmpty {
-            Base64.decodeBase64(if (cert.baseUrl.contains("fakelog")) "KDAxMjM0NTY3ODkwMTIzNDU2Nzg5MDEyMzQ1Njc4OUFCKQ==" else "KENFNzVFQTU5OEM3NzQzQUQ5QjBCNzMyOERFRDg1QjA2KQ==")
+            Base64.decode(if (cert.baseUrl.contains("fakelog")) "KDAxMjM0NTY3ODkwMTIzNDU2Nzg5MDEyMzQ1Njc4OUFCKQ==" else "KENFNzVFQTU5OEM3NzQzQUQ5QjBCNzMyOERFRDg1QjA2KQ==")
                 .toString(Charset.defaultCharset())
                 .removeSurrounding("(", ")")
         }, cert.certificatePfx)

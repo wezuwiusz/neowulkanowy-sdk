@@ -6,10 +6,10 @@ plugins {
 }
 
 dependencies {
-    implementation "io.github.wulkanowy:uonet-request-signer:6d7aebf0e9"
+    implementation "io.github.wulkanowy:uonet-request-signer:36c4365"
 
     implementation 'com.google.code.gson:gson:2.8.6'
-    implementation "commons-codec:commons-codec:1.13"
+    implementation "com.brsanthu:migbase64:2.2"
     implementation "com.squareup.retrofit2:retrofit:$retrofit"
     implementation "com.squareup.retrofit2:converter-gson:$retrofit"
     implementation "com.squareup.retrofit2:converter-scalars:$retrofit"
