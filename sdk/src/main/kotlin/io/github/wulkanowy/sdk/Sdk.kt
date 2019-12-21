@@ -204,6 +204,7 @@ class Sdk {
                         apiStudents.map { student ->
                             student.copy(
                                 loginMode = Mode.HYBRID,
+                                loginType = scrapperStudent.loginType,
                                 scrapperBaseUrl = scrapperStudent.scrapperBaseUrl
                             )
                         }
