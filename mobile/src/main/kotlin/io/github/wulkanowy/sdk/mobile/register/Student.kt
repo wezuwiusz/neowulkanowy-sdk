@@ -80,7 +80,7 @@ data class Student(
     val surname: String,
 
     @SerializedName("Pseudonim")
-    val nick: String,
+    val nick: String?,
 
     @SerializedName("UczenPlec")
     val pupilGender: Int,
