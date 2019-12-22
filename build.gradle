@@ -2,11 +2,8 @@ plugins {
     id 'jacoco'
     id 'org.jetbrains.kotlin.jvm' version '1.3.61' apply false
     id "org.jlleitschuh.gradle.ktlint" version "9.1.1"
-}
-
-subprojects {
-    version = "0.13.0-SNAPSHOT"
-    group = "io.github.wulkanowy"
+    id 'maven'
+    id 'com.jfrog.bintray' version '1.8.4'
 }
 
 ext {
@@ -25,6 +22,38 @@ allprojects {
     apply plugin: 'java'
     apply plugin: 'kotlin'
     apply plugin: "org.jlleitschuh.gradle.ktlint"
+
+    version = PUBLISH_VERSION
+    group = "io.github.wulkanowy.sdk"
+    install {
+        repositories.mavenInstaller {
+            pom {
+                project {
+                    packaging 'aar'
+                    name 'SDK for VULCAN UONET+'
+                    url SITE_URL
+                    licenses {
+                        license {
+                            name 'The Apache Software License, Version 2.0'
+                            url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                        }
+                    }
+                    developers {
+                        developer {
+                            id 'mklkj'
+                            name 'Mikołaj Pich'
+                            email 'm.pich@outlook.com'
+                        }
+                    }
+                    scm {
+                        connection GIT_URL
+                        developerConnection GIT_URL
+                        url SITE_URL
+                    }
+                }
+            }
+        }
+    }
 
     ktlint {
         additionalEditorconfigFile = file(".editorconfig")

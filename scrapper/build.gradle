@@ -2,8 +2,8 @@ plugins {
     id 'java'
     id 'org.jetbrains.kotlin.jvm'
     id 'maven'
+    id 'com.jfrog.bintray'
     id 'jacoco'
-//    id 'com.jfrog.bintray' version '1.8.4'
 }
 
 dependencies {
@@ -23,54 +23,24 @@ dependencies {
     testImplementation "org.slf4j:slf4j-simple:$slf4j"
 }
 
-//bintray {
-//    user = System.getenv('BINTRAY_USER')
-//    key = System.getenv('BINTRAY_KEY')
-//    configurations = ['archives']
-//    pkg {
-//        repo = 'wulkanowy'
-//        name = 'api'
-//        userOrg = 'wulkanowy'
-//        licenses = ['Apache-2.0']
-//        vcsUrl = GIT_URL
-//        labels = ['aar', 'wulkanowy', 'api']
-//        publicDownloadNumbers = true
-//        publish = true
-//
-//        version {
-//            name = PUBLISH_VERSION
-//            vcsTag = PUBLISH_VERSION
-//            released  = new Date()
-//        }
-//    }
-//}
+bintray {
+    user = System.getenv('BINTRAY_USER')
+    key = System.getenv('BINTRAY_KEY')
+    configurations = ['archives']
+    pkg {
+        repo = 'wulkanowy'
+        name = 'scrapper'
+        userOrg = 'wulkanowy'
+        licenses = ['Apache-2.0']
+        vcsUrl = GIT_URL
+        labels = ['wulkanowy', 'sdk']
+        publicDownloadNumbers = true
+        publish = true
 
-//install {
-//    repositories.mavenInstaller {
-//        pom {
-//            project {
-//                packaging 'aar'
-//                name 'Scraping API for VULCAN UONET+'
-//                url SITE_URL
-//                licenses {
-//                    license {
-//                        name 'The Apache Software License, Version 2.0'
-//                        url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
-//                    }
-//                }
-//                developers {
-//                    developer {
-//                        id 'mklkj'
-//                        name 'Mikołaj Pich'
-//                        email 'm.pich@outlook.com'
-//                    }
-//                }
-//                scm {
-//                    connection GIT_URL
-//                    developerConnection GIT_URL
-//                    url SITE_URL
-//                }
-//            }
-//        }
-//    }
-//}
+        version {
+            name = PUBLISH_VERSION
+            vcsTag = PUBLISH_VERSION
+            released  = new Date()
+        }
+    }
+}
