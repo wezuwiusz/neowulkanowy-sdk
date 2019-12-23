@@ -1,34 +1,9 @@
 plugins {
     id 'java'
     id 'org.jetbrains.kotlin.jvm'
-    id 'maven'
-    id 'com.jfrog.bintray'
-    id 'jacoco'
 }
 
 dependencies {
-    implementation project(":mobile")
-    implementation project(":scrapper")
-}
-
-bintray {
-    user = System.getenv('BINTRAY_USER')
-    key = System.getenv('BINTRAY_KEY')
-    configurations = ['archives']
-    pkg {
-        repo = 'wulkanowy'
-        name = 'sdk'
-        userOrg = 'wulkanowy'
-        licenses = ['Apache-2.0']
-        vcsUrl = GIT_URL
-        labels = ['wulkanowy', 'sdk']
-        publicDownloadNumbers = true
-        publish = true
-
-        version {
-            name = PUBLISH_VERSION
-            vcsTag = PUBLISH_VERSION
-            released  = new Date()
-        }
-    }
+    implementation project(":sdk-mobile")
+    implementation project(":sdk-scrapper")
 }
