@@ -17,6 +17,7 @@ fun List<ApiAttendance>.mapAttendance(dictionaries: Dictionaries): List<Attendan
             name = category?.name.orEmpty().capitalize(),
             subject = it.subjectName,
             date = it.date.toLocalDate(),
+            timeId = -1,
             absence = category?.absence ?: false,
             categoryId = it.categoryId,
             presence = category?.presence ?: false,
@@ -24,7 +25,8 @@ fun List<ApiAttendance>.mapAttendance(dictionaries: Dictionaries): List<Attendan
             exemption = category?.exemption ?: false,
             excused = category?.excused ?: false,
             excusable = false, //
-            deleted = category?.deleted ?: false
+            deleted = category?.deleted ?: false,
+            excuseStatus = null
         )
     }
 }
@@ -36,6 +38,7 @@ fun List<ScrapperAttendance>.mapAttendance(): List<Attendance> {
             name = it.name,
             subject = it.subject,
             date = it.date.toLocalDate(),
+            timeId = it.timeId,
             absence = it.absence,
             categoryId = it.categoryId,
             deleted = it.deleted,
@@ -43,7 +46,8 @@ fun List<ScrapperAttendance>.mapAttendance(): List<Attendance> {
             excused = it.excused,
             exemption = it.exemption,
             lateness = it.lateness,
-            presence = it.presence
+            presence = it.presence,
+            excuseStatus = it.excuseStatus
         )
     }
 }
