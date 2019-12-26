@@ -23,5 +23,5 @@ data class Recipient(
     val hash: String,
 
     @Transient
-    val shortName: String = ""
+    val shortName: String? = ""
 )

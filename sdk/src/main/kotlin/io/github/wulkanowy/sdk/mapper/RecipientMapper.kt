@@ -13,7 +13,7 @@ fun List<ScrapperRecipient>.mapRecipients(): List<Recipient> {
             name = it.name,
             reportingUnitId = it.reportingUnitId,
             role = it.role,
-            shortName = it.shortName
+            shortName = it.shortName.orEmpty()
         )
     }
 }
