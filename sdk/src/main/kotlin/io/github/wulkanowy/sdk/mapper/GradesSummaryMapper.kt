@@ -15,7 +15,7 @@ fun GradesSummaryResponse.mapGradesSummary(dict: Dictionaries): List<GradeSummar
             name = dict.subjects.singleOrNull { it.id == subjectId }?.name.orEmpty(),
             predicted = predicted.singleOrNull { it.subjectId == subjectId }?.entry.orEmpty(),
             final = evaluative.singleOrNull { it.subjectId == subjectId }?.entry.orEmpty(),
-            average = (average.singleOrNull { it.subjectId == subjectId }?.average ?: "0").replace(",", ".").toDouble(),
+            average = (average.singleOrNull { it.subjectId == subjectId }?.average ?: "0").replace(",", ".").takeIf { it.isNotBlank() }?.toDouble() ?: 0.0,
             pointsSum = average.singleOrNull { it.subjectId == subjectId }?.pointsSum.orEmpty(),
             proposedPoints = "",
             finalPoints = ""

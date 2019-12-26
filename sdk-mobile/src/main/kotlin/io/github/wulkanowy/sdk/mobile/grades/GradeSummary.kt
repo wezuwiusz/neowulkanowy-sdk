@@ -11,7 +11,7 @@ data class GradeSummary(
     val entry: String = "",
 
     @SerializedName("SredniaOcen")
-    val average: String = "",
+    val average: String = "0",
 
     @SerializedName("SumaPunktow")
     val pointsSum: String = ""
