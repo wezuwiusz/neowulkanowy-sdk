@@ -74,7 +74,7 @@ data class Student(
     val name: String,
 
     @SerializedName("Imie2")
-    val nameSecond: String,
+    val nameSecond: String?,
 
     @SerializedName("Nazwisko")
     val surname: String,
