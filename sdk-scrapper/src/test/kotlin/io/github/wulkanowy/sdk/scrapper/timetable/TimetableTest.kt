@@ -15,10 +15,15 @@ class TimetableTest : BaseLocalTest() {
         getStudentRepo(TimetableTest::class.java, "PlanLekcji.json").getTimetable(getLocalDate(2018, 9, 24)).blockingGet()
     }
 
+    private val studentBefore1911 by lazy {
+        getStudentRepo(TimetableTest::class.java, "PlanLekcji-before-19.11.json").getTimetable(getLocalDate(2018, 9, 24)).blockingGet()
+    }
+
     @Test
     fun getTimetableTest() {
         assertEquals(18, snp.size)
         assertEquals(18, student.size)
+        assertEquals(18, studentBefore1911.size)
     }
 
     @Test

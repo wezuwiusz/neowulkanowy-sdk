@@ -16,7 +16,7 @@ fun TimetableResponse.mapTimetableList(startDate: LocalDate, endDate: LocalDate?
         lessons.drop(1).mapIndexed { i, it ->
             val times = lessons[0].split("<br />")
             TimetableResponse.TimetableRow.TimetableCell().apply {
-                date = header.drop(1)[i].date.split("<br />")[1].toDate("dd.MM.yyyy")
+                date = headers.union(_headersOld).drop(1)[i].date.split("<br />")[1].toDate("dd.MM.yyyy")
                 start = "${date.toLocalDate().toFormat("yyyy-MM-dd")} ${times[1]}".toDate("yyyy-MM-dd HH:mm")
                 end = "${date.toLocalDate().toFormat("yyyy-MM-dd")} ${times[2]}".toDate("yyyy-MM-dd HH:mm")
                 number = times[0].toInt()

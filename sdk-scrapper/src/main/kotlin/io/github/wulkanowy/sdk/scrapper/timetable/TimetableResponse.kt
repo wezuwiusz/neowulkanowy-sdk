@@ -12,8 +12,11 @@ class TimetableResponse {
     @Format("dd.MM.yyyy")
     var days: List<Date> = emptyList()
 
+    @SerializedName("Header")
+    var _headersOld: List<Header> = emptyList()
+
     @SerializedName("Headers")
-    var header: List<Header> = emptyList()
+    var headers: List<Header> = emptyList()
 
     @SerializedName("Rows")
     var rows2api: List<List<String>> = emptyList()
