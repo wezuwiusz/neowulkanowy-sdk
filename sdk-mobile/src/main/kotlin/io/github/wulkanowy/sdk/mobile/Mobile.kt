@@ -4,6 +4,9 @@ import com.migcomponents.migbase64.Base64
 import io.github.wulkanowy.sdk.mobile.attendance.Attendance
 import io.github.wulkanowy.sdk.mobile.dictionaries.Dictionaries
 import io.github.wulkanowy.sdk.mobile.exams.Exam
+import io.github.wulkanowy.sdk.mobile.exception.InvalidPinException
+import io.github.wulkanowy.sdk.mobile.exception.InvalidTokenException
+import io.github.wulkanowy.sdk.mobile.exception.TokenDeadException
 import io.github.wulkanowy.sdk.mobile.grades.Grade
 import io.github.wulkanowy.sdk.mobile.grades.GradesSummaryResponse
 import io.github.wulkanowy.sdk.mobile.homework.Homework
@@ -90,10 +93,14 @@ class Mobile {
         }
     }
 
-    fun getStudents(certificateResponse: CertificateResponse, apiKey: String = ""): Single<List<Student>> {
-        if (certificateResponse.isError) throw RuntimeException(certificateResponse.message)
+    fun getStudents(certRes: CertificateResponse, apiKey: String = ""): Single<List<Student>> {
+        if (certRes.isError) when {
+            certRes.message == "TokenDead" -> throw TokenDeadException(certRes.message)
+            certRes.message?.startsWith("Podany numer PIN jest niepoprawny") == true -> throw InvalidPinException(certRes.message.orEmpty())
+            else -> throw InvalidTokenException(certRes.message.orEmpty())
+        }
 
-        val cert = certificateResponse.tokenCert!!
+        val cert = certRes.tokenCert!!
         certKey = cert.certificateKey
         baseUrl = cert.baseUrl.removeSuffix("/")
         privateKey = getPrivateKeyFromCert(apiKey.ifEmpty {
