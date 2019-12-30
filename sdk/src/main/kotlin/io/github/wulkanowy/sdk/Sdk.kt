@@ -6,7 +6,6 @@ import io.github.wulkanowy.sdk.mapper.*
 import io.github.wulkanowy.sdk.mobile.Mobile
 import io.github.wulkanowy.sdk.pojo.*
 import io.github.wulkanowy.sdk.scrapper.Scrapper
-import io.github.wulkanowy.sdk.scrapper.attendance.Absent
 import io.reactivex.Completable
 import io.reactivex.Maybe
 import io.reactivex.Observable
@@ -237,7 +236,7 @@ class Sdk {
 
     fun excuseForAbsence(absents: List<Absent>, content: String? = null): Single<Boolean> {
         return when (mode) {
-            Mode.HYBRID, Mode.SCRAPPER -> scrapper.excuseForAbsence(absents, content).compose(ScrapperExceptionTransformer())
+            Mode.HYBRID, Mode.SCRAPPER -> scrapper.excuseForAbsence(absents.mapToScrapperAbsent(), content).compose(ScrapperExceptionTransformer())
             Mode.API -> throw FeatureNotAvailableException("Absence excusing is not available in API mode")
         }
     }

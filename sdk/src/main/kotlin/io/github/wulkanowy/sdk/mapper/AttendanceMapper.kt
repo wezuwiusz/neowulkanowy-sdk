@@ -2,8 +2,10 @@ package io.github.wulkanowy.sdk.mapper
 
 import io.github.wulkanowy.sdk.scrapper.toLocalDate
 import io.github.wulkanowy.sdk.mobile.dictionaries.Dictionaries
+import io.github.wulkanowy.sdk.pojo.Absent
 import io.github.wulkanowy.sdk.pojo.Attendance
 import io.github.wulkanowy.sdk.pojo.AttendanceSummary
+import io.github.wulkanowy.sdk.scrapper.attendance.Absent as ScrapperAbsent
 import io.github.wulkanowy.sdk.toLocalDate
 import io.github.wulkanowy.sdk.scrapper.attendance.Attendance as ScrapperAttendance
 import io.github.wulkanowy.sdk.scrapper.attendance.AttendanceSummary as ScrapperAttendanceSummary
@@ -63,6 +65,15 @@ fun List<ScrapperAttendanceSummary>.mapAttendanceSummary(): List<AttendanceSumma
             lateness = it.lateness,
             latenessExcused = it.latenessExcused,
             exemption = it.exemption
+        )
+    }
+}
+
+fun List<Absent>.mapToScrapperAbsent(): List<ScrapperAbsent> {
+    return map {
+        ScrapperAbsent(
+            date = it.date,
+            timeId = it.timeId
         )
     }
 }
