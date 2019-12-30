@@ -1,5 +1,6 @@
 package io.github.wulkanowy.sdk.mobile.repository
 
+import io.github.wulkanowy.sdk.mobile.interceptor.ErrorInterceptor
 import io.github.wulkanowy.sdk.mobile.interceptor.SignInterceptor
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
@@ -40,6 +41,7 @@ class RepositoryManager(
             .addConverterFactory(GsonConverterFactory.create())
             .client(OkHttpClient().newBuilder()
                 .addInterceptor(HttpLoggingInterceptor().setLevel(logLevel))
+                .addInterceptor(ErrorInterceptor())
                 .addInterceptor(SignInterceptor(privateKey, certKey))
                 .apply {
                     interceptors.forEach {
