@@ -14,7 +14,19 @@ class ErrorInterceptorTest : BaseLocalTest() {
     fun invalidSymbol() {
         server.enqueueAndStart("invalid-symbol.txt")
 
-        val repo = RegisterRepository(getRetrofitBuilder().baseUrl("http://localhost:3030/wulkaowy/mobile-api/").build().create())
+        val repo = RegisterRepository(getRetrofitBuilder().baseUrl("http://localhost:3030/").build().create())
+        val students = repo.getStudents()
+        val studentsObserver = TestObserver<List<Student>>()
+        students.subscribe(studentsObserver)
+        studentsObserver.assertNotComplete()
+        studentsObserver.assertError(InvalidSymbolException::class.java)
+    }
+
+    @Test
+    fun invalidSymbol_diacritics() {
+        server.enqueueAndStart("invalid-symbol.html")
+
+        val repo = RegisterRepository(getRetrofitBuilder().baseUrl("http://localhost:3030/").build().create())
         val students = repo.getStudents()
         val studentsObserver = TestObserver<List<Student>>()
         students.subscribe(studentsObserver)

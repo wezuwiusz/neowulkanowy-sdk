@@ -8,9 +8,11 @@ class ErrorInterceptor : Interceptor {
 
     override fun intercept(chain: Interceptor.Chain): Response {
         val response = chain.proceed(chain.request())
+        val body = response.peekBody(Long.MAX_VALUE).string()
 
-        when (response.peekBody(Long.MAX_VALUE).string()) {
-            "Bad Request" -> throw InvalidSymbolException()
+        when {
+            body == "Bad Request" -> throw InvalidSymbolException()
+            body.contains("Podany symbol grupujący jest nieprawidłowy") -> throw InvalidSymbolException()
         }
 
         return response
