@@ -46,7 +46,7 @@ class ScrapperRemoteTest : BaseTest() {
             loginType = Scrapper.LoginType.STANDARD
             ssl = true
             host = "fakelog.cf"
-            symbol = "Default"
+            symbol = "powiatwulkanowy"
             email = "jan@fakelog.cf"
             password = "jan123"
             schoolSymbol = "123456"
@@ -73,7 +73,7 @@ class ScrapperRemoteTest : BaseTest() {
         val values = studentObserver.values()[0]
 
         values[0].run {
-            assertEquals("Default", symbol)
+            assertEquals("powiatwulkanowy", symbol)
             assertEquals("jan@fakelog.cf", email)
             assertEquals("Jan Kowalski", studentName)
             assertEquals("123456", schoolSymbol)
@@ -468,7 +468,7 @@ class ScrapperRemoteTest : BaseTest() {
 
         tokenObserver.values()[0].run {
             assertEquals("FK100000", token)
-            assertEquals("Default", symbol)
+            assertEquals("powiatwulkanowy", symbol)
             assertEquals("999999", pin)
         }
     }

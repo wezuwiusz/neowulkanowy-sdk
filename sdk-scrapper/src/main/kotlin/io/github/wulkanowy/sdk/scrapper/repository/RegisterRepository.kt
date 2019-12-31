@@ -2,6 +2,7 @@ package io.github.wulkanowy.sdk.scrapper.repository
 
 import io.github.wulkanowy.sdk.scrapper.Scrapper
 import io.github.wulkanowy.sdk.scrapper.ScrapperException
+import io.github.wulkanowy.sdk.scrapper.exception.TemporarilyDisabledException
 import io.github.wulkanowy.sdk.scrapper.getNormalizedSymbol
 import io.github.wulkanowy.sdk.scrapper.getScriptParam
 import io.github.wulkanowy.sdk.scrapper.interceptor.ErrorHandlerTransformer
@@ -46,25 +47,24 @@ class RegisterRepository(
                     if (t is AccountPermissionException) Single.just(SendCertificateResponse())
                     else Single.error(t)
                 }
-                .flatMapObservable { res ->
-                    Observable.fromIterable(if (useNewStudent) res.studentSchools else res.oldStudentSchools).flatMapSingle { moduleUrl ->
-                        getLoginType(symbol).flatMap { loginType ->
-                            getStudents(symbol, moduleUrl).map { students ->
-                                students.map { student ->
-                                    Student(
-                                        email = email,
-                                        symbol = symbol,
-                                        studentId = student.id,
-                                        studentName = student.name,
-                                        schoolSymbol = getExtractedSchoolSymbolFromUrl(moduleUrl),
-                                        schoolName = student.description,
-                                        className = student.className,
-                                        classId = student.classId,
-                                        baseUrl = url.generate(ServiceManager.UrlGenerator.Site.BASE),
-                                        loginType = loginType,
-                                        isParent = student.isParent
-                                    )
-                                }
+                .flatMapObservable { Observable.fromIterable(if (useNewStudent) it.studentSchools else it.oldStudentSchools) }
+                .flatMapSingle { moduleUrl ->
+                    getLoginType(symbol).flatMap { loginType ->
+                        getStudents(symbol, moduleUrl).map { students ->
+                            students.map { student ->
+                                Student(
+                                    email = email,
+                                    symbol = symbol,
+                                    studentId = student.id,
+                                    studentName = student.name,
+                                    schoolSymbol = getExtractedSchoolSymbolFromUrl(moduleUrl),
+                                    schoolName = student.description,
+                                    className = student.className,
+                                    classId = student.classId,
+                                    baseUrl = url.generate(ServiceManager.UrlGenerator.Site.BASE),
+                                    loginType = loginType,
+                                    isParent = student.isParent
+                                )
                             }
                         }
                     }
@@ -124,20 +124,24 @@ class RegisterRepository(
                     className = res.diaries[0].name
                 }
             }
-        } else student.getSchoolInfo(url.generate(ServiceManager.UrlGenerator.Site.STUDENT) + "UczenDziennik.mvc/Get")
-            .compose(ErrorHandlerTransformer())
-            .map { it.data }
-            .map { it.filter { diary -> diary.semesters?.isNotEmpty() ?: false } }
-            .map { it.sortedByDescending { diary -> diary.level } }
-            .map { diary -> diary.distinctBy { listOf(it.studentId, it.semesters!![0].classId) } }
-            .flatMap { diaries ->
-                student.getStart(url.generate(ServiceManager.UrlGenerator.Site.STUDENT) + "Start").flatMap { startPage ->
-                    student.getUserCache(
-                        url.generate(ServiceManager.UrlGenerator.Site.STUDENT) + "UczenCache.mvc/Get",
-                        getScriptParam("antiForgeryToken", startPage),
-                        getScriptParam("appGuid", startPage),
-                        getScriptParam("version", startPage)
-                    ).map { cache ->
+        } else student.getStart(url.generate(ServiceManager.UrlGenerator.Site.STUDENT) + "Start").onErrorResumeNext {
+            if (it is TemporarilyDisabledException) Single.just("")
+            else Single.error(it)
+        }.flatMap { startPage ->
+            if (startPage.isBlank()) return@flatMap Single.just<List<StudentAndParentResponse.Student>>(listOf())
+            student.getUserCache(
+                url.generate(ServiceManager.UrlGenerator.Site.STUDENT) + "UczenCache.mvc/Get",
+                getScriptParam("antiForgeryToken", startPage),
+                getScriptParam("appGuid", startPage),
+                getScriptParam("version", startPage)
+            ).flatMap { cache ->
+                student.getSchoolInfo(url.generate(ServiceManager.UrlGenerator.Site.STUDENT) + "UczenDziennik.mvc/Get")
+                    .compose(ErrorHandlerTransformer())
+                    .map { it.data }
+                    .map { it.filter { diary -> diary.semesters?.isNotEmpty() ?: false } }
+                    .map { it.sortedByDescending { diary -> diary.level } }
+                    .map { diary -> diary.distinctBy { listOf(it.studentId, it.semesters!![0].classId) } }
+                    .map { diaries ->
                         diaries.map {
                             StudentAndParentResponse.Student().apply {
                                 id = it.studentId
@@ -149,8 +153,8 @@ class RegisterRepository(
                             }
                         }
                     }
-                }
             }
+        }
     }
 
     private fun getExtractedSchoolSymbolFromUrl(snpPageUrl: String): String {

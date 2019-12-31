@@ -1,6 +1,7 @@
 package io.github.wulkanowy.sdk.scrapper.interceptor
 
 import io.github.wulkanowy.sdk.scrapper.ScrapperException
+import io.github.wulkanowy.sdk.scrapper.exception.TemporarilyDisabledException
 import io.github.wulkanowy.sdk.scrapper.login.AccountPermissionException
 import io.github.wulkanowy.sdk.scrapper.login.BadCredentialsException
 import io.github.wulkanowy.sdk.scrapper.login.PasswordChangeRequiredException
@@ -34,6 +35,7 @@ class ErrorInterceptor : Interceptor {
 
         doc.select("#MainPage_ErrorDiv div").let {
             if (it?.last()?.ownText()?.startsWith("Trwa aktualizacja bazy danych") == true) throw ServiceUnavailableException(it.last().ownText())
+            if (it?.last()?.ownText()?.contains("tymczasowo wyłączona") == true) throw TemporarilyDisabledException(it.last().ownText())
             if (it.isNotEmpty()) throw VulcanException(it[0].ownText())
         }
 

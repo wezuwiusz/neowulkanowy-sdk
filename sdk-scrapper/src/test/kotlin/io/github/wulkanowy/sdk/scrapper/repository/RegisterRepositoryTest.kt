@@ -6,6 +6,7 @@ import io.github.wulkanowy.sdk.scrapper.BaseLocalTest
 import io.github.wulkanowy.sdk.scrapper.interceptor.ErrorInterceptorTest
 import io.github.wulkanowy.sdk.scrapper.login.LoginHelper
 import io.github.wulkanowy.sdk.scrapper.login.LoginTest
+import io.github.wulkanowy.sdk.scrapper.register.RegisterTest
 import io.github.wulkanowy.sdk.scrapper.register.Student
 import io.github.wulkanowy.sdk.scrapper.service.LoginService
 import io.github.wulkanowy.sdk.scrapper.service.RegisterService
@@ -23,15 +24,70 @@ class RegisterRepositoryTest : BaseLocalTest() {
 
     private val normal by lazy { getRegisterRepository("Default") }
 
-    private fun getRegisterRepository(symbol: String): RegisterRepository {
-        return RegisterRepository(symbol, "jan@fakelog.cf", "jan123", false,
+    private fun getRegisterRepository(symbol: String, useNewStudent: Boolean = false): RegisterRepository {
+        return RegisterRepository(symbol, "jan@fakelog.cf", "jan123", useNewStudent,
             LoginHelper(Scrapper.LoginType.STANDARD, "http", "fakelog.localhost:3000", symbol, CookieManager(),
                 getService(LoginService::class.java, "http://fakelog.localhost:3000/")),
             getService(service = RegisterService::class.java, url = "http://fakelog.localhost:3000/", errorInterceptor = false, noLoggedInInterceptor = false),
             getService(StudentAndParentService::class.java),
-            getService(StudentService::class.java),
+            getService(service = StudentService::class.java, html = !useNewStudent),
             ServiceManager.UrlGenerator("http", "fakelog.localhost:3000", symbol, "")
         )
+    }
+
+    @Test
+    fun normalLogin() {
+        server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("LoginPage-standard.html").readText()))
+        server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("Logowanie-uonet.html").readText()))
+        server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("Login-success-triple.html").readText()))
+
+        (0..2).onEach {
+            server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("LoginPage-standard.html").readText()))
+            server.enqueue(MockResponse().setBody(RegisterTest::class.java.getResource("WitrynaUcznia.html").readText()))
+            server.enqueue(MockResponse().setBody(RegisterTest::class.java.getResource("UczenCache.json").readText()))
+            server.enqueue(MockResponse().setBody(RegisterTest::class.java.getResource("UczenDziennik-no-semester.json").readText()))
+        }
+
+        (0..5).onEach { // 5x symbol
+            server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("Logowanie-brak-dostepu.html").readText()))
+        }
+        server.start(3000)
+
+        val res = getRegisterRepository("Default", true).getStudents()
+        val observer = TestObserver<List<Student>>()
+        res.subscribe(observer)
+        observer.assertComplete()
+        val students = observer.values()[0]
+        assertEquals(3, students.size)
+    }
+
+    @Test
+    fun normalLogin_temporarilyOff() {
+        server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("LoginPage-standard.html").readText()))
+        server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("Logowanie-uonet.html").readText()))
+        server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("Login-success-triple.html").readText()))
+
+        (0..1).onEach {
+            server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("LoginPage-standard.html").readText()))
+            server.enqueue(MockResponse().setBody(RegisterTest::class.java.getResource("WitrynaUcznia.html").readText()))
+            server.enqueue(MockResponse().setBody(RegisterTest::class.java.getResource("UczenCache.json").readText()))
+            server.enqueue(MockResponse().setBody(RegisterTest::class.java.getResource("UczenDziennik-no-semester.json").readText()))
+        }
+
+        server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("LoginPage-standard.html").readText()))
+        server.enqueue(MockResponse().setBody(ErrorInterceptorTest::class.java.getResource("TymczasowoWyłączona.html").readText()))
+
+        (0..5).onEach { // 5x symbol
+            server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("Logowanie-brak-dostepu.html").readText()))
+        }
+        server.start(3000)
+
+        val res = getRegisterRepository("Default", true).getStudents()
+        val observer = TestObserver<List<Student>>()
+        res.subscribe(observer)
+        observer.assertComplete()
+        val students = observer.values()[0]
+        assertEquals(2, students.size)
     }
 
     @Test
