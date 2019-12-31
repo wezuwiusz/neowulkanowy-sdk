@@ -75,7 +75,7 @@ class RegisterRepositoryTest : BaseLocalTest() {
         }
 
         server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("LoginPage-standard.html").readText()))
-        server.enqueue(MockResponse().setBody(ErrorInterceptorTest::class.java.getResource("TymczasowoWyłączona.html").readText()))
+        server.enqueue(MockResponse().setBody(ErrorInterceptorTest::class.java.getResource("AplikacjaCzasowoWyłączona.html").readText()))
 
         (0..5).onEach { // 5x symbol
             server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("Logowanie-brak-dostepu.html").readText()))
