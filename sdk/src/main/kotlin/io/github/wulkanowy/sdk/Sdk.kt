@@ -167,6 +167,10 @@ class Sdk {
         }
     }
 
+    fun getPasswordResetCaptchaCode(registerBaseUrl: String, symbol: String): Single<String> {
+        return scrapper.getPasswordResetCaptcha(registerBaseUrl, symbol)
+    }
+
     fun getStudentsFromMobileApi(token: String, pin: String, symbol: String, apiKey: String = ""): Single<List<Student>> {
         return mobile.getCertificate(token, pin, symbol, buildTag, androidVersion)
             .flatMap { mobile.getStudents(it, apiKey) }

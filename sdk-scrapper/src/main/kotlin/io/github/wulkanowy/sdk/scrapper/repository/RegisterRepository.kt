@@ -40,6 +40,25 @@ class RegisterRepository(
         private val logger = LoggerFactory.getLogger(this::class.java)
     }
 
+    fun getPasswordResetCaptcha(registerBaseUrl: String, symbol: String): Single<String> {
+        val url = URL(registerBaseUrl)
+        return when (url.host) {
+            "fakelog.cf" -> Single.just("https://cufs.fakelog.cf/Default/AccountManage/UnlockAccount")
+            "eszkola.opolskie.pl" -> Single.just("https://konta.eszkola.opolskie.pl/maintenance/unlock.aspx")
+            "edu.gdansk.pl" -> Single.just("https://konta.edu.gdansk.pl/maintenance/unlock.aspx")
+            "edu.lublin.eu" -> Single.just("https://logowanie.edu.lublin.eu/AccountManage/UnlockAccountRequest")
+            "resman.pl" -> Single.just("https://adfslight.resman.pl/AccountManage/UnlockAccountRequest")
+            "vulcan.net.pl" -> getLoginType(ServiceManager.UrlGenerator(url, symbol, "")).map {
+                when (it) {
+                    Scrapper.LoginType.STANDARD -> "https://cufs.vulcan.net.pl/Default/AccountManage/UnlockAccount"
+                    Scrapper.LoginType.ADFSLightScoped -> "https://adfslight.vulcan.net.pl/rawamazowiecka/AccountManage/UnlockAccountRequest"
+                    else -> throw ScrapperException("Nieznany dziennik")
+                }
+            }
+            else -> throw ScrapperException("Nieznany dziennik")
+        }.flatMap { register.getPasswordResetPageWithCaptcha(it) }.map { it.recaptcha }
+    }
+
     fun getStudents(): Single<List<Student>> {
         return getSymbols().flatMapObservable { Observable.fromIterable(it) }.flatMap { (symbol, certificate) ->
             loginHelper.sendCertificate(certificate, email, certificate.action.replace(startSymbol.getNormalizedSymbol(), symbol))
@@ -94,7 +113,11 @@ class RegisterRepository(
     }
 
     private fun getLoginType(symbol: String): Single<Scrapper.LoginType> {
-        return register.getFormType("/$symbol/Account/LogOn").map { it.page }.map {
+        return getLoginType(url.also { it.symbol = symbol })
+    }
+
+    private fun getLoginType(urlGenerator: ServiceManager.UrlGenerator): Single<Scrapper.LoginType> {
+        return register.getFormType(urlGenerator.generate(ServiceManager.UrlGenerator.Site.LOGIN) + "Account/LogOn").map { it.page }.map {
             when {
                 it.select(".LogOnBoard input[type=submit]").isNotEmpty() -> Scrapper.LoginType.STANDARD
                 it.select("form[name=form1] #SubmitButton").isNotEmpty() -> Scrapper.LoginType.ADFS
@@ -103,7 +126,7 @@ class RegisterRepository(
                         when {
                             contains("cufs.edu.lublin.eu") -> Scrapper.LoginType.ADFSLightCufs
                             startsWith("/LoginPage.aspx") -> Scrapper.LoginType.ADFSLight
-                            startsWith("/$symbol/LoginPage.aspx") -> Scrapper.LoginType.ADFSLightScoped
+                            startsWith("/${urlGenerator.symbol}/LoginPage.aspx") -> Scrapper.LoginType.ADFSLightScoped
                             else -> throw ScrapperException("Nieznany typ dziennika ADFS")
                         }
                     }

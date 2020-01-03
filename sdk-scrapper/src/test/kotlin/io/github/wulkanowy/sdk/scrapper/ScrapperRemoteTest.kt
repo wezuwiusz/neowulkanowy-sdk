@@ -64,6 +64,16 @@ class ScrapperRemoteTest : BaseTest() {
     }
 
     @Test
+    fun getPasswordResetCaptchaCode() {
+        val code = api.getPasswordResetCaptcha("https://fakelog.cf", "Default")
+        val codeObserver = TestObserver<String>()
+        code.subscribe(codeObserver)
+        codeObserver.assertComplete()
+
+        assertEquals("6LeAGMYUAAAAAMszd5VWZTEb5WQHqsNT1F4GCqUd", codeObserver.values()[0])
+    }
+
+    @Test
     fun studentsTest() {
         val students = api.getStudents()
         val studentObserver = TestObserver<List<Student>>()

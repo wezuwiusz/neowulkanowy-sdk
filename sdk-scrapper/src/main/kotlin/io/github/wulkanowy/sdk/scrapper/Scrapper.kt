@@ -191,6 +191,10 @@ class Scrapper {
         HomepageRepository(serviceManager.getHomepageService())
     }
 
+    fun getPasswordResetCaptcha(registerBaseUrl: String, symbol: String = "Default"): Single<String> {
+        return register.getPasswordResetCaptcha(registerBaseUrl, symbol)
+    }
+
     fun getStudents() = register.getStudents()
 
     fun getSemesters() = if (useNewStudent) studentStart.getSemesters() else snpStart.getSemesters()

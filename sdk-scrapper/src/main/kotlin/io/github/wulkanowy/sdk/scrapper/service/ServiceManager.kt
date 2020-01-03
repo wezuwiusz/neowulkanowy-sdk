@@ -28,6 +28,7 @@ import retrofit2.converter.scalars.ScalarsConverterFactory
 import retrofit2.create
 import java.net.CookieManager
 import java.net.CookiePolicy
+import java.net.URL
 import java.util.concurrent.TimeUnit.SECONDS
 
 class ServiceManager(
@@ -162,6 +163,8 @@ class ServiceManager(
     }
 
     class UrlGenerator(private val schema: String, private val host: String, var symbol: String, var schoolId: String) {
+
+        constructor(url: URL, symbol: String, schoolId: String) : this(url.protocol, url.host, symbol, schoolId)
 
         enum class Site {
             BASE, LOGIN, HOME, SNP, STUDENT, MESSAGES
