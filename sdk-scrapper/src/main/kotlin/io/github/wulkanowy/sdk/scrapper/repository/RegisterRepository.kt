@@ -41,6 +41,20 @@ class RegisterRepository(
     }
 
     fun getPasswordResetCaptcha(registerBaseUrl: String, symbol: String): Single<String> {
+        return get(registerBaseUrl, symbol)
+            .flatMap { register.getPasswordResetPageWithCaptcha(it) }
+            .map { it.recaptcha }
+    }
+
+    fun sendPasswordResetRequest(registerBaseUrl: String, symbol: String, email: String, captchaCode: String): Single<Pair<Boolean, String>> {
+        return get(registerBaseUrl, symbol)
+            .flatMap { register.sendPasswordResetRequest(it, email, captchaCode) }
+            .map {
+                (it.title == "Podsumowanie operacji") to it.message
+            }
+    }
+
+    fun get(registerBaseUrl: String, symbol: String): Single<String> {
         val url = URL(registerBaseUrl)
         return when (url.host) {
             "fakelog.cf" -> Single.just("https://cufs.fakelog.cf/Default/AccountManage/UnlockAccount")
@@ -56,7 +70,7 @@ class RegisterRepository(
                 }
             }
             else -> throw ScrapperException("Nieznany dziennik")
-        }.flatMap { register.getPasswordResetPageWithCaptcha(it) }.map { it.recaptcha }
+        }
     }
 
     fun getStudents(): Single<List<Student>> {

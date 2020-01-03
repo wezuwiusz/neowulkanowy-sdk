@@ -171,6 +171,10 @@ class Sdk {
         return scrapper.getPasswordResetCaptcha(registerBaseUrl, symbol)
     }
 
+    fun sendPasswordResetRequest(registerBaseUrl: String, symbol: String, email: String, captchaCode: String): Single<Pair<Boolean, String>> {
+        return scrapper.sendPasswordResetRequest(registerBaseUrl, symbol, email, captchaCode)
+    }
+
     fun getStudentsFromMobileApi(token: String, pin: String, symbol: String, apiKey: String = ""): Single<List<Student>> {
         return mobile.getCertificate(token, pin, symbol, buildTag, androidVersion)
             .flatMap { mobile.getStudents(it, apiKey) }

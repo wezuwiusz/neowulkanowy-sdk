@@ -74,6 +74,19 @@ class ScrapperRemoteTest : BaseTest() {
     }
 
     @Test
+    fun sendPasswordResetRequest() {
+        val res = api.sendPasswordResetRequest("https://fakelog.cf", "Default", "jan@fakelog.cf", "03AOLTBLQRPyr0pWvWLRAgD4hRLfxktoqD2IVweeMuXwbkpR_8S9YQtcS3cAXqUOyEw3NxfvwzV0lTjgFWyl8j3UXGQpsc2nvQcqIofj1N8DYfxvtZO-h24W_S0Z9-fDnfXErd7vERS-Ny4d5IU1FupBAEKvT8rrf3OA3GYYbMM7TwB8b_o9Tt192TqYnSxkyIYE4UdaZnLBA0KIXxlBAoqM6QGlPEsSPK9gmCGx-0hn68w-UBQkv_ghRruf4kpv2Shw5emcP-qHBlv3YjAagsb_358K0v8uGJeyLrx4dXN9Ky02TXFMKYWNHz29fjhfunxT73u_PrsLj56f-MjOXrqO894NkUlJ7RkTTclwIsqXtJ794LEBH--mtsqZBND0miR5-odmZszqiNB3V5UsS5ObsqF_fWMl2TCWyNTTvF4elOGwOEeKiumVpjB6e740COxvxN3vbkNWxP9eeghpd5nPN5l2wUV3VL2R5s44TbqHqkrkNpUOd3h7efs3cQtCfGc-tCXoqLC26LxT7aztvKpjXMuqGEf-7wbQ")
+        val resObserver = TestObserver<Pair<Boolean, String>>()
+        res.subscribe(resObserver)
+        resObserver.assertComplete()
+
+        with(resObserver.values()[0]) {
+            assertEquals(true, first)
+            assertTrue(second.startsWith("Wysłano wiadomość na zapisany w systemie adres e-mail"))
+        }
+    }
+
+    @Test
     fun studentsTest() {
         val students = api.getStudents()
         val studentObserver = TestObserver<List<Student>>()
@@ -124,7 +137,7 @@ class ScrapperRemoteTest : BaseTest() {
         }
 
         values[6].run {
-//            assertEquals(12, semesterId)
+            //            assertEquals(12, semesterId)
 //            assertEquals(2, semesterNumber)
         }
     }

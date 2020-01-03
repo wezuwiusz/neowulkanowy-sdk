@@ -191,8 +191,12 @@ class Scrapper {
         HomepageRepository(serviceManager.getHomepageService())
     }
 
-    fun getPasswordResetCaptcha(registerBaseUrl: String, symbol: String = "Default"): Single<String> {
+    fun getPasswordResetCaptcha(registerBaseUrl: String, symbol: String): Single<String> {
         return register.getPasswordResetCaptcha(registerBaseUrl, symbol)
+    }
+
+    fun sendPasswordResetRequest(registerBaseUrl: String, symbol: String, email: String, captchaCode: String): Single<Pair<Boolean, String>> {
+        return register.sendPasswordResetRequest(registerBaseUrl, symbol, email, captchaCode)
     }
 
     fun getStudents() = register.getStudents()
