@@ -5,6 +5,7 @@ import io.github.wulkanowy.sdk.scrapper.login.LoginHelper
 import io.github.wulkanowy.sdk.scrapper.messages.Folder
 import io.github.wulkanowy.sdk.scrapper.messages.Message
 import io.github.wulkanowy.sdk.scrapper.messages.Recipient
+import io.github.wulkanowy.sdk.scrapper.repository.AccountRepository
 import io.github.wulkanowy.sdk.scrapper.repository.HomepageRepository
 import io.github.wulkanowy.sdk.scrapper.repository.MessagesRepository
 import io.github.wulkanowy.sdk.scrapper.repository.RegisterRepository
@@ -153,6 +154,8 @@ class Scrapper {
             }
     }
 
+    private val account by lazy { AccountRepository(serviceManager.getAccountService()) }
+
     private val register by resettableLazy(changeManager) {
         RegisterRepository(
             normalizedSymbol, email, password, useNewStudent,
@@ -191,12 +194,10 @@ class Scrapper {
         HomepageRepository(serviceManager.getHomepageService())
     }
 
-    fun getPasswordResetCaptcha(registerBaseUrl: String, symbol: String): Single<String> {
-        return register.getPasswordResetCaptcha(registerBaseUrl, symbol)
-    }
+    fun getPasswordResetCaptcha(registerBaseUrl: String, symbol: String) = account.getPasswordResetCaptcha(registerBaseUrl, symbol)
 
     fun sendPasswordResetRequest(registerBaseUrl: String, symbol: String, email: String, captchaCode: String): Single<Pair<Boolean, String>> {
-        return register.sendPasswordResetRequest(registerBaseUrl, symbol, email, captchaCode)
+        return account.sendPasswordResetRequest(registerBaseUrl, symbol, email, captchaCode)
     }
 
     fun getStudents() = register.getStudents()

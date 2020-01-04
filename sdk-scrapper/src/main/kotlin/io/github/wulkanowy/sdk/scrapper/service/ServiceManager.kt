@@ -82,6 +82,10 @@ class ServiceManager(
         return getRetrofit(getClientBuilder(loginIntercept = false), urlGenerator.generate(UrlGenerator.Site.LOGIN), false).create()
     }
 
+    fun getAccountService(): AccountService {
+        return getRetrofit(getClientBuilder(errIntercept = false, loginIntercept = false, separateJar = true), urlGenerator.generate(UrlGenerator.Site.LOGIN), false).create()
+    }
+
     fun getRegisterService(): RegisterService {
         return getRetrofit(getClientBuilder(errIntercept = false, loginIntercept = false, separateJar = true),
             urlGenerator.generate(UrlGenerator.Site.LOGIN),

@@ -40,39 +40,6 @@ class RegisterRepository(
         private val logger = LoggerFactory.getLogger(this::class.java)
     }
 
-    fun getPasswordResetCaptcha(registerBaseUrl: String, symbol: String): Single<String> {
-        return get(registerBaseUrl, symbol)
-            .flatMap { register.getPasswordResetPageWithCaptcha(it) }
-            .map { it.recaptcha }
-    }
-
-    fun sendPasswordResetRequest(registerBaseUrl: String, symbol: String, email: String, captchaCode: String): Single<Pair<Boolean, String>> {
-        return get(registerBaseUrl, symbol)
-            .flatMap { register.sendPasswordResetRequest(it, email, captchaCode) }
-            .map {
-                (it.title == "Podsumowanie operacji") to it.message
-            }
-    }
-
-    fun get(registerBaseUrl: String, symbol: String): Single<String> {
-        val url = URL(registerBaseUrl)
-        return when (url.host) {
-            "fakelog.cf" -> Single.just("https://cufs.fakelog.cf/Default/AccountManage/UnlockAccount")
-            "eszkola.opolskie.pl" -> Single.just("https://konta.eszkola.opolskie.pl/maintenance/unlock.aspx")
-            "edu.gdansk.pl" -> Single.just("https://konta.edu.gdansk.pl/maintenance/unlock.aspx")
-            "edu.lublin.eu" -> Single.just("https://logowanie.edu.lublin.eu/AccountManage/UnlockAccountRequest")
-            "resman.pl" -> Single.just("https://adfslight.resman.pl/AccountManage/UnlockAccountRequest")
-            "vulcan.net.pl" -> getLoginType(ServiceManager.UrlGenerator(url, symbol, "")).map {
-                when (it) {
-                    Scrapper.LoginType.STANDARD -> "https://cufs.vulcan.net.pl/Default/AccountManage/UnlockAccount"
-                    Scrapper.LoginType.ADFSLightScoped -> "https://adfslight.vulcan.net.pl/rawamazowiecka/AccountManage/UnlockAccountRequest"
-                    else -> throw ScrapperException("Nieznany dziennik")
-                }
-            }
-            else -> throw ScrapperException("Nieznany dziennik")
-        }
-    }
-
     fun getStudents(): Single<List<Student>> {
         return getSymbols().flatMapObservable { Observable.fromIterable(it) }.flatMap { (symbol, certificate) ->
             loginHelper.sendCertificate(certificate, email, certificate.action.replace(startSymbol.getNormalizedSymbol(), symbol))
