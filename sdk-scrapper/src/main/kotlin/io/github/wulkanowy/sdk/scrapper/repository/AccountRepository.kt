@@ -9,10 +9,12 @@ import java.net.URL
 
 class AccountRepository(private val account: AccountService) {
 
-    fun getPasswordResetCaptcha(registerBaseUrl: String, symbol: String): Single<String> {
+    fun getPasswordResetCaptcha(registerBaseUrl: String, symbol: String): Single<Pair<String, String>> {
         return getPasswordResetUrl(registerBaseUrl, symbol)
-            .flatMap { account.getPasswordResetPageWithCaptcha(it) }
-            .map { it.recaptcha }
+            .flatMap { resetUrl ->
+                account.getPasswordResetPageWithCaptcha(resetUrl)
+                    .map { res -> resetUrl to res.recaptchaSiteKey }
+            }
     }
 
     fun sendPasswordResetRequest(registerBaseUrl: String, symbol: String, email: String, captchaCode: String): Single<Pair<Boolean, String>> {

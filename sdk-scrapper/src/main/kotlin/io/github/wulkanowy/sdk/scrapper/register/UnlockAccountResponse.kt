@@ -5,5 +5,5 @@ import pl.droidsonroids.jspoon.annotation.Selector
 class UnlockAccountResponse {
 
     @Selector(".g-recaptcha", attr = "data-sitekey")
-    lateinit var recaptcha: String
+    lateinit var recaptchaSiteKey: String
 }

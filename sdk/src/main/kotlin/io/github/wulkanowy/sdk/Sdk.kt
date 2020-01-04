@@ -167,9 +167,7 @@ class Sdk {
         }
     }
 
-    fun getPasswordResetCaptchaCode(registerBaseUrl: String, symbol: String): Single<String> {
-        return scrapper.getPasswordResetCaptcha(registerBaseUrl, symbol)
-    }
+    fun getPasswordResetCaptchaCode(registerBaseUrl: String, symbol: String) = scrapper.getPasswordResetCaptcha(registerBaseUrl, symbol)
 
     fun sendPasswordResetRequest(registerBaseUrl: String, symbol: String, email: String, captchaCode: String): Single<Pair<Boolean, String>> {
         return scrapper.sendPasswordResetRequest(registerBaseUrl, symbol, email, captchaCode)
