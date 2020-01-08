@@ -91,7 +91,7 @@ subprojects {
         testImplementation "org.threeten:threetenbp:$threetenbp"
 
         testImplementation "com.squareup.okhttp3:mockwebserver:$okhttp3"
-        testImplementation "junit:junit:4.12"
+        testImplementation "junit:junit:4.13"
     }
 
     jacocoTestReport {
