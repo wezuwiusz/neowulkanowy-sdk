@@ -13,7 +13,7 @@ class DateDeserializer<T : Date>(private val mClazz: Class<T>) : JsonDeserialize
     override fun deserialize(element: JsonElement, arg1: Type, context: JsonDeserializationContext): T {
         val dateString = element.asString
         return try {
-            mClazz.newInstance().apply {
+            mClazz.getDeclaredConstructor().newInstance().apply {
                 time = dateString.toDate(GradeDate.FORMAT).time
             }
         } catch (e: Throwable) {
