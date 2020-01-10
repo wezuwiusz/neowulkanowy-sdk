@@ -99,6 +99,7 @@ class Mobile {
             certRes.message == "TokenDead" -> throw TokenDeadException(certRes.message)
             certRes.message == "TokenNotFound" -> throw TokenNotFoundException(certRes.message)
             certRes.message?.startsWith("Podany numer PIN jest niepoprawny") == true -> throw InvalidPinException(certRes.message.orEmpty())
+            certRes.message?.startsWith("Trzykrotnie wpisano niepoprawny kod PIN") == true -> throw InvalidPinException(certRes.message.orEmpty())
             else -> throw UnknownTokenException(certRes.message.orEmpty())
         }
 
