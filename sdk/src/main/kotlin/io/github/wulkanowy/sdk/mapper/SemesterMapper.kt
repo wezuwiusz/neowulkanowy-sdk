@@ -29,7 +29,7 @@ fun List<ScrapperSemester>.mapSemesters(): List<Semester> {
 fun List<Student>.mapSemesters(studentId: Int): List<Semester> {
     return filter { it.id == studentId }.map {
         Semester(
-            diaryId = -1,
+            diaryId = 0,
             diaryName = it.classSymbol,
             schoolYear = it.periodDateFrom.toLocalDate().let { start -> if (start.month == Month.SEPTEMBER) start.year else start.year - 1 },
             semesterId = it.classificationPeriodId,
