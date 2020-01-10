@@ -26,6 +26,10 @@ abstract class BaseLocalTest : BaseTest() {
     val server = MockWebServer()
     val jsonParser = JsonParser()
 
+    fun MockWebServer.enqueue(fileName: String, clazz: Class<*> = this@BaseLocalTest::class.java) {
+        enqueue(MockResponse().setBody(clazz.getResource(fileName).readText()))
+    }
+
     @After
     fun tearDown() {
         server.shutdown()

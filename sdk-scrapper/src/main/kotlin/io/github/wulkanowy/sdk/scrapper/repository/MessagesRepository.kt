@@ -1,5 +1,6 @@
 package io.github.wulkanowy.sdk.scrapper.repository
 
+import io.github.wulkanowy.sdk.scrapper.ScrapperException
 import io.github.wulkanowy.sdk.scrapper.getScriptParam
 import io.github.wulkanowy.sdk.scrapper.interceptor.ErrorHandlerTransformer
 import io.github.wulkanowy.sdk.scrapper.messages.DeleteMessageRequest
@@ -93,7 +94,7 @@ class MessagesRepository(private val api: MessagesService) {
                         content = content
                     )
                 ),
-                getScriptParam("antiForgeryToken", res),
+                getScriptParam("antiForgeryToken", res).ifBlank { throw ScrapperException("antiForgeryToken is empty") },
                 getScriptParam("appGuid", res),
                 getScriptParam("version", res)
             )
