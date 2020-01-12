@@ -16,12 +16,12 @@ import io.github.wulkanowy.sdk.scrapper.messages.SentMessage
 import io.github.wulkanowy.sdk.scrapper.mobile.Device
 import io.github.wulkanowy.sdk.scrapper.mobile.TokenResponse
 import io.github.wulkanowy.sdk.scrapper.notes.Note
-import io.github.wulkanowy.sdk.scrapper.timetable.CompletedLesson
 import io.github.wulkanowy.sdk.scrapper.register.Semester
 import io.github.wulkanowy.sdk.scrapper.register.Student
 import io.github.wulkanowy.sdk.scrapper.school.School
 import io.github.wulkanowy.sdk.scrapper.school.Teacher
 import io.github.wulkanowy.sdk.scrapper.student.StudentInfo
+import io.github.wulkanowy.sdk.scrapper.timetable.CompletedLesson
 import io.github.wulkanowy.sdk.scrapper.timetable.Timetable
 import io.reactivex.observers.TestObserver
 import okhttp3.Interceptor
@@ -30,11 +30,9 @@ import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Before
-import org.junit.Ignore
 import org.junit.Test
 import org.threeten.bp.Month
 
-@Ignore
 class ScrapperRemoteTest : BaseTest() {
 
     private var api = Scrapper()
@@ -462,7 +460,10 @@ class ScrapperRemoteTest : BaseTest() {
         val mObserver = TestObserver<String>()
         m.subscribe(mObserver)
         mObserver.assertComplete()
+    }
 
+    @Test
+    fun sendMessage() {
         val send = api.sendMessage("Temat wiadomości", "Treść",
             listOf(Recipient("0", "Kowalski Jan", 0, 0, 2, "hash"))
         )

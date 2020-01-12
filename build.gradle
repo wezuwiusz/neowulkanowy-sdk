@@ -5,13 +5,13 @@ plugins {
 }
 
 ext {
-    PUBLISH_VERSION = '0.14.0'
+    PUBLISH_VERSION = '0.14.2'
     SITE_URL = 'https://github.com/wulkanowy/sdk'
     GIT_URL = 'https://github.com/wulkanowy/sdk.git'
 
     jspoon = "1.3.2"
     okhttp3 = "3.12.6"
-    retrofit = "2.6.3"
+    retrofit = "2.6.4"
     threetenbp = "1.4.0"
     slf4j = "1.7.30"
 }
@@ -91,7 +91,7 @@ subprojects {
         testImplementation "org.threeten:threetenbp:$threetenbp"
 
         testImplementation "com.squareup.okhttp3:mockwebserver:$okhttp3"
-        testImplementation "junit:junit:4.12"
+        testImplementation "junit:junit:4.13"
     }
 
     jacocoTestReport {
@@ -128,4 +128,6 @@ dependencies {
     compile project(":sdk")
     compile project(":sdk-mobile")
     compile project(":sdk-scrapper")
+
+    compile "com.squareup.okhttp3:okhttp:$okhttp3"
 }

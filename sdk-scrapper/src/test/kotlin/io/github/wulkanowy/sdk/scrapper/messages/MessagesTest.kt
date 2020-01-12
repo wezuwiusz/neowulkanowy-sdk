@@ -1,8 +1,11 @@
 package io.github.wulkanowy.sdk.scrapper.messages
 
 import io.github.wulkanowy.sdk.scrapper.BaseLocalTest
+import io.github.wulkanowy.sdk.scrapper.ScrapperException
+import io.github.wulkanowy.sdk.scrapper.login.LoginTest
 import io.github.wulkanowy.sdk.scrapper.repository.MessagesRepository
 import io.github.wulkanowy.sdk.scrapper.service.MessagesService
+import io.reactivex.observers.TestObserver
 import okhttp3.mockwebserver.MockResponse
 import org.junit.Assert.assertEquals
 import org.junit.Test
@@ -167,6 +170,19 @@ class MessagesTest : BaseLocalTest() {
         )
         assertEquals("877c4a726ad61667f4e2237f0cf6307a", request.getHeader("X-V-AppGuid"))
         assertEquals("19.02.0001.32324", request.getHeader("X-V-AppVersion"))
+    }
+
+    @Test
+    fun sendMessage_error() {
+        server.enqueue("ADFSLight-form-resman.html", LoginTest::class.java)
+        server.enqueue("WyslanaWiadomosc.json")
+        server.start(3000)
+
+        val sent = api.sendMessage("Temat", "Treść", listOf())
+        val observer = TestObserver<SentMessage>()
+        sent.subscribe(observer)
+        observer.assertNotComplete()
+        observer.assertError(ScrapperException::class.java)
     }
 
     @Test

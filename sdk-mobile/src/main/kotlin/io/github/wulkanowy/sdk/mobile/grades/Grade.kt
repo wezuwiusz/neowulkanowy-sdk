@@ -32,7 +32,7 @@ data class Grade(
     val gradeWeight: Double,
 
     @SerializedName("Licznik")
-    val counter: Int?,
+    val counter: Double?,
 
     @SerializedName("Mianownik")
     val denominator: Int?,
