@@ -40,6 +40,7 @@ fun getGradeValueWithModifier(grade: String): Pair<Int, Double> {
             when {
                 matches("[-][0-6]|[0-6][-]".toRegex()) -> Pair(replace("-", "").toInt(), -modifierWeight)
                 matches("[+][0-6]|[0-6][+]".toRegex()) -> Pair(replace("+", "").toInt(), modifierWeight)
+                matches("[+]{2}[0-6]|[0-6][+]{2}".toRegex()) -> Pair(replace("++", "").toInt(), .5)
                 matches("[-|=]{1,2}[0-6]|[0-6][-|=]{1,2}".toRegex()) -> Pair(replace("[-|=]{1,2}".toRegex(), "").toInt(), -.5)
                 else -> Pair(this.toInt(), .0)
             }
