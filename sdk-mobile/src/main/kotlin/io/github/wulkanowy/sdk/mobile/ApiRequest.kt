@@ -24,6 +24,6 @@ abstract class ApiRequest(
     val remoteMobileAppName: String = "VULCAN-Android-ModulUcznia"
 ) {
     companion object {
-        const val MOBILE_APP_VERSION = "18.10.1.435"
+        const val MOBILE_APP_VERSION = "19.12.1.445"
     }
 }
