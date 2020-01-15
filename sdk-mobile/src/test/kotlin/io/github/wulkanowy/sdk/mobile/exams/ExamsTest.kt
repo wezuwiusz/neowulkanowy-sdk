@@ -17,6 +17,6 @@ class ExamsTest : BaseLocalTest() {
 
         val items = exams.getExams(of(2020, 1, 16), of(2020, 1, 17), 1, 2, 3).blockingGet()
 
-        assertEquals(1, items.size)
+        assertEquals(3, items.size)
     }
 }
