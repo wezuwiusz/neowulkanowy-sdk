@@ -2,10 +2,12 @@ package io.github.wulkanowy.sdk
 
 import io.github.wulkanowy.sdk.pojo.Folder
 import org.junit.Assert.assertEquals
+import org.junit.Ignore
 import org.junit.Test
 import org.threeten.bp.LocalDate.of
 import org.threeten.bp.LocalDateTime
 
+@Ignore
 class SdkRemoteTest {
 
     companion object {
