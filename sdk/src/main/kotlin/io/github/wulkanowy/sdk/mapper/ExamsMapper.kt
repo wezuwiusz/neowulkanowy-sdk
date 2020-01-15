@@ -17,7 +17,12 @@ fun List<ApiExam>.mapExams(dict: Dictionaries): List<Exam> {
             teacher = dict.teachers.singleOrNull { it.id == exam.employeeId }?.run { "$name $surname" }.orEmpty(),
             subject = dict.subjects.singleOrNull { it.id == exam.subjectId }?.name.orEmpty(),
             teacherSymbol = dict.teachers.singleOrNull { it.id == exam.employeeId }?.code.orEmpty(),
-            type = if (exam.type) "Sprawdzian" else "Kartkówka"
+            type = when (exam.typeNumber) {
+                1 -> "Sprawdzian"
+                2 -> "Kartkówka"
+                3 -> "Praca klasowa"
+                else -> "Nieznany"
+            }
         )
     }
 }

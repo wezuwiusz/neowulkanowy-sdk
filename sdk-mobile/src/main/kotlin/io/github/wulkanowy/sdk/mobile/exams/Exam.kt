@@ -25,6 +25,9 @@ data class Exam(
     @SerializedName("Rodzaj")
     val type: Boolean, // false - quiz, true - test
 
+    @SerializedName("RodzajNumer")
+    val typeNumber: Int,
+
     @SerializedName("Opis")
     val description: String,
 
