@@ -34,7 +34,7 @@ fun List<Student>.mapSemesters(studentId: Int): List<Semester> {
             schoolYear = it.periodDateFrom.toLocalDate().let { start -> if (start.month == Month.SEPTEMBER) start.year else start.year - 1 },
             semesterId = it.classificationPeriodId,
             semesterNumber = it.periodNumber,
-            current = now() in it.periodDateFrom.toLocalDate()..it.periodDateTo.toLocalDate(),
+            current = false,
             start = it.periodDateFrom.toLocalDate(),
             end = it.periodDateTo.toLocalDate(),
             classId = it.classId,
@@ -44,12 +44,13 @@ fun List<Student>.mapSemesters(studentId: Int): List<Semester> {
         if (it.size == 1) {
             val semesterNumber = it.single().semesterNumber
             listOf(it.single(), it.single().copy(
-                current = false,
                 semesterNumber = if (semesterNumber == 1) 2 else 1,
                 semesterId = if (semesterNumber == 1) it.single().semesterId + 1 else it.single().semesterId - 1,
                 start = if (semesterNumber == 1) it.single().end.plusDays(1) else of(it.single().schoolYear, 9, 1),
                 end = if (semesterNumber == 1) of(it.single().schoolYear + 1, 6, 30) else it.single().start.plusDays(1)
             ))
         } else it
+    }.map {
+        it.copy(current = now() in it.start..it.end)
     }
 }
