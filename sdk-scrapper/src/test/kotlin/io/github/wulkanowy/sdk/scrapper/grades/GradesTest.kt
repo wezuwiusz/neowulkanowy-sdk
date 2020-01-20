@@ -22,7 +22,7 @@ class GradesTest : BaseLocalTest() {
     fun getAllTest() {
         assertEquals(10, snp.size) // 2 items are skipped
         assertEquals(12, student.size)
-        assertEquals(3, studentPoints.size)
+        assertEquals(4, studentPoints.size)
     }
 
     @Test
@@ -293,6 +293,24 @@ class GradesTest : BaseLocalTest() {
             assertEquals("0,00", weight)
             assertEquals(0.0, weightValue, .0)
             assertEquals(getDate(2018, 12, 4), date)
+            assertEquals("Jakub Michalak", teacher)
+        }
+    }
+
+    @Test
+    fun getGrade_decimalCounter() {
+        with(studentPoints[3]) {
+            assertEquals("Fizyka", subject)
+            assertEquals("95%", entry)
+            assertEquals(0, value)
+            assertEquals(.0, modifier, .0)
+            assertEquals("47.5/50", comment)
+            assertEquals("000000", color)
+            assertEquals("K3", symbol)
+            assertEquals("Liczebniki", description)
+            assertEquals("1,00", weight)
+            assertEquals(0.0, weightValue, .0)
+            assertEquals(getDate(2018, 12, 3), date)
             assertEquals("Jakub Michalak", teacher)
         }
     }

@@ -16,7 +16,7 @@ fun GradesResponse.mapGradesList(): List<Grade> {
                     else entry.substringBeforeLast(")").substringAfter(" (")
                 }
                 entry = entry.substringBefore(" (").run {
-                    if (isPoints && matches("\\d+/\\d+".toRegex())) getGradePointPercent()
+                    if (isPoints && matches("\\d+\\.?\\d+/\\d+".toRegex())) getGradePointPercent()
                     else if (length > 4) "..."
                     else this
                 }
