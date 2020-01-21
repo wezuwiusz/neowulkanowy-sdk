@@ -18,6 +18,7 @@ import junit.framework.TestCase.assertEquals
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import org.junit.BeforeClass
+import org.junit.Ignore
 import org.junit.Test
 import org.threeten.bp.LocalDate.of
 import retrofit2.Retrofit
@@ -33,6 +34,7 @@ const val SYMBOL = "powiatwulkanowy"
 const val TOKEN = "FK100000"
 const val PIN = "999999"
 
+@Ignore
 class UonetTest {
 
     companion object {

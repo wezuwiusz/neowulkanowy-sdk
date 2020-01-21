@@ -5,6 +5,7 @@ import io.github.wulkanowy.sdk.mobile.attendance.Attendance
 import io.github.wulkanowy.sdk.mobile.dictionaries.Dictionaries
 import io.github.wulkanowy.sdk.mobile.exams.Exam
 import io.github.wulkanowy.sdk.mobile.exception.InvalidPinException
+import io.github.wulkanowy.sdk.mobile.exception.NoStudentsException
 import io.github.wulkanowy.sdk.mobile.exception.TokenDeadException
 import io.github.wulkanowy.sdk.mobile.exception.TokenNotFoundException
 import io.github.wulkanowy.sdk.mobile.exception.UnknownTokenException
@@ -100,6 +101,7 @@ class Mobile {
             certRes.message == "TokenNotFound" -> throw TokenNotFoundException(certRes.message)
             certRes.message?.startsWith("Podany numer PIN jest niepoprawny") == true -> throw InvalidPinException(certRes.message.orEmpty())
             certRes.message?.startsWith("Trzykrotnie wpisano niepoprawny kod PIN") == true -> throw InvalidPinException(certRes.message.orEmpty())
+            certRes.message == "NoPupils" -> throw NoStudentsException(certRes.message.orEmpty())
             else -> throw UnknownTokenException(certRes.message.orEmpty())
         }
 

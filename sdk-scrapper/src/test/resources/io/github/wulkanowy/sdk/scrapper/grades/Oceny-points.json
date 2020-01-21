@@ -46,6 +46,15 @@
             "KodKolumny": "O",
             "DataOceny": "04.12.2018",
             "KolorOceny": 0
+          },
+          {
+            "Nauczyciel": "Jakub Michalak",
+            "Wpis": "47.5/50",
+            "Waga": 1.00,
+            "NazwaKolumny": "Liczebniki",
+            "KodKolumny": "K3",
+            "DataOceny": "03.12.2018",
+            "KolorOceny": 0
           }
         ],
         "ProponowanaOcenaRoczna": "",

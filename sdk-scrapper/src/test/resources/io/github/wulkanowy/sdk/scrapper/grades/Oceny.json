@@ -148,6 +148,15 @@
             "KodKolumny": "STR",
             "DataOceny": "14.11.2018",
             "KolorOceny": 7261447
+          },
+          {
+            "Nauczyciel": "Klaudia Dziedzic",
+            "Wpis": "0++",
+            "Waga": 0,
+            "NazwaKolumny": "Podnoszenie ciężarów",
+            "KodKolumny": "A1",
+            "DataOceny": "01.9.2017",
+            "KolorOceny": 0
           }
         ],
         "ProponowanaOcenaRoczna": "4-",

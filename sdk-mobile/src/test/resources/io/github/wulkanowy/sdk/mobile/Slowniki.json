@@ -1,0 +1,911 @@
+{
+  "Status": "Ok",
+  "TimeKey": 1579118032,
+  "TimeValue": "Wed, 15 Jan 2020 19:53:51 GMT",
+  "RequestId": "38af6dfe-cd51-4b74-b7d3-52f764b48d85",
+  "DayOfWeek": 3,
+  "AppVersion": "17.09.0009.26859",
+  "Data": {
+    "TimeKey": 1579118032,
+    "Nauczyciele": [
+      {
+        "Id": 1,
+        "Imie": "Karolina",
+        "Nazwisko": "Kowalska",
+        "Kod": "AN",
+        "Aktywny": true,
+        "Nauczyciel": true,
+        "LoginId": 100
+      },
+      {
+        "Id": 2,
+        "Imie": "Zofia",
+        "Nazwisko": "Czerwińska",
+        "Kod": "NA",
+        "Aktywny": true,
+        "Nauczyciel": true,
+        "LoginId": 101
+      },
+      {
+        "Id": 3,
+        "Imie": "Aleksandra",
+        "Nazwisko": "Krajewska",
+        "Kod": "AK",
+        "Aktywny": true,
+        "Nauczyciel": true,
+        "LoginId": 102
+      },
+      {
+        "Id": 4,
+        "Imie": "Stanisław",
+        "Nazwisko": "Krupa",
+        "Kod": "BS",
+        "Aktywny": true,
+        "Nauczyciel": true,
+        "LoginId": 103
+      },
+      {
+        "Id": 5,
+        "Imie": "Aleksandra",
+        "Nazwisko": "Wójtowicz",
+        "Kod": "AW",
+        "Aktywny": true,
+        "Nauczyciel": true,
+        "LoginId": 104
+      },
+      {
+        "Id": 6,
+        "Imie": "Sara",
+        "Nazwisko": "Wierzbicka",
+        "Kod": "KB",
+        "Aktywny": true,
+        "Nauczyciel": true,
+        "LoginId": 105
+      },
+      {
+        "Id": 7,
+        "Imie": "Mateusz",
+        "Nazwisko": "Kowal",
+        "Kod": "MK",
+        "Aktywny": true,
+        "Nauczyciel": true,
+        "LoginId": 106
+      },
+      {
+        "Id": 8,
+        "Imie": "Amelia",
+        "Nazwisko": "Mazur",
+        "Kod": "AM",
+        "Aktywny": true,
+        "Nauczyciel": true,
+        "LoginId": 107
+      },
+      {
+        "Id": 9,
+        "Imie": "Barbara",
+        "Nazwisko": "Markowska",
+        "Kod": "BM",
+        "Aktywny": true,
+        "Nauczyciel": true,
+        "LoginId": 108
+      },
+      {
+        "Id": 10,
+        "Imie": "Michał",
+        "Nazwisko": "Mazur",
+        "Kod": "MM",
+        "Aktywny": true,
+        "Nauczyciel": true,
+        "LoginId": 109
+      }
+    ],
+    "Pracownicy": [
+      {
+        "Id": 1,
+        "Imie": "Karolina",
+        "Nazwisko": "Kowalska",
+        "Kod": "AN",
+        "Aktywny": true,
+        "Nauczyciel": true,
+        "LoginId": 100
+      },
+      {
+        "Id": 2,
+        "Imie": "Zofia",
+        "Nazwisko": "Czerwińska",
+        "Kod": "NA",
+        "Aktywny": true,
+        "Nauczyciel": true,
+        "LoginId": 101
+      },
+      {
+        "Id": 3,
+        "Imie": "Aleksandra",
+        "Nazwisko": "Krajewska",
+        "Kod": "AK",
+        "Aktywny": true,
+        "Nauczyciel": true,
+        "LoginId": 102
+      },
+      {
+        "Id": 4,
+        "Imie": "Stanisław",
+        "Nazwisko": "Krupa",
+        "Kod": "BS",
+        "Aktywny": true,
+        "Nauczyciel": true,
+        "LoginId": 103
+      },
+      {
+        "Id": 5,
+        "Imie": "Aleksandra",
+        "Nazwisko": "Wójtowicz",
+        "Kod": "AW",
+        "Aktywny": true,
+        "Nauczyciel": true,
+        "LoginId": 104
+      },
+      {
+        "Id": 6,
+        "Imie": "Sara",
+        "Nazwisko": "Wierzbicka",
+        "Kod": "KB",
+        "Aktywny": true,
+        "Nauczyciel": true,
+        "LoginId": 105
+      },
+      {
+        "Id": 7,
+        "Imie": "Mateusz",
+        "Nazwisko": "Kowal",
+        "Kod": "MK",
+        "Aktywny": true,
+        "Nauczyciel": true,
+        "LoginId": 106
+      },
+      {
+        "Id": 8,
+        "Imie": "Amelia",
+        "Nazwisko": "Mazur",
+        "Kod": "AM",
+        "Aktywny": true,
+        "Nauczyciel": true,
+        "LoginId": 107
+      },
+      {
+        "Id": 9,
+        "Imie": "Barbara",
+        "Nazwisko": "Markowska",
+        "Kod": "BM",
+        "Aktywny": true,
+        "Nauczyciel": true,
+        "LoginId": 108
+      },
+      {
+        "Id": 10,
+        "Imie": "Michał",
+        "Nazwisko": "Mazur",
+        "Kod": "MM",
+        "Aktywny": true,
+        "Nauczyciel": true,
+        "LoginId": 109
+      }
+    ],
+    "Przedmioty": [
+      {
+        "Id": 300,
+        "Nazwa": "Zajęcia z wychowawcą",
+        "Kod": "godz.wych",
+        "Aktywny": true,
+        "Pozycja": 0
+      },
+      {
+        "Id": 301,
+        "Nazwa": "Język polski",
+        "Kod": "j. polski",
+        "Aktywny": true,
+        "Pozycja": 3
+      },
+      {
+        "Id": 302,
+        "Nazwa": "Historia",
+        "Kod": "historia",
+        "Aktywny": true,
+        "Pozycja": 1
+      },
+      {
+        "Id": 303,
+        "Nazwa": "Etyka",
+        "Kod": "etyka",
+        "Aktywny": true,
+        "Pozycja": 2
+      },
+      {
+        "Id": 304,
+        "Nazwa": "Język angielski",
+        "Kod": "j. angielski",
+        "Aktywny": true,
+        "Pozycja": 4
+      },
+      {
+        "Id": 305,
+        "Nazwa": "Język niemiecki",
+        "Kod": "j. niemiecki",
+        "Aktywny": true,
+        "Pozycja": 5
+      },
+      {
+        "Id": 306,
+        "Nazwa": "Metodologia programowania",
+        "Kod": "metod.programowania",
+        "Aktywny": true,
+        "Pozycja": 6
+      },
+      {
+        "Id": 307,
+        "Nazwa": "Matematyka",
+        "Kod": "matematyka",
+        "Aktywny": true,
+        "Pozycja": 7
+      },
+      {
+        "Id": 308,
+        "Nazwa": "Fizyka",
+        "Kod": "fizyka",
+        "Aktywny": true,
+        "Pozycja": 8
+      },
+      {
+        "Id": 309,
+        "Nazwa": "Chemia",
+        "Kod": "chemia",
+        "Aktywny": true,
+        "Pozycja": 9
+      },
+      {
+        "Id": 310,
+        "Nazwa": "Biologia",
+        "Kod": "biologia",
+        "Aktywny": true,
+        "Pozycja": 10
+      },
+      {
+        "Id": 311,
+        "Nazwa": "Geografia",
+        "Kod": "geografia",
+        "Aktywny": true,
+        "Pozycja": 11
+      },
+      {
+        "Id": 312,
+        "Nazwa": "Informatyka",
+        "Kod": "informatyka",
+        "Aktywny": true,
+        "Pozycja": 12
+      },
+      {
+        "Id": 313,
+        "Nazwa": "Religia",
+        "Kod": "religia",
+        "Aktywny": true,
+        "Pozycja": 13
+      }
+    ],
+    "PoryLekcji": [
+      {
+        "Id": 76,
+        "Numer": 1,
+        "Poczatek": 25200,
+        "PoczatekTekst": "08:00",
+        "Koniec": 27900,
+        "KoniecTekst": "08:45"
+      },
+      {
+        "Id": 77,
+        "Numer": 2,
+        "Poczatek": 28500,
+        "PoczatekTekst": "08:55",
+        "Koniec": 31200,
+        "KoniecTekst": "09:40"
+      },
+      {
+        "Id": 78,
+        "Numer": 3,
+        "Poczatek": 31800,
+        "PoczatekTekst": "09:50",
+        "Koniec": 34500,
+        "KoniecTekst": "10:35"
+      },
+      {
+        "Id": 79,
+        "Numer": 4,
+        "Poczatek": 35100,
+        "PoczatekTekst": "10:45",
+        "Koniec": 37800,
+        "KoniecTekst": "11:30"
+      },
+      {
+        "Id": 80,
+        "Numer": 5,
+        "Poczatek": 38400,
+        "PoczatekTekst": "11:40",
+        "Koniec": 41100,
+        "KoniecTekst": "12:25"
+      },
+      {
+        "Id": 81,
+        "Numer": 6,
+        "Poczatek": 42300,
+        "PoczatekTekst": "12:45",
+        "Koniec": 45000,
+        "KoniecTekst": "13:30"
+      },
+      {
+        "Id": 82,
+        "Numer": 7,
+        "Poczatek": 45600,
+        "PoczatekTekst": "13:40",
+        "Koniec": 48300,
+        "KoniecTekst": "14:25"
+      },
+      {
+        "Id": 83,
+        "Numer": 8,
+        "Poczatek": 48600,
+        "PoczatekTekst": "14:30",
+        "Koniec": 51300,
+        "KoniecTekst": "15:15"
+      },
+      {
+        "Id": 84,
+        "Numer": 9,
+        "Poczatek": 51600,
+        "PoczatekTekst": "15:20",
+        "Koniec": 54300,
+        "KoniecTekst": "16:05"
+      },
+      {
+        "Id": 85,
+        "Numer": 10,
+        "Poczatek": 54600,
+        "PoczatekTekst": "16:10",
+        "Koniec": 57300,
+        "KoniecTekst": "16:55"
+      },
+      {
+        "Id": 86,
+        "Numer": 11,
+        "Poczatek": 57600,
+        "PoczatekTekst": "17:00",
+        "Koniec": 60300,
+        "KoniecTekst": "17:45"
+      },
+      {
+        "Id": 87,
+        "Numer": 12,
+        "Poczatek": 60600,
+        "PoczatekTekst": "17:50",
+        "Koniec": 63300,
+        "KoniecTekst": "18:35"
+      }
+    ],
+    "KategorieOcen": [
+      {
+        "Id": 26,
+        "Kod": "Akt",
+        "Nazwa": "A - aktywność (czarny)"
+      },
+      {
+        "Id": 27,
+        "Kod": "Bież",
+        "Nazwa": "B - bieżące (fiol)"
+      },
+      {
+        "Id": 28,
+        "Kod": "Kart",
+        "Nazwa": "K - kartkówka (zielony)"
+      },
+      {
+        "Id": 29,
+        "Kod": "Spr",
+        "Nazwa": "S - sprawdzian (czerwony)"
+      },
+      {
+        "Id": 30,
+        "Kod": "Z.dom",
+        "Nazwa": "Zd - zadanie domowe (czarny)"
+      },
+      {
+        "Id": 65,
+        "Kod": "odp",
+        "Nazwa": "OD - odpowiedź ustna (nieb)"
+      },
+      {
+        "Id": 67,
+        "Kod": "ref",
+        "Nazwa": "Referat"
+      },
+      {
+        "Id": 68,
+        "Kod": "zewn",
+        "Nazwa": "Sprawdzian zewnętrzny"
+      },
+      {
+        "Id": 69,
+        "Kod": "tsm",
+        "Nazwa": "Test sprawności motorycznej"
+      },
+      {
+        "Id": 70,
+        "Kod": "tu",
+        "Nazwa": "Test umiejętności"
+      },
+      {
+        "Id": 71,
+        "Kod": "zs",
+        "Nazwa": "Zawody sportowe"
+      },
+      {
+        "Id": 72,
+        "Kod": "bs",
+        "Nazwa": "Brak stroju"
+      },
+      {
+        "Id": 73,
+        "Kod": "r",
+        "Nazwa": "Rozgrzewka"
+      },
+      {
+        "Id": 74,
+        "Kod": "pr_dł",
+        "Nazwa": "Praca długoterminowa"
+      },
+      {
+        "Id": 75,
+        "Kod": "ze_ćwi",
+        "Nazwa": "Zeszyt ćwiczeń"
+      },
+      {
+        "Id": 76,
+        "Kod": "Inne",
+        "Nazwa": "Inne"
+      },
+      {
+        "Id": 77,
+        "Kod": "popspr",
+        "Nazwa": "Poprawa sprawdzianu"
+      },
+      {
+        "Id": 78,
+        "Kod": "PK",
+        "Nazwa": "Praca klasowa"
+      },
+      {
+        "Id": 79,
+        "Kod": "Re",
+        "Nazwa": "Recytacja"
+      },
+      {
+        "Id": 80,
+        "Kod": "dyk",
+        "Nazwa": "Dyktando"
+      },
+      {
+        "Id": 81,
+        "Kod": "lek",
+        "Nazwa": "Lektura"
+      },
+      {
+        "Id": 82,
+        "Kod": "sp_wiedzy",
+        "Nazwa": "Sprawdzian wiedzy"
+      },
+      {
+        "Id": 83,
+        "Kod": "egz_próbny",
+        "Nazwa": "Egzamin próbny"
+      }
+    ],
+    "KategorieUwag": [
+      {
+        "Id": 46,
+        "Nazwa": "Wypełnianie obowiązków ucznia",
+        "Aktywny": false
+      },
+      {
+        "Id": 47,
+        "Nazwa": "Zaangażowanie społeczne",
+        "Aktywny": false
+      },
+      {
+        "Id": 48,
+        "Nazwa": "Kultura języka",
+        "Aktywny": false
+      },
+      {
+        "Id": 49,
+        "Nazwa": "Kultura osobista",
+        "Aktywny": false
+      },
+      {
+        "Id": 50,
+        "Nazwa": "Dbałość o bezpieczeństwo i zdrowie",
+        "Aktywny": false
+      },
+      {
+        "Id": 51,
+        "Nazwa": "Szacunek dla innych osób",
+        "Aktywny": false
+      },
+      {
+        "Id": 52,
+        "Nazwa": "Zachowanie norm etycznych",
+        "Aktywny": false
+      },
+      {
+        "Id": 53,
+        "Nazwa": "Reprezentowanie szkoły",
+        "Aktywny": false
+      },
+      {
+        "Id": 54,
+        "Nazwa": "Zachowanie na lekcji",
+        "Aktywny": false
+      },
+      {
+        "Id": 58,
+        "Nazwa": "Inne (informacja bez punktów)",
+        "Aktywny": true
+      },
+      {
+        "Id": 59,
+        "Nazwa": "Udział w konkursie szkolnym +20 pkt",
+        "Aktywny": false
+      },
+      {
+        "Id": 61,
+        "Nazwa": "Przeszkadzanie na lekcjach -5 pkt",
+        "Aktywny": false
+      },
+      {
+        "Id": 66,
+        "Nazwa": "+ Udział w olimpiadzie przedmiotowej i konkursach pozaszk. (rza w sem. 20-30-50)",
+        "Aktywny": true
+      },
+      {
+        "Id": 67,
+        "Nazwa": "+ Udział w konkursie szkolnym (0-20)",
+        "Aktywny": true
+      },
+      {
+        "Id": 68,
+        "Nazwa": "+ Funkcja w szkole (0-20)",
+        "Aktywny": true
+      },
+      {
+        "Id": 69,
+        "Nazwa": "+ Funkcja w klasie (0-30)",
+        "Aktywny": true
+      },
+      {
+        "Id": 70,
+        "Nazwa": "+ Reprezentowanie szkoły w rozgrywkach sport.( raz w sem. 0-100)",
+        "Aktywny": true
+      },
+      {
+        "Id": 71,
+        "Nazwa": "+ Pomoc podczas imprezy szkolnej (0-10)",
+        "Aktywny": false
+      },
+      {
+        "Id": 72,
+        "Nazwa": "+ Praca na rzecz klasy (0-20)",
+        "Aktywny": true
+      },
+      {
+        "Id": 73,
+        "Nazwa": "+ Praca na rzecz szkoły (0-20)",
+        "Aktywny": true
+      },
+      {
+        "Id": 74,
+        "Nazwa": "+ Punktualność (0-20)",
+        "Aktywny": true
+      },
+      {
+        "Id": 75,
+        "Nazwa": "+ Pomoc kolegom (0-10)",
+        "Aktywny": true
+      },
+      {
+        "Id": 76,
+        "Nazwa": "+ Kulturalne zachowanie się w szkole i poza nią (0-50)",
+        "Aktywny": false
+      },
+      {
+        "Id": 77,
+        "Nazwa": "+ Przeciwstawianie się przejawom agresji i wulgarności (0-20)",
+        "Aktywny": false
+      },
+      {
+        "Id": 79,
+        "Nazwa": "+ Do dyspozycji wychowawcy (0-50)",
+        "Aktywny": true
+      },
+      {
+        "Id": 80,
+        "Nazwa": "+ Realizacja projektu edukacyjnego (0-50)",
+        "Aktywny": true
+      },
+      {
+        "Id": 81,
+        "Nazwa": "- Przeszkadzanie na lekcjach -5p.",
+        "Aktywny": true
+      },
+      {
+        "Id": 82,
+        "Nazwa": "- Okłamywanie i oszukiwanie nauczyciela 20p.",
+        "Aktywny": true
+      },
+      {
+        "Id": 83,
+        "Nazwa": "- Niewykonywanie poleceń nauczyciela (10-20)",
+        "Aktywny": true
+      },
+      {
+        "Id": 84,
+        "Nazwa": "- Aroganckie zachowanie wobec nauczyciela lub pracownika szkoły -50p.",
+        "Aktywny": true
+      },
+      {
+        "Id": 85,
+        "Nazwa": "- Ubliżanie kolegom/koleżankom (10-30)",
+        "Aktywny": true
+      },
+      {
+        "Id": 86,
+        "Nazwa": "- Przemoc fizyczna (10-30)",
+        "Aktywny": true
+      },
+      {
+        "Id": 87,
+        "Nazwa": "- Wulgarne słownictwo (10-30)",
+        "Aktywny": true
+      },
+      {
+        "Id": 88,
+        "Nazwa": "- Opuszczanie terenu szkoły w czasie zajęć -10p.",
+        "Aktywny": true
+      },
+      {
+        "Id": 89,
+        "Nazwa": "- Niszczenie mienia (10-30)",
+        "Aktywny": true
+      },
+      {
+        "Id": 90,
+        "Nazwa": "- Zaśmiecanie otoczenia (5-10)",
+        "Aktywny": true
+      },
+      {
+        "Id": 91,
+        "Nazwa": "- Strój i wygląd niezgodny z regulaminem ucznia (2-20)",
+        "Aktywny": true
+      },
+      {
+        "Id": 92,
+        "Nazwa": "- Spóźnienia się na lekcję do 10 min. (3p.)",
+        "Aktywny": true
+      },
+      {
+        "Id": 93,
+        "Nazwa": "- Niewykonywanie zobowiązania (10-20)",
+        "Aktywny": true
+      },
+      {
+        "Id": 94,
+        "Nazwa": "- Nieusprawiedliwiona nieobecność (5p.)",
+        "Aktywny": true
+      },
+      {
+        "Id": 95,
+        "Nazwa": "- Wyłudzanie pieniędzy (50p.)",
+        "Aktywny": true
+      },
+      {
+        "Id": 96,
+        "Nazwa": "- Kradzież (50p.)",
+        "Aktywny": true
+      },
+      {
+        "Id": 97,
+        "Nazwa": "- Palenie papierosów (50p.)",
+        "Aktywny": true
+      },
+      {
+        "Id": 98,
+        "Nazwa": "- Picie alkoholu (50p.)",
+        "Aktywny": true
+      },
+      {
+        "Id": 99,
+        "Nazwa": "- Stosowanie środków odurzających (50p.)",
+        "Aktywny": true
+      },
+      {
+        "Id": 100,
+        "Nazwa": "- Korzystanie z tel. kom. i urz. elek. niezgodnie z regulaminem (5-20)",
+        "Aktywny": true
+      },
+      {
+        "Id": 101,
+        "Nazwa": "- Drastyczne naruszenie ogólnie przyjętych norm społ. (100-250)",
+        "Aktywny": true
+      }
+    ],
+    "KategorieFrekwencji": [
+      {
+        "Id": 1,
+        "Nazwa": "obecność",
+        "Pozycja": 1000,
+        "Obecnosc": true,
+        "Nieobecnosc": false,
+        "Zwolnienie": false,
+        "Spoznienie": false,
+        "Usprawiedliwione": false,
+        "Usuniete": false
+      },
+      {
+        "Id": 2,
+        "Nazwa": "nieobecność nieusprawiedliwiona",
+        "Pozycja": 1000,
+        "Obecnosc": false,
+        "Nieobecnosc": true,
+        "Zwolnienie": false,
+        "Spoznienie": false,
+        "Usprawiedliwione": false,
+        "Usuniete": false
+      },
+      {
+        "Id": 3,
+        "Nazwa": "nieobecność usprawiedliwiona",
+        "Pozycja": 1000,
+        "Obecnosc": false,
+        "Nieobecnosc": true,
+        "Zwolnienie": false,
+        "Spoznienie": false,
+        "Usprawiedliwione": true,
+        "Usuniete": false
+      },
+      {
+        "Id": 4,
+        "Nazwa": "spóźnienie nieusprawiedliwione",
+        "Pozycja": 1000,
+        "Obecnosc": true,
+        "Nieobecnosc": false,
+        "Zwolnienie": false,
+        "Spoznienie": true,
+        "Usprawiedliwione": false,
+        "Usuniete": false
+      },
+      {
+        "Id": 5,
+        "Nazwa": "spóźnienie usprawiedliwione",
+        "Pozycja": 1000,
+        "Obecnosc": true,
+        "Nieobecnosc": false,
+        "Zwolnienie": false,
+        "Spoznienie": true,
+        "Usprawiedliwione": true,
+        "Usuniete": false
+      },
+      {
+        "Id": 6,
+        "Nazwa": "nieobecny z przyczyn szkolnych",
+        "Pozycja": 1000,
+        "Obecnosc": true,
+        "Nieobecnosc": false,
+        "Zwolnienie": false,
+        "Spoznienie": false,
+        "Usprawiedliwione": false,
+        "Usuniete": false
+      },
+      {
+        "Id": 7,
+        "Nazwa": "zwolniony",
+        "Pozycja": 1000,
+        "Obecnosc": false,
+        "Nieobecnosc": false,
+        "Zwolnienie": true,
+        "Spoznienie": false,
+        "Usprawiedliwione": false,
+        "Usuniete": false
+      },
+      {
+        "Id": 8,
+        "Nazwa": "usunięty wpis",
+        "Pozycja": 1000,
+        "Obecnosc": false,
+        "Nieobecnosc": false,
+        "Zwolnienie": false,
+        "Spoznienie": false,
+        "Usprawiedliwione": false,
+        "Usuniete": true
+      }
+    ],
+    "TypyFrekwencji": [
+      {
+        "Id": 40,
+        "Symbol": "●",
+        "Nazwa": "obecność",
+        "Aktywny": true,
+        "WpisDomyslny": true,
+        "IdKategoriaFrek": 1
+      },
+      {
+        "Id": 41,
+        "Symbol": "—",
+        "Nazwa": "nieobecność",
+        "Aktywny": true,
+        "WpisDomyslny": false,
+        "IdKategoriaFrek": 2
+      },
+      {
+        "Id": 42,
+        "Symbol": "u",
+        "Nazwa": "nieob. uspraw.",
+        "Aktywny": true,
+        "WpisDomyslny": false,
+        "IdKategoriaFrek": 3
+      },
+      {
+        "Id": 43,
+        "Symbol": "s",
+        "Nazwa": "spóźnienie",
+        "Aktywny": true,
+        "WpisDomyslny": false,
+        "IdKategoriaFrek": 4
+      },
+      {
+        "Id": 44,
+        "Symbol": "su",
+        "Nazwa": "spóźn. uspr.",
+        "Aktywny": true,
+        "WpisDomyslny": false,
+        "IdKategoriaFrek": 5
+      },
+      {
+        "Id": 45,
+        "Symbol": "ns",
+        "Nazwa": "nieob. uspr. p.s.",
+        "Aktywny": true,
+        "WpisDomyslny": false,
+        "IdKategoriaFrek": 6
+      },
+      {
+        "Id": 46,
+        "Symbol": "z",
+        "Nazwa": "zwolniony",
+        "Aktywny": true,
+        "WpisDomyslny": false,
+        "IdKategoriaFrek": 7
+      },
+      {
+        "Id": 47,
+        "Symbol": "",
+        "Nazwa": "usunięty wpis",
+        "Aktywny": true,
+        "WpisDomyslny": false,
+        "IdKategoriaFrek": 8
+      },
+      {
+        "Id": 55,
+        "Symbol": "zr",
+        "Nazwa": "zwolniony przez rodzica",
+        "Aktywny": false,
+        "WpisDomyslny": false,
+        "IdKategoriaFrek": 3
+      }
+    ]
+  }
+}

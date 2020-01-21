@@ -15,12 +15,12 @@ open class BaseLocalTest {
 
     val server = MockWebServer()
 
-    private fun MockWebServer.enqueue(fileName: String) {
-        enqueue(MockResponse().setBody(this@BaseLocalTest::class.java.getResource(fileName).readText()))
+    fun MockWebServer.enqueue(fileName: String, clazz: Class<*>) {
+        enqueue(MockResponse().setBody(clazz.getResource(fileName).readText()))
     }
 
-    fun MockWebServer.enqueueAndStart(fileName: String, port: Int = 3030) {
-        enqueue(fileName)
+    fun MockWebServer.enqueueAndStart(fileName: String, clazz: Class<*> = this@BaseLocalTest.javaClass, port: Int = 3030) {
+        enqueue(fileName, clazz)
         start(port)
     }
 
@@ -29,15 +29,15 @@ open class BaseLocalTest {
         server.shutdown()
     }
 
-    fun getRetrofitBuilder(): Retrofit.Builder {
-        return Retrofit.Builder()
-            .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-            .addConverterFactory(ScalarsConverterFactory.create())
-            .addConverterFactory(GsonConverterFactory.create())
-            .client(OkHttpClient().newBuilder()
-                .addInterceptor(ErrorInterceptor())
-                .addInterceptor(HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY))
-                .build()
-            )
-    }
+    fun getRetrofit(baseUrl: String = server.url("/").toString()): Retrofit = getRetrofitBuilder().baseUrl(baseUrl).build()
+
+    fun getRetrofitBuilder(): Retrofit.Builder = Retrofit.Builder()
+        .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+        .addConverterFactory(ScalarsConverterFactory.create())
+        .addConverterFactory(GsonConverterFactory.create())
+        .client(OkHttpClient().newBuilder()
+            .addInterceptor(ErrorInterceptor())
+            .addInterceptor(HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BASIC))
+            .build()
+        )
 }

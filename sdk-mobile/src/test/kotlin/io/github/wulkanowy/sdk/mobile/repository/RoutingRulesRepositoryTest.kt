@@ -13,7 +13,7 @@ class RoutingRulesRepositoryTest : BaseLocalTest() {
     fun getRouteByToken() {
         server.enqueueAndStart("RoutingRules.txt")
 
-        val repo = RoutingRulesRepository(getRetrofitBuilder().baseUrl("http://localhost:3030").build().create())
+        val repo = RoutingRulesRepository(getRetrofit().create())
         val route = repo.getRouteByToken("KA2000").blockingGet()
 
         assertEquals("https://uonetplus-komunikacja-test.mcuw.katowice.eu", route)
@@ -23,7 +23,7 @@ class RoutingRulesRepositoryTest : BaseLocalTest() {
     fun getRouteByToken_invalid() {
         server.enqueueAndStart("RoutingRules.txt")
 
-        val repo = RoutingRulesRepository(getRetrofitBuilder().baseUrl("http://localhost:3030").build().create())
+        val repo = RoutingRulesRepository(getRetrofit().create())
         val route = repo.getRouteByToken("ERR00000")
         val routeObserver = TestObserver<String>()
         route.subscribe(routeObserver)
@@ -35,7 +35,7 @@ class RoutingRulesRepositoryTest : BaseLocalTest() {
     fun getRouteByToken_tooShort() {
         server.enqueueAndStart("RoutingRules.txt")
 
-        val repo = RoutingRulesRepository(getRetrofitBuilder().baseUrl("http://localhost:3030").build().create())
+        val repo = RoutingRulesRepository(getRetrofit().create())
         val route = repo.getRouteByToken("ER")
         val routeObserver = TestObserver<String>()
         route.subscribe(routeObserver)
