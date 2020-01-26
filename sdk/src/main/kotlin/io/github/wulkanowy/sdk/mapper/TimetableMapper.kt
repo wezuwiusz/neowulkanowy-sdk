@@ -17,11 +17,11 @@ fun List<ApiTimetable>.mapTimetable(dictionaries: Dictionaries): List<Timetable>
         val time = dictionaries.lessonTimes.single { time -> time.id == it.lessonTimeId }
         Timetable(
             canceled = it.overriddenName,
-            changes = it.boldName || it.annotationAboutChange.isNotBlank(),
+            changes = it.boldName || !it.annotationAboutChange.isNullOrBlank(),
             date = it.day.toLocalDate(),
             end = time.end.toLocalDateTime(),
             group = it.divisionShort.orEmpty(),
-            info = it.annotationAboutChange.substringAfter("(").substringBefore(")"),
+            info = it.annotationAboutChange?.substringAfter("(")?.substringBefore(")").orEmpty(),
             number = it.lessonNumber,
             room = it.room.orEmpty(),
             roomOld = "",

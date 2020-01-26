@@ -44,7 +44,7 @@ data class Lesson(
     val timetableId: Int,
 
     @SerializedName("AdnotacjaOZmianie")
-    val annotationAboutChange: String,
+    val annotationAboutChange: String?,
 
     @SerializedName("PrzekreslonaNazwa")
     val overriddenName: Boolean,
