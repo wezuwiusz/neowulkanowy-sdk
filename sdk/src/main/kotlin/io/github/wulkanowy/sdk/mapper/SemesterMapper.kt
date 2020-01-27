@@ -1,7 +1,7 @@
 package io.github.wulkanowy.sdk.mapper
 
-import io.github.wulkanowy.sdk.pojo.Semester
 import io.github.wulkanowy.sdk.mobile.register.Student
+import io.github.wulkanowy.sdk.pojo.Semester
 import io.github.wulkanowy.sdk.toLocalDate
 import org.threeten.bp.LocalDate.now
 import org.threeten.bp.LocalDate.of
@@ -47,7 +47,7 @@ fun List<Student>.mapSemesters(studentId: Int): List<Semester> {
                 semesterNumber = if (semesterNumber == 1) 2 else 1,
                 semesterId = if (semesterNumber == 1) it.single().semesterId + 1 else it.single().semesterId - 1,
                 start = if (semesterNumber == 1) it.single().end.plusDays(1) else of(it.single().schoolYear, 9, 1),
-                end = if (semesterNumber == 1) of(it.single().schoolYear + 1, 6, 30) else it.single().start.plusDays(1)
+                end = if (semesterNumber == 1) of(it.single().schoolYear + 1, 6, 30) else it.single().start.minusDays(1)
             ))
         } else it
     }.map {
