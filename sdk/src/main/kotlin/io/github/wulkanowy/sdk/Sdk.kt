@@ -211,10 +211,10 @@ class Sdk {
             }.toList().map { it.flatten() }
     }
 
-    fun getSemesters(): Single<List<Semester>> {
+    fun getSemesters(now: LocalDate = LocalDate.now()): Single<List<Semester>> {
         return when (mode) {
             Mode.HYBRID, Mode.SCRAPPER -> scrapper.getSemesters().compose(ScrapperExceptionTransformer()).map { it.mapSemesters() }
-            Mode.API -> mobile.getStudents().map { it.mapSemesters(studentId) }
+            Mode.API -> mobile.getStudents().map { it.mapSemesters(studentId, now) }
         }
     }
 
