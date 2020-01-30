@@ -1,0 +1,41 @@
+{
+  "Status": "Ok",
+  "TimeKey": 1579185018,
+  "TimeValue": "Thu, 16 Jan 2020 14:30:18 GMT",
+  "RequestId": "1799be6b-7a60-4665-b75c-1bca504e8ebd",
+  "DayOfWeek": 4,
+  "AppVersion": "17.09.0009.26859",
+  "Data": [
+    {
+      "IdOkresKlasyfikacyjny": 12,
+      "OkresPoziom": 4,
+      "OkresNumer": 1,
+      "OkresDataOd": 1567296000,
+      "OkresDataDo": 1580256000,
+      "OkresDataOdTekst": "2019-09-01",
+      "OkresDataDoTekst": "2020-01-29",
+      "IdJednostkaSprawozdawcza": 6,
+      "JednostkaSprawozdawczaSkrot": "Fake123456",
+      "JednostkaSprawozdawczaNazwa": "Fakelog public diary nr 1",
+      "JednostkaSprawozdawczaSymbol": "123456",
+      "IdJednostka": 0,
+      "JednostkaNazwa": "Publiczna szkoła Wulkanowego nr 1 w fakelog.cf",
+      "JednostkaSkrot": "Fake123456",
+      "OddzialSymbol": "A",
+      "OddzialKod": "4A",
+      "UzytkownikRola": "uczeń",
+      "UzytkownikLogin": "jan@fakelog.cf",
+      "UzytkownikLoginId": 1,
+      "UzytkownikNazwa": "Jan Kowalski",
+      "Id": 1,
+      "IdOddzial": 1,
+      "Imie": "Jan",
+      "Imie2": "Marek",
+      "Nazwisko": "Kowalski",
+      "Pseudonim": "",
+      "UczenPlec": 1,
+      "Pozycja": 0,
+      "LoginId": null
+    }
+  ]
+}

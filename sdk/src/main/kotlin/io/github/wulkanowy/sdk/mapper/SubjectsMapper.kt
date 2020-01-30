@@ -6,7 +6,7 @@ import io.github.wulkanowy.sdk.mobile.dictionaries.Subject as ApiSubject
 
 @JvmName("mapApiSubjects")
 fun List<ApiSubject>.mapSubjects(): List<Subject> {
-    return filter { it.active }.map {
+    return listOf(Subject(-1, "Wszystkie")) + filter { it.active }.map {
         Subject(
             id = it.id,
             name = it.name

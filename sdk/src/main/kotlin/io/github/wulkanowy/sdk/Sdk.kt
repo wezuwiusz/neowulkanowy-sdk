@@ -217,10 +217,10 @@ class Sdk {
             }.toList().map { it.flatten() }
     }
 
-    fun getSemesters(): Single<List<Semester>> {
+    fun getSemesters(now: LocalDate = LocalDate.now()): Single<List<Semester>> {
         return when (mode) {
             Mode.HYBRID, Mode.SCRAPPER -> scrapper.getSemesters().compose(ScrapperExceptionTransformer()).map { it.mapSemesters() }
-            Mode.API -> mobile.getStudents().map { it.mapSemesters(studentId) }
+            Mode.API -> mobile.getStudents().map { it.mapSemesters(studentId, now) }
         }
     }
 
@@ -388,21 +388,21 @@ class Sdk {
 
     fun getReceivedMessages(start: LocalDateTime, end: LocalDateTime): Single<List<Message>> {
         return when (mode) {
-            Mode.SCRAPPER -> scrapper.getReceivedMessages(start, end).compose(ScrapperExceptionTransformer()).map { it.mapMessages() }
+            Mode.SCRAPPER -> scrapper.getReceivedMessages().compose(ScrapperExceptionTransformer()).map { it.mapMessages() } // TODO
             Mode.HYBRID, Mode.API -> mobile.getMessages(start, end).map { it.mapMessages() }
         }
     }
 
     fun getSentMessages(start: LocalDateTime, end: LocalDateTime): Single<List<Message>> {
         return when (mode) {
-            Mode.SCRAPPER -> scrapper.getSentMessages(start, end).compose(ScrapperExceptionTransformer()).map { it.mapMessages() }
+            Mode.SCRAPPER -> scrapper.getSentMessages().compose(ScrapperExceptionTransformer()).map { it.mapMessages() }
             Mode.HYBRID, Mode.API -> mobile.getMessagesSent(start, end).map { it.mapMessages() }
         }
     }
 
     fun getDeletedMessages(start: LocalDateTime, end: LocalDateTime): Single<List<Message>> {
         return when (mode) {
-            Mode.SCRAPPER -> scrapper.getDeletedMessages(start, end).compose(ScrapperExceptionTransformer()).map { it.mapMessages() }
+            Mode.SCRAPPER -> scrapper.getDeletedMessages().compose(ScrapperExceptionTransformer()).map { it.mapMessages() }
             Mode.HYBRID, Mode.API -> mobile.getMessagesDeleted(start, end).map { it.mapMessages() }
         }
     }

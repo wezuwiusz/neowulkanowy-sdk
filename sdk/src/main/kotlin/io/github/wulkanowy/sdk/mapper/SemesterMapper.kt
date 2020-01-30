@@ -1,8 +1,10 @@
 package io.github.wulkanowy.sdk.mapper
 
+import io.github.wulkanowy.sdk.exception.VulcanException
 import io.github.wulkanowy.sdk.pojo.Semester
 import io.github.wulkanowy.sdk.mobile.register.Student
 import io.github.wulkanowy.sdk.toLocalDate
+import org.threeten.bp.LocalDate
 import org.threeten.bp.LocalDate.now
 import org.threeten.bp.LocalDate.of
 import org.threeten.bp.Month
@@ -26,7 +28,7 @@ fun List<ScrapperSemester>.mapSemesters(): List<Semester> {
     }
 }
 
-fun List<Student>.mapSemesters(studentId: Int): List<Semester> {
+fun List<Student>.mapSemesters(studentId: Int, now: LocalDate = now()): List<Semester> {
     return filter { it.id == studentId }.map {
         Semester(
             diaryId = 0,
@@ -40,17 +42,18 @@ fun List<Student>.mapSemesters(studentId: Int): List<Semester> {
             classId = it.classId,
             unitId = it.reportingUnitId
         )
-    }.let {
-        if (it.size == 1) {
-            val semesterNumber = it.single().semesterNumber
-            listOf(it.single(), it.single().copy(
-                semesterNumber = if (semesterNumber == 1) 2 else 1,
-                semesterId = if (semesterNumber == 1) it.single().semesterId + 1 else it.single().semesterId - 1,
-                start = if (semesterNumber == 1) it.single().end.plusDays(1) else of(it.single().schoolYear, 9, 1),
-                end = if (semesterNumber == 1) of(it.single().schoolYear + 1, 6, 30) else it.single().start.plusDays(1)
-            ))
-        } else it
-    }.map {
-        it.copy(current = now() in it.start..it.end)
+    }.mockSecondSemester(now)
+}
+
+private fun List<Semester>.mockSecondSemester(now: LocalDate): List<Semester> {
+    if (size != 1) throw VulcanException("Expected semester list size 1, get $size")
+    val semester = single()
+    return (this + semester.copy(
+        semesterNumber = if (semester.semesterNumber == 1) 2 else 1,
+        semesterId = if (semester.semesterNumber == 1) semester.semesterId + 1 else semester.semesterId - 1,
+        start = if (semester.semesterNumber == 1) semester.end.plusDays(1) else of(semester.schoolYear, 9, 1),
+        end = if (semester.semesterNumber == 1) of(semester.schoolYear + 1, 8, 31) else semester.start.minusDays(1)
+    )).map {
+        it.copy(current = now in it.start..it.end)
     }
 }
