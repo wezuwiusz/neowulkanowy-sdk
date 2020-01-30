@@ -12,7 +12,7 @@ fun List<ApiGrade>.mapGrades(dict: Dictionaries): List<Grade> {
     return map { grade ->
         Grade(
             subject = dict.subjects.singleOrNull { it.id == grade.subjectId }?.name.orEmpty(),
-            description = dict.gradeCategories.singleOrNull { it.id == grade.categoryId }?.name.orEmpty(),
+            description = grade.description,
             symbol = dict.gradeCategories.singleOrNull { it.id == grade.categoryId }?.code.orEmpty(),
             comment = grade.comment.orEmpty(),
             date = grade.creationDate.toLocalDate(),
