@@ -8,6 +8,7 @@ fun GradesResponse.mapGradesList(): List<Grade> {
     return gradesWithSubjects.map { gradesSubject ->
         gradesSubject.grades.map { grade ->
             val values = getGradeValueWithModifier(grade.entry)
+            val onlyComment = grade.entry.startsWith("(")
             grade.apply {
                 subject = gradesSubject.name
                 entry = entry.removeSurrounding("(", ")")
@@ -25,10 +26,10 @@ fun GradesResponse.mapGradesList(): List<Grade> {
                 date = privateDate
                 modifier = values.second
                 weight = String.format(Locale.FRANCE, "%.2f", weightValue)
-                weightValue = if (isGradeValid(entry)) weightValue else .0
+                weightValue = if (isGradeValid(entry) && !onlyComment) weightValue else .0
                 color = if ("0" == color) "000000" else color.toInt().toString(16).toUpperCase()
-                symbol = symbol ?: ""
-                description = description ?: ""
+                symbol = symbol.orEmpty()
+                description = description.orEmpty()
             }
         }
     }.flatten().sortedByDescending { it.date }

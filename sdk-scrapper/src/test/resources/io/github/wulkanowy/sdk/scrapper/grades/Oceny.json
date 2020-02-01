@@ -46,6 +46,15 @@
             "KodKolumny": "d1",
             "DataOceny": "23.11.2017",
             "KolorOceny": 0
+          },
+          {
+            "Nauczyciel": "Anonimus Max",
+            "Wpis": "(0)",
+            "Waga": 4,
+            "NazwaKolumny": "sprawdzian z tematów 11-15",
+            "KodKolumny": "spr",
+            "DataOceny": "22.11.2017",
+            "KolorOceny": 0
           }
         ],
         "ProponowanaOcenaRoczna": "3",
