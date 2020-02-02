@@ -21,8 +21,24 @@ interface AccountService {
     @POST
     @FormUrlEncoded
     fun sendPasswordResetRequest(
-        @Url registerBaseUrl: String,
+        @Url url: String,
         @Field("Email") email: String,
+        @Field("g-recaptcha-response") captchaCode: String
+    ): Single<SentUnlockAccountResponse>
+
+    @POST
+    @FormUrlEncoded
+    fun sendPasswordResetRequestADFS(
+        @Url url: String,
+        @Field("txtUserID") username: String,
+        @Field("g-recaptcha-response") captchaCode: String
+    ): Single<SentUnlockAccountResponse>
+
+    @POST
+    @FormUrlEncoded
+    fun sendPasswordResetRequestADFSLight(
+        @Url url: String,
+        @Field("UserId") username: String,
         @Field("g-recaptcha-response") captchaCode: String
     ): Single<SentUnlockAccountResponse>
 }
