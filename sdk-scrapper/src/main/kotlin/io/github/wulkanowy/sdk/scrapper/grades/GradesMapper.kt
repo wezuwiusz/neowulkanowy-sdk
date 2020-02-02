@@ -16,16 +16,20 @@ fun GradesResponse.mapGradesList(): List<Grade> {
 
             Grade().apply {
                 subject = gradesSubject.name
-                entry = gradeEntryWithoutComment.let {
-                    if (isPoints && it.matches(pointGradeRegex)) it.getGradePointPercent()
-                    else if (it.isEntryContainsCommentWithGrade()) it // getGrade_onlyGradeInCommentEntry
-                    else if (it.removeSurrounding("(", ")").length > 4) "..." // getGrade_onlyCommentEntry
-                    else it.removeSurrounding("(", ")")
+                entry = gradeEntryWithoutComment.run {
+                    when {
+                        isPoints && matches(pointGradeRegex) -> getGradePointPercent()
+                        isEntryContainsCommentWithGrade() -> this // getGrade_onlyGradeInCommentEntry
+                        removeSurrounding("(", ")").length > 4 -> "..." // getGrade_onlyCommentEntry
+                        else -> removeSurrounding("(", ")")
+                    }
                 }
                 comment = gradeEntryWithoutComment.run {
-                    if (length > 4) grade.entry
-                    else if (startsWith("(") && endsWith(")")) "" // getGrade_onlyGradeInCommentEntry
-                    else grade.entry.substringBeforeLast(")").substringAfter(" (")
+                    when {
+                        length > 4 -> grade.entry
+                        startsWith("(") && endsWith(")") -> "" // getGrade_onlyGradeInCommentEntry
+                        else -> grade.entry.substringBeforeLast(")").substringAfter(" (")
+                    }
                 }
                 if (comment.removeSurrounding("(", ")") == entry) comment = "" // getGrade_onlyCommentEntry
                 value = values.first
