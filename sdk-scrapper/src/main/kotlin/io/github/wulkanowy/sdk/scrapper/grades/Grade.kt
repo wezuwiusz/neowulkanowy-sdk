@@ -43,7 +43,7 @@ class Grade {
     var weightValue: Double = .0
 
     @SerializedName("DataOceny")
-    var privateDate: GradeDate = GradeDate()
+    internal var privateDate: GradeDate = GradeDate()
 
     @Selector("td:not(:empty)", index = 4, defValue = "01.01.1970")
     @Format(GradeDate.FORMAT)

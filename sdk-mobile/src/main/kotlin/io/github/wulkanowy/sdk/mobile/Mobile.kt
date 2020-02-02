@@ -13,6 +13,7 @@ import io.github.wulkanowy.sdk.mobile.grades.Grade
 import io.github.wulkanowy.sdk.mobile.grades.GradesSummaryResponse
 import io.github.wulkanowy.sdk.mobile.homework.Homework
 import io.github.wulkanowy.sdk.mobile.messages.Message
+import io.github.wulkanowy.sdk.mobile.messages.Recipient
 import io.github.wulkanowy.sdk.mobile.notes.Note
 import io.github.wulkanowy.sdk.mobile.register.CertificateResponse
 import io.github.wulkanowy.sdk.mobile.register.Student
@@ -171,6 +172,14 @@ class Mobile {
 
     fun changeMessageStatus(messageId: Int, folder: String, status: String): Single<String> {
         return mobile.changeMessageStatus(messageId, folder, status, loginId, studentId)
+    }
+
+    fun sendMessage(subject: String, content: String, recipients: List<Recipient>): Single<Message> {
+        return getStudents().map { students ->
+            students.singleOrNull { it.loginId == loginId }?.name.orEmpty()
+        }.flatMap { sender ->
+            mobile.sendMessage(sender, subject, content, recipients, loginId, studentId)
+        }
     }
 
     fun getTimetable(start: LocalDate, end: LocalDate, classificationPeriodId: Int): Single<List<Lesson>> {

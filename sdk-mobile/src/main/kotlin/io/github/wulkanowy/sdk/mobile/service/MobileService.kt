@@ -16,6 +16,7 @@ import io.github.wulkanowy.sdk.mobile.homework.HomeworkRequest
 import io.github.wulkanowy.sdk.mobile.messages.Message
 import io.github.wulkanowy.sdk.mobile.messages.MessageStatusChangeRequest
 import io.github.wulkanowy.sdk.mobile.messages.MessagesRequest
+import io.github.wulkanowy.sdk.mobile.messages.SendMessageRequest
 import io.github.wulkanowy.sdk.mobile.notes.Note
 import io.github.wulkanowy.sdk.mobile.notes.NotesRequest
 import io.github.wulkanowy.sdk.mobile.school.TeachersRequest
@@ -69,4 +70,7 @@ interface MobileService {
 
     @POST(".")
     fun changeMessageStatus(@Body messageStatusChangeRequest: MessageStatusChangeRequest): Single<ApiResponse<String>>
+
+    @POST("DodajWiadomosc")
+    fun sendMessage(@Body sendMessageRequest: SendMessageRequest): Single<Message>
 }

@@ -21,5 +21,4 @@ data class SentMessage(
 
     @SerializedName("Id")
     val id: Int
-
 )

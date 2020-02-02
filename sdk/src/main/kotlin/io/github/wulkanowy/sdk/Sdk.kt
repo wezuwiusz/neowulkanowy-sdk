@@ -427,9 +427,10 @@ class Sdk {
 
     fun sendMessage(subject: String, content: String, recipients: List<Recipient>): Single<SentMessage> {
         return when (mode) {
-            Mode.HYBRID, Mode.SCRAPPER -> scrapper.sendMessage(subject, content,
-                recipients.mapFromRecipients()).compose(ScrapperExceptionTransformer()).map { it.mapSentMessage() }
-            Mode.API -> TODO()
+            Mode.HYBRID, Mode.SCRAPPER -> scrapper.sendMessage(subject, content, recipients.mapFromRecipientsToScraper())
+                .compose(ScrapperExceptionTransformer())
+                .map { it.mapSentMessage() }
+            Mode.API -> mobile.sendMessage(subject, content, recipients.mapFromRecipientsToMobile()).map { it.mapSentMessage(loginId) }
         }
     }
 
