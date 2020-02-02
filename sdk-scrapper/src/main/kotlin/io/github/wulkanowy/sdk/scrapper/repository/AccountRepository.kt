@@ -6,6 +6,7 @@ import io.github.wulkanowy.sdk.scrapper.Scrapper.LoginType.ADFSCards
 import io.github.wulkanowy.sdk.scrapper.Scrapper.LoginType.ADFSLight
 import io.github.wulkanowy.sdk.scrapper.Scrapper.LoginType.ADFSLightCufs
 import io.github.wulkanowy.sdk.scrapper.Scrapper.LoginType.ADFSLightScoped
+import io.github.wulkanowy.sdk.scrapper.Scrapper.LoginType.AUTO
 import io.github.wulkanowy.sdk.scrapper.Scrapper.LoginType.STANDARD
 import io.github.wulkanowy.sdk.scrapper.ScrapperException
 import io.github.wulkanowy.sdk.scrapper.service.AccountService
@@ -40,21 +41,23 @@ class AccountRepository(private val account: AccountService) {
 
     private fun getPasswordResetUrl(registerBaseUrl: String, symbol: String): Single<Pair<Scrapper.LoginType, String>> {
         val url = URL(registerBaseUrl)
-        return when (url.host) {
-            "fakelog.cf" -> Single.just(STANDARD to "https://cufs.fakelog.cf/Default/AccountManage/UnlockAccount")
-            "eszkola.opolskie.pl" -> Single.just(ADFSCards to "https://konta.eszkola.opolskie.pl/maintenance/unlock.aspx")
-            "edu.gdansk.pl" -> Single.just(ADFS to "https://konta.edu.gdansk.pl/maintenance/unlock.aspx")
-            "edu.lublin.eu" -> Single.just(ADFSLightCufs to "https://logowanie.edu.lublin.eu/AccountManage/UnlockAccountRequest")
-            "resman.pl" -> Single.just(ADFSLight to "https://adfslight.resman.pl/AccountManage/UnlockAccountRequest")
-            "umt.tarnow.pl" -> Single.just(ADFS to "https://konta.umt.tarnow.pl/maintenance/unlock.aspx")
-            "vulcan.net.pl" -> getLoginType(ServiceManager.UrlGenerator(url, symbol, "")).map {
-                it to when (it) {
+        return Single.just(when (url.host) {
+            "fakelog.cf" -> STANDARD to "https://cufs.fakelog.cf/Default/AccountManage/UnlockAccount"
+            "eszkola.opolskie.pl" -> ADFSCards to "https://konta.eszkola.opolskie.pl/maintenance/unlock.aspx"
+            "edu.gdansk.pl" -> ADFS to "https://konta.edu.gdansk.pl/maintenance/unlock.aspx"
+            "edu.lublin.eu" -> ADFSLightCufs to "https://logowanie.edu.lublin.eu/AccountManage/UnlockAccountRequest"
+            "resman.pl" -> ADFSLight to "https://adfslight.resman.pl/AccountManage/UnlockAccountRequest"
+            "umt.tarnow.pl" -> ADFS to "https://konta.umt.tarnow.pl/maintenance/unlock.aspx"
+            "vulcan.net.pl" -> AUTO to "" // stream hack - bellow
+            else -> throw ScrapperException("Nieznany dziennik $url")
+        }).flatMap {
+            if (it.first == AUTO) getLoginType(ServiceManager.UrlGenerator(url, symbol, "")).map { loginType ->
+                loginType to when (loginType) {
                     STANDARD -> "https://cufs.vulcan.net.pl/Default/AccountManage/UnlockAccount"
                     ADFSLightScoped -> "https://adfslight.vulcan.net.pl/$symbol/AccountManage/UnlockAccountRequest"
-                    else -> throw ScrapperException("Nieznany dziennik $it")
+                    else -> throw ScrapperException("Nieznany dziennik $registerBaseUrl, $loginType")
                 }
-            }
-            else -> throw ScrapperException("Nieznany dziennik $url")
+            } else Single.just(it)
         }
     }
 
