@@ -1,12 +1,12 @@
 package io.github.wulkanowy.sdk.scrapper.register
 
-import org.jsoup.nodes.Document
+import org.jsoup.nodes.Element
 import pl.droidsonroids.jspoon.annotation.Selector
 
 class SentUnlockAccountResponse {
 
     @Selector("html")
-    lateinit var html: Document
+    lateinit var html: Element
 
     @Selector("title")
     lateinit var title: String

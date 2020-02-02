@@ -31,8 +31,12 @@ class AccountRepository(private val account: AccountService) {
         return getPasswordResetUrl(registerBaseUrl, symbol).flatMap { (type, url) ->
             when (type) {
                 STANDARD -> account.sendPasswordResetRequest(url, email, captchaCode)
-                ADFS, ADFSCards -> account.sendPasswordResetRequestADFS(url, email, captchaCode)
                 ADFSLight, ADFSLightScoped, ADFSLightCufs -> account.sendPasswordResetRequestADFSLight(url, email, captchaCode)
+                ADFS, ADFSCards -> account.getPasswordResetPageADFS(url).flatMap {
+                    account.sendPasswordResetRequestADFS(url, email, captchaCode, (it.html.select("[type=hidden]").map { input ->
+                        input.attr("name") to input.attr("value")
+                    }).toMap().plus("btSend.x" to "5").plus("btSend.y" to "6"))
+                }
                 else -> throw ScrapperException("Never happen")
             }
         }.map { res ->
@@ -40,7 +44,7 @@ class AccountRepository(private val account: AccountService) {
                 select(".ErrorMessage")?.text()?.let { // STANDARD
                     if (it.contains("Niepoprawny adres email")) throw InvalidEmailException(it)
                 }
-                select("#ErrorTextLabel, #lblStatus")?.text()?.let { // ADFSLight, ADFSCards
+                select(".ErrorMessage, #ErrorTextLabel, #lblStatus")?.text()?.let { // STANDARD, ADFSLight, ADFSCards
                     if (it.contains("nie zostało odnalezione lub zostało zablokowane")) throw NoAccountFoundException(it)
                     if (it.contains("żądanie nie zostało poprawnie autoryzowane")) throw InvalidCaptchaException(it)
                 }
