@@ -4,32 +4,39 @@ import io.github.wulkanowy.sdk.scrapper.getGradePointPercent
 import io.github.wulkanowy.sdk.scrapper.getGradeShortValue
 import java.util.Locale
 
+private val pointGradeRegex = "\\d+\\.?\\d+/\\d+".toRegex()
+
+private fun String.isEntryContainsCommentWithGrade() = isGradeValid(removeSurrounding("(", ")"))
+
 fun GradesResponse.mapGradesList(): List<Grade> {
     return gradesWithSubjects.map { gradesSubject ->
         gradesSubject.grades.map { grade ->
             val values = getGradeValueWithModifier(grade.entry)
-            val onlyComment = grade.entry.startsWith("(")
-            grade.apply {
+            val gradeEntryWithoutComment = grade.entry.substringBefore(" (")
+
+            Grade().apply {
                 subject = gradesSubject.name
-                entry = entry.removeSurrounding("(", ")")
-                comment = entry.substringBefore(" (").run {
-                    if (length > 4) entry
-                    else entry.substringBeforeLast(")").substringAfter(" (")
+                entry = gradeEntryWithoutComment.let {
+                    if (isPoints && it.matches(pointGradeRegex)) it.getGradePointPercent()
+                    else if (it.isEntryContainsCommentWithGrade()) it // getGrade_onlyGradeInCommentEntry
+                    else if (it.removeSurrounding("(", ")").length > 4) "..." // getGrade_onlyCommentEntry
+                    else it.removeSurrounding("(", ")")
                 }
-                entry = entry.substringBefore(" (").run {
-                    if (isPoints && matches("\\d+\\.?\\d+/\\d+".toRegex())) getGradePointPercent()
-                    else if (length > 4) "..."
-                    else this
+                comment = gradeEntryWithoutComment.run {
+                    if (length > 4) grade.entry
+                    else if (startsWith("(") && endsWith(")")) "" // getGrade_onlyGradeInCommentEntry
+                    else grade.entry.substringBeforeLast(")").substringAfter(" (")
                 }
-                if (comment == entry) comment = ""
+                if (comment.removeSurrounding("(", ")") == entry) comment = "" // getGrade_onlyCommentEntry
                 value = values.first
-                date = privateDate
                 modifier = values.second
-                weight = String.format(Locale.FRANCE, "%.2f", weightValue)
-                weightValue = if (isGradeValid(entry) && !onlyComment) weightValue else .0
-                color = if ("0" == color) "000000" else color.toInt().toString(16).toUpperCase()
-                symbol = symbol.orEmpty()
-                description = description.orEmpty()
+                color = if ("0" == grade.color) "000000" else grade.color.toInt().toString(16).toUpperCase()
+                symbol = grade.symbol.orEmpty()
+                description = grade.description.orEmpty()
+                weight = String.format(Locale.FRANCE, "%.2f", grade.weightValue)
+                weightValue = if (isGradeValid(gradeEntryWithoutComment)) grade.weightValue else .0
+                date = grade.privateDate
+                teacher = grade.teacher
             }
         }
     }.flatten().sortedByDescending { it.date }

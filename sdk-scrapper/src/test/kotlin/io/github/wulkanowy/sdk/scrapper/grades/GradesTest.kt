@@ -247,7 +247,7 @@ class GradesTest : BaseLocalTest() {
     fun getGrade_onlyGradeInCommentEntry() {
         with(student[11]) {
             assertEquals("Fizyka", subject)
-            assertEquals("0", entry)
+            assertEquals("(0)", entry)
             assertEquals(0, value)
             assertEquals(.0, modifier, .0)
             assertEquals("", comment)
