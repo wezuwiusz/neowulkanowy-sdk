@@ -2,14 +2,13 @@ package io.github.wulkanowy.sdk.scrapper.service
 
 import RxJava2ReauthCallAdapterFactory
 import com.google.gson.GsonBuilder
+import io.github.wulkanowy.sdk.scrapper.OkHttpClientBuilderFactory
 import io.github.wulkanowy.sdk.scrapper.Scrapper
 import io.github.wulkanowy.sdk.scrapper.ScrapperException
-import io.github.wulkanowy.sdk.scrapper.OkHttpClientBuilderFactory
 import io.github.wulkanowy.sdk.scrapper.grades.DateDeserializer
 import io.github.wulkanowy.sdk.scrapper.grades.GradeDate
 import io.github.wulkanowy.sdk.scrapper.interceptor.ErrorInterceptor
 import io.github.wulkanowy.sdk.scrapper.interceptor.NotLoggedInErrorInterceptor
-import io.github.wulkanowy.sdk.scrapper.interceptor.PasswordResetErrorInterceptor
 import io.github.wulkanowy.sdk.scrapper.interceptor.StudentAndParentInterceptor
 import io.github.wulkanowy.sdk.scrapper.interceptor.UserAgentInterceptor
 import io.github.wulkanowy.sdk.scrapper.login.LoginHelper
@@ -84,10 +83,8 @@ class ServiceManager(
     }
 
     fun getAccountService(): AccountService {
-        return getRetrofit(
-            getClientBuilder(errIntercept = false, loginIntercept = false, separateJar = true).addInterceptor(PasswordResetErrorInterceptor()),
-            urlGenerator.generate(UrlGenerator.Site.LOGIN), false
-        ).create()
+        return getRetrofit(getClientBuilder(errIntercept = false, loginIntercept = false, separateJar = true),
+            urlGenerator.generate(UrlGenerator.Site.LOGIN), false).create()
     }
 
     fun getRegisterService(): RegisterService {

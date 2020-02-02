@@ -9,6 +9,10 @@ import io.github.wulkanowy.sdk.scrapper.Scrapper.LoginType.ADFSLightScoped
 import io.github.wulkanowy.sdk.scrapper.Scrapper.LoginType.AUTO
 import io.github.wulkanowy.sdk.scrapper.Scrapper.LoginType.STANDARD
 import io.github.wulkanowy.sdk.scrapper.ScrapperException
+import io.github.wulkanowy.sdk.scrapper.exception.InvalidCaptchaException
+import io.github.wulkanowy.sdk.scrapper.exception.InvalidEmailException
+import io.github.wulkanowy.sdk.scrapper.exception.NoAccountFoundException
+import io.github.wulkanowy.sdk.scrapper.exception.PasswordResetErrorException
 import io.github.wulkanowy.sdk.scrapper.service.AccountService
 import io.github.wulkanowy.sdk.scrapper.service.ServiceManager
 import io.reactivex.Single
@@ -23,7 +27,7 @@ class AccountRepository(private val account: AccountService) {
         }
     }
 
-    fun sendPasswordResetRequest(registerBaseUrl: String, symbol: String, email: String, captchaCode: String): Single<Pair<Boolean, String>> {
+    fun sendPasswordResetRequest(registerBaseUrl: String, symbol: String, email: String, captchaCode: String): Single<String> {
         return getPasswordResetUrl(registerBaseUrl, symbol).flatMap { (type, url) ->
             when (type) {
                 STANDARD -> account.sendPasswordResetRequest(url, email, captchaCode)
@@ -31,8 +35,19 @@ class AccountRepository(private val account: AccountService) {
                 ADFSLight, ADFSLightScoped, ADFSLightCufs -> account.sendPasswordResetRequestADFSLight(url, email, captchaCode)
                 else -> throw ScrapperException("Never happen")
             }
-        }.map {
-            (it.title == "Podsumowanie operacji") to it.message
+        }.map { res ->
+            with(res.html) {
+                select(".ErrorMessage")?.text()?.let { // STANDARD
+                    if (it.contains("Niepoprawny adres email")) throw InvalidEmailException(it)
+                }
+                select("#ErrorTextLabel, #lblStatus")?.text()?.let { // ADFSLight, ADFSCards
+                    if (it.contains("nie zostało odnalezione lub zostało zablokowane")) throw NoAccountFoundException(it)
+                    if (it.contains("żądanie nie zostało poprawnie autoryzowane")) throw InvalidCaptchaException(it)
+                }
+            }
+            if (!res.title.contains("Podsumowanie operacji")) throw PasswordResetErrorException("Unexpected page: ${res.title}")
+
+            res.message
         }
     }
 
