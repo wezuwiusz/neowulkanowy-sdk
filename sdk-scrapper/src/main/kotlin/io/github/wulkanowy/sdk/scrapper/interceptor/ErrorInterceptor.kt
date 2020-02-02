@@ -16,6 +16,7 @@ class ErrorInterceptor : Interceptor {
     companion object {
         @JvmStatic private val logger = LoggerFactory.getLogger(this::class.java)
     }
+
     override fun intercept(chain: Interceptor.Chain): Response {
         val response = chain.proceed(chain.request())
 

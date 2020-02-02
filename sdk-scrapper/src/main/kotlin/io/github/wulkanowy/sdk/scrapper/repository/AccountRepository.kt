@@ -17,26 +17,23 @@ import java.net.URL
 class AccountRepository(private val account: AccountService) {
 
     fun getPasswordResetCaptcha(registerBaseUrl: String, symbol: String): Single<Pair<String, String>> {
-        return getPasswordResetUrl(registerBaseUrl, symbol)
-            .flatMap { (_, resetUrl) ->
-                account.getPasswordResetPageWithCaptcha(resetUrl)
-                    .map { res -> resetUrl to res.recaptchaSiteKey }
-            }
+        return getPasswordResetUrl(registerBaseUrl, symbol).flatMap { (_, resetUrl) ->
+            account.getPasswordResetPageWithCaptcha(resetUrl)
+                .map { res -> resetUrl to res.recaptchaSiteKey }
+        }
     }
 
     fun sendPasswordResetRequest(registerBaseUrl: String, symbol: String, email: String, captchaCode: String): Single<Pair<Boolean, String>> {
-        return getPasswordResetUrl(registerBaseUrl, symbol)
-            .flatMap { (type, url) ->
-                when (type) {
-                    STANDARD -> account.sendPasswordResetRequest(url, email, captchaCode)
-                    ADFS, ADFSCards -> account.sendPasswordResetRequestADFS(url, email, captchaCode)
-                    ADFSLight, ADFSLightScoped, ADFSLightCufs -> account.sendPasswordResetRequestADFSLight(url, email, captchaCode)
-                    else -> throw ScrapperException("Never happen")
-                }
+        return getPasswordResetUrl(registerBaseUrl, symbol).flatMap { (type, url) ->
+            when (type) {
+                STANDARD -> account.sendPasswordResetRequest(url, email, captchaCode)
+                ADFS, ADFSCards -> account.sendPasswordResetRequestADFS(url, email, captchaCode)
+                ADFSLight, ADFSLightScoped, ADFSLightCufs -> account.sendPasswordResetRequestADFSLight(url, email, captchaCode)
+                else -> throw ScrapperException("Never happen")
             }
-            .map {
-                (it.title == "Podsumowanie operacji") to it.message
-            }
+        }.map {
+            (it.title == "Podsumowanie operacji") to it.message
+        }
     }
 
     private fun getPasswordResetUrl(registerBaseUrl: String, symbol: String): Single<Pair<Scrapper.LoginType, String>> {
