@@ -46,6 +46,7 @@ class AccountRepository(private val account: AccountService) {
             "edu.gdansk.pl" -> Single.just(ADFS to "https://konta.edu.gdansk.pl/maintenance/unlock.aspx")
             "edu.lublin.eu" -> Single.just(ADFSLightCufs to "https://logowanie.edu.lublin.eu/AccountManage/UnlockAccountRequest")
             "resman.pl" -> Single.just(ADFSLight to "https://adfslight.resman.pl/AccountManage/UnlockAccountRequest")
+            "umt.tarnow.pl" -> Single.just(ADFS to "https://konta.umt.tarnow.pl/maintenance/unlock.aspx")
             "vulcan.net.pl" -> getLoginType(ServiceManager.UrlGenerator(url, symbol, "")).map {
                 it to when (it) {
                     STANDARD -> "https://cufs.vulcan.net.pl/Default/AccountManage/UnlockAccount"
