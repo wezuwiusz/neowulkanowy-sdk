@@ -197,7 +197,7 @@ class Scrapper {
     fun getPasswordResetCaptcha(registerBaseUrl: String, symbol: String) = account.getPasswordResetCaptcha(registerBaseUrl, symbol)
 
     fun sendPasswordResetRequest(registerBaseUrl: String, symbol: String, email: String, captchaCode: String): Single<String> {
-        return account.sendPasswordResetRequest(registerBaseUrl, symbol, email, captchaCode)
+        return account.sendPasswordResetRequest(registerBaseUrl, symbol, email.trim(), captchaCode)
     }
 
     fun getStudents() = register.getStudents()

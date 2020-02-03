@@ -21,14 +21,14 @@ import java.net.URL
 class AccountRepository(private val account: AccountService) {
 
     fun getPasswordResetCaptcha(registerBaseUrl: String, symbol: String): Single<Pair<String, String>> {
-        return getPasswordResetUrl(registerBaseUrl, symbol).flatMap { (_, resetUrl) ->
+        return getPasswordResetUrl(registerBaseUrl, symbol.trim()).flatMap { (_, resetUrl) ->
             account.getPasswordResetPageWithCaptcha(resetUrl)
                 .map { res -> resetUrl to res.recaptchaSiteKey }
         }
     }
 
     fun sendPasswordResetRequest(registerBaseUrl: String, symbol: String, email: String, captchaCode: String): Single<String> {
-        return getPasswordResetUrl(registerBaseUrl, symbol).flatMap { (type, url) ->
+        return getPasswordResetUrl(registerBaseUrl, symbol.trim()).flatMap { (type, url) ->
             when (type) {
                 STANDARD -> account.sendPasswordResetRequest(url, email, captchaCode)
                 ADFSLight, ADFSLightScoped, ADFSLightCufs -> account.sendPasswordResetRequestADFSLight(url, email, captchaCode)
