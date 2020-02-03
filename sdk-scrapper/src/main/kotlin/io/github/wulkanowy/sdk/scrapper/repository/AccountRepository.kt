@@ -70,7 +70,7 @@ class AccountRepository(private val account: AccountService) {
         }).flatMap {
             if (it.first == AUTO) getLoginType(ServiceManager.UrlGenerator(url, symbol, "")).map { loginType ->
                 loginType to when (loginType) {
-                    STANDARD -> "https://cufs.vulcan.net.pl/Default/AccountManage/UnlockAccount"
+                    STANDARD -> "https://cufs.vulcan.net.pl/$symbol/AccountManage/UnlockAccount"
                     ADFSLightScoped -> "https://adfslight.vulcan.net.pl/$symbol/AccountManage/UnlockAccountRequest"
                     else -> throw ScrapperException("Nieznany dziennik $registerBaseUrl, $loginType")
                 }
