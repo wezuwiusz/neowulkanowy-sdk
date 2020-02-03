@@ -46,6 +46,7 @@ class AccountRepository(private val account: AccountService) {
                 }
                 select(".ErrorMessage, #ErrorTextLabel, #lblStatus")?.text()?.let { // STANDARD, ADFSLight, ADFSCards
                     if (it.contains("nie zostało odnalezione lub zostało zablokowane")) throw NoAccountFoundException(it)
+                    if (it.contains("nie ma w systemie zarejestrowanych")) throw NoAccountFoundException(it) // 😀
                     if (it.contains("żądanie nie zostało poprawnie autoryzowane")) throw InvalidCaptchaException(it)
                 }
             }
