@@ -50,7 +50,7 @@ class AccountRepository(private val account: AccountService) {
                     if (it.contains("żądanie nie zostało poprawnie autoryzowane")) throw InvalidCaptchaException(it)
                 }
             }
-            if (!res.title.contains("Podsumowanie operacji")) throw PasswordResetErrorException("Unexpected page: ${res.title}")
+            if (!res.message.startsWith("Wysłano wiadomość")) throw PasswordResetErrorException("Unexpected message: ${res.message}")
 
             res.message
         }
