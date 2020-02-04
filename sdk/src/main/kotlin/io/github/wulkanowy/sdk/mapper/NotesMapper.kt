@@ -12,9 +12,12 @@ fun List<ApiNote>.mapNotes(dictionaries: Dictionaries): List<Note> {
         Note(
             date = it.entryDate.toLocalDate(),
             content = it.content,
-            category = dictionaries.noteCategories.singleOrNull { cat -> cat.id == it.noteCategoryId }?.name.orEmpty(),
             teacherSymbol = dictionaries.teachers.singleOrNull { teacher -> teacher.id == it.employeeId }?.code.orEmpty(),
-            teacher = "${it.employeeName} ${it.employeeSurname}"
+            teacher = "${it.employeeName} ${it.employeeSurname}",
+            category = dictionaries.noteCategories.singleOrNull { cat -> cat.id == it.noteCategoryId }?.name.orEmpty(),
+            categoryType = 0,
+            showPoints = false,
+            points = ""
         )
     }
 }
@@ -26,6 +29,9 @@ fun List<ScrapperNote>.mapNotes(): List<Note> {
             teacher = it.teacher,
             teacherSymbol = it.teacherSymbol,
             category = it.category,
+            categoryType = it.categoryType,
+            showPoints = it.showPoints,
+            points = it.points,
             content = it.content
         )
     }

@@ -23,4 +23,13 @@ class Note {
     @SerializedName("TrescUwagi")
     @Selector(".wartosc", index = 2)
     lateinit var content: String
+
+    @SerializedName("Punkty")
+    lateinit var points: String
+
+    @SerializedName("PokazPunkty")
+    var showPoints = false
+
+    @SerializedName("KategoriaTyp")
+    var categoryType: Int = 0
 }

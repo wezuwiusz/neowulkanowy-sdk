@@ -7,5 +7,8 @@ data class Note(
     var teacher: String,
     var teacherSymbol: String,
     var category: String,
+    var categoryType: Int,
+    var showPoints: Boolean,
+    var points: String,
     var content: String
 )
