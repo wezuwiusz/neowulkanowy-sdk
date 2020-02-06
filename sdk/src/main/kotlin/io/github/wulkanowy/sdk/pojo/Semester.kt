@@ -8,6 +8,7 @@ data class Semester(
     val schoolYear: Int,
     val semesterId: Int,
     val semesterNumber: Int,
+    @Deprecated("Use start and end instead")
     val current: Boolean,
     val start: LocalDate,
     val end: LocalDate,
