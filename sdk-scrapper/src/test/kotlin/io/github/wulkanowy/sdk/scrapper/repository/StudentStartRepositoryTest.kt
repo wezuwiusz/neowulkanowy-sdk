@@ -5,7 +5,6 @@ import io.github.wulkanowy.sdk.scrapper.BaseLocalTest
 import io.github.wulkanowy.sdk.scrapper.register.RegisterTest
 import io.github.wulkanowy.sdk.scrapper.register.Semester
 import io.reactivex.observers.TestObserver
-import okhttp3.mockwebserver.MockResponse
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Test
@@ -28,7 +27,9 @@ class StudentStartRepositoryTest : BaseLocalTest() {
 
     @Test
     fun getSemesters() {
-        server.enqueue(MockResponse().setBody(RegisterTest::class.java.getResource("UczenDziennik.json").readText()))
+        server.enqueue("WitrynaUcznia.html", RegisterTest::class.java)
+        server.enqueue("UczenCache.json", RegisterTest::class.java)
+        server.enqueue("UczenDziennik.json", RegisterTest::class.java)
         server.start(3000) //
 
         api.studentId = 1
@@ -56,7 +57,9 @@ class StudentStartRepositoryTest : BaseLocalTest() {
 
     @Test
     fun getSemesters_empty() {
-        server.enqueue(MockResponse().setBody(RegisterTest::class.java.getResource("UczenDziennik.json").readText()))
+        server.enqueue("WitrynaUcznia.html", RegisterTest::class.java)
+        server.enqueue("UczenCache.json", RegisterTest::class.java)
+        server.enqueue("UczenDziennik.json", RegisterTest::class.java)
         server.start(3000) //
 
         api.studentId = 1
@@ -74,7 +77,9 @@ class StudentStartRepositoryTest : BaseLocalTest() {
 
     @Test
     fun getSemesters_studentWithMultiClasses() {
-        server.enqueue(MockResponse().setBody(RegisterTest::class.java.getResource("UczenDziennik-multi.json").readText()))
+        server.enqueue("WitrynaUcznia.html", RegisterTest::class.java)
+        server.enqueue("UczenCache.json", RegisterTest::class.java)
+        server.enqueue("UczenDziennik-multi.json", RegisterTest::class.java)
         server.start(3000) //
 
         api.studentId = 3881
@@ -96,7 +101,9 @@ class StudentStartRepositoryTest : BaseLocalTest() {
 
     @Test
     fun getSemesters_graduate() {
-        server.enqueue(MockResponse().setBody(RegisterTest::class.java.getResource("UczenDziennik.json").readText()))
+        server.enqueue("WitrynaUcznia.html", RegisterTest::class.java)
+        server.enqueue("UczenCache.json", RegisterTest::class.java)
+        server.enqueue("UczenDziennik.json", RegisterTest::class.java)
         server.start(3000) //
 
         api.studentId = 2

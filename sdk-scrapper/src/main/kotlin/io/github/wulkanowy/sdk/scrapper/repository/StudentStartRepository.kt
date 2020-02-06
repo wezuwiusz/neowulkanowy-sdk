@@ -1,5 +1,6 @@
 package io.github.wulkanowy.sdk.scrapper.repository
 
+import io.github.wulkanowy.sdk.scrapper.getScriptParam
 import io.github.wulkanowy.sdk.scrapper.interceptor.ErrorHandlerTransformer
 import io.github.wulkanowy.sdk.scrapper.register.Semester
 import io.github.wulkanowy.sdk.scrapper.service.StudentService
@@ -15,44 +16,56 @@ class StudentStartRepository(
 ) {
 
     companion object {
-        @JvmStatic private val logger = LoggerFactory.getLogger(this::class.java)
+        @JvmStatic
+        private val logger = LoggerFactory.getLogger(this::class.java)
     }
 
     fun getSemesters(): Single<List<Semester>> {
-        return api.getDiaries()
-            .compose(ErrorHandlerTransformer())
-            .map { it.data.orEmpty() }
-            .map { diaries ->
-                diaries.asSequence()
-                    .filter { diary -> diary.semesters?.isNotEmpty() ?: false }
-                    .filter { diary -> diary.studentId == studentId }
-                    .filter { diary -> diary.semesters!![0].classId == classId }
-                    .map { diary ->
-                        diary.semesters!!.map {
-                            Semester(
-                                diaryId = diary.diaryId,
-                                diaryName = "${diary.level}${diary.symbol}",
-                                schoolYear = diary.year,
-                                semesterId = it.id,
-                                semesterNumber = it.number,
-                                start = it.start.toLocalDate(),
-                                end = it.end.toLocalDate(),
-                                current = it.start.toLocalDate() <= now() && it.end.toLocalDate() >= now(),
-                                classId = it.classId,
-                                unitId = it.unitId
-                            )
+        return api.getStart("Start").flatMap {
+            api.getUserCache(
+                getScriptParam("antiForgeryToken", it),
+                getScriptParam("appGuid", it),
+                getScriptParam("version", it)
+            )
+        }.compose(ErrorHandlerTransformer()).map { it.data }.flatMap { cache ->
+            api.getDiaries()
+                .compose(ErrorHandlerTransformer())
+                .map { it.data.orEmpty() }
+                .map { diaries ->
+                    diaries.asSequence()
+                        .filter { diary -> diary.semesters?.isNotEmpty() ?: false }
+                        .filter { diary -> diary.studentId == studentId }
+                        .filter { diary -> diary.semesters!![0].classId == classId }
+                        .map { diary ->
+                            diary.semesters!!.map {
+                                Semester(
+                                    diaryId = diary.diaryId,
+                                    diaryName = "${diary.level}${diary.symbol}",
+                                    schoolYear = diary.year,
+                                    semesterId = it.id,
+                                    semesterNumber = it.number,
+                                    start = it.start.toLocalDate(),
+                                    end = it.end.toLocalDate(),
+                                    current = it.start.toLocalDate() <= now() && it.end.toLocalDate() >= now(),
+                                    classId = it.classId,
+                                    unitId = it.unitId,
+                                    menuEnabled = cache.isMenu,
+                                    feesEnabled = cache.isFees,
+                                    completedLessonsEnabled = cache.showCompletedLessons
+                                )
+                            }
                         }
-                    }
-                    .flatten()
-                    .sortedByDescending { it.semesterId }
-                    .toList()
-                    .ifEmpty {
-                        logger.debug("Diaries size: $diaries")
-                        emptyList()
-                    }
-            }.map {
-                if (it.isNotEmpty() && it.singleOrNull { semester -> semester.current } == null) it.apply { first().current = true }
-                else it
-            }
+                        .flatten()
+                        .sortedByDescending { it.semesterId }
+                        .toList()
+                        .ifEmpty {
+                            logger.debug("Diaries size: $diaries")
+                            emptyList()
+                        }
+                }
+        }.map {
+            if (it.isNotEmpty() && it.singleOrNull { semester -> semester.current } == null) it.apply { first().current = true }
+            else it
+        }
     }
 }

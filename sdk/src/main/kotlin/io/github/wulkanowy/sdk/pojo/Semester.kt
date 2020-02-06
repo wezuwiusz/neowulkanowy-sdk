@@ -13,5 +13,8 @@ data class Semester(
     val start: LocalDate,
     val end: LocalDate,
     val classId: Int,
-    val unitId: Int
+    val unitId: Int,
+    val feesEnabled: Boolean,
+    val menuEnabled: Boolean,
+    val completedLessonsEnabled: Boolean
 )
