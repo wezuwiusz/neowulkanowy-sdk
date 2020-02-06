@@ -21,7 +21,7 @@ class StudentStartRepository(
     fun getSemesters(): Single<List<Semester>> {
         return api.getDiaries()
             .compose(ErrorHandlerTransformer())
-            .map { it.data }
+            .map { it.data.orEmpty() }
             .map { diaries ->
                 diaries.asSequence()
                     .filter { diary -> diary.semesters?.isNotEmpty() ?: false }

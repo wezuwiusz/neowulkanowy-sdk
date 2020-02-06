@@ -117,12 +117,12 @@ class StudentRepository(private val api: StudentService) {
 
     fun getSubjects(): Single<List<Subject>> {
         return api.getAttendanceSubjects()
-            .compose(ErrorHandlerTransformer()).map { it.data }
+            .compose(ErrorHandlerTransformer()).map { it.data.orEmpty() }
     }
 
     fun getExams(startDate: LocalDate, endDate: LocalDate? = null): Single<List<Exam>> {
         return api.getExams(ExamRequest(startDate.toDate(), startDate.getSchoolYear()))
-            .compose(ErrorHandlerTransformer()).map { it.data }
+            .compose(ErrorHandlerTransformer()).map { it.data.orEmpty() }
             .map { it.mapExamsList(startDate, endDate) }
     }
 
@@ -134,19 +134,19 @@ class StudentRepository(private val api: StudentService) {
 
     fun getGradesPartialStatistics(semesterId: Int): Single<List<GradeStatistics>> {
         return api.getGradesPartialStatistics(GradesStatisticsRequest(semesterId))
-            .compose(ErrorHandlerTransformer()).map { it.data }
+            .compose(ErrorHandlerTransformer()).map { it.data.orEmpty() }
             .map { it.mapGradesStatisticsPartial(semesterId) }
     }
 
     fun getGradesPointsStatistics(semesterId: Int): Single<List<GradePointsSummary>> {
         return api.getGradesPointsStatistics(GradesStatisticsRequest(semesterId))
-            .compose(ErrorHandlerTransformer()).map { it.data }
+            .compose(ErrorHandlerTransformer()).map { it.data.orEmpty() }
             .map { it.mapGradesStatisticsPoints(semesterId) }
     }
 
     fun getGradesAnnualStatistics(semesterId: Int): Single<List<GradeStatistics>> {
         return api.getGradesAnnualStatistics(GradesStatisticsRequest(semesterId))
-            .compose(ErrorHandlerTransformer()).map { it.data }
+            .compose(ErrorHandlerTransformer()).map { it.data.orEmpty() }
             .map { it.mapGradesStatisticsAnnual(semesterId) }
     }
 
@@ -158,15 +158,15 @@ class StudentRepository(private val api: StudentService) {
 
     fun getHomework(startDate: LocalDate, endDate: LocalDate? = null): Single<List<Homework>> {
         return api.getHomework(ExamRequest(startDate.toDate(), startDate.getSchoolYear()))
-            .compose(ErrorHandlerTransformer()).map { it.data }
+            .compose(ErrorHandlerTransformer()).map { it.data.orEmpty() }
             .map { it.mapHomeworkList(startDate, endDate) }
     }
 
     fun getNotes(): Single<List<Note>> {
         return api.getNotes()
-            .compose(ErrorHandlerTransformer()).map { it.data }
+            .compose(ErrorHandlerTransformer()).map { it.data?.notes.orEmpty() }
             .map { res ->
-                res.notes.map {
+                res.map {
                     it.apply {
                         teacherSymbol = teacher.split(" [").last().removeSuffix("]")
                         teacher = teacher.split(" [").first()
@@ -202,7 +202,7 @@ class StudentRepository(private val api: StudentService) {
 
     fun getRegisteredDevices(): Single<List<Device>> {
         return api.getRegisteredDevices()
-            .compose(ErrorHandlerTransformer()).map { it.data }
+            .compose(ErrorHandlerTransformer()).map { it.data.orEmpty() }
     }
 
     fun getToken(): Single<TokenResponse> {
