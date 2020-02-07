@@ -3,19 +3,21 @@ package io.github.wulkanowy.sdk.scrapper.timetable
 import io.github.wulkanowy.sdk.scrapper.BaseLocalTest
 import io.github.wulkanowy.sdk.scrapper.interceptor.FeatureDisabledException
 import io.github.wulkanowy.sdk.scrapper.interceptor.VulcanException
+import io.github.wulkanowy.sdk.scrapper.register.RegisterTest
 import io.reactivex.observers.TestObserver
 import org.junit.Assert.assertEquals
+import org.junit.Before
 import org.junit.Test
 
 class CompletedLessonsTest : BaseLocalTest() {
 
-    private val snp by lazy {
-        getSnpRepo(CompletedLessonsTest::class.java, "Zrealizowane.html").getCompletedLessons(
-            getLocalDate(2018, 9, 17),
-            getLocalDate(2018, 9, 18),
-            -1
-        ).blockingGet()
-    }
+    // private val snp by lazy {
+    //     getSnpRepo(CompletedLessonsTest::class.java, "Zrealizowane.html").getCompletedLessons(
+    //         getLocalDate(2018, 9, 17),
+    //         getLocalDate(2018, 9, 18),
+    //         -1
+    //     ).blockingGet()
+    // }
 
     private val student by lazy {
         getStudentRepo(CompletedLessonsTest::class.java, "Zrealizowane.json").getCompletedLessons(
@@ -25,9 +27,15 @@ class CompletedLessonsTest : BaseLocalTest() {
         ).blockingGet()
     }
 
+    @Before
+    fun setUp() {
+        server.enqueue("WitrynaUcznia.html", RegisterTest::class.java)
+        server.enqueue("UczenCache.json", RegisterTest::class.java)
+    }
+
     @Test
     fun getRealizedTest() {
-        assertEquals(3, snp.size)
+        // assertEquals(3, snp.size)
         assertEquals(3, student.size)
     }
 
@@ -59,7 +67,7 @@ class CompletedLessonsTest : BaseLocalTest() {
 
     @Test
     fun getSimple() {
-        listOf(snp[0], student[0]).map {
+        listOf(/*snp[0], */student[0]).map {
             it.run {
                 assertEquals(1, number)
                 assertEquals(getDate(2018, 9, 17), date)
@@ -76,7 +84,7 @@ class CompletedLessonsTest : BaseLocalTest() {
 
     @Test
     fun getSimple_mutliCommas() {
-        listOf(snp[1], student[1]).map {
+        listOf(/*snp[1], */student[1]).map {
             it.run {
                 assertEquals(2, number)
                 assertEquals(getDate(2018, 9, 17), date)
@@ -93,7 +101,7 @@ class CompletedLessonsTest : BaseLocalTest() {
 
     @Test
     fun getLesson_absence() {
-        listOf(snp[2], student[2]).map {
+        listOf(/*snp[2], */student[2]).map {
             it.run {
                 assertEquals(4, number)
                 assertEquals(getDate(2018, 9, 18), date)

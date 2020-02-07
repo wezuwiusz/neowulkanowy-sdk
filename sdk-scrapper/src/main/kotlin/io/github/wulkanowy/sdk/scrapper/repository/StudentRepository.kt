@@ -30,6 +30,7 @@ import io.github.wulkanowy.sdk.scrapper.grades.mapGradesSummary
 import io.github.wulkanowy.sdk.scrapper.homework.Homework
 import io.github.wulkanowy.sdk.scrapper.homework.mapHomeworkList
 import io.github.wulkanowy.sdk.scrapper.interceptor.ErrorHandlerTransformer
+import io.github.wulkanowy.sdk.scrapper.interceptor.FeatureDisabledException
 import io.github.wulkanowy.sdk.scrapper.mobile.Device
 import io.github.wulkanowy.sdk.scrapper.mobile.TokenResponse
 import io.github.wulkanowy.sdk.scrapper.mobile.UnregisterDeviceRequest
@@ -183,7 +184,11 @@ class StudentRepository(private val api: StudentService) {
 
     fun getCompletedLessons(start: LocalDate, endDate: LocalDate?, subjectId: Int): Single<List<CompletedLesson>> {
         val end = endDate ?: start.plusMonths(1)
-        return api.getCompletedLessons(CompletedLessonsRequest(start.toISOFormat(), end.toISOFormat(), subjectId)).map {
+        return getCache().map { cache ->
+            if (!cache.showCompletedLessons) throw FeatureDisabledException("Widok lekcji zrealizowanych został wyłączony przez Administratora szkoły")
+        }.flatMap {
+            api.getCompletedLessons(CompletedLessonsRequest(start.toISOFormat(), end.toISOFormat(), subjectId))
+        }.map {
             gson.create().fromJson(it, ApiResponse::class.java)
         }.compose<ApiResponse<*>>(ErrorHandlerTransformer()).map { it.mapCompletedLessonsList(start, endDate, gson) }
     }

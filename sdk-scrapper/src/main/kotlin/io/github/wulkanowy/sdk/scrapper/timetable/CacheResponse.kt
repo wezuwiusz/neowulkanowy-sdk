@@ -11,6 +11,15 @@ class CacheResponse {
     @SerializedName("poryLekcji")
     lateinit var times: List<Time>
 
+    @SerializedName("czyJadlospis")
+    var isMenu: Boolean = false
+
+    @SerializedName("czyOplaty")
+    var isFees: Boolean = false
+
+    @SerializedName("pokazLekcjeZrealizowane")
+    var showCompletedLessons: Boolean = false
+
     class Time {
 
         @SerializedName("Id")
