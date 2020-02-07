@@ -161,7 +161,7 @@ class SdkRemoteTest {
         }
 
         val subjects = sdk.getSubjects().blockingGet()
-        assertEquals(15, subjects.size)
+        assertEquals(14, subjects.size)
     }
 
     @Test
@@ -237,7 +237,7 @@ class SdkRemoteTest {
         }
 
         val timetable = sdk.getTimetable(of(2018, 1, 1), of(2018, 1, 2)).blockingGet()
-        assertEquals(28, timetable.size)
+        assertEquals(24, timetable.size)
     }
 
     @Test

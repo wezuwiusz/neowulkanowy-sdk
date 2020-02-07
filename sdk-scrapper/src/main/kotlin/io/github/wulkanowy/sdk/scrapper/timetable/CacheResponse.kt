@@ -8,15 +8,6 @@ class CacheResponse {
     @SerializedName("czyOpiekun")
     var isParent: Boolean = false
 
-    @SerializedName("czyJadlospis")
-    var isMenu: Boolean = false
-
-    @SerializedName("czyOplaty")
-    var isFees: Boolean = false
-
-    @SerializedName("pokazLekcjeZrealizowane")
-    var showCompletedLessons: Boolean = false
-
     @SerializedName("poryLekcji")
     lateinit var times: List<Time>
 
