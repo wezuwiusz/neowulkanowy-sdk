@@ -17,12 +17,12 @@ import org.threeten.bp.format.DateTimeFormatter
 class MessagesRepository(private val api: MessagesService) {
 
     fun getReportingUnits(): Single<List<ReportingUnit>> {
-        return api.getUserReportingUnits().map { it.data }
+        return api.getUserReportingUnits().map { it.data.orEmpty() }
     }
 
     fun getRecipients(unitId: Int, role: Int = 2): Single<List<Recipient>> {
         return api.getRecipients(unitId, role)
-            .compose(ErrorHandlerTransformer()).map { it.data }
+            .compose(ErrorHandlerTransformer()).map { it.data.orEmpty() }
             .map { res ->
                 res.map { it.copy(shortName = it.name.normalizeRecipient()) }
             }
@@ -30,7 +30,7 @@ class MessagesRepository(private val api: MessagesService) {
 
     fun getReceivedMessages(startDate: LocalDateTime?, endDate: LocalDateTime?): Single<List<Message>> {
         return api.getReceived(getDate(startDate), getDate(endDate))
-            .compose(ErrorHandlerTransformer()).map { it.data }
+            .compose(ErrorHandlerTransformer()).map { it.data.orEmpty() }
             .map { res ->
                 res.asSequence()
                     .map { it.copy(folderId = 1) }
@@ -41,7 +41,7 @@ class MessagesRepository(private val api: MessagesService) {
 
     fun getSentMessages(startDate: LocalDateTime?, endDate: LocalDateTime?): Single<List<Message>> {
         return api.getSent(getDate(startDate), getDate(endDate))
-            .compose(ErrorHandlerTransformer()).map { it.data }
+            .compose(ErrorHandlerTransformer()).map { it.data.orEmpty() }
             .map { res ->
                 res.asSequence()
                     .map { message ->
@@ -58,7 +58,7 @@ class MessagesRepository(private val api: MessagesService) {
 
     fun getDeletedMessages(startDate: LocalDateTime?, endDate: LocalDateTime?): Single<List<Message>> {
         return api.getDeleted(getDate(startDate), getDate(endDate))
-            .compose(ErrorHandlerTransformer()).map { it.data }
+            .compose(ErrorHandlerTransformer()).map { it.data.orEmpty() }
             .map { res ->
                 res.asSequence()
                     .map { it.apply { removed = true } }
@@ -70,7 +70,7 @@ class MessagesRepository(private val api: MessagesService) {
     fun getMessageRecipients(messageId: Int, loginId: Int): Single<List<Recipient>> {
         return (if (0 == loginId) api.getMessageRecipients(messageId)
         else api.getMessageSender(loginId, messageId))
-            .compose(ErrorHandlerTransformer()).map { it.data }
+            .compose(ErrorHandlerTransformer()).map { it.data.orEmpty() }
             .map {
                 it.map { recipient ->
                     recipient.copy(shortName = recipient.name.normalizeRecipient())
@@ -81,7 +81,7 @@ class MessagesRepository(private val api: MessagesService) {
     fun getMessage(messageId: Int, folderId: Int, read: Boolean, id: Int?): Single<String> {
         return api.getMessage(messageId, folderId, read, id)
             .compose(ErrorHandlerTransformer()).map { it.data }
-            .map { it.content }
+            .map { it.content.orEmpty() }
     }
 
     fun sendMessage(subject: String, content: String, recipients: List<Recipient>): Single<SentMessage> {
