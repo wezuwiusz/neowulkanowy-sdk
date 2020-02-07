@@ -14,8 +14,10 @@ import org.slf4j.LoggerFactory
 class ErrorInterceptor : Interceptor {
 
     companion object {
-        @JvmStatic private val logger = LoggerFactory.getLogger(this::class.java)
+        @JvmStatic
+        private val logger = LoggerFactory.getLogger(this::class.java)
     }
+
     override fun intercept(chain: Interceptor.Chain): Response {
         val response = chain.proceed(chain.request())
 
@@ -43,6 +45,13 @@ class ErrorInterceptor : Interceptor {
             if (it.isNotEmpty()) throw AccountPermissionException(it.text())
         }
 
+        doc.select("form")?.attr("action")?.let {
+            if ("SetNewPassword" in it) {
+                logger.debug(redirectUrl)
+                throw PasswordChangeRequiredException("Wymagana zmiana hasła użytkownika", redirectUrl)
+            }
+        }
+
         when (doc.title()) {
             "Błąd" -> throw VulcanException(doc.body().text())
             "Błąd strony" -> throw VulcanException(doc.select(".errorMessage").text())
@@ -50,7 +59,6 @@ class ErrorInterceptor : Interceptor {
             "Przerwa techniczna" -> throw ServiceUnavailableException(doc.title())
             "Strona nie została odnaleziona" -> throw ScrapperException(doc.title())
             "Strona nie znaleziona" -> throw ScrapperException(doc.selectFirst("div div").text())
-            "Zmiana hasła użytkownika" -> { logger.debug(redirectUrl); throw PasswordChangeRequiredException("Wymagana zmiana hasła użytkownika", redirectUrl) }
         }
 
         doc.select("h2").text().let {

@@ -94,7 +94,11 @@ class RegisterRepository(
     }
 
     private fun getLoginType(symbol: String): Single<Scrapper.LoginType> {
-        return register.getFormType("/$symbol/Account/LogOn").map { it.page }.map {
+        return getLoginType(url.also { it.symbol = symbol })
+    }
+
+    private fun getLoginType(urlGenerator: ServiceManager.UrlGenerator): Single<Scrapper.LoginType> {
+        return register.getFormType(urlGenerator.generate(ServiceManager.UrlGenerator.Site.LOGIN) + "Account/LogOn").map { it.page }.map {
             when {
                 it.select(".LogOnBoard input[type=submit]").isNotEmpty() -> Scrapper.LoginType.STANDARD
                 it.select("form[name=form1] #SubmitButton").isNotEmpty() -> Scrapper.LoginType.ADFS
@@ -103,7 +107,7 @@ class RegisterRepository(
                         when {
                             contains("cufs.edu.lublin.eu") -> Scrapper.LoginType.ADFSLightCufs
                             startsWith("/LoginPage.aspx") -> Scrapper.LoginType.ADFSLight
-                            startsWith("/$symbol/LoginPage.aspx") -> Scrapper.LoginType.ADFSLightScoped
+                            startsWith("/${urlGenerator.symbol}/LoginPage.aspx") -> Scrapper.LoginType.ADFSLightScoped
                             else -> throw ScrapperException("Nieznany typ dziennika ADFS")
                         }
                     }

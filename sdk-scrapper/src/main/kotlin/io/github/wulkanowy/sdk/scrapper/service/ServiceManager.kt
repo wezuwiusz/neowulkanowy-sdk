@@ -2,9 +2,9 @@ package io.github.wulkanowy.sdk.scrapper.service
 
 import RxJava2ReauthCallAdapterFactory
 import com.google.gson.GsonBuilder
+import io.github.wulkanowy.sdk.scrapper.OkHttpClientBuilderFactory
 import io.github.wulkanowy.sdk.scrapper.Scrapper
 import io.github.wulkanowy.sdk.scrapper.ScrapperException
-import io.github.wulkanowy.sdk.scrapper.OkHttpClientBuilderFactory
 import io.github.wulkanowy.sdk.scrapper.grades.DateDeserializer
 import io.github.wulkanowy.sdk.scrapper.grades.GradeDate
 import io.github.wulkanowy.sdk.scrapper.interceptor.ErrorInterceptor
@@ -28,6 +28,7 @@ import retrofit2.converter.scalars.ScalarsConverterFactory
 import retrofit2.create
 import java.net.CookieManager
 import java.net.CookiePolicy
+import java.net.URL
 import java.util.concurrent.TimeUnit.SECONDS
 
 class ServiceManager(
@@ -79,6 +80,11 @@ class ServiceManager(
         if (email.isBlank()) throw ScrapperException("Email is not set")
         if (password.isBlank()) throw ScrapperException("Password is not set")
         return getRetrofit(getClientBuilder(loginIntercept = false), urlGenerator.generate(UrlGenerator.Site.LOGIN), false).create()
+    }
+
+    fun getAccountService(): AccountService {
+        return getRetrofit(getClientBuilder(errIntercept = false, loginIntercept = false, separateJar = true),
+            urlGenerator.generate(UrlGenerator.Site.LOGIN), false).create()
     }
 
     fun getRegisterService(): RegisterService {
@@ -162,6 +168,8 @@ class ServiceManager(
     }
 
     class UrlGenerator(private val schema: String, private val host: String, var symbol: String, var schoolId: String) {
+
+        constructor(url: URL, symbol: String, schoolId: String) : this(url.protocol, url.host, symbol, schoolId)
 
         enum class Site {
             BASE, LOGIN, HOME, SNP, STUDENT, MESSAGES
