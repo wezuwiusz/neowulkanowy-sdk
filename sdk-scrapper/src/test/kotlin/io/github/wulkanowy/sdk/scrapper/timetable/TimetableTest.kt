@@ -21,8 +21,8 @@ class TimetableTest : BaseLocalTest() {
 
     @Test
     fun getTimetableTest() {
-        assertEquals(18, snp.size)
-        assertEquals(18, student.size)
+        assertEquals(19, snp.size)
+        assertEquals(19, student.size)
         assertEquals(18, studentBefore1911.size)
     }
 
@@ -124,7 +124,7 @@ class TimetableTest : BaseLocalTest() {
 
     @Test
     fun getGroupLesson() {
-        listOf(snp[15], student[15]).map {
+        listOf(snp[16], student[16]).map {
             it.run {
                 // piątek, 0
                 assertEquals(0, number)
@@ -242,7 +242,7 @@ class TimetableTest : BaseLocalTest() {
 
     @Test
     fun getLesson_emptyOriginal() {
-        listOf(snp[16], student[16]).map {
+        listOf(snp[17], student[17]).map {
             it.run {
                 // piątek, 1
                 assertEquals(1, number)
@@ -357,7 +357,7 @@ class TimetableTest : BaseLocalTest() {
 
     @Test
     fun getSimpleLesson_canceledWithoutReason() {
-        listOf(snp[17], student[17]).map {
+        listOf(snp[18], student[18]).map {
             it.run {
                 // piątek, 2
                 assertEquals(2, number)
@@ -443,6 +443,30 @@ class TimetableTest : BaseLocalTest() {
                 assertEquals("Wiedza o kulturze", subjectOld)
                 assertEquals("[nauczyciel od WOK]", teacherOld)
                 assertEquals("010", roomOld)
+
+                assertEquals(false, canceled)
+                assertEquals(true, changes)
+            }
+        }
+    }
+
+    @Test
+    fun getLesson_tripleChange2() {
+        listOf(snp[15], student[15]).map {
+            it.run {
+                // czwartek, 3
+                assertEquals(3, number)
+                assertEquals(getDate(2018, 9, 27, 9, 45, 0), start)
+                assertEquals(getDate(2018, 9, 27, 10, 40, 0), end)
+
+                assertEquals("systemy operacyjne", subject)
+                assertEquals("t.infor.", group)
+                assertEquals("", teacher)
+                assertEquals("29", room)
+                assertEquals("przeniesiona z lekcji 1, 10.02.2020", info)
+                assertEquals("Wiedza o społeczeństwie", subjectOld)
+                assertEquals("Jan Kowalski", teacherOld)
+                assertEquals("50", roomOld)
 
                 assertEquals(false, canceled)
                 assertEquals(true, changes)

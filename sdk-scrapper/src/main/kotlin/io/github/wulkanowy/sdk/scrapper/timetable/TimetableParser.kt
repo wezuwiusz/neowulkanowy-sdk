@@ -63,22 +63,39 @@ class TimetableParser {
                 }
             }
             divs.size == 2 -> getLessonInfo(lesson, divs[0])
-            divs.size == 3 -> {
-                if (divs[0]?.selectFirst("span")?.hasClass(CLASS_CHANGES) == true &&
-                    divs[1]?.selectFirst("span")?.hasClass(CLASS_MOVED_OR_CANCELED) == true &&
-                    divs[2]?.selectFirst("span")?.hasClass(CLASS_MOVED_OR_CANCELED) == true) {
-                    getLessonInfo(lesson, divs[0]).run {
-                        val old = getLessonInfo(lesson, divs[1])
-                        copy(
-                            changes = true,
-                            canceled = false,
-                            subjectOld = old.subject,
-                            teacherOld = old.teacher,
-                            roomOld = old.room
-                        )
+            divs.size == 3 -> { // TODO: refactor this
+                when {
+                    divs[0]?.selectFirst("span")?.hasClass(CLASS_CHANGES) == true &&
+                        divs[1]?.selectFirst("span")?.hasClass(CLASS_MOVED_OR_CANCELED) == true &&
+                        divs[2]?.selectFirst("span")?.hasClass(CLASS_MOVED_OR_CANCELED) == true -> {
+                        getLessonInfo(lesson, divs[0]).run {
+                            val old = getLessonInfo(lesson, divs[1])
+                            copy(
+                                changes = true,
+                                canceled = false,
+                                subjectOld = old.subject,
+                                teacherOld = old.teacher,
+                                roomOld = old.room
+                            )
+                        }
                     }
-                } else {
-                    getLessonInfo(lesson, divs[1])
+                    divs[0]?.selectFirst("span")?.hasClass(CLASS_MOVED_OR_CANCELED) == true &&
+                        divs[1]?.selectFirst("span")?.hasClass(CLASS_MOVED_OR_CANCELED) == true &&
+                        divs[2]?.selectFirst("span")?.hasClass(CLASS_CHANGES) == true -> {
+                        getLessonInfo(lesson, divs[2]).run {
+                            val old = getLessonInfo(lesson, divs[0])
+                            copy(
+                                changes = true,
+                                canceled = false,
+                                subjectOld = old.subject,
+                                teacherOld = old.teacher,
+                                roomOld = old.room
+                            )
+                        }
+                    }
+                    else -> {
+                        getLessonInfo(lesson, divs[1])
+                    }
                 }
             }
             else -> null
