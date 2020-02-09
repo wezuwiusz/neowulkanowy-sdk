@@ -6,8 +6,6 @@ import java.sql.Timestamp
 import java.text.SimpleDateFormat
 import java.util.*
 
-fun String.toDate(format: String): Date = SimpleDateFormat(format).parse(this)
-
 fun String.toLocalDateTime(format: String) = LocalDateTime.parse(this, ofPattern(format))
 
 fun Long.toLocalDate(): LocalDate = Instant
