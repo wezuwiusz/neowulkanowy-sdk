@@ -7,7 +7,7 @@
   "AppVersion": "17.09.0009.26859",
   "Data": [
     {
-      "Dzien": 1580688000,
+      "Dzien": 1580691600,
       "DzienTekst": "2020-02-03",
       "NumerLekcji": 1,
       "IdPoraLekcji": 76,
@@ -26,7 +26,7 @@
       "PlanUcznia": true
     },
     {
-      "Dzien": 1580688000,
+      "Dzien": 1580691600,
       "DzienTekst": "2020-02-03",
       "NumerLekcji": 2,
       "IdPoraLekcji": 79,
@@ -45,7 +45,7 @@
       "PlanUcznia": true
     },
     {
-      "Dzien": 1580688000,
+      "Dzien": 1580691600,
       "DzienTekst": "2020-02-03",
       "NumerLekcji": 2,
       "IdPoraLekcji": 77,
@@ -64,7 +64,7 @@
       "PlanUcznia": true
     },
     {
-      "Dzien": 1580688000,
+      "Dzien": 1580691600,
       "DzienTekst": "2020-02-03",
       "NumerLekcji": 3,
       "IdPoraLekcji": 77,
