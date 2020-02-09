@@ -1,14 +1,14 @@
 package io.github.wulkanowy.sdk.mapper
 
-import io.github.wulkanowy.sdk.scrapper.timetable.CompletedLesson as ScrapperCompletedLesson
-import io.github.wulkanowy.sdk.pojo.CompletedLesson
-import io.github.wulkanowy.sdk.scrapper.toLocalDate
 import io.github.wulkanowy.sdk.mobile.dictionaries.Dictionaries
+import io.github.wulkanowy.sdk.pojo.CompletedLesson
 import io.github.wulkanowy.sdk.pojo.Timetable
+import io.github.wulkanowy.sdk.scrapper.toLocalDate
 import io.github.wulkanowy.sdk.toLocalDate
 import io.github.wulkanowy.sdk.toLocalDateTime
-import io.github.wulkanowy.sdk.scrapper.timetable.Timetable as ScrapperTimetable
 import io.github.wulkanowy.sdk.mobile.timetable.Lesson as ApiTimetable
+import io.github.wulkanowy.sdk.scrapper.timetable.CompletedLesson as ScrapperCompletedLesson
+import io.github.wulkanowy.sdk.scrapper.timetable.Timetable as ScrapperTimetable
 
 fun List<ApiTimetable>.mapTimetable(dictionaries: Dictionaries): List<Timetable> {
     return map {
@@ -19,20 +19,29 @@ fun List<ApiTimetable>.mapTimetable(dictionaries: Dictionaries): List<Timetable>
             canceled = it.overriddenName,
             changes = it.boldName || !it.annotationAboutChange.isNullOrBlank(),
             date = it.day.toLocalDate(),
-            end = time.end.toLocalDateTime(),
+            start = (it.day + time.start).toLocalDateTime(),
+            end = (it.day + time.end).toLocalDateTime(),
             group = it.divisionShort.orEmpty(),
             info = it.annotationAboutChange?.substringAfter("(")?.substringBefore(")").orEmpty(),
             number = it.lessonNumber,
             room = it.room.orEmpty(),
             roomOld = "",
-            start = time.start.toLocalDateTime(),
             subject = it.subjectName,
             subjectOld = "",
             studentPlan = it.studentPlan,
             teacher = teacher?.run { "$name $surname" }.orEmpty(),
             teacherOld = teacherOld?.run { "$name $surname" }.orEmpty()
         )
-    }
+    }.groupBy { Triple(it.date, it.number, it.studentPlan) }.map { (_, lessons) ->
+        if (lessons.size > 1 && lessons.any { !it.canceled } && lessons.any { it.canceled }) {
+            val canceled = lessons.first { it.canceled }
+            listOf(lessons.first { !it.canceled }.copy(
+                subjectOld = canceled.subject,
+                teacherOld = canceled.teacher,
+                roomOld = canceled.room
+            ))
+        } else lessons
+    }.flatten()
 }
 
 fun List<ScrapperTimetable>.mapTimetable(): List<Timetable> {
