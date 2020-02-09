@@ -2,7 +2,10 @@ package io.github.wulkanowy.sdk
 
 import org.threeten.bp.*
 import java.sql.Timestamp
+import java.text.SimpleDateFormat
 import java.util.*
+
+fun String.toDate(format: String): Date = SimpleDateFormat(format).parse(this)
 
 fun Long.toLocalDate(): LocalDate = Instant
     .ofEpochMilli(this * 1000L)
