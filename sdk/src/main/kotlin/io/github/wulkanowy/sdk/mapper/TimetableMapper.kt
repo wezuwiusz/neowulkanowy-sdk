@@ -3,7 +3,6 @@ package io.github.wulkanowy.sdk.mapper
 import io.github.wulkanowy.sdk.mobile.dictionaries.Dictionaries
 import io.github.wulkanowy.sdk.pojo.CompletedLesson
 import io.github.wulkanowy.sdk.pojo.Timetable
-import io.github.wulkanowy.sdk.scrapper.toDate
 import io.github.wulkanowy.sdk.scrapper.toFormat
 import io.github.wulkanowy.sdk.scrapper.toLocalDate
 import io.github.wulkanowy.sdk.toLocalDate
@@ -21,8 +20,8 @@ fun List<ApiTimetable>.mapTimetable(dictionaries: Dictionaries): List<Timetable>
             canceled = it.overriddenName,
             changes = it.boldName || !it.annotationAboutChange.isNullOrBlank(),
             date = it.day.toLocalDate(),
-            start = (it.dayText + " " + time.start.toLocalDateTime().toFormat("HH:mm")).toDate("yyyy-MM-dd HH:mm").toLocalDateTime(),
-            end = (it.dayText + " " + time.end.toLocalDateTime().toFormat("HH:mm")).toDate("yyyy-MM-dd HH:mm").toLocalDateTime(),
+            start = (it.dayText + " " + time.start.toLocalDateTime().toFormat("HH:mm")).toLocalDateTime("yyyy-MM-dd HH:mm"),
+            end = (it.dayText + " " + time.end.toLocalDateTime().toFormat("HH:mm")).toLocalDateTime("yyyy-MM-dd HH:mm"),
             group = it.divisionShort.orEmpty(),
             info = it.annotationAboutChange?.substringAfter("(")?.substringBefore(")").orEmpty(),
             number = it.lessonNumber,

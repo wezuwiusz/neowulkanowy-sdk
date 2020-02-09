@@ -1,11 +1,14 @@
 package io.github.wulkanowy.sdk
 
 import org.threeten.bp.*
+import org.threeten.bp.format.DateTimeFormatter.ofPattern
 import java.sql.Timestamp
 import java.text.SimpleDateFormat
 import java.util.*
 
 fun String.toDate(format: String): Date = SimpleDateFormat(format).parse(this)
+
+fun String.toLocalDateTime(format: String) = LocalDateTime.parse(this, ofPattern(format))
 
 fun Long.toLocalDate(): LocalDate = Instant
     .ofEpochMilli(this * 1000L)
