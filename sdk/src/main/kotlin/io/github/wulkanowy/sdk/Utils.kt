@@ -1,10 +1,13 @@
 package io.github.wulkanowy.sdk
 
-import org.threeten.bp.*
+import org.threeten.bp.DateTimeUtils
+import org.threeten.bp.Instant
+import org.threeten.bp.LocalDate
+import org.threeten.bp.LocalDateTime
+import org.threeten.bp.ZoneId
 import org.threeten.bp.format.DateTimeFormatter.ofPattern
 import java.sql.Timestamp
-import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Date
 
 fun String.toLocalDateTime(format: String) = LocalDateTime.parse(this, ofPattern(format))
 
