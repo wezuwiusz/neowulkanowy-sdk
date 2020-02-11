@@ -16,7 +16,7 @@ fun List<ApiAttendance>.mapAttendance(dictionaries: Dictionaries): List<Attendan
         val category = dictionaries.attendanceCategories.singleOrNull { cat -> cat.id == it.categoryId }
         Attendance(
             number = it.number,
-            name = category?.name.orEmpty().capitalize(),
+            name = category?.name?.capitalize() ?: "Nieznany",
             subject = it.subjectName,
             date = it.date.toLocalDate(),
             timeId = -1,
