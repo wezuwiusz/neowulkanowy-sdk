@@ -9,6 +9,7 @@ import io.github.wulkanowy.sdk.mobile.exception.NoStudentsException
 import io.github.wulkanowy.sdk.mobile.exception.TokenDeadException
 import io.github.wulkanowy.sdk.mobile.exception.TokenNotFoundException
 import io.github.wulkanowy.sdk.mobile.exception.UnknownTokenException
+import io.github.wulkanowy.sdk.mobile.exception.UnsupportedTokenException
 import io.github.wulkanowy.sdk.mobile.grades.Grade
 import io.github.wulkanowy.sdk.mobile.grades.GradesSummaryResponse
 import io.github.wulkanowy.sdk.mobile.homework.Homework
@@ -103,6 +104,7 @@ class Mobile {
             certRes.message?.startsWith("Podany numer PIN jest niepoprawny") == true -> throw InvalidPinException(certRes.message.orEmpty())
             certRes.message?.startsWith("Trzykrotnie wpisano niepoprawny kod PIN") == true -> throw InvalidPinException(certRes.message.orEmpty())
             certRes.message == "NoPupils" -> throw NoStudentsException(certRes.message.orEmpty())
+            certRes.message == "OnlyKindergarten" -> throw UnsupportedTokenException(certRes.message)
             else -> throw UnknownTokenException(certRes.message.orEmpty())
         }
 
