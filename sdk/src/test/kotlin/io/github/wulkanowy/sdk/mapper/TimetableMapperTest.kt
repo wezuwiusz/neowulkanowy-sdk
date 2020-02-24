@@ -22,12 +22,13 @@ class TimetableMapperTest : BaseLocalTest() {
         server.enqueue("Slowniki.json", BaseLocalTest::class.java)
         server.enqueueAndStart("PlanLekcji.json", TimetableTest::class.java)
 
-        val subjects = mobile.getTimetable(of(2020, 2, 3), of(2020, 2, 4)).blockingGet()
-        assertEquals(3, subjects.size)
-        with(subjects[1]) {
+        val lessons = mobile.getTimetable(of(2020, 2, 3), of(2020, 2, 4)).blockingGet()
+        assertEquals(4, lessons.size)
+
+        with(lessons[1]) {
             assertEquals(2, number)
-            assertEquals(LocalDateTime.of(2020, 2, 3, 10, 45, 0), start)
-            assertEquals(LocalDateTime.of(2020, 2, 3, 11, 30, 0), end)
+            assertEquals(LocalDateTime.of(2020, 2, 3, 8, 55, 0), start)
+            assertEquals(LocalDateTime.of(2020, 2, 3, 9, 40, 0), end)
 
             assertEquals("Sieci komputerowe", subject)
             assertEquals("t.infor", group)
@@ -40,6 +41,23 @@ class TimetableMapperTest : BaseLocalTest() {
 
             assertEquals(false, canceled)
             assertEquals(true, changes)
+        }
+    }
+
+    @Test
+    fun getApiTimetable_canceledWithInfoAboutChange() {
+        server.enqueue("Slowniki.json", BaseLocalTest::class.java)
+        server.enqueueAndStart("PlanLekcji.json", TimetableTest::class.java)
+
+        val lessons = mobile.getTimetable(of(2020, 2, 3), of(2020, 2, 4)).blockingGet()
+
+        with(lessons[3]) {
+            assertEquals(4, number)
+
+            assertEquals("nieobecny oddział - Zwiedzanie Muzeum II Wojny Światowej w Gdańsku.", info)
+
+            assertEquals(true, canceled)
+            assertEquals(false, changes)
         }
     }
 }

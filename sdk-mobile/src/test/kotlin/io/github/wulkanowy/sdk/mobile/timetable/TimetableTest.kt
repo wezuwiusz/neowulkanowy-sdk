@@ -17,6 +17,6 @@ class TimetableTest : BaseLocalTest() {
 
         val items = timetable.getTimetable(of(2020, 1, 10), of(2020, 2, 11), 1, 2, 3).blockingGet()
 
-        assertEquals(4, items.size)
+        assertEquals(5, items.size)
     }
 }

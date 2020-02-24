@@ -17,7 +17,7 @@ fun List<ApiTimetable>.mapTimetable(dictionaries: Dictionaries): List<Timetable>
         val time = dictionaries.lessonTimes.single { time -> time.id == it.lessonTimeId }
         Timetable(
             canceled = it.overriddenName,
-            changes = it.boldName || !it.annotationAboutChange.isNullOrBlank(),
+            changes = it.boldName || (!it.annotationAboutChange.isNullOrBlank() && !it.overriddenName),
             date = it.day.toLocalDate(),
             start = "${it.dayText} ${time.startText}".toLocalDateTime("yyyy-MM-dd HH:mm"),
             end = "${it.dayText} ${time.endText}".toLocalDateTime("yyyy-MM-dd HH:mm"),
