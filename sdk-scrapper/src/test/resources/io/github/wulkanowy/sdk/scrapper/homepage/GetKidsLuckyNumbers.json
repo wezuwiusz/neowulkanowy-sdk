@@ -3,57 +3,32 @@
     {
       "IkonkaNazwa": null,
       "Num": null,
+      "Nazwa": "",
       "Zawartosc": [
         {
           "IkonkaNazwa": null,
           "Num": null,
-          "Zawartosc": [
-            {
-              "IkonkaNazwa": null,
-              "Num": null,
-              "Zawartosc": [],
-              "Nazwa": "Szczęśliwy numer w dzienniku: 18",
-              "Url": null,
-              "Symbol": null,
-              "Nieaktywny": false
-            }
-          ],
           "Nazwa": "SPL",
-          "Url": null,
-          "Symbol": null,
-          "Nieaktywny": false
-        },
-        {
-          "IkonkaNazwa": null,
-          "Num": null,
           "Zawartosc": [
             {
               "IkonkaNazwa": null,
               "Num": null,
+              "Nazwa": "Szczęśliwy numer w dzienniku: 18",
               "Zawartosc": [],
-              "Nazwa": "Szczęśliwy numer w dzienniku: 42",
               "Url": null,
-              "Symbol": null,
-              "Nieaktywny": false
-            },
-            {
-              "IkonkaNazwa": null,
-              "Num": null,
-              "Zawartosc": [],
-              "Nazwa": "Szczęśliwy numer w dzienniku bo nigdy nie wiadomo: 41",
-              "Url": null,
+              "Dane": null,
               "Symbol": null,
               "Nieaktywny": false
             }
           ],
-          "Nazwa": "T1",
           "Url": null,
+          "Dane": null,
           "Symbol": null,
           "Nieaktywny": false
         }
       ],
-      "Nazwa": "",
       "Url": null,
+      "Dane": null,
       "Symbol": null,
       "Nieaktywny": false
     }

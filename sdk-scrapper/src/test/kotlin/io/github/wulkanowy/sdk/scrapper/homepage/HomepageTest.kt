@@ -95,16 +95,31 @@ class HomepageTest : BaseLocalTest() {
     }
 
     @Test
-    fun getLuckyNumber_list() {
+    fun getLuckyNumber_single() {
         server.enqueue(MockResponse().setBody(HomepageTest::class.java.getResource("Index.html").readText()))
         server.enqueue(MockResponse().setBody(HomepageTest::class.java.getResource("GetKidsLuckyNumbers.json").readText()))
         server.start(3000)
 
+        val number = repo.getKidsLuckyNumbers().blockingGet()
+        assertEquals(listOf(LuckyNumber("", "SPL", 18)), number)
+
+        server.takeRequest()
+        with(server.takeRequest().body.readUtf8()) {
+            assertTrue(startsWith("permissions=YRQQQJH"))
+            assertTrue(endsWith("XzKdrhz9Ke9dkHzx"))
+        }
+    }
+
+    @Test
+    fun getLuckyNumber_multi() {
+        server.enqueue(MockResponse().setBody(HomepageTest::class.java.getResource("Index.html").readText()))
+        server.enqueue(MockResponse().setBody(HomepageTest::class.java.getResource("GetKidsLuckyNumbers-multi-institution.json").readText()))
+        server.start(3000)
+
         val numbers = repo.getKidsLuckyNumbers().blockingGet()
         assertEquals(listOf(
-            LuckyNumber("Szczęśliwy numer w dzienniku: 18", "SPL", 18),
-            LuckyNumber("Szczęśliwy numer w dzienniku: 42", "T1", 42),
-            LuckyNumber("Szczęśliwy numer w dzienniku bo nigdy nie wiadomo: 41", "T1", 41)
+            LuckyNumber("002547", "T", 37),
+            LuckyNumber("010472", "ZSP Warcie", 12)
         ), numbers)
 
         server.takeRequest()

@@ -1,0 +1,71 @@
+{
+  "data": [
+    {
+      "IkonkaNazwa": null,
+      "Num": null,
+      "Zawartosc": [
+        {
+          "IkonkaNazwa": null,
+          "Num": null,
+          "Zawartosc": [
+            {
+              "IkonkaNazwa": null,
+              "Num": null,
+              "Zawartosc": [],
+              "Nazwa": "Szczęśliwy numer w dzienniku: 37",
+              "Url": null,
+              "Dane": null,
+              "Symbol": null,
+              "Nieaktywny": false
+            }
+          ],
+          "Nazwa": "T",
+          "Url": null,
+          "Dane": null,
+          "Symbol": null,
+          "Nieaktywny": false
+        }
+      ],
+      "Nazwa": "002547",
+      "Url": null,
+      "Dane": null,
+      "Symbol": null,
+      "Nieaktywny": false
+    },
+    {
+      "IkonkaNazwa": null,
+      "Num": null,
+      "Zawartosc": [
+        {
+          "IkonkaNazwa": null,
+          "Num": null,
+          "Zawartosc": [
+            {
+              "IkonkaNazwa": null,
+              "Num": null,
+              "Zawartosc": [],
+              "Nazwa": "Szczęśliwy numer w dzienniku: 12",
+              "Url": null,
+              "Dane": null,
+              "Symbol": null,
+              "Nieaktywny": false
+            }
+          ],
+          "Nazwa": "ZSP Warcie",
+          "Url": null,
+          "Dane": null,
+          "Symbol": null,
+          "Nieaktywny": false
+        }
+      ],
+      "Nazwa": "010472",
+      "Url": null,
+      "Dane": null,
+      "Symbol": null,
+      "Nieaktywny": false
+    }
+  ],
+  "success": true,
+  "errorMessage": null,
+  "feedback": null
+}

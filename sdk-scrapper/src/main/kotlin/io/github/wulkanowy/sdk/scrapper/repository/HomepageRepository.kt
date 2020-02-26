@@ -50,16 +50,17 @@ class HomepageRepository(private val api: HomepageService) {
     fun getKidsLuckyNumbers(): Single<List<LuckyNumber>> {
         return getToken().flatMap { api.getKidsLuckyNumbers(it) }
             .compose(ErrorHandlerTransformer()).map { it.data.orEmpty() }
-            .map { it[0].content }
             .map { res ->
-                res.map { item ->
-                    item.content.map { number ->
-                        LuckyNumber(
-                            originalContent = number.name,
-                            schoolName = item.name,
-                            number = number.name.substringAfterLast(": ").toInt()
-                        )
-                    }
+                res.map { institution ->
+                    institution.content.map { school ->
+                        school.content.map { number ->
+                            LuckyNumber(
+                                institution = institution.name,
+                                school = school.name,
+                                number = number.name.substringAfterLast(": ").toInt()
+                            )
+                        }
+                    }.flatten()
                 }.flatten()
             }
     }
@@ -93,15 +94,9 @@ class HomepageRepository(private val api: HomepageService) {
 
     @Deprecated("Deprecated due to VULCAN homepage update 19.06", ReplaceWith("getKidsLuckyNumbers()"))
     fun getLuckyNumber(): Maybe<Int> {
-        return getToken().flatMap { api.getKidsLuckyNumbers(it) }
-            .compose(ErrorHandlerTransformer()).map { it.data.orEmpty() }
+        return getKidsLuckyNumbers()
             .filter { it.isNotEmpty() }
-            .map { it[0].content }
-            .filter { it.isNotEmpty() }
-            .map { it[0].content }
-            .filter { it.isNotEmpty() }
-            .map { it[0].name }
-            .filter { it.isNotBlank() }
-            .map { it.substringAfterLast(": ").toInt() }
+            .map { it.first() }
+            .map { it.number }
     }
 }
