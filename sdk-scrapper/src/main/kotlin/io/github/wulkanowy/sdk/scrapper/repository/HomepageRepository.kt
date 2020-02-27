@@ -4,7 +4,6 @@ import io.github.wulkanowy.sdk.scrapper.getScriptParam
 import io.github.wulkanowy.sdk.scrapper.home.LuckyNumber
 import io.github.wulkanowy.sdk.scrapper.interceptor.ErrorHandlerTransformer
 import io.github.wulkanowy.sdk.scrapper.service.HomepageService
-import io.reactivex.Maybe
 import io.reactivex.Single
 
 class HomepageRepository(private val api: HomepageService) {
@@ -90,13 +89,5 @@ class HomepageRepository(private val api: HomepageService) {
             .compose(ErrorHandlerTransformer()).map { it.data.orEmpty() }.map { it[0].content }.map { res ->
                 res.map { it.name }
             }
-    }
-
-    @Deprecated("Deprecated due to VULCAN homepage update 19.06", ReplaceWith("getKidsLuckyNumbers()"))
-    fun getLuckyNumber(): Maybe<Int> {
-        return getKidsLuckyNumbers()
-            .filter { it.isNotEmpty() }
-            .map { it.first() }
-            .map { it.number }
     }
 }

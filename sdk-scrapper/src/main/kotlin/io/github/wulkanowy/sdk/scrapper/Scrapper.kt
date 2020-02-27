@@ -281,9 +281,6 @@ class Scrapper {
 
     fun deleteMessages(messages: List<Pair<Int, Int>>) = this.messages.deleteMessages(messages)
 
-    @Deprecated("Deprecated due to VULCAN homepage update 19.06", ReplaceWith("getKidsLuckyNumbers()"))
-    fun getLuckyNumber() = homepage.getLuckyNumber()
-
     fun getSelfGovernments() = homepage.getSelfGovernments()
 
     fun getStudentsTrips() = homepage.getStudentsTrips()

@@ -463,12 +463,10 @@ class Sdk {
         }
     }
 
-    @Deprecated("Deprecated due to VULCAN homepage update 19.06", ReplaceWith("getKidsLuckyNumbers()"))
-    fun getLuckyNumber(): Maybe<Int> {
-        return when (mode) {
-            Mode.HYBRID, Mode.SCRAPPER -> scrapper.getLuckyNumber()
-            Mode.API -> throw FeatureNotAvailableException("Lucky number is not available in API mode")
-        }
+    fun getLuckyNumber(institution: String = ""): Maybe<Int> {
+        return getKidsLuckyNumbers().filter { it.isNotEmpty() }.map {
+            it.singleOrNull { number -> number.institution == institution } ?: throw IllegalArgumentException("More than one lucky number in institution! Unsupported yet")
+        }.map { it.number }
     }
 
     fun getSelfGovernments(): Single<List<String>> {

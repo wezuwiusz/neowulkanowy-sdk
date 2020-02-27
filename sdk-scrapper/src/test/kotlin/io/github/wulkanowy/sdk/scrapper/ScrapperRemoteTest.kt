@@ -7,6 +7,7 @@ import io.github.wulkanowy.sdk.scrapper.exams.Exam
 import io.github.wulkanowy.sdk.scrapper.grades.Grade
 import io.github.wulkanowy.sdk.scrapper.grades.GradeStatistics
 import io.github.wulkanowy.sdk.scrapper.grades.GradeSummary
+import io.github.wulkanowy.sdk.scrapper.home.LuckyNumber
 import io.github.wulkanowy.sdk.scrapper.homework.Homework
 import io.github.wulkanowy.sdk.scrapper.messages.Folder
 import io.github.wulkanowy.sdk.scrapper.messages.Message
@@ -548,12 +549,12 @@ class ScrapperRemoteTest : BaseTest() {
 
     @Test
     fun luckyNumberTest() {
-        val luckyNumber = api.getLuckyNumber()
-        val luckyNumberObserver = TestObserver<Int>()
+        val luckyNumber = api.getKidsLuckyNumbers()
+        val luckyNumberObserver = TestObserver<List<LuckyNumber>>()
         luckyNumber.subscribe(luckyNumberObserver)
         luckyNumberObserver.assertComplete()
 
-        assertTrue(luckyNumberObserver.values().size == 0 || luckyNumberObserver.values()[0] != 0)
+        assertEquals(18, luckyNumberObserver.values()[0][0].number)
     }
 
     @Test

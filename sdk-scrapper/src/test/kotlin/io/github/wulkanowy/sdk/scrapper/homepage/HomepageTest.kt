@@ -75,26 +75,6 @@ class HomepageTest : BaseLocalTest() {
     }
 
     @Test
-    fun getLuckyNumber() {
-        server.enqueue(MockResponse().setBody(HomepageTest::class.java.getResource("Index.html").readText()))
-        server.enqueue(MockResponse().setBody(HomepageTest::class.java.getResource("GetKidsLuckyNumbers.json").readText()))
-        server.start(3000)
-
-        val number = repo.getLuckyNumber().blockingGet()
-        assertEquals(18, number)
-    }
-
-    @Test
-    fun getLuckyNumber_empty() {
-        server.enqueue(MockResponse().setBody(HomepageTest::class.java.getResource("Index.html").readText()))
-        server.enqueue(MockResponse().setBody(HomepageTest::class.java.getResource("GetEmpty.json").readText()))
-        server.start(3000)
-
-        val number = repo.getLuckyNumber().blockingGet()
-        assertEquals(null, number)
-    }
-
-    @Test
     fun getLuckyNumber_single() {
         server.enqueue(MockResponse().setBody(HomepageTest::class.java.getResource("Index.html").readText()))
         server.enqueue(MockResponse().setBody(HomepageTest::class.java.getResource("GetKidsLuckyNumbers.json").readText()))
