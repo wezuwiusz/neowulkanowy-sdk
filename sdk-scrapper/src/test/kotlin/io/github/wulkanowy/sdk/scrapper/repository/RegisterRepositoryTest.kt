@@ -14,7 +14,6 @@ import io.github.wulkanowy.sdk.scrapper.service.ServiceManager
 import io.github.wulkanowy.sdk.scrapper.service.StudentAndParentService
 import io.github.wulkanowy.sdk.scrapper.service.StudentService
 import io.reactivex.observers.TestObserver
-import okhttp3.mockwebserver.MockResponse
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Test
@@ -36,7 +35,36 @@ class RegisterRepositoryTest : BaseLocalTest() {
     }
 
     @Test
-    fun normalLogin() {
+    fun normalLogin_one() {
+        server.enqueue("LoginPage-standard.html", LoginTest::class.java)
+        server.enqueue("Logowanie-uonet.html", LoginTest::class.java)
+        server.enqueue("Login-success.html", LoginTest::class.java)
+
+        server.enqueue("LoginPage-standard.html", LoginTest::class.java)
+        server.enqueue("WitrynaUcznia.html", RegisterTest::class.java)
+        server.enqueue("UczenCache.json", RegisterTest::class.java)
+        server.enqueue("UczenDziennik-no-semester.json", RegisterTest::class.java)
+
+        (0..5).onEach { // 5x symbol
+            server.enqueue("Logowanie-brak-dostepu.html", LoginTest::class.java)
+        }
+        server.start(3000)
+
+        val res = getRegisterRepository("Default", true).getStudents()
+        val observer = TestObserver<List<Student>>()
+        res.subscribe(observer)
+        observer.assertComplete()
+        val students = observer.values()[0]
+
+        assertEquals(1, students.size)
+        with(students[0]) {
+            assertEquals("012345", schoolSymbol)
+            assertEquals("", schoolShortName)
+        }
+    }
+
+    @Test
+    fun normalLogin_triple() {
         server.enqueue("LoginPage-standard.html", LoginTest::class.java)
         server.enqueue("Logowanie-uonet.html", LoginTest::class.java)
         server.enqueue("Login-success-triple.html", LoginTest::class.java)
@@ -59,6 +87,21 @@ class RegisterRepositoryTest : BaseLocalTest() {
         observer.assertComplete()
         val students = observer.values()[0]
         assertEquals(3, students.size)
+
+        with(students[0]) {
+            assertEquals("000788", schoolSymbol)
+            assertEquals("ZST-CKZiU", schoolShortName)
+        }
+
+        with(students[1]) {
+            assertEquals("004355", schoolSymbol)
+            assertEquals("ZSET", schoolShortName)
+        }
+
+        with(students[2]) {
+            assertEquals("016636", schoolSymbol)
+            assertEquals("G7 Wulkanowo", schoolShortName)
+        }
     }
 
     @Test

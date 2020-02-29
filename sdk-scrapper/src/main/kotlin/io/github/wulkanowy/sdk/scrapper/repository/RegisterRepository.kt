@@ -50,14 +50,15 @@ class RegisterRepository(
                 .flatMapObservable { Observable.fromIterable(if (useNewStudent) it.studentSchools else it.oldStudentSchools) }
                 .flatMapSingle { moduleUrl ->
                     getLoginType(symbol).flatMap { loginType ->
-                        getStudents(symbol, moduleUrl).map { students ->
+                        getStudents(symbol, moduleUrl.attr("href")).map { students ->
                             students.map { student ->
                                 Student(
                                     email = email,
                                     symbol = symbol,
                                     studentId = student.id,
                                     studentName = student.name,
-                                    schoolSymbol = getExtractedSchoolSymbolFromUrl(moduleUrl),
+                                    schoolSymbol = getExtractedSchoolSymbolFromUrl(moduleUrl.attr("href")),
+                                    schoolShortName = moduleUrl.text().takeIf { "Uczeń" !in it }.orEmpty(),
                                     schoolName = student.description,
                                     className = student.className,
                                     classId = student.classId,
