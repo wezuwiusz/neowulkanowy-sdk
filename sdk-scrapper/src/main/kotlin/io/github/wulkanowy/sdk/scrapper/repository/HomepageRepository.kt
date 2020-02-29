@@ -50,11 +50,11 @@ class HomepageRepository(private val api: HomepageService) {
         return getToken().flatMap { api.getKidsLuckyNumbers(it) }
             .compose(ErrorHandlerTransformer()).map { it.data.orEmpty() }
             .map { res ->
-                res.map { institution ->
-                    institution.content.map { school ->
+                res.map { unit ->
+                    unit.content.map { school ->
                         school.content.map { number ->
                             LuckyNumber(
-                                institution = institution.name,
+                                unitName = unit.name,
                                 school = school.name,
                                 number = number.name.substringAfterLast(": ").toInt()
                             )

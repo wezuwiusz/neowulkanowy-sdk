@@ -463,9 +463,9 @@ class Sdk {
         }
     }
 
-    fun getLuckyNumber(institution: String = ""): Maybe<Int> {
+    fun getLuckyNumber(unitName: String = ""): Maybe<Int> {
         return getKidsLuckyNumbers().filter { it.isNotEmpty() }.map {
-            it.singleOrNull { number -> number.institution == institution } ?: throw IllegalArgumentException("More than one lucky number in institution! Unsupported yet")
+            it.singleOrNull { number -> number.unitName == unitName } ?: throw IllegalArgumentException("More than one lucky number in unit! Unsupported yet")
         }.map { it.number }
     }
 
