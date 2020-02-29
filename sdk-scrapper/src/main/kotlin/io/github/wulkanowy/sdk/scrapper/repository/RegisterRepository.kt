@@ -141,7 +141,7 @@ class RegisterRepository(
             ).flatMap { cache ->
                 student.getSchoolInfo(url.generate(ServiceManager.UrlGenerator.Site.STUDENT) + "UczenDziennik.mvc/Get")
                     .compose(ErrorHandlerTransformer())
-                    .map { it.data }
+                    .map { it.data.orEmpty() }
                     .map { it.filter { diary -> diary.semesters?.isNotEmpty() ?: false } }
                     .map { it.sortedByDescending { diary -> diary.level } }
                     .map { diary -> diary.distinctBy { listOf(it.studentId, it.semesters!![0].classId) } }

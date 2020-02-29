@@ -37,19 +37,19 @@ class RegisterRepositoryTest : BaseLocalTest() {
 
     @Test
     fun normalLogin() {
-        server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("LoginPage-standard.html").readText()))
-        server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("Logowanie-uonet.html").readText()))
-        server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("Login-success-triple.html").readText()))
+        server.enqueue("LoginPage-standard.html", LoginTest::class.java)
+        server.enqueue("Logowanie-uonet.html", LoginTest::class.java)
+        server.enqueue("Login-success-triple.html", LoginTest::class.java)
 
         (0..2).onEach {
-            server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("LoginPage-standard.html").readText()))
-            server.enqueue(MockResponse().setBody(RegisterTest::class.java.getResource("WitrynaUcznia.html").readText()))
-            server.enqueue(MockResponse().setBody(RegisterTest::class.java.getResource("UczenCache.json").readText()))
-            server.enqueue(MockResponse().setBody(RegisterTest::class.java.getResource("UczenDziennik-no-semester.json").readText()))
+            server.enqueue("LoginPage-standard.html", LoginTest::class.java)
+            server.enqueue("WitrynaUcznia.html", RegisterTest::class.java)
+            server.enqueue("UczenCache.json", RegisterTest::class.java)
+            server.enqueue("UczenDziennik-no-semester.json", RegisterTest::class.java)
         }
 
         (0..5).onEach { // 5x symbol
-            server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("Logowanie-brak-dostepu.html").readText()))
+            server.enqueue("Logowanie-brak-dostepu.html", LoginTest::class.java)
         }
         server.start(3000)
 
@@ -63,22 +63,22 @@ class RegisterRepositoryTest : BaseLocalTest() {
 
     @Test
     fun normalLogin_temporarilyOff() {
-        server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("LoginPage-standard.html").readText()))
-        server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("Logowanie-uonet.html").readText()))
-        server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("Login-success-triple.html").readText()))
+        server.enqueue("LoginPage-standard.html", LoginTest::class.java)
+        server.enqueue("Logowanie-uonet.html", LoginTest::class.java)
+        server.enqueue("Login-success-triple.html", LoginTest::class.java)
 
         (0..1).onEach {
-            server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("LoginPage-standard.html").readText()))
-            server.enqueue(MockResponse().setBody(RegisterTest::class.java.getResource("WitrynaUcznia.html").readText()))
-            server.enqueue(MockResponse().setBody(RegisterTest::class.java.getResource("UczenCache.json").readText()))
-            server.enqueue(MockResponse().setBody(RegisterTest::class.java.getResource("UczenDziennik-no-semester.json").readText()))
+            server.enqueue("LoginPage-standard.html", LoginTest::class.java)
+            server.enqueue("WitrynaUcznia.html", RegisterTest::class.java)
+            server.enqueue("UczenCache.json", RegisterTest::class.java)
+            server.enqueue("UczenDziennik-no-semester.json", RegisterTest::class.java)
         }
 
-        server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("LoginPage-standard.html").readText()))
-        server.enqueue(MockResponse().setBody(ErrorInterceptorTest::class.java.getResource("AplikacjaCzasowoWyłączona.html").readText()))
+        server.enqueue("LoginPage-standard.html", LoginTest::class.java)
+        server.enqueue("AplikacjaCzasowoWyłączona.html", ErrorInterceptorTest::class.java)
 
         (0..5).onEach { // 5x symbol
-            server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("Logowanie-brak-dostepu.html").readText()))
+            server.enqueue("Logowanie-brak-dostepu.html", LoginTest::class.java)
         }
         server.start(3000)
 
@@ -92,10 +92,10 @@ class RegisterRepositoryTest : BaseLocalTest() {
 
     @Test
     fun normalVulcanException() {
-        server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("LoginPage-standard.html").readText()))
-        server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("Logowanie-uonet.html").readText()))
-        server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("Logowanie-brak-dostepu.html").readText()))
-        server.enqueue(MockResponse().setBody(ErrorInterceptorTest::class.java.getResource("Offline.html").readText()))
+        server.enqueue("LoginPage-standard.html", LoginTest::class.java)
+        server.enqueue("Logowanie-uonet.html", LoginTest::class.java)
+        server.enqueue("Logowanie-brak-dostepu.html", LoginTest::class.java)
+        server.enqueue("Offline.html", ErrorInterceptorTest::class.java)
         server.start(3000)
 
         val res = normal.getStudents()
@@ -107,13 +107,13 @@ class RegisterRepositoryTest : BaseLocalTest() {
 
     @Test
     fun filterSymbolsWithSpaces() {
-        server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("LoginPage-standard.html").readText()))
-        server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("Logowanie-uonet.html").readText()))
+        server.enqueue("LoginPage-standard.html", LoginTest::class.java)
+        server.enqueue("Logowanie-uonet.html", LoginTest::class.java)
 
         (0..5).onEach {
-            server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("Login-success-old.html").readText()))
-            server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("LoginPage-standard.html").readText()))
-            server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("SnP-start.html").readText()))
+            server.enqueue("Login-success-old.html", LoginTest::class.java)
+            server.enqueue("LoginPage-standard.html", LoginTest::class.java)
+            server.enqueue("SnP-start.html", LoginTest::class.java)
         }
 
         server.start(3000)
@@ -126,10 +126,10 @@ class RegisterRepositoryTest : BaseLocalTest() {
 
     @Test
     fun normalizeInvalidSymbol_default() {
-        server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("LoginPage-standard.html").readText()))
-        server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("Logowanie-uonet.html").readText()))
-        server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("Logowanie-brak-dostepu.html").readText()))
-        server.enqueue(MockResponse().setBody(ErrorInterceptorTest::class.java.getResource("Offline.html").readText()))
+        server.enqueue("LoginPage-standard.html", LoginTest::class.java)
+        server.enqueue("Logowanie-uonet.html", LoginTest::class.java)
+        server.enqueue("Logowanie-brak-dostepu.html", LoginTest::class.java)
+        server.enqueue("Offline.html", ErrorInterceptorTest::class.java)
 
         server.start(3000)
 
@@ -143,10 +143,10 @@ class RegisterRepositoryTest : BaseLocalTest() {
 
     @Test
     fun normalizeInvalidSymbol_custom() {
-        server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("LoginPage-standard.html").readText()))
-        server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("Logowanie-uonet.html").readText()))
-        server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("Logowanie-brak-dostepu.html").readText()))
-        server.enqueue(MockResponse().setBody(ErrorInterceptorTest::class.java.getResource("Offline.html").readText()))
+        server.enqueue("LoginPage-standard.html", LoginTest::class.java)
+        server.enqueue("Logowanie-uonet.html", LoginTest::class.java)
+        server.enqueue("Logowanie-brak-dostepu.html", LoginTest::class.java)
+        server.enqueue("Offline.html", ErrorInterceptorTest::class.java)
 
         server.start(3000)
 
@@ -160,10 +160,10 @@ class RegisterRepositoryTest : BaseLocalTest() {
 
     @Test
     fun normalizeInvalidSymbol_trimMultipleSpaces() {
-        server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("LoginPage-standard.html").readText()))
-        server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("Logowanie-uonet.html").readText()))
-        server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("Logowanie-brak-dostepu.html").readText()))
-        server.enqueue(MockResponse().setBody(ErrorInterceptorTest::class.java.getResource("Offline.html").readText()))
+        server.enqueue("LoginPage-standard.html", LoginTest::class.java)
+        server.enqueue("Logowanie-uonet.html", LoginTest::class.java)
+        server.enqueue("Logowanie-brak-dostepu.html", LoginTest::class.java)
+        server.enqueue("Offline.html", ErrorInterceptorTest::class.java)
 
         server.start(3000)
 
@@ -177,10 +177,10 @@ class RegisterRepositoryTest : BaseLocalTest() {
 
     @Test
     fun normalizeInvalidSymbol_emptyFallback() {
-        server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("LoginPage-standard.html").readText()))
-        server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("Logowanie-uonet.html").readText()))
-        server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("Logowanie-brak-dostepu.html").readText()))
-        server.enqueue(MockResponse().setBody(ErrorInterceptorTest::class.java.getResource("Offline.html").readText()))
+        server.enqueue("LoginPage-standard.html", LoginTest::class.java)
+        server.enqueue("Logowanie-uonet.html", LoginTest::class.java)
+        server.enqueue("Logowanie-brak-dostepu.html", LoginTest::class.java)
+        server.enqueue("Offline.html", ErrorInterceptorTest::class.java)
 
         server.start(3000)
 
@@ -194,10 +194,10 @@ class RegisterRepositoryTest : BaseLocalTest() {
 
     @Test
     fun normalizeInvalidSymbol_digits() {
-        server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("LoginPage-standard.html").readText()))
-        server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("Logowanie-uonet.html").readText()))
-        server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("Logowanie-brak-dostepu.html").readText()))
-        server.enqueue(MockResponse().setBody(ErrorInterceptorTest::class.java.getResource("Offline.html").readText()))
+        server.enqueue("LoginPage-standard.html", LoginTest::class.java)
+        server.enqueue("Logowanie-uonet.html", LoginTest::class.java)
+        server.enqueue("Logowanie-brak-dostepu.html", LoginTest::class.java)
+        server.enqueue("Offline.html", ErrorInterceptorTest::class.java)
 
         server.start(3000)
 
