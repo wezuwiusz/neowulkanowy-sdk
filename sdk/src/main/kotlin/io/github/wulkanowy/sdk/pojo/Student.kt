@@ -10,6 +10,7 @@ data class Student(
     val userLoginId: Int,
     val studentName: String,
     val schoolSymbol: String,
+    val schoolShortName: String,
     val schoolName: String,
     val className: String,
     val classId: Int,
