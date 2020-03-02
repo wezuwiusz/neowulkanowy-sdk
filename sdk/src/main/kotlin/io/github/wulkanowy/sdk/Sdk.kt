@@ -478,11 +478,11 @@ class Sdk {
 
             // if there is more than one lucky number
             if (numbers.size > 1) {
-                return@flatMap Maybe.error(VulcanException("More than one mismatched lucky number: $numbers"))
+                return@flatMap Maybe.error<LuckyNumber>(VulcanException("More than one mismatched lucky number: $numbers"))
             }
 
             // else
-            Maybe.empty()
+            Maybe.empty<LuckyNumber>()
         }.map { it.number }
     }
 
