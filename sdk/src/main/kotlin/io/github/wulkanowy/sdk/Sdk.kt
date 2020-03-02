@@ -2,6 +2,7 @@ package io.github.wulkanowy.sdk
 
 import io.github.wulkanowy.sdk.exception.FeatureNotAvailableException
 import io.github.wulkanowy.sdk.exception.ScrapperExceptionTransformer
+import io.github.wulkanowy.sdk.exception.VulcanException
 import io.github.wulkanowy.sdk.mapper.*
 import io.github.wulkanowy.sdk.mobile.Mobile
 import io.github.wulkanowy.sdk.pojo.*
@@ -464,8 +465,24 @@ class Sdk {
     }
 
     fun getLuckyNumber(unitName: String = ""): Maybe<Int> {
-        return getKidsLuckyNumbers().filter { it.isNotEmpty() }.map {
-            it.singleOrNull { number -> number.unitName == unitName } ?: throw IllegalArgumentException("More than one lucky number in unit! Unsupported yet")
+        return getKidsLuckyNumbers().filter { it.isNotEmpty() }.flatMap { numbers ->
+            // if lucky number unitName match unit name from student tile
+            numbers.singleOrNull { number -> number.unitName == unitName }?.let {
+                return@flatMap Maybe.just(it)
+            }
+
+            // if there there is only one lucky number and its doesn't match to any student
+            if (numbers.size == 1) {
+                return@flatMap Maybe.just(numbers.single())
+            }
+
+            // if there is more than one lucky number
+            if (numbers.size > 1) {
+                return@flatMap Maybe.error(VulcanException("More than one mismatched lucky number: $numbers"))
+            }
+
+            // else
+            Maybe.empty()
         }.map { it.number }
     }
 
