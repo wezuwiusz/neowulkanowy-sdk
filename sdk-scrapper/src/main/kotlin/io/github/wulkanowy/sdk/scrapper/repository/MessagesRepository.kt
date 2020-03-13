@@ -80,7 +80,7 @@ class MessagesRepository(private val api: MessagesService) {
 
     fun getMessage(messageId: Int, folderId: Int, read: Boolean, id: Int?): Single<String> {
         return api.getMessage(messageId, folderId, read, id)
-            .compose(ErrorHandlerTransformer()).map { it.data }
+            .compose(ErrorHandlerTransformer()).map { requireNotNull(it.data) }
             .map { it.content.orEmpty() }
     }
 
@@ -98,7 +98,7 @@ class MessagesRepository(private val api: MessagesService) {
                 getScriptParam("appGuid", res),
                 getScriptParam("version", res)
             )
-        }.compose(ErrorHandlerTransformer()).map { it.data }
+        }.compose(ErrorHandlerTransformer()).map { requireNotNull(it.data) }
     }
 
     fun deleteMessages(messages: List<Pair<Int, Int>>): Single<Boolean> {

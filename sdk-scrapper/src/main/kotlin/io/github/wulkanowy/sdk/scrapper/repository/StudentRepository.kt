@@ -71,7 +71,7 @@ class StudentRepository(private val api: StudentService) {
                 getScriptParam("appGuid", it),
                 getScriptParam("version", it)
             )
-        }.compose(ErrorHandlerTransformer()).map { it.data }
+        }.compose(ErrorHandlerTransformer()).map { requireNotNull(it.data) }
             .map { it.apply { cache = this } }
     }
 
@@ -85,13 +85,13 @@ class StudentRepository(private val api: StudentService) {
 
     fun getAttendance(startDate: LocalDate, endDate: LocalDate?): Single<List<Attendance>> {
         return api.getAttendance(AttendanceRequest(startDate.toDate()))
-            .compose(ErrorHandlerTransformer()).map { it.data }
+            .compose(ErrorHandlerTransformer()).map { requireNotNull(it.data) }
             .mapAttendanceList(startDate, endDate, ::getTimes)
     }
 
     fun getAttendanceSummary(subjectId: Int?): Single<List<AttendanceSummary>> {
         return api.getAttendanceStatistics(AttendanceSummaryRequest(subjectId))
-            .compose(ErrorHandlerTransformer()).map { it.data }
+            .compose(ErrorHandlerTransformer()).map { requireNotNull(it.data) }
             .map { it.mapAttendanceSummaryList(gson) }
     }
 
@@ -129,7 +129,7 @@ class StudentRepository(private val api: StudentService) {
 
     fun getGrades(semesterId: Int?): Single<List<Grade>> {
         return api.getGrades(GradeRequest(semesterId))
-            .compose(ErrorHandlerTransformer()).map { it.data }
+            .compose(ErrorHandlerTransformer()).map { requireNotNull(it.data) }
             .map { it.mapGradesList() }
     }
 
@@ -153,7 +153,7 @@ class StudentRepository(private val api: StudentService) {
 
     fun getGradesSummary(semesterId: Int?): Single<List<GradeSummary>> {
         return api.getGrades(GradeRequest(semesterId))
-            .compose(ErrorHandlerTransformer()).map { it.data }
+            .compose(ErrorHandlerTransformer()).map { requireNotNull(it.data) }
             .map { it.mapGradesSummary() }
     }
 
@@ -178,7 +178,7 @@ class StudentRepository(private val api: StudentService) {
 
     fun getTimetable(startDate: LocalDate, endDate: LocalDate? = null): Single<List<Timetable>> {
         return api.getTimetable(TimetableRequest(startDate.toISOFormat()))
-            .compose(ErrorHandlerTransformer()).map { it.data }
+            .compose(ErrorHandlerTransformer()).map { requireNotNull(it.data) }
             .map { it.mapTimetableList(startDate, endDate) }
     }
 
@@ -195,13 +195,13 @@ class StudentRepository(private val api: StudentService) {
 
     fun getTeachers(): Single<List<Teacher>> {
         return api.getSchoolAndTeachers()
-            .compose(ErrorHandlerTransformer()).map { it.data }
+            .compose(ErrorHandlerTransformer()).map { requireNotNull(it.data) }
             .map { it.mapToTeachers() }
     }
 
     fun getSchool(): Single<School> {
         return api.getSchoolAndTeachers()
-            .compose(ErrorHandlerTransformer()).map { it.data }
+            .compose(ErrorHandlerTransformer()).map { requireNotNull(it.data) }
             .map { it.school }
     }
 
@@ -212,7 +212,7 @@ class StudentRepository(private val api: StudentService) {
 
     fun getToken(): Single<TokenResponse> {
         return api.getToken()
-            .compose(ErrorHandlerTransformer()).map { it.data }
+            .compose(ErrorHandlerTransformer()).map { requireNotNull(it.data) }
             .map { res ->
                 res.apply {
                     qrCodeImage = Jsoup.parse(qrCodeImage).select("img").attr("src").split("data:image/png;base64,")[1]
