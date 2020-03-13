@@ -68,7 +68,7 @@ interface MobileService {
     @POST("WiadomosciUsuniete")
     fun getMessagesDeleted(@Body messagesRequest: MessagesRequest): Single<ApiResponse<List<Message>>>
 
-    @POST(".")
+    @POST("ZmienStatusWiadomosci")
     fun changeMessageStatus(@Body messageStatusChangeRequest: MessageStatusChangeRequest): Single<ApiResponse<String>>
 
     @POST("DodajWiadomosc")
