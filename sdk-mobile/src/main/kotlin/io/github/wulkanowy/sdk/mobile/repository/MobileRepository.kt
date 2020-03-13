@@ -85,7 +85,7 @@ class MobileRepository(private val api: MobileService) {
     }
 
     fun changeMessageStatus(messageId: Int, folder: String, status: String, loginId: Int, studentId: Int): Single<String> {
-        return api.changeMessageStatus(MessageStatusChangeRequest(messageId, folder, status, loginId, studentId)).map { it.data }
+        return api.changeMessageStatus(MessageStatusChangeRequest(messageId, folder, status, loginId, studentId)).map { requireNotNull(it.data) }
     }
 
     fun sendMessage(sender: String, subject: String, content: String, recipients: List<Recipient>, loginId: Int, studentId: Int): Single<Message> {

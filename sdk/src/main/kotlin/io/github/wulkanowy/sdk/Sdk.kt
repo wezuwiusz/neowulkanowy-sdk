@@ -443,8 +443,8 @@ class Sdk {
                     1 -> "Odebrane"
                     2 -> "Wysłane"
                     else -> "Usunięte"
-                }, "Usunieta").toMaybe().ignoreElement()
-            }).toSingleDefault(true).onErrorReturnItem(false)
+                }, "Usunieta").ignoreElement()
+            }).toSingleDefault(true)
         }
     }
 
