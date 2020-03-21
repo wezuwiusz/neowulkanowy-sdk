@@ -126,6 +126,7 @@ subprojects {
 
 dependencies {
     compile project(":sdk")
+    compile project(":sdk-hebe")
     compile project(":sdk-mobile")
     compile project(":sdk-scrapper")
 

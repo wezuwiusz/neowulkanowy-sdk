@@ -1,3 +1,4 @@
+include 'sdk-hebe'
 include 'sdk-mobile'
 include 'sdk-scrapper'
 include 'sdk'

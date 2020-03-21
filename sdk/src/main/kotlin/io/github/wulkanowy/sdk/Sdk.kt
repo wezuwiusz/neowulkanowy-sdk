@@ -3,6 +3,7 @@ package io.github.wulkanowy.sdk
 import io.github.wulkanowy.sdk.exception.FeatureNotAvailableException
 import io.github.wulkanowy.sdk.exception.ScrapperExceptionTransformer
 import io.github.wulkanowy.sdk.exception.VulcanException
+import io.github.wulkanowy.sdk.hebe.Hebe
 import io.github.wulkanowy.sdk.mapper.*
 import io.github.wulkanowy.sdk.mobile.Mobile
 import io.github.wulkanowy.sdk.pojo.*
@@ -20,6 +21,7 @@ class Sdk {
 
     enum class Mode {
         API,
+        HEBE,
         SCRAPPER,
         HYBRID
     }
@@ -37,6 +39,8 @@ class Sdk {
     private val mobile = Mobile()
 
     private val scrapper = Scrapper()
+
+    private val hebe = Hebe()
 
     var mode = Mode.HYBRID
 
@@ -180,6 +184,10 @@ class Sdk {
             .map { it.mapStudents(symbol) }
     }
 
+    fun getStudentsFromHebe(token: String, pin: String, symbol: String) {
+        return hebe.register(token, pin, symbol)
+    }
+
     fun getStudentsFromScrapper(email: String, password: String, scrapperBaseUrl: String, symbol: String = "Default"): Single<List<Student>> {
         return scrapper.let {
             it.baseUrl = scrapperBaseUrl
@@ -222,6 +230,7 @@ class Sdk {
         return when (mode) {
             Mode.HYBRID, Mode.SCRAPPER -> scrapper.getSemesters().compose(ScrapperExceptionTransformer()).map { it.mapSemesters() }
             Mode.API -> mobile.getStudents().map { it.mapSemesters(studentId, now) }
+            Mode.HEBE -> TODO()
         }
     }
 
@@ -231,6 +240,7 @@ class Sdk {
             Mode.HYBRID, Mode.API -> mobile.getDictionaries().flatMap { dict ->
                 mobile.getAttendance(startDate, endDate, semesterId).map { it.mapAttendance(dict) }
             }
+            Mode.HEBE -> TODO()
         }
     }
 
@@ -238,6 +248,7 @@ class Sdk {
         return when (mode) {
             Mode.HYBRID, Mode.SCRAPPER -> scrapper.getAttendanceSummary(subjectId).compose(ScrapperExceptionTransformer()).map { it.mapAttendanceSummary() }
             Mode.API -> throw FeatureNotAvailableException("Attendance summary is not available in API mode")
+            Mode.HEBE -> TODO()
         }
     }
 
@@ -245,6 +256,7 @@ class Sdk {
         return when (mode) {
             Mode.HYBRID, Mode.SCRAPPER -> scrapper.excuseForAbsence(absents.mapToScrapperAbsent(), content).compose(ScrapperExceptionTransformer())
             Mode.API -> throw FeatureNotAvailableException("Absence excusing is not available in API mode")
+            Mode.HEBE -> TODO()
         }
     }
 
@@ -252,6 +264,7 @@ class Sdk {
         return when (mode) {
             Mode.SCRAPPER -> scrapper.getSubjects().compose(ScrapperExceptionTransformer()).map { it.mapSubjects() }
             Mode.HYBRID, Mode.API -> mobile.getDictionaries().map { it.subjects }.map { it.mapSubjects() }
+            Mode.HEBE -> TODO()
         }
     }
 
@@ -261,6 +274,7 @@ class Sdk {
             Mode.HYBRID, Mode.API -> mobile.getDictionaries().flatMap { dict ->
                 mobile.getExams(start, end, semesterId).map { it.mapExams(dict) }
             }
+            Mode.HEBE -> TODO()
         }
     }
 
@@ -270,6 +284,7 @@ class Sdk {
             Mode.HYBRID, Mode.API -> mobile.getDictionaries().flatMap { dict ->
                 mobile.getGrades(semesterId).map { it.mapGrades(dict) }
             }
+            Mode.HEBE -> TODO()
         }
     }
 
@@ -279,6 +294,7 @@ class Sdk {
             Mode.HYBRID, Mode.API -> mobile.getDictionaries().flatMap { dict ->
                 mobile.getGradesSummary(semesterId).map { it.mapGradesSummary(dict) }
             }
+            Mode.HEBE -> TODO()
         }
     }
 
@@ -286,6 +302,7 @@ class Sdk {
         return when (mode) {
             Mode.HYBRID, Mode.SCRAPPER -> scrapper.getGradesAnnualStatistics(semesterId).compose(ScrapperExceptionTransformer()).map { it.mapGradeStatistics() }
             Mode.API -> throw FeatureNotAvailableException("Class grades annual statistics is not available in API mode")
+            Mode.HEBE -> TODO()
         }
     }
 
@@ -293,6 +310,7 @@ class Sdk {
         return when (mode) {
             Mode.HYBRID, Mode.SCRAPPER -> scrapper.getGradesPartialStatistics(semesterId).compose(ScrapperExceptionTransformer()).map { it.mapGradeStatistics() }
             Mode.API -> throw FeatureNotAvailableException("Class grades partial statistics is not available in API mode")
+            Mode.HEBE -> TODO()
         }
     }
 
@@ -300,6 +318,7 @@ class Sdk {
         return when (mode) {
             Mode.HYBRID, Mode.SCRAPPER -> scrapper.getGradesPointsStatistics(semesterId).compose(ScrapperExceptionTransformer()).map { it.mapGradePointsStatistics() }
             Mode.API -> throw FeatureNotAvailableException("Class grades points statistics is not available in API mode")
+            Mode.HEBE -> TODO()
         }
     }
 
@@ -309,6 +328,7 @@ class Sdk {
             Mode.HYBRID, Mode.API -> mobile.getDictionaries().flatMap { dict ->
                 mobile.getHomework(start, end, semesterId).map { it.mapHomework(dict) }
             }
+            Mode.HEBE -> TODO()
         }
     }
 
@@ -318,6 +338,7 @@ class Sdk {
             Mode.HYBRID, Mode.API -> mobile.getDictionaries().flatMap { dict ->
                 mobile.getNotes(semesterId).map { it.mapNotes(dict) }
             }
+            Mode.HEBE -> TODO()
         }
     }
 
@@ -325,6 +346,7 @@ class Sdk {
         return when (mode) {
             Mode.HYBRID, Mode.SCRAPPER -> scrapper.getRegisteredDevices().compose(ScrapperExceptionTransformer()).map { it.mapDevices() }
             Mode.API -> throw FeatureNotAvailableException("Devices management is not available in API mode")
+            Mode.HEBE -> TODO()
         }
     }
 
@@ -332,6 +354,7 @@ class Sdk {
         return when (mode) {
             Mode.HYBRID, Mode.SCRAPPER -> scrapper.getToken().compose(ScrapperExceptionTransformer()).map { it.mapToken() }
             Mode.API -> throw FeatureNotAvailableException("Devices management is not available in API mode")
+            Mode.HEBE -> TODO()
         }
     }
 
@@ -339,6 +362,7 @@ class Sdk {
         return when (mode) {
             Mode.HYBRID, Mode.SCRAPPER -> scrapper.unregisterDevice(id).compose(ScrapperExceptionTransformer())
             Mode.API -> throw FeatureNotAvailableException("Devices management is not available in API mode")
+            Mode.HEBE -> TODO()
         }
     }
 
@@ -348,6 +372,7 @@ class Sdk {
             Mode.HYBRID, Mode.API -> mobile.getDictionaries().flatMap { dict ->
                 mobile.getTeachers(studentId, semesterId).map { it.mapTeachers(dict) }
             }
+            Mode.HEBE -> TODO()
         }
     }
 
@@ -355,6 +380,7 @@ class Sdk {
         return when (mode) {
             Mode.HYBRID, Mode.SCRAPPER -> scrapper.getSchool().compose(ScrapperExceptionTransformer()).map { it.mapSchool() }
             Mode.API -> throw FeatureNotAvailableException("School info is not available in API mode")
+            Mode.HEBE -> TODO()
         }
     }
 
@@ -362,6 +388,7 @@ class Sdk {
         return when (mode) {
             Mode.HYBRID, Mode.SCRAPPER -> scrapper.getStudentInfo().compose(ScrapperExceptionTransformer()).map { it.mapStudent() }
             Mode.API -> throw FeatureNotAvailableException("Student info is not available in API mode")
+            Mode.HEBE -> TODO()
         }
     }
 
@@ -369,6 +396,7 @@ class Sdk {
         return when (mode) {
             Mode.HYBRID, Mode.SCRAPPER -> scrapper.getReportingUnits().compose(ScrapperExceptionTransformer()).map { it.mapReportingUnits() }
             Mode.API -> mobile.getStudents().map { it.mapReportingUnits(studentId) }
+            Mode.HEBE -> TODO()
         }
     }
 
@@ -376,6 +404,7 @@ class Sdk {
         return when (mode) {
             Mode.HYBRID, Mode.SCRAPPER -> scrapper.getRecipients(unitId, role).compose(ScrapperExceptionTransformer()).map { it.mapRecipients() }
             Mode.API -> mobile.getDictionaries().map { it.teachers }.map { it.mapRecipients(unitId) }
+            Mode.HEBE -> TODO()
         }
     }
 
@@ -391,6 +420,7 @@ class Sdk {
         return when (mode) {
             Mode.SCRAPPER -> scrapper.getReceivedMessages().compose(ScrapperExceptionTransformer()).map { it.mapMessages() } // TODO
             Mode.HYBRID, Mode.API -> mobile.getMessages(start, end).map { it.mapMessages() }
+            Mode.HEBE -> TODO()
         }
     }
 
@@ -398,6 +428,7 @@ class Sdk {
         return when (mode) {
             Mode.SCRAPPER -> scrapper.getSentMessages().compose(ScrapperExceptionTransformer()).map { it.mapMessages() }
             Mode.HYBRID, Mode.API -> mobile.getMessagesSent(start, end).map { it.mapMessages() }
+            Mode.HEBE -> TODO()
         }
     }
 
@@ -405,6 +436,7 @@ class Sdk {
         return when (mode) {
             Mode.SCRAPPER -> scrapper.getDeletedMessages().compose(ScrapperExceptionTransformer()).map { it.mapMessages() }
             Mode.HYBRID, Mode.API -> mobile.getMessagesDeleted(start, end).map { it.mapMessages() }
+            Mode.HEBE -> TODO()
         }
     }
 
@@ -412,6 +444,7 @@ class Sdk {
         return when (mode) {
             Mode.HYBRID, Mode.SCRAPPER -> scrapper.getMessageRecipients(messageId, senderId).compose(ScrapperExceptionTransformer()).map { it.mapRecipients() }
             Mode.API -> TODO()
+            Mode.HEBE -> TODO()
         }
     }
 
@@ -423,6 +456,7 @@ class Sdk {
                 2 -> "Wysłane"
                 else -> "Usunięte"
             }, "Widoczna")
+            Mode.HEBE -> TODO()
         }
     }
 
@@ -432,6 +466,7 @@ class Sdk {
                 .compose(ScrapperExceptionTransformer())
                 .map { it.mapSentMessage() }
             Mode.API -> mobile.sendMessage(subject, content, recipients.mapFromRecipientsToMobile()).map { it.mapSentMessage(loginId) }
+            Mode.HEBE -> TODO()
         }
     }
 
@@ -445,6 +480,7 @@ class Sdk {
                     else -> "Usunięte"
                 }, "Usunieta").ignoreElement()
             }).toSingleDefault(true)
+            Mode.HEBE -> TODO()
         }
     }
 
@@ -454,6 +490,7 @@ class Sdk {
             Mode.HYBRID, Mode.API -> mobile.getDictionaries().flatMap { dict ->
                 mobile.getTimetable(start, end, 0).map { it.mapTimetable(dict) }
             }
+            Mode.HEBE -> TODO()
         }
     }
 
@@ -461,6 +498,7 @@ class Sdk {
         return when (mode) {
             Mode.HYBRID, Mode.SCRAPPER -> scrapper.getCompletedLessons(start, end, subjectId).compose(ScrapperExceptionTransformer()).map { it.mapCompletedLessons() }
             Mode.API -> throw FeatureNotAvailableException("Completed lessons are not available in API mode")
+            Mode.HEBE -> TODO()
         }
     }
 
@@ -490,6 +528,7 @@ class Sdk {
         return when (mode) {
             Mode.HYBRID, Mode.SCRAPPER -> scrapper.getSelfGovernments().compose(ScrapperExceptionTransformer())
             Mode.API -> throw FeatureNotAvailableException("Self governments is not available in API mode")
+            Mode.HEBE -> TODO()
         }
     }
 
@@ -497,6 +536,7 @@ class Sdk {
         return when (mode) {
             Mode.HYBRID, Mode.SCRAPPER -> scrapper.getStudentsTrips().compose(ScrapperExceptionTransformer())
             Mode.API -> throw FeatureNotAvailableException("Students trips is not available in API mode")
+            Mode.HEBE -> TODO()
         }
     }
 
@@ -504,6 +544,7 @@ class Sdk {
         return when (mode) {
             Mode.HYBRID, Mode.SCRAPPER -> scrapper.getLastGrades().compose(ScrapperExceptionTransformer())
             Mode.API -> throw FeatureNotAvailableException("Last grades is not available in API mode")
+            Mode.HEBE -> TODO()
         }
     }
 
@@ -511,6 +552,7 @@ class Sdk {
         return when (mode) {
             Mode.HYBRID, Mode.SCRAPPER -> scrapper.getFreeDays().compose(ScrapperExceptionTransformer())
             Mode.API -> throw FeatureNotAvailableException("Free days is not available in API mode")
+            Mode.HEBE -> TODO()
         }
     }
 
@@ -518,6 +560,7 @@ class Sdk {
         return when (mode) {
             Mode.HYBRID, Mode.SCRAPPER -> scrapper.getKidsLuckyNumbers().compose(ScrapperExceptionTransformer()).map { it.mapLuckyNumbers() }
             Mode.API -> throw FeatureNotAvailableException("Kids Lucky number is not available in API mode")
+            Mode.HEBE -> TODO()
         }
     }
 
@@ -525,6 +568,7 @@ class Sdk {
         return when (mode) {
             Mode.HYBRID, Mode.SCRAPPER -> scrapper.getKidsLessonPlan().compose(ScrapperExceptionTransformer())
             Mode.API -> throw FeatureNotAvailableException("Kids timetable is not available in API mode")
+            Mode.HEBE -> TODO()
         }
     }
 
@@ -532,6 +576,7 @@ class Sdk {
         return when (mode) {
             Mode.HYBRID, Mode.SCRAPPER -> scrapper.getLastHomework().compose(ScrapperExceptionTransformer())
             Mode.API -> throw FeatureNotAvailableException("Last homework is not available in API mode")
+            Mode.HEBE -> TODO()
         }
     }
 
@@ -539,6 +584,7 @@ class Sdk {
         return when (mode) {
             Mode.HYBRID, Mode.SCRAPPER -> scrapper.getLastTests().compose(ScrapperExceptionTransformer())
             Mode.API -> throw FeatureNotAvailableException("Last exams is not available in API mode")
+            Mode.HEBE -> TODO()
         }
     }
 
@@ -546,6 +592,7 @@ class Sdk {
         return when (mode) {
             Mode.HYBRID, Mode.SCRAPPER -> scrapper.getLastStudentLessons().compose(ScrapperExceptionTransformer())
             Mode.API -> throw FeatureNotAvailableException("Last student lesson is not available in API mode")
+            Mode.HEBE -> TODO()
         }
     }
 }
