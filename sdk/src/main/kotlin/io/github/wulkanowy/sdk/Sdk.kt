@@ -184,8 +184,13 @@ class Sdk {
             .map { it.mapStudents(symbol) }
     }
 
-    fun getStudentsFromHebe(token: String, pin: String, symbol: String) {
-        return hebe.register(token, pin, symbol)
+    fun getStudentsFromHebe(token: String, pin: String, symbol: String): Single<List<Student>> {
+        val privateKey = "" // TODO
+        val certificateId = "" // TODO
+
+        return hebe.register(privateKey, certificateId, token, pin, symbol)
+            .flatMap { hebe.getStudents(it.envelope!!.restUrl, symbol) }
+            .map { it.mapHebeStudents(certificateId, privateKey) }
     }
 
     fun getStudentsFromScrapper(email: String, password: String, scrapperBaseUrl: String, symbol: String = "Default"): Single<List<Student>> {

@@ -1,6 +1,7 @@
 package io.github.wulkanowy.sdk.hebe.register
 
 import com.google.gson.annotations.SerializedName
+import java.util.UUID
 
 data class RegisterRequest(
 
@@ -26,5 +27,5 @@ data class RegisterRequest(
     val securityToken: String,
 
     @SerializedName("SelfIdentifier")
-    val selfIdentifier: String
+    val selfIdentifier: String = UUID.randomUUID().toString()
 )

@@ -1,6 +1,7 @@
 package io.github.wulkanowy.sdk.mapper
 
 import io.github.wulkanowy.sdk.Sdk
+import io.github.wulkanowy.sdk.hebe.register.StudentInfo
 import io.github.wulkanowy.sdk.pojo.Student
 import io.github.wulkanowy.sdk.scrapper.register.Student as ScrapperStudent
 import io.github.wulkanowy.sdk.mobile.register.Student as ApiStudent
@@ -49,6 +50,30 @@ fun List<ScrapperStudent>.mapStudents(): List<Student> {
             mobileBaseUrl = "",
             certificateKey = "",
             privateKey = ""
+        )
+    }
+}
+
+fun List<StudentInfo>.mapHebeStudents(certificateKey: String, privateKey: String): List<Student> {
+    return map {
+        Student(
+            email = it.pupil.loginValue,
+            isParent = it.login.loginRole != "Uczen",
+            className = it.classDisplay,
+            classId = -1,
+            studentId = it.pupil.id,
+            userLoginId = it.pupil.loginId,
+            symbol = it.topLevelPartition,
+            loginType = Sdk.ScrapperLoginType.STANDARD,
+            schoolName = it.constituentUnit.name,
+            schoolShortName = it.constituentUnit.short,
+            schoolSymbol = it.unit.symbol,
+            studentName = it.pupil.let { pupil -> "${pupil.firstName} ${pupil.surname}" },
+            loginMode = Sdk.Mode.HEBE,
+            scrapperBaseUrl = "",
+            mobileBaseUrl = it.unit.restUrl,
+            certificateKey = certificateKey,
+            privateKey = privateKey
         )
     }
 }
