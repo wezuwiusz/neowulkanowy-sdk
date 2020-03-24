@@ -2,7 +2,6 @@ package io.github.wulkanowy.sdk
 
 import io.github.wulkanowy.sdk.exception.FeatureNotAvailableException
 import io.github.wulkanowy.sdk.exception.ScrapperExceptionTransformer
-import io.github.wulkanowy.sdk.exception.VulcanException
 import io.github.wulkanowy.sdk.mapper.*
 import io.github.wulkanowy.sdk.mobile.Mobile
 import io.github.wulkanowy.sdk.pojo.*
@@ -476,9 +475,9 @@ class Sdk {
                 return@flatMap Maybe.just(numbers.single())
             }
 
-            // if there is more than one lucky number
+            // if there is more than one lucky number, return first (just like this was working before 0.16.0)
             if (numbers.size > 1) {
-                return@flatMap Maybe.error<LuckyNumber>(VulcanException("More than one mismatched lucky number: $numbers"))
+                return@flatMap Maybe.just(numbers.first())
             }
 
             // else
