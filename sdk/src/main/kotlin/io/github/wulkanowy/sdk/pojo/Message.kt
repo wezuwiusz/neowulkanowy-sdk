@@ -15,5 +15,6 @@ data class Message(
     val unread: Boolean?,
     val unreadBy: Int?,
     val readBy: Int?,
-    var removed: Boolean = false
+    val removed: Boolean,
+    val hasAttachments: Boolean
 )

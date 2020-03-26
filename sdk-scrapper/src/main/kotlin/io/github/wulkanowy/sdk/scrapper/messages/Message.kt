@@ -39,7 +39,13 @@ data class Message(
     val unreadBy: Int?,
 
     @SerializedName("Przeczytane")
-    val readBy: Int?
+    val readBy: Int?,
+
+    @SerializedName("HasZalaczniki")
+    val hasAttachments: Boolean = false,
+
+    @SerializedName("Zalaczniki")
+    val attachments: List<Attachment>? = emptyList() // nullable just to make sure it doesn't not break anything
 ) {
     var removed: Boolean = false
 }

@@ -3,6 +3,7 @@ package io.github.wulkanowy.sdk.scrapper.repository
 import io.github.wulkanowy.sdk.scrapper.ScrapperException
 import io.github.wulkanowy.sdk.scrapper.getScriptParam
 import io.github.wulkanowy.sdk.scrapper.interceptor.ErrorHandlerTransformer
+import io.github.wulkanowy.sdk.scrapper.messages.Attachment
 import io.github.wulkanowy.sdk.scrapper.messages.DeleteMessageRequest
 import io.github.wulkanowy.sdk.scrapper.messages.Message
 import io.github.wulkanowy.sdk.scrapper.messages.Recipient
@@ -82,6 +83,12 @@ class MessagesRepository(private val api: MessagesService) {
         return api.getMessage(messageId, folderId, read, id)
             .compose(ErrorHandlerTransformer()).map { requireNotNull(it.data) }
             .map { it.content.orEmpty() }
+    }
+
+    fun getMessageAttachments(messageId: Int, folderId: Int): Single<List<Attachment>> {
+        return api.getMessage(messageId, folderId, false, null)
+            .compose(ErrorHandlerTransformer()).map { requireNotNull(it.data) }
+            .map { it.attachments.orEmpty() }
     }
 
     fun sendMessage(subject: String, content: String, recipients: List<Recipient>): Single<SentMessage> {

@@ -51,7 +51,21 @@ class MessagesTest : BaseLocalTest() {
         server.enqueue(MockResponse().setBody(MessagesTest::class.java.getResource("WiadomosciOdebrane.json").readText()))
         server.start(3000)
 
-        assertEquals(2, api.getReceivedMessages(null, null).blockingGet().size)
+        val messages = api.getReceivedMessages(null, null).blockingGet()
+
+        assertEquals(2, messages.size)
+        with(messages[0]) {
+            assertEquals(false, unread)
+            assertEquals(getDate(2020, 3, 25, 14, 31, 16), date)
+            assertEquals(null, content)
+            assertEquals("Temat wiadomości", subject)
+            assertEquals("Nazwisko Imię", sender)
+            assertEquals(27214, messageId)
+            assertEquals(3617, senderId)
+            assertEquals(true, hasAttachments)
+            assertEquals(35232, id)
+        }
+        assertEquals(false, messages[1].hasAttachments)
     }
 
     @Test
@@ -144,6 +158,23 @@ class MessagesTest : BaseLocalTest() {
         server.start(3000)
 
         assertEquals(90, api.getMessage(1, 1, false, 0).blockingGet().length)
+    }
+
+    @Test
+    fun getMessageAttachmentsTest() {
+        server.enqueue(MockResponse().setBody(MessagesTest::class.java.getResource("Wiadomosc.json").readText()))
+        server.start(3000)
+
+        val attachments = api.getMessageAttachments(1, 1).blockingGet()
+
+        assertEquals(1, attachments.size)
+        with(attachments[0]) {
+            assertEquals(131, id)
+            assertEquals("nazwa_pliku.pptx", filename)
+            assertEquals(35232, messageId)
+            assertEquals("0123456789ABCDEF!123", oneDriveId)
+            assertEquals("https://1drv.ms/u/s!AmvjLDq5anT2psJ4nujoBUyclWOUhw", url)
+        }
     }
 
     @Test

@@ -1,7 +1,9 @@
 package io.github.wulkanowy.sdk.mapper
 
 import io.github.wulkanowy.sdk.normalizeRecipient
+import io.github.wulkanowy.sdk.pojo.Attachment
 import io.github.wulkanowy.sdk.pojo.Message
+import io.github.wulkanowy.sdk.scrapper.messages.Attachment as ScraperAttachment
 import io.github.wulkanowy.sdk.toLocalDateTime
 import io.github.wulkanowy.sdk.scrapper.messages.Message as ScrapperMessage
 import io.github.wulkanowy.sdk.mobile.messages.Message as ApiMessage
@@ -26,7 +28,8 @@ fun List<ApiMessage>.mapMessages(): List<Message> {
             },
             content = it.content,
             date = it.sentDateTime.toLocalDateTime(),
-            subject = it.subject
+            subject = it.subject,
+            hasAttachments = false
         )
     }
 }
@@ -46,7 +49,20 @@ fun List<ScrapperMessage>.mapMessages(): List<Message> {
             sender = it.sender,
             senderId = it.senderId,
             unread = it.unread,
-            unreadBy = it.unreadBy
+            unreadBy = it.unreadBy,
+            hasAttachments = it.hasAttachments
+        )
+    }
+}
+
+fun List<ScraperAttachment>.mapAttachments(): List<Attachment> {
+    return map {
+        Attachment(
+            id = it.id,
+            messageId = it.messageId,
+            oneDriveId = it.oneDriveId,
+            url = it.url,
+            filename = it.filename
         )
     }
 }

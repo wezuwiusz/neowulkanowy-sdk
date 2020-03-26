@@ -277,6 +277,8 @@ class Scrapper {
 
     fun getMessageContent(messageId: Int, folderId: Int, read: Boolean = false, id: Int? = null) = messages.getMessage(messageId, folderId, read, id)
 
+    fun getMessageAttachments(messageId: Int, folderId: Int) = messages.getMessageAttachments(messageId, folderId)
+
     fun sendMessage(subject: String, content: String, recipients: List<Recipient>) = messages.sendMessage(subject, content, recipients)
 
     fun deleteMessages(messages: List<Pair<Int, Int>>) = this.messages.deleteMessages(messages)

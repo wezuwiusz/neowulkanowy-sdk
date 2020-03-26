@@ -425,6 +425,13 @@ class Sdk {
         }
     }
 
+    fun getMessageAttachment(messageId: Int, folderId: Int): Single<List<Attachment>> {
+        return when (mode) {
+            Mode.HYBRID, Mode.SCRAPPER -> scrapper.getMessageAttachments(messageId, folderId).compose(ScrapperExceptionTransformer()).map { it.mapAttachments() }
+            Mode.API -> throw FeatureNotAvailableException("Message attachments is not available in API mode")
+        }
+    }
+
     fun sendMessage(subject: String, content: String, recipients: List<Recipient>): Single<SentMessage> {
         return when (mode) {
             Mode.HYBRID, Mode.SCRAPPER -> scrapper.sendMessage(subject, content, recipients.mapFromRecipientsToScraper())
