@@ -6,35 +6,73 @@ import org.junit.Test
 
 class NotesTest : BaseLocalTest() {
 
-    private val empty by lazy {
-        getSnpRepo(NotesTest::class.java, "UwagiOsiagniecia-empty.html").getNotes().blockingGet()
-    }
-
-    private val snp by lazy {
-        getSnpRepo(NotesTest::class.java, "UwagiOsiagniecia-filled.html").getNotes().blockingGet()
-    }
-
     private val student by lazy {
         getStudentRepo(NotesTest::class.java, "UwagiIOsiagniecia.json").getNotes().blockingGet()
     }
 
+    private val studentPoints by lazy {
+        getStudentRepo(NotesTest::class.java, "UwagiIOsiagniecia-points.json").getNotes().blockingGet()
+    }
+
     @Test
     fun getNotesList() {
-        assertEquals(3, snp.size)
         assertEquals(3, student.size)
-        assertEquals(0, empty.size)
+        assertEquals(3, studentPoints.size)
     }
 
     @Test
     fun getNotes() {
-        listOf(snp[0], student[0]).map {
-            it.run {
-                assertEquals(getDate(2016, 10, 1), date)
-                assertEquals("Kochański Leszek", teacher)
-                assertEquals("KL", teacherSymbol)
-                assertEquals("Zachowanie na lekcji", category)
-                assertEquals("Przeszkadzanie w prowadzeniu lekcji", content)
-            }
+        with(student[0]) {
+            assertEquals(getDate(2016, 10, 1), date)
+            assertEquals("Kochański Leszek", teacher)
+            assertEquals("KL", teacherSymbol)
+            assertEquals("Zachowanie na lekcji", category)
+            assertEquals("Przeszkadzanie w prowadzeniu lekcji", content)
+            assertEquals(false, showPoints)
+            assertEquals("", points)
+            assertEquals(1, categoryType)
+        }
+    }
+
+    @Test
+    fun getNotes_positive() {
+        with(studentPoints[0]) {
+            assertEquals(getDate(2020, 2, 18, 22, 58, 49), date)
+            assertEquals("Jan Kowalski", teacher)
+            assertEquals("JK", teacherSymbol)
+            assertEquals("Przygotowanie dodatkowych pomocy naukowych (pozytywna)", category)
+            assertEquals("Jan z własnej woli przyniósł baterie do zegara.", content)
+            assertEquals(true, showPoints)
+            assertEquals("5", points)
+            assertEquals(1, categoryType)
+        }
+    }
+
+    @Test
+    fun getNotes_neutral() {
+        with(studentPoints[1]) {
+            assertEquals(getDate(2020, 2, 18, 22, 58, 50), date)
+            assertEquals("Kochański Leszek", teacher)
+            assertEquals("KL", teacherSymbol)
+            assertEquals("Odnotanie neutralnego zachowania ucznia (neutralna)", category)
+            assertEquals("Uczeń nic nie zepsuł ani nic nie naprawił", content)
+            assertEquals(true, showPoints)
+            assertEquals("0", points)
+            assertEquals(2, categoryType)
+        }
+    }
+
+    @Test
+    fun getNotes_negative() {
+        with(studentPoints[2]) {
+            assertEquals(getDate(2020, 2, 19, 14, 12, 52), date)
+            assertEquals("Ochocka Zofia", teacher)
+            assertEquals("OZ", teacherSymbol)
+            assertEquals("Nie zgłoszenie się w umówionym terminie w celu napisania zaległej pracy klasowej (negatywna)", category)
+            assertEquals("Uczeń nie przyszedł na zajęcia w celu napisania zaległej kartkówki, pomimo umówienia się z nauczycielem dzień wcześniej.", content)
+            assertEquals(true, showPoints)
+            assertEquals("-5", points)
+            assertEquals(3, categoryType)
         }
     }
 }

@@ -25,7 +25,7 @@ class Note {
     lateinit var content: String
 
     @SerializedName("Punkty")
-    lateinit var points: String
+    var points: String = ""
 
     @SerializedName("PokazPunkty")
     var showPoints = false

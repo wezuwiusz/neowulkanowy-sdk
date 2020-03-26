@@ -1,0 +1,35 @@
+{
+  "data": {
+    "Uwagi": [
+      {
+        "TrescUwagi": "Uczeń nie przyszedł na zajęcia w celu napisania zaległej kartkówki, pomimo umówienia się z nauczycielem dzień wcześniej.",
+        "Kategoria": "Nie zgłoszenie się w umówionym terminie w celu napisania zaległej pracy klasowej (negatywna)",
+        "DataWpisu": "2020-02-19 14:12:52",
+        "Nauczyciel": "Ochocka Zofia [OZ]",
+        "Punkty": "-5",
+        "PokazPunkty": true,
+        "KategoriaTyp": 3
+      },
+      {
+        "TrescUwagi": "Uczeń nic nie zepsuł ani nic nie naprawił",
+        "Kategoria": "Odnotanie neutralnego zachowania ucznia (neutralna)",
+        "DataWpisu": "2020-02-18 22:58:50",
+        "Nauczyciel": "Kochański Leszek [KL]",
+        "Punkty": "0",
+        "PokazPunkty": true,
+        "KategoriaTyp": 2
+      },
+      {
+        "TrescUwagi": "Jan z własnej woli przyniósł baterie do zegara.",
+        "Kategoria": "Przygotowanie dodatkowych pomocy naukowych (pozytywna)",
+        "DataWpisu": "2020-02-18 22:58:49",
+        "Nauczyciel": "Jan Kowalski [JK]",
+        "Punkty": "5",
+        "PokazPunkty": true,
+        "KategoriaTyp": 1
+      }
+    ],
+    "Osiagniecia": []
+  },
+  "success": true
+}
