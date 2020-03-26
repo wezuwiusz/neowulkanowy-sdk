@@ -8,7 +8,7 @@
         "Nauczyciel": "Kochański Leszek [KL]",
         "Punkty": "",
         "PokazPunkty": false,
-        "KategoriaTyp": 1
+        "KategoriaTyp": 3
       },
       {
         "TrescUwagi": "Udział w przygotowaniu spektaklu",
@@ -26,7 +26,7 @@
         "Nauczyciel": "Jan Kowalski [JK]",
         "Punkty": "",
         "PokazPunkty": false,
-        "KategoriaTyp": 3
+        "KategoriaTyp": 1
       }
     ],
     "Osiagniecia": []

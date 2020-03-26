@@ -20,8 +20,7 @@ class SentExcuse {
         DENIED(2);
 
         companion object {
-            private val values = values()
-            fun getByValue(value: Int) = values.firstOrNull { it.id == value }
+            fun getByValue(value: Int) = values().firstOrNull { it.id == value }
         }
     }
 }

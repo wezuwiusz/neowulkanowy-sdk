@@ -1,5 +1,6 @@
 package io.github.wulkanowy.sdk.pojo
 
+import io.github.wulkanowy.sdk.scrapper.notes.Note
 import org.threeten.bp.LocalDate
 
 data class Note(
@@ -7,8 +8,8 @@ data class Note(
     var teacher: String,
     var teacherSymbol: String,
     var category: String,
-    var categoryType: Int,
+    var categoryType: Note.CategoryType,
     var showPoints: Boolean,
-    var points: String,
+    var points: Int,
     var content: String
 )

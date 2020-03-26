@@ -15,9 +15,9 @@ fun List<ApiNote>.mapNotes(dictionaries: Dictionaries): List<Note> {
             teacherSymbol = dictionaries.teachers.singleOrNull { teacher -> teacher.id == it.employeeId }?.code.orEmpty(),
             teacher = "${it.employeeName} ${it.employeeSurname}",
             category = dictionaries.noteCategories.singleOrNull { cat -> cat.id == it.noteCategoryId }?.name.orEmpty(),
-            categoryType = 0,
+            categoryType = ScrapperNote.CategoryType.UNKNOWN,
             showPoints = false,
-            points = ""
+            points = 0
         )
     }
 }
@@ -29,9 +29,9 @@ fun List<ScrapperNote>.mapNotes(): List<Note> {
             teacher = it.teacher,
             teacherSymbol = it.teacherSymbol,
             category = it.category,
-            categoryType = it.categoryType,
+            categoryType = ScrapperNote.CategoryType.getByValue(it.categoryType),
             showPoints = it.showPoints,
-            points = it.points,
+            points = it.points.toIntOrNull() ?: 0,
             content = it.content
         )
     }

@@ -1,5 +1,6 @@
 package io.github.wulkanowy.sdk.scrapper.service
 
+import io.github.wulkanowy.sdk.scrapper.ApiResponse
 import io.github.wulkanowy.sdk.scrapper.Scrapper
 import io.github.wulkanowy.sdk.scrapper.ScrapperException
 import io.github.wulkanowy.sdk.scrapper.BaseTest
@@ -54,7 +55,7 @@ class ServiceManagerTest : BaseTest() {
 
     @Test
     fun interceptorTest_prepend() {
-        server.enqueue(MockResponse().setBody(NotesTest::class.java.getResource("UwagiOsiagniecia-filled.html").readText()))
+        server.enqueue(MockResponse().setBody(NotesTest::class.java.getResource("UwagiIOsiagniecia.json").readText()))
         server.start(3000)
         val manager = ServiceManager(OkHttpClientBuilderFactory(), HttpLoggingInterceptor.Level.NONE,
                 Scrapper.LoginType.STANDARD, "http", "fakelog.localhost:3000", "default", "email", "password",
@@ -68,8 +69,8 @@ class ServiceManagerTest : BaseTest() {
             throw ScrapperException("Test")
         }, false)
 
-        val notes = manager.getSnpService().getNotes()
-        val observer = TestObserver<NotesResponse>()
+        val notes = manager.getStudentService().getNotes()
+        val observer = TestObserver<ApiResponse<NotesResponse>>()
         notes.subscribe(observer)
         observer.assertTerminated()
         observer.assertNotComplete()

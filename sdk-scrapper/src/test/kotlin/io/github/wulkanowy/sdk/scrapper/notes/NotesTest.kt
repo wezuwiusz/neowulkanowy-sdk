@@ -29,8 +29,8 @@ class NotesTest : BaseLocalTest() {
             assertEquals("Zachowanie na lekcji", category)
             assertEquals("Przeszkadzanie w prowadzeniu lekcji", content)
             assertEquals(false, showPoints)
-            assertEquals("", points)
-            assertEquals(1, categoryType)
+            assertEquals(0, points.toIntOrNull() ?: 0)
+            assertEquals(Note.CategoryType.NEGATIVE.id, categoryType)
         }
     }
 
@@ -43,8 +43,8 @@ class NotesTest : BaseLocalTest() {
             assertEquals("Przygotowanie dodatkowych pomocy naukowych (pozytywna)", category)
             assertEquals("Jan z własnej woli przyniósł baterie do zegara.", content)
             assertEquals(true, showPoints)
-            assertEquals("5", points)
-            assertEquals(1, categoryType)
+            assertEquals(5, points.toInt())
+            assertEquals(Note.CategoryType.POSITIVE.id, categoryType)
         }
     }
 
@@ -57,8 +57,8 @@ class NotesTest : BaseLocalTest() {
             assertEquals("Odnotanie neutralnego zachowania ucznia (neutralna)", category)
             assertEquals("Uczeń nic nie zepsuł ani nic nie naprawił", content)
             assertEquals(true, showPoints)
-            assertEquals("0", points)
-            assertEquals(2, categoryType)
+            assertEquals(0, points.toInt())
+            assertEquals(Note.CategoryType.NEUTRAL.id, categoryType)
         }
     }
 
@@ -71,8 +71,8 @@ class NotesTest : BaseLocalTest() {
             assertEquals("Nie zgłoszenie się w umówionym terminie w celu napisania zaległej pracy klasowej (negatywna)", category)
             assertEquals("Uczeń nie przyszedł na zajęcia w celu napisania zaległej kartkówki, pomimo umówienia się z nauczycielem dzień wcześniej.", content)
             assertEquals(true, showPoints)
-            assertEquals("-5", points)
-            assertEquals(3, categoryType)
+            assertEquals(-5, points.toInt())
+            assertEquals(Note.CategoryType.NEGATIVE.id, categoryType)
         }
     }
 }
