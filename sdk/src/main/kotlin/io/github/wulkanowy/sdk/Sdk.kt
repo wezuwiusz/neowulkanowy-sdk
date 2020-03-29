@@ -389,21 +389,27 @@ class Sdk {
     fun getReceivedMessages(start: LocalDateTime, end: LocalDateTime): Single<List<Message>> {
         return when (mode) {
             Mode.HYBRID, Mode.SCRAPPER -> scrapper.getReceivedMessages().compose(ScrapperExceptionTransformer()).map { it.mapMessages() } // TODO
-            Mode.API -> mobile.getMessages(start, end).map { it.mapMessages() }
+            Mode.API -> mobile.getDictionaries().flatMap { dict ->
+                mobile.getMessages(start, end).map { it.mapMessages(dict) }
+            }
         }
     }
 
     fun getSentMessages(start: LocalDateTime, end: LocalDateTime): Single<List<Message>> {
         return when (mode) {
             Mode.HYBRID, Mode.SCRAPPER -> scrapper.getSentMessages().compose(ScrapperExceptionTransformer()).map { it.mapMessages() }
-            Mode.API -> mobile.getMessagesSent(start, end).map { it.mapMessages() }
+            Mode.API -> mobile.getDictionaries().flatMap { dict ->
+                mobile.getMessagesSent(start, end).map { it.mapMessages(dict) }
+            }
         }
     }
 
     fun getDeletedMessages(start: LocalDateTime, end: LocalDateTime): Single<List<Message>> {
         return when (mode) {
             Mode.HYBRID, Mode.SCRAPPER -> scrapper.getDeletedMessages().compose(ScrapperExceptionTransformer()).map { it.mapMessages() }
-            Mode.API -> mobile.getMessagesDeleted(start, end).map { it.mapMessages() }
+            Mode.API -> mobile.getDictionaries().flatMap { dict ->
+                mobile.getMessagesDeleted(start, end).map { it.mapMessages(dict) }
+            }
         }
     }
 

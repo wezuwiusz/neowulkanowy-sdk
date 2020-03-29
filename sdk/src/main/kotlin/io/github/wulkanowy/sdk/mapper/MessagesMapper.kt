@@ -1,5 +1,6 @@
 package io.github.wulkanowy.sdk.mapper
 
+import io.github.wulkanowy.sdk.mobile.dictionaries.Dictionaries
 import io.github.wulkanowy.sdk.normalizeRecipient
 import io.github.wulkanowy.sdk.pojo.Attachment
 import io.github.wulkanowy.sdk.pojo.Message
@@ -9,13 +10,13 @@ import io.github.wulkanowy.sdk.mobile.messages.Message as ApiMessage
 import io.github.wulkanowy.sdk.scrapper.messages.Message as ScrapperMessage
 
 @JvmName("mapApiMessages")
-fun List<ApiMessage>.mapMessages(): List<Message> {
+fun List<ApiMessage>.mapMessages(dictionaries: Dictionaries): List<Message> {
     return map {
         Message(
             id = it.messageId,
-            sender = it.senderName,
             unreadBy = it.unread?.toInt(),
             unread = it.folder == "Odebrane" && it.readDateTime == null,
+            sender = it.senderName ?: dictionaries.employees.singleOrNull { employee -> employee.id == it.senderId }?.let { e -> "${e.name} ${e.surname}" },
             senderId = it.senderId,
             removed = it.status == "Usunieta",
             recipient = it.recipients?.joinToString(", ") { recipient -> recipient.name.normalizeRecipient() },

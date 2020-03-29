@@ -56,7 +56,6 @@ class MessagesTest : BaseLocalTest() {
         assertEquals(2, messages.size)
         with(messages[0]) {
             assertEquals(false, unread)
-            assertEquals(getDate(2020, 3, 25, 14, 31, 16), date)
             assertEquals(null, content)
             assertEquals("Temat wiadomości", subject)
             assertEquals("Nazwisko Imię", sender)
