@@ -9,7 +9,6 @@ import io.github.wulkanowy.sdk.scrapper.grades.GradeStatistics
 import io.github.wulkanowy.sdk.scrapper.grades.GradeSummary
 import io.github.wulkanowy.sdk.scrapper.home.LuckyNumber
 import io.github.wulkanowy.sdk.scrapper.homework.Homework
-import io.github.wulkanowy.sdk.scrapper.messages.Attachment
 import io.github.wulkanowy.sdk.scrapper.messages.Folder
 import io.github.wulkanowy.sdk.scrapper.messages.Message
 import io.github.wulkanowy.sdk.scrapper.messages.Recipient
@@ -457,15 +456,10 @@ class ScrapperRemoteTest : BaseTest() {
         mRecipients.subscribe(mRecipientsObserver)
         mRecipientsObserver.assertComplete()
 
-        val m = api.getMessageContent(del[0].messageId ?: 0, del[0].folderId)
-        val mObserver = TestObserver<String>()
+        val m = api.getMessageDetails(del[0].messageId ?: 0, del[0].folderId)
+        val mObserver = TestObserver<Message>()
         m.subscribe(mObserver)
         mObserver.assertComplete()
-
-        val a = api.getMessageAttachments(del[0].messageId ?: 0, del[0].folderId)
-        val aObserver = TestObserver<List<Attachment>>()
-        a.subscribe(aObserver)
-        aObserver.assertComplete()
     }
 
     @Test
@@ -560,7 +554,7 @@ class ScrapperRemoteTest : BaseTest() {
         luckyNumber.subscribe(luckyNumberObserver)
         luckyNumberObserver.assertComplete()
 
-        assertEquals(18, luckyNumberObserver.values()[0][0].number)
+        assertEquals(37, luckyNumberObserver.values()[0][0].number)
     }
 
     @Test

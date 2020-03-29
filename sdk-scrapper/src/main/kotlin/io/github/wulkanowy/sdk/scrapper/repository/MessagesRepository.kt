@@ -79,6 +79,11 @@ class MessagesRepository(private val api: MessagesService) {
             }
     }
 
+    fun getMessageDetails(messageId: Int, folderId: Int, read: Boolean, id: Int?): Single<Message> {
+        return api.getMessage(messageId, folderId, read, id)
+            .compose(ErrorHandlerTransformer()).map { requireNotNull(it.data) }
+    }
+
     fun getMessage(messageId: Int, folderId: Int, read: Boolean, id: Int?): Single<String> {
         return api.getMessage(messageId, folderId, read, id)
             .compose(ErrorHandlerTransformer()).map { requireNotNull(it.data) }

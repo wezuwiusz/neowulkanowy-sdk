@@ -414,21 +414,14 @@ class Sdk {
         }
     }
 
-    fun getMessageContent(messageId: Int, folderId: Int, read: Boolean = false, id: Int? = null): Single<String> {
+    fun getMessageDetails(messageId: Int, folderId: Int, read: Boolean = false, id: Int? = null): Single<MessageDetails> {
         return when (mode) {
-            Mode.SCRAPPER -> scrapper.getMessageContent(messageId, folderId, read, id).compose(ScrapperExceptionTransformer())
+            Mode.SCRAPPER -> scrapper.getMessageDetails(messageId, folderId, read, id).compose(ScrapperExceptionTransformer()).map { it.mapScrapperMessage() }
             Mode.HYBRID, Mode.API -> mobile.changeMessageStatus(messageId, when (folderId) {
                 1 -> "Odebrane"
                 2 -> "Wysłane"
                 else -> "Usunięte"
-            }, "Widoczna")
-        }
-    }
-
-    fun getMessageAttachment(messageId: Int, folderId: Int): Single<List<Attachment>> {
-        return when (mode) {
-            Mode.HYBRID, Mode.SCRAPPER -> scrapper.getMessageAttachments(messageId, folderId).compose(ScrapperExceptionTransformer()).map { it.mapAttachments() }
-            Mode.API -> throw FeatureNotAvailableException("Message attachments is not available in API mode")
+            }, "Widoczna").map { MessageDetails("", emptyList()) }
         }
     }
 
