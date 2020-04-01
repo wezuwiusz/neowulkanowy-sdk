@@ -1,6 +1,6 @@
 package io.github.wulkanowy.sdk.pojo
 
-data class Attachment(
+data class MessageAttachment(
     val id: Int,
     val messageId: Int,
     val oneDriveId: String,

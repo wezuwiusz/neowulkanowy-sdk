@@ -28,4 +28,9 @@ class Homework {
 
     @Selector(".wartosc", index = 2, regex = "\\[(.+)\\]")
     lateinit var teacherSymbol: String
+
+    @SerializedName("Attachments")
+    var attachments: List<String> = emptyList()
+
+    var _attachments: List<Pair<String, String>> = emptyList()
 }

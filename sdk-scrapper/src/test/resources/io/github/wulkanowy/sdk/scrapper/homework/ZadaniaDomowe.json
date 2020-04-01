@@ -7,13 +7,18 @@
           "Przedmiot": "Naprawa komputera",
           "Pracownik": "Mickiewicz Adam [MA], 25.09.2018",
           "Opis": "Test diagnozujący",
-          "DataModyfikacji": "2017-10-18 00:00:00"
+          "DataModyfikacji": "2017-10-18 00:00:00",
+          "Attachments": []
         },
         {
           "Przedmiot": "Techniki biurowe",
           "Pracownik": "Mateusz Kowal [MK], 25.09.2018",
           "Opis": "Zadania egzaminacyjne:\nstr 231 \nstr 254",
-          "DataModyfikacji": "2017-10-23 00:00:00"
+          "DataModyfikacji": "2017-10-23 00:00:00",
+          "Attachments": [
+            "<a href=\"https://wulkanowy.github.io/\" target=\"_blank\">Strona główna Wulkanowego</a>",
+            "<a href=\"https://github.com/wulkanowy/wulkanowy/\" target=\"_blank\">Repozytorium kodu</a>"
+          ]
         }
       ],
       "Pokazuj": true

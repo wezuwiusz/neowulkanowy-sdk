@@ -2,7 +2,7 @@ package io.github.wulkanowy.sdk.mapper
 
 import io.github.wulkanowy.sdk.mobile.dictionaries.Dictionaries
 import io.github.wulkanowy.sdk.normalizeRecipient
-import io.github.wulkanowy.sdk.pojo.Attachment
+import io.github.wulkanowy.sdk.pojo.MessageAttachment
 import io.github.wulkanowy.sdk.pojo.Message
 import io.github.wulkanowy.sdk.pojo.MessageDetails
 import io.github.wulkanowy.sdk.toLocalDateTime
@@ -60,7 +60,7 @@ fun ScrapperMessage.mapScrapperMessage(): MessageDetails {
     return MessageDetails(
         content = requireNotNull(content),
         attachments = attachments?.map {
-            Attachment(
+            MessageAttachment(
                 id = it.id,
                 messageId = it.messageId,
                 oneDriveId = it.oneDriveId,
