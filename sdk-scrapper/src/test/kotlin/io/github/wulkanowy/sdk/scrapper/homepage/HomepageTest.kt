@@ -40,6 +40,17 @@ class HomepageTest : BaseLocalTest() {
     }
 
     @Test
+    fun getStudentThreats() {
+        server.enqueue(MockResponse().setBody(HomepageTest::class.java.getResource("Index.html").readText()))
+        server.enqueue("GetStudentThreats.json")
+        server.start(3000)
+
+        val threats = repo.getStudentThreats().blockingGet()
+        assertEquals(1, threats.size)
+        assertEquals("Jan Kowalski matematyka", threats[0])
+    }
+
+    @Test
     fun getLastGrades() {
         server.enqueue(MockResponse().setBody(HomepageTest::class.java.getResource("Index.html").readText()))
         server.enqueue(MockResponse().setBody(HomepageTest::class.java.getResource("GetLastNotes.json").readText()))

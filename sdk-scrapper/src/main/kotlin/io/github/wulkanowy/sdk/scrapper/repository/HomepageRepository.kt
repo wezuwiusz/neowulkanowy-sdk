@@ -24,6 +24,13 @@ class HomepageRepository(private val api: HomepageService) {
             .compose(ErrorHandlerTransformer()).map { requireNotNull(it.data) }
     }
 
+    fun getStudentThreats(): Single<List<String>> {
+        return getToken().flatMap { api.getStudentThreats(it) }
+            .compose(ErrorHandlerTransformer()).map { it.data.orEmpty() }.map { it[0].content }.map { res ->
+                res.map { it.name }
+            }
+    }
+
     fun getStudentsTrips(): Single<List<String>> {
         return getToken().flatMap { api.getStudentsTrips(it) }
             .compose(ErrorHandlerTransformer()).map { it.data.orEmpty() }.map { it[0].content }.map { res ->

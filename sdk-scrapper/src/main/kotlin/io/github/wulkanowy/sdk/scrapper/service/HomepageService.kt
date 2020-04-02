@@ -23,6 +23,10 @@ interface HomepageService {
     fun getStudentsTrips(@Field("permissions") token: String): Single<ApiResponse<List<HomepageTileResponse>>>
 
     @FormUrlEncoded
+    @POST("Start.mvc/GetStudentThreats")
+    fun getStudentThreats(@Field("permissions") token: String): Single<ApiResponse<List<HomepageTileResponse>>>
+
+    @FormUrlEncoded
     @POST("Start.mvc/GetLastNotes")
     fun getLastGrades(@Field("permissions") token: String): Single<ApiResponse<List<HomepageTileResponse>>>
 

@@ -498,6 +498,13 @@ class Sdk {
         }
     }
 
+    fun getStudentThreats(): Single<List<String>> {
+        return when (mode) {
+            Mode.HYBRID, Mode.SCRAPPER -> scrapper.getStudentThreats().compose(ScrapperExceptionTransformer())
+            Mode.API -> throw FeatureNotAvailableException("Student threats are not available in API mode")
+        }
+    }
+
     fun getStudentsTrips(): Single<List<String>> {
         return when (mode) {
             Mode.HYBRID, Mode.SCRAPPER -> scrapper.getStudentsTrips().compose(ScrapperExceptionTransformer())

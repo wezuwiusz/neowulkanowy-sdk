@@ -285,6 +285,8 @@ class Scrapper {
 
     fun getSelfGovernments() = homepage.getSelfGovernments()
 
+    fun getStudentThreats() = homepage.getStudentThreats()
+
     fun getStudentsTrips() = homepage.getStudentsTrips()
 
     fun getLastGrades() = homepage.getLastGrades()
