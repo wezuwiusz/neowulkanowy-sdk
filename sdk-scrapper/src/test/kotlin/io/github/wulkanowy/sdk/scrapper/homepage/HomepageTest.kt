@@ -17,6 +17,22 @@ class HomepageTest : BaseLocalTest() {
 
     @Test
     fun getSelfGovernments() {
+        server.enqueue(MockResponse().setBody(HomepageTest::class.java.getResource("Index.html").readText()))
+        server.enqueue("GetSelfGovernments.json")
+        server.start(3000)
+
+        val units = repo.getSelfGovernments().blockingGet()
+        assertEquals(1, units.size)
+        assertEquals("ZST-I", units[0].unitName)
+
+        val members = units[0].people
+        assertEquals(3, members.size)
+        with(members[0]) {
+            assertEquals("Jan Michał Kowalski", name)
+            assertEquals("Przewodniczący", position)
+            assertEquals("3tm (T 17)", division)
+            assertEquals(0, id)
+        }
     }
 
     @Test

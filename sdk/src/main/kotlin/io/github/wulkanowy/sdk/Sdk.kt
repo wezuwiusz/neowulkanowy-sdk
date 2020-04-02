@@ -491,9 +491,9 @@ class Sdk {
         }.map { it.number }
     }
 
-    fun getSelfGovernments(): Single<List<String>> {
+    fun getSelfGovernments(): Single<List<GovernmentUnit>> {
         return when (mode) {
-            Mode.HYBRID, Mode.SCRAPPER -> scrapper.getSelfGovernments().compose(ScrapperExceptionTransformer())
+            Mode.HYBRID, Mode.SCRAPPER -> scrapper.getSelfGovernments().compose(ScrapperExceptionTransformer()).map { it.mapToUnits() }
             Mode.API -> throw FeatureNotAvailableException("Self governments is not available in API mode")
         }
     }

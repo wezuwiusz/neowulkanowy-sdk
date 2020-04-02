@@ -1,6 +1,7 @@
 package io.github.wulkanowy.sdk.scrapper.service
 
 import io.github.wulkanowy.sdk.scrapper.ApiResponse
+import io.github.wulkanowy.sdk.scrapper.home.GovernmentUnit
 import io.github.wulkanowy.sdk.scrapper.home.HomepageTileResponse
 import io.reactivex.Single
 import retrofit2.http.Field
@@ -15,7 +16,7 @@ interface HomepageService {
 
     @FormUrlEncoded
     @POST("Start.mvc/GetSelfGovernments")
-    fun getSelfGovernments(@Field("permissions") token: String): Single<ApiResponse<List<HomepageTileResponse>>>
+    fun getSelfGovernments(@Field("permissions") token: String): Single<ApiResponse<List<GovernmentUnit>>>
 
     @FormUrlEncoded
     @POST("Start.mvc/GetStudentTrips")

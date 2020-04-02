@@ -1,6 +1,7 @@
 package io.github.wulkanowy.sdk.scrapper.repository
 
 import io.github.wulkanowy.sdk.scrapper.getScriptParam
+import io.github.wulkanowy.sdk.scrapper.home.GovernmentUnit
 import io.github.wulkanowy.sdk.scrapper.home.LuckyNumber
 import io.github.wulkanowy.sdk.scrapper.interceptor.ErrorHandlerTransformer
 import io.github.wulkanowy.sdk.scrapper.service.HomepageService
@@ -18,11 +19,9 @@ class HomepageRepository(private val api: HomepageService) {
         }.map { it.apply { token = this } }
     }
 
-    fun getSelfGovernments(): Single<List<String>> {
+    fun getSelfGovernments(): Single<List<GovernmentUnit>> {
         return getToken().flatMap { api.getSelfGovernments(it) }
-            .compose(ErrorHandlerTransformer()).map { it.data.orEmpty() }.map { it[0].content }.map { res ->
-                res.map { it.name }
-            }
+            .compose(ErrorHandlerTransformer()).map { requireNotNull(it.data) }
     }
 
     fun getStudentsTrips(): Single<List<String>> {
