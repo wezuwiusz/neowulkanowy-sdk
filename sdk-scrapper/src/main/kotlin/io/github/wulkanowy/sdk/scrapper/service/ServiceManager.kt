@@ -32,7 +32,6 @@ import java.net.CookiePolicy
 import java.net.URL
 import java.security.KeyStore
 import java.util.concurrent.TimeUnit.SECONDS
-import javax.net.ssl.SSLContext
 import javax.net.ssl.TrustManagerFactory
 import javax.net.ssl.X509TrustManager
 
@@ -73,6 +72,16 @@ class ServiceManager(
         NotLoggedInErrorInterceptor(loginType) to false,
         UserAgentInterceptor(androidVersion, buildTag) to false
     )
+
+    private val trustManager: X509TrustManager by lazy {
+        val trustManagerFactory = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm())
+        trustManagerFactory.init(null as? KeyStore?)
+        val trustManagers = trustManagerFactory.trustManagers
+        if (trustManagers.size != 1 || trustManagers[0] !is X509TrustManager) {
+            throw IllegalStateException("Unexpected default trust managers: $trustManagers")
+        }
+        trustManagers[0] as X509TrustManager
+    }
 
     fun setInterceptor(interceptor: Interceptor, network: Boolean = false) {
         interceptors.add(0, interceptor to network)
@@ -149,19 +158,6 @@ class ServiceManager(
     }
 
     private fun getClientBuilder(errIntercept: Boolean = true, loginIntercept: Boolean = true, separateJar: Boolean = false): OkHttpClient.Builder {
-        val trustManagerFactory = TrustManagerFactory.getInstance(
-            TrustManagerFactory.getDefaultAlgorithm())
-        trustManagerFactory.init(null as? KeyStore?)
-        val trustManagers = trustManagerFactory.trustManagers
-        if (trustManagers.size != 1 || trustManagers[0] !is X509TrustManager) {
-            throw IllegalStateException("Unexpected default trust managers: $trustManagers")
-        }
-        val trustManager = trustManagers[0] as X509TrustManager
-
-        val sslContext = SSLContext.getInstance("TLS")
-        sslContext.init(null, trustManagers, null)
-        // val sslSocketFactory = sslContext.socketFactory
-
         return okHttpClientBuilderFactory.create()
             .callTimeout(25, SECONDS)
             .sslSocketFactory(TLSSocketFactory(), trustManager)
