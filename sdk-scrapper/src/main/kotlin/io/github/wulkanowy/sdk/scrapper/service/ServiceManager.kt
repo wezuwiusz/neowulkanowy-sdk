@@ -5,6 +5,7 @@ import com.google.gson.GsonBuilder
 import io.github.wulkanowy.sdk.scrapper.OkHttpClientBuilderFactory
 import io.github.wulkanowy.sdk.scrapper.Scrapper
 import io.github.wulkanowy.sdk.scrapper.ScrapperException
+import io.github.wulkanowy.sdk.scrapper.TLSSocketFactory
 import io.github.wulkanowy.sdk.scrapper.grades.DateDeserializer
 import io.github.wulkanowy.sdk.scrapper.grades.GradeDate
 import io.github.wulkanowy.sdk.scrapper.interceptor.ErrorInterceptor
@@ -143,9 +144,11 @@ class ServiceManager(
             ).build()
     }
 
+    @Suppress("DEPRECATION")
     private fun getClientBuilder(errIntercept: Boolean = true, loginIntercept: Boolean = true, separateJar: Boolean = false): OkHttpClient.Builder {
         return okHttpClientBuilderFactory.create()
             .callTimeout(25, SECONDS)
+            .sslSocketFactory(TLSSocketFactory())
             .cookieJar(if (!separateJar) JavaNetCookieJar(cookies) else JavaNetCookieJar(CookieManager()))
             .apply {
                 interceptors.forEach {
