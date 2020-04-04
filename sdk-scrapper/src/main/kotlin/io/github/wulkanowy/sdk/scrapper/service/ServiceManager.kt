@@ -160,7 +160,11 @@ class ServiceManager(
     private fun getClientBuilder(errIntercept: Boolean = true, loginIntercept: Boolean = true, separateJar: Boolean = false): OkHttpClient.Builder {
         return okHttpClientBuilderFactory.create()
             .callTimeout(25, SECONDS)
-            .sslSocketFactory(TLSSocketFactory(), trustManager)
+            .apply {
+                if (host == "vulcan.net.pl") {
+                    sslSocketFactory(TLSSocketFactory(), trustManager)
+                }
+            }
             .cookieJar(if (!separateJar) JavaNetCookieJar(cookies) else JavaNetCookieJar(CookieManager()))
             .apply {
                 interceptors.forEach {
