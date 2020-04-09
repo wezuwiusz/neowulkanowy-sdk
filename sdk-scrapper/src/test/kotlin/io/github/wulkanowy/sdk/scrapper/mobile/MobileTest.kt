@@ -27,12 +27,33 @@ class MobileTest : BaseLocalTest() {
     fun devicesTest() {
         listOf(devicesSnp, devicesStudent).map {
             it.apply {
-                assertEquals(2, size)
                 assertEquals("google Android SDK built for x86 (Android 8.1.0)", this[0].name)
                 assertEquals("google (Android SDK) built for x86 (Android 8.1.0)", this[1].name)
-                assertEquals(getDate(2018, 1, 20), this[1].date)
+                assertEquals(getDate(2018, 1, 20), this[1].createDate)
                 assertEquals(321, this[0].id)
             }
+        }
+    }
+
+    @Test
+    fun getDevice_full() {
+        with(devicesStudent[0]) {
+            assertEquals(321, id)
+            assertEquals("google Android SDK built for x86 (Android 8.1.0)", name)
+            assertEquals("374d6203-dc0e-4299-8ca1-14b01e499d22", deviceId)
+            assertEquals(getDate(2018, 1, 20, 22, 35, 30), createDate)
+            assertEquals(getDate(2018, 1, 20, 22, 35, 31), modificationDate)
+        }
+    }
+
+    @Test
+    fun getDevice_nulls() {
+        with(devicesStudent[2]) {
+            assertEquals(214, id)
+            assertEquals(null, name)
+            assertEquals(null, deviceId)
+            assertEquals(getDate(2020, 4, 9, 23, 35, 7), createDate)
+            assertEquals(getDate(2020, 4, 9, 23, 35, 21), modificationDate)
         }
     }
 
