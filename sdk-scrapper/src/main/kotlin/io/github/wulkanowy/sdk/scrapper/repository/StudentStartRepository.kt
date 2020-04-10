@@ -47,7 +47,7 @@ class StudentStartRepository(
                     .sortedByDescending { it.semesterId }
                     .toList()
                     .ifEmpty {
-                        logger.debug("Student $studentId not found in diaries: $diaries")
+                        logger.debug("Student $studentId, class $classId not found in diaries: $diaries")
                         emptyList()
                     }
             }.map {
