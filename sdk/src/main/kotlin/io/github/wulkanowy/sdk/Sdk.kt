@@ -249,8 +249,8 @@ class Sdk {
 
     fun getSubjects(): Single<List<Subject>> {
         return when (mode) {
-            Mode.SCRAPPER -> scrapper.getSubjects().compose(ScrapperExceptionTransformer()).map { it.mapSubjects() }
-            Mode.HYBRID, Mode.API -> mobile.getDictionaries().map { it.subjects }.map { it.mapSubjects() }
+            Mode.HYBRID, Mode.SCRAPPER -> scrapper.getSubjects().compose(ScrapperExceptionTransformer()).map { it.mapSubjects() }
+            Mode.API -> mobile.getDictionaries().map { it.subjects }.map { it.mapSubjects() }
         }
     }
 
