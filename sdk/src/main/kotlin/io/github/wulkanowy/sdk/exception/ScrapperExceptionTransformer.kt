@@ -15,12 +15,12 @@ class ScrapperExceptionTransformer<T : Any?> : SingleTransformer<T, T> {
     override fun apply(upstream: Single<T>): SingleSource<T> {
         return upstream.onErrorResumeNext {
             Single.error(when (it) {
-                is ScrapperFeatureDisabledException -> FeatureDisabledException(it.message.orEmpty())
-                is ScrapperNotLoggedInException -> NotLoggedInException(it.message.orEmpty())
-                is ScrapperServiceUnavailableException -> ServiceUnavailableException(it.message.orEmpty())
-                is ScrapperBadCredentialsException -> BadCredentialsException(it.message.orEmpty())
-                is ScrapperVulcanException -> VulcanException(it.message.orEmpty())
-                is ScrapperApiException -> ApiException(it.message.orEmpty())
+                is ScrapperFeatureDisabledException -> FeatureDisabledException(it.message.orEmpty(), it)
+                is ScrapperNotLoggedInException -> NotLoggedInException(it.message.orEmpty(), it)
+                is ScrapperServiceUnavailableException -> ServiceUnavailableException(it.message.orEmpty(), it)
+                is ScrapperBadCredentialsException -> BadCredentialsException(it.message.orEmpty(), it)
+                is ScrapperVulcanException -> VulcanException(it.message.orEmpty(), it)
+                is ScrapperApiException -> ApiException(it.message.orEmpty(), it)
                 else -> it
             })
         }

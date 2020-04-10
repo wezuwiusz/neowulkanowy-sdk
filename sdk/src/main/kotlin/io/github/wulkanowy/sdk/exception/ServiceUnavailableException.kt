@@ -1,3 +1,3 @@
 package io.github.wulkanowy.sdk.exception
 
-class ServiceUnavailableException internal constructor(message: String) : VulcanException(message)
+class ServiceUnavailableException internal constructor(message: String, cause: Throwable? = null) : VulcanException(message, cause)
