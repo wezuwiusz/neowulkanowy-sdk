@@ -66,4 +66,13 @@ class ErrorInterceptorTest : BaseLocalTest() {
         notes.subscribe(observer)
         observer.assertError(PasswordChangeRequiredException::class.java)
     }
+
+    @Test
+    fun error_unknown() {
+        val notes = getSnpRepo(ErrorInterceptorTest::class.java, "Błąd-adfs.html", Scrapper.LoginType.ADFSLight).getNotes()
+        val observer = TestObserver<List<Note>>()
+        notes.subscribe(observer)
+        observer.assertError(VulcanException::class.java)
+        observer.assertError { it.message?.startsWith("Błąd") == true }
+    }
 }
