@@ -9,6 +9,7 @@ import io.github.wulkanowy.sdk.scrapper.interceptor.ServiceUnavailableException 
 import io.github.wulkanowy.sdk.scrapper.interceptor.VulcanException as ScrapperVulcanException
 import io.github.wulkanowy.sdk.scrapper.login.BadCredentialsException as ScrapperBadCredentialsException
 import io.github.wulkanowy.sdk.scrapper.login.NotLoggedInException as ScrapperNotLoggedInException
+import io.github.wulkanowy.sdk.scrapper.login.PasswordChangeRequiredException as ScrapperPasswordChangeRequiredException
 
 class ScrapperExceptionTransformer<T : Any?> : SingleTransformer<T, T> {
 
@@ -19,6 +20,7 @@ class ScrapperExceptionTransformer<T : Any?> : SingleTransformer<T, T> {
                 is ScrapperNotLoggedInException -> NotLoggedInException(it.message.orEmpty(), it)
                 is ScrapperServiceUnavailableException -> ServiceUnavailableException(it.message.orEmpty(), it)
                 is ScrapperBadCredentialsException -> BadCredentialsException(it.message.orEmpty(), it)
+                is ScrapperPasswordChangeRequiredException -> PasswordChangeRequiredException(it.message.orEmpty(), it.redirectUrl, it)
                 is ScrapperVulcanException -> VulcanException(it.message.orEmpty(), it)
                 is ScrapperApiException -> ApiException(it.message.orEmpty(), it)
                 else -> it
