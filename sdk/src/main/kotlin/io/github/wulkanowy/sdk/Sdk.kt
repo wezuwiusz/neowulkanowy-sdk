@@ -263,11 +263,20 @@ class Sdk {
         }
     }
 
-    fun getGrades(semesterId: Int): Single<List<Grade>> {
+    fun getGrades(semesterId: Int): Single<Pair<List<Grade>, List<GradeSummary>>> {
         return when (mode) {
             Mode.SCRAPPER -> scrapper.getGrades(semesterId).compose(ScrapperExceptionTransformer()).map { grades -> grades.mapGrades() }
             Mode.HYBRID, Mode.API -> mobile.getDictionaries().flatMap { dict ->
-                mobile.getGrades(semesterId).map { it.mapGrades(dict) }
+                mobile.getGrades(semesterId).map { grades -> grades.mapGrades(dict) }
+            }
+        }
+    }
+
+    fun getGradesDetails(semesterId: Int): Single<List<Grade>> {
+        return when (mode) {
+            Mode.SCRAPPER -> scrapper.getGradesDetails(semesterId).compose(ScrapperExceptionTransformer()).map { grades -> grades.mapGradesDetails() }
+            Mode.HYBRID, Mode.API -> mobile.getDictionaries().flatMap { dict ->
+                mobile.getGradesDetails(semesterId).map { it.mapGradesDetails(dict) }
             }
         }
     }

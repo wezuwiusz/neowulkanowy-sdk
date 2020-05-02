@@ -274,7 +274,7 @@ class ScrapperRemoteTest : BaseTest() {
 
     @Test
     fun gradesTest() {
-        val grades = api.getGrades(865)
+        val grades = api.getGradesDetails(865)
         val gradesObserver = TestObserver<List<Grade>>()
         grades.subscribe(gradesObserver)
         gradesObserver.assertComplete()

@@ -48,7 +48,7 @@ class MobileRepository(private val api: MobileService) {
         return api.getTimetable(TimetableRequest(start.toFormat(), end.toFormat(), classId, classificationPeriodId, studentId)).map { requireNotNull(it.data) }
     }
 
-    fun getGrades(classId: Int, classificationPeriodId: Int, studentId: Int): Single<List<Grade>> {
+    fun getGradesDetails(classId: Int, classificationPeriodId: Int, studentId: Int): Single<List<Grade>> {
         return api.getGrades(GradesRequest(classId, classificationPeriodId, studentId)).map { requireNotNull(it.data) }
     }
 

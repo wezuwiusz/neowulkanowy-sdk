@@ -127,10 +127,22 @@ class StudentRepository(private val api: StudentService) {
             .map { it.mapExamsList(startDate, endDate) }
     }
 
-    fun getGrades(semesterId: Int?): Single<List<Grade>> {
+    fun getGrades(semesterId: Int?): Single<Pair<List<Grade>, List<GradeSummary>>> {
+        return api.getGrades(GradeRequest(semesterId))
+            .compose(ErrorHandlerTransformer()).map { requireNotNull(it.data) }
+            .map { it.mapGradesList() to it.mapGradesSummary() }
+    }
+
+    fun getGradesDetails(semesterId: Int?): Single<List<Grade>> {
         return api.getGrades(GradeRequest(semesterId))
             .compose(ErrorHandlerTransformer()).map { requireNotNull(it.data) }
             .map { it.mapGradesList() }
+    }
+
+    fun getGradesSummary(semesterId: Int?): Single<List<GradeSummary>> {
+        return api.getGrades(GradeRequest(semesterId))
+            .compose(ErrorHandlerTransformer()).map { requireNotNull(it.data) }
+            .map { it.mapGradesSummary() }
     }
 
     fun getGradesPartialStatistics(semesterId: Int): Single<List<GradeStatistics>> {
@@ -149,12 +161,6 @@ class StudentRepository(private val api: StudentService) {
         return api.getGradesAnnualStatistics(GradesStatisticsRequest(semesterId))
             .compose(ErrorHandlerTransformer()).map { it.data.orEmpty() }
             .map { it.mapGradesStatisticsAnnual(semesterId) }
-    }
-
-    fun getGradesSummary(semesterId: Int?): Single<List<GradeSummary>> {
-        return api.getGrades(GradeRequest(semesterId))
-            .compose(ErrorHandlerTransformer()).map { requireNotNull(it.data) }
-            .map { it.mapGradesSummary() }
     }
 
     fun getHomework(startDate: LocalDate, endDate: LocalDate? = null): Single<List<Homework>> {

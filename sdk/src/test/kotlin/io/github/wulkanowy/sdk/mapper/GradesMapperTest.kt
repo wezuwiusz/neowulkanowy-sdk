@@ -20,7 +20,7 @@ class GradesMapperTest : BaseLocalTest() {
         server.enqueue("Slowniki.json", BaseLocalTest::class.java)
         server.enqueueAndStart("Oceny.json", GradesTest::class.java)
 
-        val grades = mobile.getGrades(0).blockingGet()
+        val grades = mobile.getGradesDetails(0).blockingGet()
         assertEquals(2, grades.size)
 
         with(grades[0]) {

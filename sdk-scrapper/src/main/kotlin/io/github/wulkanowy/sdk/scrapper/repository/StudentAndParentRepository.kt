@@ -94,7 +94,15 @@ class StudentAndParentRepository(private val api: StudentAndParentService) {
         }
     }
 
-    fun getGrades(semesterId: Int?): Single<List<Grade>> {
+    fun getGrades(semesterId: Int?): Single<Pair<List<Grade>, List<GradeSummary>>> {
+        return getGradesDetails(semesterId).flatMap { details ->
+            getGradesSummary(semesterId).map { summary ->
+                details to summary
+            }
+        }
+    }
+
+    fun getGradesDetails(semesterId: Int?): Single<List<Grade>> {
         return api.getGrades(semesterId).map { res ->
             res.grades.asSequence().map { grade ->
                 grade.apply {

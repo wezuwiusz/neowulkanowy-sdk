@@ -7,15 +7,15 @@ import org.junit.Test
 class GradesTest : BaseLocalTest() {
 
     private val snp by lazy {
-        getSnpRepo(GradesTest::class.java, "OcenyWszystkie-details.html").getGrades(0).blockingGet()
+        getSnpRepo(GradesTest::class.java, "OcenyWszystkie-details.html").getGradesDetails(0).blockingGet()
     }
 
     private val student by lazy {
-        getStudentRepo(GradesTest::class.java, "Oceny.json").getGrades(0).blockingGet()
+        getStudentRepo(GradesTest::class.java, "Oceny.json").getGradesDetails(0).blockingGet()
     }
 
     private val studentPoints by lazy {
-        getStudentRepo(GradesTest::class.java, "Oceny-points.json").getGrades(0).blockingGet()
+        getStudentRepo(GradesTest::class.java, "Oceny-points.json").getGradesDetails(0).blockingGet()
     }
 
     @Test

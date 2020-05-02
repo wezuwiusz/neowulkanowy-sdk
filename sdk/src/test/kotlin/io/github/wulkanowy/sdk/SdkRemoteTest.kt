@@ -79,7 +79,7 @@ class SdkRemoteTest {
             classId = 14
         }
 
-        val grades = sdk.getGrades(1).blockingGet()
+        val grades = sdk.getGradesDetails(1).blockingGet()
         assertEquals(22, grades.size)
     }
 
@@ -103,7 +103,7 @@ class SdkRemoteTest {
             password = "jan123"
         }
 
-        val grades = sdk.getGrades(1).blockingGet()
+        val grades = sdk.getGradesDetails(1).blockingGet()
         assertEquals(22, grades.size)
     }
 

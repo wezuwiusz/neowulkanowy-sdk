@@ -14,7 +14,7 @@ class GradesTest : BaseLocalTest() {
     fun getGrades() {
         server.enqueueAndStart("Oceny.json")
 
-        val items = grades.getGrades(0, 0, 0).blockingGet()
+        val items = grades.getGradesDetails(0, 0, 0).blockingGet()
 
         assertEquals(2, items.size)
     }

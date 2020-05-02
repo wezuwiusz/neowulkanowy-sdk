@@ -126,7 +126,7 @@ class UonetTest {
 
     @Test
     fun gradesTest() {
-        val grades = mobile.getGrades(student.classId, student.classificationPeriodId, student.id)
+        val grades = mobile.getGradesDetails(student.classId, student.classificationPeriodId, student.id)
         val gradesSubscriber = TestObserver<List<Grade>>()
         grades.subscribe(gradesSubscriber)
         gradesSubscriber.assertComplete()

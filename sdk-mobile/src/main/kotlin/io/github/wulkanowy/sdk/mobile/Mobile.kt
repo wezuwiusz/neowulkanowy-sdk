@@ -140,8 +140,16 @@ class Mobile {
         return mobile.getExams(start, end, classId, classificationPeriodId, studentId)
     }
 
-    fun getGrades(classificationPeriodId: Int): Single<List<Grade>> {
-        return mobile.getGrades(classId, classificationPeriodId, studentId)
+    fun getGrades(classificationPeriodId: Int): Single<Pair<List<Grade>, GradesSummaryResponse>> {
+        return getGradesDetails(classificationPeriodId).flatMap { details ->
+            getGradesSummary(classificationPeriodId).map { summary ->
+                details to summary
+            }
+        }
+    }
+
+    fun getGradesDetails(classificationPeriodId: Int): Single<List<Grade>> {
+        return mobile.getGradesDetails(classId, classificationPeriodId, studentId)
     }
 
     fun getGradesSummary(classificationPeriodId: Int): Single<GradesSummaryResponse> {

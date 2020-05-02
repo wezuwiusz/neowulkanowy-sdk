@@ -216,7 +216,9 @@ class Scrapper {
     fun getExams(startDate: LocalDate, endDate: LocalDate? = null) =
         if (useNewStudent) student.getExams(startDate, endDate) else snp.getExams(startDate, endDate)
 
-    fun getGrades(semesterId: Int? = null) = if (useNewStudent) student.getGrades(semesterId) else snp.getGrades(semesterId)
+    fun getGrades(semesterId: Int) = if (useNewStudent) student.getGrades(semesterId) else snp.getGrades(semesterId)
+
+    fun getGradesDetails(semesterId: Int? = null) = if (useNewStudent) student.getGradesDetails(semesterId) else snp.getGradesDetails(semesterId)
 
     fun getGradesSummary(semesterId: Int? = null) = if (useNewStudent) student.getGradesSummary(semesterId) else snp.getGradesSummary(semesterId)
 
