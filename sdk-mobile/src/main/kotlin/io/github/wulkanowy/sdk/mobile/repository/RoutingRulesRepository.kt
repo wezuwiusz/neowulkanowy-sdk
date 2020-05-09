@@ -12,7 +12,7 @@ class RoutingRulesRepository(private val api: RoutingRulesService) {
 
         val tokenSymbol = token.substring(0..2)
 
-        if ("FK1" == tokenSymbol) return Single.just("https://api.fakelog.cf")
+        if ("FK1" == tokenSymbol) return Single.just("https://api.fakelog.tk")
 
         return api.getRoutingRules().map { routes ->
             routes.split("\r?\n".toRegex())
