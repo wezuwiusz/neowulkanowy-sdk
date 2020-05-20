@@ -39,33 +39,8 @@ data class HomeworkDay(
         @SerializedName("AnswerRequired")
         val isAnswerRequired: Boolean,
 
-        //
-        // @SerializedName("TimeLimit")
-        // val timeLimit: Date?,
-        //
         @SerializedName("Attachments")
-        val attachments: List<Attachment>//,
-        //
-        // @SerializedName("AnswerDate")
-        // val answerDate: Date?,
-        //
-        // @SerializedName("TeachersComment")
-        // val teacherComment: String?,
-        //
-        // @SerializedName("Answer")
-        // val answer: String?,
-        //
-        // @SerializedName("AnswerAttachments")
-        // val answerAttachments: List<String>,
-        //
-        // @SerializedName("CanReply")
-        // val canReplay: Boolean,
-        //
-        // @SerializedName("Readonly")
-        // val readOnly: Boolean,
-        //
-        // @SerializedName("Id")
-        // val id: Long
+        val attachments: List<Attachment>
     ) {
         data class Attachment(
 
