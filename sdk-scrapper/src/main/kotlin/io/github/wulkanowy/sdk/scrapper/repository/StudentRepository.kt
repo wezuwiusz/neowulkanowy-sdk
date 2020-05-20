@@ -14,6 +14,7 @@ import io.github.wulkanowy.sdk.scrapper.attendance.mapAttendanceSummaryList
 import io.github.wulkanowy.sdk.scrapper.exams.Exam
 import io.github.wulkanowy.sdk.scrapper.exams.ExamRequest
 import io.github.wulkanowy.sdk.scrapper.exams.mapExamsList
+import io.github.wulkanowy.sdk.scrapper.exception.InvalidPathException
 import io.github.wulkanowy.sdk.scrapper.getSchoolYear
 import io.github.wulkanowy.sdk.scrapper.getScriptParam
 import io.github.wulkanowy.sdk.scrapper.grades.Grade
@@ -28,6 +29,8 @@ import io.github.wulkanowy.sdk.scrapper.grades.mapGradesStatisticsPartial
 import io.github.wulkanowy.sdk.scrapper.grades.mapGradesStatisticsPoints
 import io.github.wulkanowy.sdk.scrapper.grades.mapGradesSummary
 import io.github.wulkanowy.sdk.scrapper.homework.Homework
+import io.github.wulkanowy.sdk.scrapper.homework.HomeworkRequest
+import io.github.wulkanowy.sdk.scrapper.homework.mapHomework
 import io.github.wulkanowy.sdk.scrapper.homework.mapHomeworkList
 import io.github.wulkanowy.sdk.scrapper.interceptor.ErrorHandlerTransformer
 import io.github.wulkanowy.sdk.scrapper.interceptor.FeatureDisabledException
@@ -164,9 +167,15 @@ class StudentRepository(private val api: StudentService) {
     }
 
     fun getHomework(startDate: LocalDate, endDate: LocalDate? = null): Single<List<Homework>> {
-        return api.getHomework(ExamRequest(startDate.toDate(), startDate.getSchoolYear()))
-            .compose(ErrorHandlerTransformer()).map { it.data.orEmpty() }
-            .map { it.mapHomeworkList(startDate, endDate) }
+        return api.getHomework(HomeworkRequest(startDate.toDate(), startDate.getSchoolYear(), -1))
+            .compose(ErrorHandlerTransformer())
+            .map { it.data.orEmpty().mapHomework(startDate, endDate) }
+            .onErrorResumeNext { t ->
+                if (t is InvalidPathException) api.getZadaniaDomowe(ExamRequest(startDate.toDate(), startDate.getSchoolYear()))
+                    .compose(ErrorHandlerTransformer())
+                    .map { it.data.orEmpty().mapHomeworkList(startDate, endDate) }
+                else Single.error(t)
+            }
     }
 
     fun getNotes(): Single<List<Note>> {

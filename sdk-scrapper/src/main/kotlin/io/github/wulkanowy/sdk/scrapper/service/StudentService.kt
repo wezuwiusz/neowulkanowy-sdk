@@ -14,6 +14,8 @@ import io.github.wulkanowy.sdk.scrapper.grades.GradeRequest
 import io.github.wulkanowy.sdk.scrapper.grades.GradesResponse
 import io.github.wulkanowy.sdk.scrapper.grades.GradesStatisticsRequest
 import io.github.wulkanowy.sdk.scrapper.grades.GradesStatisticsResponse
+import io.github.wulkanowy.sdk.scrapper.homework.HomeworkDay
+import io.github.wulkanowy.sdk.scrapper.homework.HomeworkRequest
 import io.github.wulkanowy.sdk.scrapper.homework.HomeworkResponse
 import io.github.wulkanowy.sdk.scrapper.mobile.Device
 import io.github.wulkanowy.sdk.scrapper.mobile.TokenResponse
@@ -93,8 +95,11 @@ interface StudentService {
     @POST("Sprawdziany.mvc/Get")
     fun getExams(@Body examRequest: ExamRequest): Single<ApiResponse<List<ExamResponse>>>
 
+    @POST("ZadaniaDomowe.mvc/Get")
+    fun getZadaniaDomowe(@Body homeworkRequest: ExamRequest): Single<ApiResponse<List<HomeworkResponse>>>
+
     @POST("Homework.mvc/Get")
-    fun getHomework(@Body homeworkRequest: ExamRequest): Single<ApiResponse<List<HomeworkResponse>>>
+    fun getHomework(@Body homeworkRequest: HomeworkRequest): Single<ApiResponse<List<HomeworkDay>>>
 
     @POST("PlanZajec.mvc/Get")
     fun getTimetable(@Body timetableRequest: TimetableRequest): Single<ApiResponse<TimetableResponse>>
