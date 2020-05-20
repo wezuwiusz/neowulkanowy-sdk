@@ -93,7 +93,7 @@ interface StudentService {
     @POST("Sprawdziany.mvc/Get")
     fun getExams(@Body examRequest: ExamRequest): Single<ApiResponse<List<ExamResponse>>>
 
-    @POST("ZadaniaDomowe.mvc/Get")
+    @POST("Homework.mvc/Get")
     fun getHomework(@Body homeworkRequest: ExamRequest): Single<ApiResponse<List<HomeworkResponse>>>
 
     @POST("PlanZajec.mvc/Get")
