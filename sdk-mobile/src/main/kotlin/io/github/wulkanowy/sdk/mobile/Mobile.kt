@@ -91,9 +91,9 @@ class Mobile {
         }
     }
 
-    fun getCertificate(token: String, pin: String, symbol: String, deviceName: String, androidVersion: String): Single<CertificateResponse> {
+    fun getCertificate(token: String, pin: String, symbol: String, deviceName: String, androidVer: String, firebaseToken: String): Single<CertificateResponse> {
         return routes.getRouteByToken(token).flatMap { baseUrl ->
-            serviceManager.getRegisterRepository(baseUrl, symbol).getCertificate(token, pin, deviceName, androidVersion)
+            serviceManager.getRegisterRepository(baseUrl, symbol).getCertificate(token, pin, deviceName, androidVer, firebaseToken)
         }
     }
 

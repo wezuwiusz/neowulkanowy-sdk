@@ -64,7 +64,7 @@ class UonetTest {
                 .build().create()
             )
 
-            val certificate = register.getCertificate(TOKEN, PIN, DEVICE_NAME, "8.1.0")
+            val certificate = register.getCertificate(TOKEN, PIN, DEVICE_NAME, "8.1.0", "")
             val certSubscriber = TestObserver<CertificateResponse>()
             certificate.subscribe(certSubscriber)
             certSubscriber.assertComplete()

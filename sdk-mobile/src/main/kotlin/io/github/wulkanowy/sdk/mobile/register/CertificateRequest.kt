@@ -31,6 +31,9 @@ data class CertificateRequest(
     val deviceSystemType: String = "Android",
 
     @SerializedName("DeviceSystemVersion")
-    val deviceSystemVersion: String = "8.1.0"
+    val deviceSystemVersion: String = "8.1.0",
+
+    @SerializedName("FirebaseTokenKey")
+    val firebaseToken: String
 
 ) : ApiRequest()

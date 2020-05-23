@@ -9,8 +9,14 @@ import io.reactivex.Single
 
 class RegisterRepository(private val api: RegisterService) {
 
-    fun getCertificate(token: String, pin: String, deviceName: String, androidVersion: String): Single<CertificateResponse> {
-        return api.getCertificate(CertificateRequest(tokenKey = token, pin = pin, deviceName = "$deviceName (Wulkanowy)", deviceSystemVersion = androidVersion))
+    fun getCertificate(token: String, pin: String, deviceName: String, android: String, firebaseToken: String): Single<CertificateResponse> {
+        return api.getCertificate(CertificateRequest(
+            tokenKey = token,
+            pin = pin,
+            deviceName = "$deviceName (Wulkanowy)",
+            deviceSystemVersion = android,
+            firebaseToken = firebaseToken
+        ))
     }
 
     fun getStudents(): Single<List<Student>> = api.getPupils(object : ApiRequest() {}).map { requireNotNull(it.data) }

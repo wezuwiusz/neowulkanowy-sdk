@@ -21,7 +21,7 @@ class SdkRemoteTest {
     fun getStudents_api() {
         val sdk = Sdk()
         sdk.setSimpleHttpLogger { println(it) }
-        val students = sdk.getStudentsFromMobileApi(token = "FK100000", pin = "999999", symbol = "powiatwulkanowy", apiKey = API_KEY).blockingGet()
+        val students = sdk.getStudentsFromMobileApi(token = "FK100000", pin = "999999", symbol = "powiatwulkanowy", apiKey = API_KEY, firebaseToken = "").blockingGet()
         assertEquals(2, students.size)
     }
 
@@ -41,7 +41,7 @@ class SdkRemoteTest {
             // mode = Sdk.Mode.HYBRID
         }
 
-        val students = sdk.getStudentsHybrid(email = "jan@fakelog.cf", password = "jan123", apiKey = API_KEY, scrapperBaseUrl = "http://fakelog.cf", startSymbol = "powiatwulkanowy").blockingGet()
+        val students = sdk.getStudentsHybrid(email = "jan@fakelog.cf", password = "jan123", apiKey = API_KEY, scrapperBaseUrl = "http://fakelog.cf", startSymbol = "powiatwulkanowy", firebaseToken = "").blockingGet()
         assertEquals(6, students.size)
     }
 

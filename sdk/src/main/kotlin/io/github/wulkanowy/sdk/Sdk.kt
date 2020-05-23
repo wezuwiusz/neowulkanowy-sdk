@@ -173,8 +173,8 @@ class Sdk {
         return scrapper.sendPasswordResetRequest(registerBaseUrl, symbol, email, captchaCode)
     }
 
-    fun getStudentsFromMobileApi(token: String, pin: String, symbol: String, apiKey: String = ""): Single<List<Student>> {
-        return mobile.getCertificate(token, pin, symbol, buildTag, androidVersion)
+    fun getStudentsFromMobileApi(token: String, pin: String, symbol: String, firebaseToken: String, apiKey: String = ""): Single<List<Student>> {
+        return mobile.getCertificate(token, pin, symbol, buildTag, androidVersion, firebaseToken)
             .flatMap { mobile.getStudents(it, apiKey) }
             .map { it.mapStudents(symbol) }
     }
@@ -189,7 +189,7 @@ class Sdk {
         }
     }
 
-    fun getStudentsHybrid(email: String, password: String, scrapperBaseUrl: String, startSymbol: String = "Default", apiKey: String = ""): Single<List<Student>> {
+    fun getStudentsHybrid(email: String, password: String, scrapperBaseUrl: String, firebaseToken: String, startSymbol: String = "Default", apiKey: String = ""): Single<List<Student>> {
         return getStudentsFromScrapper(email, password, scrapperBaseUrl, startSymbol)
             .compose(ScrapperExceptionTransformer())
             .map { students -> students.distinctBy { it.symbol } }
@@ -204,7 +204,7 @@ class Sdk {
                     it.loginType = Scrapper.LoginType.valueOf(scrapperStudent.loginType.name)
                 }
                 scrapper.getToken().compose(ScrapperExceptionTransformer())
-                    .flatMap { getStudentsFromMobileApi(it.token, it.pin, it.symbol, apiKey) }
+                    .flatMap { getStudentsFromMobileApi(it.token, it.pin, it.symbol, firebaseToken, apiKey) }
                     .map { apiStudents ->
                         apiStudents.map { student ->
                             student.copy(
