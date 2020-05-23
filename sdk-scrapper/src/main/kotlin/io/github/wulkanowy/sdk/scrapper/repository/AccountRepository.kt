@@ -59,7 +59,7 @@ class AccountRepository(private val account: AccountService) {
     private fun getPasswordResetUrl(registerBaseUrl: String, symbol: String): Single<Pair<Scrapper.LoginType, String>> {
         val url = URL(registerBaseUrl)
         return Single.just(when (url.host) {
-            "fakelog.cf" -> STANDARD to "https://cufs.fakelog.cf/Default/AccountManage/UnlockAccount"
+            "fakelog.cf", "fakelog.tk" -> STANDARD to "https://cufs.fakelog.cf/Default/AccountManage/UnlockAccount"
             "eszkola.opolskie.pl" -> ADFSCards to "https://konta.eszkola.opolskie.pl/maintenance/unlock.aspx"
             "edu.gdansk.pl" -> ADFS to "https://konta.edu.gdansk.pl/maintenance/unlock.aspx"
             "edu.lublin.eu" -> ADFSLightCufs to "https://logowanie.edu.lublin.eu/AccountManage/UnlockAccountRequest"
