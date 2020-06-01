@@ -7,6 +7,10 @@ import io.github.wulkanowy.sdk.scrapper.Scrapper.LoginType.ADFSLight
 import io.github.wulkanowy.sdk.scrapper.Scrapper.LoginType.ADFSLightScoped
 import io.github.wulkanowy.sdk.scrapper.Scrapper.LoginType.STANDARD
 import io.github.wulkanowy.sdk.scrapper.login.NotLoggedInException
+import io.github.wulkanowy.sdk.scrapper.repository.AccountRepository.Companion.SELECTOR_ADFS
+import io.github.wulkanowy.sdk.scrapper.repository.AccountRepository.Companion.SELECTOR_ADFS_CARDS
+import io.github.wulkanowy.sdk.scrapper.repository.AccountRepository.Companion.SELECTOR_ADFS_LIGHT
+import io.github.wulkanowy.sdk.scrapper.repository.AccountRepository.Companion.SELECTOR_STANDARD
 import okhttp3.Interceptor
 import okhttp3.Response
 import org.jsoup.Jsoup
@@ -26,10 +30,10 @@ class NotLoggedInErrorInterceptor(private val loginType: LoginType) : Intercepto
         }
 
         if (when (loginType) {
-                STANDARD -> doc.select(".loginButton, .LogOnBoard input[type=submit]")
-                ADFS -> doc.select("form[name=form1] #SubmitButton")
-                ADFSLight, ADFSLightScoped -> doc.select(".submit-button, form #SubmitButton")
-                ADFSCards -> doc.select("#PassiveSignInButton")
+                STANDARD -> doc.select(SELECTOR_STANDARD)
+                ADFS -> doc.select(SELECTOR_ADFS)
+                ADFSLight, ADFSLightScoped -> doc.select(SELECTOR_ADFS_LIGHT)
+                ADFSCards -> doc.select(SELECTOR_ADFS_CARDS)
                 else -> Elements()
             }.isNotEmpty()
         ) {

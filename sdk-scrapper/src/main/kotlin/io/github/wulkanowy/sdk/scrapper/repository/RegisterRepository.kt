@@ -12,6 +12,10 @@ import io.github.wulkanowy.sdk.scrapper.login.LoginHelper
 import io.github.wulkanowy.sdk.scrapper.register.SendCertificateResponse
 import io.github.wulkanowy.sdk.scrapper.register.Student
 import io.github.wulkanowy.sdk.scrapper.register.StudentAndParentResponse
+import io.github.wulkanowy.sdk.scrapper.repository.AccountRepository.Companion.SELECTOR_ADFS
+import io.github.wulkanowy.sdk.scrapper.repository.AccountRepository.Companion.SELECTOR_ADFS_CARDS
+import io.github.wulkanowy.sdk.scrapper.repository.AccountRepository.Companion.SELECTOR_ADFS_LIGHT
+import io.github.wulkanowy.sdk.scrapper.repository.AccountRepository.Companion.SELECTOR_STANDARD
 import io.github.wulkanowy.sdk.scrapper.service.RegisterService
 import io.github.wulkanowy.sdk.scrapper.service.ServiceManager
 import io.github.wulkanowy.sdk.scrapper.service.StudentAndParentService
@@ -100,9 +104,9 @@ class RegisterRepository(
     private fun getLoginType(urlGenerator: ServiceManager.UrlGenerator): Single<Scrapper.LoginType> {
         return register.getFormType(urlGenerator.generate(ServiceManager.UrlGenerator.Site.LOGIN) + "Account/LogOn").map { it.page }.map {
             when {
-                it.select(".LogOnBoard input[type=submit]").isNotEmpty() -> Scrapper.LoginType.STANDARD
-                it.select("form[name=form1] #SubmitButton").isNotEmpty() -> Scrapper.LoginType.ADFS
-                it.select(".submit-button, form #SubmitButton").isNotEmpty() -> {
+                it.select(SELECTOR_STANDARD).isNotEmpty() -> Scrapper.LoginType.STANDARD
+                it.select(SELECTOR_ADFS).isNotEmpty() -> Scrapper.LoginType.ADFS
+                it.select(SELECTOR_ADFS_LIGHT).isNotEmpty() -> {
                     it.selectFirst("form").attr("action").run {
                         when {
                             contains("cufs.edu.lublin.eu") -> Scrapper.LoginType.ADFSLightCufs
@@ -112,7 +116,7 @@ class RegisterRepository(
                         }
                     }
                 }
-                it.select("#PassiveSignInButton").isNotEmpty() -> Scrapper.LoginType.ADFSCards
+                it.select(SELECTOR_ADFS_CARDS).isNotEmpty() -> Scrapper.LoginType.ADFSCards
                 else -> throw ScrapperException("Nieznany typ dziennika")
             }
         }

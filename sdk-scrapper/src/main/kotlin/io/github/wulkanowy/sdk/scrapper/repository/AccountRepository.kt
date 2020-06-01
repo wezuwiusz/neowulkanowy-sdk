@@ -20,6 +20,13 @@ import java.net.URL
 
 class AccountRepository(private val account: AccountService) {
 
+    companion object {
+        const val SELECTOR_STANDARD = ".loginButton, .LogOnBoard input[type=submit]" // remove second selector?
+        const val SELECTOR_ADFS = "form[name=form1] #SubmitButton"
+        const val SELECTOR_ADFS_LIGHT = ".submit-button, form #SubmitButton"
+        const val SELECTOR_ADFS_CARDS = "#PassiveSignInButton"
+    }
+
     fun getPasswordResetCaptcha(registerBaseUrl: String, symbol: String): Single<Pair<String, String>> {
         return getPasswordResetUrl(registerBaseUrl, symbol.trim()).flatMap { (_, resetUrl) ->
             account.getPasswordResetPageWithCaptcha(resetUrl)
@@ -82,9 +89,9 @@ class AccountRepository(private val account: AccountService) {
     private fun getLoginType(urlGenerator: ServiceManager.UrlGenerator): Single<Scrapper.LoginType> {
         return account.getFormType(urlGenerator.generate(ServiceManager.UrlGenerator.Site.LOGIN) + "Account/LogOn").map { it.page }.map {
             when {
-                it.select(".LogOnBoard input[type=submit]").isNotEmpty() -> STANDARD
-                it.select("form[name=form1] #SubmitButton").isNotEmpty() -> ADFS
-                it.select(".submit-button, form #SubmitButton").isNotEmpty() -> {
+                it.select(SELECTOR_STANDARD).isNotEmpty() -> STANDARD
+                it.select(SELECTOR_ADFS).isNotEmpty() -> ADFS
+                it.select(SELECTOR_ADFS_LIGHT).isNotEmpty() -> {
                     it.selectFirst("form").attr("action").run {
                         when {
                             contains("cufs.edu.lublin.eu") -> ADFSLightCufs
@@ -94,7 +101,7 @@ class AccountRepository(private val account: AccountService) {
                         }
                     }
                 }
-                it.select("#PassiveSignInButton").isNotEmpty() -> ADFSCards
+                it.select(SELECTOR_ADFS_CARDS).isNotEmpty() -> ADFSCards
                 else -> throw ScrapperException("Nieznany typ dziennika '${it.select("title")}")
             }
         }
