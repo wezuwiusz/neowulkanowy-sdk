@@ -106,7 +106,7 @@ class MessagesRepository(private val api: MessagesService) {
                         content = content
                     )
                 ),
-                getScriptParam("antiForgeryToken", res).ifBlank { throw ScrapperException("antiForgeryToken is empty") },
+                getScriptParam("antiForgeryToken", res).ifBlank { throw ScrapperException("Can't find antiForgeryToken property!") },
                 getScriptParam("appGuid", res),
                 getScriptParam("version", res)
             )
