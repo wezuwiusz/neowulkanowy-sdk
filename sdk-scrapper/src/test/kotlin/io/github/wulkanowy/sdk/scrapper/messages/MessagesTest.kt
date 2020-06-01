@@ -1,6 +1,7 @@
 package io.github.wulkanowy.sdk.scrapper.messages
 
 import io.github.wulkanowy.sdk.scrapper.BaseLocalTest
+import io.github.wulkanowy.sdk.scrapper.Scrapper
 import io.github.wulkanowy.sdk.scrapper.ScrapperException
 import io.github.wulkanowy.sdk.scrapper.login.LoginTest
 import io.github.wulkanowy.sdk.scrapper.repository.MessagesRepository
@@ -205,14 +206,15 @@ class MessagesTest : BaseLocalTest() {
     @Test
     fun sendMessage_error() {
         server.enqueue("ADFSLight-form-resman.html", LoginTest::class.java)
-        server.enqueue("WyslanaWiadomosc.json")
         server.start(3000)
 
+        val api = MessagesRepository(getService(MessagesService::class.java, "http://fakelog.localhost:3000/", false, loginType = Scrapper.LoginType.ADFSLight))
         val sent = api.sendMessage("Temat", "Treść", listOf())
         val observer = TestObserver<SentMessage>()
         sent.subscribe(observer)
         observer.assertNotComplete()
         observer.assertError(ScrapperException::class.java)
+        observer.assertErrorMessage("User not logged in")
     }
 
     @Test
