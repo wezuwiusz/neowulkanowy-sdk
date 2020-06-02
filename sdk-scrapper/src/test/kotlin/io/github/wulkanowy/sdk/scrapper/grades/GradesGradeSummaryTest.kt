@@ -18,6 +18,10 @@ class GradesGradeSummaryTest : BaseLocalTest() {
         getStudentRepo(GradesTest::class.java, "Oceny.json").getGradesSummary(0).blockingGet()
     }
 
+    private val studentPoints by lazy {
+        getStudentRepo(GradesTest::class.java, "Oceny-points.json").getGradesSummary(0).blockingGet()
+    }
+
     @Test
     fun getSummaryStd_longPredictedAndFinal() {
         std[0].run {
@@ -80,5 +84,18 @@ class GradesGradeSummaryTest : BaseLocalTest() {
                 assertEquals("5-", final)
             }
         }
+    }
+
+    @Test
+    fun getSummaryPoints_disabled() {
+        student.forEach {
+            assertEquals("", it.pointsSum)
+        }
+    }
+
+    @Test
+    fun getSummaryPoints_enabled() {
+        assertEquals("", studentPoints[0].pointsSum)
+        assertEquals("123/200 (61%)", studentPoints[1].pointsSum)
     }
 }
