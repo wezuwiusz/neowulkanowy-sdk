@@ -12,7 +12,7 @@ class ErrorHandlerTransformer<T : Any?> : SingleTransformer<ApiResponse<T>, ApiR
 
     override fun apply(upstream: Single<ApiResponse<T>>): SingleSource<ApiResponse<T>> {
         return upstream.map { res ->
-            if (!res.success) throw res.feedback.run {
+            if (!res.success && res.feedback != null) throw res.feedback.run {
                 when {
                     message.contains("niespójność danych") -> ScrapperException(message)
                     message.contains("Brak uprawnień") -> AccountPermissionException(message)
@@ -23,8 +23,7 @@ class ErrorHandlerTransformer<T : Any?> : SingleTransformer<ApiResponse<T>, ApiR
                     message.contains("The parameters dictionary contains a null entry for parameter") -> InvalidPathException(message)
                     else -> VulcanException(message)
                 }
-            }
-            else res
+            } else res
         }
     }
 }

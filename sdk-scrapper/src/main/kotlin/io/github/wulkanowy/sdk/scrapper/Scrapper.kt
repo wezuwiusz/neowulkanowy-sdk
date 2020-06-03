@@ -283,7 +283,7 @@ class Scrapper {
 
     fun sendMessage(subject: String, content: String, recipients: List<Recipient>) = messages.sendMessage(subject, content, recipients)
 
-    fun deleteMessages(messages: List<Pair<Int, Int>>) = this.messages.deleteMessages(messages)
+    fun deleteMessages(messagesToDelete: List<Pair<Int, Int>>) = messages.deleteMessages(messagesToDelete)
 
     fun getSelfGovernments() = homepage.getSelfGovernments()
 

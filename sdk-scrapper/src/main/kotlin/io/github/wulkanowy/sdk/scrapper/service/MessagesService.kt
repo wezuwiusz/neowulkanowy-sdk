@@ -65,5 +65,5 @@ interface MessagesService {
         @Header("X-V-RequestVerificationToken") token: String,
         @Header("X-V-AppGuid") appGuid: String,
         @Header("X-V-AppVersion") appVersion: String
-    ): Single<ApiResponse<Nothing>>
+    ): Single<String>
 }

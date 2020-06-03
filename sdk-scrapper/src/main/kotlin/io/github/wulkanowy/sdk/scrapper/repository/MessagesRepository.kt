@@ -1,5 +1,7 @@
 package io.github.wulkanowy.sdk.scrapper.repository
 
+import com.google.gson.Gson
+import io.github.wulkanowy.sdk.scrapper.ApiResponse
 import io.github.wulkanowy.sdk.scrapper.ScrapperException
 import io.github.wulkanowy.sdk.scrapper.getScriptParam
 import io.github.wulkanowy.sdk.scrapper.interceptor.ErrorHandlerTransformer
@@ -126,6 +128,9 @@ class MessagesRepository(private val api: MessagesService) {
                 getScriptParam("appGuid", res),
                 getScriptParam("version", res)
             )
+        }.flatMap {
+            if (it.isBlank()) Single.just(ApiResponse(true, null))
+            else Single.just(Gson().fromJson(it, ApiResponse::class.java))
         }.compose(ErrorHandlerTransformer()).map { it.success }
     }
 
