@@ -5,17 +5,14 @@ import java.util.Date
 
 class CacheResponse {
 
-    @SerializedName("czyOpiekun")
+    @SerializedName("isParentUser")
     var isParent: Boolean = false
 
     @SerializedName("poryLekcji")
     lateinit var times: List<Time>
 
-    @SerializedName("czyJadlospis")
+    @SerializedName("isMenuOn")
     var isMenu: Boolean = false
-
-    @SerializedName("czyOplaty")
-    var isFees: Boolean = false
 
     @SerializedName("pokazLekcjeZrealizowane")
     var showCompletedLessons: Boolean = false

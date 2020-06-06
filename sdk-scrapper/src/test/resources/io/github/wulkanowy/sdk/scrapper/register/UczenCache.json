@@ -1,8 +1,17 @@
 {
   "data": {
-    "czyOpiekun": false,
-    "czyJadlospis": false,
-    "czyOplaty": false,
+    "isParentUser": false,
+    "isPupilUser": true,
+    "googleDriveApiKey": "",
+    "infoCookieUrl": "http://www.vulcan.edu.pl/pliki-cookies-w-aplikacjach-hostowanych",
+    "googleDriveClientId": "",
+    "isDostepOffice": false,
+    "isGoogleDriveAttachmentsOn": false,
+    "isMenuOn": false,
+    "isO365PassOff": false,
+    "isO365LoginOff": false,
+    "isOneDriveAttachmentsOn": false,
+    "oneDriveClientId": "",
     "poryLekcji": [
       {
         "Id": 76,
@@ -125,6 +134,7 @@
         "OkresDataOd": null
       }
     ],
+    "pokazLekcjeZaplanowane": true,
     "pokazLekcjeZrealizowane": true,
     "serverDate": "2019-01-27 17:58:14"
   },
