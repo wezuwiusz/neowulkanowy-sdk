@@ -50,6 +50,7 @@ interface StudentService {
     ): Single<ApiResponse<CacheResponse>>
 
     @POST("UczenCache.mvc/Get")
+    @Headers("Content-Type: application/json")
     fun getUserCache(
         @Header("X-V-RequestVerificationToken") token: String,
         @Header("X-V-AppGuid") appGuid: String,
