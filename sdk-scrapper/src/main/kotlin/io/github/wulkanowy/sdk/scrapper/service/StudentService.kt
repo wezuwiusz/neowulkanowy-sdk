@@ -31,6 +31,7 @@ import io.reactivex.Single
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.Header
+import retrofit2.http.Headers
 import retrofit2.http.POST
 import retrofit2.http.Url
 
@@ -40,6 +41,7 @@ interface StudentService {
     fun getStart(@Url url: String): Single<String>
 
     @POST
+    @Headers("Content-Type: application/json")
     fun getUserCache(
         @Url url: String,
         @Header("X-V-RequestVerificationToken") token: String,
