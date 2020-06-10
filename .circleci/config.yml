@@ -64,5 +64,7 @@ workflows:
         requires:
           - test
         filters:
-            tags:
-                only: /\d+\.\d+\.\d+/
+          branches:
+            ignore: /.*/
+          tags:
+            only: /\d+\.\d+\.\d+/
