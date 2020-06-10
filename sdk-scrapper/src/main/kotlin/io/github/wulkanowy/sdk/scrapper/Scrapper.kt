@@ -117,6 +117,8 @@ class Scrapper {
 
     var useNewStudent: Boolean = true
 
+    var emptyCookieJarInterceptor: Boolean = false
+
     /**
      * @see <a href="https://deviceatlas.com/blog/most-popular-android-smartphones#poland">The most popular Android phones - 2018</a>
      * @see <a href="http://www.tera-wurfl.com/explore/?action=wurfl_id&id=samsung_sm_j500h_ver1">Tera-WURFL Explorer - Samsung SM-J500H (Galaxy J5)</a>
@@ -146,12 +148,26 @@ class Scrapper {
     private val okHttpFactory by lazy { OkHttpClientBuilderFactory() }
 
     private val serviceManager by resettableLazy(changeManager) {
-        ServiceManager(okHttpFactory, logLevel, loginType, schema, host, normalizedSymbol, email, password, schoolSymbol, studentId, diaryId, schoolYear, androidVersion, buildTag)
-            .apply {
-                appInterceptors.forEach { (interceptor, isNetwork) ->
-                    setInterceptor(interceptor, isNetwork)
-                }
+        ServiceManager(
+            okHttpClientBuilderFactory = okHttpFactory,
+            logLevel = logLevel,
+            loginType = loginType,
+            schema = schema,
+            host = host,
+            symbol = normalizedSymbol,
+            email = email,
+            password = password,
+            schoolSymbol = schoolSymbol,
+            studentId = studentId,
+            diaryId = diaryId,
+            schoolYear = schoolYear,
+            androidVersion = androidVersion,
+            buildTag = buildTag
+        ).apply {
+            appInterceptors.forEach { (interceptor, isNetwork) ->
+                setInterceptor(interceptor, isNetwork)
             }
+        }
     }
 
     private val account by lazy { AccountRepository(serviceManager.getAccountService()) }
@@ -161,21 +177,30 @@ class Scrapper {
             normalizedSymbol, email, password, useNewStudent,
             LoginHelper(loginType, schema, host, normalizedSymbol, serviceManager.getCookieManager(), serviceManager.getLoginService()),
             serviceManager.getRegisterService(),
-            serviceManager.getSnpService(withLogin = false, interceptor = false),
-            serviceManager.getStudentService(withLogin = false, interceptor = false),
+            serviceManager.getSnpService(withLogin = false, studentInterceptor = false),
+            serviceManager.getStudentService(withLogin = false, studentInterceptor = false),
             serviceManager.urlGenerator
         )
     }
 
     private val snpStart by resettableLazy(changeManager) {
         if (0 == studentId) throw ScrapperException("Student id is not set")
-        StudentAndParentStartRepository(normalizedSymbol, schoolSymbol, studentId, serviceManager.getSnpService(withLogin = true, interceptor = false))
+        StudentAndParentStartRepository(
+            symbol = normalizedSymbol,
+            schoolSymbol = schoolSymbol,
+            studentId = studentId,
+            api = serviceManager.getSnpService(withLogin = true, studentInterceptor = false, emptyCookieJarIntercept = emptyCookieJarInterceptor)
+        )
     }
 
     private val studentStart by resettableLazy(changeManager) {
         if (0 == studentId) throw ScrapperException("Student id is not set")
         if (0 == classId) throw ScrapperException("Class id is not set")
-        StudentStartRepository(studentId, classId, serviceManager.getStudentService(withLogin = true, interceptor = false))
+        StudentStartRepository(
+            studentId = studentId,
+            classId = classId,
+            api = serviceManager.getStudentService(withLogin = true, studentInterceptor = false, emptyCookieJarIntercept = emptyCookieJarInterceptor)
+        )
     }
 
     private val snp by resettableLazy(changeManager) {
