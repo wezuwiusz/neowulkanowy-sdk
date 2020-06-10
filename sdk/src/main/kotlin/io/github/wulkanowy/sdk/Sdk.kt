@@ -145,6 +145,12 @@ class Sdk {
             scrapper.buildTag = value
         }
 
+    var emptyCookieJarInterceptor: Boolean = false
+        set(value) {
+            field = value
+            scrapper.emptyCookieJarInterceptor = value
+        }
+
     private val interceptors: MutableList<Pair<Interceptor, Boolean>> = mutableListOf()
 
     fun setSimpleHttpLogger(logger: (String) -> Unit) {
