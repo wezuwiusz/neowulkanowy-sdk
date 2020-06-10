@@ -4,6 +4,7 @@ import io.github.wulkanowy.sdk.scrapper.Scrapper.LoginType
 import io.github.wulkanowy.sdk.scrapper.Scrapper.LoginType.ADFS
 import io.github.wulkanowy.sdk.scrapper.Scrapper.LoginType.ADFSCards
 import io.github.wulkanowy.sdk.scrapper.Scrapper.LoginType.ADFSLight
+import io.github.wulkanowy.sdk.scrapper.Scrapper.LoginType.ADFSLightCufs
 import io.github.wulkanowy.sdk.scrapper.Scrapper.LoginType.ADFSLightScoped
 import io.github.wulkanowy.sdk.scrapper.Scrapper.LoginType.STANDARD
 import io.github.wulkanowy.sdk.scrapper.login.NotLoggedInException
@@ -32,7 +33,7 @@ class NotLoggedInErrorInterceptor(private val loginType: LoginType) : Intercepto
         if (when (loginType) {
                 STANDARD -> doc.select(SELECTOR_STANDARD)
                 ADFS -> doc.select(SELECTOR_ADFS)
-                ADFSLight, ADFSLightScoped -> doc.select(SELECTOR_ADFS_LIGHT)
+                ADFSLight, ADFSLightCufs, ADFSLightScoped -> doc.select(SELECTOR_ADFS_LIGHT)
                 ADFSCards -> doc.select(SELECTOR_ADFS_CARDS)
                 else -> Elements()
             }.isNotEmpty()
