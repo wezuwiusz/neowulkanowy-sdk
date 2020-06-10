@@ -44,7 +44,7 @@ class AccountRepository(private val account: AccountService) {
                         input.attr("name") to input.attr("value")
                     }).toMap().plus("btSend.x" to "5").plus("btSend.y" to "6"))
                 }
-                else -> throw ScrapperException("Never happen")
+                else -> Single.error(ScrapperException("Never happen"))
             }
         }.map { res ->
             with(res.html) {

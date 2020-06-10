@@ -5,6 +5,7 @@ import io.github.wulkanowy.sdk.scrapper.ApiResponse
 import io.github.wulkanowy.sdk.scrapper.ScrapperException
 import io.github.wulkanowy.sdk.scrapper.getScriptParam
 import io.github.wulkanowy.sdk.scrapper.interceptor.ErrorHandlerTransformer
+import io.github.wulkanowy.sdk.scrapper.interceptor.VulcanException
 import io.github.wulkanowy.sdk.scrapper.messages.Attachment
 import io.github.wulkanowy.sdk.scrapper.messages.DeleteMessageRequest
 import io.github.wulkanowy.sdk.scrapper.messages.Message
@@ -129,7 +130,7 @@ class MessagesRepository(private val api: MessagesService) {
                 getScriptParam("version", res)
             )
         }.flatMap {
-            if (it.isBlank()) Single.just(ApiResponse(true, null))
+            if (it.isBlank()) Single.error(VulcanException("Unexpected empty response. Message(s) may already be deleted"))
             else Single.just(Gson().fromJson(it, ApiResponse::class.java))
         }.compose(ErrorHandlerTransformer()).map { it.success }
     }
