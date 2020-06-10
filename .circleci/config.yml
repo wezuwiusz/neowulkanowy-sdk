@@ -63,10 +63,10 @@ workflows:
 
   test-and-deploy:
     jobs:
-    - test:
-        filters:
-          tags:
-            only: /.*/
+    - test
     - deploy:
         requires:
           - test
+        filters:
+            tags:
+                only: /\d+\.\d+\.\d+/
