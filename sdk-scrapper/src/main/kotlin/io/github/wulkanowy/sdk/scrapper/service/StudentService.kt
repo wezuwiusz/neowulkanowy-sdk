@@ -31,7 +31,6 @@ import io.reactivex.Single
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.Header
-import retrofit2.http.Headers
 import retrofit2.http.POST
 import retrofit2.http.Url
 
@@ -41,27 +40,27 @@ interface StudentService {
     fun getStart(@Url url: String): Single<String>
 
     @POST
-    @Headers("Content-Type: application/json")
     fun getUserCache(
         @Url url: String,
         @Header("X-V-RequestVerificationToken") token: String,
         @Header("X-V-AppGuid") appGuid: String,
-        @Header("X-V-AppVersion") appVersion: String
+        @Header("X-V-AppVersion") appVersion: String,
+        @Body body: Any = Object()
     ): Single<ApiResponse<CacheResponse>>
 
     @POST("UczenCache.mvc/Get")
-    @Headers("Content-Type: application/json")
     fun getUserCache(
         @Header("X-V-RequestVerificationToken") token: String,
         @Header("X-V-AppGuid") appGuid: String,
-        @Header("X-V-AppVersion") appVersion: String
+        @Header("X-V-AppVersion") appVersion: String,
+        @Body body: Any = Object()
     ): Single<ApiResponse<CacheResponse>>
 
     @POST
-    fun getSchoolInfo(@Url url: String): Single<ApiResponse<List<Diary>>>
+    fun getSchoolInfo(@Url url: String, @Body body: Any = Object()): Single<ApiResponse<List<Diary>>>
 
     @POST("UczenDziennik.mvc/Get")
-    fun getDiaries(): Single<ApiResponse<List<Diary>>>
+    fun getDiaries(@Body body: Any = Object()): Single<ApiResponse<List<Diary>>>
 
     @POST("Oceny.mvc/Get")
     fun getGrades(@Body gradeRequest: GradeRequest): Single<ApiResponse<GradesResponse>>
@@ -82,7 +81,7 @@ interface StudentService {
     fun getAttendanceStatistics(@Body attendanceSummaryRequest: AttendanceSummaryRequest): Single<ApiResponse<AttendanceSummaryResponse>>
 
     @POST("FrekwencjaStatystykiPrzedmioty.mvc/Get")
-    fun getAttendanceSubjects(): Single<ApiResponse<List<Subject>>>
+    fun getAttendanceSubjects(@Body body: Any = Object()): Single<ApiResponse<List<Subject>>>
 
     @POST("Usprawiedliwienia.mvc/Post")
     fun excuseForAbsence(
@@ -108,19 +107,19 @@ interface StudentService {
     fun getTimetable(@Body timetableRequest: TimetableRequest): Single<ApiResponse<TimetableResponse>>
 
     @POST("LekcjeZrealizowane.mvc/GetPrzedmioty")
-    fun getRealizedSubjects()
+    fun getRealizedSubjects(@Body body: Any = Object())
 
     @POST("LekcjeZrealizowane.mvc/GetZrealizowane")
     fun getCompletedLessons(@Body completedLessonsRequest: CompletedLessonsRequest): Single<String>
 
     @POST("UwagiIOsiagniecia.mvc/Get")
-    fun getNotes(): Single<ApiResponse<NotesResponse>>
+    fun getNotes(@Body body: Any = Object()): Single<ApiResponse<NotesResponse>>
 
     @POST("ZarejestrowaneUrzadzenia.mvc/Get")
-    fun getRegisteredDevices(): Single<ApiResponse<List<Device>>>
+    fun getRegisteredDevices(@Body body: Any = Object()): Single<ApiResponse<List<Device>>>
 
     @POST("RejestracjaUrzadzeniaToken.mvc/Get")
-    fun getToken(): Single<ApiResponse<TokenResponse>>
+    fun getToken(@Body body: Any = Object()): Single<ApiResponse<TokenResponse>>
 
     @POST("ZarejestrowaneUrzadzenia.mvc/Delete")
     fun unregisterDevice(
@@ -131,7 +130,7 @@ interface StudentService {
     ): Single<ApiResponse<Nothing>>
 
     @POST("SzkolaINauczyciele.mvc/Get")
-    fun getSchoolAndTeachers(): Single<ApiResponse<SchoolAndTeachersResponse>>
+    fun getSchoolAndTeachers(@Body body: Any = Object()): Single<ApiResponse<SchoolAndTeachersResponse>>
 
     @POST("Uczen.mvc/Get")
     fun getStudentInfo()
