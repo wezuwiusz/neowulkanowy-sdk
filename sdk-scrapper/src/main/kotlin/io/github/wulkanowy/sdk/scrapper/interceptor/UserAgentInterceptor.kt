@@ -11,13 +11,13 @@ class UserAgentInterceptor(
     private val androidVersion: String,
     private val buildTag: String,
     private val webKitRev: String = "537.36",
-    private val chromeRev: String = "78.0.3904.62"
+    private val chromeRev: String = "83.0.4103.96"
 ) : Interceptor {
 
     override fun intercept(chain: Interceptor.Chain): Response {
         return chain.proceed(chain.request().newBuilder()
             .addHeader("User-Agent",
-                "Mozilla/5.0 (Linux; $androidVersion; $buildTag) " +
+                "Mozilla/5.0 (Linux; Android $androidVersion; $buildTag) " +
                     "AppleWebKit/$webKitRev (KHTML, like Gecko) " +
                     "Chrome/$chromeRev Mobile " +
                     "Safari/$webKitRev")
