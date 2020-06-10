@@ -204,11 +204,11 @@ class Scrapper {
     }
 
     private val snp by resettableLazy(changeManager) {
-        StudentAndParentRepository(serviceManager.getSnpService())
+        StudentAndParentRepository(serviceManager.getSnpService(emptyCookieJarIntercept = emptyCookieJarInterceptor))
     }
 
     private val student by resettableLazy(changeManager) {
-        StudentRepository(serviceManager.getStudentService())
+        StudentRepository(serviceManager.getStudentService(emptyCookieJarIntercept = emptyCookieJarInterceptor))
     }
 
     private val messages by resettableLazy(changeManager) {
