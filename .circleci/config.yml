@@ -1,4 +1,4 @@
-version: 2
+version: 2.1
 
 references:
   workspace_root: &workspace_root
@@ -56,10 +56,6 @@ jobs:
 
 workflows:
   version: 2
-
-  test:
-    jobs:
-    - test
 
   test-and-deploy:
     jobs:
