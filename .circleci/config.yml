@@ -60,3 +60,13 @@ workflows:
   test:
     jobs:
     - test
+
+  test-and-deploy:
+    jobs:
+    - test
+      filters:
+        tags:
+          only: /.*/
+    - deploy:
+        requires:
+          - test
