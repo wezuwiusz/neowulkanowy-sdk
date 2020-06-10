@@ -1,4 +1,4 @@
-package io.github.wulkanowy.sdk.scrapper.interceptor
+package io.github.wulkanowy.sdk.scrapper.exception
 
 import io.github.wulkanowy.sdk.scrapper.ScrapperException
 

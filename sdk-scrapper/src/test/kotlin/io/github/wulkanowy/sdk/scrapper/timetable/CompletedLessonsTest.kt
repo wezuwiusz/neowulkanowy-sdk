@@ -1,8 +1,8 @@
 package io.github.wulkanowy.sdk.scrapper.timetable
 
 import io.github.wulkanowy.sdk.scrapper.BaseLocalTest
-import io.github.wulkanowy.sdk.scrapper.interceptor.FeatureDisabledException
-import io.github.wulkanowy.sdk.scrapper.interceptor.VulcanException
+import io.github.wulkanowy.sdk.scrapper.exception.FeatureDisabledException
+import io.github.wulkanowy.sdk.scrapper.exception.VulcanException
 import io.github.wulkanowy.sdk.scrapper.register.RegisterTest
 import io.reactivex.observers.TestObserver
 import org.junit.Assert.assertEquals

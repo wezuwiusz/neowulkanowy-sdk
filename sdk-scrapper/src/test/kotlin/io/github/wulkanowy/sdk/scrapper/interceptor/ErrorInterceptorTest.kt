@@ -2,6 +2,8 @@ package io.github.wulkanowy.sdk.scrapper.interceptor
 
 import io.github.wulkanowy.sdk.scrapper.Scrapper
 import io.github.wulkanowy.sdk.scrapper.BaseLocalTest
+import io.github.wulkanowy.sdk.scrapper.exception.ServiceUnavailableException
+import io.github.wulkanowy.sdk.scrapper.exception.VulcanException
 import io.github.wulkanowy.sdk.scrapper.login.LoginTest
 import io.github.wulkanowy.sdk.scrapper.login.NotLoggedInException
 import io.github.wulkanowy.sdk.scrapper.login.PasswordChangeRequiredException

@@ -1,6 +1,6 @@
 package io.github.wulkanowy.sdk.scrapper.repository
 
-import io.github.wulkanowy.sdk.scrapper.interceptor.VulcanException
+import io.github.wulkanowy.sdk.scrapper.exception.VulcanException
 import io.github.wulkanowy.sdk.scrapper.register.Semester
 import io.github.wulkanowy.sdk.scrapper.service.StudentAndParentService
 import io.reactivex.Observable

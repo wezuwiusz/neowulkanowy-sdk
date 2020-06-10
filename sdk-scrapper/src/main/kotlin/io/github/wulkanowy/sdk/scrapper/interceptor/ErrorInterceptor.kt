@@ -1,7 +1,9 @@
 package io.github.wulkanowy.sdk.scrapper.interceptor
 
 import io.github.wulkanowy.sdk.scrapper.ScrapperException
+import io.github.wulkanowy.sdk.scrapper.exception.ServiceUnavailableException
 import io.github.wulkanowy.sdk.scrapper.exception.TemporarilyDisabledException
+import io.github.wulkanowy.sdk.scrapper.exception.VulcanException
 import io.github.wulkanowy.sdk.scrapper.login.AccountPermissionException
 import io.github.wulkanowy.sdk.scrapper.login.BadCredentialsException
 import io.github.wulkanowy.sdk.scrapper.login.PasswordChangeRequiredException
@@ -28,7 +30,8 @@ class ErrorInterceptor : Interceptor {
 
     private fun checkForError(doc: Document, redirectUrl: String) {
         doc.select(".errorBlock").let {
-            if (it.isNotEmpty()) throw VulcanException("${it.select(".errorTitle").text()}. ${it.select(".errorMessage").text()}")
+            if (it.isNotEmpty()) throw VulcanException("${it.select(".errorTitle")
+                .text()}. ${it.select(".errorMessage").text()}")
         }
 
         doc.select(".ErrorMessage, #ErrorTextLabel").let {
@@ -36,7 +39,8 @@ class ErrorInterceptor : Interceptor {
         }
 
         doc.select("#MainPage_ErrorDiv div").let {
-            if (it?.last()?.ownText()?.startsWith("Trwa aktualizacja bazy danych") == true) throw ServiceUnavailableException(it.last().ownText())
+            if (it?.last()?.ownText()?.startsWith("Trwa aktualizacja bazy danych") == true) throw ServiceUnavailableException(
+                it.last().ownText())
             if (it?.last()?.ownText()?.contains("czasowo wyłączona") == true) throw TemporarilyDisabledException(it.last().ownText())
             if (it.isNotEmpty()) throw VulcanException(it[0].ownText())
         }

@@ -33,7 +33,7 @@ import io.github.wulkanowy.sdk.scrapper.homework.HomeworkRequest
 import io.github.wulkanowy.sdk.scrapper.homework.mapHomework
 import io.github.wulkanowy.sdk.scrapper.homework.mapHomeworkList
 import io.github.wulkanowy.sdk.scrapper.interceptor.ErrorHandlerTransformer
-import io.github.wulkanowy.sdk.scrapper.interceptor.FeatureDisabledException
+import io.github.wulkanowy.sdk.scrapper.exception.FeatureDisabledException
 import io.github.wulkanowy.sdk.scrapper.mobile.Device
 import io.github.wulkanowy.sdk.scrapper.mobile.TokenResponse
 import io.github.wulkanowy.sdk.scrapper.mobile.UnregisterDeviceRequest

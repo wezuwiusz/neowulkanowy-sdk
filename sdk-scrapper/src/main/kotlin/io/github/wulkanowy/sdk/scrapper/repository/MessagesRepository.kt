@@ -5,7 +5,7 @@ import io.github.wulkanowy.sdk.scrapper.ApiResponse
 import io.github.wulkanowy.sdk.scrapper.ScrapperException
 import io.github.wulkanowy.sdk.scrapper.getScriptParam
 import io.github.wulkanowy.sdk.scrapper.interceptor.ErrorHandlerTransformer
-import io.github.wulkanowy.sdk.scrapper.interceptor.VulcanException
+import io.github.wulkanowy.sdk.scrapper.exception.VulcanException
 import io.github.wulkanowy.sdk.scrapper.messages.Attachment
 import io.github.wulkanowy.sdk.scrapper.messages.DeleteMessageRequest
 import io.github.wulkanowy.sdk.scrapper.messages.Message

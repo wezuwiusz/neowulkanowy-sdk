@@ -2,7 +2,9 @@ package io.github.wulkanowy.sdk.scrapper.interceptor
 
 import io.github.wulkanowy.sdk.scrapper.ApiResponse
 import io.github.wulkanowy.sdk.scrapper.ScrapperException
+import io.github.wulkanowy.sdk.scrapper.exception.FeatureDisabledException
 import io.github.wulkanowy.sdk.scrapper.exception.InvalidPathException
+import io.github.wulkanowy.sdk.scrapper.exception.VulcanException
 import io.github.wulkanowy.sdk.scrapper.login.AccountPermissionException
 import io.reactivex.Single
 import io.reactivex.SingleSource

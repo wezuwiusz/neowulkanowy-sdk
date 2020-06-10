@@ -4,9 +4,9 @@ import io.reactivex.Single
 import io.reactivex.SingleSource
 import io.reactivex.SingleTransformer
 import io.github.wulkanowy.sdk.scrapper.ScrapperException as ScrapperApiException
-import io.github.wulkanowy.sdk.scrapper.interceptor.FeatureDisabledException as ScrapperFeatureDisabledException
-import io.github.wulkanowy.sdk.scrapper.interceptor.ServiceUnavailableException as ScrapperServiceUnavailableException
-import io.github.wulkanowy.sdk.scrapper.interceptor.VulcanException as ScrapperVulcanException
+import io.github.wulkanowy.sdk.scrapper.exception.FeatureDisabledException as ScrapperFeatureDisabledException
+import io.github.wulkanowy.sdk.scrapper.exception.ServiceUnavailableException as ScrapperServiceUnavailableException
+import io.github.wulkanowy.sdk.scrapper.exception.VulcanException as ScrapperVulcanException
 import io.github.wulkanowy.sdk.scrapper.login.BadCredentialsException as ScrapperBadCredentialsException
 import io.github.wulkanowy.sdk.scrapper.login.NotLoggedInException as ScrapperNotLoggedInException
 import io.github.wulkanowy.sdk.scrapper.login.PasswordChangeRequiredException as ScrapperPasswordChangeRequiredException
