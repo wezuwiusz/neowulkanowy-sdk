@@ -145,21 +145,25 @@ class RegisterRepository(
             ).flatMap { cache ->
                 student.getSchoolInfo(url.generate(ServiceManager.UrlGenerator.Site.STUDENT) + "UczenDziennik.mvc/Get")
                     .compose(ErrorHandlerTransformer())
-                    .map { it.data.orEmpty() }
-                    .map { it.filter { diary -> diary.semesters?.isNotEmpty() ?: false } }
-                    .map { it.sortedByDescending { diary -> diary.level } }
-                    .map { diary -> diary.distinctBy { listOf(it.studentId, it.semesters!![0].classId) } }
                     .map { diaries ->
-                        diaries.map {
-                            StudentAndParentResponse.Student().apply {
-                                id = it.studentId
-                                name = "${it.studentName} ${it.studentSurname}"
-                                description = getScriptParam("organizationName", startPage, it.symbol + " " + (it.year - it.level + 1))
-                                className = it.level.toString() + it.symbol
-                                classId = it.semesters!![0].classId
-                                isParent = cache.data?.isParent ?: false
+                        diaries.data.orEmpty()
+                            .filter { diary -> diary.semesters?.isNotEmpty() ?: false }
+                            .sortedByDescending { diary -> diary.level }
+                            .distinctBy { diary -> listOf(diary.studentId, diary.semesters!![0].classId) }
+                            .map {
+                                StudentAndParentResponse.Student().apply {
+                                    id = it.studentId
+                                    name = "${it.studentName} ${it.studentSurname}"
+                                    description = getScriptParam("organizationName", startPage, it.symbol + " " + (it.year - it.level + 1))
+                                    className = it.level.toString() + it.symbol
+                                    classId = it.semesters!![0].classId
+                                    isParent = cache.data?.isParent ?: false
+                                }
                             }
-                        }
+                            .ifEmpty {
+                                logger.debug("No supported student found: $diaries")
+                                emptyList()
+                            }
                     }
             }
         }
