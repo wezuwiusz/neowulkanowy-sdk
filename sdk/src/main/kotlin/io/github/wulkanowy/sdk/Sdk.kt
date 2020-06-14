@@ -181,9 +181,7 @@ class Sdk {
     }
 
     fun getStudentsFromMobileApi(token: String, pin: String, symbol: String, firebaseToken: String, apiKey: String = ""): Single<List<Student>> {
-        return rxSingle { mobile.getCertificate(token, pin, symbol, buildTag, androidVersion, firebaseToken) }
-            .flatMap { rxSingle { mobile.getStudents(it, apiKey) } }
-            .map { it.mapStudents(symbol) }
+        return rxSingle { mobile.getStudents(mobile.getCertificate(token, pin, symbol, buildTag, androidVersion, firebaseToken), apiKey).mapStudents(symbol) }
     }
 
     fun getStudentsFromScrapper(email: String, password: String, scrapperBaseUrl: String, symbol: String = "Default"): Single<List<Student>> {
@@ -192,7 +190,7 @@ class Sdk {
             it.email = email
             it.password = password
             it.symbol = symbol
-            rxSingle { it.getStudents() }.compose(ScrapperExceptionTransformer()).map { students -> students.mapStudents() }
+            rxSingle { it.getStudents().mapStudents() }.compose(ScrapperExceptionTransformer())
         }
     }
 
@@ -226,21 +224,21 @@ class Sdk {
 
     fun getSemesters(now: LocalDate = LocalDate.now()): Single<List<Semester>> {
         return when (mode) {
-            Mode.HYBRID, Mode.SCRAPPER -> rxSingle { scrapper.getSemesters() }.compose(ScrapperExceptionTransformer()).map { it.mapSemesters() }
+            Mode.HYBRID, Mode.SCRAPPER -> rxSingle { scrapper.getSemesters().mapSemesters() }.compose(ScrapperExceptionTransformer())
             Mode.API -> rxSingle { mobile.getStudents().mapSemesters(studentId, now) }
         }
     }
 
     fun getAttendance(startDate: LocalDate, endDate: LocalDate, semesterId: Int): Single<List<Attendance>> {
         return when (mode) {
-            Mode.SCRAPPER -> rxSingle { scrapper.getAttendance(startDate, endDate) }.compose(ScrapperExceptionTransformer()).map { it.mapAttendance() }
+            Mode.SCRAPPER -> rxSingle { scrapper.getAttendance(startDate, endDate).mapAttendance() }.compose(ScrapperExceptionTransformer())
             Mode.HYBRID, Mode.API -> rxSingle { mobile.getAttendance(startDate, endDate, semesterId).mapAttendance(mobile.getDictionaries()) }
         }
     }
 
     fun getAttendanceSummary(subjectId: Int? = -1): Single<List<AttendanceSummary>> {
         return when (mode) {
-            Mode.HYBRID, Mode.SCRAPPER -> rxSingle { scrapper.getAttendanceSummary(subjectId) }.compose(ScrapperExceptionTransformer()).map { it.mapAttendanceSummary() }
+            Mode.HYBRID, Mode.SCRAPPER -> rxSingle { scrapper.getAttendanceSummary(subjectId).mapAttendanceSummary() }.compose(ScrapperExceptionTransformer())
             Mode.API -> throw FeatureNotAvailableException("Attendance summary is not available in API mode")
         }
     }
@@ -254,84 +252,84 @@ class Sdk {
 
     fun getSubjects(): Single<List<Subject>> {
         return when (mode) {
-            Mode.HYBRID, Mode.SCRAPPER -> rxSingle { scrapper.getSubjects() }.compose(ScrapperExceptionTransformer()).map { it.mapSubjects() }
+            Mode.HYBRID, Mode.SCRAPPER -> rxSingle { scrapper.getSubjects().mapSubjects() }.compose(ScrapperExceptionTransformer())
             Mode.API -> rxSingle { mobile.getDictionaries().subjects.mapSubjects() }
         }
     }
 
     fun getExams(start: LocalDate, end: LocalDate, semesterId: Int): Single<List<Exam>> {
         return when (mode) {
-            Mode.SCRAPPER -> rxSingle { scrapper.getExams(start, end) }.compose(ScrapperExceptionTransformer()).map { it.mapExams() }
+            Mode.SCRAPPER -> rxSingle { scrapper.getExams(start, end).mapExams() }.compose(ScrapperExceptionTransformer())
             Mode.HYBRID, Mode.API -> rxSingle { mobile.getExams(start, end, semesterId).mapExams(mobile.getDictionaries()) }
         }
     }
 
     fun getGrades(semesterId: Int): Single<Pair<List<Grade>, List<GradeSummary>>> {
         return when (mode) {
-            Mode.SCRAPPER -> rxSingle { scrapper.getGrades(semesterId) }.compose(ScrapperExceptionTransformer()).map { grades -> grades.mapGrades() }
+            Mode.SCRAPPER -> rxSingle { scrapper.getGrades(semesterId).mapGrades() }.compose(ScrapperExceptionTransformer())
             Mode.HYBRID, Mode.API -> rxSingle { mobile.getGrades(semesterId).mapGrades(mobile.getDictionaries()) }
         }
     }
 
     fun getGradesDetails(semesterId: Int): Single<List<Grade>> {
         return when (mode) {
-            Mode.SCRAPPER -> rxSingle { scrapper.getGradesDetails(semesterId) }.compose(ScrapperExceptionTransformer()).map { grades -> grades.mapGradesDetails() }
+            Mode.SCRAPPER -> rxSingle { scrapper.getGradesDetails(semesterId).mapGradesDetails() }.compose(ScrapperExceptionTransformer())
             Mode.HYBRID, Mode.API -> rxSingle { mobile.getGradesDetails(semesterId).mapGradesDetails(mobile.getDictionaries()) }
         }
     }
 
     fun getGradesSummary(semesterId: Int): Single<List<GradeSummary>> {
         return when (mode) {
-            Mode.SCRAPPER -> rxSingle { scrapper.getGradesSummary(semesterId) }.compose(ScrapperExceptionTransformer()).map { it.mapGradesSummary() }
+            Mode.SCRAPPER -> rxSingle { scrapper.getGradesSummary(semesterId).mapGradesSummary() }.compose(ScrapperExceptionTransformer())
             Mode.HYBRID, Mode.API -> rxSingle { mobile.getGradesSummary(semesterId).mapGradesSummary(mobile.getDictionaries()) }
         }
     }
 
     fun getGradesAnnualStatistics(semesterId: Int): Single<List<GradeStatistics>> {
         return when (mode) {
-            Mode.HYBRID, Mode.SCRAPPER -> rxSingle { scrapper.getGradesAnnualStatistics(semesterId) }.compose(ScrapperExceptionTransformer()).map { it.mapGradeStatistics() }
+            Mode.HYBRID, Mode.SCRAPPER -> rxSingle { scrapper.getGradesAnnualStatistics(semesterId).mapGradeStatistics() }.compose(ScrapperExceptionTransformer())
             Mode.API -> throw FeatureNotAvailableException("Class grades annual statistics is not available in API mode")
         }
     }
 
     fun getGradesPartialStatistics(semesterId: Int): Single<List<GradeStatistics>> {
         return when (mode) {
-            Mode.HYBRID, Mode.SCRAPPER -> rxSingle { scrapper.getGradesPartialStatistics(semesterId) }.compose(ScrapperExceptionTransformer()).map { it.mapGradeStatistics() }
+            Mode.HYBRID, Mode.SCRAPPER -> rxSingle { scrapper.getGradesPartialStatistics(semesterId).mapGradeStatistics() }.compose(ScrapperExceptionTransformer())
             Mode.API -> throw FeatureNotAvailableException("Class grades partial statistics is not available in API mode")
         }
     }
 
     fun getGradesPointsStatistics(semesterId: Int): Single<List<GradePointsStatistics>> {
         return when (mode) {
-            Mode.HYBRID, Mode.SCRAPPER -> rxSingle { scrapper.getGradesPointsStatistics(semesterId) }.compose(ScrapperExceptionTransformer()).map { it.mapGradePointsStatistics() }
+            Mode.HYBRID, Mode.SCRAPPER -> rxSingle { scrapper.getGradesPointsStatistics(semesterId).mapGradePointsStatistics() }.compose(ScrapperExceptionTransformer())
             Mode.API -> throw FeatureNotAvailableException("Class grades points statistics is not available in API mode")
         }
     }
 
     fun getHomework(start: LocalDate, end: LocalDate, semesterId: Int = 0): Single<List<Homework>> {
         return when (mode) {
-            Mode.SCRAPPER -> rxSingle { scrapper.getHomework(start, end) }.compose(ScrapperExceptionTransformer()).map { it.mapHomework() }
+            Mode.SCRAPPER -> rxSingle { scrapper.getHomework(start, end).mapHomework() }.compose(ScrapperExceptionTransformer())
             Mode.HYBRID, Mode.API -> rxSingle { mobile.getHomework(start, end, semesterId).mapHomework(mobile.getDictionaries()) }
         }
     }
 
     fun getNotes(semesterId: Int): Single<List<Note>> {
         return when (mode) {
-            Mode.SCRAPPER -> rxSingle { scrapper.getNotes() }.compose(ScrapperExceptionTransformer()).map { it.mapNotes() }
+            Mode.SCRAPPER -> rxSingle { scrapper.getNotes().mapNotes() }.compose(ScrapperExceptionTransformer())
             Mode.HYBRID, Mode.API -> rxSingle { mobile.getNotes(semesterId).mapNotes(mobile.getDictionaries()) }
         }
     }
 
     fun getRegisteredDevices(): Single<List<Device>> {
         return when (mode) {
-            Mode.HYBRID, Mode.SCRAPPER -> rxSingle { scrapper.getRegisteredDevices() }.compose(ScrapperExceptionTransformer()).map { it.mapDevices() }
+            Mode.HYBRID, Mode.SCRAPPER -> rxSingle { scrapper.getRegisteredDevices().mapDevices() }.compose(ScrapperExceptionTransformer())
             Mode.API -> throw FeatureNotAvailableException("Devices management is not available in API mode")
         }
     }
 
     fun getToken(): Single<Token> {
         return when (mode) {
-            Mode.HYBRID, Mode.SCRAPPER -> rxSingle { scrapper.getToken() }.compose(ScrapperExceptionTransformer()).map { it.mapToken() }
+            Mode.HYBRID, Mode.SCRAPPER -> rxSingle { scrapper.getToken().mapToken() }.compose(ScrapperExceptionTransformer())
             Mode.API -> throw FeatureNotAvailableException("Devices management is not available in API mode")
         }
     }
@@ -345,35 +343,35 @@ class Sdk {
 
     fun getTeachers(semesterId: Int): Single<List<Teacher>> {
         return when (mode) {
-            Mode.SCRAPPER -> rxSingle { scrapper.getTeachers() }.compose(ScrapperExceptionTransformer()).map { it.mapTeachers() }
+            Mode.SCRAPPER -> rxSingle { scrapper.getTeachers().mapTeachers() }.compose(ScrapperExceptionTransformer())
             Mode.HYBRID, Mode.API -> rxSingle { mobile.getTeachers(studentId, semesterId).mapTeachers(mobile.getDictionaries()) }
         }
     }
 
     fun getSchool(): Single<School> {
         return when (mode) {
-            Mode.HYBRID, Mode.SCRAPPER -> rxSingle { scrapper.getSchool() }.compose(ScrapperExceptionTransformer()).map { it.mapSchool() }
+            Mode.HYBRID, Mode.SCRAPPER -> rxSingle { scrapper.getSchool().mapSchool() }.compose(ScrapperExceptionTransformer())
             Mode.API -> throw FeatureNotAvailableException("School info is not available in API mode")
         }
     }
 
     fun getStudentInfo(): Single<StudentInfo> {
         return when (mode) {
-            Mode.HYBRID, Mode.SCRAPPER -> rxSingle { scrapper.getStudentInfo() }.compose(ScrapperExceptionTransformer()).map { it.mapStudent() }
+            Mode.HYBRID, Mode.SCRAPPER -> rxSingle { scrapper.getStudentInfo().mapStudent() }.compose(ScrapperExceptionTransformer())
             Mode.API -> throw FeatureNotAvailableException("Student info is not available in API mode")
         }
     }
 
     fun getReportingUnits(): Single<List<ReportingUnit>> {
         return when (mode) {
-            Mode.HYBRID, Mode.SCRAPPER -> rxSingle { scrapper.getReportingUnits() }.compose(ScrapperExceptionTransformer()).map { it.mapReportingUnits() }
+            Mode.HYBRID, Mode.SCRAPPER -> rxSingle { scrapper.getReportingUnits().mapReportingUnits() }.compose(ScrapperExceptionTransformer())
             Mode.API -> rxSingle { mobile.getStudents().mapReportingUnits(studentId) }
         }
     }
 
     fun getRecipients(unitId: Int, role: Int = 2): Single<List<Recipient>> {
         return when (mode) {
-            Mode.HYBRID, Mode.SCRAPPER -> rxSingle { scrapper.getRecipients(unitId, role) }.compose(ScrapperExceptionTransformer()).map { it.mapRecipients() }
+            Mode.HYBRID, Mode.SCRAPPER -> rxSingle { scrapper.getRecipients(unitId, role).mapRecipients() }.compose(ScrapperExceptionTransformer())
             Mode.API -> rxSingle { mobile.getDictionaries().teachers.mapRecipients(unitId) }
         }
     }
@@ -388,35 +386,35 @@ class Sdk {
 
     fun getReceivedMessages(start: LocalDateTime, end: LocalDateTime): Single<List<Message>> {
         return when (mode) {
-            Mode.HYBRID, Mode.SCRAPPER -> rxSingle { scrapper.getReceivedMessages() }.compose(ScrapperExceptionTransformer()).map { it.mapMessages() } // TODO
+            Mode.HYBRID, Mode.SCRAPPER -> rxSingle { scrapper.getReceivedMessages().mapMessages() }.compose(ScrapperExceptionTransformer()) // TODO
             Mode.API -> rxSingle { mobile.getMessages(start, end).mapMessages(mobile.getDictionaries()) }
         }
     }
 
     fun getSentMessages(start: LocalDateTime, end: LocalDateTime): Single<List<Message>> {
         return when (mode) {
-            Mode.HYBRID, Mode.SCRAPPER -> rxSingle { scrapper.getSentMessages() }.compose(ScrapperExceptionTransformer()).map { it.mapMessages() }
+            Mode.HYBRID, Mode.SCRAPPER -> rxSingle { scrapper.getSentMessages().mapMessages() }.compose(ScrapperExceptionTransformer())
             Mode.API -> rxSingle { mobile.getMessagesSent(start, end).mapMessages(mobile.getDictionaries()) }
         }
     }
 
     fun getDeletedMessages(start: LocalDateTime, end: LocalDateTime): Single<List<Message>> {
         return when (mode) {
-            Mode.HYBRID, Mode.SCRAPPER -> rxSingle { scrapper.getDeletedMessages() }.compose(ScrapperExceptionTransformer()).map { it.mapMessages() }
+            Mode.HYBRID, Mode.SCRAPPER -> rxSingle { scrapper.getDeletedMessages().mapMessages() }.compose(ScrapperExceptionTransformer())
             Mode.API -> rxSingle { mobile.getMessagesDeleted(start, end).mapMessages(mobile.getDictionaries()) }
         }
     }
 
     fun getMessageRecipients(messageId: Int, senderId: Int): Single<List<Recipient>> {
         return when (mode) {
-            Mode.HYBRID, Mode.SCRAPPER -> rxSingle { scrapper.getMessageRecipients(messageId, senderId) }.compose(ScrapperExceptionTransformer()).map { it.mapRecipients() }
+            Mode.HYBRID, Mode.SCRAPPER -> rxSingle { scrapper.getMessageRecipients(messageId, senderId).mapRecipients() }.compose(ScrapperExceptionTransformer())
             Mode.API -> TODO()
         }
     }
 
     fun getMessageDetails(messageId: Int, folderId: Int, read: Boolean = false, id: Int? = null): Single<MessageDetails> {
         return when (mode) {
-            Mode.HYBRID, Mode.SCRAPPER -> rxSingle { scrapper.getMessageDetails(messageId, folderId, read, id) }.compose(ScrapperExceptionTransformer()).map { it.mapScrapperMessage() }
+            Mode.HYBRID, Mode.SCRAPPER -> rxSingle { scrapper.getMessageDetails(messageId, folderId, read, id).mapScrapperMessage() }.compose(ScrapperExceptionTransformer())
             Mode.API -> rxSingle {
                 mobile.changeMessageStatus(messageId, when (folderId) {
                     1 -> "Odebrane"
@@ -429,9 +427,8 @@ class Sdk {
 
     fun sendMessage(subject: String, content: String, recipients: List<Recipient>): Single<SentMessage> {
         return when (mode) {
-            Mode.HYBRID, Mode.SCRAPPER -> rxSingle { scrapper.sendMessage(subject, content, recipients.mapFromRecipientsToScraper()) }
+            Mode.HYBRID, Mode.SCRAPPER -> rxSingle { scrapper.sendMessage(subject, content, recipients.mapFromRecipientsToScraper()).mapSentMessage() }
                 .compose(ScrapperExceptionTransformer())
-                .map { it.mapSentMessage() }
             Mode.API -> rxSingle { mobile.sendMessage(subject, content, recipients.mapFromRecipientsToMobile()).mapSentMessage(loginId) }
         }
     }
@@ -453,14 +450,14 @@ class Sdk {
 
     fun getTimetable(start: LocalDate, end: LocalDate): Single<List<Timetable>> {
         return when (mode) {
-            Mode.SCRAPPER -> rxSingle { scrapper.getTimetable(start, end) }.compose(ScrapperExceptionTransformer()).map { it.mapTimetable() }
+            Mode.SCRAPPER -> rxSingle { scrapper.getTimetable(start, end).mapTimetable() }.compose(ScrapperExceptionTransformer())
             Mode.HYBRID, Mode.API -> rxSingle { mobile.getTimetable(start, end, 0).mapTimetable(mobile.getDictionaries()) }
         }
     }
 
     fun getCompletedLessons(start: LocalDate, end: LocalDate? = null, subjectId: Int = -1): Single<List<CompletedLesson>> {
         return when (mode) {
-            Mode.HYBRID, Mode.SCRAPPER -> rxSingle { scrapper.getCompletedLessons(start, end, subjectId) }.compose(ScrapperExceptionTransformer()).map { it.mapCompletedLessons() }
+            Mode.HYBRID, Mode.SCRAPPER -> rxSingle { scrapper.getCompletedLessons(start, end, subjectId).mapCompletedLessons() }.compose(ScrapperExceptionTransformer())
             Mode.API -> throw FeatureNotAvailableException("Completed lessons are not available in API mode")
         }
     }
@@ -489,7 +486,7 @@ class Sdk {
 
     fun getSelfGovernments(): Single<List<GovernmentUnit>> {
         return when (mode) {
-            Mode.HYBRID, Mode.SCRAPPER -> rxSingle { scrapper.getSelfGovernments() }.compose(ScrapperExceptionTransformer()).map { it.mapToUnits() }
+            Mode.HYBRID, Mode.SCRAPPER -> rxSingle { scrapper.getSelfGovernments().mapToUnits() }.compose(ScrapperExceptionTransformer())
             Mode.API -> throw FeatureNotAvailableException("Self governments is not available in API mode")
         }
     }
@@ -524,7 +521,7 @@ class Sdk {
 
     fun getKidsLuckyNumbers(): Single<List<LuckyNumber>> {
         return when (mode) {
-            Mode.HYBRID, Mode.SCRAPPER -> rxSingle { scrapper.getKidsLuckyNumbers() }.compose(ScrapperExceptionTransformer()).map { it.mapLuckyNumbers() }
+            Mode.HYBRID, Mode.SCRAPPER -> rxSingle { scrapper.getKidsLuckyNumbers().mapLuckyNumbers() }.compose(ScrapperExceptionTransformer())
             Mode.API -> throw FeatureNotAvailableException("Kids Lucky number is not available in API mode")
         }
     }
