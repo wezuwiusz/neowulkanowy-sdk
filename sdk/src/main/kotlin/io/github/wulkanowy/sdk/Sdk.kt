@@ -224,10 +224,10 @@ class Sdk {
             }.toList().flatten()
     }
 
-    suspend fun getSemesters(now: LocalDate = LocalDate.now()): List<Semester> {
+    suspend fun getSemesters(): List<Semester> {
         return when (mode) {
             Mode.HYBRID, Mode.SCRAPPER -> scrapper.getSemesters().mapSemesters()
-            Mode.API -> mobile.getStudents().mapSemesters(studentId, now)
+            Mode.API -> mobile.getStudents().mapSemesters(studentId)
         }
     }
 

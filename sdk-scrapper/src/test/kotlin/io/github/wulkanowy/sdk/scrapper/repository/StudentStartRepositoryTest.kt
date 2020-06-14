@@ -6,7 +6,6 @@ import io.github.wulkanowy.sdk.scrapper.register.RegisterTest
 import kotlinx.coroutines.runBlocking
 import okhttp3.mockwebserver.MockResponse
 import org.junit.Assert.assertEquals
-import org.junit.Assert.assertTrue
 import org.junit.Test
 
 class StudentStartRepositoryTest : BaseLocalTest() {
@@ -45,7 +44,6 @@ class StudentStartRepositoryTest : BaseLocalTest() {
         assertEquals(1234566, semesters[2].semesterId)
         assertEquals(2017, semesters[2].schoolYear)
         assertEquals(2017, semesters[3].schoolYear)
-        assertTrue(semesters.single { it.current }.current)
     }
 
     @Test
@@ -75,7 +73,6 @@ class StudentStartRepositoryTest : BaseLocalTest() {
 
         assertEquals(714, semesters[0].semesterId)
         assertEquals(713, semesters[1].semesterId)
-        assertTrue(semesters.single { it.current }.current)
     }
 
     @Test
@@ -91,9 +88,6 @@ class StudentStartRepositoryTest : BaseLocalTest() {
         assertEquals(6, semesters.size)
 
         assertEquals(1234568, semesters[0].semesterId)
-        assertEquals(1234568, semesters.single { it.current }.semesterId)
         assertEquals(1234567, semesters[1].semesterId)
-        assertTrue(semesters.single { it.current }.current)
-        assertTrue(semesters[0].current)
     }
 }

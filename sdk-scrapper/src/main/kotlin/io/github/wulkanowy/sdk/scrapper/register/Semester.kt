@@ -9,7 +9,6 @@ data class Semester(
     val schoolYear: Int,
     val semesterId: Int,
     val semesterNumber: Int,
-    var current: Boolean = false,
     val start: LocalDate = now(),
     val end: LocalDate = now(),
     val classId: Int = 0,

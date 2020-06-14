@@ -5,7 +5,6 @@ import io.github.wulkanowy.sdk.scrapper.register.Semester
 import io.github.wulkanowy.sdk.scrapper.service.StudentService
 import io.github.wulkanowy.sdk.scrapper.toLocalDate
 import org.slf4j.LoggerFactory
-import org.threeten.bp.LocalDate.now
 
 class StudentStartRepository(
     private val studentId: Int,
@@ -14,7 +13,8 @@ class StudentStartRepository(
 ) {
 
     companion object {
-        @JvmStatic private val logger = LoggerFactory.getLogger(this::class.java)
+        @JvmStatic
+        private val logger = LoggerFactory.getLogger(this::class.java)
     }
 
     suspend fun getSemesters(): List<Semester> {
@@ -34,7 +34,6 @@ class StudentStartRepository(
                         semesterNumber = it.number,
                         start = it.start.toLocalDate(),
                         end = it.end.toLocalDate(),
-                        current = it.start.toLocalDate() <= now() && it.end.toLocalDate() >= now(),
                         classId = it.classId,
                         unitId = it.unitId
                     )
@@ -46,7 +45,6 @@ class StudentStartRepository(
             .ifEmpty {
                 logger.debug("Student $studentId, class $classId not found in diaries: $diaries")
                 emptyList()
-            }.apply {
-                if (isNotEmpty() && singleOrNull { semester -> semester.current } == null) first().current = true }
             }
+    }
 }

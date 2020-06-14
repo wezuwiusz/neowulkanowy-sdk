@@ -22,17 +22,15 @@ class SemesterMapperTest : BaseLocalTest() {
         server.enqueueAndStart("ListaUczniow.json", RegisterTest::class.java)
 
         mobile.studentId = 1
-        val semesters = runBlocking { mobile.getSemesters(of(2020, 1, 30)) }
+        val semesters = runBlocking { mobile.getSemesters() }
         assertEquals(2, semesters.size)
 
         with(semesters[0]) {
             assertEquals(2, semesterNumber)
-            assertEquals(true, current)
             assertEquals(of(2020, 1, 30), start)
         }
         with(semesters[1]) {
             assertEquals(1, semesterNumber)
-            assertEquals(false, current)
             assertEquals(of(2019, 9, 1), start)
         }
     }
@@ -42,17 +40,15 @@ class SemesterMapperTest : BaseLocalTest() {
         server.enqueueAndStart("ListaUczniow-2.json", RegisterTest::class.java)
 
         mobile.studentId = 1
-        val semesters = runBlocking { mobile.getSemesters(of(2020, 1, 29)) }
+        val semesters = runBlocking { mobile.getSemesters() }
         assertEquals(2, semesters.size)
 
         with(semesters[0]) {
             assertEquals(1, semesterNumber)
-            assertEquals(true, current)
             assertEquals(of(2019, 9, 1), start)
         }
         with(semesters[1]) {
             assertEquals(2, semesterNumber)
-            assertEquals(false, current)
             assertEquals(of(2020, 1, 30), start)
         }
     }

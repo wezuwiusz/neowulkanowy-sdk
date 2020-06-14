@@ -19,12 +19,13 @@ class StudentAndParentStartRepository(
             val res = api.getDiaryInfo(diary.id, "/$symbol/$schoolSymbol/Oceny.mvc/Wszystkie")
             if (!res.title.endsWith("Oceny")) throw VulcanException("Unknow page with title: ${res.title}")
             res.semesters.map {
-                Semester(diary.id,
+                Semester(
+                    diary.id,
                     diary.name,
                     diary.name.substringAfter(" ").toInt(),
                     it.semesterId,
-                    it.semesterNumber,
-                    "selected" == it.current && "selected" == diary.current)
+                    it.semesterNumber
+                )
             }
         }.flatten()
     }
