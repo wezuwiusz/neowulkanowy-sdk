@@ -25,7 +25,7 @@ class ErrorInterceptorTest : BaseLocalTest() {
     @Test
     fun notLoggedIn_standard2() {
         try {
-            runBlocking { getSnpRepo(LoginTest::class.java, "LoginPage-standard.html", Scrapper.LoginType.STANDARD).getNotes() }
+            runBlocking { getSnpRepo(LoginTest::class.java, "LoginPage-standard.html", Scrapper.LoginType.STANDARD, false).getNotes() }
         } catch (e: Throwable) {
             assertTrue(e is NotLoggedInException)
         }

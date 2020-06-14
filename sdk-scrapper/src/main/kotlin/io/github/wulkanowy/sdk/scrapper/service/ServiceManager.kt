@@ -13,6 +13,7 @@ import io.github.wulkanowy.sdk.scrapper.interceptor.NotLoggedInErrorInterceptor
 import io.github.wulkanowy.sdk.scrapper.interceptor.StudentAndParentInterceptor
 import io.github.wulkanowy.sdk.scrapper.interceptor.UserAgentInterceptor
 import io.github.wulkanowy.sdk.scrapper.login.LoginHelper
+import kotlinx.coroutines.runBlocking
 import okhttp3.Interceptor
 import okhttp3.JavaNetCookieJar
 import okhttp3.OkHttpClient
@@ -65,7 +66,9 @@ class ServiceManager(
     private val interceptors: MutableList<Pair<Interceptor, Boolean>> = mutableListOf(
         HttpLoggingInterceptor().setLevel(logLevel) to true,
         ErrorInterceptor() to false,
-        NotLoggedInErrorInterceptor(loginType) to false,
+        NotLoggedInErrorInterceptor(loginType) {
+            return@NotLoggedInErrorInterceptor runBlocking { loginHelper.login(email, password) }.toString().isNotBlank()
+        } to false,
         EmptyCookieJarInterceptor(cookies) to false,
         UserAgentInterceptor(androidVersion, buildTag) to false
     )
@@ -109,7 +112,6 @@ class ServiceManager(
         return getRetrofit(
             client = prepareStudentService(withLogin, studentInterceptor, emptyCookieJarIntercept),
             baseUrl = urlGenerator.generate(UrlGenerator.Site.STUDENT),
-            login = withLogin,
             gson = true
         ).create()
     }
@@ -117,8 +119,7 @@ class ServiceManager(
     fun getSnpService(withLogin: Boolean = true, studentInterceptor: Boolean = true, emptyCookieJarIntercept: Boolean = false): StudentAndParentService {
         return getRetrofit(
             client = prepareStudentService(withLogin, studentInterceptor, emptyCookieJarIntercept),
-            baseUrl = urlGenerator.generate(UrlGenerator.Site.SNP),
-            login = withLogin
+            baseUrl = urlGenerator.generate(UrlGenerator.Site.SNP)
         ).create()
     }
 
@@ -138,14 +139,20 @@ class ServiceManager(
     }
 
     fun getMessagesService(): MessagesService {
-        return getRetrofit(getClientBuilder(), urlGenerator.generate(UrlGenerator.Site.MESSAGES), login = true, gson = true).create()
+        return getRetrofit(getClientBuilder(), urlGenerator.generate(UrlGenerator.Site.MESSAGES), gson = true).create()
     }
 
     fun getHomepageService(): HomepageService {
-        return getRetrofit(getClientBuilder(), urlGenerator.generate(UrlGenerator.Site.HOME), login = true, gson = true).create()
+        return getRetrofit(getClientBuilder(), urlGenerator.generate(UrlGenerator.Site.HOME), gson = true).create()
     }
 
-    private fun getRetrofit(client: OkHttpClient.Builder, baseUrl: String, login: Boolean = true, gson: Boolean = false): Retrofit {
+    // private suspend fun getLoginHelper(): Flowable<SendCertificateResponse> {
+    //     return loginHelper
+    //         .login(email, password)
+    //         .share()
+    // }
+
+    private fun getRetrofit(client: OkHttpClient.Builder, baseUrl: String, gson: Boolean = false): Retrofit {
         return Retrofit.Builder()
             .baseUrl(baseUrl)
             .client(client.build())
@@ -185,12 +192,6 @@ class ServiceManager(
                 }
             }
     }
-
-    // private suspend fun getLoginHelper(): Flowable<SendCertificateResponse> {
-    //     return loginHelper
-    //         .login(email, password)
-    //         .share()
-    // }
 
     class UrlGenerator(private val schema: String, private val host: String, var symbol: String, var schoolId: String) {
 

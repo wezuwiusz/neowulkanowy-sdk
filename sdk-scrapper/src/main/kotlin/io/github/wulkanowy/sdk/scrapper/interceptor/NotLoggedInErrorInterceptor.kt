@@ -15,16 +15,34 @@ import io.github.wulkanowy.sdk.scrapper.repository.AccountRepository.Companion.S
 import okhttp3.Interceptor
 import okhttp3.Response
 import org.jsoup.Jsoup
+import org.jsoup.nodes.Document
 import org.jsoup.select.Elements
 
-class NotLoggedInErrorInterceptor(private val loginType: LoginType) : Interceptor {
+class NotLoggedInErrorInterceptor(
+    private val loginType: LoginType,
+    private val notLoggedInCallback: () -> Boolean
+) : Interceptor {
 
     override fun intercept(chain: Interceptor.Chain): Response {
         val response = chain.proceed(chain.request())
-        val doc = Jsoup.parse(response.peekBody(Long.MAX_VALUE).string())
 
+        try {
+            check(
+                doc = Jsoup.parse(response.peekBody(Long.MAX_VALUE).string()),
+                url = chain.request().url().toString()
+            )
+        } catch (e: NotLoggedInException) {
+            if (notLoggedInCallback()) {
+                return chain.proceed(response.request().newBuilder().build())
+            } else throw e
+        }
+
+        return response
+    }
+
+    private fun check(doc: Document, url: String) {
         // if (chain.request().url().toString().contains("/Start.mvc/Get")) {
-        if (chain.request().url().toString().contains("/Start.mvc/")) { // /Index return error too in 19.09.0000.34977
+        if (url.contains("/Start.mvc/")) { // /Index return error too in 19.09.0000.34977
             doc.select(".errorBlock").let {
                 if (it.isNotEmpty()) throw NotLoggedInException(it.select(".errorTitle").text())
             }
@@ -45,7 +63,5 @@ class NotLoggedInErrorInterceptor(private val loginType: LoginType) : Intercepto
             // /messages
             if (it.contains("The custom error module")) throw NotLoggedInException("Zaloguj się")
         }
-
-        return response
     }
 }

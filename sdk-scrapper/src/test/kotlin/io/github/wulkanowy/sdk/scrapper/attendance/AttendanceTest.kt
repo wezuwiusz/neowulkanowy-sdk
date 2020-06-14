@@ -20,7 +20,7 @@ class AttendanceTest : BaseLocalTest() {
         runBlocking { getStudentRepo(AttendanceTest::class.java, "Frekwencja.json").getAttendance(getLocalDate(2018, 10, 1), null) }
     }
 
-    override fun getStudentRepo(testClass: Class<*>, fixture: String, loginType: Scrapper.LoginType): StudentRepository {
+    override fun getStudentRepo(testClass: Class<*>, fixture: String, loginType: Scrapper.LoginType, autoLogin: Boolean): StudentRepository {
         server.enqueue(MockResponse().setBody(testClass.getResource(fixture).readText()))
         server.enqueue(MockResponse().setBody(RegisterTest::class.java.getResource("WitrynaUcznia.html").readText()))
         server.enqueue(MockResponse().setBody(RegisterTest::class.java.getResource("UczenCache.json").readText()))
