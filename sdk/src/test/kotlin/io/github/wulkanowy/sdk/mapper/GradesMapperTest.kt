@@ -17,8 +17,8 @@ class GradesMapperTest : BaseLocalTest() {
 
     @Test
     fun getApiGrades() {
-        server.enqueue("Slowniki.json", BaseLocalTest::class.java)
         server.enqueueAndStart("Oceny.json", GradesTest::class.java)
+        server.enqueue("Slowniki.json", BaseLocalTest::class.java)
 
         val grades = mobile.getGradesDetails(0).blockingGet()
         assertEquals(2, grades.size)

@@ -1,7 +1,7 @@
 package io.github.wulkanowy.sdk.scrapper.register
 
-import io.github.wulkanowy.sdk.scrapper.Scrapper
 import io.github.wulkanowy.sdk.scrapper.BaseLocalTest
+import io.github.wulkanowy.sdk.scrapper.Scrapper
 import io.github.wulkanowy.sdk.scrapper.grades.GradesTest
 import io.github.wulkanowy.sdk.scrapper.login.LoginHelper
 import io.github.wulkanowy.sdk.scrapper.login.LoginTest
@@ -12,6 +12,7 @@ import io.github.wulkanowy.sdk.scrapper.service.RegisterService
 import io.github.wulkanowy.sdk.scrapper.service.ServiceManager
 import io.github.wulkanowy.sdk.scrapper.service.StudentAndParentService
 import io.github.wulkanowy.sdk.scrapper.service.StudentService
+import kotlinx.coroutines.runBlocking
 import okhttp3.mockwebserver.MockResponse
 import org.junit.Assert.assertEquals
 import org.junit.Test
@@ -21,7 +22,7 @@ class RegisterTest : BaseLocalTest() {
 
     private val login by lazy {
         LoginHelper(Scrapper.LoginType.STANDARD, "http", "fakelog.localhost:3000", "default", CookieManager(),
-                getService(LoginService::class.java, "http://fakelog.localhost:3000/", true, true, false, Scrapper.LoginType.STANDARD))
+            getService(LoginService::class.java, "http://fakelog.localhost:3000/", true, true, false, Scrapper.LoginType.STANDARD))
     }
 
     private val registerSnp by lazy {
@@ -44,7 +45,7 @@ class RegisterTest : BaseLocalTest() {
 
     private val snp by lazy {
         StudentAndParentStartRepository("default", "0012345", 123,
-                getService(StudentAndParentService::class.java, "http://fakelog.localhost:3000/"))
+            getService(StudentAndParentService::class.java, "http://fakelog.localhost:3000/"))
     }
 
     @Test
@@ -62,7 +63,7 @@ class RegisterTest : BaseLocalTest() {
         server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("Logowanie-brak-dostepu.html").readText()))
         server.start(3000)
 
-        val res = registerSnp.getStudents().blockingGet()
+        val res = runBlocking { registerSnp.getStudents() }
 
         assertEquals(1, res.size)
         assertEquals("Jan Kowal", res[0].studentName)
@@ -83,7 +84,7 @@ class RegisterTest : BaseLocalTest() {
 
         server.start(3000)
 
-        val res = registerStudent.getStudents().blockingGet()
+        val res = runBlocking { registerStudent.getStudents() }
 
         assertEquals(2, res.size)
 
@@ -119,7 +120,7 @@ class RegisterTest : BaseLocalTest() {
 
         server.start(3000)
 
-        val res = registerStudent.getStudents().blockingGet()
+        val res = runBlocking { registerStudent.getStudents() }
 
         assertEquals(1, res.size)
 
@@ -147,7 +148,7 @@ class RegisterTest : BaseLocalTest() {
 
         server.start(3000)
 
-        val res = registerStudent.getStudents().blockingGet()
+        val res = runBlocking { registerStudent.getStudents() }
 
         assertEquals(1, res.size)
 
@@ -175,7 +176,7 @@ class RegisterTest : BaseLocalTest() {
 
         server.start(3000)
 
-        val res = registerStudent.getStudents().blockingGet()
+        val res = runBlocking { registerStudent.getStudents() }
 
         assertEquals(2, res.size)
 
@@ -205,7 +206,7 @@ class RegisterTest : BaseLocalTest() {
         server.enqueue(MockResponse().setBody(GradesTest::class.java.getResource("OcenyWszystkie-details.html").readText().replace("1234568", "1234572")))
         server.start(3000)
 
-        val res = snp.getSemesters().blockingGet()
+        val res = runBlocking { snp.getSemesters() }
 
         assertEquals(6, res.size)
         assertEquals(1234567, res[0].semesterId)
@@ -231,7 +232,7 @@ class RegisterTest : BaseLocalTest() {
         server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("Logowanie-brak-dostepu.html").readText()))
         server.start(3000)
 
-        val res = registerSnp.getStudents().blockingGet()
+        val res = runBlocking { registerSnp.getStudents() }
         assertEquals(Scrapper.LoginType.STANDARD, res[0].loginType)
     }
 
@@ -252,7 +253,7 @@ class RegisterTest : BaseLocalTest() {
         server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("Logowanie-brak-dostepu.html").readText()))
         server.start(3000)
 
-        val res = registerSnp.getStudents().blockingGet()
+        val res = runBlocking { registerSnp.getStudents() }
         assertEquals(Scrapper.LoginType.ADFS, res[0].loginType)
     }
 
@@ -274,7 +275,7 @@ class RegisterTest : BaseLocalTest() {
         server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("Logowanie-brak-dostepu.html").readText()))
         server.start(3000)
 
-        val res = registerSnp.getStudents().blockingGet()
+        val res = runBlocking { registerSnp.getStudents() }
         assertEquals(Scrapper.LoginType.ADFSCards, res[0].loginType)
     }
 
@@ -294,7 +295,7 @@ class RegisterTest : BaseLocalTest() {
         server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("Logowanie-brak-dostepu.html").readText()))
         server.start(3000)
 
-        val res = registerSnp.getStudents().blockingGet()
+        val res = runBlocking { registerSnp.getStudents() }
         assertEquals(Scrapper.LoginType.ADFSLight, res[0].loginType)
     }
 
@@ -314,7 +315,7 @@ class RegisterTest : BaseLocalTest() {
         server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("Logowanie-brak-dostepu.html").readText()))
         server.start(3000)
 
-        val res = registerSnp.getStudents().blockingGet()
+        val res = runBlocking { registerSnp.getStudents() }
         assertEquals(Scrapper.LoginType.ADFSLight, res[0].loginType)
     }
 
@@ -334,7 +335,7 @@ class RegisterTest : BaseLocalTest() {
         server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("Logowanie-brak-dostepu.html").readText()))
         server.start(3000)
 
-        val res = registerSnp.getStudents().blockingGet()
+        val res = runBlocking { registerSnp.getStudents() }
         assertEquals(Scrapper.LoginType.ADFSLightScoped, res[0].loginType)
     }
 }

@@ -32,8 +32,8 @@ import io.github.wulkanowy.sdk.scrapper.homework.Homework
 import io.github.wulkanowy.sdk.scrapper.homework.HomeworkRequest
 import io.github.wulkanowy.sdk.scrapper.homework.mapHomework
 import io.github.wulkanowy.sdk.scrapper.homework.mapHomeworkList
-import io.github.wulkanowy.sdk.scrapper.interceptor.ErrorHandlerTransformer
 import io.github.wulkanowy.sdk.scrapper.exception.FeatureDisabledException
+import io.github.wulkanowy.sdk.scrapper.interceptor.handleErrors
 import io.github.wulkanowy.sdk.scrapper.mobile.Device
 import io.github.wulkanowy.sdk.scrapper.mobile.TokenResponse
 import io.github.wulkanowy.sdk.scrapper.mobile.UnregisterDeviceRequest
@@ -51,7 +51,6 @@ import io.github.wulkanowy.sdk.scrapper.timetable.mapCompletedLessonsList
 import io.github.wulkanowy.sdk.scrapper.timetable.mapTimetableList
 import io.github.wulkanowy.sdk.scrapper.toDate
 import io.github.wulkanowy.sdk.scrapper.toFormat
-import io.reactivex.Single
 import org.jsoup.Jsoup
 import org.threeten.bp.LocalDate
 
@@ -65,184 +64,172 @@ class StudentRepository(private val api: StudentService) {
 
     private fun LocalDate.toISOFormat(): String = toFormat("yyyy-MM-dd'T00:00:00'")
 
-    private fun getCache(): Single<CacheResponse> {
-        if (::cache.isInitialized) return Single.just(cache)
+    private suspend fun getCache(): CacheResponse {
+        if (::cache.isInitialized) return cache
 
-        return api.getStart("Start").flatMap {
-            api.getUserCache(
-                getScriptParam("antiForgeryToken", it),
-                getScriptParam("appGuid", it),
-                getScriptParam("version", it)
-            )
-        }.compose(ErrorHandlerTransformer()).map { requireNotNull(it.data) }
-            .map { it.apply { cache = this } }
+        val it = api.getStart("Start")
+
+        val res = api.getUserCache(
+            getScriptParam("antiForgeryToken", it),
+            getScriptParam("appGuid", it),
+            getScriptParam("version", it)
+        ).handleErrors()
+
+        val data = requireNotNull(res.data)
+        cache = data
+        return data
     }
 
-    private fun getTimes(): Single<List<CacheResponse.Time>> {
-        if (::times.isInitialized) return Single.just(times)
+    private suspend fun getTimes(): List<CacheResponse.Time> {
+        if (::times.isInitialized) return times
 
-        return getCache().map { res -> res.times }.map { list ->
-            list.apply { times = this }
+        val res = getCache()
+        times = res.times
+        return res.times
+    }
+
+    suspend fun getAttendance(startDate: LocalDate, endDate: LocalDate?): List<Attendance> {
+        return api.getAttendance(AttendanceRequest(startDate.toDate()))
+            .handleErrors()
+            .data?.mapAttendanceList(startDate, endDate, getTimes())!!
+    }
+
+    suspend fun getAttendanceSummary(subjectId: Int?): List<AttendanceSummary> {
+        return api.getAttendanceStatistics(AttendanceSummaryRequest(subjectId))
+            .handleErrors()
+            .data?.mapAttendanceSummaryList(gson)!!
+    }
+
+    suspend fun excuseForAbsence(absents: List<Absent>, content: String?): Boolean {
+        val it = api.getStart("Start")
+        return api.excuseForAbsence(
+            getScriptParam("antiForgeryToken", it),
+            getScriptParam("appGuid", it),
+            getScriptParam("version", it),
+            AttendanceExcuseRequest(
+                AttendanceExcuseRequest.Excuse(
+                    absents = absents.map { absence ->
+                        AttendanceExcuseRequest.Excuse.Absent(
+                            date = absence.date.toFormat("yyyy-MM-dd'T'HH:mm:ss"),
+                            timeId = absence.timeId
+                        )
+                    },
+                    content = content
+                )
+            )
+        ).handleErrors().success
+    }
+
+    suspend fun getSubjects(): List<Subject> {
+        return api.getAttendanceSubjects().handleErrors().data.orEmpty()
+    }
+
+    suspend fun getExams(startDate: LocalDate, endDate: LocalDate? = null): List<Exam> {
+        return api.getExams(ExamRequest(startDate.toDate(), startDate.getSchoolYear()))
+            .handleErrors()
+            .data.orEmpty().mapExamsList(startDate, endDate)
+    }
+
+    suspend fun getGrades(semesterId: Int?): Pair<List<Grade>, List<GradeSummary>> {
+        val data = api.getGrades(GradeRequest(semesterId))
+            .handleErrors()
+            .data
+        return requireNotNull(data).mapGradesList() to data.mapGradesSummary()
+    }
+
+    suspend fun getGradesDetails(semesterId: Int?): List<Grade> {
+        return api.getGrades(GradeRequest(semesterId))
+            .handleErrors()
+            .data?.mapGradesList()!!
+    }
+
+    suspend fun getGradesSummary(semesterId: Int?): List<GradeSummary> {
+        return api.getGrades(GradeRequest(semesterId))
+            .handleErrors()
+            .data?.mapGradesSummary()!!
+    }
+
+    suspend fun getGradesPartialStatistics(semesterId: Int): List<GradeStatistics> {
+        return api.getGradesPartialStatistics(GradesStatisticsRequest(semesterId))
+            .handleErrors()
+            .data.orEmpty().mapGradesStatisticsPartial(semesterId)
+    }
+
+    suspend fun getGradesPointsStatistics(semesterId: Int): List<GradePointsSummary> {
+        return api.getGradesPointsStatistics(GradesStatisticsRequest(semesterId))
+            .handleErrors()
+            .data.orEmpty().mapGradesStatisticsPoints(semesterId)
+    }
+
+    suspend fun getGradesAnnualStatistics(semesterId: Int): List<GradeStatistics> {
+        return api.getGradesAnnualStatistics(GradesStatisticsRequest(semesterId))
+            .handleErrors()
+            .data.orEmpty().mapGradesStatisticsAnnual(semesterId)
+    }
+
+    suspend fun getHomework(startDate: LocalDate, endDate: LocalDate? = null): List<Homework> {
+        return try {
+            api.getHomework(HomeworkRequest(startDate.toDate(), startDate.getSchoolYear(), -1))
+                .handleErrors()
+                .data.orEmpty().mapHomework(startDate, endDate)
+        } catch (e: InvalidPathException) {
+            api.getZadaniaDomowe(ExamRequest(startDate.toDate(), startDate.getSchoolYear()))
+                .handleErrors()
+                .data.orEmpty().mapHomeworkList(startDate, endDate)
         }
     }
 
-    fun getAttendance(startDate: LocalDate, endDate: LocalDate?): Single<List<Attendance>> {
-        return api.getAttendance(AttendanceRequest(startDate.toDate()))
-            .compose(ErrorHandlerTransformer()).map { requireNotNull(it.data) }
-            .mapAttendanceList(startDate, endDate, ::getTimes)
-    }
-
-    fun getAttendanceSummary(subjectId: Int?): Single<List<AttendanceSummary>> {
-        return api.getAttendanceStatistics(AttendanceSummaryRequest(subjectId))
-            .compose(ErrorHandlerTransformer()).map { requireNotNull(it.data) }
-            .map { it.mapAttendanceSummaryList(gson) }
-    }
-
-    fun excuseForAbsence(absents: List<Absent>, content: String?): Single<Boolean> {
-        return api.getStart("Start").flatMap {
-            api.excuseForAbsence(
-                getScriptParam("antiForgeryToken", it),
-                getScriptParam("appGuid", it),
-                getScriptParam("version", it),
-                AttendanceExcuseRequest(
-                    AttendanceExcuseRequest.Excuse(
-                        absents = absents.map { absence ->
-                            AttendanceExcuseRequest.Excuse.Absent(
-                                date = absence.date.toFormat("yyyy-MM-dd'T'HH:mm:ss"),
-                                timeId = absence.timeId
-                            )
-                        },
-                        content = content
-                    )
-                )
-            )
-        }.compose(ErrorHandlerTransformer()).map { it.success }
-    }
-
-    fun getSubjects(): Single<List<Subject>> {
-        return api.getAttendanceSubjects()
-            .compose(ErrorHandlerTransformer()).map { it.data.orEmpty() }
-    }
-
-    fun getExams(startDate: LocalDate, endDate: LocalDate? = null): Single<List<Exam>> {
-        return api.getExams(ExamRequest(startDate.toDate(), startDate.getSchoolYear()))
-            .compose(ErrorHandlerTransformer()).map { it.data.orEmpty() }
-            .map { it.mapExamsList(startDate, endDate) }
-    }
-
-    fun getGrades(semesterId: Int?): Single<Pair<List<Grade>, List<GradeSummary>>> {
-        return api.getGrades(GradeRequest(semesterId))
-            .compose(ErrorHandlerTransformer()).map { requireNotNull(it.data) }
-            .map { it.mapGradesList() to it.mapGradesSummary() }
-    }
-
-    fun getGradesDetails(semesterId: Int?): Single<List<Grade>> {
-        return api.getGrades(GradeRequest(semesterId))
-            .compose(ErrorHandlerTransformer()).map { requireNotNull(it.data) }
-            .map { it.mapGradesList() }
-    }
-
-    fun getGradesSummary(semesterId: Int?): Single<List<GradeSummary>> {
-        return api.getGrades(GradeRequest(semesterId))
-            .compose(ErrorHandlerTransformer()).map { requireNotNull(it.data) }
-            .map { it.mapGradesSummary() }
-    }
-
-    fun getGradesPartialStatistics(semesterId: Int): Single<List<GradeStatistics>> {
-        return api.getGradesPartialStatistics(GradesStatisticsRequest(semesterId))
-            .compose(ErrorHandlerTransformer()).map { it.data.orEmpty() }
-            .map { it.mapGradesStatisticsPartial(semesterId) }
-    }
-
-    fun getGradesPointsStatistics(semesterId: Int): Single<List<GradePointsSummary>> {
-        return api.getGradesPointsStatistics(GradesStatisticsRequest(semesterId))
-            .compose(ErrorHandlerTransformer()).map { it.data.orEmpty() }
-            .map { it.mapGradesStatisticsPoints(semesterId) }
-    }
-
-    fun getGradesAnnualStatistics(semesterId: Int): Single<List<GradeStatistics>> {
-        return api.getGradesAnnualStatistics(GradesStatisticsRequest(semesterId))
-            .compose(ErrorHandlerTransformer()).map { it.data.orEmpty() }
-            .map { it.mapGradesStatisticsAnnual(semesterId) }
-    }
-
-    fun getHomework(startDate: LocalDate, endDate: LocalDate? = null): Single<List<Homework>> {
-        return api.getHomework(HomeworkRequest(startDate.toDate(), startDate.getSchoolYear(), -1))
-            .compose(ErrorHandlerTransformer())
-            .map { it.data.orEmpty().mapHomework(startDate, endDate) }
-            .onErrorResumeNext { t ->
-                if (t is InvalidPathException) api.getZadaniaDomowe(ExamRequest(startDate.toDate(), startDate.getSchoolYear()))
-                    .compose(ErrorHandlerTransformer())
-                    .map { it.data.orEmpty().mapHomeworkList(startDate, endDate) }
-                else Single.error(t)
+    suspend fun getNotes(): List<Note> {
+        return api.getNotes().handleErrors().data?.notes.orEmpty().map {
+            it.apply {
+                teacherSymbol = teacher.split(" [").last().removeSuffix("]")
+                teacher = teacher.split(" [").first()
             }
+        }.sortedWith(compareBy({ it.date }, { it.category }))
     }
 
-    fun getNotes(): Single<List<Note>> {
-        return api.getNotes()
-            .compose(ErrorHandlerTransformer()).map { it.data?.notes.orEmpty() }
-            .map { res ->
-                res.map {
-                    it.apply {
-                        teacherSymbol = teacher.split(" [").last().removeSuffix("]")
-                        teacher = teacher.split(" [").first()
-                    }
-                }.sortedWith(compareBy({ it.date }, { it.category }))
-            }
+    suspend fun getTimetable(startDate: LocalDate, endDate: LocalDate? = null): List<Timetable> {
+        return api.getTimetable(TimetableRequest(startDate.toISOFormat())).handleErrors().data
+            ?.mapTimetableList(startDate, endDate)!!
     }
 
-    fun getTimetable(startDate: LocalDate, endDate: LocalDate? = null): Single<List<Timetable>> {
-        return api.getTimetable(TimetableRequest(startDate.toISOFormat()))
-            .compose(ErrorHandlerTransformer()).map { requireNotNull(it.data) }
-            .map { it.mapTimetableList(startDate, endDate) }
-    }
-
-    fun getCompletedLessons(start: LocalDate, endDate: LocalDate?, subjectId: Int): Single<List<CompletedLesson>> {
+    suspend fun getCompletedLessons(start: LocalDate, endDate: LocalDate?, subjectId: Int): List<CompletedLesson> {
         val end = endDate ?: start.plusMonths(1)
-        return getCache().map { cache ->
-            if (!cache.showCompletedLessons) throw FeatureDisabledException("Widok lekcji zrealizowanych został wyłączony przez Administratora szkoły")
-        }.flatMap {
-            api.getCompletedLessons(CompletedLessonsRequest(start.toISOFormat(), end.toISOFormat(), subjectId))
-        }.map {
-            gson.create().fromJson(it, ApiResponse::class.java)
-        }.compose<ApiResponse<*>>(ErrorHandlerTransformer()).map { it.mapCompletedLessonsList(start, endDate, gson) }
+        val cache = getCache()
+        if (!cache.showCompletedLessons) throw FeatureDisabledException("Widok lekcji zrealizowanych został wyłączony przez Administratora szkoły")
+
+        val res = api.getCompletedLessons(CompletedLessonsRequest(start.toISOFormat(), end.toISOFormat(), subjectId))
+        return gson.create().fromJson(res, ApiResponse::class.java).handleErrors().mapCompletedLessonsList(start, endDate, gson)
     }
 
-    fun getTeachers(): Single<List<Teacher>> {
-        return api.getSchoolAndTeachers()
-            .compose(ErrorHandlerTransformer()).map { requireNotNull(it.data) }
-            .map { it.mapToTeachers() }
+    suspend fun getTeachers(): List<Teacher> {
+        return api.getSchoolAndTeachers().handleErrors().data?.mapToTeachers()!!
     }
 
-    fun getSchool(): Single<School> {
-        return api.getSchoolAndTeachers()
-            .compose(ErrorHandlerTransformer()).map { requireNotNull(it.data) }
-            .map { it.school }
+    suspend fun getSchool(): School {
+        return api.getSchoolAndTeachers().handleErrors().data?.school!!
     }
 
-    fun getRegisteredDevices(): Single<List<Device>> {
-        return api.getRegisteredDevices()
-            .compose(ErrorHandlerTransformer()).map { it.data.orEmpty() }
+    suspend fun getRegisteredDevices(): List<Device> {
+        return api.getRegisteredDevices().handleErrors().data.orEmpty()
     }
 
-    fun getToken(): Single<TokenResponse> {
-        return api.getToken()
-            .compose(ErrorHandlerTransformer()).map { requireNotNull(it.data) }
-            .map { res ->
-                res.apply {
-                    qrCodeImage = Jsoup.parse(qrCodeImage).select("img").attr("src").split("data:image/png;base64,")[1]
-                }
-            }
+    suspend fun getToken(): TokenResponse {
+        val data = api.getToken().handleErrors().data
+        requireNotNull(data).qrCodeImage = Jsoup.parse(data.qrCodeImage)
+            .select("img")
+            .attr("src")
+            .split("data:image/png;base64,")[1]
+        return data
     }
 
-    fun unregisterDevice(id: Int): Single<Boolean> {
-        return api.getStart("Start").flatMap {
-            api.unregisterDevice(
-                getScriptParam("antiForgeryToken", it),
-                getScriptParam("appGuid", it),
-                getScriptParam("version", it),
-                UnregisterDeviceRequest(id)
-            )
-        }.compose(ErrorHandlerTransformer()).map { it.success }
+    suspend fun unregisterDevice(id: Int): Boolean {
+        val it = api.getStart("Start")
+        return api.unregisterDevice(
+            getScriptParam("antiForgeryToken", it),
+            getScriptParam("appGuid", it),
+            getScriptParam("version", it),
+            UnregisterDeviceRequest(id)
+        ).handleErrors().success
     }
 }

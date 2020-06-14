@@ -1,6 +1,7 @@
 package io.github.wulkanowy.sdk.scrapper.mobile
 
 import io.github.wulkanowy.sdk.scrapper.BaseLocalTest
+import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Test
@@ -8,19 +9,19 @@ import org.junit.Test
 class MobileTest : BaseLocalTest() {
 
     private val devicesSnp by lazy {
-        getSnpRepo(MobileTest::class.java, "DostepMobilny-filled.html").getRegisteredDevices().blockingGet()
+        runBlocking { getSnpRepo(MobileTest::class.java, "DostepMobilny-filled.html").getRegisteredDevices() }
     }
 
     private val tokenSnp by lazy {
-        getSnpRepo(MobileTest::class.java, "Rejestruj.html").getToken().blockingGet()
+        runBlocking { getSnpRepo(MobileTest::class.java, "Rejestruj.html").getToken() }
     }
 
     private val devicesStudent by lazy {
-        getStudentRepo(MobileTest::class.java, "ZarejestrowaneUrzadzenia.json").getRegisteredDevices().blockingGet()
+        runBlocking { getStudentRepo(MobileTest::class.java, "ZarejestrowaneUrzadzenia.json").getRegisteredDevices() }
     }
 
     private val tokenStudent by lazy {
-        getStudentRepo(MobileTest::class.java, "RejestracjaUrzadzeniaToken.json").getToken().blockingGet()
+        runBlocking { getStudentRepo(MobileTest::class.java, "RejestracjaUrzadzeniaToken.json").getToken() }
     }
 
     @Test

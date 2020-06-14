@@ -4,13 +4,14 @@ import io.github.wulkanowy.sdk.scrapper.BaseLocalTest
 import io.github.wulkanowy.sdk.scrapper.Scrapper
 import io.github.wulkanowy.sdk.scrapper.repository.StudentRepository
 import io.github.wulkanowy.sdk.scrapper.service.StudentService
+import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertEquals
 import org.junit.Test
 
 class HomeworkTest : BaseLocalTest() {
 
     private val snp by lazy {
-        getSnpRepo(HomeworkTest::class.java, "ZadaniaDomowe.html").getHomework(getLocalDate(2018, 10, 1)).blockingGet()
+        runBlocking { getSnpRepo(HomeworkTest::class.java, "ZadaniaDomowe.html").getHomework(getLocalDate(2018, 10, 1)) }
     }
 
     private val studentRaw by lazy {
@@ -18,7 +19,7 @@ class HomeworkTest : BaseLocalTest() {
     }
 
     private val student by lazy {
-        getStudentRepo(HomeworkTest::class.java, "Homework.json").getHomework(getLocalDate(2018, 10, 1)).blockingGet()
+        runBlocking { getStudentRepo(HomeworkTest::class.java, "Homework.json").getHomework(getLocalDate(2018, 10, 1)) }
     }
 
     @Test
@@ -66,7 +67,7 @@ class HomeworkTest : BaseLocalTest() {
         server.enqueue("ZadaniaDomowe.json")
         server.start(3030)
 
-        val homework = studentRaw.getHomework(getLocalDate(2018, 10, 1)).blockingGet()
+        val homework = runBlocking { studentRaw.getHomework(getLocalDate(2018, 10, 1)) }
         assertEquals(2, homework.size)
     }
 }

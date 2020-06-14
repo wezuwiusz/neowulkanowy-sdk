@@ -2,6 +2,7 @@ package io.github.wulkanowy.sdk.mobile.grades
 
 import io.github.wulkanowy.sdk.mobile.BaseLocalTest
 import io.github.wulkanowy.sdk.mobile.repository.MobileRepository
+import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertEquals
 import org.junit.Test
 import retrofit2.create
@@ -14,7 +15,7 @@ class GradesTest : BaseLocalTest() {
     fun getGrades() {
         server.enqueueAndStart("Oceny.json")
 
-        val items = grades.getGradesDetails(0, 0, 0).blockingGet()
+        val items = runBlocking { grades.getGradesDetails(0, 0, 0) }
 
         assertEquals(2, items.size)
     }

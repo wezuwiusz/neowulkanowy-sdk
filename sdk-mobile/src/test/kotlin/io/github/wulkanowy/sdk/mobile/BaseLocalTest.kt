@@ -7,7 +7,6 @@ import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
 import org.junit.After
 import retrofit2.Retrofit
-import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.converter.scalars.ScalarsConverterFactory
 
@@ -32,7 +31,6 @@ open class BaseLocalTest {
     fun getRetrofit(baseUrl: String = server.url("/").toString()): Retrofit = getRetrofitBuilder().baseUrl(baseUrl).build()
 
     fun getRetrofitBuilder(): Retrofit.Builder = Retrofit.Builder()
-        .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
         .addConverterFactory(ScalarsConverterFactory.create())
         .addConverterFactory(GsonConverterFactory.create())
         .client(OkHttpClient().newBuilder()

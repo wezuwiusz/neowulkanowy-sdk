@@ -5,11 +5,14 @@ import com.google.gson.JsonParser
 import io.github.wulkanowy.sdk.scrapper.grades.DateDeserializer
 import io.github.wulkanowy.sdk.scrapper.grades.GradeDate
 import io.github.wulkanowy.sdk.scrapper.interceptor.ErrorInterceptor
-import io.github.wulkanowy.sdk.scrapper.interceptor.NotLoggedInErrorInterceptor
+import io.github.wulkanowy.sdk.scrapper.interceptor.AutoLoginInterceptor
+import io.github.wulkanowy.sdk.scrapper.login.LoginHelper
 import io.github.wulkanowy.sdk.scrapper.repository.StudentAndParentRepository
 import io.github.wulkanowy.sdk.scrapper.repository.StudentRepository
+import io.github.wulkanowy.sdk.scrapper.service.LoginService
 import io.github.wulkanowy.sdk.scrapper.service.StudentAndParentService
 import io.github.wulkanowy.sdk.scrapper.service.StudentService
+import kotlinx.coroutines.runBlocking
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import okhttp3.mockwebserver.MockResponse
@@ -17,9 +20,9 @@ import okhttp3.mockwebserver.MockWebServer
 import org.junit.After
 import pl.droidsonroids.retrofit2.JspoonConverterFactory
 import retrofit2.Retrofit
-import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.converter.scalars.ScalarsConverterFactory
+import java.net.CookieManager
 
 abstract class BaseLocalTest : BaseTest() {
 
@@ -35,14 +38,14 @@ abstract class BaseLocalTest : BaseTest() {
         server.shutdown()
     }
 
-    fun getSnpRepo(testClass: Class<*>, fixture: String, loginType: Scrapper.LoginType = Scrapper.LoginType.STANDARD): StudentAndParentRepository {
+    fun getSnpRepo(testClass: Class<*>, fixture: String, loginType: Scrapper.LoginType = Scrapper.LoginType.STANDARD, autoLogin: Boolean = false): StudentAndParentRepository {
         server.enqueue(MockResponse().setBody(testClass.getResource(fixture).readText()))
-        return StudentAndParentRepository(getService(StudentAndParentService::class.java, server.url("/").toString(), true, true, true, loginType))
+        return StudentAndParentRepository(getService(StudentAndParentService::class.java, server.url("/").toString(), true, true, true, loginType, autoLogin))
     }
 
-    open fun getStudentRepo(testClass: Class<*>, fixture: String, loginType: Scrapper.LoginType = Scrapper.LoginType.STANDARD): StudentRepository {
+    open fun getStudentRepo(testClass: Class<*>, fixture: String, loginType: Scrapper.LoginType = Scrapper.LoginType.STANDARD, autoLogin: Boolean = false): StudentRepository {
         server.enqueue(MockResponse().setBody(testClass.getResource(fixture).readText()))
-        return StudentRepository(getService(StudentService::class.java, server.url("/").toString(), false, true, true, loginType))
+        return StudentRepository(getService(StudentService::class.java, server.url("/").toString(), false, true, true, loginType, autoLogin))
     }
 
     fun <T> getService(
@@ -51,13 +54,20 @@ abstract class BaseLocalTest : BaseTest() {
         html: Boolean = true,
         errorInterceptor: Boolean = true,
         noLoggedInInterceptor: Boolean = true,
-        loginType: Scrapper.LoginType = Scrapper.LoginType.STANDARD
+        loginType: Scrapper.LoginType = Scrapper.LoginType.STANDARD,
+        autoLogin: Boolean = false
     ): T {
         return Retrofit.Builder()
             .client(OkHttpClient.Builder()
                 .apply {
                     if (errorInterceptor) addInterceptor(ErrorInterceptor())
-                    if (noLoggedInInterceptor) addInterceptor(NotLoggedInErrorInterceptor(loginType))
+                    if (noLoggedInInterceptor) addInterceptor(AutoLoginInterceptor(loginType, CookieManager(), false) {
+                        if (autoLogin) runBlocking {
+                            LoginHelper(loginType, "http", "localhost", "powiatwulkanowy", CookieManager(), getService(LoginService::class.java))
+                                .login("jan", "kowalski")
+                            true
+                        } else false
+                    })
                 }
                 .addInterceptor(HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BASIC))
                 .build()
@@ -68,7 +78,6 @@ abstract class BaseLocalTest : BaseTest() {
                 .serializeNulls()
                 .registerTypeAdapter(GradeDate::class.java, DateDeserializer(GradeDate::class.java))
                 .create()) else JspoonConverterFactory.create())
-            .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
             .baseUrl(url)
             .build()
             .create(service)

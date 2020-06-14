@@ -4,8 +4,9 @@ import io.github.wulkanowy.sdk.scrapper.BaseLocalTest
 import io.github.wulkanowy.sdk.scrapper.exception.FeatureDisabledException
 import io.github.wulkanowy.sdk.scrapper.exception.VulcanException
 import io.github.wulkanowy.sdk.scrapper.register.RegisterTest
-import io.reactivex.observers.TestObserver
+import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
 
@@ -20,11 +21,13 @@ class CompletedLessonsTest : BaseLocalTest() {
     // }
 
     private val student by lazy {
-        getStudentRepo(CompletedLessonsTest::class.java, "Zrealizowane.json").getCompletedLessons(
-            getLocalDate(2018, 9, 17),
-            getLocalDate(2018, 9, 18),
-            -1
-        ).blockingGet()
+        runBlocking {
+            getStudentRepo(CompletedLessonsTest::class.java, "Zrealizowane.json").getCompletedLessons(
+                getLocalDate(2018, 9, 17),
+                getLocalDate(2018, 9, 18),
+                -1
+            )
+        }
     }
 
     @Before
@@ -41,28 +44,34 @@ class CompletedLessonsTest : BaseLocalTest() {
 
     @Test
     fun getRealized_disabled() {
-        val lessons = getStudentRepo(CompletedLessonsTest::class.java, "Zrealizowane-disabled.json").getCompletedLessons(
-            getLocalDate(2018, 9, 17),
-            getLocalDate(2018, 9, 18),
-            -1
-        )
-        val lessonsObserver = TestObserver<List<CompletedLesson>>()
-        lessons.subscribe(lessonsObserver)
-        lessonsObserver.assertError(FeatureDisabledException::class.java)
-        lessonsObserver.assertErrorMessage("Widok lekcji zrealizowanych został wyłączony przez Administratora szkoły.")
+        try {
+            runBlocking {
+                getStudentRepo(CompletedLessonsTest::class.java, "Zrealizowane-disabled.json").getCompletedLessons(
+                    getLocalDate(2018, 9, 17),
+                    getLocalDate(2018, 9, 18),
+                    -1
+                )
+            }
+        } catch (e: Throwable) {
+            assertTrue(e is FeatureDisabledException)
+            assertEquals("Widok lekcji zrealizowanych został wyłączony przez Administratora szkoły.", e.message)
+        }
     }
 
     @Test
     fun getRealized_errored() {
-        val lessons = getStudentRepo(CompletedLessonsTest::class.java, "Zrealizowane-errored.json").getCompletedLessons(
-            getLocalDate(2018, 9, 17),
-            getLocalDate(2018, 9, 18),
-            -1
-        )
-        val lessonsObserver = TestObserver<List<CompletedLesson>>()
-        lessons.subscribe(lessonsObserver)
-        lessonsObserver.assertError(VulcanException::class.java)
-        lessonsObserver.assertErrorMessage("DB_ERROR")
+        try {
+            runBlocking {
+                getStudentRepo(CompletedLessonsTest::class.java, "Zrealizowane-errored.json").getCompletedLessons(
+                    getLocalDate(2018, 9, 17),
+                    getLocalDate(2018, 9, 18),
+                    -1
+                )
+            }
+        } catch (e: Throwable) {
+            assertTrue(e is VulcanException)
+            assertEquals("DB_ERROR", e.message)
+        }
     }
 
     @Test

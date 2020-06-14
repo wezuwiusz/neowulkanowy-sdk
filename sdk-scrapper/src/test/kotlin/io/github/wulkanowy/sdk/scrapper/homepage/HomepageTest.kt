@@ -4,6 +4,7 @@ import io.github.wulkanowy.sdk.scrapper.BaseLocalTest
 import io.github.wulkanowy.sdk.scrapper.home.LuckyNumber
 import io.github.wulkanowy.sdk.scrapper.repository.HomepageRepository
 import io.github.wulkanowy.sdk.scrapper.service.HomepageService
+import kotlinx.coroutines.runBlocking
 import okhttp3.mockwebserver.MockResponse
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
@@ -21,7 +22,7 @@ class HomepageTest : BaseLocalTest() {
         server.enqueue("GetSelfGovernments.json")
         server.start(3000)
 
-        val units = repo.getSelfGovernments().blockingGet()
+        val units = runBlocking { repo.getSelfGovernments() }
         assertEquals(1, units.size)
         assertEquals("ZST-I", units[0].unitName)
 
@@ -45,7 +46,7 @@ class HomepageTest : BaseLocalTest() {
         server.enqueue("GetStudentThreats.json")
         server.start(3000)
 
-        val threats = repo.getStudentThreats().blockingGet()
+        val threats = runBlocking { repo.getStudentThreats() }
         assertEquals(1, threats.size)
         assertEquals("Jan Kowalski matematyka", threats[0])
     }
@@ -56,7 +57,7 @@ class HomepageTest : BaseLocalTest() {
         server.enqueue(MockResponse().setBody(HomepageTest::class.java.getResource("GetLastNotes.json").readText()))
         server.start(3000)
 
-        val res = repo.getLastGrades().blockingGet()
+        val res = runBlocking { repo.getLastGrades() }
         assertEquals(
             listOf(
                 "j. angielski: 1, 6",
@@ -72,7 +73,7 @@ class HomepageTest : BaseLocalTest() {
         server.enqueue(MockResponse().setBody(HomepageTest::class.java.getResource("GetFreeDays.json").readText()))
         server.start(3000)
 
-        val res = repo.getFreeDays().blockingGet()
+        val res = runBlocking { repo.getFreeDays() }
         assertEquals(
             listOf(
                 "Czwartek (20.06.2019) - Sobota (31.08.2019) - Ferie letnie",
@@ -107,7 +108,7 @@ class HomepageTest : BaseLocalTest() {
         server.enqueue(MockResponse().setBody(HomepageTest::class.java.getResource("GetKidsLuckyNumbers.json").readText()))
         server.start(3000)
 
-        val number = repo.getKidsLuckyNumbers().blockingGet()
+        val number = runBlocking { repo.getKidsLuckyNumbers() }
         assertEquals(listOf(LuckyNumber("", "SPL", 18)), number)
 
         server.takeRequest()
@@ -123,7 +124,7 @@ class HomepageTest : BaseLocalTest() {
         server.enqueue(MockResponse().setBody(HomepageTest::class.java.getResource("GetKidsLuckyNumbers-multi-institution.json").readText()))
         server.start(3000)
 
-        val numbers = repo.getKidsLuckyNumbers().blockingGet()
+        val numbers = runBlocking { repo.getKidsLuckyNumbers() }
         assertEquals(listOf(
             LuckyNumber("002547", "T", 37),
             LuckyNumber("010472", "ZSP Warcie", 12)

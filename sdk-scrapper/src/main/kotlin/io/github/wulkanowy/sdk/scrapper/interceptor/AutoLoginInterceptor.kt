@@ -13,18 +13,51 @@ import io.github.wulkanowy.sdk.scrapper.repository.AccountRepository.Companion.S
 import io.github.wulkanowy.sdk.scrapper.repository.AccountRepository.Companion.SELECTOR_ADFS_LIGHT
 import io.github.wulkanowy.sdk.scrapper.repository.AccountRepository.Companion.SELECTOR_STANDARD
 import okhttp3.Interceptor
+import okhttp3.Request
 import okhttp3.Response
 import org.jsoup.Jsoup
+import org.jsoup.nodes.Document
 import org.jsoup.select.Elements
+import java.net.CookieManager
 
-class NotLoggedInErrorInterceptor(private val loginType: LoginType) : Interceptor {
+class AutoLoginInterceptor(
+    private val loginType: LoginType,
+    private val jar: CookieManager,
+    private val emptyCookieJarIntercept: Boolean,
+    private val notLoggedInCallback: () -> Boolean
+) : Interceptor {
 
     override fun intercept(chain: Interceptor.Chain): Response {
-        val response = chain.proceed(chain.request())
-        val doc = Jsoup.parse(response.peekBody(Long.MAX_VALUE).string())
+        val request: Request
+        val response: Response
 
+        // TODO: add max retries
+        try {
+            request = chain.request()
+            checkRequest()
+            response = chain.proceed(request)
+            checkRequest(
+                doc = Jsoup.parse(response.peekBody(Long.MAX_VALUE).string()),
+                url = chain.request().url().toString()
+            )
+        } catch (e: NotLoggedInException) {
+            if (notLoggedInCallback()) {
+                return chain.proceed(chain.request().newBuilder().build())
+            } else throw e
+        }
+
+        return response
+    }
+
+    private fun checkRequest() {
+        if (emptyCookieJarIntercept && jar.cookieStore.cookies.isEmpty()) {
+            throw NotLoggedInException("No cookie found! You are not logged in yet")
+        }
+    }
+
+    private fun checkRequest(doc: Document, url: String) {
         // if (chain.request().url().toString().contains("/Start.mvc/Get")) {
-        if (chain.request().url().toString().contains("/Start.mvc/")) { // /Index return error too in 19.09.0000.34977
+        if (url.contains("/Start.mvc/")) { // /Index return error too in 19.09.0000.34977
             doc.select(".errorBlock").let {
                 if (it.isNotEmpty()) throw NotLoggedInException(it.select(".errorTitle").text())
             }
@@ -45,7 +78,5 @@ class NotLoggedInErrorInterceptor(private val loginType: LoginType) : Intercepto
             // /messages
             if (it.contains("The custom error module")) throw NotLoggedInException("Zaloguj się")
         }
-
-        return response
     }
 }

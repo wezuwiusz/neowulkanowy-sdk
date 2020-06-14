@@ -22,7 +22,6 @@ import io.github.wulkanowy.sdk.mobile.repository.RepositoryManager
 import io.github.wulkanowy.sdk.mobile.school.Teacher
 import io.github.wulkanowy.sdk.mobile.timetable.Lesson
 import io.github.wulkanowy.signer.getPrivateKeyFromCert
-import io.reactivex.Single
 import okhttp3.Interceptor
 import okhttp3.logging.HttpLoggingInterceptor
 import org.threeten.bp.LocalDate
@@ -83,21 +82,19 @@ class Mobile {
 
     private lateinit var dictionaries: Dictionaries
 
-    fun getDictionaries(): Single<Dictionaries> {
-        if (::dictionaries.isInitialized) return Single.just(dictionaries)
+    suspend fun getDictionaries(): Dictionaries {
+        if (::dictionaries.isInitialized) return dictionaries
 
-        return mobile.getDictionaries(0, 0, classId).map {
-            it.apply { dictionaries = this }
-        }
+        return mobile.getDictionaries(0, 0, classId)
+            .apply { dictionaries = this }
     }
 
-    fun getCertificate(token: String, pin: String, symbol: String, deviceName: String, androidVer: String, firebaseToken: String): Single<CertificateResponse> {
-        return routes.getRouteByToken(token).flatMap { baseUrl ->
-            serviceManager.getRegisterRepository(baseUrl, symbol).getCertificate(token, pin, deviceName, androidVer, firebaseToken)
-        }
+    suspend fun getCertificate(token: String, pin: String, symbol: String, deviceName: String, androidVer: String, firebaseToken: String): CertificateResponse {
+        val baseUrl = routes.getRouteByToken(token)
+        return serviceManager.getRegisterRepository(baseUrl, symbol).getCertificate(token, pin, deviceName, androidVer, firebaseToken)
     }
 
-    fun getStudents(certRes: CertificateResponse, apiKey: String = ""): Single<List<Student>> {
+    suspend fun getStudents(certRes: CertificateResponse, apiKey: String = ""): List<Student> {
         if (certRes.isError) when {
             certRes.message == "TokenDead" -> throw TokenDeadException(certRes.message)
             certRes.message == "TokenNotFound" -> throw TokenNotFoundException(certRes.message)
@@ -117,82 +114,73 @@ class Mobile {
                 .removeSurrounding("(", ")")
         }, cert.certificatePfx)
 
-        return serviceManager.getRegisterRepository(cert.baseUrl).getStudents().map { students ->
-            students.map {
-                it.copy().apply {
-                    certificateKey = this@Mobile.certKey
-                    privateKey = this@Mobile.privateKey
-                    mobileBaseUrl = this@Mobile.baseUrl
-                }
+        return serviceManager.getRegisterRepository(cert.baseUrl).getStudents().map {
+            it.copy().apply {
+                certificateKey = this@Mobile.certKey
+                privateKey = this@Mobile.privateKey
+                mobileBaseUrl = this@Mobile.baseUrl
             }
         }
     }
 
-    fun getStudents(): Single<List<Student>> {
+    suspend fun getStudents(): List<Student> {
         return serviceManager.getRegisterRepository(baseUrl).getStudents()
     }
 
-    fun getAttendance(start: LocalDate, end: LocalDate, classificationPeriodId: Int): Single<List<Attendance>> {
+    suspend fun getAttendance(start: LocalDate, end: LocalDate, classificationPeriodId: Int): List<Attendance> {
         return mobile.getAttendance(start, end, classId, classificationPeriodId, studentId)
     }
 
-    fun getExams(start: LocalDate, end: LocalDate, classificationPeriodId: Int): Single<List<Exam>> {
+    suspend fun getExams(start: LocalDate, end: LocalDate, classificationPeriodId: Int): List<Exam> {
         return mobile.getExams(start, end, classId, classificationPeriodId, studentId)
     }
 
-    fun getGrades(classificationPeriodId: Int): Single<Pair<List<Grade>, GradesSummaryResponse>> {
-        return getGradesDetails(classificationPeriodId).flatMap { details ->
-            getGradesSummary(classificationPeriodId).map { summary ->
-                details to summary
-            }
-        }
+    suspend fun getGrades(classificationPeriodId: Int): Pair<List<Grade>, GradesSummaryResponse> {
+        return getGradesDetails(classificationPeriodId) to getGradesSummary(classificationPeriodId)
     }
 
-    fun getGradesDetails(classificationPeriodId: Int): Single<List<Grade>> {
+    suspend fun getGradesDetails(classificationPeriodId: Int): List<Grade> {
         return mobile.getGradesDetails(classId, classificationPeriodId, studentId)
     }
 
-    fun getGradesSummary(classificationPeriodId: Int): Single<GradesSummaryResponse> {
+    suspend fun getGradesSummary(classificationPeriodId: Int): GradesSummaryResponse {
         return mobile.getGradesSummary(classId, classificationPeriodId, studentId)
     }
 
-    fun getHomework(start: LocalDate, end: LocalDate, classificationPeriodId: Int): Single<List<Homework>> {
+    suspend fun getHomework(start: LocalDate, end: LocalDate, classificationPeriodId: Int): List<Homework> {
         return mobile.getHomework(start, end, classId, classificationPeriodId, studentId)
     }
 
-    fun getNotes(classificationPeriodId: Int): Single<List<Note>> {
+    suspend fun getNotes(classificationPeriodId: Int): List<Note> {
         return mobile.getNotes(classificationPeriodId, studentId)
     }
 
-    fun getTeachers(studentId: Int, semesterId: Int): Single<List<Teacher>> {
+    suspend fun getTeachers(studentId: Int, semesterId: Int): List<Teacher> {
         return mobile.getTeachers(studentId, semesterId)
     }
 
-    fun getMessages(start: LocalDateTime, end: LocalDateTime): Single<List<Message>> {
+    suspend fun getMessages(start: LocalDateTime, end: LocalDateTime): List<Message> {
         return mobile.getMessages(start, end, loginId, studentId)
     }
 
-    fun getMessagesSent(start: LocalDateTime, end: LocalDateTime): Single<List<Message>> {
+    suspend fun getMessagesSent(start: LocalDateTime, end: LocalDateTime): List<Message> {
         return mobile.getMessagesSent(start, end, loginId, studentId)
     }
 
-    fun getMessagesDeleted(start: LocalDateTime, end: LocalDateTime): Single<List<Message>> {
+    suspend fun getMessagesDeleted(start: LocalDateTime, end: LocalDateTime): List<Message> {
         return mobile.getMessagesDeleted(start, end, loginId, studentId)
     }
 
-    fun changeMessageStatus(messageId: Int, folder: String, status: String): Single<String> {
+    suspend fun changeMessageStatus(messageId: Int, folder: String, status: String): String {
         return mobile.changeMessageStatus(messageId, folder, status, loginId, studentId)
     }
 
-    fun sendMessage(subject: String, content: String, recipients: List<Recipient>): Single<Message> {
-        return getStudents().map { students ->
-            students.singleOrNull { it.loginId == loginId }?.name.orEmpty()
-        }.flatMap { sender ->
-            mobile.sendMessage(sender, subject, content, recipients, loginId, studentId)
-        }
+    suspend fun sendMessage(subject: String, content: String, recipients: List<Recipient>): Message {
+        val sender = getStudents().singleOrNull { it.loginId == loginId }?.name.orEmpty()
+        return mobile.sendMessage(sender, subject, content, recipients, loginId, studentId)
     }
 
-    fun getTimetable(start: LocalDate, end: LocalDate, classificationPeriodId: Int): Single<List<Lesson>> {
+    suspend fun getTimetable(start: LocalDate, end: LocalDate, classificationPeriodId: Int): List<Lesson> {
         return mobile.getTimetable(start, end, classId, classificationPeriodId, studentId)
     }
 }

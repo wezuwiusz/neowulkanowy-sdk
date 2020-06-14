@@ -1,17 +1,18 @@
 package io.github.wulkanowy.sdk.scrapper.school
 
 import io.github.wulkanowy.sdk.scrapper.BaseLocalTest
+import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertEquals
 import org.junit.Test
 
 class TeachersTest : BaseLocalTest() {
 
     private val snp by lazy {
-        getSnpRepo(TeachersTest::class.java, "Szkola.html").getTeachers().blockingGet()
+        runBlocking { getSnpRepo(TeachersTest::class.java, "Szkola.html").getTeachers() }
     }
 
     private val student by lazy {
-        getStudentRepo(TeachersTest::class.java, "Szkola.json").getTeachers().blockingGet()
+        runBlocking { getStudentRepo(TeachersTest::class.java, "Szkola.json").getTeachers() }
     }
 
     @Test

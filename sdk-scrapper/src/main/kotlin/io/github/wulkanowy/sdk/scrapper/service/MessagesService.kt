@@ -7,7 +7,6 @@ import io.github.wulkanowy.sdk.scrapper.messages.Recipient
 import io.github.wulkanowy.sdk.scrapper.messages.ReportingUnit
 import io.github.wulkanowy.sdk.scrapper.messages.SendMessageRequest
 import io.github.wulkanowy.sdk.scrapper.messages.SentMessage
-import io.reactivex.Single
 import retrofit2.http.Body
 import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded
@@ -19,51 +18,51 @@ import retrofit2.http.Query
 interface MessagesService {
 
     @GET(".")
-    fun getStart(): Single<String>
+    suspend fun getStart(): String
 
     @GET("NowaWiadomosc.mvc/GetJednostkiUzytkownika")
-    fun getUserReportingUnits(): Single<ApiResponse<List<ReportingUnit>>>
+    suspend fun getUserReportingUnits(): ApiResponse<List<ReportingUnit>>
 
     @GET("Adresaci.mvc/GetAdresaci")
-    fun getRecipients(@Query("IdJednostkaSprawozdawcza") reportingUnitId: Int, @Query("Rola") role: Int): Single<ApiResponse<List<Recipient>>>
+    suspend fun getRecipients(@Query("IdJednostkaSprawozdawcza") reportingUnitId: Int, @Query("Rola") role: Int): ApiResponse<List<Recipient>>
 
     @GET("Wiadomosc.mvc/GetWiadomosciOdebrane")
-    fun getReceived(@Query("dataOd") dateStart: String, @Query("dataDo") dateEnd: String): Single<ApiResponse<List<Message>>>
+    suspend fun getReceived(@Query("dataOd") dateStart: String, @Query("dataDo") dateEnd: String): ApiResponse<List<Message>>
 
     @GET("Wiadomosc.mvc/GetWiadomosciWyslane")
-    fun getSent(@Query("dataOd") dateStart: String, @Query("dataDo") dateEnd: String): Single<ApiResponse<List<Message>>>
+    suspend fun getSent(@Query("dataOd") dateStart: String, @Query("dataDo") dateEnd: String): ApiResponse<List<Message>>
 
     @GET("Wiadomosc.mvc/GetWiadomosciUsuniete")
-    fun getDeleted(@Query("dataOd") dateStart: String, @Query("dataDo") dateEnd: String): Single<ApiResponse<List<Message>>>
+    suspend fun getDeleted(@Query("dataOd") dateStart: String, @Query("dataDo") dateEnd: String): ApiResponse<List<Message>>
 
     @GET("Wiadomosc.mvc/GetAdresaciWiadomosci")
-    fun getMessageRecipients(@Query("idWiadomosci") messageId: Int): Single<ApiResponse<List<Recipient>>>
+    suspend fun getMessageRecipients(@Query("idWiadomosci") messageId: Int): ApiResponse<List<Recipient>>
 
     @GET("Wiadomosc.mvc/GetRoleUzytkownika")
-    fun getMessageSender(@Query("idLogin") loginId: Int, @Query("idWiadomosci") messageId: Int): Single<ApiResponse<List<Recipient>>>
+    suspend fun getMessageSender(@Query("idLogin") loginId: Int, @Query("idWiadomosci") messageId: Int): ApiResponse<List<Recipient>>
 
     @POST("Wiadomosc.mvc/GetTrescWiadomosci")
     @FormUrlEncoded
-    fun getMessage(
+    suspend fun getMessage(
         @Field("idWiadomosc") messageId: Int,
         @Field("Folder") folderId: Int,
         @Field("Nieprzeczytana") read: Boolean,
         @Field("idWiadomoscAdresat") id: Int?
-    ): Single<ApiResponse<Message>>
+    ): ApiResponse<Message>
 
     @POST("NowaWiadomosc.mvc/InsertWiadomosc")
-    fun sendMessage(
+    suspend fun sendMessage(
         @Body sendMessageRequest: SendMessageRequest,
         @Header("X-V-RequestVerificationToken") token: String,
         @Header("X-V-AppGuid") appGuid: String,
         @Header("X-V-AppVersion") appVersion: String
-    ): Single<ApiResponse<SentMessage>>
+    ): ApiResponse<SentMessage>
 
     @POST("Wiadomosc.mvc/UsunWiadomosc")
-    fun deleteMessage(
+    suspend fun deleteMessage(
         @Body deleteMessageRequests: List<DeleteMessageRequest>,
         @Header("X-V-RequestVerificationToken") token: String,
         @Header("X-V-AppGuid") appGuid: String,
         @Header("X-V-AppVersion") appVersion: String
-    ): Single<String>
+    ): String
 }

@@ -19,8 +19,8 @@ class TimetableMapperTest : BaseLocalTest() {
 
     @Test
     fun getApiTimetable() {
-        server.enqueue("Slowniki.json", BaseLocalTest::class.java)
         server.enqueueAndStart("PlanLekcji.json", TimetableTest::class.java)
+        server.enqueue("Slowniki.json", BaseLocalTest::class.java)
 
         val lessons = mobile.getTimetable(of(2020, 2, 3), of(2020, 2, 4)).blockingGet()
         assertEquals(4, lessons.size)
@@ -46,8 +46,8 @@ class TimetableMapperTest : BaseLocalTest() {
 
     @Test
     fun getApiTimetable_canceledWithInfoAboutChange() {
-        server.enqueue("Slowniki.json", BaseLocalTest::class.java)
         server.enqueueAndStart("PlanLekcji.json", TimetableTest::class.java)
+        server.enqueue("Slowniki.json", BaseLocalTest::class.java)
 
         val lessons = mobile.getTimetable(of(2020, 2, 3), of(2020, 2, 4)).blockingGet()
 

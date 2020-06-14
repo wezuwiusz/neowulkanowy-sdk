@@ -1,30 +1,8 @@
 package io.github.wulkanowy.sdk.scrapper
 
-import io.github.wulkanowy.sdk.scrapper.attendance.Attendance
-import io.github.wulkanowy.sdk.scrapper.attendance.AttendanceSummary
-import io.github.wulkanowy.sdk.scrapper.attendance.Subject
-import io.github.wulkanowy.sdk.scrapper.exams.Exam
-import io.github.wulkanowy.sdk.scrapper.grades.Grade
-import io.github.wulkanowy.sdk.scrapper.grades.GradeStatistics
-import io.github.wulkanowy.sdk.scrapper.grades.GradeSummary
-import io.github.wulkanowy.sdk.scrapper.home.LuckyNumber
-import io.github.wulkanowy.sdk.scrapper.homework.Homework
 import io.github.wulkanowy.sdk.scrapper.messages.Folder
-import io.github.wulkanowy.sdk.scrapper.messages.Message
 import io.github.wulkanowy.sdk.scrapper.messages.Recipient
-import io.github.wulkanowy.sdk.scrapper.messages.ReportingUnit
-import io.github.wulkanowy.sdk.scrapper.messages.SentMessage
-import io.github.wulkanowy.sdk.scrapper.mobile.Device
-import io.github.wulkanowy.sdk.scrapper.mobile.TokenResponse
-import io.github.wulkanowy.sdk.scrapper.notes.Note
-import io.github.wulkanowy.sdk.scrapper.register.Semester
-import io.github.wulkanowy.sdk.scrapper.register.Student
-import io.github.wulkanowy.sdk.scrapper.school.School
-import io.github.wulkanowy.sdk.scrapper.school.Teacher
-import io.github.wulkanowy.sdk.scrapper.student.StudentInfo
-import io.github.wulkanowy.sdk.scrapper.timetable.CompletedLesson
-import io.github.wulkanowy.sdk.scrapper.timetable.Timetable
-import io.reactivex.observers.TestObserver
+import kotlinx.coroutines.runBlocking
 import okhttp3.Interceptor
 import okhttp3.logging.HttpLoggingInterceptor
 import org.junit.Assert.assertEquals
@@ -66,35 +44,29 @@ class ScrapperRemoteTest : BaseTest() {
 
     @Test
     fun getPasswordResetCaptchaCode() {
-        val code = api.getPasswordResetCaptcha("https://fakelog.cf", "Default")
-        val codeObserver = TestObserver<Pair<String, String>>()
-        code.subscribe(codeObserver)
-        codeObserver.assertComplete()
+        val code = runBlocking { api.getPasswordResetCaptcha("https://fakelog.cf", "Default") }
 
-        assertEquals("https://cufs.fakelog.cf/Default/AccountManage/UnlockAccount", codeObserver.values()[0].first)
-        assertEquals("6LeAGMYUAAAAAMszd5VWZTEb5WQHqsNT1F4GCqUd", codeObserver.values()[0].second)
+        assertEquals("https://cufs.fakelog.cf/Default/AccountManage/UnlockAccount", code.first)
+        assertEquals("6LeAGMYUAAAAAMszd5VWZTEb5WQHqsNT1F4GCqUd", code.second)
     }
 
     @Test
     fun sendPasswordResetRequest() {
-        val res = api.sendPasswordResetRequest("https://fakelog.cf", "Default", "jan@fakelog.cf", "03AOLTBLQRPyr0pWvWLRAgD4hRLfxktoqD2IVweeMuXwbkpR_8S9YQtcS3cAXqUOyEw3NxfvwzV0lTjgFWyl8j3UXGQpsc2nvQcqIofj1N8DYfxvtZO-h24W_S0Z9-fDnfXErd7vERS-Ny4d5IU1FupBAEKvT8rrf3OA3GYYbMM7TwB8b_o9Tt192TqYnSxkyIYE4UdaZnLBA0KIXxlBAoqM6QGlPEsSPK9gmCGx-0hn68w-UBQkv_ghRruf4kpv2Shw5emcP-qHBlv3YjAagsb_358K0v8uGJeyLrx4dXN9Ky02TXFMKYWNHz29fjhfunxT73u_PrsLj56f-MjOXrqO894NkUlJ7RkTTclwIsqXtJ794LEBH--mtsqZBND0miR5-odmZszqiNB3V5UsS5ObsqF_fWMl2TCWyNTTvF4elOGwOEeKiumVpjB6e740COxvxN3vbkNWxP9eeghpd5nPN5l2wUV3VL2R5s44TbqHqkrkNpUOd3h7efs3cQtCfGc-tCXoqLC26LxT7aztvKpjXMuqGEf-7wbQ")
-        val resObserver = TestObserver<String>()
-        res.subscribe(resObserver)
-        resObserver.assertComplete()
+        val res = runBlocking {
+            api.sendPasswordResetRequest("https://fakelog.cf",
+                "Default",
+                "jan@fakelog.cf",
+                "03AOLTBLQRPyr0pWvWLRAgD4hRLfxktoqD2IVweeMuXwbkpR_8S9YQtcS3cAXqUOyEw3NxfvwzV0lTjgFWyl8j3UXGQpsc2nvQcqIofj1N8DYfxvtZO-h24W_S0Z9-fDnfXErd7vERS-Ny4d5IU1FupBAEKvT8rrf3OA3GYYbMM7TwB8b_o9Tt192TqYnSxkyIYE4UdaZnLBA0KIXxlBAoqM6QGlPEsSPK9gmCGx-0hn68w-UBQkv_ghRruf4kpv2Shw5emcP-qHBlv3YjAagsb_358K0v8uGJeyLrx4dXN9Ky02TXFMKYWNHz29fjhfunxT73u_PrsLj56f-MjOXrqO894NkUlJ7RkTTclwIsqXtJ794LEBH--mtsqZBND0miR5-odmZszqiNB3V5UsS5ObsqF_fWMl2TCWyNTTvF4elOGwOEeKiumVpjB6e740COxvxN3vbkNWxP9eeghpd5nPN5l2wUV3VL2R5s44TbqHqkrkNpUOd3h7efs3cQtCfGc-tCXoqLC26LxT7aztvKpjXMuqGEf-7wbQ")
+        }
 
-        assertTrue(resObserver.values()[0].startsWith("Wysłano wiadomość na zapisany w systemie adres e-mail"))
+        assertTrue(res.startsWith("Wysłano wiadomość na zapisany w systemie adres e-mail"))
     }
 
     @Test
     fun studentsTest() {
-        val students = api.getStudents()
-        val studentObserver = TestObserver<List<Student>>()
-        students.subscribe(studentObserver)
-        studentObserver.assertComplete()
+        val students = runBlocking { api.getStudents() }
 
-        val values = studentObserver.values()[0]
-
-        values[0].run {
+        students[0].run {
             assertEquals("powiatwulkanowy", symbol)
             assertEquals("jan@fakelog.cf", email)
             assertEquals("Jan Kowalski", studentName)
@@ -108,26 +80,21 @@ class ScrapperRemoteTest : BaseTest() {
 
     @Test
     fun semestersTest() {
-        val semesters = api.getSemesters()
-        val semestersObserver = TestObserver<List<Semester>>()
-        semesters.subscribe(semestersObserver)
-        semestersObserver.assertComplete()
+        val semesters = runBlocking { api.getSemesters() }
 
-        val values = semestersObserver.values()[0]
-
-        values[0].run {
+        semesters[0].run {
             assertEquals(15, diaryId)
             assertEquals("4A", diaryName)
 //            assertEquals(true, current)
         }
 
-        values[3].run {
+        semesters[3].run {
             assertEquals(13, diaryId)
             assertEquals("3A", diaryName)
             assertEquals(2017, schoolYear)
         }
 
-        values[5].run {
+        semesters[5].run {
             assertEquals(11, diaryId)
             assertEquals("2A", diaryName)
             assertEquals(2016, schoolYear)
@@ -135,7 +102,7 @@ class ScrapperRemoteTest : BaseTest() {
 //            assertEquals(1, semesterNumber)
         }
 
-        values[6].run {
+        semesters[6].run {
             //            assertEquals(12, semesterId)
 //            assertEquals(2, semesterNumber)
         }
@@ -143,14 +110,9 @@ class ScrapperRemoteTest : BaseTest() {
 
     @Test
     fun attendanceTest() {
-        val attendance = api.getAttendance(getLocalDate(2018, 10, 1))
-        val attendanceObserver = TestObserver<List<Attendance>>()
-        attendance.subscribe(attendanceObserver)
-        attendanceObserver.assertComplete()
+        val attendance = runBlocking { api.getAttendance(getLocalDate(2018, 10, 1)) }
 
-        val values = attendanceObserver.values()[0]
-
-        values[0].run {
+        attendance[0].run {
             assertEquals(1, number)
             assertEquals("Zajęcia z wychowawcą", subject)
             assertEquals(getDate(2018, 10, 1), date)
@@ -159,31 +121,26 @@ class ScrapperRemoteTest : BaseTest() {
             assertTrue(presence)
         }
 
-        values[1].run {
+        attendance[1].run {
             assertEquals("Nieobecność nieusprawiedliwiona", name)
             assertTrue(absence)
             assertFalse(excused)
         }
 
-        assertEquals("Nieobecność nieusprawiedliwiona", values[3].name)
-        assertEquals("Nieobecność nieusprawiedliwiona", values[4].name)
-        assertEquals("Nieobecność usprawiedliwiona", values[5].name)
-        assertEquals("Spóźnienie nieusprawiedliwione", values[6].name)
-        assertEquals("Obecność", values[9].name)
+        assertEquals("Nieobecność nieusprawiedliwiona", attendance[3].name)
+        assertEquals("Nieobecność nieusprawiedliwiona", attendance[4].name)
+        assertEquals("Nieobecność usprawiedliwiona", attendance[5].name)
+        assertEquals("Spóźnienie nieusprawiedliwione", attendance[6].name)
+        assertEquals("Obecność", attendance[9].name)
     }
 
     @Test
     fun getSubjects() {
-        val subjects = api.getSubjects()
-        val subjectsObserver = TestObserver<List<Subject>>()
-        subjects.subscribe(subjectsObserver)
-        subjectsObserver.assertComplete()
+        val subjects = runBlocking { api.getSubjects() }
 
-        val values = subjectsObserver.values()[0]
+        assertEquals(17, subjects.size)
 
-        assertEquals(17, values.size)
-
-        values[0].run {
+        subjects[0].run {
             assertEquals(-1, value)
             assertEquals("Wszystkie", name)
         }
@@ -191,16 +148,11 @@ class ScrapperRemoteTest : BaseTest() {
 
     @Test
     fun attendanceSummaryTest() {
-        val attendance = api.getAttendanceSummary()
-        val attendanceObserver = TestObserver<List<AttendanceSummary>>()
-        attendance.subscribe(attendanceObserver)
-        attendanceObserver.assertComplete()
+        val attendance = runBlocking { api.getAttendanceSummary() }
 
-        val values = attendanceObserver.values()[0]
+        assertEquals(10, attendance.size)
 
-        assertEquals(10, values.size)
-
-        values[0].run {
+        attendance[0].run {
             assertEquals(Month.SEPTEMBER, month)
             assertEquals(32, presence)
             assertEquals(1, absence)
@@ -211,19 +163,14 @@ class ScrapperRemoteTest : BaseTest() {
             assertEquals(6, exemption)
         }
 
-        assertEquals(64, values[1].presence)
+        assertEquals(64, attendance[1].presence)
     }
 
     @Test
     fun examsTest() {
-        val exams = api.getExams(getLocalDate(2018, 5, 7))
-        val examsObserver = TestObserver<List<Exam>>()
-        exams.subscribe(examsObserver)
-        examsObserver.assertComplete()
+        val exams = runBlocking { api.getExams(getLocalDate(2018, 5, 7)) }
 
-        val values = examsObserver.values()[0]
-
-        values[0].run {
+        exams[0].run {
             assertEquals(getDate(2018, 5, 7), date)
             assertEquals(getDate(1970, 1, 1), entryDate)
             assertEquals("Matematyka", subject)
@@ -237,14 +184,9 @@ class ScrapperRemoteTest : BaseTest() {
 
     @Test
     fun homeworkTest() {
-        val homework = api.getHomework(getLocalDate(2018, 9, 11))
-        val homeworkObserver = TestObserver<List<Homework>>()
-        homework.subscribe(homeworkObserver)
-        homeworkObserver.assertComplete()
+        val homework = runBlocking { api.getHomework(getLocalDate(2018, 9, 11)) }
 
-        val values = homeworkObserver.values()[0]
-
-        values[1].run {
+        homework[1].run {
             assertEquals(getDate(2018, 9, 11), date)
             assertEquals(getDate(2017, 10, 26), entryDate)
             assertEquals("Etyka", subject)
@@ -256,14 +198,9 @@ class ScrapperRemoteTest : BaseTest() {
 
     @Test
     fun notesTest() {
-        val notes = api.getNotes()
-        val notesObserver = TestObserver<List<Note>>()
-        notes.subscribe(notesObserver)
-        notesObserver.assertComplete()
+        val notes = runBlocking { api.getNotes() }
 
-        val values = notesObserver.values()[0]
-
-        values[0].run {
+        notes[0].run {
             assertEquals(getDate(2018, 1, 16), date)
             assertEquals("Stanisław Krupa", teacher)
             assertEquals("BS", teacherSymbol)
@@ -274,14 +211,9 @@ class ScrapperRemoteTest : BaseTest() {
 
     @Test
     fun gradesTest() {
-        val grades = api.getGradesDetails(865)
-        val gradesObserver = TestObserver<List<Grade>>()
-        grades.subscribe(gradesObserver)
-        gradesObserver.assertComplete()
+        val grades = runBlocking { api.getGradesDetails(865) }
 
-        val values = gradesObserver.values()[0]
-
-        values[5].run {
+        grades[5].run {
             assertEquals("Religia", subject)
             assertEquals("1", entry)
             assertEquals("6ECD07", color)
@@ -293,7 +225,7 @@ class ScrapperRemoteTest : BaseTest() {
             assertEquals("Michał Mazur", teacher)
         }
 
-        values[0].run {
+        grades[0].run {
             assertEquals("Bież", symbol)
             assertEquals("", description)
         }
@@ -301,26 +233,21 @@ class ScrapperRemoteTest : BaseTest() {
 
     @Test
     fun gradesSummaryTest() {
-        val summary = api.getGradesSummary(865)
-        val summaryObserver = TestObserver<List<GradeSummary>>()
-        summary.subscribe(summaryObserver)
-        summaryObserver.assertComplete()
+        val summary = runBlocking { api.getGradesSummary(865) }
 
-        val values = summaryObserver.values()[0]
-
-        values[2].run {
+        summary[2].run {
             assertEquals("Etyka", name)
             assertEquals("4", predicted)
             assertEquals("4", final)
         }
 
-        values[5].run {
+        summary[5].run {
             assertEquals("Historia", name)
             assertEquals("4", predicted)
             assertEquals("4", final)
         }
 
-        values[8].run {
+        summary[8].run {
             assertEquals("Język niemiecki", name)
             assertEquals("", predicted)
             assertEquals("", final)
@@ -329,59 +256,37 @@ class ScrapperRemoteTest : BaseTest() {
 
     @Test
     fun gradesStatisticsTest() {
-        val stats = api.getGradesPartialStatistics(321)
-        val statsObserver = TestObserver<List<GradeStatistics>>()
-        stats.subscribe(statsObserver)
-        statsObserver.assertComplete()
+        val stats = runBlocking { api.getGradesPartialStatistics(321) }
 
-        val values = statsObserver.values()[0]
+        assertEquals("Język polski", stats[0].subject)
+        assertEquals("Matematyka", stats[7].subject)
 
-        assertEquals("Język polski", values[0].subject)
-        assertEquals("Matematyka", values[7].subject)
+        val annual = runBlocking { api.getGradesAnnualStatistics(123) }
 
-        val annual = api.getGradesAnnualStatistics(123)
-        val annualObserver = TestObserver<List<GradeStatistics>>()
-        annual.subscribe(annualObserver)
-
-        val values2 = annualObserver.values()[0]
-
-        assertEquals("Język angielski", values2[0].subject)
+        assertEquals("Język angielski", annual[0].subject)
     }
 
     @Test
     fun teachersTest() {
-        val teachers = api.getTeachers()
-        val teachersObserver = TestObserver<List<Teacher>>()
-        teachers.subscribe(teachersObserver)
-        teachersObserver.assertComplete()
+        val teachers = runBlocking { api.getTeachers() }
 
-        val values = teachersObserver.values()[0]
-
-        assertEquals("Historia", values[1].subject)
-        assertEquals("Aleksandra Krajewska", values[1].name)
-        assertEquals("AK", values[1].short)
+        assertEquals("Historia", teachers[1].subject)
+        assertEquals("Aleksandra Krajewska", teachers[1].name)
+        assertEquals("AK", teachers[1].short)
     }
 
     @Test
     fun schoolTest() {
-        val school = api.getSchool()
-        val schoolObserver = TestObserver<School>()
-        school.subscribe(schoolObserver)
-        schoolObserver.assertComplete()
+        val school = runBlocking { api.getSchool() }
 
-        val values = schoolObserver.values()[0]
-
-        assertEquals("Publiczna szkoła Wulkanowego nr 1 w fakelog.cf", values.name)
+        assertEquals("Publiczna szkoła Wulkanowego nr 1 w fakelog.cf", school.name)
     }
 
     @Test
     fun studentInfoTest() {
-        val info = api.getStudentInfo()
-        val studentObserver = TestObserver<StudentInfo>()
-        info.subscribe(studentObserver)
-        studentObserver.assertComplete()
+        val info = runBlocking { api.getStudentInfo() }
 
-        studentObserver.values()[0].run {
+        info.run {
             assertEquals("Jan Marek Kowalski", student.fullName)
             assertEquals("Jan", student.firstName)
             assertEquals("Marek", student.secondName)
@@ -413,85 +318,52 @@ class ScrapperRemoteTest : BaseTest() {
 
     @Test
     fun messagesTest() {
-        val units = api.getReportingUnits()
-        val unitsObserver = TestObserver<List<ReportingUnit>>()
-        units.subscribe(unitsObserver)
-        unitsObserver.assertComplete()
+        val units = runBlocking { api.getReportingUnits() }
+        assertEquals(1, units.size)
 
-        val recipients = api.getRecipients(6)
-        val recipientsObserver = TestObserver<List<Recipient>>()
-        recipients.subscribe(recipientsObserver)
-        recipientsObserver.assertComplete()
+        val recipients = runBlocking { api.getRecipients(6) }
+        assertEquals(10, recipients.size)
 
-        val messages = api.getMessages(Folder.RECEIVED)
-        val messagesObserver = TestObserver<List<Message>>()
-        messages.subscribe(messagesObserver)
-        messagesObserver.assertComplete()
+        val messages = runBlocking { api.getMessages(Folder.RECEIVED) }
+        assertEquals(2, messages.size)
 
-        val inbox = api.getReceivedMessages(getLocalDateTime(2015, 10, 5))
-        val inboxObserver = TestObserver<List<Message>>()
-        inbox.subscribe(inboxObserver)
-        inboxObserver.assertComplete()
+        val inbox = runBlocking { api.getReceivedMessages(getLocalDateTime(2015, 10, 5)) }
+        assertEquals(2, inbox.size)
 
-        assertEquals(2, inboxObserver.values()[0].size)
+        val sent = runBlocking { api.getSentMessages() }
+        assertEquals(1, sent.size)
 
-        val sent = api.getSentMessages()
-        val outObserver = TestObserver<List<Message>>()
-        sent.subscribe(outObserver)
-        outObserver.assertComplete()
+        val trash = runBlocking { api.getDeletedMessages() }
+        assertEquals(1, trash.size)
 
-        assertEquals(1, outObserver.values()[0].size)
+        val mRecipients = runBlocking { api.getMessageRecipients(trash[0].messageId ?: 0) }
+        assertEquals(2, mRecipients.size)
 
-        val trash = api.getDeletedMessages()
-        val trashObserver = TestObserver<List<Message>>()
-        trash.subscribe(trashObserver)
-        trashObserver.assertComplete()
-
-        val del = trashObserver.values()[0]
-
-        assertEquals(1, del.size)
-
-        val mRecipients = api.getMessageRecipients(del[0].messageId ?: 0)
-        val mRecipientsObserver = TestObserver<List<Recipient>>()
-        mRecipients.subscribe(mRecipientsObserver)
-        mRecipientsObserver.assertComplete()
-
-        val m = api.getMessageDetails(del[0].messageId ?: 0, del[0].folderId)
-        val mObserver = TestObserver<Message>()
-        m.subscribe(mObserver)
-        mObserver.assertComplete()
+        val details = runBlocking { api.getMessageDetails(trash[0].messageId ?: 0, trash[0].folderId) }
+        assertEquals(27214, details.id)
     }
 
     @Test
     fun sendMessage() {
-        val send = api.sendMessage("Temat wiadomości", "Treść",
-            listOf(Recipient("0", "Kowalski Jan", 0, 0, 2, "hash"))
-        )
-        val sendObserver = TestObserver<SentMessage>()
-        send.subscribe(sendObserver)
-        sendObserver.assertComplete()
+        runBlocking {
+            api.sendMessage("Temat wiadomości", "Treść",
+                listOf(Recipient("0", "Kowalski Jan", 0, 0, 2, "hash"))
+            )
+        }
     }
 
     @Test
     fun devicesTest() {
-        val devices = api.getRegisteredDevices()
-        val devicesObserver = TestObserver<List<Device>>()
-        devices.subscribe(devicesObserver)
-        devicesObserver.assertComplete()
+        val devices = runBlocking { api.getRegisteredDevices() }
 
-        val values = devicesObserver.values()[0]
-
-        assertEquals(2, values.size)
+        assertEquals(2, devices.size)
     }
 
     @Test
     fun tokenTest() {
-        val tokenizer = api.getToken()
-        val tokenObserver = TestObserver<TokenResponse>()
-        tokenizer.subscribe(tokenObserver)
-        tokenObserver.assertComplete()
+        val tokenizer = runBlocking { api.getToken() }
 
-        tokenObserver.values()[0].run {
+        tokenizer.run {
             assertEquals("FK100000", token)
             assertEquals("powiatwulkanowy", symbol)
             assertEquals("999999", pin)
@@ -500,24 +372,16 @@ class ScrapperRemoteTest : BaseTest() {
 
     @Test
     fun unregisterTest() {
-        val unregister = api.unregisterDevice(1234)
-        val unregisterObserver = TestObserver<Boolean>()
-        unregister.subscribe(unregisterObserver)
-        unregisterObserver.assertComplete()
+        val unregister = runBlocking { api.unregisterDevice(1234) }
 
-        assertEquals(true, unregisterObserver.values()[0])
+        assertEquals(true, unregister)
     }
 
     @Test
     fun timetableTest() {
-        val timetable = api.getTimetable(getLocalDate(2018, 9, 17))
-        val timetableObserver = TestObserver<List<Timetable>>()
-        timetable.subscribe(timetableObserver)
-        timetableObserver.assertComplete()
+        val timetable = runBlocking { api.getTimetable(getLocalDate(2018, 9, 17)) }
 
-        val values = timetableObserver.values()[0]
-
-        values[0].run {
+        timetable[0].run {
             assertEquals(1, number)
             assertEquals("Fizyka", subject)
             assertEquals("Karolina Kowalska", teacher)
@@ -531,12 +395,9 @@ class ScrapperRemoteTest : BaseTest() {
 
     @Test
     fun realizedTest() {
-        val realized = api.getCompletedLessons(getLocalDate(2018, 9, 17))
-        val realizedObserver = TestObserver<List<CompletedLesson>>()
-        realized.subscribe(realizedObserver)
-        realizedObserver.assertComplete()
+        val realized = runBlocking { api.getCompletedLessons(getLocalDate(2018, 9, 17)) }
 
-        realizedObserver.values()[0][0].run {
+        realized[0].run {
             assertEquals(getDate(2018, 9, 17), date)
             assertEquals(1, number)
             assertEquals("Historia i społeczeństwo", subject)
@@ -549,17 +410,14 @@ class ScrapperRemoteTest : BaseTest() {
 
     @Test
     fun luckyNumberTest() {
-        val luckyNumber = api.getKidsLuckyNumbers()
-        val luckyNumberObserver = TestObserver<List<LuckyNumber>>()
-        luckyNumber.subscribe(luckyNumberObserver)
-        luckyNumberObserver.assertComplete()
+        val luckyNumber = runBlocking { api.getKidsLuckyNumbers() }
 
-        assertEquals(37, luckyNumberObserver.values()[0][0].number)
+        assertEquals(37, luckyNumber[0].number)
     }
 
     @Test
     fun freeDays() {
-        val freeDays = api.getFreeDays().blockingGet()
+        val freeDays = runBlocking { api.getFreeDays() }
         assertEquals(2, freeDays.size)
     }
 }

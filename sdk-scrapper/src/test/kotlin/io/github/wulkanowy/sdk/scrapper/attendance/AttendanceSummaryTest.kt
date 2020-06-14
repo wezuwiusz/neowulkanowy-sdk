@@ -1,6 +1,7 @@
 package io.github.wulkanowy.sdk.scrapper.attendance
 
 import io.github.wulkanowy.sdk.scrapper.BaseLocalTest
+import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertEquals
 import org.junit.Test
 import org.threeten.bp.Month.SEPTEMBER
@@ -10,19 +11,19 @@ import org.threeten.bp.Month.JUNE
 class AttendanceSummaryTest : BaseLocalTest() {
 
     private val snp by lazy {
-        getSnpRepo(AttendanceSummaryTest::class.java, "Frekwencja.html").getAttendanceSummary(-1).blockingGet()
+        runBlocking { getSnpRepo(AttendanceSummaryTest::class.java, "Frekwencja.html").getAttendanceSummary(-1) }
     }
 
     private val snpSubjects by lazy {
-        getSnpRepo(AttendanceSummaryTest::class.java, "Frekwencja.html").getSubjects().blockingGet()
+        runBlocking { getSnpRepo(AttendanceSummaryTest::class.java, "Frekwencja.html").getSubjects() }
     }
 
     private val student by lazy {
-        getStudentRepo(AttendanceSummaryTest::class.java, "StatystykiFrekwencji.json").getAttendanceSummary(-1).blockingGet()
+        runBlocking { getStudentRepo(AttendanceSummaryTest::class.java, "StatystykiFrekwencji.json").getAttendanceSummary(-1) }
     }
 
     private val studentSubjects by lazy {
-        getStudentRepo(AttendanceSummaryTest::class.java, "Przedmioty.json").getSubjects().blockingGet()
+        runBlocking { getStudentRepo(AttendanceSummaryTest::class.java, "Przedmioty.json").getSubjects() }
     }
 
     @Test

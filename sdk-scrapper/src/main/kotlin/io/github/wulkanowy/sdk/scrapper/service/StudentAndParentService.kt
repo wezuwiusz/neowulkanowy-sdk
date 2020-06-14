@@ -14,7 +14,6 @@ import io.github.wulkanowy.sdk.scrapper.school.SchoolAndTeachersResponse
 import io.github.wulkanowy.sdk.scrapper.student.StudentInfo
 import io.github.wulkanowy.sdk.scrapper.timetable.RealizedResponse
 import io.github.wulkanowy.sdk.scrapper.timetable.TimetableResponse
-import io.reactivex.Single
 import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded
 import retrofit2.http.GET
@@ -26,57 +25,57 @@ import retrofit2.http.Url
 interface StudentAndParentService {
 
     @GET
-    fun getSchoolInfo(@Url url: String): Single<StudentAndParentResponse>
+    suspend fun getSchoolInfo(@Url url: String): StudentAndParentResponse
 
     @GET("Uczen/UczenOnChange")
-    fun getUserInfo(@Query("id") userId: Int): Single<StudentAndParentResponse>
+    suspend fun getUserInfo(@Query("id") userId: Int): StudentAndParentResponse
 
     @GET("Dziennik/DziennikOnChange")
-    fun getDiaryInfo(@Query("id") diaryId: Int, @Header("Referer") referer: String): Single<StudentAndParentResponse>
+    suspend fun getDiaryInfo(@Query("id") diaryId: Int, @Header("Referer") referer: String): StudentAndParentResponse
 
     @GET("Frekwencja.mvc")
-    fun getAttendance(@Query("data") date: String): Single<AttendanceResponse>
+    suspend fun getAttendance(@Query("data") date: String): AttendanceResponse
 
     @GET("Frekwencja.mvc")
-    fun getAttendanceSummary(@Query("idPrzedmiot") subjectId: Int?): Single<AttendanceResponse>
+    suspend fun getAttendanceSummary(@Query("idPrzedmiot") subjectId: Int?): AttendanceResponse
 
     @GET("Sprawdziany.mvc/Terminarz?rodzajWidoku=2")
-    fun getExams(@Query("data") date: String): Single<ExamResponse>
+    suspend fun getExams(@Query("data") date: String): ExamResponse
 
     @GET("Oceny/Wszystkie?details=2")
-    fun getGrades(@Query("okres") semester: Int?): Single<GradesResponse>
+    suspend fun getGrades(@Query("okres") semester: Int?): GradesResponse
 
     @GET("Oceny/Wszystkie?details=1")
-    fun getGradesSummary(@Query("okres") semester: Int?): Single<GradesSummaryResponse>
+    suspend fun getGradesSummary(@Query("okres") semester: Int?): GradesSummaryResponse
 
     @GET("Statystyki.mvc/Uczen")
-    fun getGradesStatistics(@Query("rodzajWidoku") type: Int?, @Query("semestr") semesterId: Int): Single<GradesStatisticsResponse>
+    suspend fun getGradesStatistics(@Query("rodzajWidoku") type: Int?, @Query("semestr") semesterId: Int): GradesStatisticsResponse
 
     @GET("ZadaniaDomowe.mvc?rodzajWidoku=Dzien")
-    fun getHomework(@Query("data") date: String): Single<HomeworkResponse>
+    suspend fun getHomework(@Query("data") date: String): HomeworkResponse
 
     @GET("UwagiOsiagniecia.mvc/Wszystkie")
-    fun getNotes(): Single<NotesResponse>
+    suspend fun getNotes(): NotesResponse
 
     @GET("DostepMobilny.mvc")
-    fun getRegisteredDevices(): Single<RegisteredDevicesResponse>
+    suspend fun getRegisteredDevices(): RegisteredDevicesResponse
 
     @GET("DostepMobilny.mvc/Rejestruj")
-    fun getToken(): Single<TokenResponse>
+    suspend fun getToken(): TokenResponse
 
     @POST("DostepMobilny.mvc/PotwierdzWyrejestrowanie")
     @FormUrlEncoded
-    fun unregisterDevice(@Field("Id") id: Int): Single<RegisteredDevicesResponse>
+    suspend fun unregisterDevice(@Field("Id") id: Int): RegisteredDevicesResponse
 
     @GET("Szkola.mvc/Nauczyciele")
-    fun getSchoolAndTeachers(): Single<SchoolAndTeachersResponse>
+    suspend fun getSchoolAndTeachers(): SchoolAndTeachersResponse
 
     @GET("Lekcja.mvc/PlanZajec")
-    fun getTimetable(@Query("data") date: String): Single<TimetableResponse>
+    suspend fun getTimetable(@Query("data") date: String): TimetableResponse
 
     @GET("Lekcja.mvc/Zrealizowane")
-    fun getCompletedLessons(@Query("start") start: String, @Query("end") end: String?, @Query("idPrzedmiot") subjectId: Int?): Single<RealizedResponse>
+    suspend fun getCompletedLessons(@Query("start") start: String, @Query("end") end: String?, @Query("idPrzedmiot") subjectId: Int?): RealizedResponse
 
     @GET("Uczen.mvc/DanePodstawowe")
-    fun getStudentInfo(): Single<StudentInfo>
+    suspend fun getStudentInfo(): StudentInfo
 }

@@ -1,13 +1,14 @@
 package io.github.wulkanowy.sdk.scrapper.student
 
 import io.github.wulkanowy.sdk.scrapper.BaseLocalTest
+import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertEquals
 import org.junit.Test
 
 class StudentInfoTest : BaseLocalTest() {
 
     private val info by lazy {
-        getSnpRepo(StudentInfoTest::class.java, "UczenDanePodstawowe.html").getStudentInfo().blockingGet()
+        runBlocking { getSnpRepo(StudentInfoTest::class.java, "UczenDanePodstawowe.html").getStudentInfo() }
     }
 
     @Test

@@ -2,7 +2,6 @@ package io.github.wulkanowy.sdk.scrapper.service
 
 import io.github.wulkanowy.sdk.scrapper.login.ADFSFormResponse
 import io.github.wulkanowy.sdk.scrapper.register.SendCertificateResponse
-import io.reactivex.Single
 import retrofit2.http.FieldMap
 import retrofit2.http.FormUrlEncoded
 import retrofit2.http.GET
@@ -14,25 +13,25 @@ interface LoginService {
 
     @POST("Account/LogOn")
     @FormUrlEncoded
-    fun sendCredentials(@Query("ReturnUrl") returnUrl: String, @FieldMap credentials: Map<String, String>): Single<String>
+    suspend fun sendCredentials(@Query("ReturnUrl") returnUrl: String, @FieldMap credentials: Map<String, String>): String
 
     @POST
     @FormUrlEncoded
-    fun sendCertificate(@Url url: String, @FieldMap certificate: Map<String, String>): Single<SendCertificateResponse>
+    suspend fun sendCertificate(@Url url: String, @FieldMap certificate: Map<String, String>): SendCertificateResponse
 
     @GET
-    fun switchLogin(@Url url: String): Single<SendCertificateResponse>
+    suspend fun switchLogin(@Url url: String): SendCertificateResponse
 
     // ADFS
 
     @GET
-    fun getForm(@Url url: String): Single<ADFSFormResponse>
+    suspend fun getForm(@Url url: String): ADFSFormResponse
 
     @POST
     @FormUrlEncoded
-    fun sendADFSFormStandardChoice(@Url url: String, @FieldMap formState: Map<String, String>): Single<ADFSFormResponse>
+    suspend fun sendADFSFormStandardChoice(@Url url: String, @FieldMap formState: Map<String, String>): ADFSFormResponse
 
     @POST
     @FormUrlEncoded
-    fun sendADFSForm(@Url url: String, @FieldMap values: Map<String, String>): Single<String>
+    suspend fun sendADFSForm(@Url url: String, @FieldMap values: Map<String, String>): String
 }

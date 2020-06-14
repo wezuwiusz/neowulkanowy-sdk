@@ -1,25 +1,26 @@
 package io.github.wulkanowy.sdk.scrapper.grades
 
 import io.github.wulkanowy.sdk.scrapper.BaseLocalTest
+import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertEquals
 import org.junit.Test
 
 class GradesGradeSummaryTest : BaseLocalTest() {
 
     private val std by lazy {
-        getSnpRepo(GradesTest::class.java, "OcenyWszystkie-subjects.html").getGradesSummary(0).blockingGet()
+        runBlocking { getSnpRepo(GradesTest::class.java, "OcenyWszystkie-subjects.html").getGradesSummary(0) }
     }
 
     private val snp by lazy {
-        getSnpRepo(GradesTest::class.java, "OcenyWszystkie-subjects-average.html").getGradesSummary(0).blockingGet()
+        runBlocking { getSnpRepo(GradesTest::class.java, "OcenyWszystkie-subjects-average.html").getGradesSummary(0) }
     }
 
     private val student by lazy {
-        getStudentRepo(GradesTest::class.java, "Oceny.json").getGradesSummary(0).blockingGet()
+        runBlocking { getStudentRepo(GradesTest::class.java, "Oceny.json").getGradesSummary(0) }
     }
 
     private val studentPoints by lazy {
-        getStudentRepo(GradesTest::class.java, "Oceny-points.json").getGradesSummary(0).blockingGet()
+        runBlocking { getStudentRepo(GradesTest::class.java, "Oceny-points.json").getGradesSummary(0) }
     }
 
     @Test

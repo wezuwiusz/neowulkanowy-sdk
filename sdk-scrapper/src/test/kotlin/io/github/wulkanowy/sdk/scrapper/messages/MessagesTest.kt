@@ -6,9 +6,10 @@ import io.github.wulkanowy.sdk.scrapper.ScrapperException
 import io.github.wulkanowy.sdk.scrapper.login.LoginTest
 import io.github.wulkanowy.sdk.scrapper.repository.MessagesRepository
 import io.github.wulkanowy.sdk.scrapper.service.MessagesService
-import io.reactivex.observers.TestObserver
+import kotlinx.coroutines.runBlocking
 import okhttp3.mockwebserver.MockResponse
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertTrue
 import org.junit.Test
 
 class MessagesTest : BaseLocalTest() {
@@ -22,7 +23,7 @@ class MessagesTest : BaseLocalTest() {
         server.enqueue(MockResponse().setBody(MessagesTest::class.java.getResource("Adresaci.json").readText()))
         server.start(3000)
 
-        val recipients = api.getRecipients(6).blockingGet()
+        val recipients = runBlocking { api.getRecipients(6) }
 
         assertEquals(4, recipients.size)
 
@@ -52,7 +53,7 @@ class MessagesTest : BaseLocalTest() {
         server.enqueue(MockResponse().setBody(MessagesTest::class.java.getResource("WiadomosciOdebrane.json").readText()))
         server.start(3000)
 
-        val messages = api.getReceivedMessages(null, null).blockingGet()
+        val messages = runBlocking { api.getReceivedMessages(null, null) }
 
         assertEquals(2, messages.size)
         with(messages[0]) {
@@ -73,7 +74,7 @@ class MessagesTest : BaseLocalTest() {
         server.enqueue(MockResponse().setBody(MessagesTest::class.java.getResource("WiadomosciUsuniete.json").readText()))
         server.start(3000)
 
-        assertEquals(1, api.getDeletedMessages(null, null).blockingGet().size)
+        assertEquals(1, runBlocking { api.getDeletedMessages(null, null) }.size)
     }
 
     @Test
@@ -81,7 +82,7 @@ class MessagesTest : BaseLocalTest() {
         server.enqueue(MockResponse().setBody(MessagesTest::class.java.getResource("WiadomosciWyslane.json").readText()))
         server.start(3000)
 
-        val messages = api.getSentMessages(null, null).blockingGet()
+        val messages = runBlocking { api.getSentMessages(null, null) }
 
         assertEquals(6, messages.size)
 
@@ -100,7 +101,7 @@ class MessagesTest : BaseLocalTest() {
         server.enqueue(MockResponse().setBody(MessagesTest::class.java.getResource("WiadomosciWyslane.json").readText()))
         server.start(3000)
 
-        api.getSentMessages(null, null).blockingGet()[1].run {
+        runBlocking { api.getSentMessages(null, null) }[1].run {
             assertEquals("Czerwieńska - Kowalska Joanna", recipient)
         }
     }
@@ -110,7 +111,7 @@ class MessagesTest : BaseLocalTest() {
         server.enqueue(MockResponse().setBody(MessagesTest::class.java.getResource("WiadomosciWyslane.json").readText()))
         server.start(3000)
 
-        api.getSentMessages(null, null).blockingGet()[3].run {
+        runBlocking { api.getSentMessages(null, null) }[3].run {
             assertEquals("Czerwieńska - Kowalska Joanna; Tracz Janusz", recipient)
         }
     }
@@ -120,7 +121,7 @@ class MessagesTest : BaseLocalTest() {
         server.enqueue(MockResponse().setBody(MessagesTest::class.java.getResource("WiadomosciWyslane.json").readText()))
         server.start(3000)
 
-        api.getSentMessages(null, null).blockingGet()[5].run {
+        runBlocking { api.getSentMessages(null, null) }[5].run {
             assertEquals("Tracz Antoni; Kowalska Joanna", recipient)
         }
     }
@@ -130,7 +131,7 @@ class MessagesTest : BaseLocalTest() {
         server.enqueue(MockResponse().setBody(MessagesTest::class.java.getResource("Adresaci.json").readText()))
         server.start(3000)
 
-        api.getMessageRecipients(421, 0).blockingGet()[0].run {
+        runBlocking { api.getMessageRecipients(421, 0) }[0].run {
             assertEquals("18rPracownik", id)
             assertEquals("Tracz Janusz [TJ] - pracownik (Fake123456)", name)
             assertEquals(18, loginId)
@@ -146,7 +147,7 @@ class MessagesTest : BaseLocalTest() {
         server.enqueue(MockResponse().setBody(MessagesTest::class.java.getResource("Adresaci.json").readText()))
         server.start(3000)
 
-        api.getMessageRecipients(421, 94).blockingGet()[1].run {
+        runBlocking { api.getMessageRecipients(421, 94) }[1].run {
             assertEquals("94rPracownik", id)
             assertEquals(94, loginId)
         }
@@ -157,7 +158,7 @@ class MessagesTest : BaseLocalTest() {
         server.enqueue(MockResponse().setBody(MessagesTest::class.java.getResource("Wiadomosc.json").readText()))
         server.start(3000)
 
-        assertEquals(90, api.getMessage(1, 1, false, 0).blockingGet().length)
+        assertEquals(90, runBlocking { api.getMessage(1, 1, false, 0) }.length)
     }
 
     @Test
@@ -165,7 +166,7 @@ class MessagesTest : BaseLocalTest() {
         server.enqueue(MockResponse().setBody(MessagesTest::class.java.getResource("Wiadomosc.json").readText()))
         server.start(3000)
 
-        val attachments = api.getMessageAttachments(1, 1).blockingGet()
+        val attachments = runBlocking { api.getMessageAttachments(1, 1) }
 
         assertEquals(1, attachments.size)
         with(attachments[0]) {
@@ -183,10 +184,12 @@ class MessagesTest : BaseLocalTest() {
         server.enqueue(MockResponse().setBody(MessagesTest::class.java.getResource("WyslanaWiadomosc.json").readText()))
         server.start(3000)
 
-        api.sendMessage(
-            "Temat wiadomości", "Tak wygląda zawartość wiadomości.\nZazwyczaj ma wiele linijek.\n\nZ poważaniem,\nNazwisko Imię",
-            listOf(Recipient("0", "Kowalski Jan", 0, 0, 2, "hash"))
-        ).blockingGet()
+        runBlocking {
+            api.sendMessage(
+                "Temat wiadomości", "Tak wygląda zawartość wiadomości.\nZazwyczaj ma wiele linijek.\n\nZ poważaniem,\nNazwisko Imię",
+                listOf(Recipient("0", "Kowalski Jan", 0, 0, 2, "hash"))
+            )
+        }
 
         server.takeRequest()
 
@@ -209,12 +212,12 @@ class MessagesTest : BaseLocalTest() {
         server.start(3000)
 
         val api = MessagesRepository(getService(MessagesService::class.java, "http://fakelog.localhost:3000/", false, loginType = Scrapper.LoginType.ADFSLight))
-        val sent = api.sendMessage("Temat", "Treść", listOf())
-        val observer = TestObserver<SentMessage>()
-        sent.subscribe(observer)
-        observer.assertNotComplete()
-        observer.assertError(ScrapperException::class.java)
-        observer.assertErrorMessage("User not logged in")
+        try {
+            runBlocking { api.sendMessage("Temat", "Treść", listOf()) }
+        } catch (e: Throwable) {
+            assertTrue(e is ScrapperException)
+            assertEquals("User not logged in", e.message)
+        }
     }
 
     @Test
@@ -223,7 +226,7 @@ class MessagesTest : BaseLocalTest() {
         server.enqueue(MockResponse().setBody("{\"success\": true}"))
         server.start(3000)
 
-        assertEquals(api.deleteMessages(listOf(Pair(74, 1), Pair(69, 2))).blockingGet(), true)
+        assertEquals(runBlocking { api.deleteMessages(listOf(Pair(74, 1), Pair(69, 2))) }, true)
 
         server.takeRequest()
 
@@ -246,9 +249,10 @@ class MessagesTest : BaseLocalTest() {
         server.enqueue(MockResponse().setBody(""))
         server.start(3000)
 
-        val deleted = api.deleteMessages(listOf(Pair(74, 1), Pair(69, 2)))
-        val observer = TestObserver<Boolean>()
-        deleted.subscribe(observer)
-        observer.assertErrorMessage("Unexpected empty response. Message(s) may already be deleted")
+        try {
+            runBlocking { api.deleteMessages(listOf(Pair(74, 1), Pair(69, 2))) }
+        } catch (e: Throwable) {
+            assertEquals("Unexpected empty response. Message(s) may already be deleted", e.message)
+        }
     }
 }

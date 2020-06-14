@@ -26,69 +26,68 @@ import io.github.wulkanowy.sdk.mobile.service.MobileService
 import io.github.wulkanowy.sdk.mobile.timetable.Lesson
 import io.github.wulkanowy.sdk.mobile.timetable.TimetableRequest
 import io.github.wulkanowy.sdk.mobile.toFormat
-import io.reactivex.Single
 import org.threeten.bp.LocalDate
 import org.threeten.bp.LocalDateTime
 
 class MobileRepository(private val api: MobileService) {
 
-    fun logStart(): Single<ApiResponse<String>> = api.logAppStart(object : ApiRequest() {})
+    suspend fun logStart(): ApiResponse<String> = api.logAppStart(object : ApiRequest() {})
 
-    fun getDictionaries(userId: Int, classificationPeriodId: Int, classId: Int): Single<Dictionaries> {
-        return api.getDictionaries(DictionariesRequest(userId, classificationPeriodId, classId)).map { requireNotNull(it.data) }
+    suspend fun getDictionaries(userId: Int, classificationPeriodId: Int, classId: Int): Dictionaries {
+        return api.getDictionaries(DictionariesRequest(userId, classificationPeriodId, classId)).data!!
     }
 
-    fun getTeachers(studentId: Int, semesterId: Int): Single<List<Teacher>> {
-        return api.getTeachers(TeachersRequest(studentId, semesterId)).map { requireNotNull(it.data) }.map {
-            it.schoolTeachers.union(it.teachersSubjects).toList()
+    suspend fun getTeachers(studentId: Int, semesterId: Int): List<Teacher> {
+        return api.getTeachers(TeachersRequest(studentId, semesterId)).data.let {
+            it?.schoolTeachers.orEmpty().union(it?.teachersSubjects.orEmpty()).toList()
         }
     }
 
-    fun getTimetable(start: LocalDate, end: LocalDate, classId: Int, classificationPeriodId: Int, studentId: Int): Single<List<Lesson>> {
-        return api.getTimetable(TimetableRequest(start.toFormat(), end.toFormat(), classId, classificationPeriodId, studentId)).map { requireNotNull(it.data) }
+    suspend fun getTimetable(start: LocalDate, end: LocalDate, classId: Int, classificationPeriodId: Int, studentId: Int): List<Lesson> {
+        return api.getTimetable(TimetableRequest(start.toFormat(), end.toFormat(), classId, classificationPeriodId, studentId)).data!!
     }
 
-    fun getGradesDetails(classId: Int, classificationPeriodId: Int, studentId: Int): Single<List<Grade>> {
-        return api.getGrades(GradesRequest(classId, classificationPeriodId, studentId)).map { requireNotNull(it.data) }
+    suspend fun getGradesDetails(classId: Int, classificationPeriodId: Int, studentId: Int): List<Grade> {
+        return api.getGrades(GradesRequest(classId, classificationPeriodId, studentId)).data!!
     }
 
-    fun getGradesSummary(classId: Int, classificationPeriodId: Int, studentId: Int): Single<GradesSummaryResponse> {
-        return api.getGradesSummary(GradesRequest(classId, classificationPeriodId, studentId)).map { requireNotNull(it.data) }
+    suspend fun getGradesSummary(classId: Int, classificationPeriodId: Int, studentId: Int): GradesSummaryResponse {
+        return api.getGradesSummary(GradesRequest(classId, classificationPeriodId, studentId)).data!!
     }
 
-    fun getExams(start: LocalDate, end: LocalDate, classId: Int, classificationPeriodId: Int, studentId: Int): Single<List<Exam>> {
-        return api.getExams(ExamsRequest(start.toFormat(), end.toFormat(), classId, classificationPeriodId, studentId)).map { requireNotNull(it.data) }
+    suspend fun getExams(start: LocalDate, end: LocalDate, classId: Int, classificationPeriodId: Int, studentId: Int): List<Exam> {
+        return api.getExams(ExamsRequest(start.toFormat(), end.toFormat(), classId, classificationPeriodId, studentId)).data!!
     }
 
-    fun getNotes(classificationPeriodId: Int, studentId: Int): Single<List<Note>> {
-        return api.getNotes(NotesRequest(classificationPeriodId, studentId)).map { requireNotNull(it.data) }
+    suspend fun getNotes(classificationPeriodId: Int, studentId: Int): List<Note> {
+        return api.getNotes(NotesRequest(classificationPeriodId, studentId)).data!!
     }
 
-    fun getAttendance(start: LocalDate, end: LocalDate, classId: Int, classificationPeriodId: Int, studentId: Int): Single<List<Attendance>> {
-        return api.getAttendance(AttendanceRequest(start.toFormat(), end.toFormat(), classId, classificationPeriodId, studentId)).map { requireNotNull(it.data?.data) }
+    suspend fun getAttendance(start: LocalDate, end: LocalDate, classId: Int, classificationPeriodId: Int, studentId: Int): List<Attendance> {
+        return api.getAttendance(AttendanceRequest(start.toFormat(), end.toFormat(), classId, classificationPeriodId, studentId)).data!!.items
     }
 
-    fun getHomework(start: LocalDate, end: LocalDate, classId: Int, classificationPeriodId: Int, studentId: Int): Single<List<Homework>> {
-        return api.getHomework(HomeworkRequest(start.toFormat(), end.toFormat(), classId, classificationPeriodId, studentId)).map { requireNotNull(it.data) }
+    suspend fun getHomework(start: LocalDate, end: LocalDate, classId: Int, classificationPeriodId: Int, studentId: Int): List<Homework> {
+        return api.getHomework(HomeworkRequest(start.toFormat(), end.toFormat(), classId, classificationPeriodId, studentId)).data!!
     }
 
-    fun getMessages(start: LocalDateTime, end: LocalDateTime, loginId: Int, studentId: Int): Single<List<Message>> {
-        return api.getMessages(MessagesRequest(start.toFormat(), end.toFormat(), loginId, studentId)).map { requireNotNull(it.data) }
+    suspend fun getMessages(start: LocalDateTime, end: LocalDateTime, loginId: Int, studentId: Int): List<Message> {
+        return api.getMessages(MessagesRequest(start.toFormat(), end.toFormat(), loginId, studentId)).data!!
     }
 
-    fun getMessagesDeleted(start: LocalDateTime, end: LocalDateTime, loginId: Int, studentId: Int): Single<List<Message>> {
-        return api.getMessagesDeleted(MessagesRequest(start.toFormat(), end.toFormat(), loginId, studentId)).map { requireNotNull(it.data) }
+    suspend fun getMessagesDeleted(start: LocalDateTime, end: LocalDateTime, loginId: Int, studentId: Int): List<Message> {
+        return api.getMessagesDeleted(MessagesRequest(start.toFormat(), end.toFormat(), loginId, studentId)).data!!
     }
 
-    fun getMessagesSent(start: LocalDateTime, end: LocalDateTime, loginId: Int, studentId: Int): Single<List<Message>> {
-        return api.getMessagesSent(MessagesRequest(start.toFormat(), end.toFormat(), loginId, studentId)).map { requireNotNull(it.data) }
+    suspend fun getMessagesSent(start: LocalDateTime, end: LocalDateTime, loginId: Int, studentId: Int): List<Message> {
+        return api.getMessagesSent(MessagesRequest(start.toFormat(), end.toFormat(), loginId, studentId)).data!!
     }
 
-    fun changeMessageStatus(messageId: Int, folder: String, status: String, loginId: Int, studentId: Int): Single<String> {
-        return api.changeMessageStatus(MessageStatusChangeRequest(messageId, folder, status, loginId, studentId)).map { requireNotNull(it.data) }
+    suspend fun changeMessageStatus(messageId: Int, folder: String, status: String, loginId: Int, studentId: Int): String {
+        return api.changeMessageStatus(MessageStatusChangeRequest(messageId, folder, status, loginId, studentId)).data!!
     }
 
-    fun sendMessage(sender: String, subject: String, content: String, recipients: List<Recipient>, loginId: Int, studentId: Int): Single<Message> {
+    suspend fun sendMessage(sender: String, subject: String, content: String, recipients: List<Recipient>, loginId: Int, studentId: Int): Message {
         return api.sendMessage(SendMessageRequest(
             sender = sender,
             subject = subject,
