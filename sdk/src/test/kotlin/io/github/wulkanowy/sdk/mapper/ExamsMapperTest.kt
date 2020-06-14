@@ -18,8 +18,8 @@ class ExamsMapperTest : BaseLocalTest() {
 
     @Test
     fun getApiExams() {
-        server.enqueue("Slowniki.json", BaseLocalTest::class.java)
         server.enqueueAndStart("Sprawdziany.json", ExamsTest::class.java)
+        server.enqueue("Slowniki.json", BaseLocalTest::class.java)
 
         val exams = mobile.getExams(now(), now(), 1).blockingGet()
         assertEquals(3, exams.size)
