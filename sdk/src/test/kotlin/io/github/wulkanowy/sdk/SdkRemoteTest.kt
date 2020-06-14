@@ -1,6 +1,7 @@
 package io.github.wulkanowy.sdk
 
 import io.github.wulkanowy.sdk.pojo.Folder
+import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertEquals
 import org.junit.Ignore
 import org.junit.Test
@@ -21,7 +22,7 @@ class SdkRemoteTest {
     fun getStudents_api() {
         val sdk = Sdk()
         sdk.setSimpleHttpLogger { println(it) }
-        val students = sdk.getStudentsFromMobileApi(token = "FK100000", pin = "999999", symbol = "powiatwulkanowy", apiKey = API_KEY, firebaseToken = "").blockingGet()
+        val students = runBlocking { sdk.getStudentsFromMobileApi(token = "FK100000", pin = "999999", symbol = "powiatwulkanowy", apiKey = API_KEY, firebaseToken = "") }
         assertEquals(2, students.size)
     }
 
@@ -31,7 +32,7 @@ class SdkRemoteTest {
             // mode = Sdk.Mode.SCRAPPER
         }
 
-        val students = sdk.getStudentsFromScrapper(email = "jan@fakelog.cf", password = "jan123", scrapperBaseUrl = "http://fakelog.cf", symbol = "powiatwulkanowy").blockingGet()
+        val students = runBlocking { sdk.getStudentsFromScrapper(email = "jan@fakelog.cf", password = "jan123", scrapperBaseUrl = "http://fakelog.cf", symbol = "powiatwulkanowy") }
         assertEquals(6, students.size)
     }
 
@@ -41,7 +42,7 @@ class SdkRemoteTest {
             // mode = Sdk.Mode.HYBRID
         }
 
-        val students = sdk.getStudentsHybrid(email = "jan@fakelog.cf", password = "jan123", apiKey = API_KEY, scrapperBaseUrl = "http://fakelog.cf", startSymbol = "powiatwulkanowy", firebaseToken = "").blockingGet()
+        val students = runBlocking { sdk.getStudentsHybrid(email = "jan@fakelog.cf", password = "jan123", apiKey = API_KEY, scrapperBaseUrl = "http://fakelog.cf", startSymbol = "powiatwulkanowy", firebaseToken = "") }
         assertEquals(6, students.size)
     }
 
@@ -60,7 +61,7 @@ class SdkRemoteTest {
             classId = 14
         }
 
-        val semesters = sdk.getSemesters().blockingGet()
+        val semesters = runBlocking { sdk.getSemesters() }
         assertEquals(2, semesters.size)
     }
 
@@ -79,7 +80,7 @@ class SdkRemoteTest {
             classId = 14
         }
 
-        val grades = sdk.getGradesDetails(1).blockingGet()
+        val grades = runBlocking { sdk.getGradesDetails(1) }
         assertEquals(22, grades.size)
     }
 
@@ -103,7 +104,7 @@ class SdkRemoteTest {
             password = "jan123"
         }
 
-        val grades = sdk.getGradesDetails(1).blockingGet()
+        val grades = runBlocking { sdk.getGradesDetails(1) }
         assertEquals(22, grades.size)
     }
 
@@ -122,7 +123,7 @@ class SdkRemoteTest {
             classId = 14
         }
 
-        val grades = sdk.getGradesSummary(1).blockingGet()
+        val grades = runBlocking { sdk.getGradesSummary(1) }
         assertEquals(4, grades.size)
     }
 
@@ -141,7 +142,7 @@ class SdkRemoteTest {
             classId = 14
         }
 
-        val attendance = sdk.getAttendance(of(2018, 1, 1), of(2018, 1, 2), 1).blockingGet()
+        val attendance = runBlocking { sdk.getAttendance(of(2018, 1, 1), of(2018, 1, 2), 1) }
         assertEquals(24, attendance.size)
     }
 
@@ -160,7 +161,7 @@ class SdkRemoteTest {
             classId = 14
         }
 
-        val subjects = sdk.getSubjects().blockingGet()
+        val subjects = runBlocking { sdk.getSubjects() }
         assertEquals(14, subjects.size)
     }
 
@@ -179,7 +180,7 @@ class SdkRemoteTest {
             classId = 14
         }
 
-        val notes = sdk.getNotes(1).blockingGet()
+        val notes = runBlocking { sdk.getNotes(1) }
         assertEquals(5, notes.size)
     }
 
@@ -198,7 +199,7 @@ class SdkRemoteTest {
             classId = 14
         }
 
-        val teachers = sdk.getTeachers(1).blockingGet()
+        val teachers = runBlocking { sdk.getTeachers(1) }
         assertEquals(9, teachers.size)
     }
 
@@ -217,7 +218,7 @@ class SdkRemoteTest {
             classId = 14
         }
 
-        val homework = sdk.getHomework(of(2018, 1, 1), of(2018, 1, 2)).blockingGet()
+        val homework = runBlocking { sdk.getHomework(of(2018, 1, 1), of(2018, 1, 2)) }
         assertEquals(4, homework.size)
     }
 
@@ -236,7 +237,7 @@ class SdkRemoteTest {
             classId = 14
         }
 
-        val timetable = sdk.getTimetable(of(2018, 1, 1), of(2018, 1, 2)).blockingGet()
+        val timetable = runBlocking { sdk.getTimetable(of(2018, 1, 1), of(2018, 1, 2)) }
         assertEquals(24, timetable.size)
     }
 
@@ -255,13 +256,13 @@ class SdkRemoteTest {
             classId = 14
         }
 
-        val messages = sdk.getMessages(Folder.RECEIVED, LocalDateTime.of(2018, 1, 1, 0, 0, 0), LocalDateTime.of(2018, 1, 2, 0, 0, 0)).blockingGet()
+        val messages = runBlocking { sdk.getMessages(Folder.RECEIVED, LocalDateTime.of(2018, 1, 1, 0, 0, 0), LocalDateTime.of(2018, 1, 2, 0, 0, 0)) }
         assertEquals(2, messages.size)
 
-        val messagesSent = sdk.getMessages(Folder.SENT, LocalDateTime.of(2018, 1, 1, 0, 0, 0), LocalDateTime.of(2018, 1, 2, 0, 0, 0)).blockingGet()
+        val messagesSent = runBlocking { sdk.getMessages(Folder.SENT, LocalDateTime.of(2018, 1, 1, 0, 0, 0), LocalDateTime.of(2018, 1, 2, 0, 0, 0)) }
         assertEquals(1, messagesSent.size)
 
-        val messagesTrashed = sdk.getMessages(Folder.TRASHED, LocalDateTime.of(2018, 1, 1, 0, 0, 0), LocalDateTime.of(2018, 1, 2, 0, 0, 0)).blockingGet()
+        val messagesTrashed = runBlocking { sdk.getMessages(Folder.TRASHED, LocalDateTime.of(2018, 1, 1, 0, 0, 0), LocalDateTime.of(2018, 1, 2, 0, 0, 0)) }
         assertEquals(1, messagesTrashed.size)
     }
 
@@ -281,7 +282,7 @@ class SdkRemoteTest {
             classId = 14
         }
 
-        val message = sdk.getMessageDetails(1, 2, true, 1).blockingGet()
+        val message = runBlocking { sdk.getMessageDetails(1, 2, true, 1) }
         assertEquals("Zmiana statusu wiadomości.", message)
     }
 
@@ -301,7 +302,7 @@ class SdkRemoteTest {
             classId = 14
         }
 
-        val isDeleted = sdk.deleteMessages(listOf(1 to 1, 2 to 2)).blockingGet()
+        val isDeleted = runBlocking { sdk.deleteMessages(listOf(1 to 1, 2 to 2)) }
         assertEquals(true, isDeleted)
     }
 }

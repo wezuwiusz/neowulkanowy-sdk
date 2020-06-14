@@ -3,6 +3,7 @@ package io.github.wulkanowy.sdk.mapper
 import io.github.wulkanowy.sdk.Sdk
 import io.github.wulkanowy.sdk.mobile.BaseLocalTest
 import io.github.wulkanowy.sdk.mobile.grades.GradesTest
+import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertEquals
 import org.junit.Test
 
@@ -20,7 +21,7 @@ class GradesMapperTest : BaseLocalTest() {
         server.enqueueAndStart("Oceny.json", GradesTest::class.java)
         server.enqueue("Slowniki.json", BaseLocalTest::class.java)
 
-        val grades = mobile.getGradesDetails(0).blockingGet()
+        val grades = runBlocking { mobile.getGradesDetails(0) }
         assertEquals(2, grades.size)
 
         with(grades[0]) {

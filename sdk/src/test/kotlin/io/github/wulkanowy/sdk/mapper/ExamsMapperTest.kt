@@ -3,6 +3,7 @@ package io.github.wulkanowy.sdk.mapper
 import io.github.wulkanowy.sdk.Sdk
 import io.github.wulkanowy.sdk.mobile.BaseLocalTest
 import io.github.wulkanowy.sdk.mobile.exams.ExamsTest
+import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertEquals
 import org.junit.Test
 import org.threeten.bp.LocalDate.now
@@ -21,7 +22,7 @@ class ExamsMapperTest : BaseLocalTest() {
         server.enqueueAndStart("Sprawdziany.json", ExamsTest::class.java)
         server.enqueue("Slowniki.json", BaseLocalTest::class.java)
 
-        val exams = mobile.getExams(now(), now(), 1).blockingGet()
+        val exams = runBlocking { mobile.getExams(now(), now(), 1) }
         assertEquals(3, exams.size)
 
         assertEquals("Sprawdzian", exams[0].type)

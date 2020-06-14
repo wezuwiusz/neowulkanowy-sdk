@@ -3,6 +3,7 @@ package io.github.wulkanowy.sdk.mapper
 import io.github.wulkanowy.sdk.Sdk
 import io.github.wulkanowy.sdk.mobile.BaseLocalTest
 import io.github.wulkanowy.sdk.mobile.register.RegisterTest
+import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertEquals
 import org.junit.Test
 import org.threeten.bp.LocalDate.of
@@ -21,7 +22,7 @@ class SemesterMapperTest : BaseLocalTest() {
         server.enqueueAndStart("ListaUczniow.json", RegisterTest::class.java)
 
         mobile.studentId = 1
-        val semesters = mobile.getSemesters(of(2020, 1, 30)).blockingGet()
+        val semesters = runBlocking { mobile.getSemesters(of(2020, 1, 30)) }
         assertEquals(2, semesters.size)
 
         with(semesters[0]) {
@@ -41,7 +42,7 @@ class SemesterMapperTest : BaseLocalTest() {
         server.enqueueAndStart("ListaUczniow-2.json", RegisterTest::class.java)
 
         mobile.studentId = 1
-        val semesters = mobile.getSemesters(of(2020, 1, 29)).blockingGet()
+        val semesters = runBlocking { mobile.getSemesters(of(2020, 1, 29)) }
         assertEquals(2, semesters.size)
 
         with(semesters[0]) {

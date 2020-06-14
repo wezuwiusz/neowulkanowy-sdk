@@ -2,6 +2,7 @@ package io.github.wulkanowy.sdk.mapper
 
 import io.github.wulkanowy.sdk.Sdk
 import io.github.wulkanowy.sdk.mobile.BaseLocalTest
+import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertEquals
 import org.junit.Test
 
@@ -18,7 +19,7 @@ class SubjectsMapperTest : BaseLocalTest() {
     fun getApiSubjects() {
         server.enqueueAndStart("Slowniki.json", BaseLocalTest::class.java)
 
-        val subjects = mobile.getSubjects().blockingGet()
+        val subjects = runBlocking { mobile.getSubjects() }
         assertEquals(15, subjects.size)
         with(subjects[0]) {
             assertEquals(-1, id)

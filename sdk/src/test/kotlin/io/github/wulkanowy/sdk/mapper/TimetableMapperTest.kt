@@ -3,6 +3,7 @@ package io.github.wulkanowy.sdk.mapper
 import io.github.wulkanowy.sdk.Sdk
 import io.github.wulkanowy.sdk.mobile.BaseLocalTest
 import io.github.wulkanowy.sdk.mobile.timetable.TimetableTest
+import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertEquals
 import org.junit.Test
 import org.threeten.bp.LocalDate.of
@@ -22,7 +23,7 @@ class TimetableMapperTest : BaseLocalTest() {
         server.enqueueAndStart("PlanLekcji.json", TimetableTest::class.java)
         server.enqueue("Slowniki.json", BaseLocalTest::class.java)
 
-        val lessons = mobile.getTimetable(of(2020, 2, 3), of(2020, 2, 4)).blockingGet()
+        val lessons = runBlocking { mobile.getTimetable(of(2020, 2, 3), of(2020, 2, 4)) }
         assertEquals(4, lessons.size)
 
         with(lessons[1]) {
@@ -49,7 +50,7 @@ class TimetableMapperTest : BaseLocalTest() {
         server.enqueueAndStart("PlanLekcji.json", TimetableTest::class.java)
         server.enqueue("Slowniki.json", BaseLocalTest::class.java)
 
-        val lessons = mobile.getTimetable(of(2020, 2, 3), of(2020, 2, 4)).blockingGet()
+        val lessons = runBlocking { mobile.getTimetable(of(2020, 2, 3), of(2020, 2, 4)) }
 
         with(lessons[3]) {
             assertEquals(4, number)
