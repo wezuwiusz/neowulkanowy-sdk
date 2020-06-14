@@ -8,7 +8,7 @@ import io.github.wulkanowy.sdk.scrapper.TLSSocketFactory
 import io.github.wulkanowy.sdk.scrapper.grades.DateDeserializer
 import io.github.wulkanowy.sdk.scrapper.grades.GradeDate
 import io.github.wulkanowy.sdk.scrapper.interceptor.ErrorInterceptor
-import io.github.wulkanowy.sdk.scrapper.interceptor.NotLoggedInErrorInterceptor
+import io.github.wulkanowy.sdk.scrapper.interceptor.AutoLoginInterceptor
 import io.github.wulkanowy.sdk.scrapper.interceptor.StudentAndParentInterceptor
 import io.github.wulkanowy.sdk.scrapper.interceptor.UserAgentInterceptor
 import io.github.wulkanowy.sdk.scrapper.login.LoginHelper
@@ -66,8 +66,8 @@ class ServiceManager(
     private val interceptors: MutableList<Pair<Interceptor, Boolean>> = mutableListOf(
         HttpLoggingInterceptor().setLevel(logLevel) to true,
         ErrorInterceptor() to false,
-        NotLoggedInErrorInterceptor(loginType, cookies, emptyCookieJarIntercept) {
-            return@NotLoggedInErrorInterceptor runBlocking { loginHelper.login(email, password) }.toString().isNotBlank()
+        AutoLoginInterceptor(loginType, cookies, emptyCookieJarIntercept) {
+            return@AutoLoginInterceptor runBlocking { loginHelper.login(email, password) }.toString().isNotBlank()
         } to false,
         UserAgentInterceptor(androidVersion, buildTag) to false
     )
@@ -173,8 +173,8 @@ class ServiceManager(
             .cookieJar(if (!separateJar) JavaNetCookieJar(cookies) else JavaNetCookieJar(CookieManager()))
             .apply {
                 interceptors.forEach {
-                    if (it.first is ErrorInterceptor || it.first is NotLoggedInErrorInterceptor) {
-                        if (it.first is NotLoggedInErrorInterceptor && loginIntercept) addInterceptor(it.first)
+                    if (it.first is ErrorInterceptor || it.first is AutoLoginInterceptor) {
+                        if (it.first is AutoLoginInterceptor && loginIntercept) addInterceptor(it.first)
                         if (it.first is ErrorInterceptor && errIntercept) addInterceptor(it.first)
                     } else {
                         if (it.second) addNetworkInterceptor(it.first)

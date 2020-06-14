@@ -20,7 +20,7 @@ import org.jsoup.nodes.Document
 import org.jsoup.select.Elements
 import java.net.CookieManager
 
-class NotLoggedInErrorInterceptor(
+class AutoLoginInterceptor(
     private val loginType: LoginType,
     private val jar: CookieManager,
     private val emptyCookieJarIntercept: Boolean,
@@ -31,6 +31,7 @@ class NotLoggedInErrorInterceptor(
         val request: Request
         val response: Response
 
+        // TODO: add max retries
         try {
             request = chain.request()
             checkRequest()

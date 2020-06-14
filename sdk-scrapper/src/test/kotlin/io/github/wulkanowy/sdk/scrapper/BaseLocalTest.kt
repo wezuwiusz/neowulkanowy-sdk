@@ -5,7 +5,7 @@ import com.google.gson.JsonParser
 import io.github.wulkanowy.sdk.scrapper.grades.DateDeserializer
 import io.github.wulkanowy.sdk.scrapper.grades.GradeDate
 import io.github.wulkanowy.sdk.scrapper.interceptor.ErrorInterceptor
-import io.github.wulkanowy.sdk.scrapper.interceptor.NotLoggedInErrorInterceptor
+import io.github.wulkanowy.sdk.scrapper.interceptor.AutoLoginInterceptor
 import io.github.wulkanowy.sdk.scrapper.login.LoginHelper
 import io.github.wulkanowy.sdk.scrapper.repository.StudentAndParentRepository
 import io.github.wulkanowy.sdk.scrapper.repository.StudentRepository
@@ -61,7 +61,7 @@ abstract class BaseLocalTest : BaseTest() {
             .client(OkHttpClient.Builder()
                 .apply {
                     if (errorInterceptor) addInterceptor(ErrorInterceptor())
-                    if (noLoggedInInterceptor) addInterceptor(NotLoggedInErrorInterceptor(loginType, CookieManager(), false) {
+                    if (noLoggedInInterceptor) addInterceptor(AutoLoginInterceptor(loginType, CookieManager(), false) {
                         if (autoLogin) runBlocking {
                             LoginHelper(loginType, "http", "localhost", "powiatwulkanowy", CookieManager(), getService(LoginService::class.java))
                                 .login("jan", "kowalski")
