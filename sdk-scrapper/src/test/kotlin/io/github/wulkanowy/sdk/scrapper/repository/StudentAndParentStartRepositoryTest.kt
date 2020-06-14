@@ -5,8 +5,7 @@ import io.github.wulkanowy.sdk.scrapper.BaseLocalTest
 import io.github.wulkanowy.sdk.scrapper.grades.GradesTest
 import io.github.wulkanowy.sdk.scrapper.login.LoginTest
 import io.github.wulkanowy.sdk.scrapper.register.RegisterTest
-import io.github.wulkanowy.sdk.scrapper.register.Semester
-import io.reactivex.observers.TestObserver
+import kotlinx.coroutines.runBlocking
 import okhttp3.mockwebserver.MockResponse
 import org.junit.Assert.assertEquals
 import org.junit.Test
@@ -34,11 +33,11 @@ class StudentAndParentStartRepositoryTest : BaseLocalTest() {
 
         api.loginType = Scrapper.LoginType.STANDARD
 
-        val semesters = api.getSemesters()
-        val semestersObserver = TestObserver<List<Semester>>()
-        semesters.subscribe(semestersObserver)
-        semestersObserver.assertTerminated()
-        semestersObserver.assertErrorMessage("Unknow page with title: Uonet+")
+        try {
+            runBlocking { api.getSemesters() }
+        } catch (e: Throwable) {
+            assertEquals("Unknow page with title: Uonet+", e.message)
+        }
     }
 
     @Test
@@ -54,11 +53,11 @@ class StudentAndParentStartRepositoryTest : BaseLocalTest() {
 
         api.loginType = Scrapper.LoginType.STANDARD
 
-        val semesters = api.getSemesters()
-        val semestersObserver = TestObserver<List<Semester>>()
-        semesters.subscribe(semestersObserver)
-        semestersObserver.assertTerminated()
-        semestersObserver.assertErrorMessage("Unknow page with title: Witryna ucznia i rodzica – Strona główna")
+        try {
+            runBlocking { api.getSemesters() }
+        } catch (e: Throwable) {
+            assertEquals("Unknow page with title: Witryna ucznia i rodzica – Strona główna", e.message)
+        }
     }
 
     @Test
@@ -71,17 +70,12 @@ class StudentAndParentStartRepositoryTest : BaseLocalTest() {
 
         api.loginType = Scrapper.LoginType.STANDARD
 
-        val semesters = api.getSemesters()
-        val semestersObserver = TestObserver<List<Semester>>()
-        semesters.subscribe(semestersObserver)
-        semestersObserver.assertComplete()
+        val semesters = runBlocking { api.getSemesters() }
 
-        val items = semestersObserver.values()[0]
+        assertEquals(6, semesters.size)
 
-        assertEquals(6, items.size)
-
-        assertEquals(1234567, items[0].semesterId)
-        assertEquals(1234568, items[1].semesterId)
+        assertEquals(1234567, semesters[0].semesterId)
+        assertEquals(1234568, semesters[1].semesterId)
     }
 
     @Test
@@ -99,17 +93,12 @@ class StudentAndParentStartRepositoryTest : BaseLocalTest() {
 
         api.loginType = Scrapper.LoginType.STANDARD
 
-        val semesters = api.getSemesters()
-        val semestersObserver = TestObserver<List<Semester>>()
-        semesters.subscribe(semestersObserver)
-        semestersObserver.assertComplete()
+        val semesters = runBlocking { api.getSemesters() }
 
-        val items = semestersObserver.values()[0]
+        assertEquals(6, semesters.size)
 
-        assertEquals(6, items.size)
-
-        assertEquals(1234567, items[0].semesterId)
-        assertEquals(1234568, items[1].semesterId)
+        assertEquals(1234567, semesters[0].semesterId)
+        assertEquals(1234568, semesters[1].semesterId)
     }
 
     @Test
@@ -129,17 +118,12 @@ class StudentAndParentStartRepositoryTest : BaseLocalTest() {
 
         api.loginType = Scrapper.LoginType.ADFS
 
-        val semesters = api.getSemesters()
-        val semestersObserver = TestObserver<List<Semester>>()
-        semesters.subscribe(semestersObserver)
-        semestersObserver.assertComplete()
+        val semesters = runBlocking { api.getSemesters() }
 
-        val items = semestersObserver.values()[0]
+        assertEquals(6, semesters.size)
 
-        assertEquals(6, items.size)
-
-        assertEquals(1234567, items[0].semesterId)
-        assertEquals(1234568, items[1].semesterId)
+        assertEquals(1234567, semesters[0].semesterId)
+        assertEquals(1234568, semesters[1].semesterId)
     }
 
     @Test
@@ -158,17 +142,12 @@ class StudentAndParentStartRepositoryTest : BaseLocalTest() {
 
         api.loginType = Scrapper.LoginType.ADFSLight
 
-        val semesters = api.getSemesters()
-        val semestersObserver = TestObserver<List<Semester>>()
-        semesters.subscribe(semestersObserver)
-        semestersObserver.assertComplete()
+        val semesters = runBlocking { api.getSemesters() }
 
-        val items = semestersObserver.values()[0]
+        assertEquals(6, semesters.size)
 
-        assertEquals(6, items.size)
-
-        assertEquals(1234567, items[0].semesterId)
-        assertEquals(1234568, items[1].semesterId)
+        assertEquals(1234567, semesters[0].semesterId)
+        assertEquals(1234568, semesters[1].semesterId)
     }
 
     @Test
@@ -189,18 +168,13 @@ class StudentAndParentStartRepositoryTest : BaseLocalTest() {
 
         api.loginType = Scrapper.LoginType.ADFSCards
 
-        val semesters = api.getSemesters()
-        val semestersObserver = TestObserver<List<Semester>>()
-        semesters.subscribe(semestersObserver)
-        semestersObserver.assertComplete()
+        val semesters = runBlocking { api.getSemesters() }
 
-        val items = semestersObserver.values()[0]
+        assertEquals(6, semesters.size)
 
-        assertEquals(6, items.size)
-
-        assertEquals(1234567, items[0].semesterId)
-        assertEquals(1234568, items[1].semesterId)
-        assertEquals(2015, items[0].schoolYear)
-        assertEquals(2015, items[1].schoolYear)
+        assertEquals(1234567, semesters[0].semesterId)
+        assertEquals(1234568, semesters[1].semesterId)
+        assertEquals(2015, semesters[0].schoolYear)
+        assertEquals(2015, semesters[1].schoolYear)
     }
 }

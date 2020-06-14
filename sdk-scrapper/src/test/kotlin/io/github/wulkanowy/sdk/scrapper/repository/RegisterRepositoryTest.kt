@@ -1,19 +1,19 @@
 package io.github.wulkanowy.sdk.scrapper.repository
 
+import io.github.wulkanowy.sdk.scrapper.BaseLocalTest
 import io.github.wulkanowy.sdk.scrapper.Scrapper
 import io.github.wulkanowy.sdk.scrapper.ScrapperException
-import io.github.wulkanowy.sdk.scrapper.BaseLocalTest
+import io.github.wulkanowy.sdk.scrapper.exception.VulcanException
 import io.github.wulkanowy.sdk.scrapper.interceptor.ErrorInterceptorTest
 import io.github.wulkanowy.sdk.scrapper.login.LoginHelper
 import io.github.wulkanowy.sdk.scrapper.login.LoginTest
 import io.github.wulkanowy.sdk.scrapper.register.RegisterTest
-import io.github.wulkanowy.sdk.scrapper.register.Student
 import io.github.wulkanowy.sdk.scrapper.service.LoginService
 import io.github.wulkanowy.sdk.scrapper.service.RegisterService
 import io.github.wulkanowy.sdk.scrapper.service.ServiceManager
 import io.github.wulkanowy.sdk.scrapper.service.StudentAndParentService
 import io.github.wulkanowy.sdk.scrapper.service.StudentService
-import io.reactivex.observers.TestObserver
+import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Test
@@ -50,11 +50,7 @@ class RegisterRepositoryTest : BaseLocalTest() {
         }
         server.start(3000)
 
-        val res = getRegisterRepository("Default", true).getStudents()
-        val observer = TestObserver<List<Student>>()
-        res.subscribe(observer)
-        observer.assertComplete()
-        val students = observer.values()[0]
+        val students = runBlocking { getRegisterRepository("Default", true).getStudents() }
 
         assertEquals(1, students.size)
         with(students[0]) {
@@ -81,11 +77,7 @@ class RegisterRepositoryTest : BaseLocalTest() {
         }
         server.start(3000)
 
-        val res = getRegisterRepository("Default", true).getStudents()
-        val observer = TestObserver<List<Student>>()
-        res.subscribe(observer)
-        observer.assertComplete()
-        val students = observer.values()[0]
+        val students = runBlocking { getRegisterRepository("Default", true).getStudents() }
         assertEquals(3, students.size)
 
         with(students[0]) {
@@ -125,11 +117,7 @@ class RegisterRepositoryTest : BaseLocalTest() {
         }
         server.start(3000)
 
-        val res = getRegisterRepository("Default", true).getStudents()
-        val observer = TestObserver<List<Student>>()
-        res.subscribe(observer)
-        observer.assertComplete()
-        val students = observer.values()[0]
+        val students = runBlocking { getRegisterRepository("Default", true).getStudents() }
         assertEquals(2, students.size)
     }
 
@@ -141,11 +129,11 @@ class RegisterRepositoryTest : BaseLocalTest() {
         server.enqueue("Offline.html", ErrorInterceptorTest::class.java)
         server.start(3000)
 
-        val res = normal.getStudents()
-        val observer = TestObserver<List<Student>>()
-        res.subscribe(observer)
-        observer.assertTerminated()
-        observer.assertError(ScrapperException::class.java)
+        try {
+            runBlocking { normal.getStudents() }
+        } catch (e: Throwable) {
+            assertTrue(e is ScrapperException)
+        }
     }
 
     @Test
@@ -161,10 +149,7 @@ class RegisterRepositoryTest : BaseLocalTest() {
 
         server.start(3000)
 
-        val res = normal.getStudents()
-        val observer = TestObserver<List<Student>>()
-        res.subscribe(observer)
-        observer.assertComplete()
+        runBlocking { normal.getStudents() }
     }
 
     @Test
@@ -176,10 +161,12 @@ class RegisterRepositoryTest : BaseLocalTest() {
 
         server.start(3000)
 
-        val res = getRegisterRepository("Default").getStudents()
-        val observer = TestObserver<List<Student>>()
-        res.subscribe(observer)
-        observer.assertTerminated()
+        try {
+            runBlocking { getRegisterRepository("Default").getStudents() }
+        } catch (e: Throwable) {
+            assertTrue(e is VulcanException)
+            assertEquals("Wystąpił nieoczekiwany błąd. Wystąpił błąd aplikacji. Prosimy zalogować się ponownie. Jeśli problem będzie się powtarzał, prosimy o kontakt z serwisem.", e.message)
+        }
 
         assertEquals("/Default/Account/LogOn", server.takeRequest().path)
     }
@@ -193,10 +180,12 @@ class RegisterRepositoryTest : BaseLocalTest() {
 
         server.start(3000)
 
-        val res = getRegisterRepository(" Rzeszów + ").getStudents()
-        val observer = TestObserver<List<Student>>()
-        res.subscribe(observer)
-        observer.assertTerminated()
+        try {
+            runBlocking { getRegisterRepository(" Rzeszów + ").getStudents() }
+        } catch (e: Throwable) {
+            assertTrue(e is VulcanException)
+            assertEquals("Wystąpił nieoczekiwany błąd. Wystąpił błąd aplikacji. Prosimy zalogować się ponownie. Jeśli problem będzie się powtarzał, prosimy o kontakt z serwisem.", e.message)
+        }
 
         assertEquals("/rzeszow/Account/LogOn", server.takeRequest().path)
     }
@@ -210,10 +199,12 @@ class RegisterRepositoryTest : BaseLocalTest() {
 
         server.start(3000)
 
-        val res = getRegisterRepository(" Niepoprawny    symbol no ale + ").getStudents()
-        val observer = TestObserver<List<Student>>()
-        res.subscribe(observer)
-        observer.assertTerminated()
+        try {
+            runBlocking { getRegisterRepository(" Niepoprawny    symbol no ale + ").getStudents() }
+        } catch (e: Throwable) {
+            assertTrue(e is VulcanException)
+            assertEquals("Wystąpił nieoczekiwany błąd. Wystąpił błąd aplikacji. Prosimy zalogować się ponownie. Jeśli problem będzie się powtarzał, prosimy o kontakt z serwisem.", e.message)
+        }
 
         assertEquals("/niepoprawnysymbolnoale/Account/LogOn", server.takeRequest().path)
     }
@@ -227,10 +218,12 @@ class RegisterRepositoryTest : BaseLocalTest() {
 
         server.start(3000)
 
-        val res = getRegisterRepository(" + ").getStudents()
-        val observer = TestObserver<List<Student>>()
-        res.subscribe(observer)
-        observer.assertTerminated()
+        try {
+            runBlocking { getRegisterRepository(" + ").getStudents() }
+        } catch (e: Throwable) {
+            assertTrue(e is VulcanException)
+            assertEquals("Wystąpił nieoczekiwany błąd. Wystąpił błąd aplikacji. Prosimy zalogować się ponownie. Jeśli problem będzie się powtarzał, prosimy o kontakt z serwisem.", e.message)
+        }
 
         assertEquals("/Default/Account/LogOn", server.takeRequest().path)
     }
@@ -244,10 +237,12 @@ class RegisterRepositoryTest : BaseLocalTest() {
 
         server.start(3000)
 
-        val res = getRegisterRepository("Default").getStudents()
-        val observer = TestObserver<List<Student>>()
-        res.subscribe(observer)
-        observer.assertTerminated()
+        try {
+            runBlocking { getRegisterRepository("Default").getStudents() }
+        } catch (e: Throwable) {
+            assertTrue(e is VulcanException)
+            assertEquals("Wystąpił nieoczekiwany błąd. Wystąpił błąd aplikacji. Prosimy zalogować się ponownie. Jeśli problem będzie się powtarzał, prosimy o kontakt z serwisem.", e.message)
+        }
 
         assertEquals("/Default/Account/LogOn", server.takeRequest().path)
         assertTrue(server.takeRequest().path.startsWith("/Account/LogOn?ReturnUrl=%2FDefault"))

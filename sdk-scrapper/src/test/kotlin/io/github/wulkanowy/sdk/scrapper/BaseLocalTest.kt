@@ -17,7 +17,6 @@ import okhttp3.mockwebserver.MockWebServer
 import org.junit.After
 import pl.droidsonroids.retrofit2.JspoonConverterFactory
 import retrofit2.Retrofit
-import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.converter.scalars.ScalarsConverterFactory
 
@@ -68,7 +67,6 @@ abstract class BaseLocalTest : BaseTest() {
                 .serializeNulls()
                 .registerTypeAdapter(GradeDate::class.java, DateDeserializer(GradeDate::class.java))
                 .create()) else JspoonConverterFactory.create())
-            .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
             .baseUrl(url)
             .build()
             .create(service)

@@ -1,13 +1,12 @@
 package io.github.wulkanowy.sdk.scrapper.login
 
-import io.github.wulkanowy.sdk.scrapper.Scrapper
 import io.github.wulkanowy.sdk.scrapper.BaseLocalTest
+import io.github.wulkanowy.sdk.scrapper.Scrapper
+import io.github.wulkanowy.sdk.scrapper.exception.VulcanException
 import io.github.wulkanowy.sdk.scrapper.homework.HomeworkTest
 import io.github.wulkanowy.sdk.scrapper.interceptor.ErrorInterceptorTest
-import io.github.wulkanowy.sdk.scrapper.exception.VulcanException
-import io.github.wulkanowy.sdk.scrapper.register.SendCertificateResponse
 import io.github.wulkanowy.sdk.scrapper.service.LoginService
-import io.reactivex.observers.TestObserver
+import kotlinx.coroutines.runBlocking
 import okhttp3.mockwebserver.MockResponse
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
@@ -36,7 +35,7 @@ class LoginTest : BaseLocalTest() {
         server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("Login-success.html").readText()))
         server.start(3000)
 
-        val res = adfs.login("jan@fakelog.cf", "jan123").blockingGet()
+        val res = runBlocking { adfs.login("jan@fakelog.cf", "jan123") }
 
         assertTrue(res.oldStudentSchools.isNotEmpty())
     }
@@ -47,7 +46,7 @@ class LoginTest : BaseLocalTest() {
         server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("Login-success.html").readText()))
         server.start(3000)
 
-        val res = normal.login("jan@fakelog.cf", "jan123").blockingGet()
+        val res = runBlocking { normal.login("jan@fakelog.cf", "jan123") }
 
         assertTrue(res.oldStudentSchools.isNotEmpty())
     }
@@ -58,7 +57,7 @@ class LoginTest : BaseLocalTest() {
         server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("Login-success.html").readText()))
         server.start(3000)
 
-        normal.login("jan@fakelog.cf", "jan123").blockingGet()
+        runBlocking { normal.login("jan@fakelog.cf", "jan123") }
 
         assertEquals("[text=LoginName=jan%40fakelog.cf&Password=jan123]", server.takeRequest().body.toString())
     }
@@ -70,7 +69,7 @@ class LoginTest : BaseLocalTest() {
         server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("Login-success-account-switch.html").readText()))
         server.start(3000)
 
-        normal.login("jan||jan@fakelog.cf", "jan123").blockingGet()
+        runBlocking { normal.login("jan||jan@fakelog.cf", "jan123") }
 
         assertEquals("[text=LoginName=jan&Password=jan123]", server.takeRequest().body.toString())
     }
@@ -81,7 +80,7 @@ class LoginTest : BaseLocalTest() {
         server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("Login-success-old.html").readText()))
         server.start(3000)
 
-        val res = normal.login("jan@fakelog.cf", "jan123").blockingGet()
+        val res = runBlocking { normal.login("jan@fakelog.cf", "jan123") }
 
         assertTrue(res.oldStudentSchools.isNotEmpty())
     }
@@ -92,7 +91,7 @@ class LoginTest : BaseLocalTest() {
         server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("Login-success.html").readText()))
         server.start(3000)
 
-        normal.login("jan@fakelog.cf", "jan123").blockingGet()
+        runBlocking { normal.login("jan@fakelog.cf", "jan123") }
 
         server.takeRequest()
         assertFalse(server.takeRequest().body.readUtf8().contains("ValueType%3D%26t%3Bhttp")) // ValueType=&t;http
@@ -105,11 +104,11 @@ class LoginTest : BaseLocalTest() {
         server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("Logowanie-adfs-zle-haslo.html").readText()))
         server.start(3000)
 
-        val res = adfs.login("jan@fakelog.cf", "jan1234")
-        val observer = TestObserver<SendCertificateResponse>()
-        res.subscribe(observer)
-        observer.assertTerminated()
-        observer.assertError(BadCredentialsException::class.java)
+        try {
+            runBlocking { adfs.login("jan@fakelog.cf", "jan1234") }
+        } catch (e: Throwable) {
+            assertTrue(e is BadCredentialsException)
+        }
     }
 
     @Test
@@ -118,11 +117,11 @@ class LoginTest : BaseLocalTest() {
         server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("Logowanie-normal-zle-haslo.html").readText()))
         server.start(3000)
 
-        val res = normal.login("jan@fakelog.cf", "jan1234")
-        val observer = TestObserver<SendCertificateResponse>()
-        res.subscribe(observer)
-        observer.assertTerminated()
-        observer.assertError(BadCredentialsException::class.java)
+        try {
+            runBlocking { adfs.login("jan@fakelog.cf", "jan1234") }
+        } catch (e: Throwable) {
+            assertTrue(e is BadCredentialsException)
+        }
     }
 
     @Test
@@ -131,13 +130,11 @@ class LoginTest : BaseLocalTest() {
         server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("Logowanie-brak-dostepu.html").readText()))
         server.start(3000)
 
-        val res = normal.login("jan@fakelog.cf", "jan123")
-        val observer = TestObserver<SendCertificateResponse>()
-        res.subscribe(observer)
-        observer.assertTerminated()
-        observer.assertError(AccountPermissionException::class.java)
-        observer.assertError {
-            it.localizedMessage == "Adres nie został zarejestrowany w dzienniku uczniowskim jako adres rodzica, bądź ucznia."
+        try {
+            runBlocking { adfs.login("jan@fakelog.cf", "jan1234") }
+        } catch (e: Throwable) {
+            assertTrue(e is AccountPermissionException)
+            assertEquals("Adres nie został zarejestrowany w dzienniku uczniowskim jako adres rodzica, bądź ucznia.", e.message)
         }
     }
 
@@ -146,10 +143,7 @@ class LoginTest : BaseLocalTest() {
         server.enqueue(MockResponse().setBody(HomeworkTest::class.java.getResource("ZadaniaDomowe.html").readText()))
         server.start(3000)
 
-        val res = normal.login("jan@fakelog.cf", "jan123")
-        val observer = TestObserver<SendCertificateResponse>()
-        res.subscribe(observer)
-        observer.assertComplete()
+        runBlocking { normal.login("jan@fakelog.cf", "jan123") }
     }
 
     @Test
@@ -157,10 +151,10 @@ class LoginTest : BaseLocalTest() {
         server.enqueue(MockResponse().setBody(ErrorInterceptorTest::class.java.getResource("Offline.html").readText()))
         server.start(3000)
 
-        val res = normal.login("jan@fakelog.cf", "jan123")
-        val observer = TestObserver<SendCertificateResponse>()
-        res.subscribe(observer)
-        observer.assertTerminated()
-        observer.assertError(VulcanException::class.java)
+        try {
+            runBlocking { adfs.login("jan@fakelog.cf", "jan1234") }
+        } catch (e: Throwable) {
+            assertTrue(e is VulcanException)
+        }
     }
 }

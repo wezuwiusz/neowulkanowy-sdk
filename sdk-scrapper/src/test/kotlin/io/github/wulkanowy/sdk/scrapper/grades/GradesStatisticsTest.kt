@@ -1,29 +1,30 @@
 package io.github.wulkanowy.sdk.scrapper.grades
 
 import io.github.wulkanowy.sdk.scrapper.BaseLocalTest
+import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertEquals
 import org.junit.Test
 
 class GradesStatisticsTest : BaseLocalTest() {
 
     private val snpPartial by lazy {
-        getSnpRepo(GradesStatisticsTest::class.java, "Statystyki-czastkowe.html").getGradesStatistics(123, false).blockingGet()
+        runBlocking { getSnpRepo(GradesStatisticsTest::class.java, "Statystyki-czastkowe.html").getGradesStatistics(123, false) }
     }
 
     private val snpAnnual by lazy {
-        getSnpRepo(GradesStatisticsTest::class.java, "Statystyki-roczne.html").getGradesStatistics(321, true).blockingGet()
+        runBlocking { getSnpRepo(GradesStatisticsTest::class.java, "Statystyki-roczne.html").getGradesStatistics(321, true) }
     }
 
     private val studentPartial by lazy {
-        getStudentRepo(GradesStatisticsTest::class.java, "Statystyki-czastkowe.json").getGradesPartialStatistics(123).blockingGet()
+        runBlocking { getStudentRepo(GradesStatisticsTest::class.java, "Statystyki-czastkowe.json").getGradesPartialStatistics(123) }
     }
 
     private val studentAnnual by lazy {
-        getStudentRepo(GradesStatisticsTest::class.java, "Statystyki-roczne.json").getGradesAnnualStatistics(321).blockingGet()
+        runBlocking { getStudentRepo(GradesStatisticsTest::class.java, "Statystyki-roczne.json").getGradesAnnualStatistics(321) }
     }
 
     private val points by lazy {
-        getStudentRepo(GradesStatisticsTest::class.java, "Statystyki-punkty.json").getGradesPointsStatistics(420).blockingGet()
+        runBlocking { getStudentRepo(GradesStatisticsTest::class.java, "Statystyki-punkty.json").getGradesPointsStatistics(420) }
     }
 
     @Test

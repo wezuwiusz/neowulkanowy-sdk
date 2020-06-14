@@ -1,6 +1,5 @@
 package io.github.wulkanowy.sdk.scrapper.service
 
-import RxJava2ReauthCallAdapterFactory
 import com.google.gson.GsonBuilder
 import io.github.wulkanowy.sdk.scrapper.OkHttpClientBuilderFactory
 import io.github.wulkanowy.sdk.scrapper.Scrapper
@@ -14,9 +13,6 @@ import io.github.wulkanowy.sdk.scrapper.interceptor.NotLoggedInErrorInterceptor
 import io.github.wulkanowy.sdk.scrapper.interceptor.StudentAndParentInterceptor
 import io.github.wulkanowy.sdk.scrapper.interceptor.UserAgentInterceptor
 import io.github.wulkanowy.sdk.scrapper.login.LoginHelper
-import io.github.wulkanowy.sdk.scrapper.login.NotLoggedInException
-import io.github.wulkanowy.sdk.scrapper.register.SendCertificateResponse
-import io.reactivex.Flowable
 import okhttp3.Interceptor
 import okhttp3.JavaNetCookieJar
 import okhttp3.OkHttpClient
@@ -24,7 +20,6 @@ import okhttp3.logging.HttpLoggingInterceptor
 import org.threeten.bp.LocalDate
 import pl.droidsonroids.retrofit2.JspoonConverterFactory
 import retrofit2.Retrofit
-import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.converter.scalars.ScalarsConverterFactory
 import retrofit2.create
@@ -160,12 +155,7 @@ class ServiceManager(
                 .serializeNulls()
                 .registerTypeAdapter(GradeDate::class.java, DateDeserializer(GradeDate::class.java))
                 .create()) else JspoonConverterFactory.create())
-            .addCallAdapterFactory(if (!login) RxJava2CallAdapterFactory.create() else
-                RxJava2ReauthCallAdapterFactory.create(
-                    getLoginHelper(),
-                    { it is NotLoggedInException }
-                )
-            ).build()
+            .build()
     }
 
     private fun getClientBuilder(
@@ -196,12 +186,11 @@ class ServiceManager(
             }
     }
 
-    private fun getLoginHelper(): Flowable<SendCertificateResponse> {
-        return loginHelper
-            .login(email, password)
-            .toFlowable()
-            .share()
-    }
+    // private suspend fun getLoginHelper(): Flowable<SendCertificateResponse> {
+    //     return loginHelper
+    //         .login(email, password)
+    //         .share()
+    // }
 
     class UrlGenerator(private val schema: String, private val host: String, var symbol: String, var schoolId: String) {
 

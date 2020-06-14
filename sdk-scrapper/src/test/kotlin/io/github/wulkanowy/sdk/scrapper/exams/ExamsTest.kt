@@ -1,21 +1,22 @@
 package io.github.wulkanowy.sdk.scrapper.exams
 
 import io.github.wulkanowy.sdk.scrapper.BaseLocalTest
+import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertEquals
 import org.junit.Test
 
 class ExamsTest : BaseLocalTest() {
 
     private val snp by lazy {
-        getSnpRepo(ExamsTest::class.java, "Sprawdziany-one-per-day.html").getExams(getLocalDate(2018, 10, 1)).blockingGet()
+        runBlocking { getSnpRepo(ExamsTest::class.java, "Sprawdziany-one-per-day.html").getExams(getLocalDate(2018, 10, 1)) }
     }
 
     private val snpEmpty by lazy {
-        getSnpRepo(ExamsTest::class.java, "Sprawdziany-empty.html").getExams(getLocalDate(2018, 10, 1)).blockingGet()
+        runBlocking { getSnpRepo(ExamsTest::class.java, "Sprawdziany-empty.html").getExams(getLocalDate(2018, 10, 1)) }
     }
 
     private val student by lazy {
-        getStudentRepo(ExamsTest::class.java, "Sprawdziany.json").getExams(getLocalDate(2018, 10, 1)).blockingGet()
+        runBlocking { getStudentRepo(ExamsTest::class.java, "Sprawdziany.json").getExams(getLocalDate(2018, 10, 1)) }
     }
 
     @Test

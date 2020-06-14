@@ -5,6 +5,7 @@ import io.github.wulkanowy.sdk.scrapper.BaseLocalTest
 import io.github.wulkanowy.sdk.scrapper.register.RegisterTest
 import io.github.wulkanowy.sdk.scrapper.repository.StudentRepository
 import io.github.wulkanowy.sdk.scrapper.service.StudentService
+import kotlinx.coroutines.runBlocking
 import okhttp3.mockwebserver.MockResponse
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
@@ -16,7 +17,7 @@ import org.threeten.bp.LocalDateTime
 class AttendanceTest : BaseLocalTest() {
 
     private val student by lazy {
-        getStudentRepo(AttendanceTest::class.java, "Frekwencja.json").getAttendance(getLocalDate(2018, 10, 1), null).blockingGet()
+        runBlocking { getStudentRepo(AttendanceTest::class.java, "Frekwencja.json").getAttendance(getLocalDate(2018, 10, 1), null) }
     }
 
     override fun getStudentRepo(testClass: Class<*>, fixture: String, loginType: Scrapper.LoginType): StudentRepository {
@@ -202,27 +203,32 @@ class AttendanceTest : BaseLocalTest() {
     @Test
     fun excuseForAbsence() {
         server.enqueue(MockResponse().setBody(RegisterTest::class.java.getResource("WitrynaUcznia.html").readText()))
-        getStudentRepo(AttendanceTest::class.java, "Usprawiedliwione.json").excuseForAbsence(
-            absents = listOf(
-                Absent(
-                    date = LocalDateTime.of(2019, 2, 11, 15, 53, 9),
-                    timeId = 1
-                ),
-                Absent(
-                    date = LocalDateTime.of(2019, 2, 11, 15, 53, 9),
-                    timeId = 2
-                ),
-                Absent(
-                    date = LocalDateTime.of(2019, 2, 11, 15, 53, 9),
-                    timeId = 3
-                ),
-                Absent(
-                    date = LocalDateTime.of(2019, 2, 12, 15, 53, 9),
-                    timeId = null
-                )
+
+        val absents = listOf(
+            Absent(
+                date = LocalDateTime.of(2019, 2, 11, 15, 53, 9),
+                timeId = 1
             ),
-            content = "Test"
-        ).blockingGet()
+            Absent(
+                date = LocalDateTime.of(2019, 2, 11, 15, 53, 9),
+                timeId = 2
+            ),
+            Absent(
+                date = LocalDateTime.of(2019, 2, 11, 15, 53, 9),
+                timeId = 3
+            ),
+            Absent(
+                date = LocalDateTime.of(2019, 2, 12, 15, 53, 9),
+                timeId = null
+            )
+        )
+
+        runBlocking {
+            getStudentRepo(AttendanceTest::class.java, "Usprawiedliwione.json").excuseForAbsence(
+                absents = absents,
+                content = "Test"
+            )
+        }
 
         server.takeRequest()
 

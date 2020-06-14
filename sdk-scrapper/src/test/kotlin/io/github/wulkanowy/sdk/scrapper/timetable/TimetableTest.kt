@@ -1,6 +1,7 @@
 package io.github.wulkanowy.sdk.scrapper.timetable
 
 import io.github.wulkanowy.sdk.scrapper.BaseLocalTest
+import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Test
@@ -8,15 +9,15 @@ import org.junit.Test
 class TimetableTest : BaseLocalTest() {
 
     private val snp by lazy {
-        getSnpRepo(TimetableTest::class.java, "PlanLekcji.html").getTimetable(getLocalDate(2018, 9, 24)).blockingGet()
+        runBlocking { getSnpRepo(TimetableTest::class.java, "PlanLekcji.html").getTimetable(getLocalDate(2018, 9, 24)) }
     }
 
     private val student by lazy {
-        getStudentRepo(TimetableTest::class.java, "PlanLekcji.json").getTimetable(getLocalDate(2018, 9, 24)).blockingGet()
+        runBlocking { getStudentRepo(TimetableTest::class.java, "PlanLekcji.json").getTimetable(getLocalDate(2018, 9, 24)) }
     }
 
     private val studentBefore1911 by lazy {
-        getStudentRepo(TimetableTest::class.java, "PlanLekcji-before-19.11.json").getTimetable(getLocalDate(2018, 9, 24)).blockingGet()
+        runBlocking { getStudentRepo(TimetableTest::class.java, "PlanLekcji-before-19.11.json").getTimetable(getLocalDate(2018, 9, 24)) }
     }
 
     @Test

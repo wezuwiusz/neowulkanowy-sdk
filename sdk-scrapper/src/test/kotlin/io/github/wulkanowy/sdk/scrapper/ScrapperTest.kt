@@ -1,8 +1,7 @@
 package io.github.wulkanowy.sdk.scrapper
 
 import io.github.wulkanowy.sdk.scrapper.attendance.AttendanceSummaryTest
-import io.github.wulkanowy.sdk.scrapper.attendance.Subject
-import io.reactivex.observers.TestObserver
+import kotlinx.coroutines.runBlocking
 import okhttp3.mockwebserver.MockResponse
 import org.junit.Test
 
@@ -25,18 +24,20 @@ class ScrapperTest : BaseLocalTest() {
             diaryId = 101
         }
 
-        val subjects = api.getSubjects()
-        val subjectsObserver = TestObserver<List<Subject>>()
-        subjects.subscribe(subjectsObserver)
-        subjectsObserver.assertNotComplete() //
+        try {
+            runBlocking { api.getSubjects() }
+        } catch (e: Throwable) {
+            assert(true) //
+        }
 
         api.apply {
             host = "fakelog.localhost:3000" //
         }
 
-        val subjects2 = api.getSubjects()
-        val subjectsObserver2 = TestObserver<List<Subject>>()
-        subjects2.subscribe(subjectsObserver2)
-        subjectsObserver2.assertComplete() //
+        try {
+            runBlocking { api.getSubjects() }
+        } catch (e: Throwable) {
+            assert(false) //
+        }
     }
 }

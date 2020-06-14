@@ -1,17 +1,18 @@
 package io.github.wulkanowy.sdk.scrapper.notes
 
 import io.github.wulkanowy.sdk.scrapper.BaseLocalTest
+import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertEquals
 import org.junit.Test
 
 class NotesTest : BaseLocalTest() {
 
     private val student by lazy {
-        getStudentRepo(NotesTest::class.java, "UwagiIOsiagniecia.json").getNotes().blockingGet()
+        runBlocking { getStudentRepo(NotesTest::class.java, "UwagiIOsiagniecia.json").getNotes() }
     }
 
     private val studentPoints by lazy {
-        getStudentRepo(NotesTest::class.java, "UwagiIOsiagniecia-points.json").getNotes().blockingGet()
+        runBlocking { getStudentRepo(NotesTest::class.java, "UwagiIOsiagniecia-points.json").getNotes() }
     }
 
     @Test

@@ -14,42 +14,28 @@ import io.github.wulkanowy.sdk.scrapper.attendance.Attendance.Category.UNKNOWN
 import io.github.wulkanowy.sdk.scrapper.attendance.Attendance.Category.values
 import io.github.wulkanowy.sdk.scrapper.timetable.CacheResponse.Time
 import io.github.wulkanowy.sdk.scrapper.toLocalDate
-import io.reactivex.Observable
-import io.reactivex.Single
 import org.threeten.bp.LocalDate
 import org.threeten.bp.Month
 
-fun Single<AttendanceResponse?>.mapAttendanceList(start: LocalDate, end: LocalDate?, getTimes: () -> Single<List<Time>>): Single<List<Attendance>> {
+fun AttendanceResponse.mapAttendanceList(start: LocalDate, end: LocalDate?, times: List<Time>): List<Attendance> {
     val endDate = end ?: start.plusDays(4)
-    var excuseActive = false
-    var sentExcuses = emptyList<SentExcuse>()
-    return map {
-        it.run {
-            excuseActive = this.excuseActive
-            sentExcuses = this.sentExcuses
-            lessons
-        }
-    }.flatMapObservable { Observable.fromIterable(it) }.flatMap { a ->
-        getTimes().flatMapObservable { times ->
-            Observable.fromIterable(times.filter { time -> time.id == a.timeId })
-        }.map {
-            val sentExcuse = sentExcuses.firstOrNull { excuse -> excuse.date == a.date && excuse.timeId == a.timeId }
-            a.apply {
-                presence = a.categoryId == PRESENCE.id || a.categoryId == ABSENCE_FOR_SCHOOL_REASONS.id
-                absence = a.categoryId == ABSENCE_UNEXCUSED.id || a.categoryId == ABSENCE_EXCUSED.id
-                lateness = a.categoryId == EXCUSED_LATENESS.id || a.categoryId == UNEXCUSED_LATENESS.id
-                excused = a.categoryId == ABSENCE_EXCUSED.id || a.categoryId == EXCUSED_LATENESS.id
-                exemption = a.categoryId == EXEMPTION.id
-                excusable = excuseActive && (absence || lateness) && !excused && sentExcuse == null
-                name = (values().singleOrNull { category -> category.id == categoryId } ?: UNKNOWN).title
-                number = it.number
-                if (sentExcuse != null)
-                    excuseStatus = SentExcuse.Status.getByValue(sentExcuse.status)
-            }
+    return lessons.map {
+        val sentExcuse = sentExcuses.firstOrNull { excuse -> excuse.date == it.date && excuse.timeId == it.timeId }
+        it.apply {
+            presence = it.categoryId == PRESENCE.id || it.categoryId == ABSENCE_FOR_SCHOOL_REASONS.id
+            absence = it.categoryId == ABSENCE_UNEXCUSED.id || it.categoryId == ABSENCE_EXCUSED.id
+            lateness = it.categoryId == EXCUSED_LATENESS.id || it.categoryId == UNEXCUSED_LATENESS.id
+            excused = it.categoryId == ABSENCE_EXCUSED.id || it.categoryId == EXCUSED_LATENESS.id
+            exemption = it.categoryId == EXEMPTION.id
+            excusable = excuseActive && (absence || lateness) && !excused && sentExcuse == null
+            name = (values().singleOrNull { category -> category.id == categoryId } ?: UNKNOWN).title
+            number = times.single { time -> time.id == it.timeId }.number
+            if (sentExcuse != null)
+                excuseStatus = SentExcuse.Status.getByValue(sentExcuse.status)
         }
     }.filter {
         it.date.toLocalDate() >= start && it.date.toLocalDate() <= endDate
-    }.toList().map { list -> list.sortedWith(compareBy({ it.date }, { it.number })) }
+    }.sortedWith(compareBy({ it.date }, { it.number }))
 }
 
 fun AttendanceSummaryResponse.mapAttendanceSummaryList(gson: GsonBuilder): List<AttendanceSummary> {

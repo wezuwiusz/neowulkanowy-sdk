@@ -25,7 +25,6 @@ import io.github.wulkanowy.sdk.scrapper.timetable.TimetableParser
 import io.github.wulkanowy.sdk.scrapper.toDate
 import io.github.wulkanowy.sdk.scrapper.toFormat
 import io.github.wulkanowy.sdk.scrapper.toLocalDate
-import io.reactivex.Single
 import org.threeten.bp.LocalDate
 import org.threeten.bp.Month
 import java.util.Calendar
@@ -34,207 +33,189 @@ import java.util.TimeZone
 
 class StudentAndParentRepository(private val api: StudentAndParentService) {
 
-    fun getAttendance(startDate: LocalDate, endDate: LocalDate? = null): Single<List<Attendance>> {
+    suspend fun getAttendance(startDate: LocalDate, endDate: LocalDate? = null): List<Attendance> {
         val end = endDate ?: startDate.plusDays(4)
-        return api.getAttendance(startDate.getLastMonday().toTick()).map { res ->
-            res.rows.flatMap { row ->
-                row.lessons.mapIndexedNotNull { i, it ->
-                    if ("null" == it.subject) return@mapIndexedNotNull null // fix empty months
-                    it.apply {
-                        date = res.days[i]
-                        number = row.number
-                        presence = it.type == Types.PRESENCE || it.type == Types.ABSENCE_FOR_SCHOOL_REASONS
-                        absence = it.type == Types.ABSENCE_UNEXCUSED || it.type == Types.ABSENCE_EXCUSED
-                        lateness = it.type == Types.EXCUSED_LATENESS || it.type == Types.UNEXCUSED_LATENESS
-                        excused = it.type == Types.ABSENCE_EXCUSED || it.type == Types.EXCUSED_LATENESS
-                        exemption = it.type == Types.EXEMPTION
-                        excusable = res.excuseActiveSnp.isNotEmpty() && (absence || lateness) && !excused
-                    }
-                }
-            }.asSequence().filter {
-                it.date.toLocalDate() >= startDate && it.date.toLocalDate() <= end
-            }.sortedWith(compareBy({ it.date }, { it.number })).toList()
-        }
-    }
-
-    fun getAttendanceSummary(subjectId: Int?): Single<List<AttendanceSummary>> {
-        return api.getAttendanceSummary(subjectId).map { res ->
-            res.months.mapIndexedNotNull { i, month ->
-                if (res.summaryRows.all { it.value[i].isBlank() }) return@mapIndexedNotNull null
-                AttendanceSummary(romanToMonthEnum(month),
-                    res.summaryRows[0].value[i].toIntOrNull() ?: 0,
-                    res.summaryRows[1].value[i].toIntOrNull() ?: 0,
-                    res.summaryRows[2].value[i].toIntOrNull() ?: 0,
-                    res.summaryRows[3].value[i].toIntOrNull() ?: 0,
-                    res.summaryRows[4].value[i].toIntOrNull() ?: 0,
-                    res.summaryRows[5].value[i].toIntOrNull() ?: 0,
-                    res.summaryRows[6].value[i].toIntOrNull() ?: 0
-                )
-            }
-        }
-    }
-
-    fun getSubjects(): Single<List<Subject>> {
-        return api.getAttendanceSummary(-1).map { it.subjects }
-    }
-
-    fun getExams(startDate: LocalDate, endDate: LocalDate? = null): Single<List<Exam>> {
-        val end = endDate ?: startDate.plusDays(4)
-        return api.getExams(startDate.getLastMonday().toTick()).map { res ->
-            res.days.flatMap { day ->
-                day.exams.map { exam ->
-                    exam.apply {
-                        if (group.contains(" ")) group = ""
-                        date = day.date
-                    }
-                }
-            }.asSequence().filter {
-                it.date.toLocalDate() >= startDate && it.date.toLocalDate() <= end
-            }.sortedBy { it.date }.toList()
-        }
-    }
-
-    fun getGrades(semesterId: Int?): Single<Pair<List<Grade>, List<GradeSummary>>> {
-        return getGradesDetails(semesterId).flatMap { details ->
-            getGradesSummary(semesterId).map { summary ->
-                details to summary
-            }
-        }
-    }
-
-    fun getGradesDetails(semesterId: Int?): Single<List<Grade>> {
-        return api.getGrades(semesterId).map { res ->
-            res.grades.asSequence().map { grade ->
-                grade.apply {
-                    comment = if (entry.length > 4) "$entry ($comment)".replace(" ($comment)", "") else comment
-                    entry = entry.run { if (length > 4) "..." else this }
-
-                    if (entry == comment) comment = ""
-                    if (description == symbol) description = ""
-                }
-            }.toList().sortedByDescending { it.date }
-        }
-    }
-
-    fun getGradesSummary(semesterId: Int?): Single<List<GradeSummary>> {
-        return api.getGradesSummary(semesterId).map { res ->
-            res.subjects.asSequence().map { summary ->
-                summary.apply {
-                    predicted = if (predicted != "-") getGradeShortValue(predicted) else ""
-                    final = if (final != "-") getGradeShortValue(final) else ""
-                }
-            }.sortedBy { it.name }.toList()
-        }
-    }
-
-    fun getGradesStatistics(semesterId: Int, annual: Boolean): Single<List<GradeStatistics>> {
-        return api.getGradesStatistics(if (!annual) 1 else 2, semesterId).map { res ->
-            res.items.map {
+        val res = api.getAttendance(startDate.getLastMonday().toTick())
+        return res.rows.flatMap { row ->
+            row.lessons.mapIndexedNotNull { i, it ->
+                if ("null" == it.subject) return@mapIndexedNotNull null // fix empty months
                 it.apply {
-                    grade = getGradeShortValue(grade)
-                    gradeValue = getGradeShortValue(grade).toIntOrNull() ?: 0
-                    this.semesterId = res.semesterId
+                    date = res.days[i]
+                    number = row.number
+                    presence = it.type == Types.PRESENCE || it.type == Types.ABSENCE_FOR_SCHOOL_REASONS
+                    absence = it.type == Types.ABSENCE_UNEXCUSED || it.type == Types.ABSENCE_EXCUSED
+                    lateness = it.type == Types.EXCUSED_LATENESS || it.type == Types.UNEXCUSED_LATENESS
+                    excused = it.type == Types.ABSENCE_EXCUSED || it.type == Types.EXCUSED_LATENESS
+                    exemption = it.type == Types.EXEMPTION
+                    excusable = res.excuseActiveSnp.isNotEmpty() && (absence || lateness) && !excused
                 }
+            }
+        }.asSequence().filter {
+            it.date.toLocalDate() >= startDate && it.date.toLocalDate() <= end
+        }.sortedWith(compareBy({ it.date }, { it.number })).toList()
+    }
+
+    suspend fun getAttendanceSummary(subjectId: Int?): List<AttendanceSummary> {
+        val res = api.getAttendanceSummary(subjectId)
+        return res.months.mapIndexedNotNull { i, month ->
+            if (res.summaryRows.all { it.value[i].isBlank() }) return@mapIndexedNotNull null
+            AttendanceSummary(romanToMonthEnum(month),
+                res.summaryRows[0].value[i].toIntOrNull() ?: 0,
+                res.summaryRows[1].value[i].toIntOrNull() ?: 0,
+                res.summaryRows[2].value[i].toIntOrNull() ?: 0,
+                res.summaryRows[3].value[i].toIntOrNull() ?: 0,
+                res.summaryRows[4].value[i].toIntOrNull() ?: 0,
+                res.summaryRows[5].value[i].toIntOrNull() ?: 0,
+                res.summaryRows[6].value[i].toIntOrNull() ?: 0
+            )
+        }
+    }
+
+    suspend fun getSubjects(): List<Subject> {
+        return api.getAttendanceSummary(-1).subjects
+    }
+
+    suspend fun getExams(startDate: LocalDate, endDate: LocalDate? = null): List<Exam> {
+        val end = endDate ?: startDate.plusDays(4)
+        val res = api.getExams(startDate.getLastMonday().toTick())
+        return res.days.flatMap { day ->
+            day.exams.map { exam ->
+                exam.apply {
+                    if (group.contains(" ")) group = ""
+                    date = day.date
+                }
+            }
+        }.asSequence().filter {
+            it.date.toLocalDate() >= startDate && it.date.toLocalDate() <= end
+        }.sortedBy { it.date }.toList()
+    }
+
+    suspend fun getGrades(semesterId: Int?): Pair<List<Grade>, List<GradeSummary>> {
+        return getGradesDetails(semesterId) to getGradesSummary(semesterId)
+    }
+
+    suspend fun getGradesDetails(semesterId: Int?): List<Grade> {
+        val res = api.getGrades(semesterId)
+        return res.grades.asSequence().map { grade ->
+            grade.apply {
+                comment = if (entry.length > 4) "$entry ($comment)".replace(" ($comment)", "") else comment
+                entry = entry.run { if (length > 4) "..." else this }
+
+                if (entry == comment) comment = ""
+                if (description == symbol) description = ""
+            }
+        }.toList().sortedByDescending { it.date }
+    }
+
+    suspend fun getGradesSummary(semesterId: Int?): List<GradeSummary> {
+        val res = api.getGradesSummary(semesterId)
+        return res.subjects.asSequence().map { summary ->
+            summary.apply {
+                predicted = if (predicted != "-") getGradeShortValue(predicted) else ""
+                final = if (final != "-") getGradeShortValue(final) else ""
+            }
+        }.sortedBy { it.name }.toList()
+    }
+
+    suspend fun getGradesStatistics(semesterId: Int, annual: Boolean): List<GradeStatistics> {
+        val res = api.getGradesStatistics(if (!annual) 1 else 2, semesterId)
+        return res.items.map {
+            it.apply {
+                grade = getGradeShortValue(grade)
+                gradeValue = getGradeShortValue(grade).toIntOrNull() ?: 0
+                this.semesterId = res.semesterId
             }
         }
     }
 
-    fun getHomework(startDate: LocalDate, endDate: LocalDate? = null): Single<List<Homework>> {
+    suspend fun getHomework(startDate: LocalDate, endDate: LocalDate? = null): List<Homework> {
         val end = endDate ?: startDate.plusDays(4)
-        return api.getHomework(startDate.toTick()).map { res ->
-            res.items.asSequence().map {
-                it.apply {
-                    date = res.date
-                }
-            }.filter {
-                it.date.toLocalDate() >= startDate && it.date.toLocalDate() <= end
-            }.sortedWith(compareBy({ it.date }, { it.subject })).toList()
-        }
+        val res = api.getHomework(startDate.toTick())
+        return res.items.asSequence().map {
+            it.apply {
+                date = res.date
+            }
+        }.filter {
+            it.date.toLocalDate() >= startDate && it.date.toLocalDate() <= end
+        }.sortedWith(compareBy({ it.date }, { it.subject })).toList()
     }
 
-    fun getNotes(): Single<List<Note>> {
-        return api.getNotes().map { res ->
-            res.notes.asSequence().mapIndexed { i, note ->
-                note.apply {
-                    if (teacher == teacherSymbol) teacherSymbol = ""
-                    date = res.dates[i]
-                }
-            }.sortedWith(compareBy({ it.date }, { it.category })).toList()
-        }
+    suspend fun getNotes(): List<Note> {
+        val res = api.getNotes()
+        return res.notes.asSequence().mapIndexed { i, note ->
+            note.apply {
+                if (teacher == teacherSymbol) teacherSymbol = ""
+                date = res.dates[i]
+            }
+        }.sortedWith(compareBy({ it.date }, { it.category })).toList()
     }
 
-    fun getRegisteredDevices(): Single<List<Device>> {
-        return api.getRegisteredDevices().map { it.devices }
+    suspend fun getRegisteredDevices(): List<Device> {
+        return api.getRegisteredDevices().devices
     }
 
-    fun getToken(): Single<TokenResponse> {
+    suspend fun getToken(): TokenResponse {
         return api.getToken()
     }
 
-    fun unregisterDevice(id: Int): Single<Boolean> {
-        return api.unregisterDevice(id).map { !it.devices.any { device -> device.id == id } }
+    suspend fun unregisterDevice(id: Int): Boolean {
+        return api.unregisterDevice(id).devices.any { device -> device.id == id }
     }
 
-    fun getTeachers(): Single<List<Teacher>> {
-        return api.getSchoolAndTeachers().map { res ->
-            res.subjects.flatMap { subject ->
-                subject.teachers.split(", ").map { teacher ->
-                    teacher.split(" [").run {
-                        Teacher(first().getEmptyIfDash(), last().removeSuffix("]").getEmptyIfDash(), subject.name.let {
-                            if (it.isBlank()) ""
-                            else it
-                        })
-                    }
+    suspend fun getTeachers(): List<Teacher> {
+        val res = api.getSchoolAndTeachers()
+        return res.subjects.flatMap { subject ->
+            subject.teachers.split(", ").map { teacher ->
+                teacher.split(" [").run {
+                    Teacher(first().getEmptyIfDash(), last().removeSuffix("]").getEmptyIfDash(), subject.name.let {
+                        if (it.isBlank()) ""
+                        else it
+                    })
                 }
-            }.sortedWith(compareBy({ it.subject }, { it.name }))
-        }
-    }
-
-    fun getSchool(): Single<School> {
-        return api.getSchoolAndTeachers().map {
-            School(it.name, it.address, it.contact, it.headmaster, it.pedagogue)
-        }
-    }
-
-    fun getStudentInfo(): Single<StudentInfo> {
-        return api.getStudentInfo().map {
-            it.apply {
-                student.polishCitizenship = if ("Tak" == student.polishCitizenship) "1" else "0"
             }
+        }.sortedWith(compareBy({ it.subject }, { it.name }))
+    }
+
+    suspend fun getSchool(): School {
+        val res = api.getSchoolAndTeachers()
+        return School(res.name, res.address, res.contact, res.headmaster, res.pedagogue)
+    }
+
+    suspend fun getStudentInfo(): StudentInfo {
+        return api.getStudentInfo().apply {
+            student.polishCitizenship = if ("Tak" == student.polishCitizenship) "1" else "0"
         }
     }
 
-    fun getTimetable(startDate: LocalDate, endDate: LocalDate? = null): Single<List<Timetable>> {
-        return api.getTimetable(startDate.getLastMonday().toTick()).map { res ->
-            res.rows.flatMap { row ->
-                row.lessons.asSequence().mapIndexed { i, it ->
-                    it.apply {
-                        date = res.days[i]
-                        start = "${date.toLocalDate().toFormat("yyy-MM-dd")} ${row.startTime}".toDate("yyyy-MM-dd HH:mm")
-                        end = "${date.toLocalDate().toFormat("yyy-MM-dd")} ${row.endTime}".toDate("yyyy-MM-dd HH:mm")
-                        number = row.number
-                    }
-                }.mapNotNull { TimetableParser().getTimetable(it) }.toList()
-            }.asSequence().filter {
-                it.date.toLocalDate() >= startDate && it.date.toLocalDate() <= endDate ?: startDate.plusDays(4)
-            }.sortedWith(compareBy({ it.date }, { it.number })).toList()
-        }
+    suspend fun getTimetable(startDate: LocalDate, endDate: LocalDate? = null): List<Timetable> {
+        val res = api.getTimetable(startDate.getLastMonday().toTick())
+        return res.rows.flatMap { row ->
+            row.lessons.asSequence().mapIndexed { i, it ->
+                it.apply {
+                    date = res.days[i]
+                    start = "${date.toLocalDate().toFormat("yyy-MM-dd")} ${row.startTime}".toDate("yyyy-MM-dd HH:mm")
+                    end = "${date.toLocalDate().toFormat("yyy-MM-dd")} ${row.endTime}".toDate("yyyy-MM-dd HH:mm")
+                    number = row.number
+                }
+            }.mapNotNull { TimetableParser().getTimetable(it) }.toList()
+        }.asSequence().filter {
+            it.date.toLocalDate() >= startDate && it.date.toLocalDate() <= endDate ?: startDate.plusDays(4)
+        }.sortedWith(compareBy({ it.date }, { it.number })).toList()
     }
 
-    fun getCompletedLessons(start: LocalDate, endDate: LocalDate?, subjectId: Int): Single<List<CompletedLesson>> {
+    suspend fun getCompletedLessons(start: LocalDate, endDate: LocalDate?, subjectId: Int): List<CompletedLesson> {
         val end = endDate ?: start.plusMonths(1)
-        return api.getCompletedLessons(start.toTick(), end.toTick(), subjectId).map { res ->
+        val res = api.getCompletedLessons(start.toTick(), end.toTick(), subjectId)
+        return res.items.mapNotNull {
             lateinit var lastDate: Date
-            res.items.asSequence().mapNotNull {
-                if (it.subject.isBlank()) {
-                    lastDate = it.date
-                    return@mapNotNull null
-                }
-
-                it.apply { date = lastDate }
-            }.sortedWith(compareBy({ it.date }, { it.number })).toList().filter {
-                it.date.toLocalDate() >= start && it.date.toLocalDate() <= end
+            if (it.subject.isBlank()) {
+                lastDate = it.date
+                return@mapNotNull null
             }
+
+            it.apply { date = lastDate }
+        }.sortedWith(compareBy({ it.date }, { it.number })).filter {
+            it.date.toLocalDate() >= start && it.date.toLocalDate() <= end
         }
     }
 
