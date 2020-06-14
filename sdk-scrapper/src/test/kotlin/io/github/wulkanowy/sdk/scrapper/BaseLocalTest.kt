@@ -61,7 +61,7 @@ abstract class BaseLocalTest : BaseTest() {
             .client(OkHttpClient.Builder()
                 .apply {
                     if (errorInterceptor) addInterceptor(ErrorInterceptor())
-                    if (noLoggedInInterceptor) addInterceptor(NotLoggedInErrorInterceptor(loginType) {
+                    if (noLoggedInInterceptor) addInterceptor(NotLoggedInErrorInterceptor(loginType, CookieManager(), false) {
                         if (autoLogin) runBlocking {
                             LoginHelper(loginType, "http", "localhost", "powiatwulkanowy", CookieManager(), getService(LoginService::class.java))
                                 .login("jan", "kowalski")

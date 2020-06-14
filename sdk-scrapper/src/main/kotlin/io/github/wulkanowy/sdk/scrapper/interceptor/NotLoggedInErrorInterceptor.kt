@@ -17,9 +17,12 @@ import okhttp3.Response
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import org.jsoup.select.Elements
+import java.net.CookieManager
 
 class NotLoggedInErrorInterceptor(
     private val loginType: LoginType,
+    private val jar: CookieManager,
+    private val emptyCookieJarIntercept: Boolean,
     private val notLoggedInCallback: () -> Boolean
 ) : Interceptor {
 
@@ -41,6 +44,10 @@ class NotLoggedInErrorInterceptor(
     }
 
     private fun check(doc: Document, url: String) {
+        if (emptyCookieJarIntercept && jar.cookieStore.cookies.isEmpty()) {
+            throw NotLoggedInException("No cookie found! You are not logged in yet")
+        }
+
         // if (chain.request().url().toString().contains("/Start.mvc/Get")) {
         if (url.contains("/Start.mvc/")) { // /Index return error too in 19.09.0000.34977
             doc.select(".errorBlock").let {

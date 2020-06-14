@@ -37,7 +37,7 @@ class ServiceManagerTest : BaseTest() {
     fun interceptorTest() {
         val manager = ServiceManager(OkHttpClientBuilderFactory(), HttpLoggingInterceptor.Level.NONE,
                 Scrapper.LoginType.STANDARD, "http", "fakelog.localhost:3000", "default", "email", "password",
-                "schoolSymbol", 123, 101, 2019, "", ""
+                "schoolSymbol", 123, 101, 2019, false, "", ""
         )
         manager.setInterceptor(Interceptor {
             throw ScrapperException("Test")
@@ -56,7 +56,7 @@ class ServiceManagerTest : BaseTest() {
         server.start(3000)
         val manager = ServiceManager(OkHttpClientBuilderFactory(), HttpLoggingInterceptor.Level.NONE,
                 Scrapper.LoginType.STANDARD, "http", "fakelog.localhost:3000", "default", "email", "password",
-                "schoolSymbol", 123, 101, 2019, "", ""
+                "schoolSymbol", 123, 101, 2019, false, "", ""
         )
         manager.setInterceptor(Interceptor {
             // throw IOException("Test")

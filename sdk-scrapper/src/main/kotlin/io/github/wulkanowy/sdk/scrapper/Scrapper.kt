@@ -117,6 +117,10 @@ class Scrapper {
     var useNewStudent: Boolean = true
 
     var emptyCookieJarInterceptor: Boolean = false
+        set(value) {
+            if (field != value) changeManager.reset()
+            field = value
+        }
 
     /**
      * @see <a href="https://deviceatlas.com/blog/most-popular-android-smartphones#poland">The most popular Android phones - 2018</a>
@@ -161,7 +165,8 @@ class Scrapper {
             diaryId = diaryId,
             schoolYear = schoolYear,
             androidVersion = androidVersion,
-            buildTag = buildTag
+            buildTag = buildTag,
+            emptyCookieJarIntercept = emptyCookieJarInterceptor
         ).apply {
             appInterceptors.forEach { (interceptor, isNetwork) ->
                 setInterceptor(interceptor, isNetwork)
@@ -188,7 +193,7 @@ class Scrapper {
             symbol = normalizedSymbol,
             schoolSymbol = schoolSymbol,
             studentId = studentId,
-            api = serviceManager.getSnpService(withLogin = true, studentInterceptor = false, emptyCookieJarIntercept = emptyCookieJarInterceptor)
+            api = serviceManager.getSnpService(withLogin = true, studentInterceptor = false)
         )
     }
 
@@ -198,16 +203,16 @@ class Scrapper {
         StudentStartRepository(
             studentId = studentId,
             classId = classId,
-            api = serviceManager.getStudentService(withLogin = true, studentInterceptor = false, emptyCookieJarIntercept = emptyCookieJarInterceptor)
+            api = serviceManager.getStudentService(withLogin = true, studentInterceptor = false)
         )
     }
 
     private val snp by resettableLazy(changeManager) {
-        StudentAndParentRepository(serviceManager.getSnpService(emptyCookieJarIntercept = emptyCookieJarInterceptor))
+        StudentAndParentRepository(serviceManager.getSnpService())
     }
 
     private val student by resettableLazy(changeManager) {
-        StudentRepository(serviceManager.getStudentService(emptyCookieJarIntercept = emptyCookieJarInterceptor))
+        StudentRepository(serviceManager.getStudentService())
     }
 
     private val messages by resettableLazy(changeManager) {

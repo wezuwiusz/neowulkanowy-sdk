@@ -7,7 +7,6 @@ import io.github.wulkanowy.sdk.scrapper.ScrapperException
 import io.github.wulkanowy.sdk.scrapper.TLSSocketFactory
 import io.github.wulkanowy.sdk.scrapper.grades.DateDeserializer
 import io.github.wulkanowy.sdk.scrapper.grades.GradeDate
-import io.github.wulkanowy.sdk.scrapper.interceptor.EmptyCookieJarInterceptor
 import io.github.wulkanowy.sdk.scrapper.interceptor.ErrorInterceptor
 import io.github.wulkanowy.sdk.scrapper.interceptor.NotLoggedInErrorInterceptor
 import io.github.wulkanowy.sdk.scrapper.interceptor.StudentAndParentInterceptor
@@ -45,6 +44,7 @@ class ServiceManager(
     private val studentId: Int,
     private val diaryId: Int,
     private val schoolYear: Int,
+    emptyCookieJarIntercept: Boolean,
     androidVersion: String,
     buildTag: String
 ) {
@@ -66,10 +66,9 @@ class ServiceManager(
     private val interceptors: MutableList<Pair<Interceptor, Boolean>> = mutableListOf(
         HttpLoggingInterceptor().setLevel(logLevel) to true,
         ErrorInterceptor() to false,
-        NotLoggedInErrorInterceptor(loginType) {
+        NotLoggedInErrorInterceptor(loginType, cookies, emptyCookieJarIntercept) {
             return@NotLoggedInErrorInterceptor runBlocking { loginHelper.login(email, password) }.toString().isNotBlank()
         } to false,
-        EmptyCookieJarInterceptor(cookies) to false,
         UserAgentInterceptor(androidVersion, buildTag) to false
     )
 
@@ -108,25 +107,25 @@ class ServiceManager(
         ).create()
     }
 
-    fun getStudentService(withLogin: Boolean = true, studentInterceptor: Boolean = true, emptyCookieJarIntercept: Boolean = false): StudentService {
+    fun getStudentService(withLogin: Boolean = true, studentInterceptor: Boolean = true): StudentService {
         return getRetrofit(
-            client = prepareStudentService(withLogin, studentInterceptor, emptyCookieJarIntercept),
+            client = prepareStudentService(withLogin, studentInterceptor),
             baseUrl = urlGenerator.generate(UrlGenerator.Site.STUDENT),
             gson = true
         ).create()
     }
 
-    fun getSnpService(withLogin: Boolean = true, studentInterceptor: Boolean = true, emptyCookieJarIntercept: Boolean = false): StudentAndParentService {
+    fun getSnpService(withLogin: Boolean = true, studentInterceptor: Boolean = true): StudentAndParentService {
         return getRetrofit(
-            client = prepareStudentService(withLogin, studentInterceptor, emptyCookieJarIntercept),
+            client = prepareStudentService(withLogin, studentInterceptor),
             baseUrl = urlGenerator.generate(UrlGenerator.Site.SNP)
         ).create()
     }
 
-    private fun prepareStudentService(withLogin: Boolean, studentInterceptor: Boolean, emptyCookieJarIntercept: Boolean): OkHttpClient.Builder {
+    private fun prepareStudentService(withLogin: Boolean, studentInterceptor: Boolean): OkHttpClient.Builder {
         if (withLogin && schoolSymbol.isBlank()) throw ScrapperException("School id is not set")
 
-        val client = getClientBuilder(loginIntercept = withLogin, emptyCookieJarIntercept = emptyCookieJarIntercept)
+        val client = getClientBuilder(loginIntercept = withLogin)
         if (studentInterceptor) {
             if (0 == diaryId || 0 == studentId) throw ScrapperException("Student or/and diaryId id are not set")
 
@@ -146,12 +145,6 @@ class ServiceManager(
         return getRetrofit(getClientBuilder(), urlGenerator.generate(UrlGenerator.Site.HOME), gson = true).create()
     }
 
-    // private suspend fun getLoginHelper(): Flowable<SendCertificateResponse> {
-    //     return loginHelper
-    //         .login(email, password)
-    //         .share()
-    // }
-
     private fun getRetrofit(client: OkHttpClient.Builder, baseUrl: String, gson: Boolean = false): Retrofit {
         return Retrofit.Builder()
             .baseUrl(baseUrl)
@@ -168,7 +161,6 @@ class ServiceManager(
     private fun getClientBuilder(
         errIntercept: Boolean = true,
         loginIntercept: Boolean = true,
-        emptyCookieJarIntercept: Boolean = false,
         separateJar: Boolean = false
     ): OkHttpClient.Builder {
         return okHttpClientBuilderFactory.create()
@@ -181,9 +173,8 @@ class ServiceManager(
             .cookieJar(if (!separateJar) JavaNetCookieJar(cookies) else JavaNetCookieJar(CookieManager()))
             .apply {
                 interceptors.forEach {
-                    if (it.first is ErrorInterceptor || it.first is NotLoggedInErrorInterceptor || it.first is EmptyCookieJarInterceptor) {
+                    if (it.first is ErrorInterceptor || it.first is NotLoggedInErrorInterceptor) {
                         if (it.first is NotLoggedInErrorInterceptor && loginIntercept) addInterceptor(it.first)
-                        if (it.first is EmptyCookieJarInterceptor && emptyCookieJarIntercept) addInterceptor(it.first)
                         if (it.first is ErrorInterceptor && errIntercept) addInterceptor(it.first)
                     } else {
                         if (it.second) addNetworkInterceptor(it.first)
