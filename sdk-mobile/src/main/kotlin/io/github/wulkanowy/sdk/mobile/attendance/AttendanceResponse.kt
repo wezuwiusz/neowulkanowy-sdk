@@ -17,5 +17,5 @@ data class AttendanceResponse(
     val dateEndText: String,
 
     @SerializedName("Frekwencje")
-    val data: List<Attendance>
+    val items: List<Attendance>
 )

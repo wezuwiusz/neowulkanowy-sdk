@@ -9,7 +9,7 @@ import org.threeten.bp.format.DateTimeFormatter.ofPattern
 import java.sql.Timestamp
 import java.util.Date
 
-fun String.toLocalDateTime(format: String) = LocalDateTime.parse(this, ofPattern(format))
+fun String.toLocalDateTime(format: String): LocalDateTime = LocalDateTime.parse(this, ofPattern(format))
 
 fun Long.toLocalDate(): LocalDate = Instant
     .ofEpochMilli(this * 1000L)

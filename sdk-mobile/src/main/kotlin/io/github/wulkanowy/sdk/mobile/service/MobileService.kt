@@ -23,54 +23,53 @@ import io.github.wulkanowy.sdk.mobile.school.TeachersRequest
 import io.github.wulkanowy.sdk.mobile.school.TeachersResponse
 import io.github.wulkanowy.sdk.mobile.timetable.Lesson
 import io.github.wulkanowy.sdk.mobile.timetable.TimetableRequest
-import io.reactivex.Single
 import retrofit2.http.Body
 import retrofit2.http.POST
 
 interface MobileService {
 
     @POST("LogAppStart")
-    fun logAppStart(@Body logAppStartRequest: ApiRequest): Single<ApiResponse<String>>
+    suspend fun logAppStart(@Body logAppStartRequest: ApiRequest): ApiResponse<String>
 
     @POST("Slowniki")
-    fun getDictionaries(@Body dictionariesRequest: DictionariesRequest): Single<ApiResponse<Dictionaries>>
+    suspend fun getDictionaries(@Body dictionariesRequest: DictionariesRequest): ApiResponse<Dictionaries>
 
     @POST("Nauczyciele")
-    fun getTeachers(@Body teachersRequest: TeachersRequest): Single<ApiResponse<TeachersResponse>>
+    suspend fun getTeachers(@Body teachersRequest: TeachersRequest): ApiResponse<TeachersResponse>
 
     @POST("PlanLekcjiZeZmianami")
-    fun getTimetable(@Body timetableRequest: TimetableRequest): Single<ApiResponse<List<Lesson>>>
+    suspend fun getTimetable(@Body timetableRequest: TimetableRequest): ApiResponse<List<Lesson>>
 
     @POST("Oceny")
-    fun getGrades(@Body gradesRequest: GradesRequest): Single<ApiResponse<List<Grade>>>
+    suspend fun getGrades(@Body gradesRequest: GradesRequest): ApiResponse<List<Grade>>
 
     @POST("OcenyPodsumowanie")
-    fun getGradesSummary(@Body gradesRequest: GradesRequest): Single<ApiResponse<GradesSummaryResponse>>
+    suspend fun getGradesSummary(@Body gradesRequest: GradesRequest): ApiResponse<GradesSummaryResponse>
 
     @POST("Sprawdziany")
-    fun getExams(@Body examsRequest: ExamsRequest): Single<ApiResponse<List<Exam>>>
+    suspend fun getExams(@Body examsRequest: ExamsRequest): ApiResponse<List<Exam>>
 
     @POST("UwagiUcznia")
-    fun getNotes(@Body notesRequest: NotesRequest): Single<ApiResponse<List<Note>>>
+    suspend fun getNotes(@Body notesRequest: NotesRequest): ApiResponse<List<Note>>
 
     @POST("Frekwencje")
-    fun getAttendance(@Body attendanceRequest: AttendanceRequest): Single<ApiResponse<AttendanceResponse>>
+    suspend fun getAttendance(@Body attendanceRequest: AttendanceRequest): ApiResponse<AttendanceResponse>
 
     @POST("ZadaniaDomowe")
-    fun getHomework(@Body homeworkRequest: HomeworkRequest): Single<ApiResponse<List<Homework>>>
+    suspend fun getHomework(@Body homeworkRequest: HomeworkRequest): ApiResponse<List<Homework>>
 
     @POST("WiadomosciOdebrane")
-    fun getMessages(@Body messagesRequest: MessagesRequest): Single<ApiResponse<List<Message>>>
+    suspend fun getMessages(@Body messagesRequest: MessagesRequest): ApiResponse<List<Message>>
 
     @POST("WiadomosciWyslane")
-    fun getMessagesSent(@Body messagesRequest: MessagesRequest): Single<ApiResponse<List<Message>>>
+    suspend fun getMessagesSent(@Body messagesRequest: MessagesRequest): ApiResponse<List<Message>>
 
     @POST("WiadomosciUsuniete")
-    fun getMessagesDeleted(@Body messagesRequest: MessagesRequest): Single<ApiResponse<List<Message>>>
+    suspend fun getMessagesDeleted(@Body messagesRequest: MessagesRequest): ApiResponse<List<Message>>
 
     @POST("ZmienStatusWiadomosci")
-    fun changeMessageStatus(@Body messageStatusChangeRequest: MessageStatusChangeRequest): Single<ApiResponse<String>>
+    suspend fun changeMessageStatus(@Body messageStatusChangeRequest: MessageStatusChangeRequest): ApiResponse<String>
 
     @POST("DodajWiadomosc")
-    fun sendMessage(@Body sendMessageRequest: SendMessageRequest): Single<Message>
+    suspend fun sendMessage(@Body sendMessageRequest: SendMessageRequest): Message
 }

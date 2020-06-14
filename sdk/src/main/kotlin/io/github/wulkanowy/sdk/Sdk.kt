@@ -181,8 +181,8 @@ class Sdk {
     }
 
     fun getStudentsFromMobileApi(token: String, pin: String, symbol: String, firebaseToken: String, apiKey: String = ""): Single<List<Student>> {
-        return mobile.getCertificate(token, pin, symbol, buildTag, androidVersion, firebaseToken)
-            .flatMap { mobile.getStudents(it, apiKey) }
+        return rxSingle { mobile.getCertificate(token, pin, symbol, buildTag, androidVersion, firebaseToken) }
+            .flatMap { rxSingle { mobile.getStudents(it, apiKey) } }
             .map { it.mapStudents(symbol) }
     }
 
@@ -227,16 +227,14 @@ class Sdk {
     fun getSemesters(now: LocalDate = LocalDate.now()): Single<List<Semester>> {
         return when (mode) {
             Mode.HYBRID, Mode.SCRAPPER -> rxSingle { scrapper.getSemesters() }.compose(ScrapperExceptionTransformer()).map { it.mapSemesters() }
-            Mode.API -> mobile.getStudents().map { it.mapSemesters(studentId, now) }
+            Mode.API -> rxSingle { mobile.getStudents().mapSemesters(studentId, now) }
         }
     }
 
     fun getAttendance(startDate: LocalDate, endDate: LocalDate, semesterId: Int): Single<List<Attendance>> {
         return when (mode) {
             Mode.SCRAPPER -> rxSingle { scrapper.getAttendance(startDate, endDate) }.compose(ScrapperExceptionTransformer()).map { it.mapAttendance() }
-            Mode.HYBRID, Mode.API -> mobile.getDictionaries().flatMap { dict ->
-                mobile.getAttendance(startDate, endDate, semesterId).map { it.mapAttendance(dict) }
-            }
+            Mode.HYBRID, Mode.API -> rxSingle { mobile.getAttendance(startDate, endDate, semesterId).mapAttendance(mobile.getDictionaries()) }
         }
     }
 
@@ -257,43 +255,35 @@ class Sdk {
     fun getSubjects(): Single<List<Subject>> {
         return when (mode) {
             Mode.HYBRID, Mode.SCRAPPER -> rxSingle { scrapper.getSubjects() }.compose(ScrapperExceptionTransformer()).map { it.mapSubjects() }
-            Mode.API -> mobile.getDictionaries().map { it.subjects }.map { it.mapSubjects() }
+            Mode.API -> rxSingle { mobile.getDictionaries().subjects.mapSubjects() }
         }
     }
 
     fun getExams(start: LocalDate, end: LocalDate, semesterId: Int): Single<List<Exam>> {
         return when (mode) {
             Mode.SCRAPPER -> rxSingle { scrapper.getExams(start, end) }.compose(ScrapperExceptionTransformer()).map { it.mapExams() }
-            Mode.HYBRID, Mode.API -> mobile.getDictionaries().flatMap { dict ->
-                mobile.getExams(start, end, semesterId).map { it.mapExams(dict) }
-            }
+            Mode.HYBRID, Mode.API -> rxSingle { mobile.getExams(start, end, semesterId).mapExams(mobile.getDictionaries()) }
         }
     }
 
     fun getGrades(semesterId: Int): Single<Pair<List<Grade>, List<GradeSummary>>> {
         return when (mode) {
             Mode.SCRAPPER -> rxSingle { scrapper.getGrades(semesterId) }.compose(ScrapperExceptionTransformer()).map { grades -> grades.mapGrades() }
-            Mode.HYBRID, Mode.API -> mobile.getDictionaries().flatMap { dict ->
-                mobile.getGrades(semesterId).map { grades -> grades.mapGrades(dict) }
-            }
+            Mode.HYBRID, Mode.API -> rxSingle { mobile.getGrades(semesterId).mapGrades(mobile.getDictionaries()) }
         }
     }
 
     fun getGradesDetails(semesterId: Int): Single<List<Grade>> {
         return when (mode) {
             Mode.SCRAPPER -> rxSingle { scrapper.getGradesDetails(semesterId) }.compose(ScrapperExceptionTransformer()).map { grades -> grades.mapGradesDetails() }
-            Mode.HYBRID, Mode.API -> mobile.getDictionaries().flatMap { dict ->
-                mobile.getGradesDetails(semesterId).map { it.mapGradesDetails(dict) }
-            }
+            Mode.HYBRID, Mode.API -> rxSingle { mobile.getGradesDetails(semesterId).mapGradesDetails(mobile.getDictionaries()) }
         }
     }
 
     fun getGradesSummary(semesterId: Int): Single<List<GradeSummary>> {
         return when (mode) {
             Mode.SCRAPPER -> rxSingle { scrapper.getGradesSummary(semesterId) }.compose(ScrapperExceptionTransformer()).map { it.mapGradesSummary() }
-            Mode.HYBRID, Mode.API -> mobile.getDictionaries().flatMap { dict ->
-                mobile.getGradesSummary(semesterId).map { it.mapGradesSummary(dict) }
-            }
+            Mode.HYBRID, Mode.API -> rxSingle { mobile.getGradesSummary(semesterId).mapGradesSummary(mobile.getDictionaries()) }
         }
     }
 
@@ -321,18 +311,14 @@ class Sdk {
     fun getHomework(start: LocalDate, end: LocalDate, semesterId: Int = 0): Single<List<Homework>> {
         return when (mode) {
             Mode.SCRAPPER -> rxSingle { scrapper.getHomework(start, end) }.compose(ScrapperExceptionTransformer()).map { it.mapHomework() }
-            Mode.HYBRID, Mode.API -> mobile.getDictionaries().flatMap { dict ->
-                mobile.getHomework(start, end, semesterId).map { it.mapHomework(dict) }
-            }
+            Mode.HYBRID, Mode.API -> rxSingle { mobile.getHomework(start, end, semesterId).mapHomework(mobile.getDictionaries()) }
         }
     }
 
     fun getNotes(semesterId: Int): Single<List<Note>> {
         return when (mode) {
             Mode.SCRAPPER -> rxSingle { scrapper.getNotes() }.compose(ScrapperExceptionTransformer()).map { it.mapNotes() }
-            Mode.HYBRID, Mode.API -> mobile.getDictionaries().flatMap { dict ->
-                mobile.getNotes(semesterId).map { it.mapNotes(dict) }
-            }
+            Mode.HYBRID, Mode.API -> rxSingle { mobile.getNotes(semesterId).mapNotes(mobile.getDictionaries()) }
         }
     }
 
@@ -360,9 +346,7 @@ class Sdk {
     fun getTeachers(semesterId: Int): Single<List<Teacher>> {
         return when (mode) {
             Mode.SCRAPPER -> rxSingle { scrapper.getTeachers() }.compose(ScrapperExceptionTransformer()).map { it.mapTeachers() }
-            Mode.HYBRID, Mode.API -> mobile.getDictionaries().flatMap { dict ->
-                mobile.getTeachers(studentId, semesterId).map { it.mapTeachers(dict) }
-            }
+            Mode.HYBRID, Mode.API -> rxSingle { mobile.getTeachers(studentId, semesterId).mapTeachers(mobile.getDictionaries()) }
         }
     }
 
@@ -383,14 +367,14 @@ class Sdk {
     fun getReportingUnits(): Single<List<ReportingUnit>> {
         return when (mode) {
             Mode.HYBRID, Mode.SCRAPPER -> rxSingle { scrapper.getReportingUnits() }.compose(ScrapperExceptionTransformer()).map { it.mapReportingUnits() }
-            Mode.API -> mobile.getStudents().map { it.mapReportingUnits(studentId) }
+            Mode.API -> rxSingle { mobile.getStudents().mapReportingUnits(studentId) }
         }
     }
 
     fun getRecipients(unitId: Int, role: Int = 2): Single<List<Recipient>> {
         return when (mode) {
             Mode.HYBRID, Mode.SCRAPPER -> rxSingle { scrapper.getRecipients(unitId, role) }.compose(ScrapperExceptionTransformer()).map { it.mapRecipients() }
-            Mode.API -> mobile.getDictionaries().map { it.teachers }.map { it.mapRecipients(unitId) }
+            Mode.API -> rxSingle { mobile.getDictionaries().teachers.mapRecipients(unitId) }
         }
     }
 
@@ -405,27 +389,21 @@ class Sdk {
     fun getReceivedMessages(start: LocalDateTime, end: LocalDateTime): Single<List<Message>> {
         return when (mode) {
             Mode.HYBRID, Mode.SCRAPPER -> rxSingle { scrapper.getReceivedMessages() }.compose(ScrapperExceptionTransformer()).map { it.mapMessages() } // TODO
-            Mode.API -> mobile.getDictionaries().flatMap { dict ->
-                mobile.getMessages(start, end).map { it.mapMessages(dict) }
-            }
+            Mode.API -> rxSingle { mobile.getMessages(start, end).mapMessages(mobile.getDictionaries()) }
         }
     }
 
     fun getSentMessages(start: LocalDateTime, end: LocalDateTime): Single<List<Message>> {
         return when (mode) {
             Mode.HYBRID, Mode.SCRAPPER -> rxSingle { scrapper.getSentMessages() }.compose(ScrapperExceptionTransformer()).map { it.mapMessages() }
-            Mode.API -> mobile.getDictionaries().flatMap { dict ->
-                mobile.getMessagesSent(start, end).map { it.mapMessages(dict) }
-            }
+            Mode.API -> rxSingle { mobile.getMessagesSent(start, end).mapMessages(mobile.getDictionaries()) }
         }
     }
 
     fun getDeletedMessages(start: LocalDateTime, end: LocalDateTime): Single<List<Message>> {
         return when (mode) {
             Mode.HYBRID, Mode.SCRAPPER -> rxSingle { scrapper.getDeletedMessages() }.compose(ScrapperExceptionTransformer()).map { it.mapMessages() }
-            Mode.API -> mobile.getDictionaries().flatMap { dict ->
-                mobile.getMessagesDeleted(start, end).map { it.mapMessages(dict) }
-            }
+            Mode.API -> rxSingle { mobile.getMessagesDeleted(start, end).mapMessages(mobile.getDictionaries()) }
         }
     }
 
@@ -439,11 +417,13 @@ class Sdk {
     fun getMessageDetails(messageId: Int, folderId: Int, read: Boolean = false, id: Int? = null): Single<MessageDetails> {
         return when (mode) {
             Mode.HYBRID, Mode.SCRAPPER -> rxSingle { scrapper.getMessageDetails(messageId, folderId, read, id) }.compose(ScrapperExceptionTransformer()).map { it.mapScrapperMessage() }
-            Mode.API -> mobile.changeMessageStatus(messageId, when (folderId) {
-                1 -> "Odebrane"
-                2 -> "Wysłane"
-                else -> "Usunięte"
-            }, "Widoczna").map { MessageDetails("", emptyList()) }
+            Mode.API -> rxSingle {
+                mobile.changeMessageStatus(messageId, when (folderId) {
+                    1 -> "Odebrane"
+                    2 -> "Wysłane"
+                    else -> "Usunięte"
+                }, "Widoczna").let { MessageDetails("", emptyList()) }
+            }
         }
     }
 
@@ -452,7 +432,7 @@ class Sdk {
             Mode.HYBRID, Mode.SCRAPPER -> rxSingle { scrapper.sendMessage(subject, content, recipients.mapFromRecipientsToScraper()) }
                 .compose(ScrapperExceptionTransformer())
                 .map { it.mapSentMessage() }
-            Mode.API -> mobile.sendMessage(subject, content, recipients.mapFromRecipientsToMobile()).map { it.mapSentMessage(loginId) }
+            Mode.API -> rxSingle { mobile.sendMessage(subject, content, recipients.mapFromRecipientsToMobile()).mapSentMessage(loginId) }
         }
     }
 
@@ -460,11 +440,13 @@ class Sdk {
         return when (mode) {
             Mode.SCRAPPER -> rxSingle { scrapper.deleteMessages(messages) }.compose(ScrapperExceptionTransformer())
             Mode.HYBRID, Mode.API -> Completable.mergeDelayError(messages.map { (messageId, folderId) ->
-                mobile.changeMessageStatus(messageId, when (folderId) {
-                    1 -> "Odebrane"
-                    2 -> "Wysłane"
-                    else -> "Usunięte"
-                }, "Usunieta").ignoreElement()
+                rxSingle {
+                    mobile.changeMessageStatus(messageId, when (folderId) {
+                        1 -> "Odebrane"
+                        2 -> "Wysłane"
+                        else -> "Usunięte"
+                    }, "Usunieta")
+                }.ignoreElement()
             }).toSingleDefault(true)
         }
     }
@@ -472,9 +454,7 @@ class Sdk {
     fun getTimetable(start: LocalDate, end: LocalDate): Single<List<Timetable>> {
         return when (mode) {
             Mode.SCRAPPER -> rxSingle { scrapper.getTimetable(start, end) }.compose(ScrapperExceptionTransformer()).map { it.mapTimetable() }
-            Mode.HYBRID, Mode.API -> mobile.getDictionaries().flatMap { dict ->
-                mobile.getTimetable(start, end, 0).map { it.mapTimetable(dict) }
-            }
+            Mode.HYBRID, Mode.API -> rxSingle { mobile.getTimetable(start, end, 0).mapTimetable(mobile.getDictionaries()) }
         }
     }
 

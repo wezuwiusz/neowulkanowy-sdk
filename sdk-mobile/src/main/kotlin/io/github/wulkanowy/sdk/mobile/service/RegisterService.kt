@@ -5,7 +5,6 @@ import io.github.wulkanowy.sdk.mobile.ApiResponse
 import io.github.wulkanowy.sdk.mobile.register.CertificateRequest
 import io.github.wulkanowy.sdk.mobile.register.CertificateResponse
 import io.github.wulkanowy.sdk.mobile.register.Student
-import io.reactivex.Single
 import retrofit2.http.Body
 import retrofit2.http.Headers
 import retrofit2.http.POST
@@ -14,8 +13,8 @@ interface RegisterService {
 
     @POST("Certyfikat")
     @Headers("RequestMobileType: RegisterDevice")
-    fun getCertificate(@Body certificateRequest: CertificateRequest): Single<CertificateResponse>
+    suspend fun getCertificate(@Body certificateRequest: CertificateRequest): CertificateResponse
 
     @POST("ListaUczniow")
-    fun getPupils(@Body pupilsListRequest: ApiRequest): Single<ApiResponse<List<Student>>>
+    suspend fun getPupils(@Body pupilsListRequest: ApiRequest): ApiResponse<List<Student>>
 }
