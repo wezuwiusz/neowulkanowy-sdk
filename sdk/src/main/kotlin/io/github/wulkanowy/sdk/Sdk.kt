@@ -481,7 +481,7 @@ class Sdk {
         }
 
         // else
-        return@withContext -1
+        null
     }
 
     suspend fun getSelfGovernments() = withContext(Dispatchers.IO) {
