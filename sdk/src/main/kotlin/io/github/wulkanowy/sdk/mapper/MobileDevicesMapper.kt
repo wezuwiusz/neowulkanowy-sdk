@@ -7,23 +7,19 @@ import io.github.wulkanowy.sdk.toLocalDateTime
 import java.time.LocalDateTime.now
 import io.github.wulkanowy.sdk.scrapper.mobile.Device as ScrapperDevice
 
-fun TokenResponse.mapToken(): Token {
-    return Token(
-        token = token,
-        symbol = symbol,
-        pin = pin,
-        qrCodeImage = qrCodeImage
-    )
-}
+fun TokenResponse.mapToken() = Token(
+    token = token,
+    symbol = symbol,
+    pin = pin,
+    qrCodeImage = qrCodeImage
+)
 
-fun List<ScrapperDevice>.mapDevices(): List<Device> {
-    return map {
-        Device(
-            id = it.id,
-            deviceId = it.deviceId.orEmpty(),
-            name = it.name.orEmpty(),
-            createDate = it.createDate?.toLocalDateTime() ?: now(),
-            modificationDate = it.modificationDate?.toLocalDateTime()
-        )
-    }
+fun List<ScrapperDevice>.mapDevices() = map {
+    Device(
+        id = it.id,
+        deviceId = it.deviceId.orEmpty(),
+        name = it.name.orEmpty(),
+        createDate = it.createDate?.toLocalDateTime() ?: now(),
+        modificationDate = it.modificationDate?.toLocalDateTime()
+    )
 }

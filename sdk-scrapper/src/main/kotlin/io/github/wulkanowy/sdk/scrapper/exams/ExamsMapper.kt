@@ -4,7 +4,6 @@ import io.github.wulkanowy.sdk.scrapper.toLocalDate
 import java.time.LocalDate
 
 fun List<ExamResponse>.mapExamsList(startDate: LocalDate, endDate: LocalDate?): List<Exam> {
-
     val end = endDate ?: startDate.plusDays(4)
     return asSequence().map { weeks ->
         weeks.weeks.map { day ->
