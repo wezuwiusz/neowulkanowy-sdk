@@ -14,8 +14,8 @@ import io.github.wulkanowy.sdk.scrapper.attendance.Attendance.Category.UNKNOWN
 import io.github.wulkanowy.sdk.scrapper.attendance.Attendance.Category.values
 import io.github.wulkanowy.sdk.scrapper.timetable.CacheResponse.Time
 import io.github.wulkanowy.sdk.scrapper.toLocalDate
-import org.threeten.bp.LocalDate
-import org.threeten.bp.Month
+import java.time.LocalDate
+import java.time.Month
 
 fun AttendanceResponse.mapAttendanceList(start: LocalDate, end: LocalDate?, times: List<Time>): List<Attendance> {
     val endDate = end ?: start.plusDays(4)

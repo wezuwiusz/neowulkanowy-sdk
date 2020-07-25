@@ -16,9 +16,9 @@ import io.github.wulkanowy.sdk.scrapper.repository.StudentStartRepository
 import io.github.wulkanowy.sdk.scrapper.service.ServiceManager
 import okhttp3.Interceptor
 import okhttp3.logging.HttpLoggingInterceptor
-import org.threeten.bp.LocalDate
-import org.threeten.bp.LocalDateTime
 import java.net.URL
+import java.time.LocalDate
+import java.time.LocalDateTime
 
 class Scrapper {
 

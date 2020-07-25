@@ -1,12 +1,11 @@
 package io.github.wulkanowy.sdk
 
-import org.threeten.bp.DateTimeUtils
-import org.threeten.bp.Instant
-import org.threeten.bp.LocalDate
-import org.threeten.bp.LocalDateTime
-import org.threeten.bp.ZoneId
-import org.threeten.bp.format.DateTimeFormatter.ofPattern
 import java.sql.Timestamp
+import java.time.Instant
+import java.time.LocalDate
+import java.time.LocalDateTime
+import java.time.ZoneId
+import java.time.format.DateTimeFormatter.ofPattern
 import java.util.Date
 
 fun String.toLocalDateTime(format: String): LocalDateTime = LocalDateTime.parse(this, ofPattern(format))
@@ -21,6 +20,6 @@ fun Long.toLocalDateTime(): LocalDateTime = Instant
     .atZone(ZoneId.systemDefault())
     .toLocalDateTime()
 
-fun Date.toLocalDateTime(): LocalDateTime = DateTimeUtils.toLocalDateTime(Timestamp(time))
+fun Date.toLocalDateTime(): LocalDateTime = Timestamp(time).toLocalDateTime()
 
 fun String.normalizeRecipient() = substringBeforeLast("-").substringBefore(" [").substringBeforeLast(" (").trim()

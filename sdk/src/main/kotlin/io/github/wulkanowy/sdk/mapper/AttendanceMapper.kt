@@ -1,15 +1,15 @@
 package io.github.wulkanowy.sdk.mapper
 
-import io.github.wulkanowy.sdk.scrapper.toLocalDate
 import io.github.wulkanowy.sdk.mobile.dictionaries.Dictionaries
 import io.github.wulkanowy.sdk.pojo.Absent
 import io.github.wulkanowy.sdk.pojo.Attendance
 import io.github.wulkanowy.sdk.pojo.AttendanceSummary
-import io.github.wulkanowy.sdk.scrapper.attendance.Absent as ScrapperAbsent
+import io.github.wulkanowy.sdk.scrapper.toLocalDate
 import io.github.wulkanowy.sdk.toLocalDate
+import io.github.wulkanowy.sdk.mobile.attendance.Attendance as ApiAttendance
+import io.github.wulkanowy.sdk.scrapper.attendance.Absent as ScrapperAbsent
 import io.github.wulkanowy.sdk.scrapper.attendance.Attendance as ScrapperAttendance
 import io.github.wulkanowy.sdk.scrapper.attendance.AttendanceSummary as ScrapperAttendanceSummary
-import io.github.wulkanowy.sdk.mobile.attendance.Attendance as ApiAttendance
 
 fun List<ApiAttendance>.mapAttendance(dictionaries: Dictionaries): List<Attendance> {
     return map {

@@ -1,7 +1,7 @@
 package io.github.wulkanowy.sdk.scrapper.register
 
-import org.threeten.bp.LocalDate
-import org.threeten.bp.LocalDate.now
+import java.time.LocalDate
+import java.time.LocalDate.now
 
 data class Semester(
     val diaryId: Int,

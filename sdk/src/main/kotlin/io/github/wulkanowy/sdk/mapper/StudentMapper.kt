@@ -1,7 +1,7 @@
 package io.github.wulkanowy.sdk.mapper
 
-import io.github.wulkanowy.sdk.scrapper.toLocalDate
 import io.github.wulkanowy.sdk.pojo.StudentInfo
+import io.github.wulkanowy.sdk.scrapper.toLocalDate
 import io.github.wulkanowy.sdk.scrapper.student.StudentInfo as ScrapperStudentInfo
 
 fun ScrapperStudentInfo.mapStudent(): StudentInfo {

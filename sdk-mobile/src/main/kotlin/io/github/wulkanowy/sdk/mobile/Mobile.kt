@@ -24,9 +24,9 @@ import io.github.wulkanowy.sdk.mobile.timetable.Lesson
 import io.github.wulkanowy.signer.getPrivateKeyFromCert
 import okhttp3.Interceptor
 import okhttp3.logging.HttpLoggingInterceptor
-import org.threeten.bp.LocalDate
-import org.threeten.bp.LocalDateTime
 import java.nio.charset.Charset
+import java.time.LocalDate
+import java.time.LocalDateTime
 
 class Mobile {
 

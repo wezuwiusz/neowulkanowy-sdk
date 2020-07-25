@@ -11,7 +11,7 @@ import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Ignore
 import org.junit.Test
-import org.threeten.bp.Month
+import java.time.Month
 
 @Ignore
 class ScrapperRemoteTest : BaseTest() {

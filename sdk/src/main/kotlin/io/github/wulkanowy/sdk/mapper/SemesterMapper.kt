@@ -1,11 +1,11 @@
 package io.github.wulkanowy.sdk.mapper
 
 import io.github.wulkanowy.sdk.exception.VulcanException
-import io.github.wulkanowy.sdk.pojo.Semester
 import io.github.wulkanowy.sdk.mobile.register.Student
+import io.github.wulkanowy.sdk.pojo.Semester
 import io.github.wulkanowy.sdk.toLocalDate
-import org.threeten.bp.LocalDate.of
-import org.threeten.bp.Month
+import java.time.LocalDate.of
+import java.time.Month
 import io.github.wulkanowy.sdk.scrapper.register.Semester as ScrapperSemester
 
 @JvmName("mapScrapperSemesters")

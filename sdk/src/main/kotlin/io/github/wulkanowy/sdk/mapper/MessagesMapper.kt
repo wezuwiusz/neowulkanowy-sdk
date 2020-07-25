@@ -2,8 +2,8 @@ package io.github.wulkanowy.sdk.mapper
 
 import io.github.wulkanowy.sdk.mobile.dictionaries.Dictionaries
 import io.github.wulkanowy.sdk.normalizeRecipient
-import io.github.wulkanowy.sdk.pojo.MessageAttachment
 import io.github.wulkanowy.sdk.pojo.Message
+import io.github.wulkanowy.sdk.pojo.MessageAttachment
 import io.github.wulkanowy.sdk.pojo.MessageDetails
 import io.github.wulkanowy.sdk.toLocalDateTime
 import io.github.wulkanowy.sdk.mobile.messages.Message as ApiMessage

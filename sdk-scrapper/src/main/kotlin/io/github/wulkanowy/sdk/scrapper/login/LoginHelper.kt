@@ -13,12 +13,12 @@ import io.github.wulkanowy.sdk.scrapper.exception.VulcanException
 import io.github.wulkanowy.sdk.scrapper.register.SendCertificateResponse
 import io.github.wulkanowy.sdk.scrapper.service.LoginService
 import org.slf4j.LoggerFactory
-import org.threeten.bp.LocalDateTime.now
-import org.threeten.bp.ZoneId
-import org.threeten.bp.format.DateTimeFormatter
 import pl.droidsonroids.jspoon.Jspoon
 import java.net.CookieManager
 import java.net.URLEncoder
+import java.time.LocalDateTime.now
+import java.time.ZoneId
+import java.time.format.DateTimeFormatter
 
 class LoginHelper(
     var loginType: Scrapper.LoginType,

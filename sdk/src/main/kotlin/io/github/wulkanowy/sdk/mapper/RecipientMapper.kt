@@ -1,9 +1,9 @@
 package io.github.wulkanowy.sdk.mapper
 
 import io.github.wulkanowy.sdk.mobile.dictionaries.Teacher
-import io.github.wulkanowy.sdk.scrapper.messages.Recipient as ScrapperRecipient
-import io.github.wulkanowy.sdk.mobile.messages.Recipient as MobileRecipient
 import io.github.wulkanowy.sdk.pojo.Recipient
+import io.github.wulkanowy.sdk.mobile.messages.Recipient as MobileRecipient
+import io.github.wulkanowy.sdk.scrapper.messages.Recipient as ScrapperRecipient
 
 fun List<ScrapperRecipient>.mapRecipients(): List<Recipient> {
     return map {

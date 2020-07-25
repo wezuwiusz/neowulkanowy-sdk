@@ -1,8 +1,8 @@
 package io.github.wulkanowy.sdk.mobile
 
 import com.google.gson.annotations.SerializedName
-import org.threeten.bp.LocalDateTime.now
-import org.threeten.bp.ZoneOffset
+import java.time.LocalDateTime.now
+import java.time.ZoneOffset
 import java.util.UUID
 
 @Suppress("unused")

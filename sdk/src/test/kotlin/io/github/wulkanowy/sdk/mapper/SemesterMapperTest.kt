@@ -6,7 +6,7 @@ import io.github.wulkanowy.sdk.mobile.register.RegisterTest
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertEquals
 import org.junit.Test
-import org.threeten.bp.LocalDate.of
+import java.time.LocalDate.of
 
 class SemesterMapperTest : BaseLocalTest() {
 

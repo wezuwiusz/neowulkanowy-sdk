@@ -9,7 +9,7 @@ import io.github.wulkanowy.sdk.scrapper.toDate
 import io.github.wulkanowy.sdk.scrapper.toFormat
 import io.github.wulkanowy.sdk.scrapper.toLocalDate
 import org.jsoup.Jsoup
-import org.threeten.bp.LocalDate
+import java.time.LocalDate
 
 fun TimetableResponse.mapTimetableList(startDate: LocalDate, endDate: LocalDate?): List<Timetable> {
     return rows2api.flatMap { lessons ->

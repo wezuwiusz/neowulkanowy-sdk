@@ -1,16 +1,15 @@
 package io.github.wulkanowy.sdk.scrapper
 
 import org.jsoup.Jsoup.parse
-import org.threeten.bp.DateTimeUtils
-import org.threeten.bp.DayOfWeek.MONDAY
-import org.threeten.bp.Instant.ofEpochMilli
-import org.threeten.bp.LocalDate
-import org.threeten.bp.LocalDateTime
-import org.threeten.bp.ZoneId.systemDefault
-import org.threeten.bp.format.DateTimeFormatter.ofPattern
-import org.threeten.bp.temporal.TemporalAdjusters.previousOrSame
 import java.text.Normalizer
 import java.text.SimpleDateFormat
+import java.time.DayOfWeek.MONDAY
+import java.time.Instant.ofEpochMilli
+import java.time.LocalDate
+import java.time.LocalDateTime
+import java.time.ZoneId.systemDefault
+import java.time.format.DateTimeFormatter.ofPattern
+import java.time.temporal.TemporalAdjusters.previousOrSame
 import java.util.Date
 import kotlin.math.roundToInt
 
@@ -18,7 +17,7 @@ fun String.toDate(format: String): Date = SimpleDateFormat(format).parse(this)
 
 fun Date.toLocalDate(): LocalDate = ofEpochMilli(time).atZone(systemDefault()).toLocalDate()
 
-fun LocalDate.toDate(): Date = DateTimeUtils.toDate(atStartOfDay(systemDefault()).toInstant())
+fun LocalDate.toDate(): Date = Date.from(atStartOfDay(systemDefault()).toInstant())
 
 fun LocalDate.toFormat(format: String): String = format(ofPattern(format))
 

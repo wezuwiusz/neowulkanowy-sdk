@@ -1,7 +1,7 @@
 package io.github.wulkanowy.sdk.scrapper.exams
 
 import io.github.wulkanowy.sdk.scrapper.toLocalDate
-import org.threeten.bp.LocalDate
+import java.time.LocalDate
 
 fun List<ExamResponse>.mapExamsList(startDate: LocalDate, endDate: LocalDate?): List<Exam> {
 

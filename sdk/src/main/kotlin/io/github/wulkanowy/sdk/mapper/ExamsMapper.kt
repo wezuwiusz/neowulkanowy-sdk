@@ -1,11 +1,11 @@
 package io.github.wulkanowy.sdk.mapper
 
-import io.github.wulkanowy.sdk.scrapper.toLocalDate
 import io.github.wulkanowy.sdk.mobile.dictionaries.Dictionaries
 import io.github.wulkanowy.sdk.pojo.Exam
+import io.github.wulkanowy.sdk.scrapper.toLocalDate
 import io.github.wulkanowy.sdk.toLocalDate
-import io.github.wulkanowy.sdk.scrapper.exams.Exam as ScrapperExam
 import io.github.wulkanowy.sdk.mobile.exams.Exam as ApiExam
+import io.github.wulkanowy.sdk.scrapper.exams.Exam as ScrapperExam
 
 fun List<ApiExam>.mapExams(dict: Dictionaries): List<Exam> {
     return map { exam ->

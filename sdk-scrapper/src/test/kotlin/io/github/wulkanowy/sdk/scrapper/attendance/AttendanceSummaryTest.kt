@@ -4,9 +4,9 @@ import io.github.wulkanowy.sdk.scrapper.BaseLocalTest
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertEquals
 import org.junit.Test
-import org.threeten.bp.Month.SEPTEMBER
-import org.threeten.bp.Month.DECEMBER
-import org.threeten.bp.Month.JUNE
+import java.time.Month.DECEMBER
+import java.time.Month.JUNE
+import java.time.Month.SEPTEMBER
 
 class AttendanceSummaryTest : BaseLocalTest() {
 

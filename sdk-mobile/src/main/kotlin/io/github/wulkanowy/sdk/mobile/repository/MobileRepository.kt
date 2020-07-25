@@ -26,8 +26,8 @@ import io.github.wulkanowy.sdk.mobile.service.MobileService
 import io.github.wulkanowy.sdk.mobile.timetable.Lesson
 import io.github.wulkanowy.sdk.mobile.timetable.TimetableRequest
 import io.github.wulkanowy.sdk.mobile.toFormat
-import org.threeten.bp.LocalDate
-import org.threeten.bp.LocalDateTime
+import java.time.LocalDate
+import java.time.LocalDateTime
 
 class MobileRepository(private val api: MobileService) {
 

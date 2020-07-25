@@ -3,7 +3,7 @@ package io.github.wulkanowy.sdk.scrapper.homework
 import io.github.wulkanowy.sdk.scrapper.toDate
 import io.github.wulkanowy.sdk.scrapper.toLocalDate
 import org.jsoup.Jsoup
-import org.threeten.bp.LocalDate
+import java.time.LocalDate
 
 fun List<HomeworkResponse>.mapHomeworkList(startDate: LocalDate, endDate: LocalDate?): List<Homework> {
     val end = endDate ?: startDate

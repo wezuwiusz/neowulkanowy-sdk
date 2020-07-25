@@ -4,8 +4,8 @@ import com.google.gson.GsonBuilder
 import com.google.gson.JsonParser
 import io.github.wulkanowy.sdk.scrapper.grades.DateDeserializer
 import io.github.wulkanowy.sdk.scrapper.grades.GradeDate
-import io.github.wulkanowy.sdk.scrapper.interceptor.ErrorInterceptor
 import io.github.wulkanowy.sdk.scrapper.interceptor.AutoLoginInterceptor
+import io.github.wulkanowy.sdk.scrapper.interceptor.ErrorInterceptor
 import io.github.wulkanowy.sdk.scrapper.login.LoginHelper
 import io.github.wulkanowy.sdk.scrapper.repository.StudentAndParentRepository
 import io.github.wulkanowy.sdk.scrapper.repository.StudentRepository

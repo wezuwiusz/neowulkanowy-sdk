@@ -5,8 +5,8 @@ import io.github.wulkanowy.sdk.mobile.repository.MobileRepository
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertEquals
 import org.junit.Test
-import org.threeten.bp.LocalDate.of
 import retrofit2.create
+import java.time.LocalDate.of
 
 class TimetableTest : BaseLocalTest() {
 

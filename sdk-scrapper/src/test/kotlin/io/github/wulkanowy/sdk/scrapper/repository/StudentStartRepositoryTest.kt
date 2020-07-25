@@ -1,7 +1,7 @@
 package io.github.wulkanowy.sdk.scrapper.repository
 
-import io.github.wulkanowy.sdk.scrapper.Scrapper
 import io.github.wulkanowy.sdk.scrapper.BaseLocalTest
+import io.github.wulkanowy.sdk.scrapper.Scrapper
 import io.github.wulkanowy.sdk.scrapper.register.RegisterTest
 import kotlinx.coroutines.runBlocking
 import okhttp3.mockwebserver.MockResponse

@@ -1,6 +1,6 @@
 package io.github.wulkanowy.sdk.scrapper.attendance
 
-import org.threeten.bp.Month
+import java.time.Month
 
 data class AttendanceSummary(
     val month: Month,

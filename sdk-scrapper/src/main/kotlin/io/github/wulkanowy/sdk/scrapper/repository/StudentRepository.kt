@@ -14,6 +14,7 @@ import io.github.wulkanowy.sdk.scrapper.attendance.mapAttendanceSummaryList
 import io.github.wulkanowy.sdk.scrapper.exams.Exam
 import io.github.wulkanowy.sdk.scrapper.exams.ExamRequest
 import io.github.wulkanowy.sdk.scrapper.exams.mapExamsList
+import io.github.wulkanowy.sdk.scrapper.exception.FeatureDisabledException
 import io.github.wulkanowy.sdk.scrapper.exception.InvalidPathException
 import io.github.wulkanowy.sdk.scrapper.getSchoolYear
 import io.github.wulkanowy.sdk.scrapper.getScriptParam
@@ -32,7 +33,6 @@ import io.github.wulkanowy.sdk.scrapper.homework.Homework
 import io.github.wulkanowy.sdk.scrapper.homework.HomeworkRequest
 import io.github.wulkanowy.sdk.scrapper.homework.mapHomework
 import io.github.wulkanowy.sdk.scrapper.homework.mapHomeworkList
-import io.github.wulkanowy.sdk.scrapper.exception.FeatureDisabledException
 import io.github.wulkanowy.sdk.scrapper.interceptor.handleErrors
 import io.github.wulkanowy.sdk.scrapper.mobile.Device
 import io.github.wulkanowy.sdk.scrapper.mobile.TokenResponse
@@ -52,7 +52,7 @@ import io.github.wulkanowy.sdk.scrapper.timetable.mapTimetableList
 import io.github.wulkanowy.sdk.scrapper.toDate
 import io.github.wulkanowy.sdk.scrapper.toFormat
 import org.jsoup.Jsoup
-import org.threeten.bp.LocalDate
+import java.time.LocalDate
 
 class StudentRepository(private val api: StudentService) {
 

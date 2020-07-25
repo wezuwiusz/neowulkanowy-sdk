@@ -6,7 +6,7 @@ import io.github.wulkanowy.sdk.mobile.exams.ExamsTest
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertEquals
 import org.junit.Test
-import org.threeten.bp.LocalDate.now
+import java.time.LocalDate.now
 
 class ExamsMapperTest : BaseLocalTest() {
 

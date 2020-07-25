@@ -1,7 +1,7 @@
 package io.github.wulkanowy.sdk.pojo
 
-import org.threeten.bp.LocalDate
-import org.threeten.bp.LocalDateTime
+import java.time.LocalDate
+import java.time.LocalDateTime
 
 data class Timetable(
     val number: Int,

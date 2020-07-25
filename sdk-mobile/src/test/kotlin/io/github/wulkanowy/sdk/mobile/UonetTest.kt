@@ -12,11 +12,11 @@ import okhttp3.logging.HttpLoggingInterceptor
 import org.junit.BeforeClass
 import org.junit.Ignore
 import org.junit.Test
-import org.threeten.bp.LocalDate.of
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.converter.scalars.ScalarsConverterFactory
 import retrofit2.create
+import java.time.LocalDate.of
 
 const val PASSWORD = "012345678901234567890123456789AB"
 const val DEVICE_NAME = "Wulkanowy#client"

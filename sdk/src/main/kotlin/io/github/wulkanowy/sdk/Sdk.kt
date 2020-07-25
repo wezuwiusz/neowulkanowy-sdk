@@ -3,15 +3,18 @@ package io.github.wulkanowy.sdk
 import io.github.wulkanowy.sdk.exception.FeatureNotAvailableException
 import io.github.wulkanowy.sdk.mapper.*
 import io.github.wulkanowy.sdk.mobile.Mobile
-import io.github.wulkanowy.sdk.pojo.*
+import io.github.wulkanowy.sdk.pojo.Absent
+import io.github.wulkanowy.sdk.pojo.Folder
+import io.github.wulkanowy.sdk.pojo.MessageDetails
+import io.github.wulkanowy.sdk.pojo.Recipient
 import io.github.wulkanowy.sdk.scrapper.Scrapper
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import okhttp3.Interceptor
 import okhttp3.logging.HttpLoggingInterceptor
 import org.slf4j.LoggerFactory
-import org.threeten.bp.LocalDate
-import org.threeten.bp.LocalDateTime
+import java.time.LocalDate
+import java.time.LocalDateTime
 
 class Sdk {
 

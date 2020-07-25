@@ -7,8 +7,8 @@ import io.github.wulkanowy.sdk.scrapper.ScrapperException
 import io.github.wulkanowy.sdk.scrapper.TLSSocketFactory
 import io.github.wulkanowy.sdk.scrapper.grades.DateDeserializer
 import io.github.wulkanowy.sdk.scrapper.grades.GradeDate
-import io.github.wulkanowy.sdk.scrapper.interceptor.ErrorInterceptor
 import io.github.wulkanowy.sdk.scrapper.interceptor.AutoLoginInterceptor
+import io.github.wulkanowy.sdk.scrapper.interceptor.ErrorInterceptor
 import io.github.wulkanowy.sdk.scrapper.interceptor.StudentAndParentInterceptor
 import io.github.wulkanowy.sdk.scrapper.interceptor.UserAgentInterceptor
 import io.github.wulkanowy.sdk.scrapper.login.LoginHelper
@@ -17,7 +17,6 @@ import okhttp3.Interceptor
 import okhttp3.JavaNetCookieJar
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
-import org.threeten.bp.LocalDate
 import pl.droidsonroids.retrofit2.JspoonConverterFactory
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -27,6 +26,7 @@ import java.net.CookieManager
 import java.net.CookiePolicy
 import java.net.URL
 import java.security.KeyStore
+import java.time.LocalDate
 import java.util.concurrent.TimeUnit.SECONDS
 import javax.net.ssl.TrustManagerFactory
 import javax.net.ssl.X509TrustManager

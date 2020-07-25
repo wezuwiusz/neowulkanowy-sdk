@@ -1,6 +1,6 @@
 package io.github.wulkanowy.sdk.pojo
 
-import org.threeten.bp.LocalDateTime
+import java.time.LocalDateTime
 
 data class Message(
     val id: Int?,

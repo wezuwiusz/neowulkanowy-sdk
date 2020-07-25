@@ -1,7 +1,7 @@
 package io.github.wulkanowy.sdk.mapper
 
-import io.github.wulkanowy.sdk.pojo.ReportingUnit
 import io.github.wulkanowy.sdk.mobile.register.Student
+import io.github.wulkanowy.sdk.pojo.ReportingUnit
 import io.github.wulkanowy.sdk.scrapper.messages.ReportingUnit as ScrapperReportingUnit
 
 fun List<ScrapperReportingUnit>.mapReportingUnits(): List<ReportingUnit> {

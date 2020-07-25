@@ -1,7 +1,7 @@
 package io.github.wulkanowy.sdk.pojo
 
 import io.github.wulkanowy.sdk.scrapper.attendance.SentExcuse
-import org.threeten.bp.LocalDate
+import java.time.LocalDate
 
 data class Attendance(
     val number: Int,

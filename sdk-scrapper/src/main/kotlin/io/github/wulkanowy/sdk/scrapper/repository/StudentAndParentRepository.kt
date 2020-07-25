@@ -25,8 +25,8 @@ import io.github.wulkanowy.sdk.scrapper.timetable.TimetableParser
 import io.github.wulkanowy.sdk.scrapper.toDate
 import io.github.wulkanowy.sdk.scrapper.toFormat
 import io.github.wulkanowy.sdk.scrapper.toLocalDate
-import org.threeten.bp.LocalDate
-import org.threeten.bp.Month
+import java.time.LocalDate
+import java.time.Month
 import java.util.Calendar
 import java.util.Date
 import java.util.TimeZone

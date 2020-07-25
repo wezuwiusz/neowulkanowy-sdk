@@ -1,7 +1,7 @@
 package io.github.wulkanowy.sdk.scrapper.attendance
 
-import io.github.wulkanowy.sdk.scrapper.Scrapper
 import io.github.wulkanowy.sdk.scrapper.BaseLocalTest
+import io.github.wulkanowy.sdk.scrapper.Scrapper
 import io.github.wulkanowy.sdk.scrapper.register.RegisterTest
 import io.github.wulkanowy.sdk.scrapper.repository.StudentRepository
 import io.github.wulkanowy.sdk.scrapper.service.StudentService
@@ -12,7 +12,7 @@ import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
 import org.junit.Test
-import org.threeten.bp.LocalDateTime
+import java.time.LocalDateTime
 
 class AttendanceTest : BaseLocalTest() {
 
