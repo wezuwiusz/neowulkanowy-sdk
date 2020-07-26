@@ -2,8 +2,8 @@ package io.github.wulkanowy.sdk.scrapper.notes
 
 import com.google.gson.annotations.SerializedName
 
-class NotesResponse {
+data class NotesResponse(
 
     @SerializedName("Uwagi")
-    var notes: List<Note> = listOf()
-}
+    val notes: List<Note> = emptyList()
+)

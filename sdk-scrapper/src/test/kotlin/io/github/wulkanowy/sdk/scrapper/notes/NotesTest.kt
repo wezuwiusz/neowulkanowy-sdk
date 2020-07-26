@@ -31,7 +31,7 @@ class NotesTest : BaseLocalTest() {
             assertEquals("Przeszkadzanie w prowadzeniu lekcji", content)
             assertEquals(false, showPoints)
             assertEquals(0, points.toIntOrNull() ?: 0)
-            assertEquals(Note.CategoryType.NEGATIVE.id, categoryType)
+            assertEquals(NoteCategory.NEGATIVE.id, categoryType)
         }
     }
 
@@ -45,7 +45,7 @@ class NotesTest : BaseLocalTest() {
             assertEquals("Jan z własnej woli przyniósł baterie do zegara.", content)
             assertEquals(true, showPoints)
             assertEquals(5, points.toInt())
-            assertEquals(Note.CategoryType.POSITIVE.id, categoryType)
+            assertEquals(NoteCategory.POSITIVE.id, categoryType)
         }
     }
 
@@ -59,7 +59,7 @@ class NotesTest : BaseLocalTest() {
             assertEquals("Uczeń nic nie zepsuł ani nic nie naprawił", content)
             assertEquals(true, showPoints)
             assertEquals(0, points.toInt())
-            assertEquals(Note.CategoryType.NEUTRAL.id, categoryType)
+            assertEquals(NoteCategory.NEUTRAL.id, categoryType)
         }
     }
 
@@ -73,7 +73,7 @@ class NotesTest : BaseLocalTest() {
             assertEquals("Uczeń nie przyszedł na zajęcia w celu napisania zaległej kartkówki, pomimo umówienia się z nauczycielem dzień wcześniej.", content)
             assertEquals(true, showPoints)
             assertEquals(-5, points.toInt())
-            assertEquals(Note.CategoryType.NEGATIVE.id, categoryType)
+            assertEquals(NoteCategory.NEGATIVE.id, categoryType)
         }
     }
 }

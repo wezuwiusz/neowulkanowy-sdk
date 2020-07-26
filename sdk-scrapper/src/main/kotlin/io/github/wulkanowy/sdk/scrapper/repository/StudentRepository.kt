@@ -174,9 +174,10 @@ class StudentRepository(private val api: StudentService) {
 
     suspend fun getNotes(): List<Note> {
         return api.getNotes().handleErrors().data?.notes.orEmpty().map {
-            it.apply {
-                teacherSymbol = teacher.split(" [").last().removeSuffix("]")
-                teacher = teacher.split(" [").first()
+            it.copy(
+                teacher = it.teacher.split(" [").first()
+            ).apply {
+                teacherSymbol = it.teacher.split(" [").last().removeSuffix("]")
             }
         }.sortedWith(compareBy({ it.date }, { it.category }))
     }

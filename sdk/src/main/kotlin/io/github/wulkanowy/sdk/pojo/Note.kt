@@ -1,6 +1,6 @@
 package io.github.wulkanowy.sdk.pojo
 
-import io.github.wulkanowy.sdk.scrapper.notes.Note
+import io.github.wulkanowy.sdk.scrapper.notes.NoteCategory
 import java.time.LocalDate
 
 data class Note(
@@ -8,7 +8,7 @@ data class Note(
     var teacher: String,
     var teacherSymbol: String,
     var category: String,
-    var categoryType: Note.CategoryType,
+    var categoryType: NoteCategory,
     var showPoints: Boolean,
     var points: Int,
     var content: String

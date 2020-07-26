@@ -3,39 +3,29 @@ package io.github.wulkanowy.sdk.scrapper.notes
 import com.google.gson.annotations.SerializedName
 import java.util.Date
 
-class Note {
+data class Note(
 
     @SerializedName("DataWpisu")
-    lateinit var date: Date
+    val date: Date,
 
     @SerializedName("Nauczyciel")
-    lateinit var teacher: String
-
-    lateinit var teacherSymbol: String
+    val teacher: String,
 
     @SerializedName("Kategoria")
-    lateinit var category: String
+    val category: String,
 
     @SerializedName("TrescUwagi")
-    lateinit var content: String
+    val content: String,
 
     @SerializedName("Punkty")
-    var points: String = ""
+    val points: String = "",
 
     @SerializedName("PokazPunkty")
-    var showPoints = false
+    val showPoints: Boolean = false,
 
     @SerializedName("KategoriaTyp")
-    var categoryType: Int = 0
+    val categoryType: Int = 0
+) {
 
-    enum class CategoryType(val id: Int) {
-        UNKNOWN(0),
-        POSITIVE(1),
-        NEUTRAL(2),
-        NEGATIVE(3);
-
-        companion object {
-            fun getByValue(value: Int) = values().singleOrNull { it.id == value } ?: UNKNOWN
-        }
-    }
+    lateinit var teacherSymbol: String
 }
