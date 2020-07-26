@@ -8,18 +8,20 @@ fun List<ExamResponse>.mapExamsList(startDate: LocalDate, endDate: LocalDate?): 
     return asSequence().map { weeks ->
         weeks.weeks.map { day ->
             day.exams.map { exam ->
-                exam.apply {
-                    group = subject.split("|").last()
-                    subject = subject.substringBeforeLast(" ")
-                    if (group.contains(" ")) group = ""
-                    date = day.date
-                    type = when (type) {
+                exam.copy(
+                    teacher = exam.teacher.split(" [").first(),
+                    subject = exam.subject.substringBeforeLast(" "),
+                    type = when (exam.type) {
                         "1" -> "Sprawdzian"
                         "2" -> "Kartkówka"
                         else -> "Praca klasowa"
                     }
-                    teacherSymbol = teacher.split(" [").last().removeSuffix("]")
-                    teacher = teacher.split(" [").first()
+                ).apply {
+                    date = day.date
+
+                    teacherSymbol = exam.teacher.split(" [").last().removeSuffix("]")
+                    group = exam.subject.split("|").last()
+                    if (group.contains(" ")) group = ""
                 }
             }
         }.flatten()

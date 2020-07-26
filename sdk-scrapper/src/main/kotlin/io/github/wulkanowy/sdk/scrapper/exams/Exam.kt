@@ -1,38 +1,29 @@
 package io.github.wulkanowy.sdk.scrapper.exams
 
 import com.google.gson.annotations.SerializedName
-import pl.droidsonroids.jspoon.annotation.Format
-import pl.droidsonroids.jspoon.annotation.Selector
 import java.util.Date
 
-class Exam {
+data class Exam(
+
+    @SerializedName("DataModyfikacji")
+    val entryDate: Date,
+
+    @SerializedName("DisplayValue")
+    val subject: String,
+
+    @SerializedName("Rodzaj")
+    val type: String,
+
+    @SerializedName("Opis")
+    val description: String,
+
+    @SerializedName("PracownikModyfikujacyDisplay")
+    val teacher: String
+) {
 
     lateinit var date: Date
 
-    @SerializedName("DataModyfikacji")
-    @Format("dd.MM.yyyy")
-    @Selector(".wartosc", index = 3, regex = ".+, (.+)", defValue = "01.01.1970")
-    lateinit var entryDate: Date
-
-    @SerializedName("DisplayValue")
-    @Selector(".wartosc", index = 0, regex = "^(.+)\\s.+")
-    lateinit var subject: String
-
-    @Selector(".wartosc", index = 0, regex = "\\|(.+)", defValue = "")
     lateinit var group: String
 
-    @SerializedName("Rodzaj")
-    @Selector(".wartosc", index = 1)
-    lateinit var type: String
-
-    @SerializedName("Opis")
-    @Selector(".wartosc", index = 2)
-    lateinit var description: String
-
-    @SerializedName("PracownikModyfikujacyDisplay")
-    @Selector(".wartosc", index = 3, regex = "(.+)\\s\\[.+")
-    lateinit var teacher: String
-
-    @Selector(".wartosc", index = 3, regex = "\\[(.+)\\]")
     lateinit var teacherSymbol: String
 }
