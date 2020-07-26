@@ -3,15 +3,7 @@ package io.github.wulkanowy.sdk.scrapper.attendance
 import com.google.gson.GsonBuilder
 import com.google.gson.internal.LinkedTreeMap
 import com.google.gson.reflect.TypeToken
-import io.github.wulkanowy.sdk.scrapper.attendance.Attendance.Category.ABSENCE_EXCUSED
-import io.github.wulkanowy.sdk.scrapper.attendance.Attendance.Category.ABSENCE_FOR_SCHOOL_REASONS
-import io.github.wulkanowy.sdk.scrapper.attendance.Attendance.Category.ABSENCE_UNEXCUSED
-import io.github.wulkanowy.sdk.scrapper.attendance.Attendance.Category.EXCUSED_LATENESS
-import io.github.wulkanowy.sdk.scrapper.attendance.Attendance.Category.EXEMPTION
-import io.github.wulkanowy.sdk.scrapper.attendance.Attendance.Category.PRESENCE
-import io.github.wulkanowy.sdk.scrapper.attendance.Attendance.Category.UNEXCUSED_LATENESS
-import io.github.wulkanowy.sdk.scrapper.attendance.Attendance.Category.UNKNOWN
-import io.github.wulkanowy.sdk.scrapper.attendance.Attendance.Category.values
+import io.github.wulkanowy.sdk.scrapper.attendance.Attendance.Category
 import io.github.wulkanowy.sdk.scrapper.timetable.CacheResponse.Time
 import io.github.wulkanowy.sdk.scrapper.toLocalDate
 import java.time.LocalDate
@@ -22,16 +14,10 @@ fun AttendanceResponse.mapAttendanceList(start: LocalDate, end: LocalDate?, time
     return lessons.map {
         val sentExcuse = sentExcuses.firstOrNull { excuse -> excuse.date == it.date && excuse.timeId == it.timeId }
         it.apply {
-            presence = it.categoryId == PRESENCE.id || it.categoryId == ABSENCE_FOR_SCHOOL_REASONS.id
-            absence = it.categoryId == ABSENCE_UNEXCUSED.id || it.categoryId == ABSENCE_EXCUSED.id
-            lateness = it.categoryId == EXCUSED_LATENESS.id || it.categoryId == UNEXCUSED_LATENESS.id
-            excused = it.categoryId == ABSENCE_EXCUSED.id || it.categoryId == EXCUSED_LATENESS.id
-            exemption = it.categoryId == EXEMPTION.id
-            excusable = excuseActive && (absence || lateness) && !excused && sentExcuse == null
-            name = (values().singleOrNull { category -> category.id == categoryId } ?: UNKNOWN).title
             number = times.single { time -> time.id == it.timeId }.number
-            if (sentExcuse != null)
-                excuseStatus = SentExcuse.Status.getByValue(sentExcuse.status)
+            category = Category.getCategoryById(categoryId)
+            excusable = excuseActive && (category == Category.ABSENCE_UNEXCUSED || category == Category.UNEXCUSED_LATENESS) && sentExcuse == null
+            if (sentExcuse != null) excuseStatus = SentExcuse.Status.getByValue(sentExcuse.status)
         }
     }.filter {
         it.date.toLocalDate() >= start && it.date.toLocalDate() <= endDate

@@ -116,21 +116,18 @@ class ScrapperRemoteTest : BaseTest() {
             assertEquals("Zajęcia z wychowawcą", subject)
             assertEquals(getDate(2018, 10, 1), date)
 
-            assertEquals("Obecność", name)
-            assertTrue(presence)
+            assertEquals("Obecność", category.name)
         }
 
         attendance[1].run {
-            assertEquals("Nieobecność nieusprawiedliwiona", name)
-            assertTrue(absence)
-            assertFalse(excused)
+            assertEquals("Nieobecność nieusprawiedliwiona", category.name)
         }
 
-        assertEquals("Nieobecność nieusprawiedliwiona", attendance[3].name)
-        assertEquals("Nieobecność nieusprawiedliwiona", attendance[4].name)
-        assertEquals("Nieobecność usprawiedliwiona", attendance[5].name)
-        assertEquals("Spóźnienie nieusprawiedliwione", attendance[6].name)
-        assertEquals("Obecność", attendance[9].name)
+        assertEquals("Nieobecność nieusprawiedliwiona", attendance[3].category.name)
+        assertEquals("Nieobecność nieusprawiedliwiona", attendance[4].category.name)
+        assertEquals("Nieobecność usprawiedliwiona", attendance[5].category.name)
+        assertEquals("Spóźnienie nieusprawiedliwione", attendance[6].category.name)
+        assertEquals("Obecność", attendance[9].category)
     }
 
     @Test

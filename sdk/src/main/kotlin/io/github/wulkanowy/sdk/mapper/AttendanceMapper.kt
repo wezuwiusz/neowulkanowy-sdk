@@ -4,6 +4,13 @@ import io.github.wulkanowy.sdk.mobile.dictionaries.Dictionaries
 import io.github.wulkanowy.sdk.pojo.Absent
 import io.github.wulkanowy.sdk.pojo.Attendance
 import io.github.wulkanowy.sdk.pojo.AttendanceSummary
+import io.github.wulkanowy.sdk.scrapper.attendance.Attendance.Category.ABSENCE_EXCUSED
+import io.github.wulkanowy.sdk.scrapper.attendance.Attendance.Category.ABSENCE_FOR_SCHOOL_REASONS
+import io.github.wulkanowy.sdk.scrapper.attendance.Attendance.Category.ABSENCE_UNEXCUSED
+import io.github.wulkanowy.sdk.scrapper.attendance.Attendance.Category.EXCUSED_LATENESS
+import io.github.wulkanowy.sdk.scrapper.attendance.Attendance.Category.EXEMPTION
+import io.github.wulkanowy.sdk.scrapper.attendance.Attendance.Category.PRESENCE
+import io.github.wulkanowy.sdk.scrapper.attendance.Attendance.Category.UNEXCUSED_LATENESS
 import io.github.wulkanowy.sdk.scrapper.toLocalDate
 import io.github.wulkanowy.sdk.toLocalDate
 import io.github.wulkanowy.sdk.mobile.attendance.Attendance as ApiAttendance
@@ -34,19 +41,19 @@ fun List<ApiAttendance>.mapAttendance(dictionaries: Dictionaries) = map {
 fun List<ScrapperAttendance>.mapAttendance() = map {
     Attendance(
         number = it.number,
-        name = it.name,
+        name = it.category.name,
         subject = it.subject,
         date = it.date.toLocalDate(),
         timeId = it.timeId,
-        absence = it.absence,
         categoryId = it.categoryId,
-        deleted = it.deleted,
+        deleted = false,
+        excuseStatus = it.excuseStatus,
         excusable = it.excusable,
-        excused = it.excused,
-        exemption = it.exemption,
-        lateness = it.lateness,
-        presence = it.presence,
-        excuseStatus = it.excuseStatus
+        absence = it.category == ABSENCE_UNEXCUSED || it.category == ABSENCE_EXCUSED,
+        excused = it.category == ABSENCE_EXCUSED || it.category == EXCUSED_LATENESS,
+        exemption = it.category == EXEMPTION,
+        lateness = it.category == EXCUSED_LATENESS || it.category == UNEXCUSED_LATENESS,
+        presence = it.category == PRESENCE || it.category == ABSENCE_FOR_SCHOOL_REASONS
     )
 }
 
