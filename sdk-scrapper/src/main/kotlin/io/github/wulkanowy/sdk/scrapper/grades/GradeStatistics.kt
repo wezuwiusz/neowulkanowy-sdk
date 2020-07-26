@@ -2,7 +2,11 @@ package io.github.wulkanowy.sdk.scrapper.grades
 
 import com.google.gson.annotations.SerializedName
 
-class GradeStatistics {
+data class GradeStatistics(
+
+    @SerializedName("Value")
+    val amount: Int? = 0
+) {
 
     var semesterId: Int = 0
 
@@ -11,7 +15,4 @@ class GradeStatistics {
     lateinit var grade: String
 
     var gradeValue: Int = 0
-
-    @SerializedName("Value")
-    var amount: Int? = 0
 }

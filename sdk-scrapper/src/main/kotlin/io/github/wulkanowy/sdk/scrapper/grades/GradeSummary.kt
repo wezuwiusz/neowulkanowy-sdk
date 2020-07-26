@@ -1,22 +1,13 @@
 package io.github.wulkanowy.sdk.scrapper.grades
 
-class GradeSummary {
-
-    var order: Int = 0
-
-    var name: String = ""
-
-    var average: Double = .0
-
-    var predicted: String = ""
-
-    var final: String = ""
-
-    var pointsSum: String = ""
-
-    var proposedPoints: String = ""
-
-    var finalPoints: String = ""
-
-    var visibleSubject: Boolean = false
-}
+data class GradeSummary(
+    val order: Int = 0,
+    val name: String = "",
+    val average: Double = .0,
+    val predicted: String = "",
+    val final: String = "",
+    val pointsSum: String = "",
+    val proposedPoints: String = "",
+    val finalPoints: String = "",
+    val visibleSubject: Boolean = false
+)

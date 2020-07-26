@@ -2,44 +2,41 @@ package io.github.wulkanowy.sdk.scrapper.grades
 
 import com.google.gson.annotations.SerializedName
 
-class GradesStatisticsResponse {
+data class GradesStatisticsAnnual(
 
-    data class Annual(
+    @SerializedName("Subject")
+    val subject: String,
 
-        @SerializedName("Subject")
-        val subject: String,
+    @SerializedName("IsEmpty")
+    val isEmpty: Boolean,
 
-        @SerializedName("IsEmpty")
-        val isEmpty: Boolean,
+    @SerializedName("Items")
+    val items: List<GradeStatistics>?
+)
 
-        @SerializedName("Items")
-        val items: List<GradeStatistics>?
-    )
+data class GradesStatisticsPartial(
 
-    data class Partial(
+    @SerializedName("Subject")
+    val subject: String,
 
-        @SerializedName("Subject")
-        val subject: String,
+    @SerializedName("IsAverage")
+    val isAverage: Boolean,
 
-        @SerializedName("IsAverage")
-        val isAverage: Boolean,
+    @SerializedName("ClassSeries")
+    val classSeries: Series,
 
-        @SerializedName("ClassSeries")
-        val classSeries: Series,
+    @SerializedName("StudentSeries")
+    val studentSeries: Series
+)
 
-        @SerializedName("StudentSeries")
-        val studentSeries: Series
-    )
+data class Series(
 
-    data class Series(
+    @SerializedName("Average")
+    val average: String?,
 
-        @SerializedName("Average")
-        val average: String?,
+    @SerializedName("IsEmpty")
+    val isEmpty: Boolean,
 
-        @SerializedName("IsEmpty")
-        val isEmpty: Boolean,
-
-        @SerializedName("Items")
-        val items: List<GradeStatistics>?
-    )
-}
+    @SerializedName("Items")
+    val items: List<GradeStatistics>?
+)

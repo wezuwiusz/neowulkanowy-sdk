@@ -12,8 +12,9 @@ import io.github.wulkanowy.sdk.scrapper.exams.ExamResponse
 import io.github.wulkanowy.sdk.scrapper.grades.GradePointsSummary
 import io.github.wulkanowy.sdk.scrapper.grades.GradeRequest
 import io.github.wulkanowy.sdk.scrapper.grades.GradesResponse
+import io.github.wulkanowy.sdk.scrapper.grades.GradesStatisticsAnnual
+import io.github.wulkanowy.sdk.scrapper.grades.GradesStatisticsPartial
 import io.github.wulkanowy.sdk.scrapper.grades.GradesStatisticsRequest
-import io.github.wulkanowy.sdk.scrapper.grades.GradesStatisticsResponse
 import io.github.wulkanowy.sdk.scrapper.homework.HomeworkDay
 import io.github.wulkanowy.sdk.scrapper.homework.HomeworkRequest
 import io.github.wulkanowy.sdk.scrapper.homework.HomeworkResponse
@@ -65,13 +66,13 @@ interface StudentService {
     suspend fun getGrades(@Body gradeRequest: GradeRequest): ApiResponse<GradesResponse>
 
     @POST("Statystyki.mvc/GetOcenyCzastkowe")
-    suspend fun getGradesPartialStatistics(@Body gradesStatisticsRequest: GradesStatisticsRequest): ApiResponse<List<GradesStatisticsResponse.Partial>>
+    suspend fun getGradesPartialStatistics(@Body gradesStatisticsRequest: GradesStatisticsRequest): ApiResponse<List<GradesStatisticsPartial>>
 
     @POST("Statystyki.mvc/GetPunkty")
     suspend fun getGradesPointsStatistics(@Body gradesStatisticsRequest: GradesStatisticsRequest): ApiResponse<List<GradePointsSummary>>
 
     @POST("Statystyki.mvc/GetOcenyRoczne")
-    suspend fun getGradesAnnualStatistics(@Body gradesStatisticsRequest: GradesStatisticsRequest): ApiResponse<List<GradesStatisticsResponse.Annual>>
+    suspend fun getGradesAnnualStatistics(@Body gradesStatisticsRequest: GradesStatisticsRequest): ApiResponse<List<GradesStatisticsAnnual>>
 
     @POST("Frekwencja.mvc/Get")
     suspend fun getAttendance(@Body attendanceRequest: AttendanceRequest): ApiResponse<AttendanceResponse>
