@@ -7,10 +7,8 @@ import io.github.wulkanowy.sdk.scrapper.grades.GradeDate
 import io.github.wulkanowy.sdk.scrapper.interceptor.AutoLoginInterceptor
 import io.github.wulkanowy.sdk.scrapper.interceptor.ErrorInterceptor
 import io.github.wulkanowy.sdk.scrapper.login.LoginHelper
-import io.github.wulkanowy.sdk.scrapper.repository.StudentAndParentRepository
 import io.github.wulkanowy.sdk.scrapper.repository.StudentRepository
 import io.github.wulkanowy.sdk.scrapper.service.LoginService
-import io.github.wulkanowy.sdk.scrapper.service.StudentAndParentService
 import io.github.wulkanowy.sdk.scrapper.service.StudentService
 import kotlinx.coroutines.runBlocking
 import okhttp3.OkHttpClient
@@ -36,11 +34,6 @@ abstract class BaseLocalTest : BaseTest() {
     @After
     fun tearDown() {
         server.shutdown()
-    }
-
-    fun getSnpRepo(testClass: Class<*>, fixture: String, loginType: Scrapper.LoginType = Scrapper.LoginType.STANDARD, autoLogin: Boolean = false): StudentAndParentRepository {
-        server.enqueue(MockResponse().setBody(testClass.getResource(fixture).readText()))
-        return StudentAndParentRepository(getService(StudentAndParentService::class.java, server.url("/").toString(), true, true, true, loginType, autoLogin))
     }
 
     open fun getStudentRepo(testClass: Class<*>, fixture: String, loginType: Scrapper.LoginType = Scrapper.LoginType.STANDARD, autoLogin: Boolean = false): StudentRepository {

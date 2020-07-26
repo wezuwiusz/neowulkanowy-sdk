@@ -2,6 +2,7 @@ package io.github.wulkanowy.sdk.scrapper.repository
 
 import io.github.wulkanowy.sdk.scrapper.BaseLocalTest
 import io.github.wulkanowy.sdk.scrapper.Scrapper
+import io.github.wulkanowy.sdk.scrapper.login.LoginTest
 import io.github.wulkanowy.sdk.scrapper.register.RegisterTest
 import kotlinx.coroutines.runBlocking
 import okhttp3.mockwebserver.MockResponse
@@ -20,7 +21,6 @@ class StudentStartRepositoryTest : BaseLocalTest() {
             password = "jan123"
             schoolSymbol = "123456"
             diaryId = 101
-            useNewStudent = true
         }
     }
 
@@ -89,5 +89,109 @@ class StudentStartRepositoryTest : BaseLocalTest() {
 
         assertEquals(1234568, semesters[0].semesterId)
         assertEquals(1234567, semesters[1].semesterId)
+    }
+
+    @Test
+    fun getSemesters_normal() {
+        server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("Logowanie-standard.html").readText()))
+
+        server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("Logowanie-uonet.html").readText()))
+        server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("Login-success.html").readText()))
+
+        server.enqueue(MockResponse().setBody(RegisterTest::class.java.getResource("UczenDziennik.json").readText()))
+        server.start(3000) //
+
+        with(api) {
+            studentId = 1
+            classId = 1
+            loginType = Scrapper.LoginType.STANDARD
+        }
+
+        val semesters = runBlocking { api.getSemesters() }
+
+        assertEquals(6, semesters.size)
+
+        assertEquals(1234568, semesters[0].semesterId)
+        assertEquals(1234567, semesters[1].semesterId)
+    }
+
+    @Test
+    fun getSemesters_ADFS() {
+        server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("ADFS-form-2.html").readText())) //
+
+        server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("ADFS-form-2.html").readText()))
+        server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("Logowanie-cufs.html").readText()))
+        server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("Logowanie-uonet.html").readText()))
+        server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("Login-success.html").readText()))
+
+        server.enqueue(MockResponse().setBody(RegisterTest::class.java.getResource("UczenDziennik.json").readText()))
+        server.start(3000) //
+
+        with(api) {
+            studentId = 1
+            classId = 1
+            loginType = Scrapper.LoginType.ADFS
+        }
+
+        val semesters = runBlocking { api.getSemesters() }
+
+        assertEquals(6, semesters.size)
+
+        assertEquals(1234568, semesters[0].semesterId)
+        assertEquals(1234567, semesters[1].semesterId)
+    }
+
+    @Test
+    fun getSemesters_ADFSLight() {
+        server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("ADFSLight-form-1.html").readText()))
+
+        server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("Logowanie-cufs.html").readText()))
+        server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("Logowanie-uonet.html").readText()))
+        server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("Login-success.html").readText()))
+
+        server.enqueue(MockResponse().setBody(RegisterTest::class.java.getResource("UczenDziennik.json").readText()))
+        server.start(3000) //
+
+        with(api) {
+            studentId = 1
+            classId = 1
+            loginType = Scrapper.LoginType.ADFSLight
+        }
+
+        val semesters = runBlocking { api.getSemesters() }
+
+        assertEquals(6, semesters.size)
+
+        assertEquals(1234568, semesters[0].semesterId)
+        assertEquals(1234567, semesters[1].semesterId)
+    }
+
+    @Test
+    fun getSemesters_ADFSCards() {
+        server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("ADFS-form-1.html").readText()))
+
+        server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("ADFS-form-1.html").readText()))
+        server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("ADFS-form-2.html").readText()))
+        server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("Logowanie-cufs.html").readText()))
+        server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("Logowanie-uonet.html").readText()))
+        server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("Login-success.html").readText()))
+
+        server.enqueue(MockResponse().setBody(RegisterTest::class.java.getResource("UczenDziennik.json").readText()))
+        server.start(3000) //
+
+        with(api) {
+            studentId = 1
+            classId = 1
+            loginType = Scrapper.LoginType.ADFSCards
+        }
+
+        val semesters = runBlocking { api.getSemesters() }
+
+        assertEquals(6, semesters.size)
+
+        assertEquals(1234568, semesters[0].semesterId)
+        assertEquals(1234567, semesters[1].semesterId)
+        assertEquals(2018, semesters[0].schoolYear)
+        assertEquals(2018, semesters[1].schoolYear)
     }
 }

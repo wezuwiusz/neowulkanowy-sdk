@@ -11,7 +11,6 @@ import io.github.wulkanowy.sdk.scrapper.register.RegisterTest
 import io.github.wulkanowy.sdk.scrapper.service.LoginService
 import io.github.wulkanowy.sdk.scrapper.service.RegisterService
 import io.github.wulkanowy.sdk.scrapper.service.ServiceManager
-import io.github.wulkanowy.sdk.scrapper.service.StudentAndParentService
 import io.github.wulkanowy.sdk.scrapper.service.StudentService
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertEquals
@@ -23,14 +22,18 @@ class RegisterRepositoryTest : BaseLocalTest() {
 
     private val normal by lazy { getRegisterRepository("Default") }
 
-    private fun getRegisterRepository(symbol: String, useNewStudent: Boolean = false): RegisterRepository {
-        return RegisterRepository(symbol, "jan@fakelog.cf", "jan123", useNewStudent,
-            LoginHelper(Scrapper.LoginType.STANDARD, "http", "fakelog.localhost:3000", symbol, CookieManager(),
-                getService(LoginService::class.java, "http://fakelog.localhost:3000/")),
-            getService(service = RegisterService::class.java, url = "http://fakelog.localhost:3000/", errorInterceptor = false, noLoggedInInterceptor = false),
-            getService(StudentAndParentService::class.java),
-            getService(service = StudentService::class.java, html = !useNewStudent),
-            ServiceManager.UrlGenerator("http", "fakelog.localhost:3000", symbol, "")
+    private fun getRegisterRepository(symbol: String): RegisterRepository {
+        return RegisterRepository(
+            startSymbol = symbol,
+            email = "jan@fakelog.cf",
+            password = "jan123",
+            loginHelper = LoginHelper(
+                Scrapper.LoginType.STANDARD, "http", "fakelog.localhost:3000", symbol, CookieManager(),
+                getService(LoginService::class.java, "http://fakelog.localhost:3000/")
+            ),
+            register = getService(service = RegisterService::class.java, url = "http://fakelog.localhost:3000/", errorInterceptor = false, noLoggedInInterceptor = false),
+            student = getService(service = StudentService::class.java, html = false),
+            url = ServiceManager.UrlGenerator("http", "fakelog.localhost:3000", symbol, "")
         )
     }
 
@@ -50,7 +53,7 @@ class RegisterRepositoryTest : BaseLocalTest() {
         }
         server.start(3000)
 
-        val students = runBlocking { getRegisterRepository("Default", true).getStudents() }
+        val students = runBlocking { getRegisterRepository("Default").getStudents() }
 
         assertEquals(1, students.size)
         with(students[0]) {
@@ -77,7 +80,7 @@ class RegisterRepositoryTest : BaseLocalTest() {
         }
         server.start(3000)
 
-        val students = runBlocking { getRegisterRepository("Default", true).getStudents() }
+        val students = runBlocking { getRegisterRepository("Default").getStudents() }
         assertEquals(3, students.size)
 
         with(students[0]) {
@@ -117,7 +120,7 @@ class RegisterRepositoryTest : BaseLocalTest() {
         }
         server.start(3000)
 
-        val students = runBlocking { getRegisterRepository("Default", true).getStudents() }
+        val students = runBlocking { getRegisterRepository("Default").getStudents() }
         assertEquals(2, students.size)
     }
 
@@ -143,8 +146,6 @@ class RegisterRepositoryTest : BaseLocalTest() {
 
         (0..5).onEach {
             server.enqueue("Login-success-old.html", LoginTest::class.java)
-            server.enqueue("LoginPage-standard.html", LoginTest::class.java)
-            server.enqueue("SnP-start.html", LoginTest::class.java)
         }
 
         server.start(3000)
@@ -165,7 +166,8 @@ class RegisterRepositoryTest : BaseLocalTest() {
             runBlocking { getRegisterRepository("Default").getStudents() }
         } catch (e: Throwable) {
             assertTrue(e is VulcanException)
-            assertEquals("Wystąpił nieoczekiwany błąd. Wystąpił błąd aplikacji. Prosimy zalogować się ponownie. Jeśli problem będzie się powtarzał, prosimy o kontakt z serwisem.", e.message)
+            assertEquals("Wystąpił nieoczekiwany błąd. Wystąpił błąd aplikacji. Prosimy zalogować się ponownie. Jeśli problem będzie się powtarzał, prosimy o kontakt z serwisem.",
+                e.message)
         }
 
         assertEquals("/Default/Account/LogOn", server.takeRequest().path)
@@ -184,7 +186,8 @@ class RegisterRepositoryTest : BaseLocalTest() {
             runBlocking { getRegisterRepository(" Rzeszów + ").getStudents() }
         } catch (e: Throwable) {
             assertTrue(e is VulcanException)
-            assertEquals("Wystąpił nieoczekiwany błąd. Wystąpił błąd aplikacji. Prosimy zalogować się ponownie. Jeśli problem będzie się powtarzał, prosimy o kontakt z serwisem.", e.message)
+            assertEquals("Wystąpił nieoczekiwany błąd. Wystąpił błąd aplikacji. Prosimy zalogować się ponownie. Jeśli problem będzie się powtarzał, prosimy o kontakt z serwisem.",
+                e.message)
         }
 
         assertEquals("/rzeszow/Account/LogOn", server.takeRequest().path)
@@ -203,7 +206,8 @@ class RegisterRepositoryTest : BaseLocalTest() {
             runBlocking { getRegisterRepository(" Niepoprawny    symbol no ale + ").getStudents() }
         } catch (e: Throwable) {
             assertTrue(e is VulcanException)
-            assertEquals("Wystąpił nieoczekiwany błąd. Wystąpił błąd aplikacji. Prosimy zalogować się ponownie. Jeśli problem będzie się powtarzał, prosimy o kontakt z serwisem.", e.message)
+            assertEquals("Wystąpił nieoczekiwany błąd. Wystąpił błąd aplikacji. Prosimy zalogować się ponownie. Jeśli problem będzie się powtarzał, prosimy o kontakt z serwisem.",
+                e.message)
         }
 
         assertEquals("/niepoprawnysymbolnoale/Account/LogOn", server.takeRequest().path)
@@ -222,7 +226,8 @@ class RegisterRepositoryTest : BaseLocalTest() {
             runBlocking { getRegisterRepository(" + ").getStudents() }
         } catch (e: Throwable) {
             assertTrue(e is VulcanException)
-            assertEquals("Wystąpił nieoczekiwany błąd. Wystąpił błąd aplikacji. Prosimy zalogować się ponownie. Jeśli problem będzie się powtarzał, prosimy o kontakt z serwisem.", e.message)
+            assertEquals("Wystąpił nieoczekiwany błąd. Wystąpił błąd aplikacji. Prosimy zalogować się ponownie. Jeśli problem będzie się powtarzał, prosimy o kontakt z serwisem.",
+                e.message)
         }
 
         assertEquals("/Default/Account/LogOn", server.takeRequest().path)
@@ -241,7 +246,8 @@ class RegisterRepositoryTest : BaseLocalTest() {
             runBlocking { getRegisterRepository("Default").getStudents() }
         } catch (e: Throwable) {
             assertTrue(e is VulcanException)
-            assertEquals("Wystąpił nieoczekiwany błąd. Wystąpił błąd aplikacji. Prosimy zalogować się ponownie. Jeśli problem będzie się powtarzał, prosimy o kontakt z serwisem.", e.message)
+            assertEquals("Wystąpił nieoczekiwany błąd. Wystąpił błąd aplikacji. Prosimy zalogować się ponownie. Jeśli problem będzie się powtarzał, prosimy o kontakt z serwisem.",
+                e.message)
         }
 
         assertEquals("/Default/Account/LogOn", server.takeRequest().path)

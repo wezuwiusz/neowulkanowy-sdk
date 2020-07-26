@@ -10,41 +10,34 @@ import org.junit.Test
 
 class HomeworkTest : BaseLocalTest() {
 
-    private val snp by lazy {
-        runBlocking { getSnpRepo(HomeworkTest::class.java, "ZadaniaDomowe.html").getHomework(getLocalDate(2018, 10, 1)) }
-    }
-
     private val studentRaw by lazy {
         StudentRepository(getService(StudentService::class.java, server.url("/").toString(), false, true, true, Scrapper.LoginType.STANDARD))
     }
 
-    private val student by lazy {
+    private val homework by lazy {
         runBlocking { getStudentRepo(HomeworkTest::class.java, "Homework.json").getHomework(getLocalDate(2018, 10, 1)) }
     }
 
     @Test
     fun getHomeworkList() {
-        assertEquals(2, snp.size)
-        assertEquals(2, student.size)
+        assertEquals(2, homework.size)
     }
 
     @Test
     fun getHomework() {
-        listOf(snp[0], student[0]).map {
-            it.run {
-                assertEquals(getDate(2018, 10, 1), date)
-                assertEquals(getDate(2018, 9, 25), entryDate)
-                assertEquals("Naprawa komputera", subject)
-                assertEquals("Test diagnozujący", content)
-                assertEquals("Mickiewicz Adam", teacher)
-                assertEquals("MA", teacherSymbol)
-            }
+        with(homework[0]) {
+            assertEquals(getDate(2018, 10, 1), date)
+            assertEquals(getDate(2018, 9, 25), entryDate)
+            assertEquals("Naprawa komputera", subject)
+            assertEquals("Test diagnozujący", content)
+            assertEquals("Mickiewicz Adam", teacher)
+            assertEquals("MA", teacherSymbol)
         }
     }
 
     @Test
     fun getHomeworkWithAttachments() {
-        with(student[1]) {
+        with(homework[1]) {
             assertEquals(getDate(2018, 10, 1), date)
             assertEquals(getDate(2018, 9, 25), entryDate)
             assertEquals("Techniki biurowe", subject)

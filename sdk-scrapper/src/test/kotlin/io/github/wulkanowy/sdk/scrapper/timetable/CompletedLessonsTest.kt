@@ -12,14 +12,6 @@ import org.junit.Test
 
 class CompletedLessonsTest : BaseLocalTest() {
 
-    // private val snp by lazy {
-    //     getSnpRepo(CompletedLessonsTest::class.java, "Zrealizowane.html").getCompletedLessons(
-    //         getLocalDate(2018, 9, 17),
-    //         getLocalDate(2018, 9, 18),
-    //         -1
-    //     ).blockingGet()
-    // }
-
     private val student by lazy {
         runBlocking {
             getStudentRepo(CompletedLessonsTest::class.java, "Zrealizowane.json").getCompletedLessons(
@@ -76,52 +68,46 @@ class CompletedLessonsTest : BaseLocalTest() {
 
     @Test
     fun getSimple() {
-        listOf(/*snp[0], */student[0]).map {
-            it.run {
-                assertEquals(1, number)
-                assertEquals(getDate(2018, 9, 17), date)
-                assertEquals("Język angielski", subject)
-                assertEquals("Human - vocabulary practice", topic)
-                assertEquals("Angielska Amerykanka", teacher)
-                assertEquals("An", teacherSymbol)
-                assertEquals("", substitution)
-                assertEquals("", absence)
-                assertEquals("", resources)
-            }
+        with(student[0]) {
+            assertEquals(1, number)
+            assertEquals(getDate(2018, 9, 17), date)
+            assertEquals("Język angielski", subject)
+            assertEquals("Human - vocabulary practice", topic)
+            assertEquals("Angielska Amerykanka", teacher)
+            assertEquals("An", teacherSymbol)
+            assertEquals("", substitution)
+            assertEquals("", absence)
+            assertEquals("", resources)
         }
     }
 
     @Test
     fun getSimple_mutliCommas() {
-        listOf(/*snp[1], */student[1]).map {
-            it.run {
-                assertEquals(2, number)
-                assertEquals(getDate(2018, 9, 17), date)
-                assertEquals("Historia i społeczeństwo", subject)
-                assertEquals("Powstanie listopadowe, Napoleon, i inne przecinki", topic)
-                assertEquals("Histeryczna Jadwiga", teacher)
-                assertEquals("Hi", teacherSymbol)
-                assertEquals("", substitution)
-                assertEquals("", absence)
-                assertEquals("", resources)
-            }
+        with(student[1]) {
+            assertEquals(2, number)
+            assertEquals(getDate(2018, 9, 17), date)
+            assertEquals("Historia i społeczeństwo", subject)
+            assertEquals("Powstanie listopadowe, Napoleon, i inne przecinki", topic)
+            assertEquals("Histeryczna Jadwiga", teacher)
+            assertEquals("Hi", teacherSymbol)
+            assertEquals("", substitution)
+            assertEquals("", absence)
+            assertEquals("", resources)
         }
     }
 
     @Test
     fun getLesson_absence() {
-        listOf(/*snp[2], */student[2]).map {
-            it.run {
-                assertEquals(4, number)
-                assertEquals(getDate(2018, 9, 18), date)
-                assertEquals("Język polski", subject)
-                assertEquals("Inspiracje krajobrazem gór w poezji", topic)
-                assertEquals("Polonistka Joanna", teacher)
-                assertEquals("Po", teacherSymbol)
-                assertEquals("", substitution)
-                assertEquals("Nieobecność nieusprawiedliwiona", absence)
-                assertEquals("", resources)
-            }
+        with(student[2]) {
+            assertEquals(4, number)
+            assertEquals(getDate(2018, 9, 18), date)
+            assertEquals("Język polski", subject)
+            assertEquals("Inspiracje krajobrazem gór w poezji", topic)
+            assertEquals("Polonistka Joanna", teacher)
+            assertEquals("Po", teacherSymbol)
+            assertEquals("", substitution)
+            assertEquals("Nieobecność nieusprawiedliwiona", absence)
+            assertEquals("", resources)
         }
     }
 }

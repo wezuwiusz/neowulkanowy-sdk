@@ -17,13 +17,25 @@ import java.net.CookieManager
 class LoginTest : BaseLocalTest() {
 
     private val normal by lazy {
-        LoginHelper(Scrapper.LoginType.STANDARD, "http", "fakelog.localhost:3000", "default", CookieManager(),
-                getService(LoginService::class.java, "http://fakelog.localhost:3000/"))
+        LoginHelper(
+            loginType = Scrapper.LoginType.STANDARD,
+            schema = "http",
+            host = "fakelog.localhost:3000",
+            symbol = "default",
+            cookies = CookieManager(),
+            api = getService(LoginService::class.java, "http://fakelog.localhost:3000/")
+        )
     }
 
     private val adfs by lazy {
-        LoginHelper(Scrapper.LoginType.ADFSCards, "http", "fakelog.localhost:3000", "default", CookieManager(),
-                getService(LoginService::class.java, "http://fakelog.localhost:3000/", true, true, false, Scrapper.LoginType.ADFSCards))
+        LoginHelper(
+            loginType = Scrapper.LoginType.ADFSCards,
+            schema = "http",
+            host = "fakelog.localhost:3000",
+            symbol = "default",
+            cookies = CookieManager(),
+            api = getService(LoginService::class.java, "http://fakelog.localhost:3000/", true, true, false, Scrapper.LoginType.ADFSCards)
+        )
     }
 
     @Test

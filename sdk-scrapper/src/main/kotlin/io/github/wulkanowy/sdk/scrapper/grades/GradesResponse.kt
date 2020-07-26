@@ -1,12 +1,8 @@
 package io.github.wulkanowy.sdk.scrapper.grades
 
 import com.google.gson.annotations.SerializedName
-import pl.droidsonroids.jspoon.annotation.Selector
 
 class GradesResponse {
-
-    @Selector(".ocenySzczegoly-table tbody tr:has(td:nth-of-type(2):not(:contains(Brak ocen)))")
-    var grades: List<Grade> = emptyList()
 
     @SerializedName("IsSrednia")
     var isAverage: Boolean = false

@@ -115,13 +115,6 @@ class ServiceManager(
         ).create()
     }
 
-    fun getSnpService(withLogin: Boolean = true, studentInterceptor: Boolean = true): StudentAndParentService {
-        return getRetrofit(
-            client = prepareStudentService(withLogin, studentInterceptor),
-            baseUrl = urlGenerator.generate(UrlGenerator.Site.SNP)
-        ).create()
-    }
-
     private fun prepareStudentService(withLogin: Boolean, studentInterceptor: Boolean): OkHttpClient.Builder {
         if (withLogin && schoolSymbol.isBlank()) throw ScrapperException("School id is not set")
 

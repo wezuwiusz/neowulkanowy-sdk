@@ -8,37 +8,27 @@ import org.junit.Test
 
 class MobileTest : BaseLocalTest() {
 
-    private val devicesSnp by lazy {
-        runBlocking { getSnpRepo(MobileTest::class.java, "DostepMobilny-filled.html").getRegisteredDevices() }
-    }
-
-    private val tokenSnp by lazy {
-        runBlocking { getSnpRepo(MobileTest::class.java, "Rejestruj.html").getToken() }
-    }
-
-    private val devicesStudent by lazy {
+    private val devices by lazy {
         runBlocking { getStudentRepo(MobileTest::class.java, "ZarejestrowaneUrzadzenia.json").getRegisteredDevices() }
     }
 
-    private val tokenStudent by lazy {
+    private val token by lazy {
         runBlocking { getStudentRepo(MobileTest::class.java, "RejestracjaUrzadzeniaToken.json").getToken() }
     }
 
     @Test
     fun devicesTest() {
-        listOf(devicesSnp, devicesStudent).map {
-            it.apply {
-                assertEquals("google Android SDK built for x86 (Android 8.1.0)", this[0].name)
-                assertEquals("google (Android SDK) built for x86 (Android 8.1.0)", this[1].name)
-                assertEquals(getDate(2018, 1, 20), this[1].createDate)
-                assertEquals(321, this[0].id)
-            }
+        with(devices) {
+            assertEquals("google Android SDK built for x86 (Android 8.1.0)", this[0].name)
+            assertEquals("google (Android SDK) built for x86 (Android 8.1.0)", this[1].name)
+            assertEquals(getDate(2018, 1, 20), this[1].createDate)
+            assertEquals(321, this[0].id)
         }
     }
 
     @Test
     fun getDevice_full() {
-        with(devicesStudent[0]) {
+        with(devices[0]) {
             assertEquals(321, id)
             assertEquals("google Android SDK built for x86 (Android 8.1.0)", name)
             assertEquals("374d6203-dc0e-4299-8ca1-14b01e499d22", deviceId)
@@ -49,7 +39,7 @@ class MobileTest : BaseLocalTest() {
 
     @Test
     fun getDevice_nulls() {
-        with(devicesStudent[2]) {
+        with(devices[2]) {
             assertEquals(214, id)
             assertEquals(null, name)
             assertEquals(null, deviceId)
@@ -60,14 +50,12 @@ class MobileTest : BaseLocalTest() {
 
     @Test
     fun tokenTest() {
-        listOf(tokenSnp, tokenStudent).map {
-            it.apply {
-                assertEquals("3S1A1B2C", token)
-                assertEquals("Default", symbol)
-                assertEquals("1234567", pin)
-                assertTrue(qrCodeImage.startsWith("iVBORw0KGgoAAAANSUhEUgAAAZAAAAGQCAYAAACAvzbMAAAABmJLR0QA"))
-                assertTrue(qrCodeImage.endsWith("IYf8fZKNX0RrMQAAAAASUVORK5CYII="))
-            }
+        with(token) {
+            assertEquals("3S1A1B2C", token)
+            assertEquals("Default", symbol)
+            assertEquals("1234567", pin)
+            assertTrue(qrCodeImage.startsWith("iVBORw0KGgoAAAANSUhEUgAAAZAAAAGQCAYAAACAvzbMAAAABmJLR0QA"))
+            assertTrue(qrCodeImage.endsWith("IYf8fZKNX0RrMQAAAAASUVORK5CYII="))
         }
     }
 }

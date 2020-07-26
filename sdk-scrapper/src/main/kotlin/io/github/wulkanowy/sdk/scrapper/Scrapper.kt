@@ -9,8 +9,6 @@ import io.github.wulkanowy.sdk.scrapper.repository.AccountRepository
 import io.github.wulkanowy.sdk.scrapper.repository.HomepageRepository
 import io.github.wulkanowy.sdk.scrapper.repository.MessagesRepository
 import io.github.wulkanowy.sdk.scrapper.repository.RegisterRepository
-import io.github.wulkanowy.sdk.scrapper.repository.StudentAndParentRepository
-import io.github.wulkanowy.sdk.scrapper.repository.StudentAndParentStartRepository
 import io.github.wulkanowy.sdk.scrapper.repository.StudentRepository
 import io.github.wulkanowy.sdk.scrapper.repository.StudentStartRepository
 import io.github.wulkanowy.sdk.scrapper.service.ServiceManager
@@ -114,8 +112,6 @@ class Scrapper {
             field = value
         }
 
-    var useNewStudent: Boolean = true
-
     var emptyCookieJarInterceptor: Boolean = false
         set(value) {
             if (field != value) changeManager.reset()
@@ -178,22 +174,11 @@ class Scrapper {
 
     private val register by resettableLazy(changeManager) {
         RegisterRepository(
-            normalizedSymbol, email, password, useNewStudent,
+            normalizedSymbol, email, password,
             LoginHelper(loginType, schema, host, normalizedSymbol, serviceManager.getCookieManager(), serviceManager.getLoginService()),
             serviceManager.getRegisterService(),
-            serviceManager.getSnpService(withLogin = false, studentInterceptor = false),
             serviceManager.getStudentService(withLogin = false, studentInterceptor = false),
             serviceManager.urlGenerator
-        )
-    }
-
-    private val snpStart by resettableLazy(changeManager) {
-        if (0 == studentId) throw ScrapperException("Student id is not set")
-        StudentAndParentStartRepository(
-            symbol = normalizedSymbol,
-            schoolSymbol = schoolSymbol,
-            studentId = studentId,
-            api = serviceManager.getSnpService(withLogin = true, studentInterceptor = false)
         )
     }
 
@@ -205,10 +190,6 @@ class Scrapper {
             classId = classId,
             api = serviceManager.getStudentService(withLogin = true, studentInterceptor = false)
         )
-    }
-
-    private val snp by resettableLazy(changeManager) {
-        StudentAndParentRepository(serviceManager.getSnpService())
     }
 
     private val student by resettableLazy(changeManager) {
@@ -231,56 +212,49 @@ class Scrapper {
 
     suspend fun getStudents() = register.getStudents()
 
-    suspend fun getSemesters() = if (useNewStudent) studentStart.getSemesters() else snpStart.getSemesters()
+    suspend fun getSemesters() = studentStart.getSemesters()
 
-    suspend fun getAttendance(startDate: LocalDate, endDate: LocalDate? = null) =
-        if (useNewStudent) student.getAttendance(startDate, endDate) else snp.getAttendance(startDate, endDate)
+    suspend fun getAttendance(startDate: LocalDate, endDate: LocalDate? = null) = student.getAttendance(startDate, endDate)
 
-    suspend fun getAttendanceSummary(subjectId: Int? = -1) = if (useNewStudent) student.getAttendanceSummary(subjectId) else snp.getAttendanceSummary(subjectId)
+    suspend fun getAttendanceSummary(subjectId: Int? = -1) = student.getAttendanceSummary(subjectId)
 
     suspend fun excuseForAbsence(absents: List<Absent>, content: String? = null) = student.excuseForAbsence(absents, content)
 
-    suspend fun getSubjects() = if (useNewStudent) student.getSubjects() else snp.getSubjects()
+    suspend fun getSubjects() = student.getSubjects()
 
-    suspend fun getExams(startDate: LocalDate, endDate: LocalDate? = null) =
-        if (useNewStudent) student.getExams(startDate, endDate) else snp.getExams(startDate, endDate)
+    suspend fun getExams(startDate: LocalDate, endDate: LocalDate? = null) = student.getExams(startDate, endDate)
 
-    suspend fun getGrades(semesterId: Int) = if (useNewStudent) student.getGrades(semesterId) else snp.getGrades(semesterId)
+    suspend fun getGrades(semesterId: Int) = student.getGrades(semesterId)
 
-    suspend fun getGradesDetails(semesterId: Int? = null) = if (useNewStudent) student.getGradesDetails(semesterId) else snp.getGradesDetails(semesterId)
+    suspend fun getGradesDetails(semesterId: Int? = null) = student.getGradesDetails(semesterId)
 
-    suspend fun getGradesSummary(semesterId: Int? = null) = if (useNewStudent) student.getGradesSummary(semesterId) else snp.getGradesSummary(semesterId)
+    suspend fun getGradesSummary(semesterId: Int? = null) = student.getGradesSummary(semesterId)
 
-    suspend fun getGradesPartialStatistics(semesterId: Int) =
-        if (useNewStudent) student.getGradesPartialStatistics(semesterId) else snp.getGradesStatistics(semesterId, false)
+    suspend fun getGradesPartialStatistics(semesterId: Int) = student.getGradesPartialStatistics(semesterId)
 
     suspend fun getGradesPointsStatistics(semesterId: Int) = student.getGradesPointsStatistics(semesterId)
 
-    suspend fun getGradesAnnualStatistics(semesterId: Int) =
-        if (useNewStudent) student.getGradesAnnualStatistics(semesterId) else snp.getGradesStatistics(semesterId, true)
+    suspend fun getGradesAnnualStatistics(semesterId: Int) = student.getGradesAnnualStatistics(semesterId)
 
-    suspend fun getHomework(startDate: LocalDate, endDate: LocalDate? = null) =
-        if (useNewStudent) student.getHomework(startDate, endDate) else snp.getHomework(startDate, endDate)
+    suspend fun getHomework(startDate: LocalDate, endDate: LocalDate? = null) = student.getHomework(startDate, endDate)
 
-    suspend fun getNotes() = if (useNewStudent) student.getNotes() else snp.getNotes()
+    suspend fun getNotes() = student.getNotes()
 
-    suspend fun getTimetable(startDate: LocalDate, endDate: LocalDate? = null) =
-        if (useNewStudent) student.getTimetable(startDate, endDate) else snp.getTimetable(startDate, endDate)
+    suspend fun getTimetable(startDate: LocalDate, endDate: LocalDate? = null) = student.getTimetable(startDate, endDate)
 
-    suspend fun getCompletedLessons(startDate: LocalDate, endDate: LocalDate? = null, subjectId: Int = -1) =
-        if (useNewStudent) student.getCompletedLessons(startDate, endDate, subjectId) else snp.getCompletedLessons(startDate, endDate, subjectId)
+    suspend fun getCompletedLessons(startDate: LocalDate, endDate: LocalDate? = null, subjectId: Int = -1) = student.getCompletedLessons(startDate, endDate, subjectId)
 
-    suspend fun getRegisteredDevices() = if (useNewStudent) student.getRegisteredDevices() else snp.getRegisteredDevices()
+    suspend fun getRegisteredDevices() = student.getRegisteredDevices()
 
-    suspend fun getToken() = if (useNewStudent) student.getToken() else snp.getToken()
+    suspend fun getToken() = student.getToken()
 
-    suspend fun unregisterDevice(id: Int) = if (useNewStudent) student.unregisterDevice(id) else snp.unregisterDevice(id)
+    suspend fun unregisterDevice(id: Int) = student.unregisterDevice(id)
 
-    suspend fun getTeachers() = if (useNewStudent) student.getTeachers() else snp.getTeachers()
+    suspend fun getTeachers() = student.getTeachers()
 
-    suspend fun getSchool() = if (useNewStudent) student.getSchool() else snp.getSchool()
+    suspend fun getSchool() = student.getSchool()
 
-    suspend fun getStudentInfo() = snp.getStudentInfo()
+    suspend fun getStudentInfo() = student.getStudentInfo()
 
     suspend fun getReportingUnits() = messages.getReportingUnits()
 

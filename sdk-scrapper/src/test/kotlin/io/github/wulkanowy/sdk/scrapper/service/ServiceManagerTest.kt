@@ -44,7 +44,7 @@ class ServiceManagerTest : BaseTest() {
         })
 
         try {
-            runBlocking { manager.getSnpService().getNotes() }
+            runBlocking { manager.getStudentService().getNotes() }
         } catch (e: Throwable) {
             assertTrue(e is ScrapperException)
         }

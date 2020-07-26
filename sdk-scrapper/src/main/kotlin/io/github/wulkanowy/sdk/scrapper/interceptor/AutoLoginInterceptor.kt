@@ -36,7 +36,7 @@ class AutoLoginInterceptor(
             request = chain.request()
             checkRequest()
             response = chain.proceed(request)
-            checkRequest(
+            checkResponse(
                 doc = Jsoup.parse(response.peekBody(Long.MAX_VALUE).string()),
                 url = chain.request().url().toString()
             )
@@ -55,7 +55,7 @@ class AutoLoginInterceptor(
         }
     }
 
-    private fun checkRequest(doc: Document, url: String) {
+    private fun checkResponse(doc: Document, url: String) {
         // if (chain.request().url().toString().contains("/Start.mvc/Get")) {
         if (url.contains("/Start.mvc/")) { // /Index return error too in 19.09.0000.34977
             doc.select(".errorBlock").let {

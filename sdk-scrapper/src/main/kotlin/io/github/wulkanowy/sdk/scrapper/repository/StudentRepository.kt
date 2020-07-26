@@ -42,6 +42,7 @@ import io.github.wulkanowy.sdk.scrapper.school.School
 import io.github.wulkanowy.sdk.scrapper.school.Teacher
 import io.github.wulkanowy.sdk.scrapper.school.mapToTeachers
 import io.github.wulkanowy.sdk.scrapper.service.StudentService
+import io.github.wulkanowy.sdk.scrapper.student.StudentInfo
 import io.github.wulkanowy.sdk.scrapper.timetable.CacheResponse
 import io.github.wulkanowy.sdk.scrapper.timetable.CompletedLesson
 import io.github.wulkanowy.sdk.scrapper.timetable.CompletedLessonsRequest
@@ -208,6 +209,11 @@ class StudentRepository(private val api: StudentService) {
 
     suspend fun getSchool(): School {
         return api.getSchoolAndTeachers().handleErrors().data?.school!!
+    }
+
+    suspend fun getStudentInfo(): StudentInfo {
+        // return api.getStudentInfo()
+        return StudentInfo()
     }
 
     suspend fun getRegisteredDevices(): List<Device> {

@@ -18,7 +18,6 @@ import io.github.wulkanowy.sdk.scrapper.repository.AccountRepository.Companion.S
 import io.github.wulkanowy.sdk.scrapper.repository.AccountRepository.Companion.SELECTOR_STANDARD
 import io.github.wulkanowy.sdk.scrapper.service.RegisterService
 import io.github.wulkanowy.sdk.scrapper.service.ServiceManager
-import io.github.wulkanowy.sdk.scrapper.service.StudentAndParentService
 import io.github.wulkanowy.sdk.scrapper.service.StudentService
 import org.jsoup.Jsoup
 import org.jsoup.parser.Parser
@@ -29,10 +28,8 @@ class RegisterRepository(
     private val startSymbol: String,
     private val email: String,
     private val password: String,
-    private val useNewStudent: Boolean,
     private val loginHelper: LoginHelper,
     private val register: RegisterService,
-    private val snp: StudentAndParentService,
     private val student: StudentService,
     private val url: ServiceManager.UrlGenerator
 ) {
@@ -49,7 +46,7 @@ class RegisterRepository(
             } catch (e: AccountPermissionException) {
                 SendCertificateResponse()
             }
-            (if (useNewStudent) cert.studentSchools else cert.oldStudentSchools).map { moduleUrl ->
+            cert.studentSchools.map { moduleUrl ->
                 val loginType = getLoginType(symbol)
                 getStudents(symbol, moduleUrl.attr("href")).map { student ->
                     Student(
@@ -110,60 +107,46 @@ class RegisterRepository(
     private suspend fun getStudents(symbol: String, schoolUrl: String): List<StudentAndParentResponse.Student> {
         url.schoolId = getExtractedSchoolSymbolFromUrl(schoolUrl)
         url.symbol = symbol
-        return if (!useNewStudent) {
-            val res = snp.getSchoolInfo(schoolUrl)
-            res.students.map { student ->
-                student.apply {
-                    description = res.schoolName
-                    className = res.diaries[0].name
-                }
-            }
-        } else {
-            val startPage = try {
-                student.getStart(url.generate(ServiceManager.UrlGenerator.Site.STUDENT) + "Start")
-            } catch (e: TemporarilyDisabledException) {
-                return listOf()
-            }
 
-            val cache = student.getUserCache(
-                url.generate(ServiceManager.UrlGenerator.Site.STUDENT) + "UczenCache.mvc/Get",
-                getScriptParam("antiForgeryToken", startPage),
-                getScriptParam("appGuid", startPage),
-                getScriptParam("version", startPage)
-            )
-
-            val diaries = student
-                .getSchoolInfo(url.generate(ServiceManager.UrlGenerator.Site.STUDENT) + "UczenDziennik.mvc/Get")
-                .handleErrors()
-                .data.orEmpty()
-
-            diaries.filter { diary -> diary.semesters?.isNotEmpty() ?: false }
-                .sortedByDescending { diary -> diary.level }
-                .distinctBy { diary -> listOf(diary.studentId, diary.semesters!![0].classId) }
-                .map {
-                    StudentAndParentResponse.Student().apply {
-                        id = it.studentId
-                        name = "${it.studentName} ${it.studentSurname}"
-                        description = getScriptParam("organizationName", startPage, it.symbol + " " + (it.year - it.level + 1))
-                        className = it.level.toString() + it.symbol
-                        classId = it.semesters!![0].classId
-                        isParent = cache.data?.isParent ?: false
-                    }
-                }
-                .ifEmpty {
-                    logger.debug("No supported student found: $diaries")
-                    emptyList()
-                }
+        val startPage = try {
+            student.getStart(url.generate(ServiceManager.UrlGenerator.Site.STUDENT) + "Start")
+        } catch (e: TemporarilyDisabledException) {
+            return listOf()
         }
+
+        val cache = student.getUserCache(
+            url.generate(ServiceManager.UrlGenerator.Site.STUDENT) + "UczenCache.mvc/Get",
+            getScriptParam("antiForgeryToken", startPage),
+            getScriptParam("appGuid", startPage),
+            getScriptParam("version", startPage)
+        )
+
+        val diaries = student
+            .getSchoolInfo(url.generate(ServiceManager.UrlGenerator.Site.STUDENT) + "UczenDziennik.mvc/Get")
+            .handleErrors()
+            .data.orEmpty()
+
+        return diaries.filter { diary -> diary.semesters?.isNotEmpty() ?: false }
+            .sortedByDescending { diary -> diary.level }
+            .distinctBy { diary -> listOf(diary.studentId, diary.semesters!![0].classId) }
+            .map {
+                StudentAndParentResponse.Student().apply {
+                    id = it.studentId
+                    name = "${it.studentName} ${it.studentSurname}"
+                    description = getScriptParam("organizationName", startPage, it.symbol + " " + (it.year - it.level + 1))
+                    className = it.level.toString() + it.symbol
+                    classId = it.semesters!![0].classId
+                    isParent = cache.data?.isParent ?: false
+                }
+            }
+            .ifEmpty {
+                logger.debug("No supported student found: $diaries")
+                emptyList()
+            }
     }
 
     private fun getExtractedSchoolSymbolFromUrl(snpPageUrl: String): String {
         val path = URL(snpPageUrl).path.split("/")
-
-        if (6 != path.size && !useNewStudent) {
-            throw ScrapperException("Na pewno używasz konta z dostępem do Witryny ucznia i rodzica?")
-        }
-
         return path[2]
     }
 }

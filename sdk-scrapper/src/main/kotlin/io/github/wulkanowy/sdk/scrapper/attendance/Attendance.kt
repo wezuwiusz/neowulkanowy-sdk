@@ -1,7 +1,6 @@
 package io.github.wulkanowy.sdk.scrapper.attendance
 
 import com.google.gson.annotations.SerializedName
-import pl.droidsonroids.jspoon.annotation.Selector
 import java.util.Date
 
 class Attendance {
@@ -15,14 +14,9 @@ class Attendance {
     lateinit var date: Date
 
     @SerializedName("PrzedmiotNazwa")
-    @Selector("span", defValue = "null")
     lateinit var subject: String
 
-    @Selector("img", attr = "title", defValue = "Nieznany wpis")
     lateinit var name: String
-
-    @Selector("div", attr = "class")
-    internal lateinit var type: String // do not use
 
     @SerializedName("IdKategoria")
     var categoryId: Int = -1
