@@ -214,11 +214,12 @@ class StudentRepository(private val api: StudentService) {
 
     suspend fun getToken(): TokenResponse {
         val data = api.getToken().handleErrors().data
-        requireNotNull(data).qrCodeImage = Jsoup.parse(data.qrCodeImage)
-            .select("img")
-            .attr("src")
-            .split("data:image/png;base64,")[1]
-        return data
+        return requireNotNull(data).copy(
+            qrCodeImage = Jsoup.parse(data.qrCodeImage)
+                .select("img")
+                .attr("src")
+                .split("data:image/png;base64,")[1]
+        )
     }
 
     suspend fun unregisterDevice(id: Int): Boolean {
