@@ -3,26 +3,36 @@ package io.github.wulkanowy.sdk.scrapper.homework
 import com.google.gson.annotations.SerializedName
 import java.util.Date
 
-class Homework {
+data class Homework(
+    @SerializedName("HomeworkId")
+    val homeworkId: Int,
 
-    lateinit var date: Date
+    @SerializedName("Subject")
+    val subject: String,
 
-    @SerializedName("DataModyfikacji")
-    lateinit var entryDate: Date
+    @SerializedName("Teacher")
+    val teacher: String,
 
-    @SerializedName("Przedmiot")
-    lateinit var subject: String
+    @SerializedName("Description")
+    val content: String,
 
-    @SerializedName("Opis")
-    lateinit var content: String
+    @SerializedName("Date")
+    val date: Date,
 
-    @SerializedName("Pracownik")
-    lateinit var teacher: String
+    @SerializedName("ModificationDate")
+    val entryDate: Date,
 
-    lateinit var teacherSymbol: String
+    @SerializedName("Status")
+    val status: String,
+
+    @SerializedName("AnswerRequired")
+    val isAnswerRequired: Boolean,
 
     @SerializedName("Attachments")
-    var attachments: List<String> = emptyList()
+    val attachments: List<HomeworkAttachment>
+) {
+
+    lateinit var teacherSymbol: String
 
     var _attachments: List<Pair<String, String>> = emptyList()
 }

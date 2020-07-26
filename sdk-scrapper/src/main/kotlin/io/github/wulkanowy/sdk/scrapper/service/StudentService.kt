@@ -17,7 +17,6 @@ import io.github.wulkanowy.sdk.scrapper.grades.GradesStatisticsPartial
 import io.github.wulkanowy.sdk.scrapper.grades.GradesStatisticsRequest
 import io.github.wulkanowy.sdk.scrapper.homework.HomeworkDay
 import io.github.wulkanowy.sdk.scrapper.homework.HomeworkRequest
-import io.github.wulkanowy.sdk.scrapper.homework.HomeworkResponse
 import io.github.wulkanowy.sdk.scrapper.mobile.Device
 import io.github.wulkanowy.sdk.scrapper.mobile.TokenResponse
 import io.github.wulkanowy.sdk.scrapper.mobile.UnregisterDeviceRequest
@@ -96,9 +95,6 @@ interface StudentService {
 
     @POST("Sprawdziany.mvc/Get")
     suspend fun getExams(@Body examRequest: ExamRequest): ApiResponse<List<ExamResponse>>
-
-    @POST("ZadaniaDomowe.mvc/Get")
-    suspend fun getZadaniaDomowe(@Body homeworkRequest: ExamRequest): ApiResponse<List<HomeworkResponse>>
 
     @POST("Homework.mvc/Get")
     suspend fun getHomework(@Body homeworkRequest: HomeworkRequest): ApiResponse<List<HomeworkDay>>
