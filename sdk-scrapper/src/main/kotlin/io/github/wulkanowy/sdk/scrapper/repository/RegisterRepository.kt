@@ -9,9 +9,9 @@ import io.github.wulkanowy.sdk.scrapper.interceptor.handleErrors
 import io.github.wulkanowy.sdk.scrapper.login.AccountPermissionException
 import io.github.wulkanowy.sdk.scrapper.login.CertificateResponse
 import io.github.wulkanowy.sdk.scrapper.login.LoginHelper
+import io.github.wulkanowy.sdk.scrapper.register.Diary
 import io.github.wulkanowy.sdk.scrapper.register.SendCertificateResponse
 import io.github.wulkanowy.sdk.scrapper.register.Student
-import io.github.wulkanowy.sdk.scrapper.register.StudentAndParentResponse
 import io.github.wulkanowy.sdk.scrapper.repository.AccountRepository.Companion.SELECTOR_ADFS
 import io.github.wulkanowy.sdk.scrapper.repository.AccountRepository.Companion.SELECTOR_ADFS_CARDS
 import io.github.wulkanowy.sdk.scrapper.repository.AccountRepository.Companion.SELECTOR_ADFS_LIGHT
@@ -20,6 +20,7 @@ import io.github.wulkanowy.sdk.scrapper.service.RegisterService
 import io.github.wulkanowy.sdk.scrapper.service.ServiceManager
 import io.github.wulkanowy.sdk.scrapper.service.StudentService
 import org.jsoup.Jsoup
+import org.jsoup.nodes.Element
 import org.jsoup.parser.Parser
 import org.slf4j.LoggerFactory
 import java.net.URL
@@ -47,23 +48,7 @@ class RegisterRepository(
                 SendCertificateResponse()
             }
             cert.studentSchools.map { moduleUrl ->
-                val loginType = getLoginType(symbol)
-                getStudents(symbol, moduleUrl.attr("href")).map { student ->
-                    Student(
-                        email = email,
-                        symbol = symbol,
-                        studentId = student.id,
-                        studentName = student.name,
-                        schoolSymbol = getExtractedSchoolSymbolFromUrl(moduleUrl.attr("href")),
-                        schoolShortName = moduleUrl.text().takeIf { "Uczeń" !in it }.orEmpty(),
-                        schoolName = student.description,
-                        className = student.className,
-                        classId = student.classId,
-                        baseUrl = url.generate(ServiceManager.UrlGenerator.Site.BASE),
-                        loginType = loginType,
-                        isParent = student.isParent
-                    )
-                }
+                getStudentsBySymbol(symbol, moduleUrl)
             }.flatten()
         }.flatten().distinctBy { pupil -> listOf(pupil.studentId, pupil.classId, pupil.schoolSymbol) }
     }
@@ -104,7 +89,9 @@ class RegisterRepository(
         }
     }
 
-    private suspend fun getStudents(symbol: String, schoolUrl: String): List<StudentAndParentResponse.Student> {
+    private suspend fun getStudentsBySymbol(symbol: String, moduleUrl: Element): List<Student> {
+        val loginType = getLoginType(symbol)
+        val schoolUrl = moduleUrl.attr("href")
         url.schoolId = getExtractedSchoolSymbolFromUrl(schoolUrl)
         url.symbol = symbol
 
@@ -114,36 +101,46 @@ class RegisterRepository(
             return listOf()
         }
 
-        val cache = student.getUserCache(
-            url.generate(ServiceManager.UrlGenerator.Site.STUDENT) + "UczenCache.mvc/Get",
-            getScriptParam("antiForgeryToken", startPage),
-            getScriptParam("appGuid", startPage),
-            getScriptParam("version", startPage)
-        )
+        val cache = getStudentCache(startPage)
 
-        val diaries = student
-            .getSchoolInfo(url.generate(ServiceManager.UrlGenerator.Site.STUDENT) + "UczenDziennik.mvc/Get")
-            .handleErrors()
-            .data.orEmpty()
-
-        return diaries.filter { diary -> diary.semesters?.isNotEmpty() ?: false }
-            .sortedByDescending { diary -> diary.level }
-            .distinctBy { diary -> listOf(diary.studentId, diary.semesters!![0].classId) }
-            .map {
-                StudentAndParentResponse.Student().apply {
-                    id = it.studentId
-                    name = "${it.studentName} ${it.studentSurname}"
-                    description = getScriptParam("organizationName", startPage, it.symbol + " " + (it.year - it.level + 1))
-                    className = it.level.toString() + it.symbol
-                    classId = it.semesters!![0].classId
-                    isParent = cache.data?.isParent ?: false
-                }
-            }
-            .ifEmpty {
-                logger.debug("No supported student found: $diaries")
-                emptyList()
-            }
+        val diaries = getStudentDiaries()
+        return diaries.filterDiaries().map { diary ->
+            Student(
+                email = email,
+                symbol = symbol,
+                studentId = diary.studentId,
+                studentName = "${diary.studentName} ${diary.studentSurname}",
+                schoolSymbol = getExtractedSchoolSymbolFromUrl(schoolUrl),
+                schoolShortName = moduleUrl.text().takeIf { "Uczeń" !in it }.orEmpty(),
+                schoolName = getScriptParam("organizationName", startPage, diary.symbol + " " + (diary.year - diary.level + 1)),
+                className = diary.level.toString() + diary.symbol,
+                classId = diary.semesters!![0].classId,
+                baseUrl = url.generate(ServiceManager.UrlGenerator.Site.BASE),
+                loginType = loginType,
+                isParent = cache?.isParent ?: false
+            )
+        }.ifEmpty {
+            logger.debug("No supported student found in diaries: $diaries")
+            emptyList()
+        }
     }
+
+    private suspend fun getStudentCache(startPage: String) = student.getUserCache(
+        url.generate(ServiceManager.UrlGenerator.Site.STUDENT) + "UczenCache.mvc/Get",
+        getScriptParam("antiForgeryToken", startPage),
+        getScriptParam("appGuid", startPage),
+        getScriptParam("version", startPage)
+    ).data
+
+    private suspend fun getStudentDiaries() = student
+        .getSchoolInfo(url.generate(ServiceManager.UrlGenerator.Site.STUDENT) + "UczenDziennik.mvc/Get")
+        .handleErrors()
+        .data.orEmpty()
+
+    private fun List<Diary>.filterDiaries() = this
+        .filter { diary -> diary.semesters?.isNotEmpty() ?: false }
+        .sortedByDescending { diary -> diary.level }
+        .distinctBy { diary -> listOf(diary.studentId, diary.semesters!![0].classId) }
 
     private fun getExtractedSchoolSymbolFromUrl(snpPageUrl: String): String {
         val path = URL(snpPageUrl).path.split("/")
