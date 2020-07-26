@@ -4,13 +4,13 @@ import io.github.wulkanowy.sdk.mobile.dictionaries.Dictionaries
 import io.github.wulkanowy.sdk.pojo.Absent
 import io.github.wulkanowy.sdk.pojo.Attendance
 import io.github.wulkanowy.sdk.pojo.AttendanceSummary
-import io.github.wulkanowy.sdk.scrapper.attendance.Attendance.Category.ABSENCE_EXCUSED
-import io.github.wulkanowy.sdk.scrapper.attendance.Attendance.Category.ABSENCE_FOR_SCHOOL_REASONS
-import io.github.wulkanowy.sdk.scrapper.attendance.Attendance.Category.ABSENCE_UNEXCUSED
-import io.github.wulkanowy.sdk.scrapper.attendance.Attendance.Category.EXCUSED_LATENESS
-import io.github.wulkanowy.sdk.scrapper.attendance.Attendance.Category.EXEMPTION
-import io.github.wulkanowy.sdk.scrapper.attendance.Attendance.Category.PRESENCE
-import io.github.wulkanowy.sdk.scrapper.attendance.Attendance.Category.UNEXCUSED_LATENESS
+import io.github.wulkanowy.sdk.scrapper.attendance.AttendanceCategory.ABSENCE_EXCUSED
+import io.github.wulkanowy.sdk.scrapper.attendance.AttendanceCategory.ABSENCE_FOR_SCHOOL_REASONS
+import io.github.wulkanowy.sdk.scrapper.attendance.AttendanceCategory.ABSENCE_UNEXCUSED
+import io.github.wulkanowy.sdk.scrapper.attendance.AttendanceCategory.EXCUSED_LATENESS
+import io.github.wulkanowy.sdk.scrapper.attendance.AttendanceCategory.EXEMPTION
+import io.github.wulkanowy.sdk.scrapper.attendance.AttendanceCategory.PRESENCE
+import io.github.wulkanowy.sdk.scrapper.attendance.AttendanceCategory.UNEXCUSED_LATENESS
 import io.github.wulkanowy.sdk.scrapper.toLocalDate
 import io.github.wulkanowy.sdk.toLocalDate
 import io.github.wulkanowy.sdk.mobile.attendance.Attendance as ApiAttendance

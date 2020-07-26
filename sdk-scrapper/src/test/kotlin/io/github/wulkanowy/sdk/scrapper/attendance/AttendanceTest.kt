@@ -40,7 +40,7 @@ class AttendanceTest : BaseLocalTest() {
             assertEquals(76, timeId)
             assertEquals(getDate(2018, 10, 2), date)
             assertEquals("Zajęcia artystyczne", subject)
-            assertEquals(Attendance.Category.PRESENCE, category)
+            assertEquals(AttendanceCategory.PRESENCE, category)
             assertEquals(SentExcuse.Status.WAITING, excuseStatus)
             assertFalse(excusable)
         }
@@ -54,7 +54,7 @@ class AttendanceTest : BaseLocalTest() {
             assertEquals(77, timeId)
             assertEquals(getDate(2018, 10, 2), date)
             assertEquals("Informatyka", subject)
-            assertEquals(Attendance.Category.ABSENCE_UNEXCUSED, category)
+            assertEquals(AttendanceCategory.ABSENCE_UNEXCUSED, category)
             assertEquals(SentExcuse.Status.ACCEPTED, excuseStatus)
             assertFalse(excusable)
         }
@@ -68,7 +68,7 @@ class AttendanceTest : BaseLocalTest() {
             assertEquals(76, timeId)
             assertEquals(getDate(2018, 10, 3), date)
             assertEquals("Matematyka", subject)
-            assertEquals(Attendance.Category.ABSENCE_EXCUSED, category)
+            assertEquals(AttendanceCategory.ABSENCE_EXCUSED, category)
             assertEquals(SentExcuse.Status.DENIED, excuseStatus)
             assertFalse(excusable)
         }
@@ -82,7 +82,7 @@ class AttendanceTest : BaseLocalTest() {
             assertEquals(77, timeId)
             assertEquals(getDate(2018, 10, 3), date)
             assertEquals("Godzina wychowawcza", subject)
-            assertEquals(Attendance.Category.UNEXCUSED_LATENESS, category)
+            assertEquals(AttendanceCategory.UNEXCUSED_LATENESS, category)
             assertNull(excuseStatus)
 
             assertTrue(excusable)
@@ -97,7 +97,7 @@ class AttendanceTest : BaseLocalTest() {
             assertEquals(76, timeId)
             assertEquals(getDate(2018, 10, 4), date)
             assertEquals("Historia", subject)
-            assertEquals(Attendance.Category.EXCUSED_LATENESS, category)
+            assertEquals(AttendanceCategory.EXCUSED_LATENESS, category)
             assertNull(excuseStatus)
             assertFalse(excusable)
         }
@@ -111,7 +111,7 @@ class AttendanceTest : BaseLocalTest() {
             assertEquals(77, timeId)
             assertEquals(getDate(2018, 10, 4), date)
             assertEquals("Język angielski", subject)
-            assertEquals(Attendance.Category.ABSENCE_FOR_SCHOOL_REASONS, category)
+            assertEquals(AttendanceCategory.ABSENCE_FOR_SCHOOL_REASONS, category)
             assertNull(excuseStatus)
             assertFalse(excusable)
         }
@@ -125,7 +125,7 @@ class AttendanceTest : BaseLocalTest() {
             assertEquals(76, timeId)
             assertEquals(getDate(2018, 10, 5), date)
             assertEquals("Informatyka", subject)
-            assertEquals(Attendance.Category.EXEMPTION, category)
+            assertEquals(AttendanceCategory.EXEMPTION, category)
             assertNull(excuseStatus)
             assertFalse(excusable)
         }
@@ -139,7 +139,7 @@ class AttendanceTest : BaseLocalTest() {
             assertEquals(77, timeId)
             assertEquals(getDate(2018, 10, 5), date)
             assertEquals("Informatyka", subject)
-            assertEquals(Attendance.Category.UNKNOWN, category)
+            assertEquals(AttendanceCategory.UNKNOWN, category)
             assertNull(excuseStatus)
             assertFalse(excusable)
         }

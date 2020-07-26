@@ -2,14 +2,14 @@ package io.github.wulkanowy.sdk.scrapper.attendance
 
 import com.google.gson.annotations.SerializedName
 
-class AttendanceResponse {
+data class AttendanceResponse(
 
     @SerializedName("UsprawiedliwieniaAktywne")
-    var excuseActive: Boolean = false
+    val excuseActive: Boolean,
 
     @SerializedName("Frekwencje")
-    var lessons: List<Attendance> = emptyList()
+    val lessons: List<Attendance>,
 
     @SerializedName("UsprawiedliwieniaWyslane")
-    var sentExcuses: List<SentExcuse> = emptyList()
-}
+    val sentExcuses: List<SentExcuse>
+)

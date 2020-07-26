@@ -2,6 +2,7 @@ package io.github.wulkanowy.sdk.mapper
 
 import io.github.wulkanowy.sdk.mobile.BaseLocalTest
 import io.github.wulkanowy.sdk.scrapper.attendance.Attendance
+import io.github.wulkanowy.sdk.scrapper.attendance.AttendanceCategory
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Test
@@ -11,7 +12,7 @@ class AttendanceMapperTest : BaseLocalTest() {
 
     @Test
     fun getAttendance_presence() {
-        createAttendance(Attendance.Category.PRESENCE).mapAttendance()[0].run {
+        createAttendance(AttendanceCategory.PRESENCE).mapAttendance()[0].run {
             assertTrue(presence)
             assertFalse(excused)
 
@@ -23,7 +24,7 @@ class AttendanceMapperTest : BaseLocalTest() {
 
     @Test
     fun getAttendance_absence() {
-        createAttendance(Attendance.Category.ABSENCE_UNEXCUSED).mapAttendance()[0].run {
+        createAttendance(AttendanceCategory.ABSENCE_UNEXCUSED).mapAttendance()[0].run {
             assertTrue(absence)
             assertFalse(excused)
 
@@ -35,7 +36,7 @@ class AttendanceMapperTest : BaseLocalTest() {
 
     @Test
     fun getAttendance_absenceExcused() {
-        createAttendance(Attendance.Category.ABSENCE_EXCUSED).mapAttendance()[0].run {
+        createAttendance(AttendanceCategory.ABSENCE_EXCUSED).mapAttendance()[0].run {
             assertTrue(absence)
             assertTrue(excused)
 
@@ -47,7 +48,7 @@ class AttendanceMapperTest : BaseLocalTest() {
 
     @Test
     fun getAttendance_lateness() {
-        createAttendance(Attendance.Category.UNEXCUSED_LATENESS).mapAttendance()[0].run {
+        createAttendance(AttendanceCategory.UNEXCUSED_LATENESS).mapAttendance()[0].run {
             assertTrue(lateness)
             assertFalse(excused)
 
@@ -59,7 +60,7 @@ class AttendanceMapperTest : BaseLocalTest() {
 
     @Test
     fun getAttendance_latenessExcused() {
-        createAttendance(Attendance.Category.EXCUSED_LATENESS).mapAttendance()[0].run {
+        createAttendance(AttendanceCategory.EXCUSED_LATENESS).mapAttendance()[0].run {
             assertTrue(lateness)
             assertTrue(excused)
 
@@ -71,7 +72,7 @@ class AttendanceMapperTest : BaseLocalTest() {
 
     @Test
     fun getAttendance_absenceForSchoolReason() {
-        createAttendance(Attendance.Category.ABSENCE_FOR_SCHOOL_REASONS).mapAttendance()[0].run {
+        createAttendance(AttendanceCategory.ABSENCE_FOR_SCHOOL_REASONS).mapAttendance()[0].run {
             assertTrue(presence)
             assertFalse(excused)
 
@@ -83,7 +84,7 @@ class AttendanceMapperTest : BaseLocalTest() {
 
     @Test
     fun getAttendance_exemption() {
-        createAttendance(Attendance.Category.EXEMPTION).mapAttendance()[0].run {
+        createAttendance(AttendanceCategory.EXEMPTION).mapAttendance()[0].run {
             assertTrue(exemption)
             assertFalse(excused)
 
@@ -95,7 +96,7 @@ class AttendanceMapperTest : BaseLocalTest() {
 
     @Test
     fun getAttendance_unknown() {
-        createAttendance(Attendance.Category.UNKNOWN).mapAttendance()[0].run {
+        createAttendance(AttendanceCategory.UNKNOWN).mapAttendance()[0].run {
             assertFalse(exemption)
             assertFalse(excused)
 
@@ -105,12 +106,9 @@ class AttendanceMapperTest : BaseLocalTest() {
         }
     }
 
-    private fun createAttendance(cat: Attendance.Category) = listOf(Attendance().apply {
+    private fun createAttendance(cat: AttendanceCategory) = listOf(Attendance(1, Date(), "").apply {
         number = 0
         category = cat
-        subject = ""
-        date = Date()
-        timeId = 1
         excusable = false
         excuseStatus = null
     })

@@ -3,7 +3,8 @@ package io.github.wulkanowy.sdk.scrapper.attendance
 import com.google.gson.GsonBuilder
 import com.google.gson.internal.LinkedTreeMap
 import com.google.gson.reflect.TypeToken
-import io.github.wulkanowy.sdk.scrapper.attendance.Attendance.Category
+import io.github.wulkanowy.sdk.scrapper.attendance.AttendanceCategory.ABSENCE_UNEXCUSED
+import io.github.wulkanowy.sdk.scrapper.attendance.AttendanceCategory.UNEXCUSED_LATENESS
 import io.github.wulkanowy.sdk.scrapper.timetable.CacheResponse.Time
 import io.github.wulkanowy.sdk.scrapper.toLocalDate
 import java.time.LocalDate
@@ -15,8 +16,8 @@ fun AttendanceResponse.mapAttendanceList(start: LocalDate, end: LocalDate?, time
         val sentExcuse = sentExcuses.firstOrNull { excuse -> excuse.date == it.date && excuse.timeId == it.timeId }
         it.apply {
             number = times.single { time -> time.id == it.timeId }.number
-            category = Category.getCategoryById(categoryId)
-            excusable = excuseActive && (category == Category.ABSENCE_UNEXCUSED || category == Category.UNEXCUSED_LATENESS) && sentExcuse == null
+            category = AttendanceCategory.getCategoryById(categoryId)
+            excusable = excuseActive && (category == ABSENCE_UNEXCUSED || category == UNEXCUSED_LATENESS) && sentExcuse == null
             if (sentExcuse != null) excuseStatus = SentExcuse.Status.getByValue(sentExcuse.status)
         }
     }.filter {
