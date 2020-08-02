@@ -9,7 +9,7 @@ import io.github.wulkanowy.sdk.scrapper.grades.DateDeserializer
 import io.github.wulkanowy.sdk.scrapper.grades.GradeDate
 import io.github.wulkanowy.sdk.scrapper.interceptor.AutoLoginInterceptor
 import io.github.wulkanowy.sdk.scrapper.interceptor.ErrorInterceptor
-import io.github.wulkanowy.sdk.scrapper.interceptor.StudentAndParentInterceptor
+import io.github.wulkanowy.sdk.scrapper.interceptor.StudentCookieInterceptor
 import io.github.wulkanowy.sdk.scrapper.interceptor.UserAgentInterceptor
 import io.github.wulkanowy.sdk.scrapper.login.LoginHelper
 import kotlinx.coroutines.runBlocking
@@ -122,7 +122,7 @@ class ServiceManager(
         if (studentInterceptor) {
             if (0 == diaryId || 0 == studentId) throw ScrapperException("Student or/and diaryId id are not set")
 
-            client.addInterceptor(StudentAndParentInterceptor(cookies, schema, host, diaryId, studentId, when (schoolYear) {
+            client.addInterceptor(StudentCookieInterceptor(cookies, schema, host, diaryId, studentId, when (schoolYear) {
                 0 -> if (LocalDate.now().monthValue < 9) LocalDate.now().year - 1 else LocalDate.now().year // fallback
                 else -> schoolYear
             }))
