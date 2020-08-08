@@ -24,7 +24,7 @@ class AttendanceTest : BaseLocalTest() {
         server.enqueue(MockResponse().setBody(testClass.getResource(fixture).readText()))
         server.enqueue(MockResponse().setBody(RegisterTest::class.java.getResource("WitrynaUcznia.html").readText()))
         server.enqueue(MockResponse().setBody(RegisterTest::class.java.getResource("UczenCache.json").readText()))
-        return StudentRepository(getService(StudentService::class.java, server.url("/").toString(), false, true, true, loginType))
+        return StudentRepository(getService(StudentService::class.java, server.url("/").toString(), false, getOkHttp(true, true, loginType)))
     }
 
     @Test

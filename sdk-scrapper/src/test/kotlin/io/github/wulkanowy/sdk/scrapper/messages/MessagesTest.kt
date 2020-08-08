@@ -211,7 +211,7 @@ class MessagesTest : BaseLocalTest() {
         server.enqueue("ADFSLight-form-resman.html", LoginTest::class.java)
         server.start(3000)
 
-        val api = MessagesRepository(getService(MessagesService::class.java, "http://fakelog.localhost:3000/", false, loginType = Scrapper.LoginType.ADFSLight))
+        val api = MessagesRepository(getService(MessagesService::class.java, "http://fakelog.localhost:3000/", false, getOkHttp(loginType = Scrapper.LoginType.ADFSLight)))
         try {
             runBlocking { api.sendMessage("Temat", "Treść", listOf()) }
         } catch (e: Throwable) {

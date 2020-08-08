@@ -91,8 +91,10 @@ subprojects {
 
         implementation "com.squareup.okhttp3:logging-interceptor:$okhttp3"
 
-        testImplementation "com.squareup.okhttp3:mockwebserver:$okhttp3"
         testImplementation "junit:junit:4.13"
+        testImplementation "com.squareup.okhttp3:mockwebserver:$okhttp3"
+        testImplementation "com.squareup.retrofit2:retrofit-mock:$retrofit"
+        testImplementation 'org.jetbrains.kotlinx:kotlinx-coroutines-test:1.3.8'
     }
 
     jacocoTestReport {

@@ -38,41 +38,46 @@ abstract class BaseLocalTest : BaseTest() {
 
     open fun getStudentRepo(testClass: Class<*>, fixture: String, loginType: Scrapper.LoginType = Scrapper.LoginType.STANDARD, autoLogin: Boolean = false): StudentRepository {
         server.enqueue(MockResponse().setBody(testClass.getResource(fixture).readText()))
-        return StudentRepository(getService(StudentService::class.java, server.url("/").toString(), false, true, true, loginType, autoLogin))
+        val okHttp = getOkHttp(true, true, loginType, autoLogin)
+        return StudentRepository(getService(StudentService::class.java, server.url("/").toString(), false, okHttp))
     }
 
     fun <T> getService(
         service: Class<T>,
         url: String = this.server.url("/").toString(),
         html: Boolean = true,
+        okHttp: OkHttpClient = getOkHttp()
+    ): T = Retrofit.Builder()
+        .client(okHttp)
+        .addConverterFactory(ScalarsConverterFactory.create())
+        .addConverterFactory(if (!html) GsonConverterFactory.create(GsonBuilder()
+            .setDateFormat("yyyy-MM-dd HH:mm:ss")
+            .serializeNulls()
+            .registerTypeAdapter(GradeDate::class.java, DateDeserializer(GradeDate::class.java))
+            .create()) else JspoonConverterFactory.create())
+        .baseUrl(url)
+        .build()
+        .create(service)
+
+    fun getOkHttp(
         errorInterceptor: Boolean = true,
-        noLoggedInInterceptor: Boolean = true,
+        autoLoginInterceptorOn: Boolean = true,
         loginType: Scrapper.LoginType = Scrapper.LoginType.STANDARD,
-        autoLogin: Boolean = false
-    ): T {
-        return Retrofit.Builder()
-            .client(OkHttpClient.Builder()
-                .apply {
-                    if (errorInterceptor) addInterceptor(ErrorInterceptor())
-                    if (noLoggedInInterceptor) addInterceptor(AutoLoginInterceptor(loginType, CookieManager(), false) {
-                        if (autoLogin) runBlocking {
-                            LoginHelper(loginType, "http", "localhost", "powiatwulkanowy", CookieManager(), getService(LoginService::class.java))
-                                .login("jan", "kowalski")
-                            true
-                        } else false
-                    })
-                }
-                .addInterceptor(HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BASIC))
-                .build()
-            )
-            .addConverterFactory(ScalarsConverterFactory.create())
-            .addConverterFactory(if (!html) GsonConverterFactory.create(GsonBuilder()
-                .setDateFormat("yyyy-MM-dd HH:mm:ss")
-                .serializeNulls()
-                .registerTypeAdapter(GradeDate::class.java, DateDeserializer(GradeDate::class.java))
-                .create()) else JspoonConverterFactory.create())
-            .baseUrl(url)
-            .build()
-            .create(service)
+        autoLogin: Boolean = false,
+        autoLoginInterceptor: AutoLoginInterceptor = getAutoLoginInterceptor(loginType, autoLogin)
+    ): OkHttpClient = OkHttpClient.Builder()
+        .apply {
+            if (errorInterceptor) addInterceptor(ErrorInterceptor())
+            if (autoLoginInterceptorOn) addInterceptor(autoLoginInterceptor)
+        }
+        .addInterceptor(HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BASIC))
+        .build()
+
+    private fun getAutoLoginInterceptor(loginType: Scrapper.LoginType, autoLogin: Boolean) = AutoLoginInterceptor(loginType, CookieManager(), false) {
+        if (autoLogin) runBlocking {
+            LoginHelper(loginType, "http", "localhost", "powiatwulkanowy", CookieManager(), getService(LoginService::class.java))
+                .login("jan", "kowalski")
+            true
+        } else false
     }
 }

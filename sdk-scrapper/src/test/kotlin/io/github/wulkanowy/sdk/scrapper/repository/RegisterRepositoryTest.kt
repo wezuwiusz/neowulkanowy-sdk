@@ -31,7 +31,7 @@ class RegisterRepositoryTest : BaseLocalTest() {
                 Scrapper.LoginType.STANDARD, "http", "fakelog.localhost:3000", symbol, CookieManager(),
                 getService(LoginService::class.java, "http://fakelog.localhost:3000/")
             ),
-            register = getService(service = RegisterService::class.java, url = "http://fakelog.localhost:3000/", errorInterceptor = false, noLoggedInInterceptor = false),
+            register = getService(service = RegisterService::class.java, url = "http://fakelog.localhost:3000/", okHttp = getOkHttp(errorInterceptor = false, autoLoginInterceptorOn = false)),
             student = getService(service = StudentService::class.java, html = false),
             url = ServiceManager.UrlGenerator("http", "fakelog.localhost:3000", symbol, "")
         )

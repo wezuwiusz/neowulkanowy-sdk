@@ -67,7 +67,7 @@ class ServiceManager(
         HttpLoggingInterceptor().setLevel(logLevel) to true,
         ErrorInterceptor() to false,
         AutoLoginInterceptor(loginType, cookies, emptyCookieJarIntercept) {
-            return@AutoLoginInterceptor runBlocking { loginHelper.login(email, password) }.toString().isNotBlank()
+            runBlocking { loginHelper.login(email, password) }.toString().isNotBlank()
         } to false,
         UserAgentInterceptor(androidVersion, buildTag) to false
     )
@@ -138,44 +138,40 @@ class ServiceManager(
         return getRetrofit(getClientBuilder(), urlGenerator.generate(UrlGenerator.Site.HOME), gson = true).create()
     }
 
-    private fun getRetrofit(client: OkHttpClient.Builder, baseUrl: String, gson: Boolean = false): Retrofit {
-        return Retrofit.Builder()
-            .baseUrl(baseUrl)
-            .client(client.build())
-            .addConverterFactory(ScalarsConverterFactory.create())
-            .addConverterFactory(if (gson) GsonConverterFactory.create(GsonBuilder()
-                .setDateFormat("yyyy-MM-dd HH:mm:ss")
-                .serializeNulls()
-                .registerTypeAdapter(GradeDate::class.java, DateDeserializer(GradeDate::class.java))
-                .create()) else JspoonConverterFactory.create())
-            .build()
-    }
+    private fun getRetrofit(client: OkHttpClient.Builder, baseUrl: String, gson: Boolean = false) = Retrofit.Builder()
+        .baseUrl(baseUrl)
+        .client(client.build())
+        .addConverterFactory(ScalarsConverterFactory.create())
+        .addConverterFactory(if (gson) GsonConverterFactory.create(GsonBuilder()
+            .setDateFormat("yyyy-MM-dd HH:mm:ss")
+            .serializeNulls()
+            .registerTypeAdapter(GradeDate::class.java, DateDeserializer(GradeDate::class.java))
+            .create()) else JspoonConverterFactory.create())
+        .build()
 
     private fun getClientBuilder(
         errIntercept: Boolean = true,
         loginIntercept: Boolean = true,
         separateJar: Boolean = false
-    ): OkHttpClient.Builder {
-        return okHttpClientBuilderFactory.create()
-            .callTimeout(25, SECONDS)
-            .apply {
-                if (host == "vulcan.net.pl") {
-                    sslSocketFactory(TLSSocketFactory(), trustManager)
+    ) = okHttpClientBuilderFactory.create()
+        .callTimeout(25, SECONDS)
+        .apply {
+            if (host == "vulcan.net.pl") {
+                sslSocketFactory(TLSSocketFactory(), trustManager)
+            }
+        }
+        .cookieJar(if (!separateJar) JavaNetCookieJar(cookies) else JavaNetCookieJar(CookieManager()))
+        .apply {
+            interceptors.forEach {
+                if (it.first is ErrorInterceptor || it.first is AutoLoginInterceptor) {
+                    if (it.first is AutoLoginInterceptor && loginIntercept) addInterceptor(it.first)
+                    if (it.first is ErrorInterceptor && errIntercept) addInterceptor(it.first)
+                } else {
+                    if (it.second) addNetworkInterceptor(it.first)
+                    else addInterceptor(it.first)
                 }
             }
-            .cookieJar(if (!separateJar) JavaNetCookieJar(cookies) else JavaNetCookieJar(CookieManager()))
-            .apply {
-                interceptors.forEach {
-                    if (it.first is ErrorInterceptor || it.first is AutoLoginInterceptor) {
-                        if (it.first is AutoLoginInterceptor && loginIntercept) addInterceptor(it.first)
-                        if (it.first is ErrorInterceptor && errIntercept) addInterceptor(it.first)
-                    } else {
-                        if (it.second) addNetworkInterceptor(it.first)
-                        else addInterceptor(it.first)
-                    }
-                }
-            }
-    }
+        }
 
     class UrlGenerator(private val schema: String, private val host: String, var symbol: String, var schoolId: String) {
 

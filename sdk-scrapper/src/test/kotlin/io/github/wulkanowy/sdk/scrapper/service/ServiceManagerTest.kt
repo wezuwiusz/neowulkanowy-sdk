@@ -1,6 +1,6 @@
 package io.github.wulkanowy.sdk.scrapper.service
 
-import io.github.wulkanowy.sdk.scrapper.BaseTest
+import io.github.wulkanowy.sdk.scrapper.BaseLocalTest
 import io.github.wulkanowy.sdk.scrapper.OkHttpClientBuilderFactory
 import io.github.wulkanowy.sdk.scrapper.Scrapper
 import io.github.wulkanowy.sdk.scrapper.ScrapperException
@@ -11,27 +11,12 @@ import kotlinx.coroutines.runBlocking
 import okhttp3.Interceptor
 import okhttp3.logging.HttpLoggingInterceptor
 import okhttp3.mockwebserver.MockResponse
-import okhttp3.mockwebserver.MockWebServer
-import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
-import org.junit.Before
 import org.junit.Test
 import java.net.URL
 
-class ServiceManagerTest : BaseTest() {
-
-    lateinit var server: MockWebServer
-
-    @Before
-    fun setUp() {
-        server = MockWebServer()
-    }
-
-    @After
-    fun shutDown() {
-        server.shutdown()
-    }
+class ServiceManagerTest : BaseLocalTest() {
 
     @Test
     fun interceptorTest() {
