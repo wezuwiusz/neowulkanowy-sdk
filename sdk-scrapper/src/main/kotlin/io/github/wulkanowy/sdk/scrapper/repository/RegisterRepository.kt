@@ -12,6 +12,7 @@ import io.github.wulkanowy.sdk.scrapper.login.LoginHelper
 import io.github.wulkanowy.sdk.scrapper.register.Diary
 import io.github.wulkanowy.sdk.scrapper.register.SendCertificateResponse
 import io.github.wulkanowy.sdk.scrapper.register.Student
+import io.github.wulkanowy.sdk.scrapper.register.toSemesters
 import io.github.wulkanowy.sdk.scrapper.repository.AccountRepository.Companion.SELECTOR_ADFS
 import io.github.wulkanowy.sdk.scrapper.repository.AccountRepository.Companion.SELECTOR_ADFS_CARDS
 import io.github.wulkanowy.sdk.scrapper.repository.AccountRepository.Companion.SELECTOR_ADFS_LIGHT
@@ -117,7 +118,11 @@ class RegisterRepository(
                 classId = diary.semesters!![0].classId,
                 baseUrl = url.generate(ServiceManager.UrlGenerator.Site.BASE),
                 loginType = loginType,
-                isParent = cache?.isParent ?: false
+                isParent = cache?.isParent == true,
+                semesters = diaries
+                    .filter { it.studentId == diary.studentId && it.semesters?.getOrNull(0)?.classId == diary.semesters[0].classId }
+                    .map { it.toSemesters() }
+                    .flatten()
             )
         }.ifEmpty {
             logger.debug("No supported student found in diaries: $diaries")
@@ -138,9 +143,9 @@ class RegisterRepository(
         .data.orEmpty()
 
     private fun List<Diary>.filterDiaries() = this
-        .filter { diary -> diary.semesters?.isNotEmpty() ?: false }
-        .sortedByDescending { diary -> diary.level }
-        .distinctBy { diary -> listOf(diary.studentId, diary.semesters!![0].classId) }
+        .filter { it.semesters.orEmpty().isNotEmpty() }
+        .sortedByDescending { it.level }
+        .distinctBy { listOf(it.studentId, it.semesters!![0].classId) }
 
     private fun getExtractedSchoolSymbolFromUrl(snpPageUrl: String): String {
         val path = URL(snpPageUrl).path.split("/")

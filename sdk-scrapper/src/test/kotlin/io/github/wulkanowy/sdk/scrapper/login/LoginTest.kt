@@ -49,7 +49,7 @@ class LoginTest : BaseLocalTest() {
 
         val res = runBlocking { adfs.login("jan@fakelog.cf", "jan123") }
 
-        assertTrue(res.oldStudentSchools.isNotEmpty())
+        assertTrue(res.studentSchools.isNotEmpty())
     }
 
     @Test
@@ -60,7 +60,7 @@ class LoginTest : BaseLocalTest() {
 
         val res = runBlocking { normal.login("jan@fakelog.cf", "jan123") }
 
-        assertTrue(res.oldStudentSchools.isNotEmpty())
+        assertTrue(res.studentSchools.isNotEmpty())
     }
 
     @Test
@@ -84,17 +84,6 @@ class LoginTest : BaseLocalTest() {
         runBlocking { normal.login("jan||jan@fakelog.cf", "jan123") }
 
         assertEquals("[text=LoginName=jan&Password=jan123]", server.takeRequest().body.toString())
-    }
-
-    @Test
-    fun normalLogin_beforeNewStudentSite() {
-        server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("Logowanie-uonet.html").readText()))
-        server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("Login-success-old.html").readText()))
-        server.start(3000)
-
-        val res = runBlocking { normal.login("jan@fakelog.cf", "jan123") }
-
-        assertTrue(res.oldStudentSchools.isNotEmpty())
     }
 
     @Test

@@ -59,7 +59,35 @@ class RegisterRepositoryTest : BaseLocalTest() {
         with(students[0]) {
             assertEquals("012345", schoolSymbol)
             assertEquals("", schoolShortName)
+            assertEquals(2, semesters.size)
         }
+    }
+
+    @Test
+    fun normalLogin_semesters() {
+        server.enqueue("LoginPage-standard.html", LoginTest::class.java)
+        server.enqueue("Logowanie-uonet.html", LoginTest::class.java)
+        server.enqueue("Login-success.html", LoginTest::class.java)
+
+        server.enqueue("LoginPage-standard.html", LoginTest::class.java)
+        server.enqueue("WitrynaUcznia.html", RegisterTest::class.java)
+        server.enqueue("UczenCache.json", RegisterTest::class.java)
+        server.enqueue("UczenDziennik.json", RegisterTest::class.java)
+
+        (0..5).onEach { // 5x symbol
+            server.enqueue("Logowanie-brak-dostepu.html", LoginTest::class.java)
+        }
+        server.start(3000)
+
+        val students = runBlocking { getRegisterRepository("Default").getStudents() }
+
+        assertEquals(2, students.size)
+        with(students[0]) {
+            assertEquals("012345", schoolSymbol)
+            assertEquals("", schoolShortName)
+            assertEquals(6, semesters.size)
+        }
+        assertEquals(6, students[1].semesters.size)
     }
 
     @Test

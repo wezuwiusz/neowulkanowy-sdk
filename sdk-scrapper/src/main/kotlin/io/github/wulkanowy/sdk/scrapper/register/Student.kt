@@ -14,5 +14,6 @@ data class Student(
     val classId: Int,
     val baseUrl: String,
     val loginType: Scrapper.LoginType,
-    val isParent: Boolean
+    val isParent: Boolean,
+    val semesters: List<Semester>
 )

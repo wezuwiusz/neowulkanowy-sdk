@@ -19,5 +19,6 @@ data class Student(
     val scrapperBaseUrl: String,
     val mobileBaseUrl: String,
     val certificateKey: String,
-    val privateKey: String
+    val privateKey: String,
+    val semesters: List<Semester>
 )

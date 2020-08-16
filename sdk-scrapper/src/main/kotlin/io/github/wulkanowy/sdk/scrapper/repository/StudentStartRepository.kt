@@ -2,8 +2,8 @@ package io.github.wulkanowy.sdk.scrapper.repository
 
 import io.github.wulkanowy.sdk.scrapper.interceptor.handleErrors
 import io.github.wulkanowy.sdk.scrapper.register.Semester
+import io.github.wulkanowy.sdk.scrapper.register.toSemesters
 import io.github.wulkanowy.sdk.scrapper.service.StudentService
-import io.github.wulkanowy.sdk.scrapper.toLocalDate
 import org.slf4j.LoggerFactory
 
 class StudentStartRepository(
@@ -21,24 +21,10 @@ class StudentStartRepository(
         val diaries = api.getDiaries().handleErrors().data
         return diaries.orEmpty()
             .asSequence()
-            .filter { it.semesters?.isNotEmpty() ?: false }
+            .filter { it.semesters.orEmpty().isNotEmpty() }
             .filter { it.studentId == studentId }
             .filter { it.semesters!![0].classId == classId }
-            .map { diary ->
-                diary.semesters!!.map {
-                    Semester(
-                        diaryId = diary.diaryId,
-                        diaryName = "${diary.level}${diary.symbol}",
-                        schoolYear = diary.year,
-                        semesterId = it.id,
-                        semesterNumber = it.number,
-                        start = it.start.toLocalDate(),
-                        end = it.end.toLocalDate(),
-                        classId = it.classId,
-                        unitId = it.unitId
-                    )
-                }
-            }
+            .map { it.toSemesters() }
             .flatten()
             .sortedByDescending { it.semesterId }
             .toList()
