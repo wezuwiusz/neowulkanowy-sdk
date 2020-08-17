@@ -1,5 +1,5 @@
 plugins {
-    id 'org.jetbrains.kotlin.jvm' version '1.3.72' apply false
+    id 'org.jetbrains.kotlin.jvm' version '1.4.0' apply false
     id "org.jlleitschuh.gradle.ktlint" version "9.2.1"
     id 'com.jfrog.bintray' version '1.8.5'
 }
@@ -87,14 +87,14 @@ subprojects {
 
     dependencies {
         implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
-        implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.3.7'
+        implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.3.9'
 
         implementation "com.squareup.okhttp3:logging-interceptor:$okhttp3"
 
         testImplementation "junit:junit:4.13"
         testImplementation "com.squareup.okhttp3:mockwebserver:$okhttp3"
         testImplementation "com.squareup.retrofit2:retrofit-mock:$retrofit"
-        testImplementation 'org.jetbrains.kotlinx:kotlinx-coroutines-test:1.3.8'
+        testImplementation 'org.jetbrains.kotlinx:kotlinx-coroutines-test:1.3.9'
     }
 
     jacocoTestReport {
