@@ -4,8 +4,10 @@ import io.github.wulkanowy.sdk.scrapper.BaseLocalTest
 import io.github.wulkanowy.sdk.scrapper.Scrapper
 import io.github.wulkanowy.sdk.scrapper.login.LoginHelper
 import io.github.wulkanowy.sdk.scrapper.login.LoginTest
+import io.github.wulkanowy.sdk.scrapper.messages.MessagesTest
 import io.github.wulkanowy.sdk.scrapper.repository.RegisterRepository
 import io.github.wulkanowy.sdk.scrapper.service.LoginService
+import io.github.wulkanowy.sdk.scrapper.service.MessagesService
 import io.github.wulkanowy.sdk.scrapper.service.RegisterService
 import io.github.wulkanowy.sdk.scrapper.service.ServiceManager
 import io.github.wulkanowy.sdk.scrapper.service.StudentService
@@ -25,6 +27,7 @@ class RegisterTest : BaseLocalTest() {
     private val registerStudent by lazy {
         RegisterRepository("default", "jan@fakelog.localhost", "jan123", login,
             getService(RegisterService::class.java, "http://fakelog.localhost:3000/Default/", true, getOkHttp(false, false)),
+            getService(MessagesService::class.java, "http://fakelog.localhost:3000", false),
             getService(StudentService::class.java, "http://fakelog.localhost:3000", false),
             ServiceManager.UrlGenerator("http", "fakelog.localhost:3000", "default", "123")
         )
@@ -35,6 +38,7 @@ class RegisterTest : BaseLocalTest() {
         server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("LoginPage-standard.html").readText()))
         server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("Logowanie-uonet.html").readText()))
         server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("Login-success.html").readText()))
+        server.enqueue("JednostkiUzytkownika.json", MessagesTest::class.java)
         server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("LoginPage-standard.html").readText()))
         server.enqueue(MockResponse().setBody(RegisterTest::class.java.getResource("WitrynaUcznia.html").readText()))
         server.enqueue(MockResponse().setBody(RegisterTest::class.java.getResource("UczenCache.json").readText()))
@@ -71,6 +75,7 @@ class RegisterTest : BaseLocalTest() {
         server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("LoginPage-standard.html").readText()))
         server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("Logowanie-uonet.html").readText()))
         server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("Login-success.html").readText()))
+        server.enqueue("JednostkiUzytkownika.json", MessagesTest::class.java)
         server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("LoginPage-standard.html").readText()))
         server.enqueue(MockResponse().setBody(RegisterTest::class.java.getResource("WitrynaUcznia.html").readText()))
         server.enqueue(MockResponse().setBody(RegisterTest::class.java.getResource("UczenCache.json").readText()))
@@ -99,6 +104,7 @@ class RegisterTest : BaseLocalTest() {
         server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("LoginPage-standard.html").readText()))
         server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("Logowanie-uonet.html").readText()))
         server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("Login-success.html").readText()))
+        server.enqueue("JednostkiUzytkownika.json", MessagesTest::class.java)
         server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("LoginPage-standard.html").readText()))
         server.enqueue(MockResponse().setBody(RegisterTest::class.java.getResource("WitrynaUcznia.html").readText()))
         server.enqueue(MockResponse().setBody(RegisterTest::class.java.getResource("UczenCache.json").readText()))
@@ -127,6 +133,7 @@ class RegisterTest : BaseLocalTest() {
         server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("LoginPage-standard.html").readText()))
         server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("Logowanie-uonet.html").readText()))
         server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("Login-success.html").readText()))
+        server.enqueue("JednostkiUzytkownika.json", MessagesTest::class.java)
         server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("LoginPage-standard.html").readText()))
         server.enqueue(MockResponse().setBody(RegisterTest::class.java.getResource("WitrynaUcznia.html").readText()))
         server.enqueue(MockResponse().setBody(RegisterTest::class.java.getResource("UczenCache.json").readText()))

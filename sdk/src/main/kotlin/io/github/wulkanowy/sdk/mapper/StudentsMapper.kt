@@ -8,10 +8,12 @@ import io.github.wulkanowy.sdk.scrapper.register.Student as ScrapperStudent
 fun List<ApiStudent>.mapStudents(symbol: String) = map {
     Student(
         email = it.userLogin,
+        userName = it.userName,
+        userLogin = it.userLogin,
+        userLoginId = it.userLoginId,
         isParent = it.userRole != "uczeń",
         symbol = symbol,
         studentId = it.id,
-        userLoginId = it.userLoginId,
         classId = it.classId,
         className = it.classCode.orEmpty(),
         studentName = "${it.name} ${it.surname}",
@@ -31,11 +33,13 @@ fun List<ApiStudent>.mapStudents(symbol: String) = map {
 fun List<ScrapperStudent>.mapStudents() = map {
     Student(
         email = it.email,
+        userName = it.userName,
+        userLogin = it.userLogin,
+        userLoginId = it.userLoginId,
         isParent = it.isParent,
         className = it.className,
         classId = it.classId,
         studentId = it.studentId,
-        userLoginId = 0,
         symbol = it.symbol,
         loginType = Sdk.ScrapperLoginType.valueOf(it.loginType.name),
         schoolName = it.schoolName,

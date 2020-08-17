@@ -9,14 +9,15 @@ import io.github.wulkanowy.sdk.scrapper.interceptor.handleErrors
 import io.github.wulkanowy.sdk.scrapper.login.AccountPermissionException
 import io.github.wulkanowy.sdk.scrapper.login.CertificateResponse
 import io.github.wulkanowy.sdk.scrapper.login.LoginHelper
+import io.github.wulkanowy.sdk.scrapper.messages.ReportingUnit
 import io.github.wulkanowy.sdk.scrapper.register.Diary
-import io.github.wulkanowy.sdk.scrapper.register.SendCertificateResponse
 import io.github.wulkanowy.sdk.scrapper.register.Student
 import io.github.wulkanowy.sdk.scrapper.register.toSemesters
 import io.github.wulkanowy.sdk.scrapper.repository.AccountRepository.Companion.SELECTOR_ADFS
 import io.github.wulkanowy.sdk.scrapper.repository.AccountRepository.Companion.SELECTOR_ADFS_CARDS
 import io.github.wulkanowy.sdk.scrapper.repository.AccountRepository.Companion.SELECTOR_ADFS_LIGHT
 import io.github.wulkanowy.sdk.scrapper.repository.AccountRepository.Companion.SELECTOR_STANDARD
+import io.github.wulkanowy.sdk.scrapper.service.MessagesService
 import io.github.wulkanowy.sdk.scrapper.service.RegisterService
 import io.github.wulkanowy.sdk.scrapper.service.ServiceManager
 import io.github.wulkanowy.sdk.scrapper.service.StudentService
@@ -32,6 +33,7 @@ class RegisterRepository(
     private val password: String,
     private val loginHelper: LoginHelper,
     private val register: RegisterService,
+    private val messages: MessagesService,
     private val student: StudentService,
     private val url: ServiceManager.UrlGenerator
 ) {
@@ -46,10 +48,12 @@ class RegisterRepository(
             val cert = try {
                 loginHelper.sendCertificate(certificate, email, certificate.action.replace(startSymbol.getNormalizedSymbol(), symbol))
             } catch (e: AccountPermissionException) {
-                SendCertificateResponse()
+                return@map emptyList<Student>()
             }
+
+            val units = messages.getUserReportingUnits().handleErrors().data.orEmpty()
             cert.studentSchools.map { moduleUrl ->
-                getStudentsBySymbol(symbol, moduleUrl)
+                getStudentsBySymbol(symbol, moduleUrl, units)
             }.flatten()
         }.flatten().distinctBy { pupil -> listOf(pupil.studentId, pupil.classId, pupil.schoolSymbol) }
     }
@@ -63,7 +67,7 @@ class RegisterRepository(
             .map { it.text().trim() }
             .apply { logger.debug("$this") }
             .filter { it.matches("[a-zA-Z0-9]*".toRegex()) } // early filter invalid symbols
-            .map { Pair(it, cert) }
+            .map { it to cert }
     }
 
     private suspend fun getLoginType(symbol: String): Scrapper.LoginType {
@@ -90,7 +94,7 @@ class RegisterRepository(
         }
     }
 
-    private suspend fun getStudentsBySymbol(symbol: String, moduleUrl: Element): List<Student> {
+    private suspend fun getStudentsBySymbol(symbol: String, moduleUrl: Element, units: List<ReportingUnit>): List<Student> {
         val loginType = getLoginType(symbol)
         val schoolUrl = moduleUrl.attr("href")
         url.schoolId = getExtractedSchoolSymbolFromUrl(schoolUrl)
@@ -106,12 +110,18 @@ class RegisterRepository(
 
         val diaries = getStudentDiaries()
         return diaries.filterDiaries().map { diary ->
+            val schoolSymbol = getExtractedSchoolSymbolFromUrl(schoolUrl)
+            val unit = units.firstOrNull { it.short == schoolSymbol }
+
             Student(
                 email = email,
+                userLogin = email,
+                userName = unit?.senderName ?: email,
+                userLoginId = unit?.id ?: 0,
                 symbol = symbol,
                 studentId = diary.studentId,
                 studentName = "${diary.studentName} ${diary.studentSurname}",
-                schoolSymbol = getExtractedSchoolSymbolFromUrl(schoolUrl),
+                schoolSymbol = schoolSymbol,
                 schoolShortName = moduleUrl.text().takeIf { "Uczeń" !in it }.orEmpty(),
                 schoolName = getScriptParam("organizationName", startPage, diary.symbol + " " + (diary.year - diary.level + 1)),
                 className = diary.level.toString() + diary.symbol,

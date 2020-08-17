@@ -4,6 +4,9 @@ import io.github.wulkanowy.sdk.scrapper.Scrapper
 
 data class Student(
     val email: String,
+    val userName: String,
+    val userLogin: String,
+    val userLoginId: Int,
     val symbol: String,
     val studentId: Int,
     val studentName: String,
