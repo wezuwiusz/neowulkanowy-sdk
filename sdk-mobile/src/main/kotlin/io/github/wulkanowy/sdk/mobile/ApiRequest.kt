@@ -6,7 +6,7 @@ import java.time.ZoneOffset
 import java.util.UUID
 
 @Suppress("unused")
-abstract class ApiRequest(
+open class ApiRequest(
 
     @SerializedName("RemoteMobileTimeKey")
     val remoteMobileTimeKey: Long = now().toEpochSecond(ZoneOffset.UTC),

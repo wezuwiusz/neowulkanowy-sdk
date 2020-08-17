@@ -31,7 +31,7 @@ import java.time.LocalDateTime
 
 class MobileRepository(private val api: MobileService) {
 
-    suspend fun logStart(): ApiResponse<String> = api.logAppStart(object : ApiRequest() {})
+    suspend fun logStart(): ApiResponse<String> = api.logAppStart(ApiRequest())
 
     suspend fun getDictionaries(userId: Int, classificationPeriodId: Int, classId: Int): Dictionaries {
         return api.getDictionaries(DictionariesRequest(userId, classificationPeriodId, classId)).data!!
