@@ -44,18 +44,18 @@ class RegisterRepository(
     }
 
     suspend fun getStudents(): List<Student> {
-        return getSymbols().map { (symbol, certificate) ->
+        return getSymbols().flatMap { (symbol, certificate) ->
             val cert = try {
                 loginHelper.sendCertificate(certificate, email, certificate.action.replace(startSymbol.getNormalizedSymbol(), symbol))
             } catch (e: AccountPermissionException) {
-                return@map emptyList<Student>()
+                return@flatMap emptyList<Student>()
             }
 
             val units = messages.getUserReportingUnits().handleErrors().data.orEmpty()
-            cert.studentSchools.map { moduleUrl ->
+            cert.studentSchools.flatMap { moduleUrl ->
                 getStudentsBySymbol(symbol, moduleUrl, units)
-            }.flatten()
-        }.flatten().distinctBy { pupil -> listOf(pupil.studentId, pupil.classId, pupil.schoolSymbol) }
+            }
+        }.distinctBy { pupil -> listOf(pupil.studentId, pupil.classId, pupil.schoolSymbol) }
     }
 
     private suspend fun getSymbols(): List<Pair<String, CertificateResponse>> {
@@ -120,19 +120,20 @@ class RegisterRepository(
                 userLoginId = unit?.id ?: 0,
                 symbol = symbol,
                 studentId = diary.studentId,
-                studentName = "${diary.studentName} ${diary.studentSurname}",
+                studentName = diary.studentName,
+                studentSecondName = diary.studentSecondName,
+                studentSurname = diary.studentSurname,
                 schoolSymbol = schoolSymbol,
                 schoolShortName = moduleUrl.text().takeIf { "Uczeń" !in it }.orEmpty(),
                 schoolName = getScriptParam("organizationName", startPage, diary.symbol + " " + (diary.year - diary.level + 1)),
-                className = diary.level.toString() + diary.symbol,
+                className = diary.symbol,
                 classId = diary.semesters!![0].classId,
                 baseUrl = url.generate(ServiceManager.UrlGenerator.Site.BASE),
                 loginType = loginType,
                 isParent = cache?.isParent == true,
                 semesters = diaries
                     .filter { it.studentId == diary.studentId && it.semesters?.getOrNull(0)?.classId == diary.semesters[0].classId }
-                    .map { it.toSemesters() }
-                    .flatten()
+                    .flatMap { it.toSemesters() }
             )
         }.ifEmpty {
             logger.debug("No supported student found in diaries: $diaries")

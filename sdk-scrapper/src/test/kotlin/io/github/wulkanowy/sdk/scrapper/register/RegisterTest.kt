@@ -55,18 +55,20 @@ class RegisterTest : BaseLocalTest() {
 
         res[0].run {
             assertEquals(3881, studentId)
-            assertEquals("Jan Kowalski", studentName)
+            assertEquals("Jan", studentName)
+            assertEquals("Kowalski", studentSurname)
             assertEquals(121, classId)
             assertEquals("Publiczna szkoła Wulkanowego nr 1 w fakelog.cf", schoolName)
-            assertEquals("2Te", className)
+            assertEquals("Te", className)
         }
 
         res[1].run {
             assertEquals(3881, studentId)
-            assertEquals("Jan Kowalski", studentName)
+            assertEquals("Jan", studentName)
+            assertEquals("Kowalski", studentSurname)
             assertEquals(119, classId)
             assertEquals("Publiczna szkoła Wulkanowego nr 1 w fakelog.cf", schoolName)
-            assertEquals("2Ti", className)
+            assertEquals("Ti", className)
         }
     }
 
@@ -92,10 +94,10 @@ class RegisterTest : BaseLocalTest() {
 
         res[0].run {
             assertEquals(1, studentId)
-            assertEquals("Jan Kowalski", studentName)
+            assertEquals("Jan", studentName)
+            assertEquals("Kowalski", studentSurname)
             assertEquals(1, classId)
             assertEquals("Publiczna szkoła Wulkanowego nr 1 w fakelog.cf", schoolName)
-            assertEquals("1A", className)
         }
     }
 
@@ -121,10 +123,11 @@ class RegisterTest : BaseLocalTest() {
 
         res[0].run {
             assertEquals(1, studentId)
-            assertEquals("Jan Kowalski", studentName)
+            assertEquals("Jan", studentName)
+            assertEquals("Kowalski", studentSurname)
             assertEquals(1, classId)
             assertEquals("Publiczna szkoła Wulkanowego nr 1 w fakelog.cf", schoolName)
-            assertEquals("1A", className)
+            assertEquals("A", className)
         }
     }
 
@@ -150,17 +153,19 @@ class RegisterTest : BaseLocalTest() {
 
         res[0].run {
             assertEquals(1, studentId)
-            assertEquals("Jan Kowalski", studentName)
+            assertEquals("Jan", studentName)
+            assertEquals("Kowalski", studentSurname)
             assertEquals(1, classId)
-            assertEquals("3A", className)
+            assertEquals("A", className)
             assertEquals("Publiczna szkoła Wulkanowego nr 1 w fakelog.cf", schoolName)
         }
 
         res[1].run {
             assertEquals(2, studentId)
-            assertEquals("Joanna Czerwińska", studentName)
+            assertEquals("Joanna", studentName)
+            assertEquals("Czerwińska", studentSurname)
             assertEquals(2, classId)
-            assertEquals("3A", className)
+            assertEquals("A", className)
             assertEquals("Publiczna szkoła Wulkanowego nr 1 w fakelog.cf", schoolName)
         }
     }
