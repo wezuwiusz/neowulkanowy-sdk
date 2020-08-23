@@ -130,8 +130,8 @@ class ServiceManager(
         return client
     }
 
-    fun getMessagesService(): MessagesService {
-        return getRetrofit(getClientBuilder(), urlGenerator.generate(UrlGenerator.Site.MESSAGES), gson = true).create()
+    fun getMessagesService(withLogin: Boolean = true): MessagesService {
+        return getRetrofit(getClientBuilder(loginIntercept = withLogin), urlGenerator.generate(UrlGenerator.Site.MESSAGES), gson = true).create()
     }
 
     fun getHomepageService(): HomepageService {

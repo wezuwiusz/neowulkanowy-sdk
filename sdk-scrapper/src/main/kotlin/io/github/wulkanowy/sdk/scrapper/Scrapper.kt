@@ -177,8 +177,8 @@ class Scrapper {
             normalizedSymbol, email, password,
             LoginHelper(loginType, schema, host, normalizedSymbol, serviceManager.getCookieManager(), serviceManager.getLoginService()),
             serviceManager.getRegisterService(),
-            serviceManager.getMessagesService(),
-            serviceManager.getStudentService(withLogin = false, studentInterceptor = false), // it is really needed?
+            serviceManager.getMessagesService(withLogin = false),
+            serviceManager.getStudentService(withLogin = false, studentInterceptor = false),
             serviceManager.urlGenerator
         )
     }
