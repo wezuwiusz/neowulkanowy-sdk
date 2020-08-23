@@ -122,7 +122,7 @@ class RegisterRepository(
                 symbol = symbol,
                 studentId = diary.studentId,
                 studentName = diary.studentName,
-                studentSecondName = diary.studentSecondName,
+                studentSecondName = diary.studentSecondName.orEmpty(),
                 studentSurname = diary.studentSurname,
                 schoolSymbol = schoolSymbol,
                 schoolShortName = moduleUrl.text().takeIf { "Uczeń" !in it }.orEmpty(),

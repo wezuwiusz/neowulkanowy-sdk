@@ -15,7 +15,7 @@ data class Diary(
     val studentName: String,
 
     @SerializedName("UczenImie2")
-    val studentSecondName: String,
+    val studentSecondName: String?,
 
     @SerializedName("UczenNazwisko")
     val studentSurname: String,
