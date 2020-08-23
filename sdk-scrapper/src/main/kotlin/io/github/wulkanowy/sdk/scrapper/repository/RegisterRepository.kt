@@ -52,7 +52,7 @@ class RegisterRepository(
             }
 
             url.symbol = symbol
-            val unitsUrl = url.generate(ServiceManager.UrlGenerator.Site.STUDENT) + "NowaWiadomosc.mvc/GetJednostkiUzytkownika"
+            val unitsUrl = url.generate(ServiceManager.UrlGenerator.Site.MESSAGES) + "NowaWiadomosc.mvc/GetJednostkiUzytkownika"
             val units = messages.getUserReportingUnits(unitsUrl).handleErrors().data.orEmpty()
             cert.studentSchools.flatMap { moduleUrl ->
                 getStudentsBySymbol(symbol, moduleUrl, units)
