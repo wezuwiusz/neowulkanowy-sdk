@@ -42,8 +42,8 @@ class HomepageRepository(private val api: HomepageService) {
 
     suspend fun getKidsLuckyNumbers(): List<LuckyNumber> {
         val res = api.getKidsLuckyNumbers(getToken()).handleErrors().data
-        return requireNotNull(res).map { unit ->
-            unit.content.map { school ->
+        return requireNotNull(res).flatMap { unit ->
+            unit.content.flatMap { school ->
                 school.content.map { number ->
                     LuckyNumber(
                         unitName = unit.name,
@@ -51,8 +51,8 @@ class HomepageRepository(private val api: HomepageService) {
                         number = number.name.substringAfterLast(": ").toInt()
                     )
                 }
-            }.flatten()
-        }.flatten()
+            }
+        }
     }
 
     suspend fun getKidsLessonPlan(): List<String> {
