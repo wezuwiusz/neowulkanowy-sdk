@@ -14,6 +14,7 @@ import retrofit2.http.GET
 import retrofit2.http.Header
 import retrofit2.http.POST
 import retrofit2.http.Query
+import retrofit2.http.Url
 
 interface MessagesService {
 
@@ -22,6 +23,9 @@ interface MessagesService {
 
     @GET("NowaWiadomosc.mvc/GetJednostkiUzytkownika")
     suspend fun getUserReportingUnits(): ApiResponse<List<ReportingUnit>>
+
+    @GET
+    suspend fun getUserReportingUnits(@Url url: String): ApiResponse<List<ReportingUnit>>
 
     @GET("Adresaci.mvc/GetAdresaci")
     suspend fun getRecipients(@Query("IdJednostkaSprawozdawcza") reportingUnitId: Int, @Query("Rola") role: Int): ApiResponse<List<Recipient>>

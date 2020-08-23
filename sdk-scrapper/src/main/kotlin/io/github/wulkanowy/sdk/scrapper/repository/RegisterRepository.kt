@@ -51,7 +51,9 @@ class RegisterRepository(
                 return@flatMap emptyList<Student>()
             }
 
-            val units = messages.getUserReportingUnits().handleErrors().data.orEmpty()
+            url.symbol = symbol
+            val unitsUrl = url.generate(ServiceManager.UrlGenerator.Site.STUDENT) + "NowaWiadomosc.mvc/GetJednostkiUzytkownika"
+            val units = messages.getUserReportingUnits(unitsUrl).handleErrors().data.orEmpty()
             cert.studentSchools.flatMap { moduleUrl ->
                 getStudentsBySymbol(symbol, moduleUrl, units)
             }
@@ -98,7 +100,6 @@ class RegisterRepository(
         val loginType = getLoginType(symbol)
         val schoolUrl = moduleUrl.attr("href")
         url.schoolId = getExtractedSchoolSymbolFromUrl(schoolUrl)
-        url.symbol = symbol
 
         val startPage = try {
             student.getStart(url.generate(ServiceManager.UrlGenerator.Site.STUDENT) + "Start")
