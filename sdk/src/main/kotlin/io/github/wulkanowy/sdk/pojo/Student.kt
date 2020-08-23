@@ -11,6 +11,7 @@ data class Student(
     val isParent: Boolean,
     val studentId: Int,
     val studentName: String,
+    val studentSurname: String,
     val schoolSymbol: String,
     val schoolShortName: String,
     val schoolName: String,
