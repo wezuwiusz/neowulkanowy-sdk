@@ -302,7 +302,7 @@ class SdkRemoteTest {
             classId = 14
         }
 
-        val isDeleted = runBlocking { sdk.deleteMessages(listOf(1 to 1, 2 to 2)) }
+        val isDeleted = runBlocking { sdk.deleteMessages(listOf(1, 2), 1) }
         assertEquals(true, isDeleted)
     }
 }

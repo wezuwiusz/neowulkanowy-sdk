@@ -45,7 +45,7 @@ data class Message(
     val hasAttachments: Boolean = false,
 
     @SerializedName("Zalaczniki")
-    val attachments: List<Attachment>? = emptyList() // nullable just to make sure it doesn't not break anything
+    val attachments: List<Attachment>? = emptyList() // nullable just to make sure it doesn't break anything
 ) {
     var removed: Boolean = false
 }

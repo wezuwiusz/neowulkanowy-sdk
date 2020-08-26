@@ -10,6 +10,7 @@ import io.github.wulkanowy.sdk.scrapper.messages.Attachment
 import io.github.wulkanowy.sdk.scrapper.messages.DeleteMessageRequest
 import io.github.wulkanowy.sdk.scrapper.messages.Message
 import io.github.wulkanowy.sdk.scrapper.messages.Recipient
+import io.github.wulkanowy.sdk.scrapper.messages.RecipientsRequest
 import io.github.wulkanowy.sdk.scrapper.messages.ReportingUnit
 import io.github.wulkanowy.sdk.scrapper.messages.SendMessageRequest
 import io.github.wulkanowy.sdk.scrapper.messages.SentMessage
@@ -24,20 +25,23 @@ class MessagesRepository(private val api: MessagesService) {
     }
 
     suspend fun getRecipients(unitId: Int, role: Int = 2): List<Recipient> {
-        return api.getRecipients(unitId, role).handleErrors().data.orEmpty().map {
+        return api.getRecipients(RecipientsRequest(RecipientsRequest.ParamsVo(
+            unitId = unitId,
+            role = role
+        ))).handleErrors().data.orEmpty().map {
             it.copy(shortName = it.name.normalizeRecipient())
         }
     }
 
     suspend fun getReceivedMessages(startDate: LocalDateTime?, endDate: LocalDateTime?): List<Message> {
-        return api.getReceived(getDate(startDate), getDate(endDate)).handleErrors().data.orEmpty()
+        return api.getReceived(startDate.getDate(), endDate.getDate()).handleErrors().data.orEmpty()
             .map { it.copy(folderId = 1) }
             .sortedBy { it.date }
             .toList()
     }
 
     suspend fun getSentMessages(startDate: LocalDateTime?, endDate: LocalDateTime?): List<Message> {
-        return api.getSent(getDate(startDate), getDate(endDate)).handleErrors().data.orEmpty()
+        return api.getSent(startDate.getDate(), endDate.getDate()).handleErrors().data.orEmpty()
             .map { message ->
                 message.copy(
                     messageId = message.id,
@@ -50,7 +54,7 @@ class MessagesRepository(private val api: MessagesService) {
     }
 
     suspend fun getDeletedMessages(startDate: LocalDateTime?, endDate: LocalDateTime?): List<Message> {
-        return api.getDeleted(getDate(startDate), getDate(endDate)).handleErrors().data.orEmpty()
+        return api.getDeleted(startDate.getDate(), endDate.getDate()).handleErrors().data.orEmpty()
             .map { it.apply { removed = true } }
             .sortedBy { it.date }
             .toList()
@@ -63,16 +67,20 @@ class MessagesRepository(private val api: MessagesService) {
         }
     }
 
-    suspend fun getMessageDetails(messageId: Int, folderId: Int, read: Boolean, id: Int?): Message {
-        return api.getMessage(messageId, folderId, read, id).handleErrors().data!!
-    }
-
     suspend fun getMessage(messageId: Int, folderId: Int, read: Boolean, id: Int?): String {
-        return api.getMessage(messageId, folderId, read, id).handleErrors().data?.content.orEmpty()
+        return getMessageDetails(messageId, folderId, read, id).content.orEmpty()
     }
 
     suspend fun getMessageAttachments(messageId: Int, folderId: Int): List<Attachment> {
-        return api.getMessage(messageId, folderId, false, null).handleErrors().data?.attachments.orEmpty()
+        return getMessageDetails(messageId, folderId, false, null).attachments.orEmpty()
+    }
+
+    suspend fun getMessageDetails(messageId: Int, folderId: Int, read: Boolean, id: Int?): Message {
+        return when(folderId) {
+            1 -> api.getInboxMessage(messageId, read, id).handleErrors().data!!
+            2 -> api.getOutboxMessage(messageId, read, id).handleErrors().data!!
+            else -> api.getTrashboxMessage(messageId, read, id).handleErrors().data!! // 3
+        }
     }
 
     suspend fun sendMessage(subject: String, content: String, recipients: List<Recipient>): SentMessage {
@@ -91,19 +99,19 @@ class MessagesRepository(private val api: MessagesService) {
         ).handleErrors().data!!
     }
 
-    suspend fun deleteMessages(messages: List<Pair<Int, Int>>): Boolean {
+    suspend fun deleteMessages(messages: List<Int>, folderId: Int): Boolean {
         val startPage = api.getStart()
-        val res = api.deleteMessage(
-            messages.map { (messageId, folderId) ->
-                DeleteMessageRequest(
-                    messageId = messageId,
-                    folderId = folderId
-                )
-            },
-            getScriptParam("antiForgeryToken", startPage),
-            getScriptParam("appGuid", startPage),
-            getScriptParam("version", startPage)
-        )
+
+        val items = messages.map { DeleteMessageRequest(it) }
+        val antiForgeryToken = getScriptParam("antiForgeryToken", startPage)
+        val appGUID = getScriptParam("appGuid", startPage)
+        val version = getScriptParam("version", startPage)
+
+        val res = when (folderId) {
+            1 -> api.deleteInboxMessage(items, antiForgeryToken, appGUID, version)
+            2 -> api.deleteOutboxMessage(items, antiForgeryToken, appGUID, version)
+            else -> api.deleteTrashMessages(items, antiForgeryToken, appGUID, version) // 3
+        }
 
         val apiResponse = if (res.isBlank()) throw VulcanException("Unexpected empty response. Message(s) may already be deleted")
         else Gson().fromJson(res, ApiResponse::class.java)
@@ -115,8 +123,7 @@ class MessagesRepository(private val api: MessagesService) {
         return this.substringBeforeLast("-").substringBefore(" [").substringBeforeLast(" (").trim()
     }
 
-    private fun getDate(date: LocalDateTime?): String {
-        if (date == null) return ""
-        return date.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))
+    private fun LocalDateTime?.getDate(): String {
+        return this?.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")).orEmpty()
     }
 }

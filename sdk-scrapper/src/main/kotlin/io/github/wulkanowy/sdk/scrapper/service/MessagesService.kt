@@ -4,6 +4,7 @@ import io.github.wulkanowy.sdk.scrapper.ApiResponse
 import io.github.wulkanowy.sdk.scrapper.messages.DeleteMessageRequest
 import io.github.wulkanowy.sdk.scrapper.messages.Message
 import io.github.wulkanowy.sdk.scrapper.messages.Recipient
+import io.github.wulkanowy.sdk.scrapper.messages.RecipientsRequest
 import io.github.wulkanowy.sdk.scrapper.messages.ReportingUnit
 import io.github.wulkanowy.sdk.scrapper.messages.SendMessageRequest
 import io.github.wulkanowy.sdk.scrapper.messages.SentMessage
@@ -27,29 +28,44 @@ interface MessagesService {
     @GET
     suspend fun getUserReportingUnits(@Url url: String): ApiResponse<List<ReportingUnit>>
 
-    @GET("Adresaci.mvc/GetAdresaci")
-    suspend fun getRecipients(@Query("IdJednostkaSprawozdawcza") reportingUnitId: Int, @Query("Rola") role: Int): ApiResponse<List<Recipient>>
+    @GET("Adresaci.mvc/GetAddressee")
+    suspend fun getRecipients(@Body recipientsRequest: RecipientsRequest): ApiResponse<List<Recipient>>
 
-    @GET("Wiadomosc.mvc/GetWiadomosciOdebrane")
+    @GET("Wiadomosc.mvc/GetInboxMessages")
     suspend fun getReceived(@Query("dataOd") dateStart: String, @Query("dataDo") dateEnd: String): ApiResponse<List<Message>>
 
-    @GET("Wiadomosc.mvc/GetWiadomosciWyslane")
+    @GET("Wiadomosc.mvc/GetOutboxMessages")
     suspend fun getSent(@Query("dataOd") dateStart: String, @Query("dataDo") dateEnd: String): ApiResponse<List<Message>>
 
-    @GET("Wiadomosc.mvc/GetWiadomosciUsuniete")
+    @GET("Wiadomosc.mvc/GetTrashboxMessages")
     suspend fun getDeleted(@Query("dataOd") dateStart: String, @Query("dataDo") dateEnd: String): ApiResponse<List<Message>>
 
-    @GET("Wiadomosc.mvc/GetAdresaciWiadomosci")
+    @GET("Wiadomosc.mvc/GetMessageAddressee")
     suspend fun getMessageRecipients(@Query("idWiadomosci") messageId: Int): ApiResponse<List<Recipient>>
 
-    @GET("Wiadomosc.mvc/GetRoleUzytkownika")
+    @GET("Wiadomosc.mvc/GetMessageSenderRoles")
     suspend fun getMessageSender(@Query("idLogin") loginId: Int, @Query("idWiadomosci") messageId: Int): ApiResponse<List<Recipient>>
 
-    @POST("Wiadomosc.mvc/GetTrescWiadomosci")
+    @POST("Wiadomosc.mvc/GetInboxMessageDetails")
     @FormUrlEncoded
-    suspend fun getMessage(
-        @Field("idWiadomosc") messageId: Int,
-        @Field("Folder") folderId: Int,
+    suspend fun getInboxMessage(
+        @Field("messageId") messageId: Int,
+        @Field("Nieprzeczytana") read: Boolean,
+        @Field("idWiadomoscAdresat") id: Int?
+    ): ApiResponse<Message>
+
+    @POST("Wiadomosc.mvc/GetOutboxMessageDetails")
+    @FormUrlEncoded
+    suspend fun getOutboxMessage(
+        @Field("messageId") messageId: Int,
+        @Field("Nieprzeczytana") read: Boolean,
+        @Field("idWiadomoscAdresat") id: Int?
+    ): ApiResponse<Message>
+
+    @POST("Wiadomosc.mvc/GetTrashboxMessageDetails")
+    @FormUrlEncoded
+    suspend fun getTrashboxMessage(
+        @Field("messageId") messageId: Int,
         @Field("Nieprzeczytana") read: Boolean,
         @Field("idWiadomoscAdresat") id: Int?
     ): ApiResponse<Message>
@@ -62,8 +78,24 @@ interface MessagesService {
         @Header("X-V-AppVersion") appVersion: String
     ): ApiResponse<SentMessage>
 
-    @POST("Wiadomosc.mvc/UsunWiadomosc")
-    suspend fun deleteMessage(
+    @POST("Wiadomosc.mvc/DeleteInboxMessages")
+    suspend fun deleteInboxMessage(
+        @Body deleteMessageRequests: List<DeleteMessageRequest>,
+        @Header("X-V-RequestVerificationToken") token: String,
+        @Header("X-V-AppGuid") appGuid: String,
+        @Header("X-V-AppVersion") appVersion: String
+    ): String
+
+    @POST("Wiadomosc.mvc/DeleteOutboxMessages")
+    suspend fun deleteOutboxMessage(
+        @Body deleteMessageRequests: List<DeleteMessageRequest>,
+        @Header("X-V-RequestVerificationToken") token: String,
+        @Header("X-V-AppGuid") appGuid: String,
+        @Header("X-V-AppVersion") appVersion: String
+    ): String
+
+    @POST("Wiadomosc.mvc/DeleteTrashboxMessages")
+    suspend fun deleteTrashMessages(
         @Body deleteMessageRequests: List<DeleteMessageRequest>,
         @Header("X-V-RequestVerificationToken") token: String,
         @Header("X-V-AppGuid") appGuid: String,

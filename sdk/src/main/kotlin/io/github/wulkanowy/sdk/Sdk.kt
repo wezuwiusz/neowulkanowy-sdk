@@ -439,10 +439,10 @@ class Sdk {
         }
     }
 
-    suspend fun deleteMessages(messages: List<Pair<Int, Int>>) = withContext(Dispatchers.IO) {
+    suspend fun deleteMessages(messages: List<Int>, folderId: Int) = withContext(Dispatchers.IO) {
         when (mode) {
-            Mode.SCRAPPER -> scrapper.deleteMessages(messages)
-            Mode.HYBRID, Mode.API -> messages.map { (messageId, folderId) ->
+            Mode.SCRAPPER -> scrapper.deleteMessages(messages, folderId)
+            Mode.HYBRID, Mode.API -> messages.map { messageId ->
                 mobile.changeMessageStatus(messageId, when (folderId) {
                     1 -> "Odebrane"
                     2 -> "Wysłane"

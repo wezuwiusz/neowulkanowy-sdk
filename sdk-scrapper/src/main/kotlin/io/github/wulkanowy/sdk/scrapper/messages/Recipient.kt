@@ -7,16 +7,19 @@ data class Recipient(
     @SerializedName("Id")
     val id: String,
 
-    @SerializedName("Nazwa")
+    @SerializedName("Name")
     val name: String,
 
     @SerializedName("IdLogin")
     val loginId: Int,
 
-    @SerializedName("IdJednostkaSprawozdawcza")
+    @SerializedName("Unreaded")
+    val unread: Boolean,
+
+    @SerializedName("UnitId")
     val reportingUnitId: Int?,
 
-    @SerializedName("Rola")
+    @SerializedName("Role")
     val role: Int,
 
     @SerializedName("Hash")
