@@ -13,9 +13,6 @@ data class Recipient(
     @SerializedName("IdLogin")
     val loginId: Int,
 
-    @SerializedName("Unreaded")
-    val unread: Boolean,
-
     @SerializedName("UnitId")
     val reportingUnitId: Int?,
 
