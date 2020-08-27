@@ -28,7 +28,7 @@ interface MessagesService {
     @GET
     suspend fun getUserReportingUnits(@Url url: String): ApiResponse<List<ReportingUnit>>
 
-    @GET("Adresaci.mvc/GetAddressee")
+    @POST("Adresaci.mvc/GetAddressee")
     suspend fun getRecipients(@Body recipientsRequest: RecipientsRequest): ApiResponse<List<Recipient>>
 
     @GET("Wiadomosc.mvc/GetInboxMessages")
