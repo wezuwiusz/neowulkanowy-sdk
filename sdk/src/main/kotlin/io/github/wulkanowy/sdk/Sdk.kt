@@ -395,21 +395,21 @@ class Sdk {
 
     suspend fun getReceivedMessages(start: LocalDateTime, end: LocalDateTime) = withContext(Dispatchers.IO) {
         when (mode) {
-            Mode.HYBRID, Mode.SCRAPPER -> scrapper.getReceivedMessages().mapMessages() // TODO
+            Mode.HYBRID, Mode.SCRAPPER -> scrapper.getReceivedMessages(start, end).mapMessages()
             Mode.API -> mobile.getMessages(start, end).mapMessages(mobile.getDictionaries())
         }
     }
 
     suspend fun getSentMessages(start: LocalDateTime, end: LocalDateTime) = withContext(Dispatchers.IO) {
         when (mode) {
-            Mode.HYBRID, Mode.SCRAPPER -> scrapper.getSentMessages().mapMessages()
+            Mode.HYBRID, Mode.SCRAPPER -> scrapper.getSentMessages(start, end).mapMessages()
             Mode.API -> mobile.getMessagesSent(start, end).mapMessages(mobile.getDictionaries())
         }
     }
 
     suspend fun getDeletedMessages(start: LocalDateTime, end: LocalDateTime) = withContext(Dispatchers.IO) {
         when (mode) {
-            Mode.HYBRID, Mode.SCRAPPER -> scrapper.getDeletedMessages().mapMessages()
+            Mode.HYBRID, Mode.SCRAPPER -> scrapper.getDeletedMessages(start, end).mapMessages()
             Mode.API -> mobile.getMessagesDeleted(start, end).mapMessages(mobile.getDictionaries())
         }
     }
