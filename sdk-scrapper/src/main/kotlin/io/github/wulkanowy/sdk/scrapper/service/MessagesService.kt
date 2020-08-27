@@ -80,7 +80,7 @@ interface MessagesService {
 
     @POST("Wiadomosc.mvc/DeleteInboxMessages")
     suspend fun deleteInboxMessage(
-        @Body deleteMessageRequests: List<DeleteMessageRequest>,
+        @Body deleteMessageRequest: DeleteMessageRequest,
         @Header("X-V-RequestVerificationToken") token: String,
         @Header("X-V-AppGuid") appGuid: String,
         @Header("X-V-AppVersion") appVersion: String
@@ -88,7 +88,7 @@ interface MessagesService {
 
     @POST("Wiadomosc.mvc/DeleteOutboxMessages")
     suspend fun deleteOutboxMessage(
-        @Body deleteMessageRequests: List<DeleteMessageRequest>,
+        @Body deleteMessageRequest: DeleteMessageRequest,
         @Header("X-V-RequestVerificationToken") token: String,
         @Header("X-V-AppGuid") appGuid: String,
         @Header("X-V-AppVersion") appVersion: String
@@ -96,7 +96,7 @@ interface MessagesService {
 
     @POST("Wiadomosc.mvc/DeleteTrashboxMessages")
     suspend fun deleteTrashMessages(
-        @Body deleteMessageRequests: List<DeleteMessageRequest>,
+        @Body deleteMessageRequest: DeleteMessageRequest,
         @Header("X-V-RequestVerificationToken") token: String,
         @Header("X-V-AppGuid") appGuid: String,
         @Header("X-V-AppVersion") appVersion: String

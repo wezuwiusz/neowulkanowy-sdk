@@ -4,6 +4,9 @@ import com.google.gson.annotations.SerializedName
 
 data class DeleteMessageRequest(
 
-    @SerializedName("IdWiadomosci")
-    val messageId: Int
+    @SerializedName("folder")
+    val folder: Int,
+
+    @SerializedName("messages")
+    val messages: List<Int>
 )

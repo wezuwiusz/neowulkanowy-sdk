@@ -102,7 +102,7 @@ class MessagesRepository(private val api: MessagesService) {
     suspend fun deleteMessages(messages: List<Int>, folderId: Int): Boolean {
         val startPage = api.getStart()
 
-        val items = messages.map { DeleteMessageRequest(it) }
+        val items = DeleteMessageRequest(folder = folderId, messages = messages)
         val antiForgeryToken = getScriptParam("antiForgeryToken", startPage)
         val appGUID = getScriptParam("appGuid", startPage)
         val version = getScriptParam("version", startPage)
