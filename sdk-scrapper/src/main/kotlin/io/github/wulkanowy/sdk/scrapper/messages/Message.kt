@@ -11,14 +11,11 @@ data class Message(
     @SerializedName("IdWiadomosci")
     val messageId: Int?,
 
-    @SerializedName("NadawcaNazwa")
-    val sender: String?,
-
-    @SerializedName("IdNadawca")
-    val senderId: Int?,
+    @SerializedName("Nadawca")
+    val sender: Recipient?,
 
     @SerializedName("Adresaci")
-    val recipient: String?,
+    val recipients: List<Recipient>?,
 
     @SerializedName("Temat")
     val subject: String,

@@ -62,7 +62,7 @@ class MessagesTest : BaseLocalTest() {
             assertEquals("Temat wiadomości", subject)
             assertEquals("Nazwisko Imię", sender)
             assertEquals(27214, messageId)
-            assertEquals(3617, senderId)
+            assertEquals(3617, sender?.loginId)
             assertEquals(true, hasAttachments)
             assertEquals(35232, id)
         }
@@ -90,7 +90,7 @@ class MessagesTest : BaseLocalTest() {
             assertEquals(32798, id)
             assertEquals(32798, messageId)
             assertEquals("Usprawiedliwienie nieobecności", subject)
-            assertEquals("Tracz Janusz", recipient)
+            assertEquals("Tracz Janusz", recipients)
             assertEquals(1, unreadBy)
             assertEquals(0, readBy)
         }
@@ -102,7 +102,7 @@ class MessagesTest : BaseLocalTest() {
         server.start(3000)
 
         runBlocking { api.getSentMessages(null, null) }[1].run {
-            assertEquals("Czerwieńska - Kowalska Joanna", recipient)
+            assertEquals("Czerwieńska - Kowalska Joanna", recipients)
         }
     }
 
@@ -112,7 +112,7 @@ class MessagesTest : BaseLocalTest() {
         server.start(3000)
 
         runBlocking { api.getSentMessages(null, null) }[3].run {
-            assertEquals("Czerwieńska - Kowalska Joanna; Tracz Janusz", recipient)
+            assertEquals("Czerwieńska - Kowalska Joanna; Tracz Janusz", recipients)
         }
     }
 
@@ -122,7 +122,7 @@ class MessagesTest : BaseLocalTest() {
         server.start(3000)
 
         runBlocking { api.getSentMessages(null, null) }[5].run {
-            assertEquals("Tracz Antoni; Kowalska Joanna", recipient)
+            assertEquals("Tracz Antoni; Kowalska Joanna", recipients)
         }
     }
 
@@ -226,7 +226,7 @@ class MessagesTest : BaseLocalTest() {
         server.enqueue(MockResponse().setBody("{\"success\": true}"))
         server.start(3000)
 
-        assertEquals(runBlocking { api.deleteMessages(listOf(Pair(74, 1), Pair(69, 2))) }, true)
+        assertEquals(runBlocking { api.deleteMessages(listOf(74, 69), 2) }, true)
 
         server.takeRequest()
 
@@ -250,7 +250,7 @@ class MessagesTest : BaseLocalTest() {
         server.start(3000)
 
         try {
-            runBlocking { api.deleteMessages(listOf(Pair(74, 1), Pair(69, 2))) }
+            runBlocking { api.deleteMessages(listOf(74, 69), 2) }
         } catch (e: Throwable) {
             assertEquals("Unexpected empty response. Message(s) may already be deleted", e.message)
         }

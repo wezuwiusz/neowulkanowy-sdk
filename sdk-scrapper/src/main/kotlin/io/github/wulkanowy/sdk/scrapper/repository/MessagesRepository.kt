@@ -46,7 +46,7 @@ class MessagesRepository(private val api: MessagesService) {
                 message.copy(
                     messageId = message.id,
                     folderId = 2,
-                    recipient = message.recipient?.split(";")?.joinToString("; ") { it.normalizeRecipient() }
+                    recipients = message.recipients?.map { it.copy(name = it.name.normalizeRecipient()) }
                 )
             }
             .sortedBy { it.date }
