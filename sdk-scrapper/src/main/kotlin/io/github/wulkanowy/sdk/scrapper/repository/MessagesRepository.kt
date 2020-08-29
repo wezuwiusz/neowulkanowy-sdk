@@ -68,7 +68,7 @@ class MessagesRepository(private val api: MessagesService) {
     }
 
     suspend fun getMessageDetails(messageId: Int, folderId: Int, read: Boolean, id: Int?): Message {
-        return when(folderId) {
+        return when (folderId) {
             1 -> api.getInboxMessage(messageId, read, id).handleErrors().data!!
             2 -> api.getOutboxMessage(messageId, read, id).handleErrors().data!!
             3 -> api.getTrashboxMessage(messageId, read, id).handleErrors().data!!
