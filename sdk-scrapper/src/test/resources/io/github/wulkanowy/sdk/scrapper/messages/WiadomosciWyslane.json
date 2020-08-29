@@ -26,7 +26,7 @@
       "Adresaci": [
         {
           "Id": "1",
-          "Name": "Tracz Janusz",
+          "Name": "Tracz Janusz [TJ] - Nauczyciel (0000FK)",
           "IdLogin": 1,
           "Unreaded": false,
           "Date": null,
@@ -62,7 +62,7 @@
       "Adresaci": [
         {
           "Id": "1",
-          "Name": "Czerwieńska - Kowalska Joanna",
+          "Name": "Czerwieńska - Kowalska Joanna [JK] - Nauczyciel (0000FK)",
           "IdLogin": 1,
           "Unreaded": false,
           "Date": null,
@@ -83,7 +83,7 @@
       "Temat": "Wiadomość testowa",
       "Nadawca": {
         "Id": "111",
-        "Name": "Jan Kowalski",
+        "Name": "Jan Kowalski [JK] - Nauczyciel (0000FK)",
         "IdLogin": 111,
         "Unreaded": false,
         "Date": null,
@@ -134,7 +134,7 @@
       "Adresaci": [
         {
           "Id": "1",
-          "Name": "Czerwieńska - Kowalska Joanna",
+          "Name": "Czerwieńska - Kowalska Joanna [JK] - Nauczyciel (0000FK)",
           "IdLogin": 1,
           "Unreaded": false,
           "Date": null,
@@ -145,7 +145,7 @@
         },
         {
           "Id": "2",
-          "Name": "Tracz Janusz",
+          "Name": "Tracz Janusz [TJ] - Nauczyciel (0000FK)",
           "IdLogin": 2,
           "Unreaded": false,
           "Date": null,
@@ -181,7 +181,7 @@
       "Adresaci": [
         {
           "Id": "1",
-          "Name": "Czerwieńska - Kowalska Joanna",
+          "Name": "Czerwieńska - Kowalska Joanna [CK] - Nauczyciel (0000FK)",
           "IdLogin": 1,
           "Unreaded": false,
           "Date": null,
@@ -192,7 +192,7 @@
         },
         {
           "Id": "3",
-          "Name": "Kowalska Joanna",
+          "Name": "Kowalska Joanna [JK] - Nauczyciel (0000FK)",
           "IdLogin": 3,
           "Unreaded": false,
           "Date": null,
@@ -228,7 +228,7 @@
       "Adresaci": [
         {
           "Id": "2",
-          "Name": "Tracz Antoni",
+          "Name": "Tracz Antoni [TA] - Nauczyciel (0000FK)",
           "IdLogin": 2,
           "Unreaded": false,
           "Date": null,
@@ -239,7 +239,7 @@
         },
         {
           "Id": "3",
-          "Name": "Kowalska Joanna",
+          "Name": "Kowalska Joanna [JK] - Nauczyciel (0000FK)",
           "IdLogin": 3,
           "Unreaded": false,
           "Date": null,
