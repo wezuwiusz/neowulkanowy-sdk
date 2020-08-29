@@ -5,6 +5,7 @@ import io.github.wulkanowy.sdk.normalizeRecipient
 import io.github.wulkanowy.sdk.pojo.Message
 import io.github.wulkanowy.sdk.pojo.MessageAttachment
 import io.github.wulkanowy.sdk.pojo.MessageDetails
+import io.github.wulkanowy.sdk.pojo.Sender
 import io.github.wulkanowy.sdk.toLocalDateTime
 import io.github.wulkanowy.sdk.mobile.messages.Message as ApiMessage
 import io.github.wulkanowy.sdk.scrapper.messages.Message as ScrapperMessage
@@ -15,8 +16,14 @@ fun List<ApiMessage>.mapMessages(dictionaries: Dictionaries) = map {
         id = it.messageId,
         unreadBy = it.unread?.toInt(),
         unread = it.folder == "Odebrane" && it.readDateTime == null,
-        sender = it.senderName ?: dictionaries.employees.singleOrNull { employee -> employee.id == it.senderId }?.let { e -> "${e.name} ${e.surname}" },
-        senderId = it.senderId,
+        sender = Sender(
+            id = null,
+            loginId = it.senderId,
+            name = it.senderName ?: dictionaries.employees.singleOrNull { employee -> employee.id == it.senderId }?.let { e -> "${e.name} ${e.surname}" },
+            reportingUnitId = null,
+            hash = null,
+            role = 2
+        ),
         removed = it.status == "Usunieta",
         recipients = it.recipients?.map { recipient -> recipient.copy(name = recipient.name.normalizeRecipient()) }?.mapFromMobileToRecipients().orEmpty(),
         readBy = it.read?.toInt(),
@@ -44,8 +51,16 @@ fun List<ScrapperMessage>.mapMessages() = map {
         readBy = it.readBy,
         recipients = it.recipients?.mapRecipients().orEmpty(),
         removed = it.removed,
-        sender = it.sender?.name,
-        senderId = it.sender?.loginId,
+        sender = it.sender?.let { sender ->
+            Sender(
+                id = sender.id,
+                name = sender.name,
+                loginId = sender.loginId,
+                reportingUnitId = sender.reportingUnitId,
+                role = sender.role,
+                hash = sender.hash
+            )
+        },
         unread = it.unread,
         unreadBy = it.unreadBy,
         hasAttachments = it.hasAttachments
