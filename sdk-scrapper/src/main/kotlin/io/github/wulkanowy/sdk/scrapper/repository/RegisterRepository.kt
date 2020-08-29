@@ -112,7 +112,7 @@ class RegisterRepository(
         val diaries = getStudentDiaries()
         return diaries.filterDiaries().map { diary ->
             val schoolSymbol = getExtractedSchoolSymbolFromUrl(schoolUrl)
-            val unit = units.firstOrNull { it.short == schoolSymbol }
+            val unit = units.firstOrNull { it.unitId == diary.semesters!![0].unitId }
 
             Student(
                 email = email,
