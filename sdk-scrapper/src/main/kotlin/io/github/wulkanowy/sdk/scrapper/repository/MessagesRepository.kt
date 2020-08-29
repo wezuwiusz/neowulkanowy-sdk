@@ -79,7 +79,8 @@ class MessagesRepository(private val api: MessagesService) {
         return when(folderId) {
             1 -> api.getInboxMessage(messageId, read, id).handleErrors().data!!
             2 -> api.getOutboxMessage(messageId, read, id).handleErrors().data!!
-            else -> api.getTrashboxMessage(messageId, read, id).handleErrors().data!! // 3
+            3 -> api.getTrashboxMessage(messageId, read, id).handleErrors().data!!
+            else -> throw IllegalArgumentException("Unknown folder id: $folderId")
         }
     }
 
@@ -110,7 +111,8 @@ class MessagesRepository(private val api: MessagesService) {
         val res = when (folderId) {
             1 -> api.deleteInboxMessage(items, antiForgeryToken, appGUID, version)
             2 -> api.deleteOutboxMessage(items, antiForgeryToken, appGUID, version)
-            else -> api.deleteTrashMessages(items, antiForgeryToken, appGUID, version) // 3
+            3 -> api.deleteTrashMessages(items, antiForgeryToken, appGUID, version)
+            else -> throw IllegalArgumentException("Unknown folder id: $folderId")
         }
 
         val apiResponse = if (res.isBlank()) throw VulcanException("Unexpected empty response. Message(s) may already be deleted")
