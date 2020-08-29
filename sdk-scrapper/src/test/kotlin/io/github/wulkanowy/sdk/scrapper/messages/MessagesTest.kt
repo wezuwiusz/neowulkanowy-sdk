@@ -61,6 +61,7 @@ class MessagesTest : BaseLocalTest() {
             assertEquals(null, content)
             assertEquals("Temat wiadomości", subject)
             assertEquals("Nazwisko Imię", sender?.name)
+            assertEquals("Jan Kowalski", recipients!![0].name)
             assertEquals(27214, messageId)
             assertEquals(3617, sender?.loginId)
             assertEquals(true, hasAttachments)
@@ -74,7 +75,10 @@ class MessagesTest : BaseLocalTest() {
         server.enqueue(MockResponse().setBody(MessagesTest::class.java.getResource("WiadomosciUsuniete.json").readText()))
         server.start(3000)
 
-        assertEquals(1, runBlocking { api.getDeletedMessages(null, null) }.size)
+        val messages = runBlocking { api.getDeletedMessages(null, null) }
+
+        assertEquals(1, messages.size)
+        assertEquals("Kowalski Jan", messages[0].recipients!![0].name)
     }
 
     @Test

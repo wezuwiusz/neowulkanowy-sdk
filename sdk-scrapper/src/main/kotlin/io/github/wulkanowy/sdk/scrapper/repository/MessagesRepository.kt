@@ -36,6 +36,11 @@ class MessagesRepository(private val api: MessagesService) {
     suspend fun getReceivedMessages(startDate: LocalDateTime?, endDate: LocalDateTime?): List<Message> {
         return api.getReceived(startDate.getDate(), endDate.getDate()).handleErrors().data.orEmpty()
             .sortedBy { it.date }
+            .map { message ->
+                message.copy(
+                    recipients = message.recipients?.map { it.copy(name = it.name.normalizeRecipient()) }
+                )
+            }
             .toList()
     }
 
@@ -54,7 +59,11 @@ class MessagesRepository(private val api: MessagesService) {
 
     suspend fun getDeletedMessages(startDate: LocalDateTime?, endDate: LocalDateTime?): List<Message> {
         return api.getDeleted(startDate.getDate(), endDate.getDate()).handleErrors().data.orEmpty()
-            .map { it.apply { removed = true } }
+            .map { message ->
+                message.copy(
+                    recipients = message.recipients?.map { it.copy(name = it.name.normalizeRecipient()) }
+                ).apply { removed = true }
+            }
             .sortedBy { it.date }
             .toList()
     }
