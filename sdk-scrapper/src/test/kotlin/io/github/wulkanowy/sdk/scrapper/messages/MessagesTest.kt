@@ -60,7 +60,7 @@ class MessagesTest : BaseLocalTest() {
             assertEquals(false, unread)
             assertEquals(null, content)
             assertEquals("Temat wiadomości", subject)
-            assertEquals("Nazwisko Imię", sender)
+            assertEquals("Nazwisko Imię", sender?.name)
             assertEquals(27214, messageId)
             assertEquals(3617, sender?.loginId)
             assertEquals(true, hasAttachments)
@@ -90,7 +90,8 @@ class MessagesTest : BaseLocalTest() {
             assertEquals(32798, id)
             assertEquals(32798, messageId)
             assertEquals("Usprawiedliwienie nieobecności", subject)
-            assertEquals("Tracz Janusz", recipients)
+            assertEquals(1, recipients?.size)
+            assertEquals("Tracz Janusz", recipients!![0].name)
             assertEquals(1, unreadBy)
             assertEquals(0, readBy)
         }
@@ -102,7 +103,7 @@ class MessagesTest : BaseLocalTest() {
         server.start(3000)
 
         runBlocking { api.getSentMessages(null, null) }[1].run {
-            assertEquals("Czerwieńska - Kowalska Joanna", recipients)
+            assertEquals("Czerwieńska - Kowalska Joanna", recipients!![0].name)
         }
     }
 
@@ -112,7 +113,9 @@ class MessagesTest : BaseLocalTest() {
         server.start(3000)
 
         runBlocking { api.getSentMessages(null, null) }[3].run {
-            assertEquals("Czerwieńska - Kowalska Joanna; Tracz Janusz", recipients)
+            assertEquals(2, recipients?.size)
+            assertEquals("Czerwieńska - Kowalska Joanna", recipients!![0].name)
+            assertEquals("Tracz Janusz", recipients!![1].name)
         }
     }
 
@@ -122,7 +125,9 @@ class MessagesTest : BaseLocalTest() {
         server.start(3000)
 
         runBlocking { api.getSentMessages(null, null) }[5].run {
-            assertEquals("Tracz Antoni; Kowalska Joanna", recipients)
+            assertEquals(2, recipients?.size)
+            assertEquals("Tracz Antoni", recipients!![0].name)
+            assertEquals("Kowalska Joanna", recipients!![1].name)
         }
     }
 
@@ -135,7 +140,7 @@ class MessagesTest : BaseLocalTest() {
             assertEquals("18rPracownik", id)
             assertEquals("Tracz Janusz [TJ] - pracownik (Fake123456)", name)
             assertEquals(18, loginId)
-//            assertEquals(null, reportingUnitId)
+            assertEquals(6, reportingUnitId)
             assertEquals(2, role)
             assertEquals("NTVhNTQwMDhhZDFiYTU4OWFhMjEwZDI2MjljMWRmNDE=", hash)
             assertEquals("Tracz Janusz", shortName)

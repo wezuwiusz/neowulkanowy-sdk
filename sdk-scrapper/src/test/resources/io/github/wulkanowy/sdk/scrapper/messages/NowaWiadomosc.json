@@ -3,20 +3,20 @@
     "Adresaci": [
       {
         "Id": "0",
-        "Nazwa": "Kowalski Jan",
+        "Name": "Kowalski Jan",
         "IdLogin": 0,
-        "IdJednostkaSprawozdawcza": 0,
-        "Rola": 2,
+        "UnitId": 0,
+        "Role": 2,
         "Hash": "hash"
       }
     ],
     "Id": 0,
     "Nadawca": {
       "Id": null,
-      "Nazwa": null,
+      "Name": null,
       "IdLogin": null,
-      "IdJednostkaSprawozdawcza": null,
-      "Rola": null,
+      "UnitId": null,
+      "Role": null,
       "Hash": null
     },
     "Temat": "Temat wiadomości",

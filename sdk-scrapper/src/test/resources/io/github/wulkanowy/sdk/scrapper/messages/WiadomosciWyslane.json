@@ -2,52 +2,253 @@
   "success": true,
   "data": [
     {
-      "Data": "2018-06-11T07:38:35.000Z",
+      "Id": 32798,
+      "Nieprzeczytana": false,
+      "Nieprzeczytane": 1,
+      "Przeczytane": 0,
+      "Data": "2018-06-11 07:38:35",
+      "Tresc": null,
       "Temat": "Usprawiedliwienie nieobecności",
-      "Adresaci": "Tracz Janusz [TJ] - pracownik (Fake123456)",
-      "Nieprzeczytane": "1",
-      "Przeczytane": "0",
-      "Id": 32798
+      "Nadawca": {
+        "Id": "111",
+        "Name": "Jan Kowalski",
+        "IdLogin": 111,
+        "Unreaded": false,
+        "Date": null,
+        "Role": 2,
+        "PushMessage": false,
+        "UnitId": 0,
+        "Hash": "abcdef0123456789="
+      },
+      "IdWiadomosci": 32798,
+      "HasZalaczniki": false,
+      "FolderWiadomosci": 2,
+      "Adresaci": [
+        {
+          "Id": "1",
+          "Name": "Tracz Janusz",
+          "IdLogin": 1,
+          "Unreaded": false,
+          "Date": null,
+          "Role": 2,
+          "PushMessage": false,
+          "UnitId": 0,
+          "Hash": "0123456789abcdef="
+        }
+      ]
     },
     {
-      "Data": "2018-06-11T09:38:35.000Z",
+      "Id": 32799,
+      "Nieprzeczytana": false,
+      "Nieprzeczytane": 1,
+      "Przeczytane": 0,
+      "Data": "2018-06-11 09:38:35",
+      "Tresc": null,
       "Temat": "Wiadomość testowa",
-      "Adresaci": "Czerwieńska - Kowalska Joanna [CJ] - pracownik (Fake123456)",
-      "Nieprzeczytane": "1",
-      "Przeczytane": "0",
-      "Id": 32799
+      "Nadawca": {
+        "Id": "111",
+        "Name": "Jan Kowalski",
+        "IdLogin": 111,
+        "Unreaded": false,
+        "Date": null,
+        "Role": 2,
+        "PushMessage": false,
+        "UnitId": 0,
+        "Hash": "abcdef0123456789="
+      },
+      "IdWiadomosci": 32799,
+      "HasZalaczniki": false,
+      "FolderWiadomosci": 2,
+      "Adresaci": [
+        {
+          "Id": "1",
+          "Name": "Czerwieńska - Kowalska Joanna",
+          "IdLogin": 1,
+          "Unreaded": false,
+          "Date": null,
+          "Role": 2,
+          "PushMessage": false,
+          "UnitId": 0,
+          "Hash": "0123456789abcdef="
+        }
+      ]
     },
     {
-      "Data": "2018-06-11T09:38:35.000Z",
+      "Id": 32800,
+      "Nieprzeczytana": false,
+      "Nieprzeczytane": 1,
+      "Przeczytane": 0,
+      "Data": "2018-06-11 09:38:35",
+      "Tresc": null,
       "Temat": "Wiadomość testowa",
-      "Adresaci": "Czerwieńska - Kowalska Joanna - pracownik (Fake123456)",
-      "Nieprzeczytane": "1",
-      "Przeczytane": "0",
-      "Id": 32800
+      "Nadawca": {
+        "Id": "111",
+        "Name": "Jan Kowalski",
+        "IdLogin": 111,
+        "Unreaded": false,
+        "Date": null,
+        "Role": 2,
+        "PushMessage": false,
+        "UnitId": 0,
+        "Hash": "abcdef0123456789="
+      },
+      "IdWiadomosci": 32800,
+      "HasZalaczniki": false,
+      "FolderWiadomosci": 2,
+      "Adresaci": [
+        {
+          "Id": "1",
+          "Name": "Czerwieńska - Kowalska Joanna",
+          "IdLogin": 1,
+          "Unreaded": false,
+          "Date": null,
+          "Role": 2,
+          "PushMessage": false,
+          "UnitId": 0,
+          "Hash": "0123456789abcdef="
+        }
+      ]
     },
     {
-      "Data": "2018-06-11T09:38:35.000Z",
-      "Temat": "Wiadomość tekstowa",
-      "Adresaci": "Czerwieńska - Kowalska Joanna - pracownik (Fake123456); Tracz Janusz [TJ] - pracownik (Fake123456)",
-      "Nieprzeczytane": "1",
-      "Przeczytane": "0",
-      "Id": 32801
+      "Id": 32801,
+      "Nieprzeczytana": false,
+      "Nieprzeczytane": 1,
+      "Przeczytane": 0,
+      "Data": "2018-06-11 09:38:35",
+      "Tresc": null,
+      "Temat": "Wiadomość testowa",
+      "Nadawca": {
+        "Id": "111",
+        "Name": "Jan Kowalski",
+        "IdLogin": 111,
+        "Unreaded": false,
+        "Date": null,
+        "Role": 2,
+        "PushMessage": false,
+        "UnitId": 0,
+        "Hash": "abcdef0123456789="
+      },
+      "IdWiadomosci": 32801,
+      "HasZalaczniki": false,
+      "FolderWiadomosci": 2,
+      "Adresaci": [
+        {
+          "Id": "1",
+          "Name": "Czerwieńska - Kowalska Joanna",
+          "IdLogin": 1,
+          "Unreaded": false,
+          "Date": null,
+          "Role": 2,
+          "PushMessage": false,
+          "UnitId": 0,
+          "Hash": "0123456789abcdef="
+        },
+        {
+          "Id": "2",
+          "Name": "Tracz Janusz",
+          "IdLogin": 2,
+          "Unreaded": false,
+          "Date": null,
+          "Role": 2,
+          "PushMessage": false,
+          "UnitId": 0,
+          "Hash": "0123456789abcdeg="
+        }
+      ]
     },
     {
-      "Data": "2018-06-11T09:38:35.000Z",
-      "Temat": "Wiadomość tekstowa",
-      "Adresaci": "Tracz Janusz [TJ] - pracownik (Fake123456); Kowalska Joanna - pracownik (Fake123456)",
-      "Nieprzeczytane": "1",
-      "Przeczytane": "0",
-      "Id": 32801
+      "Id": 32801,
+      "Nieprzeczytana": false,
+      "Nieprzeczytane": 1,
+      "Przeczytane": 0,
+      "Data": "2018-06-11 09:38:35",
+      "Tresc": null,
+      "Temat": "Wiadomość testowa",
+      "Nadawca": {
+        "Id": "111",
+        "Name": "Jan Kowalski",
+        "IdLogin": 111,
+        "Unreaded": false,
+        "Date": null,
+        "Role": 2,
+        "PushMessage": false,
+        "UnitId": 0,
+        "Hash": "abcdef0123456789="
+      },
+      "IdWiadomosci": 32801,
+      "HasZalaczniki": false,
+      "FolderWiadomosci": 2,
+      "Adresaci": [
+        {
+          "Id": "1",
+          "Name": "Czerwieńska - Kowalska Joanna",
+          "IdLogin": 1,
+          "Unreaded": false,
+          "Date": null,
+          "Role": 2,
+          "PushMessage": false,
+          "UnitId": 0,
+          "Hash": "0123456789abcdef="
+        },
+        {
+          "Id": "3",
+          "Name": "Kowalska Joanna",
+          "IdLogin": 3,
+          "Unreaded": false,
+          "Date": null,
+          "Role": 2,
+          "PushMessage": false,
+          "UnitId": 0,
+          "Hash": "0123456789abcdeh="
+        }
+      ]
     },
     {
-      "Data": "2018-06-11T09:38:35.000Z",
-      "Temat": "Wiadomość tekstowa",
-      "Adresaci": "Tracz Antoni (TA)- pracownik (Fake123456); Kowalska Joanna - pracownik (Fake123456)",
-      "Nieprzeczytane": "1",
-      "Przeczytane": "0",
-      "Id": 32801
+      "Id": 32801,
+      "Nieprzeczytana": false,
+      "Nieprzeczytane": 1,
+      "Przeczytane": 0,
+      "Data": "2018-06-11 09:38:35",
+      "Tresc": null,
+      "Temat": "Wiadomość testowa",
+      "Nadawca": {
+        "Id": "111",
+        "Name": "Jan Kowalski",
+        "IdLogin": 111,
+        "Unreaded": false,
+        "Date": null,
+        "Role": 2,
+        "PushMessage": false,
+        "UnitId": 0,
+        "Hash": "abcdef0123456789="
+      },
+      "IdWiadomosci": 32801,
+      "HasZalaczniki": false,
+      "FolderWiadomosci": 2,
+      "Adresaci": [
+        {
+          "Id": "2",
+          "Name": "Tracz Antoni",
+          "IdLogin": 2,
+          "Unreaded": false,
+          "Date": null,
+          "Role": 2,
+          "PushMessage": false,
+          "UnitId": 0,
+          "Hash": "0123456789abcdeg="
+        },
+        {
+          "Id": "3",
+          "Name": "Kowalska Joanna",
+          "IdLogin": 3,
+          "Unreaded": false,
+          "Date": null,
+          "Role": 2,
+          "PushMessage": false,
+          "UnitId": 0,
+          "Hash": "0123456789abcdeh="
+        }
+      ]
     }
   ]
 }

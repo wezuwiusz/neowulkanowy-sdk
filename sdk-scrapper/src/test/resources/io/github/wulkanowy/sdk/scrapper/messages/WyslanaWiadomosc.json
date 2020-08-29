@@ -4,11 +4,11 @@
     "Adresaci": [
       {
         "Id": "0",
-        "Nazwa": "Kowalski Jan",
+        "Name": "Kowalski Jan",
         "IdLogin": 0,
-        "IdJednostkaSprawozdawcza": null,
-        "Rola": 2,
-        "PushWiadomosc": false,
+        "UnitId": null,
+        "Role": 2,
+        "PushMessage": false,
         "Hash": "hash"
       }
     ],
@@ -16,11 +16,11 @@
     "Tresc": "Tak wygląda zawartość wiadomości.\nZazwyczaj ma wiele linijek.\n\nZ poważaniem,\nNazwisko Imię",
     "Nadawca": {
       "Id": null,
-      "Nazwa": "Kowalski Jan",
+      "Name": "Kowalski Jan",
       "IdLogin": 621,
-      "IdJednostkaSprawozdawcza": null,
-      "Rola": 0,
-      "PushWiadomosc": null,
+      "UnitId": null,
+      "Role": 0,
+      "PushMessage": null,
       "Hash": "hash"
     },
     "WiadomoscPowitalna": false,

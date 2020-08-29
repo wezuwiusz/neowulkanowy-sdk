@@ -35,20 +35,12 @@ class MessagesRepository(private val api: MessagesService) {
 
     suspend fun getReceivedMessages(startDate: LocalDateTime?, endDate: LocalDateTime?): List<Message> {
         return api.getReceived(startDate.getDate(), endDate.getDate()).handleErrors().data.orEmpty()
-            .map { it.copy(folderId = 1) }
             .sortedBy { it.date }
             .toList()
     }
 
     suspend fun getSentMessages(startDate: LocalDateTime?, endDate: LocalDateTime?): List<Message> {
         return api.getSent(startDate.getDate(), endDate.getDate()).handleErrors().data.orEmpty()
-            .map { message ->
-                message.copy(
-                    messageId = message.id,
-                    folderId = 2,
-                    recipients = message.recipients?.map { it.copy(name = it.name.normalizeRecipient()) }
-                )
-            }
             .sortedBy { it.date }
             .toList()
     }

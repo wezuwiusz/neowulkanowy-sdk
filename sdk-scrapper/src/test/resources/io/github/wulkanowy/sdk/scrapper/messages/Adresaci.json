@@ -3,38 +3,46 @@
   "data": [
     {
       "Id": "18rPracownik",
-      "Nazwa": "Tracz Janusz [TJ] - pracownik (Fake123456)",
+      "Name": "Tracz Janusz [TJ] - pracownik (Fake123456)",
       "IdLogin": 18,
-      "IdJednostkaSprawozdawcza": 6,
-      "Rola": 2,
-      "PushWiadomosc": null,
+      "Unreaded": false,
+      "Date": null,
+      "Role": 2,
+      "PushMessage": false,
+      "UnitId": 6,
       "Hash": "NTVhNTQwMDhhZDFiYTU4OWFhMjEwZDI2MjljMWRmNDE="
     },
     {
       "Id": "94rPracownik",
-      "Nazwa": "Lech Wałęsa [Dd] - pracownik (Fake123456)",
+      "Name": "Lech Wałęsa [Dd] - pracownik (Fake123456)",
       "IdLogin": 94,
-      "IdJednostkaSprawozdawcza": 6,
-      "Rola": 2,
-      "PushWiadomosc": null,
+      "UnitId": 6,
+      "Role": 2,
+      "Unreaded": false,
+      "Date": null,
+      "PushMessage": null,
       "Hash": "NTVhNTQwMDhhZDFiYTU4OWFhMjEwZDI2MjljMWRmNDE="
     },
     {
       "Id": "95rPracownik",
-      "Nazwa": "Czerwieńska - Kowalska Joanna [CJ] - pracownik (Fake123456)",
+      "Name": "Czerwieńska - Kowalska Joanna [CJ] - pracownik (Fake123456)",
       "IdLogin": 95,
-      "IdJednostkaSprawozdawcza": 6,
-      "Rola": 2,
-      "PushWiadomosc": null,
+      "UnitId": 6,
+      "Role": 2,
+      "Unreaded": false,
+      "Date": null,
+      "PushMessage": null,
       "Hash": "NTVhNTQwMDhhZDFiYTU4OWFhMjEwZDI2MjljMWRmNDE="
     },
     {
       "Id": "96rPracownik",
-      "Nazwa": "Kowalski Jan (JK) - pracownik [Fake123456]",
+      "Name": "Kowalski Jan (JK) - pracownik [Fake123456]",
       "IdLogin": 96,
-      "IdJednostkaSprawozdawcza": 6,
-      "Rola": 2,
-      "PushWiadomosc": null,
+      "UnitId": 6,
+      "Role": 2,
+      "Unreaded": false,
+      "Date": null,
+      "PushMessage": null,
       "Hash": "NTVhNTQwMDhhZDFiYTU4OWFhMjEwZDI2MjljMWRmNDE="
     }
   ]

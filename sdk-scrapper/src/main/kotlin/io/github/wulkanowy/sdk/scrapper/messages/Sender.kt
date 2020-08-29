@@ -7,16 +7,16 @@ data class Sender(
     @SerializedName("Id")
     val id: String? = null,
 
-    @SerializedName("Nazwa")
+    @SerializedName("Name")
     val name: String? = null,
 
     @SerializedName("IdLogin")
     val loginId: Int? = null,
 
-    @SerializedName("IdJednostkaSprawozdawcza")
+    @SerializedName("UnitId")
     val reportingUnitId: Int? = null,
 
-    @SerializedName("Rola")
+    @SerializedName("Role")
     val role: Int? = null,
 
     @SerializedName("Hash")

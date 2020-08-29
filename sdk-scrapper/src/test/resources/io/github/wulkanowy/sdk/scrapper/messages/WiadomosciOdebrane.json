@@ -2,26 +2,76 @@
   "success": true,
   "data": [
     {
+      "Id": 35232,
       "Nieprzeczytana": false,
-      "Data": "2020-03-25T13:31:16.000Z",
+      "Nieprzeczytane": 0,
+      "Przeczytane": 1,
+      "Data": "2020-03-25 13:31:16",
       "Tresc": null,
       "Temat": "Temat wiadomości",
-      "NadawcaNazwa": "Nazwisko Imię",
+      "Nadawca": {
+        "Id": "3617",
+        "Name": "Nazwisko Imię",
+        "IdLogin": 3617,
+        "Unreaded": false,
+        "Date": null,
+        "Role": 2,
+        "PushMessage": false,
+        "UnitId": 0,
+        "Hash": "abcdef="
+      },
       "IdWiadomosci": 27214,
-      "IdNadawca": 3617,
       "HasZalaczniki": true,
-      "Id": 35232
+      "FolderWiadomosci": 2,
+      "Adresaci": [
+        {
+          "Id": "111",
+          "Name": "Jan Kowalski",
+          "IdLogin": 111,
+          "Unreaded": false,
+          "Date": null,
+          "Role": 2,
+          "PushMessage": false,
+          "UnitId": 0,
+          "Hash": "nFqOnNO2+abcd="
+        }
+      ]
     },
     {
-      "Nieprzeczytana": true,
-      "Data": "2020-03-26T09:51:15.000Z",
+      "Id": 43245,
+      "Nieprzeczytana": false,
+      "Nieprzeczytane": 0,
+      "Przeczytane": 1,
+      "Data": "2020-03-26 09:51:15",
       "Tresc": null,
       "Temat": "Tytuł",
-      "NadawcaNazwa": "Kowalski Jan",
+      "Nadawca": {
+        "Id": "2137",
+        "Name": "Kowalski Jan",
+        "IdLogin": 2137,
+        "Unreaded": false,
+        "Date": null,
+        "Role": 2,
+        "PushMessage": false,
+        "UnitId": 0,
+        "Hash": "abcdef="
+      },
       "IdWiadomosci": 28973,
-      "IdNadawca": 2137,
       "HasZalaczniki": false,
-      "Id": 43245
+      "FolderWiadomosci": 2,
+      "Adresaci": [
+        {
+          "Id": "111",
+          "Name": "Jan Kowalski",
+          "IdLogin": 111,
+          "Unreaded": false,
+          "Date": null,
+          "Role": 2,
+          "PushMessage": false,
+          "UnitId": 0,
+          "Hash": "nFqOnNO2+abcd="
+        }
+      ]
     }
   ]
 }
