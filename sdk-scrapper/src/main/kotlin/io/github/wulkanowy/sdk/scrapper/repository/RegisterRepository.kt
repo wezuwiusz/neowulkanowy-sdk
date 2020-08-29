@@ -118,7 +118,7 @@ class RegisterRepository(
                 email = email,
                 userLogin = email,
                 userName = unit?.senderName ?: email,
-                userLoginId = unit?.id ?: 0,
+                userLoginId = unit?.senderId ?: 0,
                 symbol = symbol,
                 studentId = diary.studentId,
                 studentName = diary.studentName,

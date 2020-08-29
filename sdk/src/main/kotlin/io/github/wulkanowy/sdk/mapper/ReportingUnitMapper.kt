@@ -6,7 +6,7 @@ import io.github.wulkanowy.sdk.scrapper.messages.ReportingUnit as ScrapperReport
 
 fun List<ScrapperReportingUnit>.mapReportingUnits() = map {
     ReportingUnit(
-        id = it.id,
+        id = it.unitId,
         roles = it.roles,
         senderId = it.senderId,
         senderName = it.senderName,
