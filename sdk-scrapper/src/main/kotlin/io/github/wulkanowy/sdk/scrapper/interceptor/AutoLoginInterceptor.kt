@@ -31,7 +31,7 @@ class AutoLoginInterceptor(
         val request: Request
         val response: Response
 
-        synchronized(jar) {
+        // synchronized(jar) {
             try {
                 request = chain.request()
                 checkRequest()
@@ -47,7 +47,7 @@ class AutoLoginInterceptor(
                     return chain.proceed(chain.request().newBuilder().build())
                 } else throw e
             }
-        }
+        // }
 
         return response
     }

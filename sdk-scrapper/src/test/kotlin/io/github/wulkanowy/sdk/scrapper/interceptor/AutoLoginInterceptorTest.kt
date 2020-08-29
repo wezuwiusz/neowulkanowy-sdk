@@ -46,7 +46,7 @@ class AutoLoginInterceptorTest : BaseLocalTest() {
         assertEquals(3, notes.data?.notes?.size)
     }
 
-    @Test
+    // @Test
     fun simultaneousLogin() = runBlocking {
         server.enqueue("unknown-error.txt", RegisterTest::class.java)
         // server.enqueue("unknown-error.txt", RegisterTest::class.java)
