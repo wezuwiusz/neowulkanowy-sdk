@@ -7,7 +7,7 @@ data class Message(
     val messageId: Int?,
     val sender: String?,
     val senderId: Int?,
-    val recipient: String?,
+    val recipients: List<Recipient>,
     val subject: String,
     val content: String?,
     val date: LocalDateTime?,

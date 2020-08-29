@@ -18,7 +18,7 @@ fun List<ApiMessage>.mapMessages(dictionaries: Dictionaries) = map {
         sender = it.senderName ?: dictionaries.employees.singleOrNull { employee -> employee.id == it.senderId }?.let { e -> "${e.name} ${e.surname}" },
         senderId = it.senderId,
         removed = it.status == "Usunieta",
-        recipient = it.recipients?.joinToString(", ") { recipient -> recipient.name.normalizeRecipient() },
+        recipients = it.recipients?.map { recipient -> recipient.copy(name = recipient.name.normalizeRecipient()) }?.mapFromMobileToRecipients().orEmpty(),
         readBy = it.read?.toInt(),
         messageId = it.messageId,
         folderId = when (it.folder) {
@@ -42,7 +42,7 @@ fun List<ScrapperMessage>.mapMessages() = map {
         folderId = it.folderId,
         messageId = it.messageId,
         readBy = it.readBy,
-        recipient = it.recipients?.joinToString("; ") { it.name },
+        recipients = it.recipients?.mapRecipients().orEmpty(),
         removed = it.removed,
         sender = it.sender?.name,
         senderId = it.sender?.loginId,

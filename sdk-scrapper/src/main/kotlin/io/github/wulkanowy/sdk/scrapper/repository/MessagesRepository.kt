@@ -36,34 +36,21 @@ class MessagesRepository(private val api: MessagesService) {
     suspend fun getReceivedMessages(startDate: LocalDateTime?, endDate: LocalDateTime?): List<Message> {
         return api.getReceived(startDate.getDate(), endDate.getDate()).handleErrors().data.orEmpty()
             .sortedBy { it.date }
-            .map { message ->
-                message.copy(
-                    recipients = message.recipients?.map { it.copy(name = it.name.normalizeRecipient()) }
-                )
-            }
+            .map { it.normalizeRecipients() }
             .toList()
     }
 
     suspend fun getSentMessages(startDate: LocalDateTime?, endDate: LocalDateTime?): List<Message> {
         return api.getSent(startDate.getDate(), endDate.getDate()).handleErrors().data.orEmpty()
-            .map { message ->
-                message.copy(
-                    messageId = message.id,
-                    folderId = 2,
-                    recipients = message.recipients?.map { it.copy(name = it.name.normalizeRecipient()) }
-                )
-            }
+            .map { it.normalizeRecipients() }
             .sortedBy { it.date }
             .toList()
     }
 
     suspend fun getDeletedMessages(startDate: LocalDateTime?, endDate: LocalDateTime?): List<Message> {
         return api.getDeleted(startDate.getDate(), endDate.getDate()).handleErrors().data.orEmpty()
-            .map { message ->
-                message.copy(
-                    recipients = message.recipients?.map { it.copy(name = it.name.normalizeRecipient()) }
-                ).apply { removed = true }
-            }
+            .map { it.normalizeRecipients() }
+            .map { it.apply { removed = true } }
             .sortedBy { it.date }
             .toList()
     }
@@ -132,6 +119,10 @@ class MessagesRepository(private val api: MessagesService) {
     private fun String.normalizeRecipient(): String {
         return this.substringBeforeLast("-").substringBefore(" [").substringBeforeLast(" (").trim()
     }
+
+    private fun Message.normalizeRecipients() = copy(
+        recipients = recipients?.map { it.copy(name = it.name.normalizeRecipient()) }
+    )
 
     private fun LocalDateTime?.getDate(): String {
         return this?.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")).orEmpty()
