@@ -46,17 +46,17 @@ class AutoLoginInterceptorTest : BaseLocalTest() {
         assertEquals(3, notes.data?.notes?.size)
     }
 
-    // @Test
+    @Test
     fun simultaneousLogin() = runBlocking {
         server.enqueue("unknown-error.txt", RegisterTest::class.java)
-        // server.enqueue("unknown-error.txt", RegisterTest::class.java)
+        server.enqueue("unknown-error.txt", RegisterTest::class.java)
 
         server.enqueue("Logowanie-uonet.html", LoginTest::class.java)
-        // server.enqueue("Logowanie-uonet.html", LoginTest::class.java)
         server.enqueue("Login-success.html", LoginTest::class.java)
-        // server.enqueue("Login-success.html", LoginTest::class.java)
-
         server.enqueue("UwagiIOsiagniecia.json", NotesTest::class.java)
+
+        server.enqueue("Logowanie-uonet.html", LoginTest::class.java)
+        server.enqueue("Login-success.html", LoginTest::class.java)
         server.enqueue("UwagiIOsiagniecia.json", NotesTest::class.java)
         server.start(3000)
         init()

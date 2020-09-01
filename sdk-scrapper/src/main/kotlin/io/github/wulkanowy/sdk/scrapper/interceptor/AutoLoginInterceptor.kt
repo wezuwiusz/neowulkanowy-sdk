@@ -31,23 +31,23 @@ class AutoLoginInterceptor(
         val request: Request
         val response: Response
 
-        // synchronized(jar) {
-            try {
-                request = chain.request()
-                checkRequest()
-                response = chain.proceed(request)
-                checkResponse(
-                    doc = Jsoup.parse(response.peekBody(Long.MAX_VALUE).string()),
-                    url = chain.request().url().toString()
-                )
-            } catch (e: NotLoggedInException) {
+        try {
+            request = chain.request()
+            checkRequest()
+            response = chain.proceed(request)
+            checkResponse(
+                doc = Jsoup.parse(response.peekBody(Long.MAX_VALUE).string()),
+                url = chain.request().url().toString()
+            )
+        } catch (e: NotLoggedInException) {
+            synchronized(jar) {
                 println("Not logged in. Login in...")
                 if (notLoggedInCallback()) {
                     println("Retry after login...")
                     return chain.proceed(chain.request().newBuilder().build())
                 } else throw e
             }
-        // }
+        }
 
         return response
     }
