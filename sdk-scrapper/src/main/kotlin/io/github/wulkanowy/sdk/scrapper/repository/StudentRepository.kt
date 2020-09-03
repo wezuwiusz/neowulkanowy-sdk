@@ -90,13 +90,13 @@ class StudentRepository(private val api: StudentService) {
     suspend fun getAttendance(startDate: LocalDate, endDate: LocalDate?): List<Attendance> {
         return api.getAttendance(AttendanceRequest(startDate.toDate()))
             .handleErrors()
-            .data?.mapAttendanceList(startDate, endDate, getTimes())!!
+            .data?.mapAttendanceList(startDate, endDate, getTimes()).orEmpty()
     }
 
     suspend fun getAttendanceSummary(subjectId: Int?): List<AttendanceSummary> {
         return api.getAttendanceStatistics(AttendanceSummaryRequest(subjectId))
             .handleErrors()
-            .data?.mapAttendanceSummaryList(gson)!!
+            .data?.mapAttendanceSummaryList(gson).orEmpty()
     }
 
     suspend fun excuseForAbsence(absents: List<Absent>, content: String?): Boolean {
@@ -139,13 +139,13 @@ class StudentRepository(private val api: StudentService) {
     suspend fun getGradesDetails(semesterId: Int?): List<Grade> {
         return api.getGrades(GradeRequest(semesterId))
             .handleErrors()
-            .data?.mapGradesList()!!
+            .data?.mapGradesList().orEmpty()
     }
 
     suspend fun getGradesSummary(semesterId: Int?): List<GradeSummary> {
         return api.getGrades(GradeRequest(semesterId))
             .handleErrors()
-            .data?.mapGradesSummary()!!
+            .data?.mapGradesSummary().orEmpty()
     }
 
     suspend fun getGradesPartialStatistics(semesterId: Int): List<GradeStatistics> {
@@ -184,7 +184,7 @@ class StudentRepository(private val api: StudentService) {
 
     suspend fun getTimetable(startDate: LocalDate, endDate: LocalDate? = null): List<Timetable> {
         return api.getTimetable(TimetableRequest(startDate.toISOFormat())).handleErrors().data
-            ?.mapTimetableList(startDate, endDate)!!
+            ?.mapTimetableList(startDate, endDate).orEmpty()
     }
 
     suspend fun getCompletedLessons(start: LocalDate, endDate: LocalDate?, subjectId: Int): List<CompletedLesson> {
@@ -197,7 +197,7 @@ class StudentRepository(private val api: StudentService) {
     }
 
     suspend fun getTeachers(): List<Teacher> {
-        return api.getSchoolAndTeachers().handleErrors().data?.mapToTeachers()!!
+        return api.getSchoolAndTeachers().handleErrors().data?.mapToTeachers().orEmpty()
     }
 
     suspend fun getSchool(): School {
