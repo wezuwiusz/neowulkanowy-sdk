@@ -15,5 +15,8 @@ enum class AttendanceCategory(val id: Int, val title: String) {
     companion object {
         @JvmStatic
         fun getCategoryById(id: Int) = values().singleOrNull { category -> category.id == id } ?: UNKNOWN
+
+        @JvmStatic
+        fun getCategoryByName(name: String) = values().singleOrNull { category -> category.name == name || category.title == name } ?: UNKNOWN
     }
 }
