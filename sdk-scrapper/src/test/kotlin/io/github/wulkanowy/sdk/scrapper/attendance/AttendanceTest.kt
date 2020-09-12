@@ -1,10 +1,7 @@
 package io.github.wulkanowy.sdk.scrapper.attendance
 
 import io.github.wulkanowy.sdk.scrapper.BaseLocalTest
-import io.github.wulkanowy.sdk.scrapper.Scrapper
 import io.github.wulkanowy.sdk.scrapper.register.RegisterTest
-import io.github.wulkanowy.sdk.scrapper.repository.StudentRepository
-import io.github.wulkanowy.sdk.scrapper.service.StudentService
 import kotlinx.coroutines.runBlocking
 import okhttp3.mockwebserver.MockResponse
 import org.junit.Assert.assertEquals
@@ -17,14 +14,11 @@ import java.time.LocalDateTime
 class AttendanceTest : BaseLocalTest() {
 
     private val student by lazy {
-        runBlocking { getStudentRepo(AttendanceTest::class.java, "Frekwencja.json").getAttendance(getLocalDate(2018, 10, 1), null) }
-    }
-
-    override fun getStudentRepo(testClass: Class<*>, fixture: String, loginType: Scrapper.LoginType, autoLogin: Boolean): StudentRepository {
-        server.enqueue(MockResponse().setBody(testClass.getResource(fixture).readText()))
-        server.enqueue(MockResponse().setBody(RegisterTest::class.java.getResource("WitrynaUcznia.html").readText()))
-        server.enqueue(MockResponse().setBody(RegisterTest::class.java.getResource("UczenCache.json").readText()))
-        return StudentRepository(getService(StudentService::class.java, server.url("/").toString(), false, getOkHttp(true, true, loginType)))
+        runBlocking { getStudentRepo {
+            it.enqueue("Frekwencja.json", AttendanceTest::class.java)
+            it.enqueue("WitrynaUcznia.html", RegisterTest::class.java)
+            it.enqueue("UczenCache.json", RegisterTest::class.java)
+        }.getAttendance(getLocalDate(2018, 10, 1), null) }
     }
 
     @Test

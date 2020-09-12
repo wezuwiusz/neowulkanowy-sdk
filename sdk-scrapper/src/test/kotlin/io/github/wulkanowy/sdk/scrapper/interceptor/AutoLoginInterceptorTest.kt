@@ -12,7 +12,9 @@ import io.github.wulkanowy.sdk.scrapper.service.StudentService
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.supervisorScope
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -40,34 +42,72 @@ class AutoLoginInterceptorTest : BaseLocalTest() {
         server.start(3000)
         init()
 
-        val service = getService { loginHelper.login("", "").studentSchools.isNotEmpty() }
+        val service = getService { loginHelper.login("", "") }
         val notes = service.getNotes()
 
         assertEquals(3, notes.data?.notes?.size)
     }
 
     @Test
-    fun simultaneousLogin() = runBlocking {
+    fun oneLoginAtTimeWithError() = runBlocking {
         server.enqueue("unknown-error.txt", RegisterTest::class.java)
+        server.enqueue("Logowanie-uonet.html", LoginTest::class.java)
+        server.enqueue("Offline.html", AutoLoginInterceptor::class.java)
         server.enqueue("unknown-error.txt", RegisterTest::class.java)
-
-        server.enqueue("Logowanie-uonet.html", LoginTest::class.java)
-        server.enqueue("Login-success.html", LoginTest::class.java)
-        server.enqueue("UwagiIOsiagniecia.json", NotesTest::class.java)
-
-        server.enqueue("Logowanie-uonet.html", LoginTest::class.java)
-        server.enqueue("Login-success.html", LoginTest::class.java)
-        server.enqueue("UwagiIOsiagniecia.json", NotesTest::class.java)
         server.start(3000)
         init()
-        val service = getService { loginHelper.login("", "").studentSchools.isNotEmpty() }
+
+        val service = getService { loginHelper.login("", "") }
+        val result = runCatching { service.getNotes() }
+
+        assertEquals(true, result.isFailure)
+        assertEquals(true, result.exceptionOrNull()?.message?.startsWith("Wystąpił nieoczekiwany błąd"))
+    }
+
+    @Test
+    fun simultaneousLogin() = runBlocking {
+        repeat(3) { server.enqueue("unknown-error.txt", RegisterTest::class.java) }
+
+        server.enqueue("Logowanie-uonet.html", LoginTest::class.java)
+        server.enqueue("Login-success.html", LoginTest::class.java)
+
+        repeat(3) { server.enqueue("UwagiIOsiagniecia.json", NotesTest::class.java) }
+
+        server.start(3000)
+        init()
+        val service = getService { loginHelper.login("", "") }
 
         val notes1 = async { service.getNotes() }
         val notes2 = async { service.getNotes() }
+        val notes3 = async { service.getNotes() }
 
-        val a = awaitAll(notes1, notes2)
+        val a = awaitAll(notes1, notes2, notes3)
 
-        assertEquals(1 + 1, a.size)
+        assertEquals(1 + 1 + 1, a.size)
+    }
+
+    @Test
+    fun simultaneousLoginWithError() = runBlocking {
+        repeat(3) { server.enqueue("unknown-error.txt", RegisterTest::class.java) }
+
+        server.enqueue("Logowanie-uonet.html", LoginTest::class.java)
+        server.enqueue("Offline.html", AutoLoginInterceptor::class.java)
+
+        repeat(3) { server.enqueue("unknown-error.txt", RegisterTest::class.java) }
+
+        server.start(3000)
+        init()
+
+        val service = getService { loginHelper.login("", "") }
+        supervisorScope {
+            val notes1 = async { service.getNotes() }
+            val notes2 = async { service.getNotes() }
+            val notes3 = async { service.getNotes() }
+
+            val result = runCatching { awaitAll(notes1, notes2, notes3) }
+            assertEquals(true, result.isFailure)
+            assertTrue(result.exceptionOrNull()?.message?.startsWith("Wystąpił nieoczekiwany błąd") == true)
+        }
     }
 
     private fun init() {
@@ -82,7 +122,7 @@ class AutoLoginInterceptorTest : BaseLocalTest() {
         )
     }
 
-    private fun getService(checkJar: Boolean = false, notLoggedInCallback: suspend () -> Boolean): StudentService {
+    private fun getService(checkJar: Boolean = false, notLoggedInCallback: suspend () -> Unit): StudentService {
         val interceptor = AutoLoginInterceptor(
             loginType = Scrapper.LoginType.STANDARD,
             jar = CookieManager(),

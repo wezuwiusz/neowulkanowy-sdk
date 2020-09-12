@@ -48,7 +48,6 @@ class LoginHelper(
         Jspoon.create().adapter(CertificateResponse::class.java)
     }
 
-    @Synchronized
     suspend fun login(email: String, password: String): SendCertificateResponse {
         val res = sendCredentials(email, password)
         logger.info("Login ${loginType.name} started")

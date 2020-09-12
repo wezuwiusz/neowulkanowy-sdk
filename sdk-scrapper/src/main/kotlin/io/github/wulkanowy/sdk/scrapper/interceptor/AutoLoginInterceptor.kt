@@ -19,14 +19,24 @@ import okhttp3.Response
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import org.jsoup.select.Elements
+import org.slf4j.LoggerFactory
 import java.net.CookieManager
+import java.util.concurrent.locks.Lock
+import java.util.concurrent.locks.ReentrantLock
 
 class AutoLoginInterceptor(
     private val loginType: LoginType,
     private val jar: CookieManager,
     private val emptyCookieJarIntercept: Boolean,
-    private val notLoggedInCallback: suspend () -> Boolean
+    private val notLoggedInCallback: suspend () -> Unit
 ) : Interceptor {
+
+    companion object {
+        @JvmStatic
+        private val logger = LoggerFactory.getLogger(this::class.java)
+    }
+
+    private val lock: Lock = ReentrantLock()
 
     override fun intercept(chain: Interceptor.Chain): Response {
         val request: Request
@@ -41,12 +51,25 @@ class AutoLoginInterceptor(
                 url = chain.request().url().toString()
             )
         } catch (e: NotLoggedInException) {
-            synchronized(jar) {
-                println("Not logged in. Login in...")
-                if (runBlocking { notLoggedInCallback() }) {
-                    println("Retry after login...")
+            if (lock.tryLock()) {
+                logger.warn("Not logged in. Login in...")
+                try {
+                    runBlocking { notLoggedInCallback() }
                     return chain.proceed(chain.request().newBuilder().build())
-                } else throw e
+                } catch (e: Throwable) {
+                    logger.warn("Error occurred on login")
+                    throw e
+                } finally {
+                    logger.warn("Login finished. Release lock")
+                    lock.unlock()
+                }
+            } else {
+                logger.warn("Wait for user to be logged in...")
+                lock.lock()
+                lock.unlock()
+                logger.warn("User logged in. Retry after login...")
+
+                return chain.proceed(chain.request().newBuilder().build())
             }
         }
 

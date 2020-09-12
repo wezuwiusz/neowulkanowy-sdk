@@ -1,15 +1,11 @@
 package io.github.wulkanowy.sdk.scrapper.messages
 
 import io.github.wulkanowy.sdk.scrapper.BaseLocalTest
-import io.github.wulkanowy.sdk.scrapper.Scrapper
-import io.github.wulkanowy.sdk.scrapper.ScrapperException
-import io.github.wulkanowy.sdk.scrapper.login.LoginTest
 import io.github.wulkanowy.sdk.scrapper.repository.MessagesRepository
 import io.github.wulkanowy.sdk.scrapper.service.MessagesService
 import kotlinx.coroutines.runBlocking
 import okhttp3.mockwebserver.MockResponse
 import org.junit.Assert.assertEquals
-import org.junit.Assert.assertTrue
 import org.junit.Test
 
 class MessagesTest : BaseLocalTest() {
@@ -213,20 +209,6 @@ class MessagesTest : BaseLocalTest() {
         )
         assertEquals("877c4a726ad61667f4e2237f0cf6307a", request.getHeader("X-V-AppGuid"))
         assertEquals("19.02.0001.32324", request.getHeader("X-V-AppVersion"))
-    }
-
-    @Test
-    fun sendMessage_error() {
-        server.enqueue("ADFSLight-form-resman.html", LoginTest::class.java)
-        server.start(3000)
-
-        val api = MessagesRepository(getService(MessagesService::class.java, "http://fakelog.localhost:3000/", false, getOkHttp(loginType = Scrapper.LoginType.ADFSLight)))
-        try {
-            runBlocking { api.sendMessage("Temat", "Treść", listOf()) }
-        } catch (e: Throwable) {
-            assertTrue(e is ScrapperException)
-            assertEquals("User not logged in", e.message)
-        }
     }
 
     @Test

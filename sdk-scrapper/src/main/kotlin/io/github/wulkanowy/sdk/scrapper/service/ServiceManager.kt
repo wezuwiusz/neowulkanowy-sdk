@@ -65,9 +65,7 @@ class ServiceManager(
     private val interceptors: MutableList<Pair<Interceptor, Boolean>> = mutableListOf(
         HttpLoggingInterceptor().setLevel(logLevel) to true,
         ErrorInterceptor() to false,
-        AutoLoginInterceptor(loginType, cookies, emptyCookieJarIntercept) {
-            loginHelper.login(email, password).toString().isNotBlank()
-        } to false,
+        AutoLoginInterceptor(loginType, cookies, emptyCookieJarIntercept) { loginHelper.login(email, password) } to false,
         UserAgentInterceptor(androidVersion, buildTag) to false
     )
 

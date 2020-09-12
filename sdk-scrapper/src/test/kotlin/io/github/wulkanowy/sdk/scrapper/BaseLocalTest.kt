@@ -35,9 +35,13 @@ abstract class BaseLocalTest : BaseTest() {
         server.shutdown()
     }
 
-    open fun getStudentRepo(testClass: Class<*>, fixture: String, loginType: Scrapper.LoginType = Scrapper.LoginType.STANDARD, autoLogin: Boolean = false): StudentRepository {
-        server.enqueue(MockResponse().setBody(testClass.getResource(fixture).readText()))
-        val okHttp = getOkHttp(true, true, loginType, autoLogin)
+    fun getStudentRepo(testClass: Class<*>, fixture: String, loginType: Scrapper.LoginType = Scrapper.LoginType.STANDARD, autoLogin: Boolean = false): StudentRepository {
+        return getStudentRepo(loginType, autoLogin) { it.enqueue(fixture, testClass) }
+    }
+
+    fun getStudentRepo(loginType: Scrapper.LoginType = Scrapper.LoginType.STANDARD, autoLogin: Boolean = false, responses: (MockWebServer) -> Unit): StudentRepository {
+        responses(server)
+        val okHttp = getOkHttp(errorInterceptor = true, autoLoginInterceptorOn = true, loginType = loginType, autoLogin = autoLogin)
         return StudentRepository(getService(StudentService::class.java, server.url("/").toString(), false, okHttp))
     }
 
@@ -72,11 +76,10 @@ abstract class BaseLocalTest : BaseTest() {
         .addInterceptor(HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BASIC))
         .build()
 
-    private fun getAutoLoginInterceptor(loginType: Scrapper.LoginType, autoLogin: Boolean) = AutoLoginInterceptor(loginType, CookieManager(), false) {
-        if (autoLogin) {
-            LoginHelper(loginType, "http", "localhost", "powiatwulkanowy", CookieManager(), getService(LoginService::class.java))
+    private fun getAutoLoginInterceptor(loginType: Scrapper.LoginType, autoLogin: Boolean): AutoLoginInterceptor {
+        return AutoLoginInterceptor(loginType, CookieManager(), false) {
+            if (autoLogin) LoginHelper(loginType, "http", "localhost", "powiatwulkanowy", CookieManager(), getService(LoginService::class.java))
                 .login("jan", "kowalski")
-            true
-        } else false
+        }
     }
 }
