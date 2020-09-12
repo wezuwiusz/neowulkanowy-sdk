@@ -12,7 +12,6 @@ import io.github.wulkanowy.sdk.scrapper.interceptor.ErrorInterceptor
 import io.github.wulkanowy.sdk.scrapper.interceptor.StudentCookieInterceptor
 import io.github.wulkanowy.sdk.scrapper.interceptor.UserAgentInterceptor
 import io.github.wulkanowy.sdk.scrapper.login.LoginHelper
-import kotlinx.coroutines.runBlocking
 import okhttp3.Interceptor
 import okhttp3.JavaNetCookieJar
 import okhttp3.OkHttpClient
@@ -67,7 +66,7 @@ class ServiceManager(
         HttpLoggingInterceptor().setLevel(logLevel) to true,
         ErrorInterceptor() to false,
         AutoLoginInterceptor(loginType, cookies, emptyCookieJarIntercept) {
-            runBlocking { loginHelper.login(email, password) }.toString().isNotBlank()
+            loginHelper.login(email, password).toString().isNotBlank()
         } to false,
         UserAgentInterceptor(androidVersion, buildTag) to false
     )

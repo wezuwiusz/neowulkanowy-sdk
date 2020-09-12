@@ -10,7 +10,6 @@ import io.github.wulkanowy.sdk.scrapper.login.LoginHelper
 import io.github.wulkanowy.sdk.scrapper.repository.StudentRepository
 import io.github.wulkanowy.sdk.scrapper.service.LoginService
 import io.github.wulkanowy.sdk.scrapper.service.StudentService
-import kotlinx.coroutines.runBlocking
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import okhttp3.mockwebserver.MockResponse
@@ -74,7 +73,7 @@ abstract class BaseLocalTest : BaseTest() {
         .build()
 
     private fun getAutoLoginInterceptor(loginType: Scrapper.LoginType, autoLogin: Boolean) = AutoLoginInterceptor(loginType, CookieManager(), false) {
-        if (autoLogin) runBlocking {
+        if (autoLogin) {
             LoginHelper(loginType, "http", "localhost", "powiatwulkanowy", CookieManager(), getService(LoginService::class.java))
                 .login("jan", "kowalski")
             true

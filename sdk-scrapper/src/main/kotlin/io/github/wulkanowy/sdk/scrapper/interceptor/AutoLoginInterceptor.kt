@@ -12,6 +12,7 @@ import io.github.wulkanowy.sdk.scrapper.repository.AccountRepository.Companion.S
 import io.github.wulkanowy.sdk.scrapper.repository.AccountRepository.Companion.SELECTOR_ADFS_CARDS
 import io.github.wulkanowy.sdk.scrapper.repository.AccountRepository.Companion.SELECTOR_ADFS_LIGHT
 import io.github.wulkanowy.sdk.scrapper.repository.AccountRepository.Companion.SELECTOR_STANDARD
+import kotlinx.coroutines.runBlocking
 import okhttp3.Interceptor
 import okhttp3.Request
 import okhttp3.Response
@@ -24,7 +25,7 @@ class AutoLoginInterceptor(
     private val loginType: LoginType,
     private val jar: CookieManager,
     private val emptyCookieJarIntercept: Boolean,
-    private val notLoggedInCallback: () -> Boolean
+    private val notLoggedInCallback: suspend () -> Boolean
 ) : Interceptor {
 
     override fun intercept(chain: Interceptor.Chain): Response {
@@ -42,7 +43,7 @@ class AutoLoginInterceptor(
         } catch (e: NotLoggedInException) {
             synchronized(jar) {
                 println("Not logged in. Login in...")
-                if (notLoggedInCallback()) {
+                if (runBlocking { notLoggedInCallback() }) {
                     println("Retry after login...")
                     return chain.proceed(chain.request().newBuilder().build())
                 } else throw e

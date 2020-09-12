@@ -40,7 +40,7 @@ class AutoLoginInterceptorTest : BaseLocalTest() {
         server.start(3000)
         init()
 
-        val service = getService { runBlocking { loginHelper.login("", "").studentSchools.isNotEmpty() } }
+        val service = getService { loginHelper.login("", "").studentSchools.isNotEmpty() }
         val notes = service.getNotes()
 
         assertEquals(3, notes.data?.notes?.size)
@@ -60,7 +60,7 @@ class AutoLoginInterceptorTest : BaseLocalTest() {
         server.enqueue("UwagiIOsiagniecia.json", NotesTest::class.java)
         server.start(3000)
         init()
-        val service = getService { runBlocking { loginHelper.login("", "").studentSchools.isNotEmpty() } }
+        val service = getService { loginHelper.login("", "").studentSchools.isNotEmpty() }
 
         val notes1 = async { service.getNotes() }
         val notes2 = async { service.getNotes() }
@@ -82,7 +82,7 @@ class AutoLoginInterceptorTest : BaseLocalTest() {
         )
     }
 
-    private fun getService(checkJar: Boolean = false, notLoggedInCallback: () -> Boolean): StudentService {
+    private fun getService(checkJar: Boolean = false, notLoggedInCallback: suspend () -> Boolean): StudentService {
         val interceptor = AutoLoginInterceptor(
             loginType = Scrapper.LoginType.STANDARD,
             jar = CookieManager(),
