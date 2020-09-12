@@ -51,7 +51,7 @@ class LoginHelper(
     @Synchronized
     suspend fun login(email: String, password: String): SendCertificateResponse {
         val res = sendCredentials(email, password)
-        logger.info("Login started")
+        logger.info("Login ${loginType.name} started")
         when {
             res.title.startsWith("Witryna ucznia i rodzica") -> return SendCertificateResponse()
             res.action.isBlank() -> throw VulcanException("Invalid certificate page: '${res.title}'. Try again")
