@@ -166,7 +166,7 @@ class LoginHelper(
 
     private fun getADFSUrl(type: Scrapper.LoginType): String {
         val id = when (type) {
-            ADFS -> "adfs"
+            ADFS -> if (host == "eduportal.koszalin.pl") "ADFS" else "adfs"
             ADFSCards -> "eSzkola"
             ADFSLightScoped -> "ADFSLight"
             ADFSLightCufs -> "AdfsLight"
