@@ -26,10 +26,6 @@ class GradeDateDeserializer : JsonAdapter<GradeDate>() {
 
     @ToJson
     override fun toJson(writer: JsonWriter, value: GradeDate?) {
-        if (value != null) {
-            synchronized(writer) {
-                writer.value(value.toString())
-            }
-        }
+        throw NotImplementedError()
     }
 }

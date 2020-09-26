@@ -29,7 +29,7 @@ class CustomDateAdapter : JsonAdapter<Date>() {
     override fun toJson(writer: JsonWriter, value: Date?) {
         if (value != null) {
             synchronized(dateFormat) {
-                writer.value(value.toString())
+                writer.value(dateFormat.format(value))
             }
         }
     }

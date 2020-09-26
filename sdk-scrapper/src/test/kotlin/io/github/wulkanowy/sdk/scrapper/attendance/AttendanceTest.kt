@@ -2,6 +2,7 @@ package io.github.wulkanowy.sdk.scrapper.attendance
 
 import com.squareup.moshi.Moshi
 import io.github.wulkanowy.sdk.scrapper.BaseLocalTest
+import io.github.wulkanowy.sdk.scrapper.adapter.CustomDateAdapter
 import io.github.wulkanowy.sdk.scrapper.register.RegisterTest
 import kotlinx.coroutines.runBlocking
 import okhttp3.mockwebserver.MockResponse
@@ -138,6 +139,21 @@ class AttendanceTest : BaseLocalTest() {
             assertNull(excuseStatus)
             assertFalse(excusable)
         }
+    }
+
+    @Test
+    fun getAttendance_requestDateFormat() {
+        runBlocking { getStudentRepo {
+            it.enqueue("Frekwencja.json", AttendanceTest::class.java)
+            it.enqueue("WitrynaUcznia.html", RegisterTest::class.java)
+            it.enqueue("UczenCache.json", RegisterTest::class.java)
+        }.getAttendance(getLocalDate(2018, 10, 1), null) }
+
+        val request = server.takeRequest()
+        val adapter = AttendanceRequestJsonAdapter(Moshi.Builder().add(CustomDateAdapter()).build())
+        val requestObject = adapter.fromJson(request.body.readUtf8())
+        assertEquals(getDate(2018, 10, 1, 0, 0, 0), requestObject?.date)
+        assertEquals(-1, requestObject?.typeId)
     }
 
     @Test
