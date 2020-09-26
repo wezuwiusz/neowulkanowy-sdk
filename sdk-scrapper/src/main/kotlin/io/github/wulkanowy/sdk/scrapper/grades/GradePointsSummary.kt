@@ -4,6 +4,16 @@ import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 
 @JsonClass(generateAdapter = true)
+data class GradePointsSummaryResponse(
+
+    @Json(name = "TableContent")
+    val tableContent: String,
+
+    @Json(name = "Items")
+    val items: List<GradePointsSummary>
+)
+
+@JsonClass(generateAdapter = true)
 data class GradePointsSummary(
 
     val semesterId: Int = 0,

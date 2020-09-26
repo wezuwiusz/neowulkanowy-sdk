@@ -10,6 +10,7 @@ import io.github.wulkanowy.sdk.scrapper.attendance.Subject
 import io.github.wulkanowy.sdk.scrapper.exams.ExamRequest
 import io.github.wulkanowy.sdk.scrapper.exams.ExamResponse
 import io.github.wulkanowy.sdk.scrapper.grades.GradePointsSummary
+import io.github.wulkanowy.sdk.scrapper.grades.GradePointsSummaryResponse
 import io.github.wulkanowy.sdk.scrapper.grades.GradeRequest
 import io.github.wulkanowy.sdk.scrapper.grades.GradesResponse
 import io.github.wulkanowy.sdk.scrapper.grades.GradesStatisticsAnnual
@@ -68,7 +69,7 @@ interface StudentService {
     suspend fun getGradesPartialStatistics(@Body gradesStatisticsRequest: GradesStatisticsRequest): ApiResponse<List<GradesStatisticsPartial>>
 
     @POST("Statystyki.mvc/GetPunkty")
-    suspend fun getGradesPointsStatistics(@Body gradesStatisticsRequest: GradesStatisticsRequest): ApiResponse<List<GradePointsSummary>>
+    suspend fun getGradesPointsStatistics(@Body gradesStatisticsRequest: GradesStatisticsRequest): ApiResponse<GradePointsSummaryResponse>
 
     @POST("Statystyki.mvc/GetOcenyRoczne")
     suspend fun getGradesAnnualStatistics(@Body gradesStatisticsRequest: GradesStatisticsRequest): ApiResponse<List<GradesStatisticsAnnual>>

@@ -158,7 +158,7 @@ class StudentRepository(private val api: StudentService) {
     suspend fun getGradesPointsStatistics(semesterId: Int): List<GradePointsSummary> {
         return api.getGradesPointsStatistics(GradesStatisticsRequest(semesterId))
             .handleErrors()
-            .data.orEmpty().mapGradesStatisticsPoints(semesterId)
+            .data?.items.orEmpty().mapGradesStatisticsPoints(semesterId)
     }
 
     suspend fun getGradesAnnualStatistics(semesterId: Int): List<GradeStatistics> {

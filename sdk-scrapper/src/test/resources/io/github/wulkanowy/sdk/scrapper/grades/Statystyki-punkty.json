@@ -1,26 +1,29 @@
 {
-  "data": [
-    {
-      "Subject": "Edukacja dla bezpieczeństwa",
-      "Value1": 78.18,
-      "Value2": 80.00,
-      "Label1": "78,18",
-      "Label2": "80,00"
-    },
-    {
-      "Subject": "Biologia",
-      "Value1": 50.00,
-      "Value2": 50.00,
-      "Label1": "50,00",
-      "Label2": "50,00"
-    },
-    {
-      "Subject": "Język angielski",
-      "Value1": 69.18,
-      "Value2": 85.00,
-      "Label1": "69,18",
-      "Label2": "85,00"
-    }
-  ],
+  "data": {
+    "TableContent": "<table><thead><tr><th>Przedmiot</th><th>Uczeń</th><th>Średnia klasy</th></tr></thead><tbody></tbody></table>",
+    "Items": [
+      {
+        "Subject": "Edukacja dla bezpieczeństwa",
+        "Value1": 78.18,
+        "Value2": 80.00,
+        "Label1": "78,18",
+        "Label2": "80,00"
+      },
+      {
+        "Subject": "Biologia",
+        "Value1": 50.00,
+        "Value2": 50.00,
+        "Label1": "50,00",
+        "Label2": "50,00"
+      },
+      {
+        "Subject": "Język angielski",
+        "Value1": 69.18,
+        "Value2": 85.00,
+        "Label1": "69,18",
+        "Label2": "85,00"
+      }
+    ]
+  },
   "success": true
 }
