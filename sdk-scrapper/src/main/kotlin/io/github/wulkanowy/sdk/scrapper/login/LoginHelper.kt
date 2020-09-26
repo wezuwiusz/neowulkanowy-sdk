@@ -6,6 +6,7 @@ import io.github.wulkanowy.sdk.scrapper.Scrapper.LoginType.ADFSCards
 import io.github.wulkanowy.sdk.scrapper.Scrapper.LoginType.ADFSLight
 import io.github.wulkanowy.sdk.scrapper.Scrapper.LoginType.ADFSLightCufs
 import io.github.wulkanowy.sdk.scrapper.Scrapper.LoginType.ADFSLightScoped
+import io.github.wulkanowy.sdk.scrapper.Scrapper.LoginType.ADFSMS
 import io.github.wulkanowy.sdk.scrapper.Scrapper.LoginType.AUTO
 import io.github.wulkanowy.sdk.scrapper.Scrapper.LoginType.STANDARD
 import io.github.wulkanowy.sdk.scrapper.ScrapperException
@@ -66,7 +67,11 @@ class LoginHelper(
             return when (loginType) {
                 AUTO -> throw ScrapperException("You must first specify Api.loginType before logging in")
                 STANDARD -> sendStandard(it, password)
-                ADFS -> sendADFS(it, password)
+                ADFS -> {
+                    if (host == "umt.tarnow.pl") sendADFSMS(email, password) // legacy
+                    else sendADFS(it, password)
+                }
+                ADFSMS -> sendADFSMS(it, password)
                 ADFSLight, ADFSLightScoped, ADFSLightCufs -> sendADFSLightGeneric(it, password, loginType)
                 ADFSCards -> sendADFSCards(it, password)
             }
@@ -126,6 +131,22 @@ class LoginHelper(
             "SubmitButton.x" to "0",
             "SubmitButton.y" to "0"
         )))
+
+        return certificateAdapter.fromHtml(api.sendADFSForm(form.action, mapOf(
+            "wa" to form.wa,
+            "wresult" to form.wresult,
+            "wctx" to form.wctx
+        )))
+    }
+
+    private suspend fun sendADFSMS(email: String, password: String): CertificateResponse {
+        val res = api.sendADFSMSForm(getADFSUrl(ADFS), mapOf(
+            "UserName" to email,
+            "Password" to password,
+            "AuthMethod" to "FormsAuthentication"
+        ))
+
+        val form = certificateAdapter.fromHtml(res)
 
         return certificateAdapter.fromHtml(api.sendADFSForm(form.action, mapOf(
             "wa" to form.wa,

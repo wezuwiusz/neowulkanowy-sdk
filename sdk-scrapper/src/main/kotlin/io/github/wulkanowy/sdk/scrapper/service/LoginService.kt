@@ -34,4 +34,8 @@ interface LoginService {
     @POST
     @FormUrlEncoded
     suspend fun sendADFSForm(@Url url: String, @FieldMap values: Map<String, String>): String
+
+    @POST
+    @FormUrlEncoded
+    suspend fun sendADFSMSForm(@Url url: String, @FieldMap values: Map<String, String>): String
 }

@@ -22,6 +22,7 @@ class AccountRepository(private val account: AccountService) {
     companion object {
         const val SELECTOR_STANDARD = ".loginButton, .LogOnBoard input[type=submit]" // remove second selector?
         const val SELECTOR_ADFS = "form[name=form1] #SubmitButton"
+        const val SELECTOR_ADFS_MS = "form#loginForm"
         const val SELECTOR_ADFS_LIGHT = ".submit-button, form #SubmitButton"
         const val SELECTOR_ADFS_CARDS = "#PassiveSignInButton"
     }

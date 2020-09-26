@@ -34,7 +34,7 @@ class ErrorInterceptor : Interceptor {
                 .text()}. ${it.select(".errorMessage").text()}")
         }
 
-        doc.select(".ErrorMessage, #ErrorTextLabel").let {
+        doc.select(".ErrorMessage, #ErrorTextLabel, #loginArea #errorText").let {
             if (it.isNotEmpty()) throw BadCredentialsException(it.text())
         }
 
