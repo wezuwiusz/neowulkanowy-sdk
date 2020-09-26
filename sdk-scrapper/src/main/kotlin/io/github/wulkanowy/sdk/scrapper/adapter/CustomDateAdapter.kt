@@ -5,8 +5,6 @@ import com.squareup.moshi.JsonAdapter
 import com.squareup.moshi.JsonReader
 import com.squareup.moshi.JsonWriter
 import com.squareup.moshi.ToJson
-import io.github.wulkanowy.sdk.scrapper.grades.GradeDate
-import io.github.wulkanowy.sdk.scrapper.toDate
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale

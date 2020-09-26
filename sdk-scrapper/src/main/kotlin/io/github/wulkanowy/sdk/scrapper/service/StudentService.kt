@@ -9,7 +9,6 @@ import io.github.wulkanowy.sdk.scrapper.attendance.AttendanceSummaryResponse
 import io.github.wulkanowy.sdk.scrapper.attendance.Subject
 import io.github.wulkanowy.sdk.scrapper.exams.ExamRequest
 import io.github.wulkanowy.sdk.scrapper.exams.ExamResponse
-import io.github.wulkanowy.sdk.scrapper.grades.GradePointsSummary
 import io.github.wulkanowy.sdk.scrapper.grades.GradePointsSummaryResponse
 import io.github.wulkanowy.sdk.scrapper.grades.GradeRequest
 import io.github.wulkanowy.sdk.scrapper.grades.GradesResponse
