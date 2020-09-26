@@ -1,33 +1,35 @@
 package io.github.wulkanowy.sdk.mobile.dictionaries
 
-import com.google.gson.annotations.SerializedName
+import com.squareup.moshi.Json
+import com.squareup.moshi.JsonClass
 
+@JsonClass(generateAdapter = true)
 data class Dictionaries(
 
-    @SerializedName("TimeKey")
+    @Json(name = "TimeKey")
     val timeKey: Long,
 
-    @SerializedName("Nauczyciele")
+    @Json(name = "Nauczyciele")
     val teachers: List<Teacher>,
 
-    @SerializedName("Pracownicy")
+    @Json(name = "Pracownicy")
     val employees: List<Employee>,
 
-    @SerializedName("Przedmioty")
+    @Json(name = "Przedmioty")
     val subjects: List<Subject>,
 
-    @SerializedName("PoryLekcji")
+    @Json(name = "PoryLekcji")
     val lessonTimes: List<LessonTime>,
 
-    @SerializedName("KategorieOcen")
+    @Json(name = "KategorieOcen")
     val gradeCategories: List<GradeCategory>,
 
-    @SerializedName("KategorieUwag")
+    @Json(name = "KategorieUwag")
     val noteCategories: List<NoteCategory>,
 
-    @SerializedName("KategorieFrekwencji")
+    @Json(name = "KategorieFrekwencji")
     val attendanceCategories: List<AttendanceCategory>,
 
-    @SerializedName("TypyFrekwencji")
+    @Json(name = "TypyFrekwencji")
     val attendanceTypes: List<AttendanceType>
 )

@@ -1,15 +1,17 @@
 package io.github.wulkanowy.sdk.mobile.dictionaries
 
-import com.google.gson.annotations.SerializedName
+import com.squareup.moshi.Json
+import com.squareup.moshi.JsonClass
 
+@JsonClass(generateAdapter = true)
 data class NoteCategory(
 
-    @SerializedName("Id")
+    @Json(name = "Id")
     val id: Int,
 
-    @SerializedName("Kod")
-    val code: String,
+    @Json(name = "Nazwa")
+    val name: String,
 
-    @SerializedName("Nazwa")
-    val name: String
+    @Json(name = "Aktywny")
+    val isActive: Boolean
 )

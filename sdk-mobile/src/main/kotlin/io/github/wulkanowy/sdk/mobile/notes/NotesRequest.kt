@@ -1,13 +1,15 @@
 package io.github.wulkanowy.sdk.mobile.notes
 
-import com.google.gson.annotations.SerializedName
+import com.squareup.moshi.Json
+import com.squareup.moshi.JsonClass
 import io.github.wulkanowy.sdk.mobile.ApiRequest
 
+@JsonClass(generateAdapter = true)
 data class NotesRequest(
 
-    @SerializedName("IdOkresKlasyfikacyjny")
+    @Json(name = "IdOkresKlasyfikacyjny")
     val classificationPeriodId: Int,
 
-    @SerializedName("IdUczen")
+    @Json(name = "IdUczen")
     val studentId: Int
 ) : ApiRequest()

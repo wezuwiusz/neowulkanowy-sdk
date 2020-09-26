@@ -1,27 +1,29 @@
 package io.github.wulkanowy.sdk.mobile
 
-import com.google.gson.annotations.SerializedName
+import com.squareup.moshi.Json
+import com.squareup.moshi.JsonClass
 
+@JsonClass(generateAdapter = true)
 data class ApiResponse<out T>(
 
-    @SerializedName("Status")
+    @Json(name = "Status")
     val status: String,
 
-    @SerializedName("TimeKey")
+    @Json(name = "TimeKey")
     val timeKey: String,
 
-    @SerializedName("TimeValue")
+    @Json(name = "TimeValue")
     val timeValue: String,
 
-    @SerializedName("RequestId")
+    @Json(name = "RequestId")
     val requestId: String,
 
-    @SerializedName("DayOfWeek")
+    @Json(name = "DayOfWeek")
     val dayOfWeek: String,
 
-    @SerializedName("AppVersion")
+    @Json(name = "AppVersion")
     val appVersion: String,
 
-    @SerializedName("Data")
+    @Json(name = "Data")
     val data: T?
 )

@@ -13,7 +13,7 @@ import org.junit.BeforeClass
 import org.junit.Ignore
 import org.junit.Test
 import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
+import retrofit2.converter.moshi.MoshiConverterFactory
 import retrofit2.converter.scalars.ScalarsConverterFactory
 import retrofit2.create
 import java.time.LocalDate.of
@@ -37,7 +37,7 @@ class UonetTest {
         private fun getRetrofitBuilder(privateKey: String, certKey: String): Retrofit.Builder {
             return Retrofit.Builder()
                 .addConverterFactory(ScalarsConverterFactory.create())
-                .addConverterFactory(GsonConverterFactory.create())
+                .addConverterFactory(MoshiConverterFactory.create())
                 .client(OkHttpClient().newBuilder()
                     .addInterceptor(HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BASIC))
                     .addInterceptor(SignInterceptor(privateKey, certKey))

@@ -1,48 +1,50 @@
 package io.github.wulkanowy.sdk.mobile.notes
 
-import com.google.gson.annotations.SerializedName
+import com.squareup.moshi.Json
+import com.squareup.moshi.JsonClass
 
+@JsonClass(generateAdapter = true)
 data class Note(
 
-    @SerializedName("Id")
+    @Json(name = "Id")
     val id: Int,
 
-    @SerializedName("IdKategoriaUwag")
+    @Json(name = "IdKategoriaUwag")
     val noteCategoryId: Int,
 
-    @SerializedName("IdUczen")
+    @Json(name = "IdUczen")
     val studentId: Int,
 
-    @SerializedName("UczenImie")
+    @Json(name = "UczenImie")
     val studentName: String,
 
-    @SerializedName("UczenNazwisko")
+    @Json(name = "UczenNazwisko")
     val studentSurname: String,
 
-    @SerializedName("IdPracownik")
+    @Json(name = "IdPracownik")
     val employeeId: Int,
 
-    @SerializedName("PracownikImie")
+    @Json(name = "PracownikImie")
     val employeeName: String,
 
-    @SerializedName("PracownikNazwisko")
+    @Json(name = "PracownikNazwisko")
     val employeeSurname: String,
 
-    @SerializedName("DataWpisu")
+    @Json(name = "DataWpisu")
     val entryDate: Long,
 
-    @SerializedName("DataWpisuTekst")
+    @Json(name = "DataWpisuTekst")
     val entryDateText: String,
 
-    @SerializedName("DataModyfikacji")
+    @Json(name = "DataModyfikacji")
     val modificationDate: Long?,
 
-    @SerializedName("DataModyfikacjiTekst")
+    @Json(name = "DataModyfikacjiTekst")
     val modificationDateText: String?,
 
-    @SerializedName("UwagaKey")
+    @Json(name = "UwagaKey")
     val noteKey: String,
 
-    @SerializedName("TrescUwagi")
+    @Json(name = "TrescUwagi")
     val content: String
 )

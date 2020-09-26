@@ -1,17 +1,19 @@
 package io.github.wulkanowy.sdk.mobile.dictionaries
 
-import com.google.gson.annotations.SerializedName
+import com.squareup.moshi.Json
+import com.squareup.moshi.JsonClass
 import io.github.wulkanowy.sdk.mobile.ApiRequest
 
+@JsonClass(generateAdapter = true)
 data class DictionariesRequest(
 
-    @SerializedName("IdUczen")
+    @Json(name = "IdUczen")
     val userId: Int,
 
-    @SerializedName("IdOkresKlasyfikacyjny")
+    @Json(name = "IdOkresKlasyfikacyjny")
     val classificationPeriodId: Int,
 
-    @SerializedName("IdOddzial")
+    @Json(name = "IdOddzial")
     val classId: Int
 
 ) : ApiRequest()

@@ -1,22 +1,24 @@
 package io.github.wulkanowy.sdk.mobile.messages
 
-import com.google.gson.annotations.SerializedName
+import com.squareup.moshi.Json
+import com.squareup.moshi.JsonClass
 import io.github.wulkanowy.sdk.mobile.ApiRequest
 
+@JsonClass(generateAdapter = true)
 data class MessageStatusChangeRequest(
 
-    @SerializedName("WiadomoscId")
+    @Json(name = "WiadomoscId")
     val messageId: Int,
 
-    @SerializedName("FolderWiadomosci")
+    @Json(name = "FolderWiadomosci")
     val folder: String,
 
-    @SerializedName("Status")
+    @Json(name = "Status")
     val status: String,
 
-    @SerializedName("LoginId")
+    @Json(name = "LoginId")
     val loginId: Int,
 
-    @SerializedName("IdUczen")
+    @Json(name = "IdUczen")
     val studentId: Int
 ) : ApiRequest()

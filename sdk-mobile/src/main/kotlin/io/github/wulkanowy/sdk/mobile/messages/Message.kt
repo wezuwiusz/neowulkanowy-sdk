@@ -1,54 +1,56 @@
 package io.github.wulkanowy.sdk.mobile.messages
 
-import com.google.gson.annotations.SerializedName
+import com.squareup.moshi.Json
+import com.squareup.moshi.JsonClass
 
+@JsonClass(generateAdapter = true)
 data class Message(
 
-    @SerializedName("WiadomoscId")
+    @Json(name = "WiadomoscId")
     val messageId: Int,
 
-    @SerializedName("Nadawca")
+    @Json(name = "Nadawca")
     val senderName: String?,
 
-    @SerializedName("NadawcaId")
+    @Json(name = "NadawcaId")
     val senderId: Int,
 
-    @SerializedName("Adresaci")
+    @Json(name = "Adresaci")
     val recipients: List<Recipient>?,
 
-    @SerializedName("Tytul")
+    @Json(name = "Tytul")
     val subject: String,
 
-    @SerializedName("Tresc")
+    @Json(name = "Tresc")
     val content: String,
 
-    @SerializedName("DataWyslania")
+    @Json(name = "DataWyslania")
     val sentDate: String,
 
-    @SerializedName("DataWyslaniaUnixEpoch")
+    @Json(name = "DataWyslaniaUnixEpoch")
     val sentDateTime: Long,
 
-    @SerializedName("GodzinaWyslania")
+    @Json(name = "GodzinaWyslania")
     val sentHour: String,
 
-    @SerializedName("DataPrzeczytania")
+    @Json(name = "DataPrzeczytania")
     val readDate: String?,
 
-    @SerializedName("DataPrzeczytaniaUnixEpoch")
+    @Json(name = "DataPrzeczytaniaUnixEpoch")
     val readDateTime: Long?,
 
-    @SerializedName("GodzinaPrzeczytania")
+    @Json(name = "GodzinaPrzeczytania")
     val readHour: String?,
 
-    @SerializedName("StatusWiadomosci")
+    @Json(name = "StatusWiadomosci")
     val status: String,
 
-    @SerializedName("FolderWiadomosci")
+    @Json(name = "FolderWiadomosci")
     val folder: String,
 
-    @SerializedName("Nieprzeczytane")
+    @Json(name = "Nieprzeczytane")
     val unread: String?,
 
-    @SerializedName("Przeczytane")
+    @Json(name = "Przeczytane")
     val read: String?
 )

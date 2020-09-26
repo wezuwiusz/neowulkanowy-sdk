@@ -1,21 +1,23 @@
 package io.github.wulkanowy.sdk.mobile.dictionaries
 
-import com.google.gson.annotations.SerializedName
+import com.squareup.moshi.Json
+import com.squareup.moshi.JsonClass
 
+@JsonClass(generateAdapter = true)
 data class Subject(
 
-    @SerializedName("Id")
+    @Json(name = "Id")
     val id: Int,
 
-    @SerializedName("Nazwa")
+    @Json(name = "Nazwa")
     val name: String,
 
-    @SerializedName("Kod")
+    @Json(name = "Kod")
     val code: String,
 
-    @SerializedName("Aktywny")
+    @Json(name = "Aktywny")
     val active: Boolean,
 
-    @SerializedName("Pozycja")
+    @Json(name = "Pozycja")
     val position: Int
 )

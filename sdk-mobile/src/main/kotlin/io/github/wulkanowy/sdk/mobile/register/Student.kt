@@ -1,94 +1,96 @@
 package io.github.wulkanowy.sdk.mobile.register
 
-import com.google.gson.annotations.SerializedName
+import com.squareup.moshi.Json
+import com.squareup.moshi.JsonClass
 
+@JsonClass(generateAdapter = true)
 data class Student(
 
-    @SerializedName("IdOkresKlasyfikacyjny")
+    @Json(name = "IdOkresKlasyfikacyjny")
     val classificationPeriodId: Int,
 
-    @SerializedName("OkresPoziom")
+    @Json(name = "OkresPoziom")
     val periodLevel: Int,
 
-    @SerializedName("OkresNumer")
+    @Json(name = "OkresNumer")
     val periodNumber: Int,
 
-    @SerializedName("OkresDataOd")
+    @Json(name = "OkresDataOd")
     val periodDateFrom: Long,
 
-    @SerializedName("OkresDataDo")
+    @Json(name = "OkresDataDo")
     val periodDateTo: Long,
 
-    @SerializedName("OkresDataOdTekst")
+    @Json(name = "OkresDataOdTekst")
     val periodDateFromText: String,
 
-    @SerializedName("OkresDataDoTekst")
+    @Json(name = "OkresDataDoTekst")
     val periodDateToText: String,
 
-    @SerializedName("IdJednostkaSprawozdawcza")
+    @Json(name = "IdJednostkaSprawozdawcza")
     val reportingUnitId: Int,
 
-    @SerializedName("JednostkaSprawozdawczaSkrot")
+    @Json(name = "JednostkaSprawozdawczaSkrot")
     val reportingUnitShortcut: String,
 
-    @SerializedName("JednostkaSprawozdawczaNazwa")
+    @Json(name = "JednostkaSprawozdawczaNazwa")
     val reportingUnitName: String,
 
-    @SerializedName("JednostkaSprawozdawczaSymbol")
+    @Json(name = "JednostkaSprawozdawczaSymbol")
     val reportingUnitSymbol: String,
 
-    @SerializedName("IdJednostka")
+    @Json(name = "IdJednostka")
     val unitId: Int,
 
-    @SerializedName("JednostkaNazwa")
+    @Json(name = "JednostkaNazwa")
     val unitName: String,
 
-    @SerializedName("JednostkaSkrot")
+    @Json(name = "JednostkaSkrot")
     val unitShortcut: String,
 
-    @SerializedName("OddzialSymbol")
+    @Json(name = "OddzialSymbol")
     val classSymbol: String,
 
-    @SerializedName("OddzialKod")
+    @Json(name = "OddzialKod")
     val classCode: String?,
 
-    @SerializedName("UzytkownikRola")
+    @Json(name = "UzytkownikRola")
     val userRole: String,
 
-    @SerializedName("UzytkownikLogin")
+    @Json(name = "UzytkownikLogin")
     val userLogin: String,
 
-    @SerializedName("UzytkownikLoginId")
+    @Json(name = "UzytkownikLoginId")
     val userLoginId: Int,
 
-    @SerializedName("UzytkownikNazwa")
+    @Json(name = "UzytkownikNazwa")
     val userName: String,
 
-    @SerializedName("Id")
+    @Json(name = "Id")
     val id: Int,
 
-    @SerializedName("IdOddzial")
+    @Json(name = "IdOddzial")
     val classId: Int,
 
-    @SerializedName("Imie")
+    @Json(name = "Imie")
     val name: String,
 
-    @SerializedName("Imie2")
+    @Json(name = "Imie2")
     val nameSecond: String?,
 
-    @SerializedName("Nazwisko")
+    @Json(name = "Nazwisko")
     val surname: String,
 
-    @SerializedName("Pseudonim")
+    @Json(name = "Pseudonim")
     val nick: String?,
 
-    @SerializedName("UczenPlec")
+    @Json(name = "UczenPlec")
     val pupilGender: Int,
 
-    @SerializedName("Pozycja")
+    @Json(name = "Pozycja")
     val position: Int,
 
-    @SerializedName("LoginId")
+    @Json(name = "LoginId")
     val loginId: Int?
 ) {
 

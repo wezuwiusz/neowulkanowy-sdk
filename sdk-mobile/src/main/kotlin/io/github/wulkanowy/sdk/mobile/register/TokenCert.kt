@@ -1,36 +1,38 @@
 package io.github.wulkanowy.sdk.mobile.register
 
-import com.google.gson.annotations.SerializedName
+import com.squareup.moshi.Json
+import com.squareup.moshi.JsonClass
 
+@JsonClass(generateAdapter = true)
 data class TokenCert(
 
-    @SerializedName("CertyfikatKlucz")
+    @Json(name = "CertyfikatKlucz")
     val certificateKey: String,
 
-    @SerializedName("CertyfikatKluczSformatowanyTekst")
+    @Json(name = "CertyfikatKluczSformatowanyTekst")
     val certificateKeyFormatted: String,
 
-    @SerializedName("CertyfikatDataUtworzenia")
+    @Json(name = "CertyfikatDataUtworzenia")
     val certificateCreatedDate: Int,
 
-    @SerializedName("CertyfikatDataUtworzeniaSformatowanyTekst")
+    @Json(name = "CertyfikatDataUtworzeniaSformatowanyTekst")
     val certificateCreatedDateText: String,
 
-    @SerializedName("CertyfikatPfx")
+    @Json(name = "CertyfikatPfx")
     val certificatePfx: String,
 
-    @SerializedName("GrupaKlientow")
+    @Json(name = "GrupaKlientow")
     val symbol: String,
 
-    @SerializedName("AdresBazowyRestApi")
+    @Json(name = "AdresBazowyRestApi")
     val baseUrl: String,
 
-    @SerializedName("UzytkownikLogin")
+    @Json(name = "UzytkownikLogin")
     val userLogin: String,
 
-    @SerializedName("UzytkownikNazwa")
+    @Json(name = "UzytkownikNazwa")
     val userName: String,
 
-    @SerializedName("TypKonta")
+    @Json(name = "TypKonta")
     val accountType: String?
 )

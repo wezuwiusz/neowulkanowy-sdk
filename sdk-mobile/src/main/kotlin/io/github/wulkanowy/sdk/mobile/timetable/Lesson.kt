@@ -1,57 +1,59 @@
 package io.github.wulkanowy.sdk.mobile.timetable
 
-import com.google.gson.annotations.SerializedName
+import com.squareup.moshi.Json
+import com.squareup.moshi.JsonClass
 
+@JsonClass(generateAdapter = true)
 data class Lesson(
 
-    @SerializedName("Dzien")
+    @Json(name = "Dzien")
     val day: Long,
 
-    @SerializedName("DzienTekst")
+    @Json(name = "DzienTekst")
     val dayText: String,
 
-    @SerializedName("NumerLekcji")
+    @Json(name = "NumerLekcji")
     val lessonNumber: Int,
 
-    @SerializedName("IdPoraLekcji")
+    @Json(name = "IdPoraLekcji")
     val lessonTimeId: Int,
 
-    @SerializedName("IdPrzedmiot")
+    @Json(name = "IdPrzedmiot")
     val subjectId: Int,
 
-    @SerializedName("PrzedmiotNazwa")
+    @Json(name = "PrzedmiotNazwa")
     val subjectName: String,
 
-    @SerializedName("PodzialSkrot")
+    @Json(name = "PodzialSkrot")
     val divisionShort: String?,
 
-    @SerializedName("Sala")
+    @Json(name = "Sala")
     val room: String?,
 
-    @SerializedName("IdPracownik")
+    @Json(name = "IdPracownik")
     val employeeId: Int,
 
-    @SerializedName("IdPracownikWspomagajacy")
+    @Json(name = "IdPracownikWspomagajacy")
     val employeeSupporterId: Int?,
 
-    @SerializedName("IdPracownikOld")
+    @Json(name = "IdPracownikOld")
     val employeeOldId: Int?,
 
-    @SerializedName("IdPracownikWspomagajacyOld")
+    @Json(name = "IdPracownikWspomagajacyOld")
     val employeeSupporterOldId: Int?,
 
-    @SerializedName("IdPlanLekcji")
+    @Json(name = "IdPlanLekcji")
     val timetableId: Int,
 
-    @SerializedName("AdnotacjaOZmianie")
+    @Json(name = "AdnotacjaOZmianie")
     val annotationAboutChange: String?,
 
-    @SerializedName("PrzekreslonaNazwa")
+    @Json(name = "PrzekreslonaNazwa")
     val overriddenName: Boolean,
 
-    @SerializedName("PogrubionaNazwa")
+    @Json(name = "PogrubionaNazwa")
     val boldName: Boolean,
 
-    @SerializedName("PlanUcznia")
+    @Json(name = "PlanUcznia")
     val studentPlan: Boolean
 )

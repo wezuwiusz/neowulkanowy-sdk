@@ -1,26 +1,28 @@
 package io.github.wulkanowy.sdk.mobile
 
-import com.google.gson.annotations.SerializedName
+import com.squareup.moshi.Json
+import com.squareup.moshi.JsonClass
 import java.time.LocalDateTime.now
 import java.time.ZoneOffset
 import java.util.UUID
 
 @Suppress("unused")
+@JsonClass(generateAdapter = true)
 open class ApiRequest(
 
-    @SerializedName("RemoteMobileTimeKey")
+    @Json(name = "RemoteMobileTimeKey")
     val remoteMobileTimeKey: Long = now().toEpochSecond(ZoneOffset.UTC),
 
-    @SerializedName("TimeKey")
+    @Json(name = "TimeKey")
     val timeKey: Long = now().toEpochSecond(ZoneOffset.UTC) - 1,
 
-    @SerializedName("RequestId")
+    @Json(name = "RequestId")
     val requestId: String = UUID.randomUUID().toString(),
 
-    @SerializedName("RemoteMobileAppVersion")
+    @Json(name = "RemoteMobileAppVersion")
     val remoteMobileAppVersion: String = MOBILE_APP_VERSION,
 
-    @SerializedName("RemoteMobileAppName")
+    @Json(name = "RemoteMobileAppName")
     val remoteMobileAppName: String = "VULCAN-Android-ModulUcznia"
 ) {
     companion object {

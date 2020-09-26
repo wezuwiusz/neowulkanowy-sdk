@@ -1,22 +1,24 @@
 package io.github.wulkanowy.sdk.mobile.timetable
 
-import com.google.gson.annotations.SerializedName
+import com.squareup.moshi.Json
+import com.squareup.moshi.JsonClass
 import io.github.wulkanowy.sdk.mobile.ApiRequest
 
+@JsonClass(generateAdapter = true)
 data class TimetableRequest(
 
-    @SerializedName("DataPoczatkowa")
+    @Json(name = "DataPoczatkowa")
     val startDate: String,
 
-    @SerializedName("DataKoncowa")
+    @Json(name = "DataKoncowa")
     val endDate: String,
 
-    @SerializedName("IdOddzial")
+    @Json(name = "IdOddzial")
     val classId: Int,
 
-    @SerializedName("IdOkresKlasyfikacyjny")
+    @Json(name = "IdOkresKlasyfikacyjny")
     val classificationPeriodId: Int,
 
-    @SerializedName("IdUczen")
+    @Json(name = "IdUczen")
     val studentId: Int
 ) : ApiRequest()

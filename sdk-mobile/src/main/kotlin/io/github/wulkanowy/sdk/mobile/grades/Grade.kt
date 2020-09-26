@@ -1,66 +1,68 @@
 package io.github.wulkanowy.sdk.mobile.grades
 
-import com.google.gson.annotations.SerializedName
+import com.squareup.moshi.Json
+import com.squareup.moshi.JsonClass
 
+@JsonClass(generateAdapter = true)
 data class Grade(
 
-    @SerializedName("id")
+    @Json(name = "Id")
     val id: Int,
 
-    @SerializedName("Pozycja")
+    @Json(name = "Pozycja")
     val position: Int,
 
-    @SerializedName("PrzedmiotPozycja")
+    @Json(name = "PrzedmiotPozycja")
     val subjectPosition: Int,
 
-    @SerializedName("IdPrzedmiot")
+    @Json(name = "IdPrzedmiot")
     val subjectId: Int,
 
-    @SerializedName("IdKategoria")
+    @Json(name = "IdKategoria")
     val categoryId: Int,
 
-    @SerializedName("Wpis")
+    @Json(name = "Wpis")
     val entry: String,
 
-    @SerializedName("Wartosc")
+    @Json(name = "Wartosc")
     val value: Double,
 
-    @SerializedName("WagaModyfikatora")
+    @Json(name = "WagaModyfikatora")
     val modificationWeight: Double?,
 
-    @SerializedName("WagaOceny")
+    @Json(name = "WagaOceny")
     val gradeWeight: Double,
 
-    @SerializedName("Licznik")
+    @Json(name = "Licznik")
     val counter: Double?,
 
-    @SerializedName("Mianownik")
+    @Json(name = "Mianownik")
     val denominator: Int?,
 
-    @SerializedName("Komentarz")
+    @Json(name = "Komentarz")
     val comment: String?,
 
-    @SerializedName("Waga")
+    @Json(name = "Waga")
     val weight: String,
 
-    @SerializedName("Opis")
+    @Json(name = "Opis")
     val description: String,
 
-    @SerializedName("DataUtworzenia")
+    @Json(name = "DataUtworzenia")
     val creationDate: Long,
 
-    @SerializedName("DataUtworzeniaTekst")
+    @Json(name = "DataUtworzeniaTekst")
     val creationDateText: String,
 
-    @SerializedName("DataModyfikacji")
+    @Json(name = "DataModyfikacji")
     val modificationDate: Long,
 
-    @SerializedName("DataModyfikacjiTekst")
+    @Json(name = "DataModyfikacjiTekst")
     val modificationDateText: String,
 
-    @SerializedName("IdPracownikD")
+    @Json(name = "IdPracownikD")
     val employeeIdD: Int,
 
-    @SerializedName("IdPracownikM")
+    @Json(name = "IdPracownikM")
     val employeeIdM: Int
 )

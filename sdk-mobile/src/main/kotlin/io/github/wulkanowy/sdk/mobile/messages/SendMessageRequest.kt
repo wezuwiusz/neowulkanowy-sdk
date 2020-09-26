@@ -1,24 +1,26 @@
 package io.github.wulkanowy.sdk.mobile.messages
 
-import com.google.gson.annotations.SerializedName
+import com.squareup.moshi.Json
+import com.squareup.moshi.JsonClass
 
+@JsonClass(generateAdapter = true)
 data class SendMessageRequest(
 
-    @SerializedName("NadawcaWiadomosci")
+    @Json(name = "NadawcaWiadomosci")
     val sender: String,
 
-    @SerializedName("Tytul")
+    @Json(name = "Tytul")
     val subject: String,
 
-    @SerializedName("Tresc")
+    @Json(name = "Tresc")
     val content: String,
 
-    @SerializedName("Adresaci")
+    @Json(name = "Adresaci")
     val recipients: List<Recipient>,
 
-    @SerializedName("LoginId")
+    @Json(name = "LoginId")
     val loginId: Int,
 
-    @SerializedName("IdUczen")
+    @Json(name = "IdUczen")
     val studentId: Int
 )

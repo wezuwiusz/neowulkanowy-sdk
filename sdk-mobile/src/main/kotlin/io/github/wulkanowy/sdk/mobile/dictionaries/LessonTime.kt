@@ -1,24 +1,26 @@
 package io.github.wulkanowy.sdk.mobile.dictionaries
 
-import com.google.gson.annotations.SerializedName
+import com.squareup.moshi.Json
+import com.squareup.moshi.JsonClass
 
+@JsonClass(generateAdapter = true)
 data class LessonTime(
 
-    @SerializedName("Id")
+    @Json(name = "Id")
     val id: Int,
 
-    @SerializedName("Numer")
+    @Json(name = "Numer")
     val number: Int,
 
-    @SerializedName("Poczatek")
+    @Json(name = "Poczatek")
     val start: Long,
 
-    @SerializedName("PoczatekTekst")
+    @Json(name = "PoczatekTekst")
     val startText: String,
 
-    @SerializedName("Koniec")
+    @Json(name = "Koniec")
     val end: Long,
 
-    @SerializedName("KoniecTekst")
+    @Json(name = "KoniecTekst")
     val endText: String
 )

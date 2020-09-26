@@ -1,27 +1,29 @@
 package io.github.wulkanowy.sdk.mobile.attendance
 
-import com.google.gson.annotations.SerializedName
+import com.squareup.moshi.Json
+import com.squareup.moshi.JsonClass
 
+@JsonClass(generateAdapter = true)
 data class Attendance(
 
-    @SerializedName("IdKategoria")
+    @Json(name = "IdKategoria")
     val categoryId: Int,
 
-    @SerializedName("Numer")
+    @Json(name = "Numer")
     val number: Int,
 
-    @SerializedName("IdPoraLekcji")
+    @Json(name = "IdPoraLekcji")
     val lessonTimeId: Int,
 
-    @SerializedName("Dzien")
+    @Json(name = "Dzien")
     val date: Long,
 
-    @SerializedName("DzienTekst")
+    @Json(name = "DzienTekst")
     val dateText: String,
 
-    @SerializedName("IdPrzedmiot")
+    @Json(name = "IdPrzedmiot")
     val subjectId: Int,
 
-    @SerializedName("PrzedmiotNazwa")
+    @Json(name = "PrzedmiotNazwa")
     val subjectName: String
 )

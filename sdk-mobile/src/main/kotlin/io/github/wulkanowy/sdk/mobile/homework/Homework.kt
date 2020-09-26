@@ -1,27 +1,29 @@
 package io.github.wulkanowy.sdk.mobile.homework
 
-import com.google.gson.annotations.SerializedName
+import com.squareup.moshi.Json
+import com.squareup.moshi.JsonClass
 
+@JsonClass(generateAdapter = true)
 data class Homework(
 
-    @SerializedName("Id")
+    @Json(name = "Id")
     val id: Int,
 
-    @SerializedName("IdUczen")
+    @Json(name = "IdUczen")
     val studentId: Int,
 
-    @SerializedName("Data")
+    @Json(name = "Data")
     val date: Long,
 
-    @SerializedName("DataTekst")
+    @Json(name = "DataTekst")
     val dateText: String,
 
-    @SerializedName("IdPracownik")
+    @Json(name = "IdPracownik")
     val employeeId: Int,
 
-    @SerializedName("IdPrzedmiot")
+    @Json(name = "IdPrzedmiot")
     val subjectId: Int,
 
-    @SerializedName("Opis")
+    @Json(name = "Opis")
     val content: String
 )

@@ -1,19 +1,21 @@
 package io.github.wulkanowy.sdk.mobile.messages
 
-import com.google.gson.annotations.SerializedName
+import com.squareup.moshi.Json
+import com.squareup.moshi.JsonClass
 import io.github.wulkanowy.sdk.mobile.ApiRequest
 
+@JsonClass(generateAdapter = true)
 data class MessagesRequest(
 
-    @SerializedName("DataPoczatkowa")
+    @Json(name = "DataPoczatkowa")
     val startDate: String,
 
-    @SerializedName("DataKoncowa")
+    @Json(name = "DataKoncowa")
     val endDate: String,
 
-    @SerializedName("LoginId")
+    @Json(name = "LoginId")
     val loginId: Int,
 
-    @SerializedName("IdUczen")
+    @Json(name = "IdUczen")
     val studentId: Int
 ) : ApiRequest()

@@ -1,33 +1,35 @@
 package io.github.wulkanowy.sdk.mobile.dictionaries
 
-import com.google.gson.annotations.SerializedName
+import com.squareup.moshi.Json
+import com.squareup.moshi.JsonClass
 
+@JsonClass(generateAdapter = true)
 data class AttendanceCategory(
 
-    @SerializedName("Id")
+    @Json(name = "Id")
     val id: Int,
 
-    @SerializedName("Nazwa")
+    @Json(name = "Nazwa")
     val name: String,
 
-    @SerializedName("Pozycja")
+    @Json(name = "Pozycja")
     val position: Int,
 
-    @SerializedName("Obecnosc")
+    @Json(name = "Obecnosc")
     val presence: Boolean,
 
-    @SerializedName("Nieobecnosc")
+    @Json(name = "Nieobecnosc")
     val absence: Boolean,
 
-    @SerializedName("Zwolnienie")
+    @Json(name = "Zwolnienie")
     val exemption: Boolean,
 
-    @SerializedName("Spoznienie")
+    @Json(name = "Spoznienie")
     val lateness: Boolean,
 
-    @SerializedName("Usprawiedliwione")
+    @Json(name = "Usprawiedliwione")
     val excused: Boolean,
 
-    @SerializedName("Usuniete")
+    @Json(name = "Usuniete")
     val deleted: Boolean
 )

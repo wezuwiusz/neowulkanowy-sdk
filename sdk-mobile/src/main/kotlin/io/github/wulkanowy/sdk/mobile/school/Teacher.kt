@@ -1,15 +1,17 @@
 package io.github.wulkanowy.sdk.mobile.school
 
-import com.google.gson.annotations.SerializedName
+import com.squareup.moshi.Json
+import com.squareup.moshi.JsonClass
 
+@JsonClass(generateAdapter = true)
 data class Teacher(
 
-    @SerializedName("IdPracownik")
+    @Json(name = "IdPracownik")
     val employeeId: Int,
 
-    @SerializedName("IdPrzedmiot")
+    @Json(name = "IdPrzedmiot")
     val subjectId: Int,
 
-    @SerializedName("Rola")
+    @Json(name = "Rola")
     val role: String
 )

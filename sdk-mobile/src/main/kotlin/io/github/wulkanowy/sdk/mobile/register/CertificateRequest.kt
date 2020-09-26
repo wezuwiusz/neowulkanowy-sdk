@@ -1,39 +1,41 @@
 package io.github.wulkanowy.sdk.mobile.register
 
-import com.google.gson.annotations.SerializedName
+import com.squareup.moshi.Json
+import com.squareup.moshi.JsonClass
 import io.github.wulkanowy.sdk.mobile.ApiRequest
 import java.util.UUID
 
+@JsonClass(generateAdapter = true)
 data class CertificateRequest(
 
-    @SerializedName("PIN")
+    @Json(name = "PIN")
     val pin: String,
 
-    @SerializedName("TokenKey")
+    @Json(name = "TokenKey")
     val tokenKey: String,
 
-    @SerializedName("AppVersion")
+    @Json(name = "AppVersion")
     val appVersion: String = MOBILE_APP_VERSION,
 
-    @SerializedName("DeviceId")
+    @Json(name = "DeviceId")
     val deviceId: String = UUID.randomUUID().toString(),
 
-    @SerializedName("DeviceName")
+    @Json(name = "DeviceName")
     val deviceName: String,
 
-    @SerializedName("DeviceNameUser")
+    @Json(name = "DeviceNameUser")
     val deviceNameUser: String = "",
 
-    @SerializedName("DeviceDescription")
+    @Json(name = "DeviceDescription")
     val deviceDescription: String = "",
 
-    @SerializedName("DeviceSystemType")
+    @Json(name = "DeviceSystemType")
     val deviceSystemType: String = "Android",
 
-    @SerializedName("DeviceSystemVersion")
+    @Json(name = "DeviceSystemVersion")
     val deviceSystemVersion: String = "8.1.0",
 
-    @SerializedName("FirebaseTokenKey")
+    @Json(name = "FirebaseTokenKey")
     val firebaseToken: String
 
 ) : ApiRequest()

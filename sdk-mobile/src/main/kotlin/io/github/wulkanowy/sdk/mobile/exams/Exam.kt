@@ -1,39 +1,41 @@
 package io.github.wulkanowy.sdk.mobile.exams
 
-import com.google.gson.annotations.SerializedName
+import com.squareup.moshi.Json
+import com.squareup.moshi.JsonClass
 
+@JsonClass(generateAdapter = true)
 data class Exam(
 
-    @SerializedName("Id")
+    @Json(name = "Id")
     val id: Int,
 
-    @SerializedName("IdPrzedmiot")
+    @Json(name = "IdPrzedmiot")
     val subjectId: Int,
 
-    @SerializedName("IdPracownik")
+    @Json(name = "IdPracownik")
     val employeeId: Int,
 
-    @SerializedName("IdOddzial")
+    @Json(name = "IdOddzial")
     val classId: Int?,
 
-    @SerializedName("IdPodzial")
+    @Json(name = "IdPodzial")
     val divideId: Int?,
 
-    @SerializedName("PodzialNazwa")
+    @Json(name = "PodzialNazwa")
     val divideName: String?,
 
-    @SerializedName("Rodzaj")
+    @Json(name = "Rodzaj")
     val type: Boolean, // false - quiz, true - test
 
-    @SerializedName("RodzajNumer")
+    @Json(name = "RodzajNumer")
     val typeNumber: Int,
 
-    @SerializedName("Opis")
+    @Json(name = "Opis")
     val description: String,
 
-    @SerializedName("Data")
+    @Json(name = "Data")
     val date: Long,
 
-    @SerializedName("DataTekst")
+    @Json(name = "DataTekst")
     val dateText: String
 )

@@ -1,18 +1,20 @@
 package io.github.wulkanowy.sdk.mobile.grades
 
-import com.google.gson.annotations.SerializedName
+import com.squareup.moshi.Json
+import com.squareup.moshi.JsonClass
 
+@JsonClass(generateAdapter = true)
 data class GradeSummary(
 
-    @SerializedName("IdPrzedmiot")
+    @Json(name = "IdPrzedmiot")
     val subjectId: Int = 0,
 
-    @SerializedName("Wpis")
+    @Json(name = "Wpis")
     val entry: String = "",
 
-    @SerializedName("SredniaOcen")
+    @Json(name = "SredniaOcen")
     val average: String = "0",
 
-    @SerializedName("SumaPunktow")
+    @Json(name = "SumaPunktow")
     val pointsSum: String = ""
 )

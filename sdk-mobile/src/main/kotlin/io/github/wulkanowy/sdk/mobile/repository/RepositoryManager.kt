@@ -6,7 +6,7 @@ import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
+import retrofit2.converter.moshi.MoshiConverterFactory
 import retrofit2.converter.scalars.ScalarsConverterFactory
 import retrofit2.create
 
@@ -36,7 +36,7 @@ class RepositoryManager(
     private fun getRetrofitBuilder(interceptors: MutableList<Pair<Interceptor, Boolean>>): Retrofit.Builder {
         return Retrofit.Builder()
             .addConverterFactory(ScalarsConverterFactory.create())
-            .addConverterFactory(GsonConverterFactory.create())
+            .addConverterFactory(MoshiConverterFactory.create())
             .client(OkHttpClient().newBuilder()
                 .addInterceptor(HttpLoggingInterceptor().setLevel(logLevel))
                 .addInterceptor(ErrorInterceptor())

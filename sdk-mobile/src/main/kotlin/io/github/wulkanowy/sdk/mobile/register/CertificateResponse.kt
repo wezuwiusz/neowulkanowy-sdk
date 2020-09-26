@@ -1,24 +1,26 @@
 package io.github.wulkanowy.sdk.mobile.register
 
-import com.google.gson.annotations.SerializedName
+import com.squareup.moshi.Json
+import com.squareup.moshi.JsonClass
 
+@JsonClass(generateAdapter = true)
 data class CertificateResponse(
 
-    @SerializedName("IsError")
+    @Json(name = "IsError")
     val isError: Boolean,
 
-    @SerializedName("IsMessageForUser")
+    @Json(name = "IsMessageForUser")
     val isMessageForUser: Boolean,
 
-    @SerializedName("Message")
+    @Json(name = "Message")
     val message: String?,
 
-    @SerializedName("TokenKey")
+    @Json(name = "TokenKey")
     val tokenKey: String?,
 
-    @SerializedName("TokenStatus")
+    @Json(name = "TokenStatus")
     val tokenStatus: String?,
 
-    @SerializedName("TokenCert")
+    @Json(name = "TokenCert")
     val tokenCert: TokenCert?
 )
