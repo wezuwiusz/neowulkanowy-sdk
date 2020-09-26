@@ -1,76 +1,79 @@
 package io.github.wulkanowy.sdk.scrapper.register
 
-import com.google.gson.annotations.SerializedName
+import com.squareup.moshi.Json
+import com.squareup.moshi.JsonClass
 import java.util.Date
 
+@JsonClass(generateAdapter = true)
 data class Diary(
 
-    @SerializedName("Id")
+    @Json(name = "Id")
     val id: Int,
 
-    @SerializedName("IdUczen")
+    @Json(name = "IdUczen")
     val studentId: Int,
 
-    @SerializedName("UczenImie")
+    @Json(name = "UczenImie")
     val studentName: String,
 
-    @SerializedName("UczenImie2")
+    @Json(name = "UczenImie2")
     val studentSecondName: String?,
 
-    @SerializedName("UczenNazwisko")
+    @Json(name = "UczenNazwisko")
     val studentSurname: String,
 
-    @SerializedName("IsDziennik")
+    @Json(name = "IsDziennik")
     val isDiary: Boolean,
 
-    @SerializedName("IdDziennik")
+    @Json(name = "IdDziennik")
     val diaryId: Int,
 
-    @SerializedName("IdPrzedszkoleDziennik")
+    @Json(name = "IdPrzedszkoleDziennik")
     val kindergartenDiaryId: Int,
 
-    @SerializedName("Poziom")
+    @Json(name = "Poziom")
     val level: Int,
 
-    @SerializedName("Symbol")
+    @Json(name = "Symbol")
     val symbol: String,
 
-    @SerializedName("Nazwa")
+    @Json(name = "Nazwa")
     val name: String?,
 
-    @SerializedName("DziennikRokSzkolny")
+    @Json(name = "DziennikRokSzkolny")
     val year: Int,
 
-    @SerializedName("Okresy")
+    @Json(name = "Okresy")
     val semesters: List<Semester>? = emptyList(),
 
-    @SerializedName("UczenPelnaNazwa")
+    @Json(name = "UczenPelnaNazwa")
     val fullName: String
 ) {
+    @JsonClass(generateAdapter = true)
     data class Semester(
 
-        @SerializedName("NumerOkresu")
+        @Json(name = "NumerOkresu")
         val number: Int,
 
-        @SerializedName("Poziom")
+        @Json(name = "Poziom")
         val level: Int,
 
-        @SerializedName("DataOd")
+        @Json(name = "DataOd")
         val start: Date,
 
-        @SerializedName("DataDo")
+        @Json(name = "DataDo")
         val end: Date,
 
-        @SerializedName("IdOddzial")
+        @Json(name = "IdOddzial")
         val classId: Int,
 
-        @SerializedName("IdJednostkaSprawozdawcza")
+        @Json(name = "IdJednostkaSprawozdawcza")
         val unitId: Int,
 
-        @SerializedName("IsLastOkres")
+        @Json(name = "IsLastOkres")
         val isLast: Boolean,
 
-        @SerializedName("Id")
+        @Json(name = "Id")
         val id: Int
     )
 }

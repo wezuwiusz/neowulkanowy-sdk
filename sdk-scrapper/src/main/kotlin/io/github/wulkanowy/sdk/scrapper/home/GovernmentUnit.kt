@@ -1,12 +1,14 @@
 package io.github.wulkanowy.sdk.scrapper.home
 
-import com.google.gson.annotations.SerializedName
+import com.squareup.moshi.Json
+import com.squareup.moshi.JsonClass
 
+@JsonClass(generateAdapter = true)
 data class GovernmentUnit(
 
-    @SerializedName("UnitName")
+    @Json(name = "UnitName")
     val unitName: String,
 
-    @SerializedName("People")
+    @Json(name = "People")
     val people: List<GovernmentMember>
 )

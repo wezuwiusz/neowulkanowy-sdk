@@ -1,5 +1,6 @@
 package io.github.wulkanowy.sdk.scrapper.messages
 
+import com.squareup.moshi.Moshi
 import io.github.wulkanowy.sdk.scrapper.BaseLocalTest
 import io.github.wulkanowy.sdk.scrapper.repository.MessagesRepository
 import io.github.wulkanowy.sdk.scrapper.service.MessagesService
@@ -7,6 +8,7 @@ import kotlinx.coroutines.runBlocking
 import okhttp3.mockwebserver.MockResponse
 import org.junit.Assert.assertEquals
 import org.junit.Test
+import java.io.EOFException
 
 class MessagesTest : BaseLocalTest() {
 
@@ -198,9 +200,10 @@ class MessagesTest : BaseLocalTest() {
 
         server.takeRequest()
 
-        val expected = jsonParser.parse(MessagesTest::class.java.getResource("NowaWiadomosc.json").readText())
+        val adapter = SendMessageRequestJsonAdapter(Moshi.Builder().build())
+        val expected = adapter.fromJson(MessagesTest::class.java.getResource("NowaWiadomosc.json").readText())
         val request = server.takeRequest()
-        val actual = jsonParser.parse(request.body.readUtf8())
+        val actual = adapter.fromJson(request.body.readUtf8())
 
         assertEquals(expected, actual)
         assertEquals(
@@ -221,9 +224,10 @@ class MessagesTest : BaseLocalTest() {
 
         server.takeRequest()
 
-        val expected = jsonParser.parse(MessagesTest::class.java.getResource("UsunWiadomosc.json").readText())
+        val adapter = DeleteMessageRequestJsonAdapter(Moshi.Builder().build())
+        val expected = adapter.fromJson(MessagesTest::class.java.getResource("UsunWiadomosc.json").readText())
         val request = server.takeRequest()
-        val actual = jsonParser.parse(request.body.readUtf8())
+        val actual = adapter.fromJson(request.body.readUtf8())
 
         assertEquals(expected, actual)
         assertEquals(
@@ -240,10 +244,10 @@ class MessagesTest : BaseLocalTest() {
         server.enqueue(MockResponse().setBody(""))
         server.start(3000)
 
-        try {
-            runBlocking { api.deleteMessages(listOf(74, 69), 2) }
-        } catch (e: Throwable) {
-            assertEquals("Unexpected empty response. Message(s) may already be deleted", e.message)
-        }
+        val res = runCatching { runBlocking { api.deleteMessages(listOf(74, 69), 3) } }
+
+        val exception = res.exceptionOrNull()!!
+        assertEquals(EOFException::class.java, exception::class.java)
+        assertEquals("End of input", exception.message)
     }
 }

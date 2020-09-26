@@ -1,17 +1,19 @@
 package io.github.wulkanowy.sdk.scrapper.attendance
 
-import com.google.gson.annotations.SerializedName
+import com.squareup.moshi.Json
+import com.squareup.moshi.JsonClass
 import java.util.Date
 
+@JsonClass(generateAdapter = true)
 class SentExcuse {
 
-    @SerializedName("Status")
+    @Json(name = "Status")
     var status: Int = 0
 
-    @SerializedName("Dzien")
+    @Json(name = "Dzien")
     lateinit var date: Date
 
-    @SerializedName("IdPoraLekcji")
+    @Json(name = "IdPoraLekcji")
     var timeId: Int = 0
 
     enum class Status(val id: Int) {

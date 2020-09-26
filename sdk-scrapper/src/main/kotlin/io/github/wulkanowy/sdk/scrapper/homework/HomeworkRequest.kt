@@ -1,16 +1,18 @@
 package io.github.wulkanowy.sdk.scrapper.homework
 
-import com.google.gson.annotations.SerializedName
+import com.squareup.moshi.Json
+import com.squareup.moshi.JsonClass
 import java.util.Date
 
+@JsonClass(generateAdapter = true)
 data class HomeworkRequest(
 
-    @SerializedName("date")
+    @Json(name = "date")
     val date: Date,
 
-    @SerializedName("schoolYear")
+    @Json(name = "schoolYear")
     val schoolYear: Int,
 
-    @SerializedName("statusFilter")
+    @Json(name = "statusFilter")
     val statusFilter: Int
 )

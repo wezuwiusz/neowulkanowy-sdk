@@ -1,9 +1,8 @@
 package io.github.wulkanowy.sdk.scrapper
 
-import com.google.gson.GsonBuilder
-import com.google.gson.JsonParser
-import io.github.wulkanowy.sdk.scrapper.grades.DateDeserializer
-import io.github.wulkanowy.sdk.scrapper.grades.GradeDate
+import com.squareup.moshi.Moshi
+import io.github.wulkanowy.sdk.scrapper.adapter.CustomDateAdapter
+import io.github.wulkanowy.sdk.scrapper.adapter.GradeDateDeserializer
 import io.github.wulkanowy.sdk.scrapper.interceptor.AutoLoginInterceptor
 import io.github.wulkanowy.sdk.scrapper.interceptor.ErrorInterceptor
 import io.github.wulkanowy.sdk.scrapper.login.LoginHelper
@@ -17,14 +16,13 @@ import okhttp3.mockwebserver.MockWebServer
 import org.junit.After
 import pl.droidsonroids.retrofit2.JspoonConverterFactory
 import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
+import retrofit2.converter.moshi.MoshiConverterFactory
 import retrofit2.converter.scalars.ScalarsConverterFactory
 import java.net.CookieManager
 
 abstract class BaseLocalTest : BaseTest() {
 
     val server = MockWebServer()
-    val jsonParser = JsonParser()
 
     fun MockWebServer.enqueue(fileName: String, clazz: Class<*> = this@BaseLocalTest::class.java) {
         enqueue(MockResponse().setBody(clazz.getResource(fileName).readText()))
@@ -53,11 +51,11 @@ abstract class BaseLocalTest : BaseTest() {
     ): T = Retrofit.Builder()
         .client(okHttp)
         .addConverterFactory(ScalarsConverterFactory.create())
-        .addConverterFactory(if (!html) GsonConverterFactory.create(GsonBuilder()
-            .setDateFormat("yyyy-MM-dd HH:mm:ss")
-            .serializeNulls()
-            .registerTypeAdapter(GradeDate::class.java, DateDeserializer(GradeDate::class.java))
-            .create()) else JspoonConverterFactory.create())
+        .addConverterFactory(if (!html) MoshiConverterFactory.create(Moshi.Builder()
+            .add(CustomDateAdapter())
+            .add(GradeDateDeserializer())
+            .build()
+        ) else JspoonConverterFactory.create())
         .baseUrl(url)
         .build()
         .create(service)

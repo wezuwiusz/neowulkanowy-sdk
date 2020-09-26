@@ -1,7 +1,9 @@
 package io.github.wulkanowy.sdk.scrapper
 
-import com.google.gson.annotations.SerializedName
+import com.squareup.moshi.Json
+import com.squareup.moshi.JsonClass
 
+@JsonClass(generateAdapter = true)
 data class ApiResponse<out T>(
 
     val success: Boolean,
@@ -10,24 +12,25 @@ data class ApiResponse<out T>(
 
     val feedback: Feedback? = null,
 
-    val errorMessage: String = ""
+    val errorMessage: String? = null
 ) {
 
+    @JsonClass(generateAdapter = true)
     data class Feedback(
 
-        @SerializedName("Handled")
+        @Json(name = "Handled")
         val handled: Boolean,
 
-        @SerializedName("FType")
+        @Json(name = "FType")
         val type: String,
 
-        @SerializedName("Message")
+        @Json(name = "Message")
         val message: String,
 
-        @SerializedName("ExceptionMessage")
+        @Json(name = "ExceptionMessage")
         val exceptionMessage: String,
 
-        @SerializedName("InnerExceptionMessage")
+        @Json(name = "InnerExceptionMessage")
         val innerExceptionMessage: String,
 
         val success: Boolean

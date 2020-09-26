@@ -1,12 +1,12 @@
 package io.github.wulkanowy.sdk.scrapper.service
 
-import com.google.gson.GsonBuilder
+import com.squareup.moshi.Moshi
+import io.github.wulkanowy.sdk.scrapper.adapter.CustomDateAdapter
 import io.github.wulkanowy.sdk.scrapper.OkHttpClientBuilderFactory
 import io.github.wulkanowy.sdk.scrapper.Scrapper
 import io.github.wulkanowy.sdk.scrapper.ScrapperException
 import io.github.wulkanowy.sdk.scrapper.TLSSocketFactory
-import io.github.wulkanowy.sdk.scrapper.grades.DateDeserializer
-import io.github.wulkanowy.sdk.scrapper.grades.GradeDate
+import io.github.wulkanowy.sdk.scrapper.adapter.GradeDateDeserializer
 import io.github.wulkanowy.sdk.scrapper.interceptor.AutoLoginInterceptor
 import io.github.wulkanowy.sdk.scrapper.interceptor.ErrorInterceptor
 import io.github.wulkanowy.sdk.scrapper.interceptor.StudentCookieInterceptor
@@ -18,7 +18,7 @@ import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import pl.droidsonroids.retrofit2.JspoonConverterFactory
 import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
+import retrofit2.converter.moshi.MoshiConverterFactory
 import retrofit2.converter.scalars.ScalarsConverterFactory
 import retrofit2.create
 import java.net.CookieManager
@@ -139,11 +139,11 @@ class ServiceManager(
         .baseUrl(baseUrl)
         .client(client.build())
         .addConverterFactory(ScalarsConverterFactory.create())
-        .addConverterFactory(if (gson) GsonConverterFactory.create(GsonBuilder()
-            .setDateFormat("yyyy-MM-dd HH:mm:ss")
-            .serializeNulls()
-            .registerTypeAdapter(GradeDate::class.java, DateDeserializer(GradeDate::class.java))
-            .create()) else JspoonConverterFactory.create())
+        .addConverterFactory(if (gson) MoshiConverterFactory.create(Moshi.Builder()
+            .add(CustomDateAdapter())
+            .add(GradeDateDeserializer())
+            .build()
+        ) else JspoonConverterFactory.create())
         .build()
 
     private fun getClientBuilder(

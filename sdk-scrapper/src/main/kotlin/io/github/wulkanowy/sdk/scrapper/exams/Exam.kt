@@ -1,29 +1,34 @@
 package io.github.wulkanowy.sdk.scrapper.exams
 
-import com.google.gson.annotations.SerializedName
+import com.squareup.moshi.Json
+import com.squareup.moshi.JsonClass
 import java.util.Date
 
+@JsonClass(generateAdapter = true)
 data class Exam(
 
-    @SerializedName("DataModyfikacji")
+    @Json(name = "DataModyfikacji")
     val entryDate: Date,
 
-    @SerializedName("DisplayValue")
+    @Json(name = "DisplayValue")
     val subject: String,
 
-    @SerializedName("Rodzaj")
+    @Json(name = "Rodzaj")
     val type: String,
 
-    @SerializedName("Opis")
+    @Json(name = "Opis")
     val description: String,
 
-    @SerializedName("PracownikModyfikujacyDisplay")
+    @Json(name = "PracownikModyfikujacyDisplay")
     val teacher: String
 ) {
 
+    @Transient
     lateinit var date: Date
 
+    @Transient
     lateinit var group: String
 
+    @Transient
     lateinit var teacherSymbol: String
 }

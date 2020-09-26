@@ -1,14 +1,18 @@
 package io.github.wulkanowy.sdk.scrapper.school
 
-import com.google.gson.annotations.SerializedName
+import com.squareup.moshi.Json
+import com.squareup.moshi.JsonClass
 
+@JsonClass(generateAdapter = true)
 data class Teacher(
 
-    @SerializedName("Nauczyciel")
+    @Json(name = "Nauczyciel")
     val name: String,
 
-    val short: String,
-
-    @SerializedName("Nazwa")
+    @Json(name = "Nazwa")
     val subject: String
-)
+) {
+
+    @Transient
+    var short: String = ""
+}

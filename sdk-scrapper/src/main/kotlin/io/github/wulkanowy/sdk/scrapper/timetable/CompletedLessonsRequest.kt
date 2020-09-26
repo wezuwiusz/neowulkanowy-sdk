@@ -1,15 +1,17 @@
 package io.github.wulkanowy.sdk.scrapper.timetable
 
-import com.google.gson.annotations.SerializedName
+import com.squareup.moshi.Json
+import com.squareup.moshi.JsonClass
 
+@JsonClass(generateAdapter = true)
 class CompletedLessonsRequest(
 
-    @SerializedName("poczatek")
+    @Json(name = "poczatek")
     val startDate: String,
 
-    @SerializedName("koniec")
+    @Json(name = "koniec")
     val endDate: String,
 
-    @SerializedName("idPrzedmiot")
+    @Json(name = "idPrzedmiot")
     val subject: Int = -1
 )

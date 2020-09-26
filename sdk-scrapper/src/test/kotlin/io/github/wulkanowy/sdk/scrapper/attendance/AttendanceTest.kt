@@ -1,5 +1,6 @@
 package io.github.wulkanowy.sdk.scrapper.attendance
 
+import com.squareup.moshi.Moshi
 import io.github.wulkanowy.sdk.scrapper.BaseLocalTest
 import io.github.wulkanowy.sdk.scrapper.register.RegisterTest
 import kotlinx.coroutines.runBlocking
@@ -172,9 +173,13 @@ class AttendanceTest : BaseLocalTest() {
         server.takeRequest()
 
         val request = server.takeRequest()
-        val expected = jsonParser.parse(AttendanceTest::class.java.getResource("Usprawiedliwienie.json").readText())
 
-        assertEquals(expected, jsonParser.parse(request.body.readUtf8()))
+        val adapter = AttendanceExcuseRequestJsonAdapter(Moshi.Builder().build())
+
+        val expected = adapter.fromJson(AttendanceTest::class.java.getResource("Usprawiedliwienie.json").readText())
+        val actual = adapter.fromJson(request.body.readUtf8())
+
+        assertEquals(expected, actual)
         assertEquals(
             "7SaCmj247xiKA4nQcTqLJ8J56UnZpxL3zLNENZjKAdFQN3xN26EwRdhAezyo5Wx3P2iWVPLTc3fpjPCNMbEPLmxF4RrLeaAGdQevu8pgbEB2TocqfBPjWzNLyHXBcqxKM",
             request.getHeader("X-V-RequestVerificationToken")

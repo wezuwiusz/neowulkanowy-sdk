@@ -1,22 +1,24 @@
 package io.github.wulkanowy.sdk.scrapper.mobile
 
-import com.google.gson.annotations.SerializedName
+import com.squareup.moshi.Json
+import com.squareup.moshi.JsonClass
 import java.util.Date
 
+@JsonClass(generateAdapter = true)
 data class Device(
 
-    @SerializedName("Id")
+    @Json(name = "Id")
     val id: Int = 0,
 
-    @SerializedName("IdentyfikatorUrzadzenia")
+    @Json(name = "IdentyfikatorUrzadzenia")
     val deviceId: String? = null,
 
-    @SerializedName("NazwaUrzadzenia")
+    @Json(name = "NazwaUrzadzenia")
     val name: String? = null,
 
-    @SerializedName("DataUtworzenia")
+    @Json(name = "DataUtworzenia")
     val createDate: Date? = null,
 
-    @SerializedName("DataModyfikacji")
+    @Json(name = "DataModyfikacji")
     val modificationDate: Date? = null
 )

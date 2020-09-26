@@ -1,19 +1,22 @@
 package io.github.wulkanowy.sdk.scrapper.exams
 
-import com.google.gson.annotations.SerializedName
+import com.squareup.moshi.Json
+import com.squareup.moshi.JsonClass
 import java.util.Date
 
+@JsonClass(generateAdapter = true)
 class ExamResponse {
 
-    @SerializedName("SprawdzianyGroupedByDayList")
+    @Json(name = "SprawdzianyGroupedByDayList")
     var weeks: List<ExamDay> = emptyList()
 
+    @JsonClass(generateAdapter = true)
     class ExamDay {
 
-        @SerializedName("Data")
+        @Json(name = "Data")
         lateinit var date: Date
 
-        @SerializedName("Sprawdziany")
+        @Json(name = "Sprawdziany")
         lateinit var exams: List<Exam>
     }
 }

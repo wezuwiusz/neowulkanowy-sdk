@@ -1,7 +1,8 @@
 package io.github.wulkanowy.sdk.scrapper.repository
 
-import com.google.gson.GsonBuilder
-import io.github.wulkanowy.sdk.scrapper.ApiResponse
+import com.squareup.moshi.Moshi
+import io.github.wulkanowy.sdk.scrapper.ApiResponseJsonAdapter
+import io.github.wulkanowy.sdk.scrapper.adapter.CustomDateAdapter
 import io.github.wulkanowy.sdk.scrapper.attendance.Absent
 import io.github.wulkanowy.sdk.scrapper.attendance.Attendance
 import io.github.wulkanowy.sdk.scrapper.attendance.AttendanceExcuseRequest
@@ -59,7 +60,7 @@ class StudentRepository(private val api: StudentService) {
 
     private lateinit var times: List<CacheResponse.Time>
 
-    private val gson by lazy { GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss") }
+    private val moshi by lazy { Moshi.Builder().add(CustomDateAdapter()) }
 
     private fun LocalDate.toISOFormat(): String = toFormat("yyyy-MM-dd'T00:00:00'")
 
@@ -96,7 +97,7 @@ class StudentRepository(private val api: StudentService) {
     suspend fun getAttendanceSummary(subjectId: Int?): List<AttendanceSummary> {
         return api.getAttendanceStatistics(AttendanceSummaryRequest(subjectId))
             .handleErrors()
-            .data?.mapAttendanceSummaryList(gson).orEmpty()
+            .data?.mapAttendanceSummaryList(moshi).orEmpty()
     }
 
     suspend fun excuseForAbsence(absents: List<Absent>, content: String?): Boolean {
@@ -193,7 +194,9 @@ class StudentRepository(private val api: StudentService) {
         if (!cache.showCompletedLessons) throw FeatureDisabledException("Widok lekcji zrealizowanych został wyłączony przez Administratora szkoły")
 
         val res = api.getCompletedLessons(CompletedLessonsRequest(start.toISOFormat(), end.toISOFormat(), subjectId))
-        return gson.create().fromJson(res, ApiResponse::class.java).handleErrors().mapCompletedLessonsList(start, endDate, gson)
+
+        val adapter = ApiResponseJsonAdapter<Any>(moshi.build(), arrayOf(Any::class.java))
+        return adapter.fromJson(res)?.handleErrors()?.mapCompletedLessonsList(start, endDate, moshi).orEmpty()
     }
 
     suspend fun getTeachers(): List<Teacher> {

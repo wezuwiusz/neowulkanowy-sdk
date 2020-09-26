@@ -1,47 +1,49 @@
 package io.github.wulkanowy.sdk.scrapper.messages
 
-import com.google.gson.annotations.SerializedName
+import com.squareup.moshi.Json
+import com.squareup.moshi.JsonClass
 import java.util.Date
 
+@JsonClass(generateAdapter = true)
 data class Message(
 
-    @SerializedName("Id")
+    @Json(name = "Id")
     val id: Int?,
 
-    @SerializedName("Nieprzeczytana")
+    @Json(name = "Nieprzeczytana")
     val unread: Boolean?,
 
-    @SerializedName("Nieprzeczytane")
+    @Json(name = "Nieprzeczytane")
     val unreadBy: Int?,
 
-    @SerializedName("Przeczytane")
+    @Json(name = "Przeczytane")
     val readBy: Int?,
 
-    @SerializedName("Data")
+    @Json(name = "Data")
     val date: Date?,
 
-    @SerializedName("Tresc")
+    @Json(name = "Tresc")
     val content: String?,
 
-    @SerializedName("Temat")
-    val subject: String,
+    @Json(name = "Temat")
+    val subject: String?,
 
-    @SerializedName("Nadawca")
+    @Json(name = "Nadawca")
     val sender: Recipient?,
 
-    @SerializedName("IdWiadomosci")
+    @Json(name = "IdWiadomosci")
     val messageId: Int?,
 
-    @SerializedName("HasZalaczniki")
+    @Json(name = "HasZalaczniki")
     val hasAttachments: Boolean = false,
 
-    @SerializedName("FolderWiadomosci")
+    @Json(name = "FolderWiadomosci")
     val folderId: Int = 0,
 
-    @SerializedName("Adresaci")
+    @Json(name = "Adresaci")
     val recipients: List<Recipient>?,
 
-    @SerializedName("Zalaczniki")
+    @Json(name = "Zalaczniki")
     val attachments: List<Attachment>? = emptyList() // nullable just to make sure it doesn't break anything
 ) {
     var removed: Boolean = false

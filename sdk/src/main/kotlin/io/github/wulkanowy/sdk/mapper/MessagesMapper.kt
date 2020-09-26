@@ -43,7 +43,7 @@ fun List<ApiMessage>.mapMessages(dictionaries: Dictionaries) = map {
 fun List<ScrapperMessage>.mapMessages() = map {
     Message(
         id = it.id,
-        subject = it.subject,
+        subject = it.subject.orEmpty(),
         date = it.date?.toLocalDateTime(),
         content = it.content,
         folderId = it.folderId,

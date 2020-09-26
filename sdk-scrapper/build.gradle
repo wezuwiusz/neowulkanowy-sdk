@@ -1,15 +1,21 @@
 plugins {
     id 'java'
     id 'org.jetbrains.kotlin.jvm'
+    id 'kotlin-kapt'
 }
 
 dependencies {
     implementation "pl.droidsonroids:jspoon:$jspoon"
 
+    testImplementation "com.squareup.okhttp3:mockwebserver:$okhttp3"
     implementation "com.squareup.retrofit2:retrofit:$retrofit"
-    implementation "com.squareup.retrofit2:converter-gson:$retrofit"
+    implementation "com.squareup.retrofit2:converter-moshi:$retrofit"
     implementation "com.squareup.retrofit2:converter-scalars:$retrofit"
     implementation "pl.droidsonroids.retrofit2:converter-jspoon:$jspoon"
+
+    implementation "com.squareup.moshi:moshi:1.9.3"
+    implementation 'com.squareup.moshi:moshi-adapters:1.9.3'
+    kapt "com.squareup.moshi:moshi-kotlin-codegen:1.9.3"
 
     implementation "com.squareup.okhttp3:okhttp-urlconnection:$okhttp3"
 }

@@ -1,9 +1,7 @@
 package io.github.wulkanowy.sdk.scrapper.timetable
 
-import com.google.gson.Gson
-import com.google.gson.GsonBuilder
-import com.google.gson.internal.LinkedTreeMap
-import com.google.gson.reflect.TypeToken
+import com.squareup.moshi.Moshi
+import com.squareup.moshi.Types
 import io.github.wulkanowy.sdk.scrapper.ApiResponse
 import io.github.wulkanowy.sdk.scrapper.toDate
 import io.github.wulkanowy.sdk.scrapper.toFormat
@@ -26,15 +24,25 @@ fun TimetableResponse.mapTimetableList(startDate: LocalDate, endDate: LocalDate?
     it.date.toLocalDate() >= startDate && it.date.toLocalDate() <= endDate ?: startDate.plusDays(4)
 }.sortedWith(compareBy({ it.date }, { it.number })).toList()
 
-fun ApiResponse<*>.mapCompletedLessonsList(start: LocalDate, endDate: LocalDate?, gson: GsonBuilder): List<CompletedLesson> {
-    return (data as LinkedTreeMap<*, *>).map { list ->
-        gson.create().fromJson<List<CompletedLesson>>(Gson().toJson(list.value), object : TypeToken<ArrayList<CompletedLesson>>() {}.type)
-    }.flatten().map {
-        it.apply {
-            teacherSymbol = teacher.substringAfter(" [").substringBefore("]")
-            teacher = teacher.substringBefore(" [")
+fun ApiResponse<*>.mapCompletedLessonsList(start: LocalDate, endDate: LocalDate?, moshi: Moshi.Builder): List<CompletedLesson> {
+    val type = Types.newParameterizedType(MutableMap::class.java, String::class.java, List::class.java)
+    val adapter = moshi.build().adapter<Map<String, List<Map<String, Any>>>>(type)
+
+    val mapType = Types.newParameterizedType(List::class.java, MutableMap::class.java)
+    val mapAdapter = moshi.build().adapter<List<Map<String, Any>>>(mapType)
+
+    val lessonType = Types.newParameterizedType(List::class.java, CompletedLesson::class.java)
+    val completedLessonAdapter = moshi.build().adapter<List<CompletedLesson>>(lessonType)
+    return adapter.fromJsonValue(data).orEmpty()
+        .map { it.value }
+        .map { mapAdapter.toJson(it) }
+        .flatMap { completedLessonAdapter.fromJson(it).orEmpty() }
+        .map {
+            it.apply {
+                teacherSymbol = teacher.substringAfter(" [").substringBefore("]")
+                teacher = teacher.substringBefore(" [")
+            }
+        }.sortedWith(compareBy({ it.date }, { it.number })).toList().filter {
+            it.date.toLocalDate() >= start && it.date.toLocalDate() <= endDate ?: start.plusDays(4)
         }
-    }.sortedWith(compareBy({ it.date }, { it.number })).toList().filter {
-        it.date.toLocalDate() >= start && it.date.toLocalDate() <= endDate ?: start.plusDays(4)
-    }
 }

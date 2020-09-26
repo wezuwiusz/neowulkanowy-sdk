@@ -1,9 +1,6 @@
 package io.github.wulkanowy.sdk.scrapper.repository
 
-import com.google.gson.Gson
-import io.github.wulkanowy.sdk.scrapper.ApiResponse
 import io.github.wulkanowy.sdk.scrapper.ScrapperException
-import io.github.wulkanowy.sdk.scrapper.exception.VulcanException
 import io.github.wulkanowy.sdk.scrapper.getScriptParam
 import io.github.wulkanowy.sdk.scrapper.interceptor.handleErrors
 import io.github.wulkanowy.sdk.scrapper.messages.Attachment
@@ -103,17 +100,12 @@ class MessagesRepository(private val api: MessagesService) {
         val appGUID = getScriptParam("appGuid", startPage)
         val version = getScriptParam("version", startPage)
 
-        val res = when (folderId) {
+        return when (folderId) {
             1 -> api.deleteInboxMessage(items, antiForgeryToken, appGUID, version)
             2 -> api.deleteOutboxMessage(items, antiForgeryToken, appGUID, version)
             3 -> api.deleteTrashMessages(items, antiForgeryToken, appGUID, version)
             else -> throw IllegalArgumentException("Unknown folder id: $folderId")
-        }
-
-        val apiResponse = if (res.isBlank()) throw VulcanException("Unexpected empty response. Message(s) may already be deleted")
-        else Gson().fromJson(res, ApiResponse::class.java)
-
-        return apiResponse.success
+        }.success
     }
 
     private fun String.normalizeRecipient(): String {

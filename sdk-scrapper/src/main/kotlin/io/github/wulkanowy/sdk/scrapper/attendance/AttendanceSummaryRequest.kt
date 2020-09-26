@@ -1,8 +1,10 @@
 package io.github.wulkanowy.sdk.scrapper.attendance
 
-import com.google.gson.annotations.SerializedName
+import com.squareup.moshi.Json
+import com.squareup.moshi.JsonClass
 
+@JsonClass(generateAdapter = true)
 data class AttendanceSummaryRequest(
-    @SerializedName("idPrzedmiot")
+    @Json(name = "idPrzedmiot")
     val id: Int?
 )

@@ -1,23 +1,26 @@
 package io.github.wulkanowy.sdk.scrapper.timetable
 
-import com.google.gson.annotations.SerializedName
+import com.squareup.moshi.Json
+import com.squareup.moshi.JsonClass
 import org.jsoup.nodes.Element
 import java.util.Date
 
+@JsonClass(generateAdapter = true)
 class TimetableResponse {
 
-    @SerializedName("Header")
+    @Json(name = "Header")
     var _headersOld: List<Header> = emptyList()
 
-    @SerializedName("Headers")
+    @Json(name = "Headers")
     var headers: List<Header> = emptyList()
 
-    @SerializedName("Rows")
+    @Json(name = "Rows")
     var rows2api: List<List<String>> = emptyList()
 
+    @JsonClass(generateAdapter = true)
     class Header {
 
-        @SerializedName("Text")
+        @Json(name = "Text")
         lateinit var date: String
     }
 

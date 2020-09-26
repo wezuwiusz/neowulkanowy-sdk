@@ -1,8 +1,7 @@
 package io.github.wulkanowy.sdk.scrapper.attendance
 
-import com.google.gson.GsonBuilder
-import com.google.gson.internal.LinkedTreeMap
-import com.google.gson.reflect.TypeToken
+import com.squareup.moshi.Moshi
+import com.squareup.moshi.Types
 import io.github.wulkanowy.sdk.scrapper.attendance.AttendanceCategory.ABSENCE_UNEXCUSED
 import io.github.wulkanowy.sdk.scrapper.attendance.AttendanceCategory.UNEXCUSED_LATENESS
 import io.github.wulkanowy.sdk.scrapper.timetable.CacheResponse.Time
@@ -25,18 +24,16 @@ fun AttendanceResponse.mapAttendanceList(start: LocalDate, end: LocalDate?, time
     }.sortedWith(compareBy({ it.date }, { it.number }))
 }
 
-fun AttendanceSummaryResponse.mapAttendanceSummaryList(gson: GsonBuilder): List<AttendanceSummary> {
+fun AttendanceSummaryResponse.mapAttendanceSummaryList(moshi: Moshi.Builder): List<AttendanceSummary> {
     val stats = items.map {
-        (gson.create().fromJson<LinkedTreeMap<String, String?>>(
-            gson.registerTypeAdapter(
-                AttendanceSummaryResponse.Summary::class.java,
-                AttendanceSummaryItemSerializer()
-            ).create().toJson(it), object : TypeToken<LinkedTreeMap<String, String?>>() {}.type
-        ))
+        val json = AttendanceSummaryResponse_SummaryJsonAdapter(moshi.build()).toJson(it)
+        val type = Types.newParameterizedType(MutableMap::class.java, String::class.java, String::class.java)
+        val adapter = moshi.build().adapter<Map<String, String>>(type)
+        adapter.fromJson(json).orEmpty()
     }
 
     val getMonthValue = fun(type: Int, month: Int): Int {
-        return stats[type][stats[0].keys.toTypedArray()[month + 1]]?.toInt() ?: 0
+        return stats.getOrNull(type)?.get(stats[0].keys.toTypedArray().getOrNull(month + 1))?.toInt() ?: 0
     }
 
     return (1..12).map {

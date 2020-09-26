@@ -1,30 +1,32 @@
 package io.github.wulkanowy.sdk.scrapper.messages
 
-import com.google.gson.annotations.SerializedName
+import com.squareup.moshi.Json
+import com.squareup.moshi.JsonClass
 
+@JsonClass(generateAdapter = true)
 data class SendMessageRequest(
 
-    @SerializedName("incomming")
+    @Json(name = "incomming")
     val incoming: Incoming
 
 ) {
 
+    @JsonClass(generateAdapter = true)
     data class Incoming(
 
-        @SerializedName("Adresaci")
+        @Json(name = "Adresaci")
         val recipients: List<Recipient>,
 
-        @SerializedName("Id")
+        @Json(name = "Id")
         val id: Int = 0,
 
-        @SerializedName("Nadawca")
+        @Json(name = "Nadawca")
         val sender: Sender = Sender(),
 
-        @SerializedName("Temat")
+        @Json(name = "Temat")
         val subject: String,
 
-        @SerializedName("Tresc")
+        @Json(name = "Tresc")
         val content: String
-
     )
 }

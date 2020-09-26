@@ -1,33 +1,35 @@
 package io.github.wulkanowy.sdk.scrapper.timetable
 
-import com.google.gson.annotations.SerializedName
+import com.squareup.moshi.Json
+import com.squareup.moshi.JsonClass
 import java.util.Date
 
+@JsonClass(generateAdapter = true)
 class CompletedLesson {
 
-    @SerializedName("Data")
+    @Json(name = "Data")
     lateinit var date: Date
 
-    @SerializedName("NrLekcji")
+    @Json(name = "NrLekcji")
     var number: Int = 0
 
-    @SerializedName("Przedmiot")
+    @Json(name = "Przedmiot")
     var subject: String = ""
 
-    @SerializedName("Temat")
+    @Json(name = "Temat")
     var topic: String = ""
 
-    @SerializedName("Nauczyciel")
+    @Json(name = "Nauczyciel")
     var teacher: String = ""
 
     var teacherSymbol: String = ""
 
-    @SerializedName("Zastepstwo")
+    @Json(name = "Zastepstwo")
     var substitution: String = ""
 
-    @SerializedName("Nieobecnosc")
+    @Json(name = "Nieobecnosc")
     var absence: String = ""
 
-    @SerializedName("ZasobyPubliczne")
+    @Json(name = "ZasobyPubliczne")
     var resources: String = ""
 }

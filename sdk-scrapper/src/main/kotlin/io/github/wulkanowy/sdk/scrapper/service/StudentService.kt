@@ -88,7 +88,7 @@ interface StudentService {
         @Header("X-V-AppGuid") appGuid: String,
         @Header("X-V-AppVersion") appVersion: String,
         @Body attendanceExcuseRequest: AttendanceExcuseRequest
-    ): ApiResponse<Nothing>
+    ): ApiResponse<Any>
 
     @POST("EgzaminyZewnetrzne.mvc/Get")
     suspend fun getExternalExaminations()

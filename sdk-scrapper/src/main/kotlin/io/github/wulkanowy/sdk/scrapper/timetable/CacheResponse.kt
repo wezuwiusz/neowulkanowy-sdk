@@ -1,43 +1,46 @@
 package io.github.wulkanowy.sdk.scrapper.timetable
 
-import com.google.gson.annotations.SerializedName
+import com.squareup.moshi.Json
+import com.squareup.moshi.JsonClass
 import java.util.Date
 
+@JsonClass(generateAdapter = true)
 class CacheResponse {
 
-    @SerializedName("isParentUser")
+    @Json(name = "isParentUser")
     var isParent: Boolean = false
 
-    @SerializedName("poryLekcji")
+    @Json(name = "poryLekcji")
     lateinit var times: List<Time>
 
-    @SerializedName("isMenuOn")
+    @Json(name = "isMenuOn")
     var isMenu: Boolean = false
 
-    @SerializedName("pokazLekcjeZrealizowane")
+    @Json(name = "pokazLekcjeZrealizowane")
     var showCompletedLessons: Boolean = false
 
+    @JsonClass(generateAdapter = true)
     class Time {
 
-        @SerializedName("Id")
+        @Json(name = "Id")
         var id: Int = 0
 
-        @SerializedName("Numer")
+        @Json(name = "Numer")
         var number: Int = 0
 
-        @SerializedName("Poczatek")
+        @Json(name = "Poczatek")
         lateinit var start: Date
 
-        @SerializedName("Koniec")
+        @Json(name = "Koniec")
         lateinit var end: Date
 
-        @SerializedName("DataModyfikacji")
+        @Json(name = "DataModyfikacji")
         lateinit var modified: Date
 
-        @SerializedName("IdJednostkaSprawozdawcza")
+        @Json(name = "IdJednostkaSprawozdawcza")
         var organizationUnitId: Int = 0
 
-        @SerializedName("Nazwa")
+        @Json(name = "Nazwa")
         lateinit var name: String
     }
 }

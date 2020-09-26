@@ -1,18 +1,20 @@
 package io.github.wulkanowy.sdk.scrapper.mobile
 
-import com.google.gson.annotations.SerializedName
+import com.squareup.moshi.Json
+import com.squareup.moshi.JsonClass
 
+@JsonClass(generateAdapter = true)
 data class TokenResponse(
 
-    @SerializedName("TokenKey")
+    @Json(name = "TokenKey")
     val token: String,
 
-    @SerializedName("CustomerGroup")
+    @Json(name = "CustomerGroup")
     val symbol: String,
 
-    @SerializedName("PIN")
+    @Json(name = "PIN")
     val pin: String,
 
-    @SerializedName("QrCodeImage")
+    @Json(name = "QrCodeImage")
     val qrCodeImage: String
 )

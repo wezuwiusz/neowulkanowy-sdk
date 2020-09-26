@@ -1,38 +1,42 @@
 package io.github.wulkanowy.sdk.scrapper.homework
 
-import com.google.gson.annotations.SerializedName
+import com.squareup.moshi.Json
+import com.squareup.moshi.JsonClass
 import java.util.Date
 
+@JsonClass(generateAdapter = true)
 data class Homework(
-    @SerializedName("HomeworkId")
+    @Json(name = "HomeworkId")
     val homeworkId: Int,
 
-    @SerializedName("Subject")
+    @Json(name = "Subject")
     val subject: String,
 
-    @SerializedName("Teacher")
+    @Json(name = "Teacher")
     val teacher: String,
 
-    @SerializedName("Description")
+    @Json(name = "Description")
     val content: String,
 
-    @SerializedName("Date")
+    @Json(name = "Date")
     val date: Date,
 
-    @SerializedName("ModificationDate")
+    @Json(name = "ModificationDate")
     val entryDate: Date,
 
-    @SerializedName("Status")
+    @Json(name = "Status")
     val status: String,
 
-    @SerializedName("AnswerRequired")
+    @Json(name = "AnswerRequired")
     val isAnswerRequired: Boolean,
 
-    @SerializedName("Attachments")
+    @Json(name = "Attachments")
     val attachments: List<HomeworkAttachment>
 ) {
 
+    @Transient
     lateinit var teacherSymbol: String
 
+    @Transient
     var _attachments: List<Pair<String, String>> = emptyList()
 }

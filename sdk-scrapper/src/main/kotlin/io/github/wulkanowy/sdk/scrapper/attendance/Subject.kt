@@ -1,12 +1,14 @@
 package io.github.wulkanowy.sdk.scrapper.attendance
 
-import com.google.gson.annotations.SerializedName
+import com.squareup.moshi.Json
+import com.squareup.moshi.JsonClass
 
+@JsonClass(generateAdapter = true)
 data class Subject(
 
-    @SerializedName("Nazwa")
+    @Json(name = "Nazwa")
     var name: String = "Wszystkie",
 
-    @SerializedName("Id")
+    @Json(name = "Id")
     var value: Int = -1
 )

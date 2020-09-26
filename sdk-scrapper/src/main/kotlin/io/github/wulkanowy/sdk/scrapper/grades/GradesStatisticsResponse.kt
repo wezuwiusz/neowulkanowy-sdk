@@ -1,42 +1,46 @@
 package io.github.wulkanowy.sdk.scrapper.grades
 
-import com.google.gson.annotations.SerializedName
+import com.squareup.moshi.Json
+import com.squareup.moshi.JsonClass
 
+@JsonClass(generateAdapter = true)
 data class GradesStatisticsAnnual(
 
-    @SerializedName("Subject")
+    @Json(name = "Subject")
     val subject: String,
 
-    @SerializedName("IsEmpty")
+    @Json(name = "IsEmpty")
     val isEmpty: Boolean,
 
-    @SerializedName("Items")
+    @Json(name = "Items")
     val items: List<GradeStatistics>?
 )
 
+@JsonClass(generateAdapter = true)
 data class GradesStatisticsPartial(
 
-    @SerializedName("Subject")
+    @Json(name = "Subject")
     val subject: String,
 
-    @SerializedName("IsAverage")
+    @Json(name = "IsAverage")
     val isAverage: Boolean,
 
-    @SerializedName("ClassSeries")
+    @Json(name = "ClassSeries")
     val classSeries: Series,
 
-    @SerializedName("StudentSeries")
+    @Json(name = "StudentSeries")
     val studentSeries: Series
 )
 
+@JsonClass(generateAdapter = true)
 data class Series(
 
-    @SerializedName("Average")
+    @Json(name = "Average")
     val average: String?,
 
-    @SerializedName("IsEmpty")
+    @Json(name = "IsEmpty")
     val isEmpty: Boolean,
 
-    @SerializedName("Items")
+    @Json(name = "Items")
     val items: List<GradeStatistics>?
 )

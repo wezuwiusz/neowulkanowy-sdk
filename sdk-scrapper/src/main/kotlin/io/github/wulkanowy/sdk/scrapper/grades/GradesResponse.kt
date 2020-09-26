@@ -1,49 +1,52 @@
 package io.github.wulkanowy.sdk.scrapper.grades
 
-import com.google.gson.annotations.SerializedName
+import com.squareup.moshi.Json
+import com.squareup.moshi.JsonClass
 
+@JsonClass(generateAdapter = true)
 data class GradesResponse(
 
-    @SerializedName("IsSrednia")
+    @Json(name = "IsSrednia")
     val isAverage: Boolean,
 
-    @SerializedName("IsPunkty")
+    @Json(name = "IsPunkty")
     val isPoints: Boolean,
 
-    @SerializedName("Oceny")
+    @Json(name = "Oceny")
     val gradesWithSubjects: List<Subject>
 ) {
 
+    @JsonClass(generateAdapter = true)
     data class Subject(
 
-        @SerializedName("WidocznyPrzedmiot")
+        @Json(name = "WidocznyPrzedmiot")
         val visibleSubject: Boolean = false,
 
-        @SerializedName("Pozycja")
+        @Json(name = "Pozycja")
         val order: Int = 0,
 
-        @SerializedName("Przedmiot")
+        @Json(name = "Przedmiot")
         val name: String = "",
 
-        @SerializedName("Srednia")
+        @Json(name = "Srednia")
         val average: Double = .0,
 
-        @SerializedName("ProponowanaOcenaRoczna")
+        @Json(name = "ProponowanaOcenaRoczna")
         val proposed: String? = "",
 
-        @SerializedName("OcenaRoczna")
+        @Json(name = "OcenaRoczna")
         val annual: String? = "",
 
-        @SerializedName("SumaPunktow")
+        @Json(name = "SumaPunktow")
         val pointsSum: String? = "",
 
-        @SerializedName("ProponowanaOcenaRocznaPunkty")
+        @Json(name = "ProponowanaOcenaRocznaPunkty")
         val proposedPoints: String? = "",
 
-        @SerializedName("OcenaRocznaPunkty")
+        @Json(name = "OcenaRocznaPunkty")
         val finalPoints: String? = "",
 
-        @SerializedName("OcenyCzastkowe")
+        @Json(name = "OcenyCzastkowe")
         val grades: List<Grade> = emptyList()
     )
 }

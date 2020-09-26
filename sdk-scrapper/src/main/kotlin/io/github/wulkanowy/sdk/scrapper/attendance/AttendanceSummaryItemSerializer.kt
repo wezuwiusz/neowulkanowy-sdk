@@ -1,30 +1,33 @@
 package io.github.wulkanowy.sdk.scrapper.attendance
 
-import com.google.gson.JsonElement
-import com.google.gson.JsonObject
-import com.google.gson.JsonSerializationContext
-import com.google.gson.JsonSerializer
-import java.lang.reflect.Type
+import com.squareup.moshi.JsonAdapter
+import com.squareup.moshi.JsonReader
+import com.squareup.moshi.JsonWriter
 
-class AttendanceSummaryItemSerializer : JsonSerializer<AttendanceSummaryResponse.Summary> {
+class AttendanceSummaryItemSerializer : JsonAdapter<AttendanceSummaryResponse.Summary>() {
 
-    override fun serialize(src: AttendanceSummaryResponse.Summary, typeOfSrc: Type, context: JsonSerializationContext): JsonElement {
-        return JsonObject().apply {
-            add("Id", context.serialize(src.id))
-            add("NazwaTypuFrekwencji", context.serialize(src.type))
-            add("Wrzesien", context.serialize(src.september))
-            add("Pazdziernik", context.serialize(src.october))
-            add("Listopad", context.serialize(src.november))
-            add("Grudzien", context.serialize(src.december))
-            add("Styczen", context.serialize(src.january))
-            add("Luty", context.serialize(src.february))
-            add("Marzec", context.serialize(src.march))
-            add("Kwiecien", context.serialize(src.april))
-            add("Maj", context.serialize(src.may))
-            add("Czerwiec", context.serialize(src.june))
-            add("Lipiec", context.serialize(src.july))
-            add("Sierpien", context.serialize(src.august))
-            add("Razem", context.serialize(src.total))
+    override fun fromJson(reader: JsonReader): AttendanceSummaryResponse.Summary? {
+        throw IllegalStateException("Not implemented")
+    }
+
+    override fun toJson(writer: JsonWriter, src: AttendanceSummaryResponse.Summary?) {
+        writer.run {
+            beginObject()
+            name("Id").value(src?.id)
+            name("NazwaTypuFrekwencji").value(src?.type)
+            name("Wrzesien").value(src?.september)
+            name("Pazdziernik").value(src?.october)
+            name("Listopad").value(src?.november)
+            name("Grudzien").value(src?.december)
+            name("Styczen").value(src?.january)
+            name("Luty").value(src?.february)
+            name("Marzec").value(src?.march)
+            name("Kwiecien").value(src?.april)
+            name("Maj").value(src?.may)
+            name("Czerwiec").value(src?.june)
+            name("Lipiec").value(src?.july)
+            name("Sierpien").value(src?.august)
+            name("Razem").value(src?.total)
         }
     }
 }

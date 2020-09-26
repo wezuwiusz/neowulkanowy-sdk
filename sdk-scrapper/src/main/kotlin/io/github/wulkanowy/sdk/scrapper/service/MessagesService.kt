@@ -84,7 +84,7 @@ interface MessagesService {
         @Header("X-V-RequestVerificationToken") token: String,
         @Header("X-V-AppGuid") appGuid: String,
         @Header("X-V-AppVersion") appVersion: String
-    ): String
+    ): ApiResponse<Any>
 
     @POST("Wiadomosc.mvc/DeleteOutboxMessages")
     suspend fun deleteOutboxMessage(
@@ -92,7 +92,7 @@ interface MessagesService {
         @Header("X-V-RequestVerificationToken") token: String,
         @Header("X-V-AppGuid") appGuid: String,
         @Header("X-V-AppVersion") appVersion: String
-    ): String
+    ): ApiResponse<Any>
 
     @POST("Wiadomosc.mvc/DeleteTrashboxMessages")
     suspend fun deleteTrashMessages(
@@ -100,5 +100,5 @@ interface MessagesService {
         @Header("X-V-RequestVerificationToken") token: String,
         @Header("X-V-AppGuid") appGuid: String,
         @Header("X-V-AppVersion") appVersion: String
-    ): String
+    ): ApiResponse<Any>
 }

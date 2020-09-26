@@ -1,17 +1,19 @@
 package io.github.wulkanowy.sdk.scrapper.grades
 
-import com.google.gson.annotations.SerializedName
+import com.squareup.moshi.Json
+import com.squareup.moshi.JsonClass
 
+@JsonClass(generateAdapter = true)
 data class GradePointsSummary(
 
     val semesterId: Int = 0,
 
-    @SerializedName("Subject")
+    @Json(name = "Subject")
     val subject: String,
 
-    @SerializedName("Value1")
+    @Json(name = "Value1")
     val others: Double,
 
-    @SerializedName("Value2")
+    @Json(name = "Value2")
     val student: Double
 )
