@@ -26,14 +26,14 @@ fun AttendanceResponse.mapAttendanceList(start: LocalDate, end: LocalDate?, time
 
 fun AttendanceSummaryResponse.mapAttendanceSummaryList(moshi: Moshi.Builder): List<AttendanceSummary> {
     val stats = items.map {
-        val json = AttendanceSummaryResponse_SummaryJsonAdapter(moshi.build()).toJson(it)
+        val json = AttendanceSummaryResponse_SummaryJsonAdapter(moshi.build()).serializeNulls().toJson(it)
         val type = Types.newParameterizedType(MutableMap::class.java, String::class.java, String::class.java)
-        val adapter = moshi.build().adapter<Map<String, String>>(type)
+        val adapter = moshi.build().adapter<Map<String, String?>>(type)
         adapter.fromJson(json).orEmpty()
     }
 
     val getMonthValue = fun(type: Int, month: Int): Int {
-        return stats.getOrNull(type)?.get(stats[0].keys.toTypedArray().getOrNull(month + 1))?.toInt() ?: 0
+        return stats[type][stats[0].keys.toTypedArray()[month + 1]]?.toInt() ?: 0
     }
 
     return (1..12).map {
