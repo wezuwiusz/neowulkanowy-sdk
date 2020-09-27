@@ -81,8 +81,7 @@ class RegisterRepository(
         val page = register.getFormType(urlGenerator.generate(ServiceManager.UrlGenerator.Site.LOGIN) + "Account/LogOn").page
         return when {
             page.select(SELECTOR_STANDARD).isNotEmpty() -> Scrapper.LoginType.STANDARD
-            page.select(SELECTOR_ADFS).isNotEmpty() -> Scrapper.LoginType.ADFS
-            page.select(SELECTOR_ADFS_MS).isNotEmpty() -> Scrapper.LoginType.ADFSMS
+            page.select(SELECTOR_ADFS).isNotEmpty() || page.select(SELECTOR_ADFS_MS).isNotEmpty() -> Scrapper.LoginType.ADFS
             page.select(SELECTOR_ADFS_LIGHT).isNotEmpty() -> {
                 page.selectFirst("form").attr("action").run {
                     when {

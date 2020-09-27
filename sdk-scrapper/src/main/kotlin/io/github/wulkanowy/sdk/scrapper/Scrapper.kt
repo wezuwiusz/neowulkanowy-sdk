@@ -25,7 +25,6 @@ class Scrapper {
         AUTO,
         STANDARD,
         ADFS,
-        ADFSMS,
         ADFSCards,
         ADFSLight,
         ADFSLightScoped,

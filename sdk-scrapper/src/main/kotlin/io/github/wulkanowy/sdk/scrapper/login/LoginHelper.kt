@@ -6,7 +6,6 @@ import io.github.wulkanowy.sdk.scrapper.Scrapper.LoginType.ADFSCards
 import io.github.wulkanowy.sdk.scrapper.Scrapper.LoginType.ADFSLight
 import io.github.wulkanowy.sdk.scrapper.Scrapper.LoginType.ADFSLightCufs
 import io.github.wulkanowy.sdk.scrapper.Scrapper.LoginType.ADFSLightScoped
-import io.github.wulkanowy.sdk.scrapper.Scrapper.LoginType.ADFSMS
 import io.github.wulkanowy.sdk.scrapper.Scrapper.LoginType.AUTO
 import io.github.wulkanowy.sdk.scrapper.Scrapper.LoginType.STANDARD
 import io.github.wulkanowy.sdk.scrapper.ScrapperException
@@ -71,7 +70,6 @@ class LoginHelper(
                     if (host == "umt.tarnow.pl") sendADFSMS(email, password) // legacy
                     else sendADFS(it, password)
                 }
-                ADFSMS -> sendADFSMS(it, password)
                 ADFSLight, ADFSLightScoped, ADFSLightCufs -> sendADFSLightGeneric(it, password, loginType)
                 ADFSCards -> sendADFSCards(it, password)
             }
