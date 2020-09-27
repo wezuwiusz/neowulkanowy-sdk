@@ -12,10 +12,16 @@ import io.github.wulkanowy.sdk.scrapper.messages.ReportingUnit
 import io.github.wulkanowy.sdk.scrapper.messages.SendMessageRequest
 import io.github.wulkanowy.sdk.scrapper.messages.SentMessage
 import io.github.wulkanowy.sdk.scrapper.service.MessagesService
+import org.slf4j.LoggerFactory
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
 class MessagesRepository(private val api: MessagesService) {
+
+    companion object {
+        @JvmStatic
+        private val logger = LoggerFactory.getLogger(this::class.java)
+    }
 
     suspend fun getReportingUnits(): List<ReportingUnit> {
         return api.getUserReportingUnits().data.orEmpty()
@@ -78,6 +84,7 @@ class MessagesRepository(private val api: MessagesService) {
 
     suspend fun sendMessage(subject: String, content: String, recipients: List<Recipient>): SentMessage {
         val res = api.getStart()
+        logger.debug("Subject length: ${subject.length}, content length: ${content.length}, recipients number: ${recipients.size}")
         return api.sendMessage(
             SendMessageRequest(
                 SendMessageRequest.Incoming(
