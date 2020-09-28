@@ -14,7 +14,7 @@ class SentExcuse {
     lateinit var date: Date
 
     @Json(name = "IdPoraLekcji")
-    var timeId: Int = 0
+    var timeId: Int? = null
 
     enum class Status(val id: Int) {
         WAITING(0),
