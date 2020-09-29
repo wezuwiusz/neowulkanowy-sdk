@@ -29,6 +29,6 @@ allprojects {
     }
 }
 dependencies {
-    implementation 'io.github.wulkanowy:sdk:0.21.0'
+    implementation 'io.github.wulkanowy:sdk:0.21.1'
 }
 ```
