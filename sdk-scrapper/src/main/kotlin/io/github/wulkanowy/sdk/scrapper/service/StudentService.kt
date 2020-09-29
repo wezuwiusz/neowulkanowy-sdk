@@ -123,7 +123,7 @@ interface StudentService {
         @Header("X-V-AppGuid") appGuid: String,
         @Header("X-V-AppVersion") appVersion: String,
         @Body unregisterDeviceRequest: UnregisterDeviceRequest
-    ): ApiResponse<Nothing>
+    ): ApiResponse<Any>
 
     @POST("SzkolaINauczyciele.mvc/Get")
     suspend fun getSchoolAndTeachers(@Body body: Any = Object()): ApiResponse<SchoolAndTeachersResponse>
