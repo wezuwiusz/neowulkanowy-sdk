@@ -35,7 +35,7 @@ data class Diary(
     val level: Int,
 
     @Json(name = "Symbol")
-    val symbol: String,
+    val symbol: String?,
 
     @Json(name = "Nazwa")
     val name: String?,

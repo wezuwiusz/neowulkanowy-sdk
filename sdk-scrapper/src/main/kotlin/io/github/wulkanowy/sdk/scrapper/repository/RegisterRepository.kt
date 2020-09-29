@@ -128,7 +128,7 @@ class RegisterRepository(
                 schoolSymbol = schoolSymbol,
                 schoolShortName = moduleUrl.text().takeIf { "Uczeń" !in it }.orEmpty(),
                 schoolName = getScriptParam("organizationName", startPage, diary.symbol + " " + (diary.year - diary.level + 1)),
-                className = diary.symbol,
+                className = diary.symbol.orEmpty(),
                 classId = diary.semesters!![0].classId,
                 baseUrl = url.generate(ServiceManager.UrlGenerator.Site.BASE),
                 loginType = loginType,
