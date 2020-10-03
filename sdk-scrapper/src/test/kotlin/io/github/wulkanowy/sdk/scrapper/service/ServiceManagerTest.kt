@@ -24,7 +24,7 @@ class ServiceManagerTest : BaseLocalTest() {
                 Scrapper.LoginType.STANDARD, "http", "fakelog.localhost:3000", "default", "email", "password",
                 "schoolSymbol", 123, 101, 2019, false, "", ""
         )
-        manager.setInterceptor(Interceptor {
+        manager.setInterceptor({
             throw ScrapperException("Test")
         })
 
@@ -43,11 +43,11 @@ class ServiceManagerTest : BaseLocalTest() {
                 Scrapper.LoginType.STANDARD, "http", "fakelog.localhost:3000", "default", "email", "password",
                 "schoolSymbol", 123, 101, 2019, false, "", ""
         )
-        manager.setInterceptor(Interceptor {
+        manager.setInterceptor({
             // throw IOException("Test")
             it.proceed(it.request())
         })
-        manager.setInterceptor(Interceptor {
+        manager.setInterceptor({
             throw ScrapperException("Test")
         }, false)
 

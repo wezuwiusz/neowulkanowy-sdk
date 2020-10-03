@@ -70,6 +70,8 @@ class RegisterRepository(
             .map { it.text().trim() }
             .apply { logger.debug("$this") }
             .filter { it.matches("[a-zA-Z0-9]*".toRegex()) } // early filter invalid symbols
+            .filter { it != "Default" }
+            .apply { logger.debug("$this") }
             .map { it to cert }
     }
 

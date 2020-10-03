@@ -52,7 +52,7 @@ class RegisterRepositoryTest : BaseLocalTest() {
         server.enqueue("UczenCache.json", RegisterTest::class.java)
         server.enqueue("UczenDziennik-no-semester.json", RegisterTest::class.java)
 
-        (0..5).onEach { // 5x symbol
+        (1..4).onEach { // 4x symbol
             server.enqueue("Logowanie-brak-dostepu.html", LoginTest::class.java)
         }
         server.start(3000)
@@ -79,7 +79,7 @@ class RegisterRepositoryTest : BaseLocalTest() {
         server.enqueue("UczenCache.json", RegisterTest::class.java)
         server.enqueue("UczenDziennik.json", RegisterTest::class.java)
 
-        (0..5).onEach { // 5x symbol
+        (1..4).onEach { // 4x symbol
             server.enqueue("Logowanie-brak-dostepu.html", LoginTest::class.java)
         }
         server.start(3000)
@@ -109,7 +109,7 @@ class RegisterRepositoryTest : BaseLocalTest() {
             server.enqueue("UczenDziennik-no-semester.json", RegisterTest::class.java)
         }
 
-        (0..5).onEach { // 5x symbol
+        (1..4).onEach { // 4x symbol
             server.enqueue("Logowanie-brak-dostepu.html", LoginTest::class.java)
         }
         server.start(3000)
@@ -150,7 +150,7 @@ class RegisterRepositoryTest : BaseLocalTest() {
         server.enqueue("LoginPage-standard.html", LoginTest::class.java)
         server.enqueue("AplikacjaCzasowoWyłączona.html", ErrorInterceptorTest::class.java)
 
-        (0..5).onEach { // 5x symbol
+        (1..4).onEach { // 4x symbol
             server.enqueue("Logowanie-brak-dostepu.html", LoginTest::class.java)
         }
         server.start(3000)
@@ -179,7 +179,7 @@ class RegisterRepositoryTest : BaseLocalTest() {
         server.enqueue("LoginPage-standard.html", LoginTest::class.java)
         server.enqueue("Logowanie-uonet.html", LoginTest::class.java)
 
-        (0..5).onEach {
+        (1..5).onEach {
             server.enqueue("Login-success-old.html", LoginTest::class.java)
             server.enqueue("JednostkiUzytkownika.json", MessagesTest::class.java)
         }
@@ -288,7 +288,7 @@ class RegisterRepositoryTest : BaseLocalTest() {
 
         assertEquals("/Default/Account/LogOn", server.takeRequest().path)
         assertTrue(server.takeRequest().path.startsWith("/Account/LogOn?ReturnUrl=%2FDefault"))
-        assertEquals("/default/LoginEndpoint.aspx", server.takeRequest().path)
+        assertEquals("/powiatwulkanowy/LoginEndpoint.aspx", server.takeRequest().path)
         assertEquals("/glubczyce2/LoginEndpoint.aspx", server.takeRequest().path)
     }
 }

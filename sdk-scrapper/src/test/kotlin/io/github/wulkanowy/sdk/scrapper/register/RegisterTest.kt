@@ -43,7 +43,7 @@ class RegisterTest : BaseLocalTest() {
         server.enqueue(MockResponse().setBody(RegisterTest::class.java.getResource("WitrynaUcznia.html").readText()))
         server.enqueue(MockResponse().setBody(RegisterTest::class.java.getResource("UczenCache.json").readText()))
         server.enqueue(MockResponse().setBody(RegisterTest::class.java.getResource("UczenDziennik-multi.json").readText()))
-        (0..5).onEach { // 5x symbol
+        (1..4).onEach { // 4x symbol
             server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("Logowanie-brak-dostepu.html").readText()))
         }
 
@@ -82,7 +82,7 @@ class RegisterTest : BaseLocalTest() {
         server.enqueue(MockResponse().setBody(RegisterTest::class.java.getResource("WitrynaUcznia.html").readText()))
         server.enqueue(MockResponse().setBody(RegisterTest::class.java.getResource("UczenCache.json").readText()))
         server.enqueue(MockResponse().setBody(RegisterTest::class.java.getResource("UczenDziennik-no-semester.json").readText()))
-        (0..5).onEach { // 5x symbol
+        (1..4).onEach { // 4x symbol
             server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("Logowanie-brak-dostepu.html").readText()))
         }
 
@@ -111,7 +111,7 @@ class RegisterTest : BaseLocalTest() {
         server.enqueue(MockResponse().setBody(RegisterTest::class.java.getResource("WitrynaUcznia.html").readText()))
         server.enqueue(MockResponse().setBody(RegisterTest::class.java.getResource("UczenCache.json").readText()))
         server.enqueue(MockResponse().setBody(RegisterTest::class.java.getResource("UczenDziennik-empty-semester.json").readText()))
-        (0..5).onEach { // 5x symbol
+        (1..4).onEach { // 4x symbol
             server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("Logowanie-brak-dostepu.html").readText()))
         }
 
@@ -141,7 +141,7 @@ class RegisterTest : BaseLocalTest() {
         server.enqueue(MockResponse().setBody(RegisterTest::class.java.getResource("WitrynaUcznia.html").readText()))
         server.enqueue(MockResponse().setBody(RegisterTest::class.java.getResource("UczenCache.json").readText()))
         server.enqueue(MockResponse().setBody(RegisterTest::class.java.getResource("UczenDziennik.json").readText()))
-        (0..5).onEach { // 5x symbol
+        (1..4).onEach { // 4x symbol
             server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("Logowanie-brak-dostepu.html").readText()))
         }
 
