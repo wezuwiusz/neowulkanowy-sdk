@@ -14,12 +14,19 @@ import io.github.wulkanowy.sdk.scrapper.repository.AccountRepository.Companion.S
 import io.github.wulkanowy.sdk.scrapper.repository.AccountRepository.Companion.SELECTOR_STANDARD
 import kotlinx.coroutines.runBlocking
 import okhttp3.Interceptor
+import okhttp3.MediaType
+import okhttp3.Protocol
 import okhttp3.Request
 import okhttp3.Response
+import okhttp3.ResponseBody
+import okio.Buffer
+import okio.BufferedSource
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import org.jsoup.select.Elements
 import org.slf4j.LoggerFactory
+import retrofit2.HttpException
+import java.io.IOException
 import java.net.CookieManager
 import java.util.concurrent.locks.Lock
 import java.util.concurrent.locks.ReentrantLock
@@ -52,22 +59,27 @@ class AutoLoginInterceptor(
             )
         } catch (e: NotLoggedInException) {
             if (lock.tryLock()) {
-                logger.warn("Not logged in. Login in...")
-                try {
+                logger.debug("Not logged in. Login in...")
+                return try {
                     runBlocking { notLoggedInCallback() }
-                    return chain.proceed(chain.request().newBuilder().build())
-                } catch (e: Throwable) {
-                    logger.warn("Error occurred on login")
+                    chain.proceed(chain.request().newBuilder().build())
+                } catch (e: IOException) {
+                    logger.debug("Error occurred on login")
                     throw e
+                } catch (e: HttpException) {
+                    logger.debug("Error occurred on login")
+                    e.toOkHttpResponse(chain.request())
+                } catch (e: Throwable) {
+                    throw IOException("Unknown exception on login", e)
                 } finally {
-                    logger.warn("Login finished. Release lock")
+                    logger.debug("Login finished. Release lock")
                     lock.unlock()
                 }
             } else {
-                logger.warn("Wait for user to be logged in...")
+                logger.debug("Wait for user to be logged in...")
                 lock.lock()
                 lock.unlock()
-                logger.warn("User logged in. Retry after login...")
+                logger.debug("User logged in. Retry after login...")
 
                 return chain.proceed(chain.request().newBuilder().build())
             }
@@ -106,4 +118,19 @@ class AutoLoginInterceptor(
             if (it.contains("The custom error module")) throw NotLoggedInException("Zaloguj się")
         }
     }
+
+    /**
+     * @see [https://github.com/square/retrofit/issues/3110#issuecomment-536248102]
+     */
+    private fun HttpException.toOkHttpResponse(request: Request) = Response.Builder()
+        .code(code())
+        .message(message())
+        .request(request)
+        .protocol(Protocol.HTTP_1_1)
+        .body(response()?.errorBody() ?: object : ResponseBody() {
+            override fun contentLength() = 0L
+            override fun contentType(): MediaType? = null
+            override fun source(): BufferedSource = Buffer()
+        })
+        .build()
 }

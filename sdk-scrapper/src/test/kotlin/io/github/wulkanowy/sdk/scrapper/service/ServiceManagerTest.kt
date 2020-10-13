@@ -8,12 +8,12 @@ import io.github.wulkanowy.sdk.scrapper.interceptor.ErrorInterceptorTest
 import io.github.wulkanowy.sdk.scrapper.login.LoginTest
 import io.github.wulkanowy.sdk.scrapper.notes.NotesTest
 import kotlinx.coroutines.runBlocking
-import okhttp3.Interceptor
 import okhttp3.logging.HttpLoggingInterceptor
 import okhttp3.mockwebserver.MockResponse
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Test
+import retrofit2.HttpException
 import java.net.URL
 
 class ServiceManagerTest : BaseLocalTest() {
@@ -21,8 +21,8 @@ class ServiceManagerTest : BaseLocalTest() {
     @Test
     fun interceptorTest() {
         val manager = ServiceManager(OkHttpClientBuilderFactory(), HttpLoggingInterceptor.Level.NONE,
-                Scrapper.LoginType.STANDARD, "http", "fakelog.localhost:3000", "default", "email", "password",
-                "schoolSymbol", 123, 101, 2019, false, "", ""
+            Scrapper.LoginType.STANDARD, "http", "fakelog.localhost:3000", "default", "email", "password",
+            "schoolSymbol", 123, 101, 2019, false, "", ""
         )
         manager.setInterceptor({
             throw ScrapperException("Test")
@@ -40,8 +40,8 @@ class ServiceManagerTest : BaseLocalTest() {
         server.enqueue(MockResponse().setBody(NotesTest::class.java.getResource("UwagiIOsiagniecia.json").readText()))
         server.start(3000)
         val manager = ServiceManager(OkHttpClientBuilderFactory(), HttpLoggingInterceptor.Level.NONE,
-                Scrapper.LoginType.STANDARD, "http", "fakelog.localhost:3000", "default", "email", "password",
-                "schoolSymbol", 123, 101, 2019, false, "", ""
+            Scrapper.LoginType.STANDARD, "http", "fakelog.localhost:3000", "default", "email", "password",
+            "schoolSymbol", 123, 101, 2019, false, "", ""
         )
         manager.setInterceptor({
             // throw IOException("Test")
@@ -88,5 +88,24 @@ class ServiceManagerTest : BaseLocalTest() {
         server.takeRequest()
         // /Default/Account/LogOn <– default symbol set
         assertEquals("/Default/Account/LogOn", URL(server.takeRequest().requestUrl.toString()).path)
+    }
+
+    @Test
+    fun autoLoginInterceptor() {
+        server.enqueue(MockResponse().setResponseCode(503))
+        server.start(3000)
+        val manager = ServiceManager(OkHttpClientBuilderFactory(), HttpLoggingInterceptor.Level.NONE,
+            Scrapper.LoginType.STANDARD, "http", "fakelog.localhost:3000", "default", "email", "password",
+            "schoolSymbol", 123, 101, 2019, true, "", ""
+        )
+
+        val res = runCatching {
+            runBlocking { manager.getStudentService().getNotes() }
+        }
+
+        val exception = res.exceptionOrNull()!!
+
+        assertEquals("HTTP 503 Server Error", exception.message)
+        assertEquals(HttpException::class.java, exception::class.java)
     }
 }
