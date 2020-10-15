@@ -19,7 +19,7 @@ data class ApiResponse<out T>(
     data class Feedback(
 
         @Json(name = "Handled")
-        val handled: Boolean,
+        val handled: Boolean?,
 
         @Json(name = "FType")
         val type: String,
