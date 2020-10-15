@@ -4,11 +4,12 @@ import com.squareup.moshi.Moshi
 import io.github.wulkanowy.sdk.scrapper.adapter.CustomDateAdapter
 import io.github.wulkanowy.sdk.scrapper.OkHttpClientBuilderFactory
 import io.github.wulkanowy.sdk.scrapper.Scrapper
-import io.github.wulkanowy.sdk.scrapper.ScrapperException
+import io.github.wulkanowy.sdk.scrapper.exception.ScrapperException
 import io.github.wulkanowy.sdk.scrapper.TLSSocketFactory
 import io.github.wulkanowy.sdk.scrapper.adapter.GradeDateDeserializer
 import io.github.wulkanowy.sdk.scrapper.interceptor.AutoLoginInterceptor
 import io.github.wulkanowy.sdk.scrapper.interceptor.ErrorInterceptor
+import io.github.wulkanowy.sdk.scrapper.interceptor.HttpErrorInterceptor
 import io.github.wulkanowy.sdk.scrapper.interceptor.StudentCookieInterceptor
 import io.github.wulkanowy.sdk.scrapper.interceptor.UserAgentInterceptor
 import io.github.wulkanowy.sdk.scrapper.login.LoginHelper
@@ -66,7 +67,8 @@ class ServiceManager(
         HttpLoggingInterceptor().setLevel(logLevel) to true,
         ErrorInterceptor() to false,
         AutoLoginInterceptor(loginType, cookies, emptyCookieJarIntercept) { loginHelper.login(email, password) } to false,
-        UserAgentInterceptor(androidVersion, buildTag) to false
+        UserAgentInterceptor(androidVersion, buildTag) to false,
+        HttpErrorInterceptor() to false
     )
 
     private val trustManager: X509TrustManager by lazy {

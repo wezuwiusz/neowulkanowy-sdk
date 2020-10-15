@@ -1,4 +1,4 @@
-package io.github.wulkanowy.sdk.scrapper
+package io.github.wulkanowy.sdk.scrapper.exception
 
 import java.io.IOException
 

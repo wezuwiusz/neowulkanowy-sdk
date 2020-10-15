@@ -3,7 +3,8 @@ package io.github.wulkanowy.sdk.scrapper.service
 import io.github.wulkanowy.sdk.scrapper.BaseLocalTest
 import io.github.wulkanowy.sdk.scrapper.OkHttpClientBuilderFactory
 import io.github.wulkanowy.sdk.scrapper.Scrapper
-import io.github.wulkanowy.sdk.scrapper.ScrapperException
+import io.github.wulkanowy.sdk.scrapper.exception.ScrapperException
+import io.github.wulkanowy.sdk.scrapper.exception.VulcanException
 import io.github.wulkanowy.sdk.scrapper.interceptor.ErrorInterceptorTest
 import io.github.wulkanowy.sdk.scrapper.login.LoginTest
 import io.github.wulkanowy.sdk.scrapper.notes.NotesTest
@@ -13,7 +14,6 @@ import okhttp3.mockwebserver.MockResponse
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Test
-import retrofit2.HttpException
 import java.net.URL
 
 class ServiceManagerTest : BaseLocalTest() {
@@ -105,7 +105,7 @@ class ServiceManagerTest : BaseLocalTest() {
 
         val exception = res.exceptionOrNull()!!
 
-        assertEquals("HTTP 503 Server Error", exception.message)
-        assertEquals(HttpException::class.java, exception::class.java)
+        assertEquals("503: Server Error", exception.message)
+        assertEquals(VulcanException::class.java, exception::class.java)
     }
 }
