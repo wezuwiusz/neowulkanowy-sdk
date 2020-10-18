@@ -242,6 +242,8 @@ class Scrapper {
 
     suspend fun getNotes() = student.getNotes()
 
+    suspend fun getConferences() = student.getConferences()
+
     suspend fun getTimetable(startDate: LocalDate, endDate: LocalDate? = null) = student.getTimetable(startDate, endDate)
 
     suspend fun getCompletedLessons(startDate: LocalDate, endDate: LocalDate? = null, subjectId: Int = -1) = student.getCompletedLessons(startDate, endDate, subjectId)

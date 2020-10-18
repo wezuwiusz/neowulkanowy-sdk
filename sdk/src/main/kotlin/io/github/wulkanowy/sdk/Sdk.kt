@@ -329,6 +329,13 @@ class Sdk {
         }
     }
 
+    suspend fun getConferences() = withContext(Dispatchers.IO) {
+        when (mode) {
+            Mode.HYBRID, Mode.SCRAPPER -> scrapper.getConferences().mapConferences()
+            Mode.API -> throw FeatureNotAvailableException("Conferences is not available in API mode")
+        }
+    }
+
     suspend fun getRegisteredDevices() = withContext(Dispatchers.IO) {
         when (mode) {
             Mode.HYBRID, Mode.SCRAPPER -> scrapper.getRegisteredDevices().mapDevices()

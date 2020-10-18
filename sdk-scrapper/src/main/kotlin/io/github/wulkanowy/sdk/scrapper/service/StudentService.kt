@@ -7,6 +7,7 @@ import io.github.wulkanowy.sdk.scrapper.attendance.AttendanceResponse
 import io.github.wulkanowy.sdk.scrapper.attendance.AttendanceSummaryRequest
 import io.github.wulkanowy.sdk.scrapper.attendance.AttendanceSummaryResponse
 import io.github.wulkanowy.sdk.scrapper.attendance.Subject
+import io.github.wulkanowy.sdk.scrapper.conferences.Conference
 import io.github.wulkanowy.sdk.scrapper.exams.ExamRequest
 import io.github.wulkanowy.sdk.scrapper.exams.ExamResponse
 import io.github.wulkanowy.sdk.scrapper.grades.GradePointsSummaryResponse
@@ -110,6 +111,9 @@ interface StudentService {
 
     @POST("UwagiIOsiagniecia.mvc/Get")
     suspend fun getNotes(@Body body: Any = Object()): ApiResponse<NotesResponse>
+
+    @POST("Zebrania.mvc/Get")
+    suspend fun getConferences(): ApiResponse<List<Conference>>
 
     @POST("ZarejestrowaneUrzadzenia.mvc/Get")
     suspend fun getRegisteredDevices(@Body body: Any = Object()): ApiResponse<List<Device>>

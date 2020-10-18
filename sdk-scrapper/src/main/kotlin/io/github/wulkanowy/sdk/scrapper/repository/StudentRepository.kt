@@ -12,6 +12,8 @@ import io.github.wulkanowy.sdk.scrapper.attendance.AttendanceSummaryRequest
 import io.github.wulkanowy.sdk.scrapper.attendance.Subject
 import io.github.wulkanowy.sdk.scrapper.attendance.mapAttendanceList
 import io.github.wulkanowy.sdk.scrapper.attendance.mapAttendanceSummaryList
+import io.github.wulkanowy.sdk.scrapper.conferences.Conference
+import io.github.wulkanowy.sdk.scrapper.conferences.mapConferences
 import io.github.wulkanowy.sdk.scrapper.exams.Exam
 import io.github.wulkanowy.sdk.scrapper.exams.ExamRequest
 import io.github.wulkanowy.sdk.scrapper.exams.mapExamsList
@@ -181,6 +183,12 @@ class StudentRepository(private val api: StudentService) {
                 teacherSymbol = it.teacher.split(" [").last().removeSuffix("]")
             }
         }.sortedWith(compareBy({ it.date }, { it.category }))
+    }
+
+    suspend fun getConferences(): List<Conference> {
+        return api.getConferences()
+            .handleErrors().data.orEmpty()
+            .mapConferences()
     }
 
     suspend fun getTimetable(startDate: LocalDate, endDate: LocalDate? = null): List<Timetable> {
