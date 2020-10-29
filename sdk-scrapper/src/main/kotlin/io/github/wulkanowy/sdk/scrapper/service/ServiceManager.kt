@@ -153,7 +153,7 @@ class ServiceManager(
         loginIntercept: Boolean = true,
         separateJar: Boolean = false
     ) = okHttpClientBuilderFactory.create()
-        .callTimeout(25, SECONDS)
+        .callTimeout(60, SECONDS)
         .apply {
             if (host == "vulcan.net.pl") {
                 sslSocketFactory(TLSSocketFactory(), trustManager)
