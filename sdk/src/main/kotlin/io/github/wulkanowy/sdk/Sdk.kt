@@ -296,7 +296,7 @@ class Sdk {
 
     suspend fun getGradesAnnualStatistics(semesterId: Int) = withContext(Dispatchers.IO) {
         when (mode) {
-            Mode.HYBRID, Mode.SCRAPPER -> scrapper.getGradesAnnualStatistics(semesterId).mapGradeStatistics()
+            Mode.HYBRID, Mode.SCRAPPER -> scrapper.getGradesAnnualStatistics(semesterId).mapGradesAnnualStatistics()
             Mode.API -> throw FeatureNotAvailableException("Class grades annual statistics is not available in API mode")
         }
     }

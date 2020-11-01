@@ -16,8 +16,6 @@ data class GradePointsSummaryResponse(
 @JsonClass(generateAdapter = true)
 data class GradePointsSummary(
 
-    val semesterId: Int = 0,
-
     @Json(name = "Subject")
     val subject: String,
 

@@ -4,19 +4,6 @@ import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 
 @JsonClass(generateAdapter = true)
-data class GradesStatisticsAnnual(
-
-    @Json(name = "Subject")
-    val subject: String,
-
-    @Json(name = "IsEmpty")
-    val isEmpty: Boolean,
-
-    @Json(name = "Items")
-    val items: List<GradeStatistics>?
-)
-
-@JsonClass(generateAdapter = true)
 data class GradesStatisticsPartial(
 
     @Json(name = "Subject")
@@ -26,14 +13,14 @@ data class GradesStatisticsPartial(
     val isAverage: Boolean,
 
     @Json(name = "ClassSeries")
-    val classSeries: Series,
+    val classSeries: GradeStatisticsPartialSeries,
 
     @Json(name = "StudentSeries")
-    val studentSeries: Series
+    val studentSeries: GradeStatisticsPartialSeries
 )
 
 @JsonClass(generateAdapter = true)
-data class Series(
+data class GradeStatisticsPartialSeries(
 
     @Json(name = "Average")
     val average: String?,
@@ -42,5 +29,15 @@ data class Series(
     val isEmpty: Boolean,
 
     @Json(name = "Items")
-    val items: List<GradeStatistics>?
+    val items: List<GradeStatisticsPartialItem>?
+)
+
+@JsonClass(generateAdapter = true)
+data class GradeStatisticsPartialItem(
+
+    @Json(name = "Label")
+    val label: String,
+
+    @Json(name = "Value")
+    val amount: Int? = 0
 )

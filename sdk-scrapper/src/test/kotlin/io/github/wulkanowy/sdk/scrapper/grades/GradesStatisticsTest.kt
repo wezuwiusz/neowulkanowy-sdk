@@ -21,7 +21,7 @@ class GradesStatisticsTest : BaseLocalTest() {
 
     @Test
     fun getGradesStatistics() {
-        assertEquals(12, partial.size)
+        assertEquals(3, partial.size)
         assertEquals(6, annual.size)
         assertEquals(3, points.size)
     }
@@ -30,19 +30,21 @@ class GradesStatisticsTest : BaseLocalTest() {
     fun getGradesStatistics_empty() {
         with(partial[0]) {
             assertEquals("Język polski", subject)
-            assertEquals("6", grade)
-            assertEquals(6, gradeValue)
-            assertEquals(0, amount)
+            with(items[0]) {
+                assertEquals(6, grade)
+                assertEquals(0, amount)
+            }
         }
     }
 
     @Test
     fun getGradesStatistics_filled() {
-        with(partial[3]) {
+        with(partial[0]) {
             assertEquals("Język polski", subject)
-            assertEquals("3", grade)
-            assertEquals(3, gradeValue)
-            assertEquals(63, amount)
+            with(items[3]) {
+                assertEquals(3, grade)
+                assertEquals(63, amount)
+            }
         }
     }
 
@@ -50,8 +52,7 @@ class GradesStatisticsTest : BaseLocalTest() {
     fun getGradeStatistics_shortValue() {
         with(annual[1]) {
             assertEquals("Język angielski", subject)
-            assertEquals("5", grade)
-            assertEquals(5, gradeValue)
+            assertEquals(5, grade)
             assertEquals(4, amount)
         }
     }

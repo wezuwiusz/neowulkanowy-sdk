@@ -59,28 +59,28 @@ fun GradesResponse.mapGradesSummary() = gradesWithSubjects.map { subject ->
     )
 }.sortedBy { it.name }.toList()
 
-fun List<GradesStatisticsAnnual>.mapGradesStatisticsAnnual(semesterId: Int) = map { annualSubject ->
+fun List<GradesStatisticsAnnual>.mapGradesStatisticsAnnual() = map { annualSubject ->
     annualSubject.items?.reversed()?.mapIndexed { index, item ->
-        item.apply {
-            this.semesterId = semesterId
-            gradeValue = index + 1
-            grade = item.gradeValue.toString()
-            subject = annualSubject.subject
-        }
+        GradeStatisticsAnnualItem(
+            subject = annualSubject.subject,
+            grade = index + 1,
+            amount = item.value,
+            isStudentHere = item.description.contains("Tu jesteś")
+        )
     }.orEmpty()
 }.flatten().reversed()
 
-fun List<GradesStatisticsPartial>.mapGradesStatisticsPartial(semesterId: Int) = map { partialSubject ->
-    partialSubject.classSeries.items?.reversed()?.mapIndexed { index, item ->
-        item.apply {
-            this.semesterId = semesterId
-            gradeValue = index + 1
-            grade = item.gradeValue.toString()
-            subject = partialSubject.subject
-        }
-    }?.reversed().orEmpty()
-}.flatten()
-
-fun List<GradePointsSummary>.mapGradesStatisticsPoints(semesterId: Int) = map {
-    it.copy(semesterId = semesterId)
+fun List<GradesStatisticsPartial>.mapGradesStatisticsPartial() = map { partialSubject ->
+    partialSubject.let {
+        GradeStatisticsSubject(
+            subject = it.subject,
+            average = it.classSeries.average.orEmpty(),
+            items = it.classSeries.items?.reversed()?.mapIndexed { index, item ->
+                GradeStatisticsPartial(
+                    grade = index + 1,
+                    amount = item.amount ?: 0
+                )
+            }?.reversed().orEmpty()
+        )
+    }
 }
