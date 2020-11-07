@@ -23,13 +23,13 @@ import io.github.wulkanowy.sdk.scrapper.getScriptParam
 import io.github.wulkanowy.sdk.scrapper.grades.Grade
 import io.github.wulkanowy.sdk.scrapper.grades.GradePointsSummary
 import io.github.wulkanowy.sdk.scrapper.grades.GradeRequest
-import io.github.wulkanowy.sdk.scrapper.grades.GradeStatisticsAnnualItem
-import io.github.wulkanowy.sdk.scrapper.grades.GradeStatisticsSubject
 import io.github.wulkanowy.sdk.scrapper.grades.GradeSummary
+import io.github.wulkanowy.sdk.scrapper.grades.GradesStatisticsPartial
 import io.github.wulkanowy.sdk.scrapper.grades.GradesStatisticsRequest
+import io.github.wulkanowy.sdk.scrapper.grades.GradesStatisticsSemester
 import io.github.wulkanowy.sdk.scrapper.grades.mapGradesList
-import io.github.wulkanowy.sdk.scrapper.grades.mapGradesStatisticsAnnual
 import io.github.wulkanowy.sdk.scrapper.grades.mapGradesStatisticsPartial
+import io.github.wulkanowy.sdk.scrapper.grades.mapGradesStatisticsSemester
 import io.github.wulkanowy.sdk.scrapper.grades.mapGradesSummary
 import io.github.wulkanowy.sdk.scrapper.homework.Homework
 import io.github.wulkanowy.sdk.scrapper.homework.HomeworkRequest
@@ -151,7 +151,7 @@ class StudentRepository(private val api: StudentService) {
             .data?.mapGradesSummary().orEmpty()
     }
 
-    suspend fun getGradesPartialStatistics(semesterId: Int): List<GradeStatisticsSubject> {
+    suspend fun getGradesPartialStatistics(semesterId: Int): List<GradesStatisticsPartial> {
         return api.getGradesPartialStatistics(GradesStatisticsRequest(semesterId))
             .handleErrors()
             .data.orEmpty().mapGradesStatisticsPartial()
@@ -163,10 +163,10 @@ class StudentRepository(private val api: StudentService) {
             .data?.items.orEmpty()
     }
 
-    suspend fun getGradesAnnualStatistics(semesterId: Int): List<GradeStatisticsAnnualItem> {
+    suspend fun getGradesAnnualStatistics(semesterId: Int): List<GradesStatisticsSemester> {
         return api.getGradesAnnualStatistics(GradesStatisticsRequest(semesterId))
             .handleErrors()
-            .data.orEmpty().mapGradesStatisticsAnnual()
+            .data.orEmpty().mapGradesStatisticsSemester()
     }
 
     suspend fun getHomework(startDate: LocalDate, endDate: LocalDate? = null): List<Homework> {

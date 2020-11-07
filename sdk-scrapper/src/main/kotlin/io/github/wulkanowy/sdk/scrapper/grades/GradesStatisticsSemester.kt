@@ -4,7 +4,7 @@ import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 
 @JsonClass(generateAdapter = true)
-data class GradesStatisticsAnnual(
+data class GradesStatisticsSemester(
 
     @Json(name = "Subject")
     val subject: String,
@@ -13,18 +13,25 @@ data class GradesStatisticsAnnual(
     val isEmpty: Boolean,
 
     @Json(name = "Items")
-    val items: List<GradeStatisticsItemAnnual>?
+    val items: List<GradesStatisticsSemesterSubItem>?
 )
 
 @JsonClass(generateAdapter = true)
-data class GradeStatisticsItemAnnual(
+data class GradesStatisticsSemesterSubItem(
 
     @Json(name = "Label")
-    val label: String,
+    internal val label: String,
 
     @Json(name = "Description")
-    val description: String,
+    internal val description: String,
 
     @Json(name = "Value")
-    val value: Int
-)
+    val amount: Int
+) {
+
+    @Transient
+    var grade: Int = 0
+
+    @Transient
+    var isStudentHere: Boolean = false
+}

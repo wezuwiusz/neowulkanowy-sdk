@@ -13,7 +13,7 @@ import io.github.wulkanowy.sdk.scrapper.exams.ExamResponse
 import io.github.wulkanowy.sdk.scrapper.grades.GradePointsSummaryResponse
 import io.github.wulkanowy.sdk.scrapper.grades.GradeRequest
 import io.github.wulkanowy.sdk.scrapper.grades.GradesResponse
-import io.github.wulkanowy.sdk.scrapper.grades.GradesStatisticsAnnual
+import io.github.wulkanowy.sdk.scrapper.grades.GradesStatisticsSemester
 import io.github.wulkanowy.sdk.scrapper.grades.GradesStatisticsPartial
 import io.github.wulkanowy.sdk.scrapper.grades.GradesStatisticsRequest
 import io.github.wulkanowy.sdk.scrapper.homework.HomeworkDay
@@ -72,7 +72,7 @@ interface StudentService {
     suspend fun getGradesPointsStatistics(@Body gradesStatisticsRequest: GradesStatisticsRequest): ApiResponse<GradePointsSummaryResponse>
 
     @POST("Statystyki.mvc/GetOcenyRoczne")
-    suspend fun getGradesAnnualStatistics(@Body gradesStatisticsRequest: GradesStatisticsRequest): ApiResponse<List<GradesStatisticsAnnual>>
+    suspend fun getGradesAnnualStatistics(@Body gradesStatisticsRequest: GradesStatisticsRequest): ApiResponse<List<GradesStatisticsSemester>>
 
     @POST("Frekwencja.mvc/Get")
     suspend fun getAttendance(@Body attendanceRequest: AttendanceRequest): ApiResponse<AttendanceResponse>

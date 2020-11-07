@@ -256,7 +256,7 @@ class ScrapperRemoteTest : BaseTest() {
         assertEquals("Język polski", stats[0].subject)
         assertEquals("Matematyka", stats[7].subject)
 
-        val annual = runBlocking { api.getGradesAnnualStatistics(123) }
+        val annual = runBlocking { api.getGradesSemesterStatistics(123) }
 
         assertEquals("Język angielski", annual[0].subject)
     }

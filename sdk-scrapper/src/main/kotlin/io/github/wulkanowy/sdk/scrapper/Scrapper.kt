@@ -236,7 +236,7 @@ class Scrapper {
 
     suspend fun getGradesPointsStatistics(semesterId: Int) = student.getGradesPointsStatistics(semesterId)
 
-    suspend fun getGradesAnnualStatistics(semesterId: Int) = student.getGradesAnnualStatistics(semesterId)
+    suspend fun getGradesSemesterStatistics(semesterId: Int) = student.getGradesAnnualStatistics(semesterId)
 
     suspend fun getHomework(startDate: LocalDate, endDate: LocalDate? = null) = student.getHomework(startDate, endDate)
 

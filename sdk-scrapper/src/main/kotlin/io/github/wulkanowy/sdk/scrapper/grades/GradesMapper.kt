@@ -59,28 +59,28 @@ fun GradesResponse.mapGradesSummary() = gradesWithSubjects.map { subject ->
     )
 }.sortedBy { it.name }.toList()
 
-fun List<GradesStatisticsAnnual>.mapGradesStatisticsAnnual() = map { annualSubject ->
-    annualSubject.items?.reversed()?.mapIndexed { index, item ->
-        GradeStatisticsAnnualItem(
-            subject = annualSubject.subject,
-            grade = index + 1,
-            amount = item.value,
-            isStudentHere = item.description.contains("Tu jesteś")
-        )
-    }.orEmpty()
-}.flatten().reversed()
+fun List<GradesStatisticsSemester>.mapGradesStatisticsSemester() = map {
+    it.copy(
+        items = it.items.orEmpty().reversed().mapIndexed { index, item ->
+            item.copy().apply {
+                grade = index + 1
+                isStudentHere = item.description.contains("Tu jesteś")
+            }
+        }.reversed()
+    )
+}
 
-fun List<GradesStatisticsPartial>.mapGradesStatisticsPartial() = map { partialSubject ->
-    partialSubject.let {
-        GradeStatisticsSubject(
-            subject = it.subject,
-            average = it.classSeries.average.orEmpty(),
-            items = it.classSeries.items?.reversed()?.mapIndexed { index, item ->
-                GradeStatisticsPartial(
-                    grade = index + 1,
-                    amount = item.amount ?: 0
-                )
-            }?.reversed().orEmpty()
-        )
-    }
+fun List<GradesStatisticsPartial>.mapGradesStatisticsPartial() = map {
+    it.copy(
+        classSeries = it.classSeries.addGradeValue(),
+        studentSeries = it.studentSeries.addGradeValue()
+    )
+}
+
+private fun GradeStatisticsPartialSeries.addGradeValue(): GradeStatisticsPartialSeries {
+    return copy(items = items.orEmpty().reversed().mapIndexed { i, item ->
+        item.copy().apply {
+            grade = i + 1
+        }
+    }.reversed())
 }

@@ -1,7 +1,38 @@
 package io.github.wulkanowy.sdk
 
 import io.github.wulkanowy.sdk.exception.FeatureNotAvailableException
-import io.github.wulkanowy.sdk.mapper.*
+import io.github.wulkanowy.sdk.mapper.mapAttendance
+import io.github.wulkanowy.sdk.mapper.mapAttendanceSummary
+import io.github.wulkanowy.sdk.mapper.mapCompletedLessons
+import io.github.wulkanowy.sdk.mapper.mapConferences
+import io.github.wulkanowy.sdk.mapper.mapDevices
+import io.github.wulkanowy.sdk.mapper.mapExams
+import io.github.wulkanowy.sdk.mapper.mapFromRecipientsToMobile
+import io.github.wulkanowy.sdk.mapper.mapFromRecipientsToScraper
+import io.github.wulkanowy.sdk.mapper.mapGradePointsStatistics
+import io.github.wulkanowy.sdk.mapper.mapGradeStatistics
+import io.github.wulkanowy.sdk.mapper.mapGrades
+import io.github.wulkanowy.sdk.mapper.mapGradesDetails
+import io.github.wulkanowy.sdk.mapper.mapGradesSemesterStatistics
+import io.github.wulkanowy.sdk.mapper.mapGradesSummary
+import io.github.wulkanowy.sdk.mapper.mapHomework
+import io.github.wulkanowy.sdk.mapper.mapLuckyNumbers
+import io.github.wulkanowy.sdk.mapper.mapMessages
+import io.github.wulkanowy.sdk.mapper.mapNotes
+import io.github.wulkanowy.sdk.mapper.mapRecipients
+import io.github.wulkanowy.sdk.mapper.mapReportingUnits
+import io.github.wulkanowy.sdk.mapper.mapSchool
+import io.github.wulkanowy.sdk.mapper.mapScrapperMessage
+import io.github.wulkanowy.sdk.mapper.mapSemesters
+import io.github.wulkanowy.sdk.mapper.mapSentMessage
+import io.github.wulkanowy.sdk.mapper.mapStudent
+import io.github.wulkanowy.sdk.mapper.mapStudents
+import io.github.wulkanowy.sdk.mapper.mapSubjects
+import io.github.wulkanowy.sdk.mapper.mapTeachers
+import io.github.wulkanowy.sdk.mapper.mapTimetable
+import io.github.wulkanowy.sdk.mapper.mapToScrapperAbsent
+import io.github.wulkanowy.sdk.mapper.mapToUnits
+import io.github.wulkanowy.sdk.mapper.mapToken
 import io.github.wulkanowy.sdk.mobile.Mobile
 import io.github.wulkanowy.sdk.pojo.Absent
 import io.github.wulkanowy.sdk.pojo.Folder
@@ -294,9 +325,9 @@ class Sdk {
         }
     }
 
-    suspend fun getGradesAnnualStatistics(semesterId: Int) = withContext(Dispatchers.IO) {
+    suspend fun getGradesSemesterStatistics(semesterId: Int) = withContext(Dispatchers.IO) {
         when (mode) {
-            Mode.HYBRID, Mode.SCRAPPER -> scrapper.getGradesAnnualStatistics(semesterId).mapGradesAnnualStatistics()
+            Mode.HYBRID, Mode.SCRAPPER -> scrapper.getGradesSemesterStatistics(semesterId).mapGradesSemesterStatistics()
             Mode.API -> throw FeatureNotAvailableException("Class grades annual statistics is not available in API mode")
         }
     }

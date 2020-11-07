@@ -2,28 +2,43 @@ package io.github.wulkanowy.sdk.mapper
 
 import io.github.wulkanowy.sdk.pojo.GradePointsStatistics
 import io.github.wulkanowy.sdk.pojo.GradeStatisticsItem
+import io.github.wulkanowy.sdk.pojo.GradeStatisticsSemester
+import io.github.wulkanowy.sdk.pojo.GradeStatisticsSemesterSubItem
 import io.github.wulkanowy.sdk.pojo.GradeStatisticsSubject
 import io.github.wulkanowy.sdk.scrapper.grades.GradePointsSummary
-import io.github.wulkanowy.sdk.scrapper.grades.GradeStatisticsAnnualItem as ScrapperGradeStatisticsAnnualItem
-import io.github.wulkanowy.sdk.scrapper.grades.GradeStatisticsSubject as ScrapperGradeStatisticsPartialItem
+import io.github.wulkanowy.sdk.scrapper.grades.GradesStatisticsPartial
+import io.github.wulkanowy.sdk.scrapper.grades.GradesStatisticsSemester
 
-fun List<ScrapperGradeStatisticsAnnualItem>.mapGradesAnnualStatistics() = map {
-    GradeStatisticsItem(
+fun List<GradesStatisticsSemester>.mapGradesSemesterStatistics() = map {
+    GradeStatisticsSemester(
         subject = it.subject,
-        grade = it.grade,
-        amount = it.amount
+        items = it.items.orEmpty().map { item ->
+            GradeStatisticsSemesterSubItem(
+                grade = item.grade,
+                amount = item.amount,
+                isStudentHere = item.isStudentHere
+            )
+        }
     )
 }
 
-fun List<ScrapperGradeStatisticsPartialItem>.mapGradeStatistics() = map {
+fun List<GradesStatisticsPartial>.mapGradeStatistics() = map {
     GradeStatisticsSubject(
         subject = it.subject,
-        average = it.average,
-        items = it.items.map { grade ->
+        classAverage = it.classSeries.average.orEmpty(),
+        classItems = it.classSeries.items.orEmpty().map { grade ->
             GradeStatisticsItem(
                 subject = it.subject,
                 grade = grade.grade,
-                amount = grade.amount
+                amount = grade.amount ?: 0
+            )
+        },
+        studentAverage = it.studentSeries.average.orEmpty(),
+        studentItems = it.studentSeries.items.orEmpty().map { grade ->
+            GradeStatisticsItem(
+                subject = it.subject,
+                grade = grade.grade,
+                amount = grade.amount ?: 0
             )
         }
     )

@@ -40,4 +40,8 @@ data class GradeStatisticsPartialItem(
 
     @Json(name = "Value")
     val amount: Int? = 0
-)
+) {
+
+    @Transient
+    var grade: Int = 0
+}
