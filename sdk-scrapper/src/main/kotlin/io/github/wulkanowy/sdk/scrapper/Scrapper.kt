@@ -292,6 +292,8 @@ class Scrapper {
 
     suspend fun deleteMessages(messagesToDelete: List<Int>, folderId: Int) = messages.deleteMessages(messagesToDelete, folderId)
 
+    suspend fun getDirectorInformation() = homepage.getDirectorInformation()
+
     suspend fun getSelfGovernments() = homepage.getSelfGovernments()
 
     suspend fun getStudentThreats() = homepage.getStudentThreats()

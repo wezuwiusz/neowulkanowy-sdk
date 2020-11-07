@@ -6,6 +6,7 @@ import io.github.wulkanowy.sdk.mapper.mapAttendanceSummary
 import io.github.wulkanowy.sdk.mapper.mapCompletedLessons
 import io.github.wulkanowy.sdk.mapper.mapConferences
 import io.github.wulkanowy.sdk.mapper.mapDevices
+import io.github.wulkanowy.sdk.mapper.mapDirectorInformation
 import io.github.wulkanowy.sdk.mapper.mapExams
 import io.github.wulkanowy.sdk.mapper.mapFromRecipientsToMobile
 import io.github.wulkanowy.sdk.mapper.mapFromRecipientsToScraper
@@ -523,6 +524,13 @@ class Sdk {
 
         // else
         null
+    }
+
+    suspend fun getDirectorInformation() = withContext(Dispatchers.IO) {
+        when (mode) {
+            Mode.HYBRID, Mode.SCRAPPER -> scrapper.getDirectorInformation().mapDirectorInformation()
+            Mode.API -> throw FeatureNotAvailableException("Director informations is not available in API mode")
+        }
     }
 
     suspend fun getSelfGovernments() = withContext(Dispatchers.IO) {

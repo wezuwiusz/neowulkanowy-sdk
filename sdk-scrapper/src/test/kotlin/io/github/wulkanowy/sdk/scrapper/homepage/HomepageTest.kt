@@ -9,11 +9,34 @@ import okhttp3.mockwebserver.MockResponse
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Test
+import java.time.LocalDate.of
 
 class HomepageTest : BaseLocalTest() {
 
     private val repo by lazy {
         HomepageRepository(getService(HomepageService::class.java, "http://fakelog.localhost:3000/", false))
+    }
+
+    @Test
+    fun getDirectorInformation() {
+        server.enqueue(MockResponse().setBody(HomepageTest::class.java.getResource("Index.html").readText()))
+        server.enqueue("GetDirectorInformation.json")
+        server.start(3000)
+
+        val infos = runBlocking { repo.getDirectorInformation() }
+        assertEquals(2, infos.size)
+
+        with(infos[0]) {
+            assertEquals(of(2020, 10, 12), date)
+            assertEquals("Zmaina obuwia", subject)
+            assertEquals("Informuję nauczycieli i uczni&#243;w, że...", content)
+        }
+
+        with(infos[1]) {
+            assertEquals(of(2020, 11, 2), date)
+            assertEquals("Dzień wolny od zajęć dydaktycznych", subject)
+            assertEquals("Dzień wolny od zajęć dydaktycznych<br />02.11.2020 – poniedziałek", content)
+        }
     }
 
     @Test

@@ -1,10 +1,13 @@
 package io.github.wulkanowy.sdk.scrapper.repository
 
 import io.github.wulkanowy.sdk.scrapper.getScriptParam
+import io.github.wulkanowy.sdk.scrapper.home.DirectorInformation
 import io.github.wulkanowy.sdk.scrapper.home.GovernmentUnit
 import io.github.wulkanowy.sdk.scrapper.home.LuckyNumber
 import io.github.wulkanowy.sdk.scrapper.interceptor.handleErrors
 import io.github.wulkanowy.sdk.scrapper.service.HomepageService
+import io.github.wulkanowy.sdk.scrapper.toDate
+import io.github.wulkanowy.sdk.scrapper.toLocalDate
 
 class HomepageRepository(private val api: HomepageService) {
 
@@ -17,6 +20,19 @@ class HomepageRepository(private val api: HomepageService) {
         val permissions = getScriptParam("permissions", page)
         token = permissions
         return permissions
+    }
+
+    suspend fun getDirectorInformation(): List<DirectorInformation> {
+        val res = api.getDirectorInformation(getToken()).handleErrors().data
+        return requireNotNull(res).flatMap { wrapper ->
+            wrapper.content.map {
+                DirectorInformation(
+                    date = it.name.substringBefore(" ").toDate("dd.MM.yyyy").toLocalDate(),
+                    subject = it.name.substringAfter(" "),
+                    content = it.data.orEmpty()
+                )
+            }
+        }.sortedBy { it.date }
     }
 
     suspend fun getSelfGovernments(): List<GovernmentUnit> {

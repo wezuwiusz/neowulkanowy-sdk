@@ -1,0 +1,38 @@
+{
+  "data": [
+    {
+      "IkonkaNazwa": null,
+      "Num": null,
+      "Zawartosc": [
+        {
+          "IkonkaNazwa": null,
+          "Num": null,
+          "Zawartosc": [],
+          "Nazwa": "02.11.2020 Dzień wolny od zajęć dydaktycznych",
+          "Url": null,
+          "Dane": "Dzień wolny od zajęć dydaktycznych<br />02.11.2020 – poniedziałek",
+          "Symbol": null,
+          "Nieaktywny": false
+        },
+        {
+          "IkonkaNazwa": null,
+          "Num": null,
+          "Zawartosc": [],
+          "Nazwa": "12.10.2020 Zmaina obuwia",
+          "Url": null,
+          "Dane": "Informuję nauczycieli i uczni&#243;w, że...",
+          "Symbol": null,
+          "Nieaktywny": false
+        }
+      ],
+      "Nazwa": "",
+      "Url": null,
+      "Dane": null,
+      "Symbol": null,
+      "Nieaktywny": false
+    }
+  ],
+  "success": true,
+  "errorMessage": null,
+  "feedback": null
+}

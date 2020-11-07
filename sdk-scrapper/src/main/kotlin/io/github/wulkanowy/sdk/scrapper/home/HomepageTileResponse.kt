@@ -21,6 +21,9 @@ data class HomepageTileResponse(
     @Json(name = "Url")
     val url: String?,
 
+    @Json(name = "Dane")
+    val data: String?,
+
     @Json(name = "Symbol")
     val symbol: String?,
 
