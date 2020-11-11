@@ -18,7 +18,7 @@ class TimetableTest : BaseLocalTest() {
 
     @Test
     fun getTimetableTest() {
-        assertEquals(19, timetable.size)
+        assertEquals(20, timetable.size)
         assertEquals(18, timetableBefore1911.size)
     }
 
@@ -426,6 +426,28 @@ class TimetableTest : BaseLocalTest() {
             assertEquals("Wiedza o społeczeństwie", subjectOld)
             assertEquals("Jan Kowalski", teacherOld)
             assertEquals("50", roomOld)
+
+            assertEquals(false, canceled)
+            assertEquals(true, changes)
+        }
+    }
+
+    @Test
+    fun getLesson_two_change_lines_no_group() {
+        with(timetable[19]) {
+            // piątek, 3
+            assertEquals(3, number)
+            assertEquals(getDate(2018, 9, 28, 9, 45, 0), start)
+            assertEquals(getDate(2018, 9, 28, 10, 40, 0), end)
+
+            assertEquals("Matematyka", subject)
+            assertEquals("", group)
+            assertEquals("Jan Kowalski", teacher)
+            assertEquals("114", room)
+            assertEquals("przeniesiona z lekcji 5, 04.11.2020", info)
+            assertEquals("", subjectOld)
+            assertEquals("", teacherOld)
+            assertEquals("", roomOld)
 
             assertEquals(false, canceled)
             assertEquals(true, changes)

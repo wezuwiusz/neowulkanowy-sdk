@@ -108,6 +108,7 @@ class TimetableParser {
             size == 3 -> getSimpleLesson(lesson, this)
             size == 4 && last().hasClass(CLASS_REALIZED) -> getSimpleLesson(lesson, this)
             size == 4 -> getGroupLesson(lesson, this)
+            size == 5 && first().hasClass(CLASS_CHANGES) && select(".$CLASS_REALIZED").size == 2 -> getSimpleLesson(lesson, this, 1)
             size == 5 && last().hasClass(CLASS_REALIZED) -> getGroupLesson(lesson, this)
             size == 7 -> getSimpleLessonWithReplacement(lesson, this)
             size == 9 -> getGroupLessonWithReplacement(lesson, this)
@@ -115,8 +116,8 @@ class TimetableParser {
         }
     }
 
-    private fun getSimpleLesson(lesson: Timetable, spans: Elements): Timetable {
-        return getLesson(lesson, spans)
+    private fun getSimpleLesson(lesson: Timetable, spans: Elements, infoExtraOffset: Int = 0): Timetable {
+        return getLesson(lesson, spans, 0, infoExtraOffset)
     }
 
     private fun getSimpleLessonWithReplacement(lesson: Timetable, spans: Elements): Timetable {
@@ -131,12 +132,12 @@ class TimetableParser {
         return getLessonWithReplacement(lesson, spans, 1)
     }
 
-    private fun getLesson(lesson: Timetable, spans: Elements, offset: Int = 0) = lesson.copy(
+    private fun getLesson(lesson: Timetable, spans: Elements, offset: Int = 0, infoExtraOffset: Int = 0) = lesson.copy(
         subject = getLessonAndGroupInfoFromSpan(spans[0])[0],
         group = getLessonAndGroupInfoFromSpan(spans[0])[1],
         teacher = spans[1 + offset].text(),
         room = spans[2 + offset].text(),
-        info = getFormattedLessonInfo(spans.getOrNull(3 + offset)?.text()),
+        info = getFormattedLessonInfo(spans.getOrNull(3 + offset + infoExtraOffset)?.text()),
         canceled = spans.first().hasClass(CLASS_MOVED_OR_CANCELED),
         changes = spans.first().hasClass(CLASS_CHANGES)
     )
@@ -161,10 +162,8 @@ class TimetableParser {
         .replace(" ,", "")
         .removePrefix(", ")
 
-    private fun getLessonAndGroupInfoFromSpan(span: Element) = span.text().let {
-        arrayOf(
-            span.text().substringBefore(" ["),
-            if (it.contains("[")) span.text().split(" [").last().removeSuffix("]") else ""
-        )
-    }
+    private fun getLessonAndGroupInfoFromSpan(span: Element) = arrayOf(
+        span.text().substringBefore(" ["),
+        if (span.text().contains("[")) span.text().split(" [").last().removeSuffix("]") else ""
+    )
 }
