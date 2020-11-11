@@ -375,7 +375,7 @@ class ScrapperRemoteTest : BaseTest() {
 
     @Test
     fun timetableTest() {
-        val timetable = runBlocking { api.getTimetable(getLocalDate(2018, 9, 17)) }
+        val timetable = runBlocking { api.getTimetableNormal(getLocalDate(2018, 9, 17)) }
 
         timetable[0].run {
             assertEquals(1, number)

@@ -23,7 +23,7 @@ class TimetableMapperTest : BaseLocalTest() {
         server.enqueueAndStart("PlanLekcji.json", TimetableTest::class.java)
         server.enqueue("Slowniki.json", BaseLocalTest::class.java)
 
-        val lessons = runBlocking { mobile.getTimetable(of(2020, 2, 3), of(2020, 2, 4)) }
+        val (lessons) = runBlocking { mobile.getTimetable(of(2020, 2, 3), of(2020, 2, 4)) }
         assertEquals(4, lessons.size)
 
         with(lessons[1]) {
@@ -50,7 +50,7 @@ class TimetableMapperTest : BaseLocalTest() {
         server.enqueueAndStart("PlanLekcji.json", TimetableTest::class.java)
         server.enqueue("Slowniki.json", BaseLocalTest::class.java)
 
-        val lessons = runBlocking { mobile.getTimetable(of(2020, 2, 3), of(2020, 2, 4)) }
+        val (lessons) = runBlocking { mobile.getTimetable(of(2020, 2, 3), of(2020, 2, 4)) }
 
         with(lessons[3]) {
             assertEquals(4, number)

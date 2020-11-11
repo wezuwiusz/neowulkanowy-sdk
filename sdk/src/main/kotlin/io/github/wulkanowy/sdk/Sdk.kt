@@ -493,8 +493,22 @@ class Sdk {
 
     suspend fun getTimetable(start: LocalDate, end: LocalDate) = withContext(Dispatchers.IO) {
         when (mode) {
-            Mode.SCRAPPER -> scrapper.getTimetable(start, end).mapTimetable()
+            Mode.SCRAPPER -> scrapper.getTimetable(start, end).let { (normal, additional) -> normal.mapTimetable() to additional.mapTimetable() }
+            Mode.HYBRID, Mode.API -> mobile.getTimetable(start, end, 0).mapTimetable(mobile.getDictionaries()) to emptyList()
+        }
+    }
+
+    suspend fun getTimetableNormal(start: LocalDate, end: LocalDate) = withContext(Dispatchers.IO) {
+        when (mode) {
+            Mode.SCRAPPER -> scrapper.getTimetableNormal(start, end).mapTimetable()
             Mode.HYBRID, Mode.API -> mobile.getTimetable(start, end, 0).mapTimetable(mobile.getDictionaries())
+        }
+    }
+
+    suspend fun getTimetableAdditional(start: LocalDate) = withContext(Dispatchers.IO) {
+        when (mode) {
+            Mode.SCRAPPER -> scrapper.getTimetableAdditional(start).mapTimetable()
+            Mode.HYBRID, Mode.API -> throw FeatureNotAvailableException("Additional timetable lessons are not available in API mode")
         }
     }
 

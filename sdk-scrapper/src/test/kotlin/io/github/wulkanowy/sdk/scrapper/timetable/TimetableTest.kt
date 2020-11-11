@@ -9,11 +9,15 @@ import org.junit.Test
 class TimetableTest : BaseLocalTest() {
 
     private val timetable by lazy {
-        runBlocking { getStudentRepo(TimetableTest::class.java, "PlanLekcji.json").getTimetable(getLocalDate(2018, 9, 24)) }
+        runBlocking { getStudentRepo(TimetableTest::class.java, "PlanLekcji.json").getTimetableNormal(getLocalDate(2018, 9, 24)) }
     }
 
     private val timetableBefore1911 by lazy {
-        runBlocking { getStudentRepo(TimetableTest::class.java, "PlanLekcji-before-19.11.json").getTimetable(getLocalDate(2018, 9, 24)) }
+        runBlocking { getStudentRepo(TimetableTest::class.java, "PlanLekcji-before-19.11.json").getTimetableNormal(getLocalDate(2018, 9, 24)) }
+    }
+
+    private val additional by lazy {
+        runBlocking { getStudentRepo(TimetableTest::class.java, "PlanLekcji.json").getTimetableAdditional(getLocalDate(2020, 10, 9)) }
     }
 
     @Test
@@ -451,6 +455,17 @@ class TimetableTest : BaseLocalTest() {
 
             assertEquals(false, canceled)
             assertEquals(true, changes)
+        }
+    }
+
+    @Test
+    fun getAdditionalLesson() {
+        with(additional[0]) {
+            assertEquals(getDate(2020, 3, 9), date)
+            assertEquals(getDate(2020, 3, 9, 14, 50, 0), start)
+            assertEquals(getDate(2020, 3, 9, 15, 35, 0), end)
+
+            assertEquals("zajęcia wyrównawcze dla kl. 6d", subject)
         }
     }
 }

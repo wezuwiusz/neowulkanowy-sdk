@@ -246,6 +246,10 @@ class Scrapper {
 
     suspend fun getTimetable(startDate: LocalDate, endDate: LocalDate? = null) = student.getTimetable(startDate, endDate)
 
+    suspend fun getTimetableNormal(startDate: LocalDate, endDate: LocalDate? = null) = student.getTimetableNormal(startDate, endDate)
+
+    suspend fun getTimetableAdditional(startDate: LocalDate) = student.getTimetableAdditional(startDate)
+
     suspend fun getCompletedLessons(startDate: LocalDate, endDate: LocalDate? = null, subjectId: Int = -1) = student.getCompletedLessons(startDate, endDate, subjectId)
 
     suspend fun getRegisteredDevices() = student.getRegisteredDevices()

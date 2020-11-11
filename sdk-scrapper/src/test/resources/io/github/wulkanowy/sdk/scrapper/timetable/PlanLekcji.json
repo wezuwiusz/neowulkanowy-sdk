@@ -73,7 +73,16 @@
         "<div><span class='x-treelabel-ppl x-treelabel-zas'>Matematyka</span><span class='x-treelabel-ppl x-treelabel-zas'>Jan Kowalski</span> <span class='x-treelabel-ppl x-treelabel-zas'>114</span><span class='x-treelabel-rlz'>(zastępstwo)</span><span class='x-treelabel-rlz'>(przeniesiona z lekcji 5, 04.11.2020)</span></div>"
       ]
     ],
-    "Additionals":[]
+    "Additionals": [
+      {
+        "Header": "Poniedziałek, 09.03.2020",
+        "Descriptions": [
+          {
+            "Description": "14:50 - 15:35 zajęcia wyrównawcze dla kl. 6d"
+          }
+        ]
+      }
+    ]
   },
   "success": true
 }

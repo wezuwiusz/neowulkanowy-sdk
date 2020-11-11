@@ -9,20 +9,40 @@ import java.util.Date
 data class TimetableResponse(
 
     @Json(name = "Header")
-    val _headersOld: List<Header> = emptyList(),
+    val _headersOld: List<TimetableHeader> = emptyList(),
 
     @Json(name = "Headers")
-    val headers: List<Header> = emptyList(),
+    val headers: List<TimetableHeader> = emptyList(),
 
     @Json(name = "Rows")
-    val rows: List<List<String>> = emptyList()
+    val rows: List<List<String>> = emptyList(),
+
+    @Json(name = "Additionals")
+    val additional: List<TimetableAdditionalDay>
 )
 
 @JsonClass(generateAdapter = true)
-data class Header(
+data class TimetableHeader(
 
     @Json(name = "Text")
     val date: String
+)
+
+@JsonClass(generateAdapter = true)
+data class TimetableAdditionalDay(
+
+    @Json(name = "Header")
+    val header: String,
+
+    @Json(name = "Descriptions")
+    val descriptions: List<TimetableAdditionalLesson>
+)
+
+@JsonClass(generateAdapter = true)
+data class TimetableAdditionalLesson(
+
+    @Json(name = "Description")
+    val description: String
 )
 
 data class TimetableCell(

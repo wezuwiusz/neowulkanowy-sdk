@@ -27,6 +27,21 @@ fun TimetableResponse.mapTimetableList(startDate: LocalDate, endDate: LocalDate?
     it.date.toLocalDate() >= startDate && it.date.toLocalDate() <= endDate ?: startDate.plusDays(4)
 }.sortedWith(compareBy({ it.date }, { it.number })).toList()
 
+fun TimetableResponse.mapTimetableAdditional() = additional.flatMap { day ->
+    val date = day.header.substringAfter(", ").toDate("dd.MM.yyyy")
+    day.descriptions.map { lesson ->
+        val startTime = lesson.description.substringBefore(" - ")
+        val endTime = lesson.description.split(" ")[2]
+        Timetable(
+            number = -1,
+            date = date,
+            start = "${date.toLocalDate().toFormat("yyyy-MM-dd")} $startTime".toDate("yyyy-MM-dd HH:mm"),
+            end = "${date.toLocalDate().toFormat("yyyy-MM-dd")} $endTime".toDate("yyyy-MM-dd HH:mm"),
+            subject = lesson.description.substringAfter("$endTime ")
+        )
+    }
+}
+
 fun ApiResponse<*>.mapCompletedLessonsList(start: LocalDate, endDate: LocalDate?, moshi: Moshi.Builder): List<CompletedLesson> {
     val type = Types.newParameterizedType(MutableMap::class.java, String::class.java, List::class.java)
     val adapter = moshi.build().adapter<Map<String, List<Map<String, Any>>>>(type)

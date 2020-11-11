@@ -237,7 +237,7 @@ class SdkRemoteTest {
             classId = 14
         }
 
-        val timetable = runBlocking { sdk.getTimetable(of(2018, 1, 1), of(2018, 1, 2)) }
+        val (timetable) = runBlocking { sdk.getTimetable(of(2018, 1, 1), of(2018, 1, 2)) }
         assertEquals(24, timetable.size)
     }
 
