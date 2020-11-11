@@ -23,7 +23,9 @@ class ErrorInterceptor : Interceptor {
     override fun intercept(chain: Interceptor.Chain): Response {
         val response = chain.proceed(chain.request())
 
-        checkForError(Jsoup.parse(response.peekBody(Long.MAX_VALUE).string()), response.request().url().toString())
+        if (response.body()?.contentType()?.subtype() != "json") {
+            checkForError(Jsoup.parse(response.peekBody(Long.MAX_VALUE).string()), response.request().url().toString())
+        }
 
         return response
     }

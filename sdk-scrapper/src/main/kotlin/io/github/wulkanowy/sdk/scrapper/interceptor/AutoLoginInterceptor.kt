@@ -53,10 +53,12 @@ class AutoLoginInterceptor(
             request = chain.request()
             checkRequest()
             response = chain.proceed(request)
-            checkResponse(
-                doc = Jsoup.parse(response.peekBody(Long.MAX_VALUE).string()),
-                url = chain.request().url().toString()
-            )
+            if (response.body()?.contentType()?.subtype() != "json") {
+                checkResponse(
+                    doc = Jsoup.parse(response.peekBody(Long.MAX_VALUE).string()),
+                    url = chain.request().url().toString()
+                )
+            }
         } catch (e: NotLoggedInException) {
             if (lock.tryLock()) {
                 logger.debug("Not logged in. Login in...")
