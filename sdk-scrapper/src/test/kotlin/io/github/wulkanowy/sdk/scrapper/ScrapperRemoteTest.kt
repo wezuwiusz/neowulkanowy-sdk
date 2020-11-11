@@ -1,5 +1,6 @@
 package io.github.wulkanowy.sdk.scrapper
 
+import io.github.wulkanowy.sdk.scrapper.attendance.AttendanceCategory
 import io.github.wulkanowy.sdk.scrapper.messages.Folder
 import io.github.wulkanowy.sdk.scrapper.messages.Recipient
 import kotlinx.coroutines.runBlocking
@@ -33,7 +34,7 @@ class ScrapperRemoteTest : BaseTest() {
             classId = 1
             androidVersion = "9.0"
             buildTag = "Wulkanowy"
-            addInterceptor(Interceptor {
+            addInterceptor({
                 println("Request event ${it.request().url().host()}")
                 it.proceed(it.request())
             }, true)
@@ -67,11 +68,12 @@ class ScrapperRemoteTest : BaseTest() {
         students[0].run {
             assertEquals("powiatwulkanowy", symbol)
             assertEquals("jan@fakelog.cf", email)
-            assertEquals("Jan Kowalski", studentName)
+            assertEquals("Jan", studentName)
+            assertEquals("Kowalski", studentSurname)
             assertEquals("123456", schoolSymbol)
             assertEquals(1, studentId)
             assertEquals(1, classId)
-            assertEquals("4A", className)
+            assertEquals("A", className)
             assertEquals("Publiczna szkoła Wulkanowego nr 1 w fakelog.cf", schoolName)
         }
     }
@@ -115,18 +117,18 @@ class ScrapperRemoteTest : BaseTest() {
             assertEquals("Zajęcia z wychowawcą", subject)
             assertEquals(getDate(2018, 10, 1), date)
 
-            assertEquals("Obecność", category.name)
+            assertEquals(AttendanceCategory.PRESENCE, category)
         }
 
         attendance[1].run {
-            assertEquals("Nieobecność nieusprawiedliwiona", category.name)
+            assertEquals(AttendanceCategory.ABSENCE_UNEXCUSED, category)
         }
 
-        assertEquals("Nieobecność nieusprawiedliwiona", attendance[3].category.name)
-        assertEquals("Nieobecność nieusprawiedliwiona", attendance[4].category.name)
-        assertEquals("Nieobecność usprawiedliwiona", attendance[5].category.name)
-        assertEquals("Spóźnienie nieusprawiedliwione", attendance[6].category.name)
-        assertEquals("Obecność", attendance[9].category)
+        assertEquals(AttendanceCategory.ABSENCE_UNEXCUSED, attendance[3].category)
+        assertEquals(AttendanceCategory.ABSENCE_UNEXCUSED, attendance[4].category)
+        assertEquals(AttendanceCategory.ABSENCE_EXCUSED, attendance[5].category)
+        assertEquals(AttendanceCategory.UNEXCUSED_LATENESS, attendance[6].category)
+        assertEquals(AttendanceCategory.PRESENCE, attendance[9].category)
     }
 
     @Test
