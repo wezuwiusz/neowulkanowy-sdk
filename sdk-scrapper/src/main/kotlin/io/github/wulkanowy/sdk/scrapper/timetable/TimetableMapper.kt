@@ -9,17 +9,20 @@ import io.github.wulkanowy.sdk.scrapper.toLocalDate
 import org.jsoup.Jsoup
 import java.time.LocalDate
 
-fun TimetableResponse.mapTimetableList(startDate: LocalDate, endDate: LocalDate?) = rows2api.flatMap { lessons ->
+private val parser = TimetableParser()
+
+fun TimetableResponse.mapTimetableList(startDate: LocalDate, endDate: LocalDate?) = rows.flatMap { lessons ->
     lessons.drop(1).mapIndexed { i, it ->
         val times = lessons[0].split("<br />")
-        TimetableResponse.TimetableRow.TimetableCell().apply {
-            date = headers.union(_headersOld).drop(1)[i].date.split("<br />")[1].toDate("dd.MM.yyyy")
-            start = "${date.toLocalDate().toFormat("yyyy-MM-dd")} ${times[1]}".toDate("yyyy-MM-dd HH:mm")
-            end = "${date.toLocalDate().toFormat("yyyy-MM-dd")} ${times[2]}".toDate("yyyy-MM-dd HH:mm")
-            number = times[0].toInt()
+        val date = headers.union(_headersOld).drop(1)[i].date.split("<br />")[1].toDate("dd.MM.yyyy")
+        TimetableCell(
+            date = date,
+            start = "${date.toLocalDate().toFormat("yyyy-MM-dd")} ${times[1]}".toDate("yyyy-MM-dd HH:mm"),
+            end = "${date.toLocalDate().toFormat("yyyy-MM-dd")} ${times[2]}".toDate("yyyy-MM-dd HH:mm"),
+            number = times[0].toInt(),
             td = Jsoup.parse(it)
-        }
-    }.mapNotNull { TimetableParser().getTimetable(it) }
+        )
+    }.mapNotNull { parser.getTimetable(it) }
 }.asSequence().filter {
     it.date.toLocalDate() >= startDate && it.date.toLocalDate() <= endDate ?: startDate.plusDays(4)
 }.sortedWith(compareBy({ it.date }, { it.number })).toList()

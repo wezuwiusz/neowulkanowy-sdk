@@ -6,45 +6,29 @@ import org.jsoup.nodes.Element
 import java.util.Date
 
 @JsonClass(generateAdapter = true)
-class TimetableResponse {
+data class TimetableResponse(
 
     @Json(name = "Header")
-    var _headersOld: List<Header> = emptyList()
+    val _headersOld: List<Header> = emptyList(),
 
     @Json(name = "Headers")
-    var headers: List<Header> = emptyList()
+    val headers: List<Header> = emptyList(),
 
     @Json(name = "Rows")
-    var rows2api: List<List<String>> = emptyList()
+    val rows: List<List<String>> = emptyList()
+)
 
-    @JsonClass(generateAdapter = true)
-    class Header {
+@JsonClass(generateAdapter = true)
+data class Header(
 
-        @Json(name = "Text")
-        lateinit var date: String
-    }
+    @Json(name = "Text")
+    val date: String
+)
 
-    class TimetableRow {
-
-        var number: Int = 0
-
-        lateinit var startTime: String
-
-        lateinit var endTime: String
-
-        var lessons: List<TimetableCell> = emptyList()
-
-        class TimetableCell {
-
-            var number: Int = 0
-
-            lateinit var start: Date
-
-            lateinit var end: Date
-
-            lateinit var date: Date
-
-            lateinit var td: Element
-        }
-    }
-}
+data class TimetableCell(
+    val number: Int = 0,
+    val start: Date,
+    val end: Date,
+    val date: Date,
+    val td: Element
+)

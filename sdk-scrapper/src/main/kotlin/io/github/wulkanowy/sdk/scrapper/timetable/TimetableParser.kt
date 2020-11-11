@@ -12,7 +12,7 @@ class TimetableParser {
         const val CLASS_MOVED_OR_CANCELED = "x-treelabel-inv"
     }
 
-    fun getTimetable(c: TimetableResponse.TimetableRow.TimetableCell): Timetable? {
+    fun getTimetable(c: TimetableCell): Timetable? {
         return addLessonDetails(Timetable(c.number, c.start, c.end, c.date), c.td)
     }
 
