@@ -224,12 +224,11 @@ class StudentRepository(private val api: StudentService) {
     }
 
     suspend fun getSchool(): School {
-        return api.getSchoolAndTeachers().handleErrors().data?.school!!
+        return api.getSchoolAndTeachers().handleErrors().data.let { requireNotNull(it?.school) }
     }
 
     suspend fun getStudentInfo(): StudentInfo {
-        // return api.getStudentInfo()
-        return StudentInfo()
+        return api.getStudentInfo().handleErrors().let { requireNotNull(it.data) }
     }
 
     suspend fun getRegisteredDevices(): List<Device> {
