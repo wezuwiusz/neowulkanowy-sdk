@@ -43,7 +43,7 @@ jobs:
       - store_artifacts:
           path: ./build/reports/tests/test
       - store_artifacts:
-          path: ./build/libs/sdk-0.22.2.jar
+          path: ./build/libs/sdk-0.23.0.jar
   deploy:
     <<: *container_config
     steps:
