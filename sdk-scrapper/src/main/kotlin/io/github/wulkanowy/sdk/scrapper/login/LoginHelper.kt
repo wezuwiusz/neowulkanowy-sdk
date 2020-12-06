@@ -67,10 +67,21 @@ class LoginHelper(
                 AUTO -> throw ScrapperException("You must first specify Api.loginType before logging in")
                 STANDARD -> sendStandard(it, password)
                 ADFS -> {
-                    if (host == "umt.tarnow.pl") {
-                        val login = if ("@" in email) email else "EDUNET\\$email"
-                        sendADFSMS(login, password)
-                    } else sendADFS(it, password)
+                    when (host) {
+                        "umt.tarnow.pl" -> {
+                            val login = if ("@" in email) email else "EDUNET\\$email"
+                            sendADFSMS(login, password)
+                        }
+                        "edu.gdansk.pl" -> {
+                            val login = if ("@" in email) email else "GPE\\$email"
+                            sendADFSMS(login, password)
+                        }
+                        "eduportal.koszalin.pl" -> {
+                            val login = if ("@" in email) email else "EDUPORTAL\\$email"
+                            sendADFSMS(login, password)
+                        }
+                        else -> sendADFS(it, password)
+                    }
                 }
                 ADFSLight, ADFSLightScoped, ADFSLightCufs -> sendADFSLightGeneric(it, password, loginType)
                 ADFSCards -> sendADFSCards(it, password)
