@@ -155,8 +155,11 @@ class ServiceManager(
     ) = okHttpClientBuilderFactory.create()
         .callTimeout(60, SECONDS)
         .apply {
-            if (host == "vulcan.net.pl") {
-                sslSocketFactory(TLSSocketFactory(), trustManager)
+            when (host) {
+                "edu.gdansk.pl",
+                "edu.lublin.eu",
+                "eduportal.koszalin.pl",
+                "vulcan.net.pl" -> sslSocketFactory(TLSSocketFactory(), trustManager)
             }
         }
         .cookieJar(if (!separateJar) JavaNetCookieJar(cookies) else JavaNetCookieJar(CookieManager()))
