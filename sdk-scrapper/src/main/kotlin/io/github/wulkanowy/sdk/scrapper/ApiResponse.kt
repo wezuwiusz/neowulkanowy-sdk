@@ -31,7 +31,7 @@ data class ApiResponse<out T>(
         val exceptionMessage: String?,
 
         @Json(name = "InnerExceptionMessage")
-        val innerExceptionMessage: String,
+        val innerExceptionMessage: String?,
 
         val success: Boolean
     )
