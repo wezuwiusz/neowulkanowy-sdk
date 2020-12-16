@@ -153,7 +153,7 @@ class ServiceManager(
         loginIntercept: Boolean = true,
         separateJar: Boolean = false
     ) = okHttpClientBuilderFactory.create()
-        .callTimeout(60, SECONDS)
+        .connectTimeout(60, SECONDS)
         .apply {
             when (host) {
                 "edu.gdansk.pl",
