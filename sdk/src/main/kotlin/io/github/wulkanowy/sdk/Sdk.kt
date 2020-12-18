@@ -31,6 +31,7 @@ import io.github.wulkanowy.sdk.mapper.mapStudents
 import io.github.wulkanowy.sdk.mapper.mapSubjects
 import io.github.wulkanowy.sdk.mapper.mapTeachers
 import io.github.wulkanowy.sdk.mapper.mapTimetable
+import io.github.wulkanowy.sdk.mapper.mapTimetableAdditional
 import io.github.wulkanowy.sdk.mapper.mapToScrapperAbsent
 import io.github.wulkanowy.sdk.mapper.mapToUnits
 import io.github.wulkanowy.sdk.mapper.mapToken
@@ -493,7 +494,7 @@ class Sdk {
 
     suspend fun getTimetable(start: LocalDate, end: LocalDate) = withContext(Dispatchers.IO) {
         when (mode) {
-            Mode.SCRAPPER -> scrapper.getTimetable(start, end).let { (normal, additional) -> normal.mapTimetable() to additional.mapTimetable() }
+            Mode.SCRAPPER -> scrapper.getTimetable(start, end).let { (normal, additional) -> normal.mapTimetable() to additional.mapTimetableAdditional() }
             Mode.HYBRID, Mode.API -> mobile.getTimetable(start, end, 0).mapTimetable(mobile.getDictionaries()) to emptyList()
         }
     }
@@ -507,7 +508,7 @@ class Sdk {
 
     suspend fun getTimetableAdditional(start: LocalDate) = withContext(Dispatchers.IO) {
         when (mode) {
-            Mode.SCRAPPER -> scrapper.getTimetableAdditional(start).mapTimetable()
+            Mode.SCRAPPER -> scrapper.getTimetableAdditional(start).mapTimetableAdditional()
             Mode.HYBRID, Mode.API -> throw FeatureNotAvailableException("Additional timetable lessons are not available in API mode")
         }
     }

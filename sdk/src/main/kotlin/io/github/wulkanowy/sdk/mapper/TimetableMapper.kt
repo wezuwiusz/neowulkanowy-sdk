@@ -3,12 +3,14 @@ package io.github.wulkanowy.sdk.mapper
 import io.github.wulkanowy.sdk.mobile.dictionaries.Dictionaries
 import io.github.wulkanowy.sdk.pojo.CompletedLesson
 import io.github.wulkanowy.sdk.pojo.Timetable
+import io.github.wulkanowy.sdk.pojo.TimetableAdditional
 import io.github.wulkanowy.sdk.scrapper.toLocalDate
 import io.github.wulkanowy.sdk.toLocalDate
 import io.github.wulkanowy.sdk.toLocalDateTime
 import io.github.wulkanowy.sdk.mobile.timetable.Lesson as ApiTimetable
 import io.github.wulkanowy.sdk.scrapper.timetable.CompletedLesson as ScrapperCompletedLesson
 import io.github.wulkanowy.sdk.scrapper.timetable.Timetable as ScrapperTimetable
+import io.github.wulkanowy.sdk.scrapper.timetable.TimetableAdditional as ScrapperTimetableAdditional
 
 fun List<ApiTimetable>.mapTimetable(dictionaries: Dictionaries) = map {
     val teacher = dictionaries.employees.singleOrNull { employee -> employee.id == it.employeeId }
@@ -59,6 +61,15 @@ fun List<ScrapperTimetable>.mapTimetable() = map {
         studentPlan = true,
         teacher = it.teacher,
         teacherOld = it.teacherOld
+    )
+}
+
+fun List<ScrapperTimetableAdditional>.mapTimetableAdditional() = map {
+    TimetableAdditional(
+        subject = it.subject,
+        date = it.date.toLocalDate(),
+        start = it.start.toLocalDateTime(),
+        end = it.end.toLocalDateTime()
     )
 }
 

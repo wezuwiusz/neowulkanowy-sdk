@@ -48,6 +48,7 @@ import io.github.wulkanowy.sdk.scrapper.timetable.CacheResponse
 import io.github.wulkanowy.sdk.scrapper.timetable.CompletedLesson
 import io.github.wulkanowy.sdk.scrapper.timetable.CompletedLessonsRequest
 import io.github.wulkanowy.sdk.scrapper.timetable.Timetable
+import io.github.wulkanowy.sdk.scrapper.timetable.TimetableAdditional
 import io.github.wulkanowy.sdk.scrapper.timetable.TimetableRequest
 import io.github.wulkanowy.sdk.scrapper.timetable.mapCompletedLessonsList
 import io.github.wulkanowy.sdk.scrapper.timetable.mapTimetableAdditional
@@ -192,7 +193,7 @@ class StudentRepository(private val api: StudentService) {
             .mapConferences()
     }
 
-    suspend fun getTimetable(startDate: LocalDate, endDate: LocalDate? = null): Pair<List<Timetable>, List<Timetable>> {
+    suspend fun getTimetable(startDate: LocalDate, endDate: LocalDate? = null): Pair<List<Timetable>, List<TimetableAdditional>> {
         val data = api.getTimetable(TimetableRequest(startDate.toISOFormat())).handleErrors().data
 
         return requireNotNull(data).mapTimetableList(startDate, endDate) to data.mapTimetableAdditional()
@@ -203,7 +204,7 @@ class StudentRepository(private val api: StudentService) {
             ?.mapTimetableList(startDate, endDate).orEmpty()
     }
 
-    suspend fun getTimetableAdditional(startDate: LocalDate): List<Timetable> {
+    suspend fun getTimetableAdditional(startDate: LocalDate): List<TimetableAdditional> {
         return api.getTimetable(TimetableRequest(startDate.toISOFormat())).handleErrors().data
             ?.mapTimetableAdditional().orEmpty()
     }

@@ -18,3 +18,10 @@ data class Timetable(
     val changes: Boolean = false,
     val canceled: Boolean = false
 )
+
+data class TimetableAdditional(
+    val start: Date,
+    val end: Date,
+    val date: Date,
+    val subject: String
+)

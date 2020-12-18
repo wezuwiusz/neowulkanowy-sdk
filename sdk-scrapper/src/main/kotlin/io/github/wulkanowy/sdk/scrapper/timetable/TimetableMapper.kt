@@ -32,8 +32,7 @@ fun TimetableResponse.mapTimetableAdditional() = additional.flatMap { day ->
     day.descriptions.map { lesson ->
         val startTime = lesson.description.substringBefore(" - ")
         val endTime = lesson.description.split(" ")[2]
-        Timetable(
-            number = -1,
+        TimetableAdditional(
             date = date,
             start = "${date.toLocalDate().toFormat("yyyy-MM-dd")} $startTime".toDate("yyyy-MM-dd HH:mm"),
             end = "${date.toLocalDate().toFormat("yyyy-MM-dd")} $endTime".toDate("yyyy-MM-dd HH:mm"),
