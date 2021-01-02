@@ -524,17 +524,17 @@ class Sdk {
         val numbers = getKidsLuckyNumbers()
         // if lucky number unitName match unit name from student tile
         numbers.singleOrNull { number -> number.unitName == unitName }?.let {
-            return@withContext it.number
+            return@withContext it
         }
 
         // if there there is only one lucky number and its doesn't match to any student
         if (numbers.size == 1) {
-            return@withContext numbers.single().number
+            return@withContext numbers.single()
         }
 
         // if there is more than one lucky number, return first (just like this was working before 0.16.0)
         if (numbers.size > 1) {
-            return@withContext numbers.first().number
+            return@withContext numbers.first()
         }
 
         // else
