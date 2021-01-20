@@ -81,6 +81,10 @@ class ServiceManager(
         trustManagers[0] as X509TrustManager
     }
 
+    companion object {
+        private const val TIMEOUT_IN_SECONDS = 30L
+    }
+
     fun setInterceptor(interceptor: Interceptor, network: Boolean = false) {
         interceptors.add(0, interceptor to network)
     }
@@ -153,10 +157,10 @@ class ServiceManager(
         loginIntercept: Boolean = true,
         separateJar: Boolean = false
     ) = okHttpClientBuilderFactory.create()
-        .connectTimeout(60, SECONDS)
-        .callTimeout(60, SECONDS)
-        .writeTimeout(60, SECONDS)
-        .readTimeout(60, SECONDS)
+        .connectTimeout(TIMEOUT_IN_SECONDS, SECONDS)
+        .callTimeout(TIMEOUT_IN_SECONDS, SECONDS)
+        .writeTimeout(TIMEOUT_IN_SECONDS, SECONDS)
+        .readTimeout(TIMEOUT_IN_SECONDS, SECONDS)
         .apply {
             when (host) {
                 "edu.gdansk.pl",
