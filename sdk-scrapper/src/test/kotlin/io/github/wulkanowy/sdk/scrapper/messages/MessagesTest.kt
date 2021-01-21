@@ -162,6 +162,7 @@ class MessagesTest : BaseLocalTest() {
 
     @Test
     fun getMessageContentTest() {
+        server.enqueue(MockResponse().setBody(MessagesTest::class.java.getResource("Start.html").readText()))
         server.enqueue(MockResponse().setBody(MessagesTest::class.java.getResource("Wiadomosc.json").readText()))
         server.start(3000)
 
@@ -170,6 +171,7 @@ class MessagesTest : BaseLocalTest() {
 
     @Test
     fun getMessageAttachmentsTest() {
+        server.enqueue(MockResponse().setBody(MessagesTest::class.java.getResource("Start.html").readText()))
         server.enqueue(MockResponse().setBody(MessagesTest::class.java.getResource("Wiadomosc.json").readText()))
         server.start(3000)
 
