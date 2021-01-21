@@ -74,10 +74,14 @@ class MessagesRepository(private val api: MessagesService) {
     }
 
     suspend fun getMessageDetails(messageId: Int, folderId: Int, read: Boolean, id: Int?): Message {
+        val res = api.getStart()
+        val antiForgeryToken = getScriptParam("antiForgeryToken", res).ifBlank { throw ScrapperException("Can't find antiForgeryToken property!") }
+        val appGuid = getScriptParam("appGuid", res)
+
         return when (folderId) {
-            1 -> api.getInboxMessage("$messageId").handleErrors().data!!
-            2 -> api.getOutboxMessage("$messageId").handleErrors().data!!
-            3 -> api.getTrashboxMessage("$messageId").handleErrors().data!!
+            1 -> api.getInboxMessage(messageId, read, id, antiForgeryToken, appGuid).handleErrors().data!!
+            2 -> api.getOutboxMessage(messageId, read, id, antiForgeryToken, appGuid).handleErrors().data!!
+            3 -> api.getTrashboxMessage(messageId, read, id, antiForgeryToken, appGuid).handleErrors().data!!
             else -> throw IllegalArgumentException("Unknown folder id: $folderId")
         }
     }
@@ -86,16 +90,16 @@ class MessagesRepository(private val api: MessagesService) {
         val res = api.getStart()
         logger.debug("Subject length: ${subject.length}, content length: ${content.length}, recipients number: ${recipients.size}")
         return api.sendMessage(
-            SendMessageRequest(
+            sendMessageRequest = SendMessageRequest(
                 SendMessageRequest.Incoming(
                     recipients = recipients,
                     subject = subject,
                     content = content
                 )
             ),
-            getScriptParam("antiForgeryToken", res).ifBlank { throw ScrapperException("Can't find antiForgeryToken property!") },
-            getScriptParam("appGuid", res),
-            getScriptParam("version", res)
+            token = getScriptParam("antiForgeryToken", res).ifBlank { throw ScrapperException("Can't find antiForgeryToken property!") },
+            appGuid = getScriptParam("appGuid", res),
+            appVersion = getScriptParam("version", res)
         ).handleErrors().data!!
     }
 
