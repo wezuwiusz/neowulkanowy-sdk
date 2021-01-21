@@ -48,15 +48,15 @@ interface MessagesService {
 
     @POST("Wiadomosc.mvc/GetInboxMessageDetails")
     @FormUrlEncoded
-    suspend fun getInboxMessage(@Field("messageId") messageId: Int): ApiResponse<Message>
+    suspend fun getInboxMessage(@Field("messageId") messageId: String): ApiResponse<Message>
 
     @POST("Wiadomosc.mvc/GetOutboxMessageDetails")
     @FormUrlEncoded
-    suspend fun getOutboxMessage(@Field("messageId") messageId: Int): ApiResponse<Message>
+    suspend fun getOutboxMessage(@Field("messageId") messageId: String): ApiResponse<Message>
 
     @POST("Wiadomosc.mvc/GetTrashboxMessageDetails")
     @FormUrlEncoded
-    suspend fun getTrashboxMessage(@Field("messageId") messageId: Int): ApiResponse<Message>
+    suspend fun getTrashboxMessage(@Field("messageId") messageId: String): ApiResponse<Message>
 
     @POST("NowaWiadomosc.mvc/InsertWiadomosc")
     suspend fun sendMessage(
