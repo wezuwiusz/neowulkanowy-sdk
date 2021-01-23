@@ -54,10 +54,9 @@ class AutoLoginInterceptor(
             checkRequest()
             response = chain.proceed(request)
             if (response.body()?.contentType()?.subtype() != "json") {
-                checkResponse(
-                    doc = Jsoup.parse(response.peekBody(Long.MAX_VALUE).string()),
-                    url = chain.request().url().toString()
-                )
+                val body = response.peekBody(Long.MAX_VALUE).byteStream()
+                val url = chain.request().url().toString()
+                checkResponse(Jsoup.parse(body, null, url), url)
             }
         } catch (e: NotLoggedInException) {
             if (lock.tryLock()) {

@@ -24,7 +24,8 @@ class ErrorInterceptor : Interceptor {
         val response = chain.proceed(chain.request())
 
         if (response.body()?.contentType()?.subtype() != "json") {
-            checkForError(Jsoup.parse(response.peekBody(Long.MAX_VALUE).string()), response.request().url().toString())
+            val url = response.request().url().toString()
+            checkForError(Jsoup.parse(response.peekBody(Long.MAX_VALUE).byteStream(), null, url), url)
         }
 
         return response
