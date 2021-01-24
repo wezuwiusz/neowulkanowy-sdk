@@ -32,7 +32,7 @@ fun ScrapperStudentInfo.mapStudent() = StudentInfo(
 
 private fun ScrapperStudentGuardian.toFamilyMember() = StudentGuardian(
     fullName = fullName,
-    email = email,
+    email = email.orEmpty(),
     address = address,
     kinship = kinship,
     phones = phone
