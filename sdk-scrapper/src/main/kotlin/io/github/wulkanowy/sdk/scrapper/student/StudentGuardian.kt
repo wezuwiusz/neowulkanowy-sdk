@@ -31,7 +31,7 @@ data class StudentGuardian(
     val workPhone: String?,
 
     @Json(name = "Email")
-    val email: String,
+    val email: String?,
 
     @Json(name = "FullName")
     val fullName: String,
