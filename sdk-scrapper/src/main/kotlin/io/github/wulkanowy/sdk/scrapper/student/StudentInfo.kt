@@ -14,7 +14,7 @@ data class StudentInfo(
     val middleName: String,
 
     @Json(name = "NumerDokumentu")
-    val idNumber: Int?,
+    val idNumber: Any?,
 
     @Json(name = "Nazwisko")
     val lastName: String,
@@ -26,7 +26,7 @@ data class StudentInfo(
     val birthPlace: String,
 
     @Json(name = "NazwiskoRodowe")
-    val familyName: String,
+    val familyName: String?,
 
     @Json(name = "ObywatelstwoPolskie")
     val polishCitizenship: Int,
