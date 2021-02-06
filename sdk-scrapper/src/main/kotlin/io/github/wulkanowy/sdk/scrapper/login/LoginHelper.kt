@@ -119,6 +119,8 @@ class LoginHelper(
             )
         ))
 
+        logger.debug("Page title after credentials sent: ${res.title}")
+
         return certificateAdapter.fromHtml(api.sendADFSForm(
             res.action, mapOf(
                 "wa" to res.wa,
