@@ -95,31 +95,31 @@ class StudentInfoTest : BaseLocalTest() {
 
     @Test
     fun getNameTest() {
-        assertEquals("Marianna Pająk", info.guardianFirst.fullName)
-        assertEquals("Dawid Świątek", info.guardianSecond.fullName)
+        assertEquals("Marianna Pająk", info.guardianFirst?.fullName)
+        assertEquals("Dawid Świątek", info.guardianSecond?.fullName)
     }
 
     @Test
     fun getKinshipTest() {
-        assertEquals("matka", info.guardianFirst.kinship)
-        assertEquals("ojciec", info.guardianSecond.kinship)
+        assertEquals("matka", info.guardianFirst?.kinship)
+        assertEquals("ojciec", info.guardianSecond?.kinship)
     }
 
     @Test
     fun getAddressTest() {
-        assertEquals("ul. Sportowa 16, 00-123 Warszawa", info.guardianFirst.address)
-        assertEquals("ul. Sportowa 18, 00-123 Warszawa", info.guardianSecond.address)
+        assertEquals("ul. Sportowa 16, 00-123 Warszawa", info.guardianFirst?.address)
+        assertEquals("ul. Sportowa 18, 00-123 Warszawa", info.guardianSecond?.address)
     }
 
     @Test
     fun getTelephonesTest() {
-        assertEquals("555111222", info.guardianFirst.cellPhone)
-        assertEquals("555222111", info.guardianSecond.cellPhone)
+        assertEquals("555111222", info.guardianFirst?.cellPhone)
+        assertEquals("555222111", info.guardianSecond?.cellPhone)
     }
 
     @Test
     fun getEmailTest() {
-        assertEquals("wulkanowy@example.null", info.guardianFirst.email)
-        assertEquals("wulkanowy@example.null", info.guardianSecond.email)
+        assertEquals("wulkanowy@example.null", info.guardianFirst?.email)
+        assertEquals("wulkanowy@example.null", info.guardianSecond?.email)
     }
 }

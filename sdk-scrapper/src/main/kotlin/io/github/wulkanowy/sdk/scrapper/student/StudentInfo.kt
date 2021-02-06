@@ -56,16 +56,16 @@ data class StudentInfo(
     val cellPhone: String?,
 
     @Json(name = "Email")
-    val email: String,
+    val email: String?,
 
     @Json(name = "CzyWidocznyPesel")
     val isVisiblePesel: Boolean,
 
     @Json(name = "Opiekun1")
-    val guardianFirst: StudentGuardian,
+    val guardianFirst: StudentGuardian?,
 
     @Json(name = "Opiekun2")
-    val guardianSecond: StudentGuardian,
+    val guardianSecond: StudentGuardian?,
 
     @Json(name = "UkryteDaneAdresowe")
     val hideAddress: Boolean,

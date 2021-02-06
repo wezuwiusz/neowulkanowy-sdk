@@ -14,7 +14,7 @@ fun ScrapperStudentInfo.mapStudent() = StudentInfo(
     birthPlace = birthPlace,
     cellPhoneNumber = cellPhone.orEmpty(),
     correspondenceAddress = correspondenceAddress,
-    email = email,
+    email = email.orEmpty(),
     familyName = familyName.orEmpty(),
     firstName = name,
     gender = if (gender) StudentGender.MALE else StudentGender.FEMALE,
@@ -24,10 +24,12 @@ fun ScrapperStudentInfo.mapStudent() = StudentInfo(
     registeredAddress = registeredAddress,
     secondName = middleName,
     surname = lastName,
-    guardians = listOf(
-        guardianFirst.toFamilyMember(),
-        guardianSecond.toFamilyMember()
-    )
+    guardians = listOfNotNull(
+        guardianFirst?.toFamilyMember(),
+        guardianSecond?.toFamilyMember()
+    ),
+    guardianFirst = guardianFirst?.toFamilyMember(),
+    guardianSecond = guardianSecond?.toFamilyMember()
 )
 
 private fun ScrapperStudentGuardian.toFamilyMember() = StudentGuardian(
