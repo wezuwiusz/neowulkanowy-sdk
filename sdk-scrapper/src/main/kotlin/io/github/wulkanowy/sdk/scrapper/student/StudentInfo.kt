@@ -32,10 +32,10 @@ data class StudentInfo(
     val polishCitizenship: Int,
 
     @Json(name = "ImieMatki")
-    val motherName: String,
+    val motherName: String?,
 
     @Json(name = "ImieOjca")
-    val fatherName: String,
+    val fatherName: String?,
 
     @Json(name = "Plec")
     val gender: Boolean,
