@@ -11,7 +11,7 @@ data class StudentInfo(
     val name: String,
 
     @Json(name = "Imie2")
-    val middleName: String,
+    val middleName: String?,
 
     @Json(name = "NumerDokumentu")
     val idNumber: Any?,

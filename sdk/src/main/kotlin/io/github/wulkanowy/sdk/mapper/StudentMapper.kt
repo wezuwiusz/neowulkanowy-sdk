@@ -22,7 +22,7 @@ fun ScrapperStudentInfo.mapStudent() = StudentInfo(
     phoneNumber = homePhone.orEmpty(),
     hasPolishCitizenship = polishCitizenship == 1,
     registeredAddress = registeredAddress,
-    secondName = middleName,
+    secondName = middleName.orEmpty(),
     surname = lastName,
     guardians = listOfNotNull(
         guardianFirst?.toFamilyMember(),
