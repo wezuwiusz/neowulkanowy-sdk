@@ -88,8 +88,9 @@ class MessagesRepository(private val api: MessagesService) {
     }
 
     suspend fun sendMessage(subject: String, content: String, recipients: List<Recipient>): SentMessage {
-        val res = api.getStart()
         logger.debug("Subject length: ${subject.length}, content length: ${content.length}, recipients number: ${recipients.size}")
+        val res = api.getStart()
+        logger.debug("Start page length: ${res.length}")
         return api.sendMessage(
             sendMessageRequest = SendMessageRequest(
                 SendMessageRequest.Incoming(

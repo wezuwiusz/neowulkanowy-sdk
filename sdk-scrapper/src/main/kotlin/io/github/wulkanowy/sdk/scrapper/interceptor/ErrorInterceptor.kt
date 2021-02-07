@@ -54,7 +54,7 @@ class ErrorInterceptor : Interceptor {
 
         doc.select("form")?.attr("action")?.let {
             if ("SetNewPassword" in it) {
-                logger.debug(redirectUrl)
+                logger.debug("Set new password action url: $redirectUrl")
                 throw PasswordChangeRequiredException("Wymagana zmiana hasła użytkownika", redirectUrl)
             }
         }
