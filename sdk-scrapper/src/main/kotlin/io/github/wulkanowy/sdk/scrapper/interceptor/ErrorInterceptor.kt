@@ -33,8 +33,9 @@ class ErrorInterceptor : Interceptor {
 
     private fun checkForError(doc: Document, redirectUrl: String) {
         doc.select(".errorBlock").let {
-            if (it.isNotEmpty()) throw VulcanException("${it.select(".errorTitle")
-                .text()}. ${it.select(".errorMessage").text()}")
+            if (it.isNotEmpty()) {
+                throw VulcanException("${it.select(".errorTitle").text()}. ${it.select(".errorMessage").text()}")
+            }
         }
 
         doc.select(".ErrorMessage, #ErrorTextLabel, #loginArea #errorText").let {
@@ -42,8 +43,7 @@ class ErrorInterceptor : Interceptor {
         }
 
         doc.select("#MainPage_ErrorDiv div").let {
-            if (it?.last()?.ownText()?.startsWith("Trwa aktualizacja bazy danych") == true) throw ServiceUnavailableException(
-                it.last().ownText())
+            if (it?.text()?.contains("Trwa aktualizacja bazy danych") == true) throw ServiceUnavailableException(it.last().ownText())
             if (it?.last()?.ownText()?.contains("czasowo wyłączona") == true) throw TemporarilyDisabledException(it.last().ownText())
             if (it.isNotEmpty()) throw VulcanException(it[0].ownText())
         }
