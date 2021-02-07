@@ -75,6 +75,7 @@ class MessagesRepository(private val api: MessagesService) {
 
     suspend fun getMessageDetails(messageId: Int, folderId: Int, read: Boolean, id: Int?): Message {
         val res = api.getStart()
+        logger.debug("Start page length: ${res.length}")
         val antiForgeryToken = getScriptParam("antiForgeryToken", res).ifBlank { throw ScrapperException("Can't find antiForgeryToken property!") }
         val appGuid = getScriptParam("appGuid", res)
 
