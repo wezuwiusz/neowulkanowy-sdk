@@ -119,7 +119,7 @@ class LoginHelper(
             )
         ))
 
-        logger.debug("Page title after credentials sent: ${res.title}")
+        logger.debug("Page title after credentials sent: ${res.title}, action: ${res.action} wresult: ${res.wresult.length}, wctx: ${res.wctx}")
 
         return certificateAdapter.fromHtml(api.sendADFSForm(
             res.action, mapOf(
