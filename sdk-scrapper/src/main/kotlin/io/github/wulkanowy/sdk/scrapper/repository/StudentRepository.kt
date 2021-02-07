@@ -79,7 +79,9 @@ class StudentRepository(private val api: StudentService) {
             getScriptParam("version", it)
         ).handleErrors()
 
-        val data = requireNotNull(res.data)
+        val data = requireNotNull(res.data) {
+            "Required value was null. $res"
+        }
         cache = data
         return data
     }
@@ -135,10 +137,10 @@ class StudentRepository(private val api: StudentService) {
     }
 
     suspend fun getGrades(semesterId: Int?): Pair<List<Grade>, List<GradeSummary>> {
-        val data = api.getGrades(GradeRequest(semesterId))
-            .handleErrors()
-            .data
-        return requireNotNull(data).mapGradesList() to data.mapGradesSummary()
+        val res = api.getGrades(GradeRequest(semesterId)).handleErrors()
+        return requireNotNull(res.data) {
+            "Required value was null. $res"
+        }.mapGradesList() to res.data.mapGradesSummary()
     }
 
     suspend fun getGradesDetails(semesterId: Int?): List<Grade> {
@@ -194,9 +196,11 @@ class StudentRepository(private val api: StudentService) {
     }
 
     suspend fun getTimetable(startDate: LocalDate, endDate: LocalDate? = null): Pair<List<Timetable>, List<TimetableAdditional>> {
-        val data = api.getTimetable(TimetableRequest(startDate.toISOFormat())).handleErrors().data
+        val res = api.getTimetable(TimetableRequest(startDate.toISOFormat())).handleErrors()
 
-        return requireNotNull(data).mapTimetableList(startDate, endDate) to data.mapTimetableAdditional()
+        return requireNotNull(res.data) {
+            "Required value was null. $res"
+        }.mapTimetableList(startDate, endDate) to res.data.mapTimetableAdditional()
     }
 
     suspend fun getTimetableNormal(startDate: LocalDate, endDate: LocalDate? = null): List<Timetable> {
@@ -225,11 +229,19 @@ class StudentRepository(private val api: StudentService) {
     }
 
     suspend fun getSchool(): School {
-        return api.getSchoolAndTeachers().handleErrors().data.let { requireNotNull(it?.school) }
+        return api.getSchoolAndTeachers().handleErrors().let {
+            requireNotNull(it.data?.school) {
+                "Required value was null. $it"
+            }
+        }
     }
 
     suspend fun getStudentInfo(): StudentInfo {
-        return api.getStudentInfo().handleErrors().let { requireNotNull(it.data) }
+        return api.getStudentInfo().handleErrors().let {
+            requireNotNull(it.data) {
+                "Required value was null. $it"
+            }
+        }
     }
 
     suspend fun getRegisteredDevices(): List<Device> {
@@ -237,9 +249,11 @@ class StudentRepository(private val api: StudentService) {
     }
 
     suspend fun getToken(): TokenResponse {
-        val data = api.getToken().handleErrors().data
-        return requireNotNull(data).copy(
-            qrCodeImage = Jsoup.parse(data.qrCodeImage)
+        val res = api.getToken().handleErrors()
+        return requireNotNull(res.data) {
+            "Required value was null. $res"
+        }.copy(
+            qrCodeImage = Jsoup.parse(res.data.qrCodeImage)
                 .select("img")
                 .attr("src")
                 .split("data:image/png;base64,")[1]
