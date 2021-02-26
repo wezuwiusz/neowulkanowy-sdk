@@ -18,7 +18,7 @@ fun ScrapperStudentInfo.mapStudent() = StudentInfo(
     familyName = familyName.orEmpty(),
     firstName = name,
     gender = if (gender) StudentGender.MALE else StudentGender.FEMALE,
-    parentsNames = motherAndFatherNames,
+    parentsNames = motherAndFatherNames.orEmpty(),
     phoneNumber = homePhone.orEmpty(),
     hasPolishCitizenship = polishCitizenship == 1,
     registeredAddress = registeredAddress,

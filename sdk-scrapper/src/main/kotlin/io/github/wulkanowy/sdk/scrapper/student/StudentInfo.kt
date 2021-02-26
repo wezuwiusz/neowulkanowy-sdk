@@ -80,5 +80,5 @@ data class StudentInfo(
     val isPole: Boolean,
 
     @Json(name = "ImieMatkiIOjca")
-    val motherAndFatherNames: String
+    val motherAndFatherNames: String?
 )
