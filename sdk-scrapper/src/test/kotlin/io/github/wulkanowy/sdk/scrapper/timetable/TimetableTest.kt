@@ -22,7 +22,7 @@ class TimetableTest : BaseLocalTest() {
 
     @Test
     fun getTimetableTest() {
-        assertEquals(20, timetable.size)
+        assertEquals(23, timetable.size)
         assertEquals(18, timetableBefore1911.size)
     }
 
@@ -51,7 +51,7 @@ class TimetableTest : BaseLocalTest() {
 
     @Test
     fun getSimpleLesson_canceled() {
-        with(timetable[4]) {
+        with(timetable[5]) {
             // wtorek, 0
             assertEquals(0, number)
             assertEquals(getDate(2018, 9, 25, 7, 10, 0), start)
@@ -72,7 +72,7 @@ class TimetableTest : BaseLocalTest() {
 
     @Test
     fun getSimpleLesson_replacementSameTeacher() {
-        with(timetable[8]) {
+        with(timetable[10]) {
             // środa, 0
             assertEquals(0, number)
             assertEquals(getDate(2018, 9, 26, 7, 10, 0), start)
@@ -94,7 +94,7 @@ class TimetableTest : BaseLocalTest() {
 
     @Test
     fun getSimpleLesson_replacementDifferentTeacher() {
-        with(timetable[12]) {
+        with(timetable[15]) {
             // czwartek, 0
             assertEquals(0, number)
             assertEquals(getDate(2018, 9, 27, 7, 10, 0), start)
@@ -116,7 +116,7 @@ class TimetableTest : BaseLocalTest() {
 
     @Test
     fun getGroupLesson() {
-        with(timetable[16]) {
+        with(timetable[19]) {
             // piątek, 0
             assertEquals(0, number)
             assertEquals(getDate(2018, 9, 28, 7, 10, 0), start)
@@ -159,7 +159,7 @@ class TimetableTest : BaseLocalTest() {
 
     @Test
     fun getGroupLesson_replacementSameTeacher() {
-        with(timetable[5]) {
+        with(timetable[6]) {
             // wtorek, 1
             assertEquals(1, number)
             assertEquals(getDate(2018, 9, 25, 8, 0, 0), start)
@@ -180,7 +180,7 @@ class TimetableTest : BaseLocalTest() {
 
     @Test
     fun getGroupLesson_replacementDifferentTeacher() {
-        with(timetable[9]) {
+        with(timetable[11]) {
             // środa, 1
             assertEquals(1, number)
             assertEquals(getDate(2018, 9, 26, 8, 0, 0), start)
@@ -202,7 +202,7 @@ class TimetableTest : BaseLocalTest() {
 
     @Test
     fun getLesson_button() {
-        with(timetable[13]) {
+        with(timetable[16]) {
             // czwartek, 1
             assertEquals(1, number)
             assertEquals(getDate(2018, 9, 27, 8, 0, 0), start)
@@ -224,7 +224,7 @@ class TimetableTest : BaseLocalTest() {
 
     @Test
     fun getLesson_emptyOriginal() {
-        with(timetable[17]) {
+        with(timetable[20]) {
             // piątek, 1
             assertEquals(1, number)
             assertEquals(getDate(2018, 9, 28, 8, 0, 0), start)
@@ -266,7 +266,7 @@ class TimetableTest : BaseLocalTest() {
 
     @Test
     fun getLesson_invAndChange() {
-        with(timetable[6]) {
+        with(timetable[7]) {
             // wtorek, 2
             assertEquals(2, number)
             assertEquals(getDate(2018, 9, 25, 8, 50, 0), start)
@@ -287,7 +287,7 @@ class TimetableTest : BaseLocalTest() {
 
     @Test
     fun getSimpleLesson_replacementDifferentTeacherv2() {
-        with(timetable[10]) {
+        with(timetable[12]) {
             // środa, 2
             assertEquals(2, number)
             assertEquals(getDate(2018, 9, 26, 8, 50, 0), start)
@@ -308,7 +308,7 @@ class TimetableTest : BaseLocalTest() {
 
     @Test
     fun getSimpleLesson_movedWithButton() {
-        with(timetable[14]) {
+        with(timetable[17]) {
             // czwartek, 2
             assertEquals(2, number)
             assertEquals(getDate(2018, 9, 27, 8, 50, 0), start)
@@ -329,7 +329,7 @@ class TimetableTest : BaseLocalTest() {
 
     @Test
     fun getSimpleLesson_canceledWithoutReason() {
-        with(timetable[18]) {
+        with(timetable[21]) {
             // piątek, 2
             assertEquals(2, number)
             assertEquals(getDate(2018, 9, 28, 8, 50, 0), start)
@@ -372,7 +372,7 @@ class TimetableTest : BaseLocalTest() {
 
     @Test
     fun getLesson_buttonWithChanges2() {
-        with(timetable[7]) {
+        with(timetable[8]) {
             // wtorek, 3
             assertEquals(3, number)
             assertEquals(getDate(2018, 9, 25, 9, 45, 0), start)
@@ -394,7 +394,7 @@ class TimetableTest : BaseLocalTest() {
 
     @Test
     fun getLesson_tripleChange() {
-        with(timetable[11]) {
+        with(timetable[13]) {
             // środa 3
             assertEquals(3, number)
             assertEquals(getDate(2018, 9, 26, 9, 45, 0), start)
@@ -416,7 +416,7 @@ class TimetableTest : BaseLocalTest() {
 
     @Test
     fun getLesson_tripleChange2() {
-        with(timetable[15]) {
+        with(timetable[18]) {
             // czwartek, 3
             assertEquals(3, number)
             assertEquals(getDate(2018, 9, 27, 9, 45, 0), start)
@@ -438,7 +438,7 @@ class TimetableTest : BaseLocalTest() {
 
     @Test
     fun getLesson_two_change_lines_no_group() {
-        with(timetable[19]) {
+        with(timetable[22]) {
             // piątek, 3
             assertEquals(3, number)
             assertEquals(getDate(2018, 9, 28, 9, 45, 0), start)
@@ -455,6 +455,72 @@ class TimetableTest : BaseLocalTest() {
 
             assertEquals(false, canceled)
             assertEquals(true, changes)
+        }
+    }
+
+    @Test
+    fun getClasslessLesson_withoutChanges() {
+        with(timetable[4]) {
+            // poniedziałek, 4
+            assertEquals(4, number)
+            assertEquals(getDate(2018, 9, 24, 10, 50, 0), start)
+            assertEquals(getDate(2018, 9, 24, 11, 35, 0), end)
+
+            assertEquals("Fizyka", subject)
+            assertEquals("", group)
+            assertEquals("", teacher)
+            assertEquals("A10", room)
+            assertEquals("", info)
+            assertEquals("", subjectOld)
+            assertEquals("", teacherOld)
+            assertEquals("", roomOld)
+
+            assertEquals(false, canceled)
+            assertEquals(false, changes)
+        }
+    }
+
+    @Test
+    fun getLightLesson_withChanges() {
+        with(timetable[9]) {
+            // wtorek, 4
+            assertEquals(4, number)
+            assertEquals(getDate(2018, 9, 25, 10, 50, 0), start)
+            assertEquals(getDate(2018, 9, 25, 11, 35, 0), end)
+
+            assertEquals("podstawy algorytmiki i programowania", subject)
+            assertEquals("", group)
+            assertEquals("", teacher)
+            assertEquals("A114", room)
+            assertEquals("zastępstwo: Stanisław Baran", info)
+            assertEquals("", subjectOld)
+            assertEquals("", teacherOld)
+            assertEquals("", roomOld)
+
+            assertEquals(false, canceled)
+            assertEquals(true, changes)
+        }
+    }
+
+    @Test
+    fun getClasslessLesson_groupWithChanges() {
+        with(timetable[14]) {
+            // środa, 4
+            assertEquals(4, number)
+            assertEquals(getDate(2018, 9, 26, 10, 50, 0), start)
+            assertEquals(getDate(2018, 9, 26, 11, 35, 0), end)
+
+            assertEquals("Język angielski", subject)
+            assertEquals("JA 2", group)
+            assertEquals("", teacher)
+            assertEquals("A315", room)
+            assertEquals("nieobecność nauczyciela: czytelnia", info)
+            assertEquals("", subjectOld)
+            assertEquals("", teacherOld)
+            assertEquals("", roomOld)
+
+            assertEquals(true, canceled)
+            assertEquals(false, changes)
         }
     }
 
