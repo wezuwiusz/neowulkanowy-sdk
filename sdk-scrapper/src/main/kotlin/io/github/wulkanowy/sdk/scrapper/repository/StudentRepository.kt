@@ -41,6 +41,7 @@ import io.github.wulkanowy.sdk.scrapper.mobile.UnregisterDeviceRequest
 import io.github.wulkanowy.sdk.scrapper.notes.Note
 import io.github.wulkanowy.sdk.scrapper.school.School
 import io.github.wulkanowy.sdk.scrapper.school.Teacher
+import io.github.wulkanowy.sdk.scrapper.school.mapToSchool
 import io.github.wulkanowy.sdk.scrapper.school.mapToTeachers
 import io.github.wulkanowy.sdk.scrapper.service.StudentService
 import io.github.wulkanowy.sdk.scrapper.student.StudentInfo
@@ -230,10 +231,8 @@ class StudentRepository(private val api: StudentService) {
 
     suspend fun getSchool(): School {
         return api.getSchoolAndTeachers().handleErrors().let {
-            requireNotNull(it.data?.school) {
-                "Required value was null. $it"
-            }
-        }
+            requireNotNull(it.data) { "Required value was null. $it" }
+        }.mapToSchool()
     }
 
     suspend fun getStudentInfo(): StudentInfo {

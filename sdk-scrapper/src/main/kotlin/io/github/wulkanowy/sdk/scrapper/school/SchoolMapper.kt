@@ -2,6 +2,14 @@ package io.github.wulkanowy.sdk.scrapper.school
 
 import io.github.wulkanowy.sdk.scrapper.getEmptyIfDash
 
+fun SchoolAndTeachersResponse.mapToSchool() = school.copy(
+    name = school.name.trim('-'),
+    address = school.address.trim('-'),
+    contact = school.address.trim('-'),
+    headmaster = school.headmaster.trim('-'),
+    pedagogue = school.pedagogue.trim('-')
+)
+
 fun SchoolAndTeachersResponse.mapToTeachers() = teachers.map { item ->
     item.name.split(",").map { namePart ->
         item.copy(
