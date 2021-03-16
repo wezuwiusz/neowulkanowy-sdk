@@ -30,13 +30,14 @@ fun TimetableResponse.mapTimetableList(startDate: LocalDate, endDate: LocalDate?
 fun TimetableResponse.mapTimetableAdditional() = additional.flatMap { day ->
     val date = day.header.substringAfter(", ").toDate("dd.MM.yyyy")
     day.descriptions.map { lesson ->
-        val startTime = lesson.description.substringBefore(" - ")
-        val endTime = lesson.description.split(" ")[2]
+        val description = Jsoup.parse(lesson.description).text()
+        val startTime = description.substringBefore(" - ")
+        val endTime = description.split(" ")[2]
         TimetableAdditional(
             date = date,
             start = "${date.toLocalDate().toFormat("yyyy-MM-dd")} $startTime".toDate("yyyy-MM-dd HH:mm"),
             end = "${date.toLocalDate().toFormat("yyyy-MM-dd")} $endTime".toDate("yyyy-MM-dd HH:mm"),
-            subject = lesson.description.substringAfter("$endTime ")
+            subject = description.substringAfter("$endTime ")
         )
     }
 }

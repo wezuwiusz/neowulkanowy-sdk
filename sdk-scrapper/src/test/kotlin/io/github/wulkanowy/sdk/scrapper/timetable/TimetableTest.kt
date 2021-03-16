@@ -534,4 +534,15 @@ class TimetableTest : BaseLocalTest() {
             assertEquals("zajęcia wyrównawcze dla kl. 6d", subject)
         }
     }
+
+    @Test
+    fun getAdditionalLessonWithSpan() {
+        with(additional[1]) {
+            assertEquals(getDate(2020, 3, 11), date)
+            assertEquals(getDate(2020, 3, 11, 13, 20, 0), start)
+            assertEquals(getDate(2020, 3, 11, 14, 5, 0), end)
+
+            assertEquals("Zajęcia dodatkowe 2", subject)
+        }
+    }
 }
