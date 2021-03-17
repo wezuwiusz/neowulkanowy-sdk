@@ -5,7 +5,7 @@ import io.github.wulkanowy.sdk.scrapper.getEmptyIfDash
 fun SchoolAndTeachersResponse.mapToSchool() = school.copy(
     name = school.name.trim('-'),
     address = school.address.trim('-'),
-    contact = school.address.trim('-'),
+    contact = school.contact.trim('-'),
     headmaster = school.headmaster.trim('-'),
     pedagogue = school.pedagogue.trim('-')
 )
