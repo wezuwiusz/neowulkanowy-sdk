@@ -28,6 +28,14 @@ fun TimetableResponse.mapTimetableList(startDate: LocalDate, endDate: LocalDate?
     it.date.toLocalDate() >= startDate && it.date.toLocalDate() <= endDate ?: startDate.plusDays(4)
 }.sortedWith(compareBy({ it.date }, { it.number })).toList()
 
+fun TimetableResponse.mapTimetableHeaders() = headers.drop(1).map {
+    val header = it.date.split("<br />")
+    TimetableDayHeader(
+        date = header[1].toDate("dd.MM.yyyy").toLocalDate(),
+        content = header.getOrNull(2).orEmpty()
+    )
+}
+
 fun TimetableResponse.mapTimetableAdditional() = additional.flatMap { day ->
     val date = day.header.substringAfter(", ").toDate("dd.MM.yyyy")
     day.descriptions.map { lesson ->

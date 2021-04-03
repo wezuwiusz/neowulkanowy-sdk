@@ -244,9 +244,13 @@ class Scrapper {
 
     suspend fun getConferences() = student.getConferences()
 
+    suspend fun getTimetableFull(startDate: LocalDate, endDate: LocalDate? = null) = student.getTimetableFull(startDate, endDate)
+
     suspend fun getTimetable(startDate: LocalDate, endDate: LocalDate? = null) = student.getTimetable(startDate, endDate)
 
     suspend fun getTimetableNormal(startDate: LocalDate, endDate: LocalDate? = null) = student.getTimetableNormal(startDate, endDate)
+
+    suspend fun getTimetableHeaders(startDate: LocalDate) = student.getTimetableHeaders(startDate)
 
     suspend fun getTimetableAdditional(startDate: LocalDate) = student.getTimetableAdditional(startDate)
 

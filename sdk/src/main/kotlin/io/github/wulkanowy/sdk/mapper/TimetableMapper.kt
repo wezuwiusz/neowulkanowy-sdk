@@ -4,6 +4,8 @@ import io.github.wulkanowy.sdk.mobile.dictionaries.Dictionaries
 import io.github.wulkanowy.sdk.pojo.CompletedLesson
 import io.github.wulkanowy.sdk.pojo.Timetable
 import io.github.wulkanowy.sdk.pojo.TimetableAdditional
+import io.github.wulkanowy.sdk.pojo.TimetableDayHeader
+import io.github.wulkanowy.sdk.pojo.TimetableFull
 import io.github.wulkanowy.sdk.scrapper.toLocalDate
 import io.github.wulkanowy.sdk.toLocalDate
 import io.github.wulkanowy.sdk.toLocalDateTime
@@ -11,6 +13,14 @@ import io.github.wulkanowy.sdk.mobile.timetable.Lesson as ApiTimetable
 import io.github.wulkanowy.sdk.scrapper.timetable.CompletedLesson as ScrapperCompletedLesson
 import io.github.wulkanowy.sdk.scrapper.timetable.Timetable as ScrapperTimetable
 import io.github.wulkanowy.sdk.scrapper.timetable.TimetableAdditional as ScrapperTimetableAdditional
+import io.github.wulkanowy.sdk.scrapper.timetable.TimetableDayHeader as ScrapperTimetableDayHeader
+import io.github.wulkanowy.sdk.scrapper.timetable.TimetableFull as ScrapperTimetableFull
+
+fun List<ApiTimetable>.mapTimetableFull(dictionaries: Dictionaries) = TimetableFull(
+    headers = emptyList(),
+    lessons = mapTimetable(dictionaries),
+    additional = emptyList()
+)
 
 fun List<ApiTimetable>.mapTimetable(dictionaries: Dictionaries) = map {
     val teacher = dictionaries.employees.singleOrNull { employee -> employee.id == it.employeeId }
@@ -44,6 +54,12 @@ fun List<ApiTimetable>.mapTimetable(dictionaries: Dictionaries) = map {
     } else lessons
 }.flatten()
 
+fun ScrapperTimetableFull.mapTimetableFull() = TimetableFull(
+    headers = headers.mapTimetableDayHeaders(),
+    lessons = lessons.mapTimetable(),
+    additional = additional.mapTimetableAdditional()
+)
+
 fun List<ScrapperTimetable>.mapTimetable() = map {
     Timetable(
         canceled = it.canceled,
@@ -61,6 +77,13 @@ fun List<ScrapperTimetable>.mapTimetable() = map {
         studentPlan = true,
         teacher = it.teacher,
         teacherOld = it.teacherOld
+    )
+}
+
+fun List<ScrapperTimetableDayHeader>.mapTimetableDayHeaders() = map {
+    TimetableDayHeader(
+        date = it.date,
+        content = it.content
     )
 }
 

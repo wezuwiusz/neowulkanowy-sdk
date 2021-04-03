@@ -12,12 +12,17 @@ class TimetableTest : BaseLocalTest() {
         runBlocking { getStudentRepo(TimetableTest::class.java, "PlanLekcji.json").getTimetableNormal(getLocalDate(2018, 9, 24)) }
     }
 
+    private val headers by lazy {
+        runBlocking { getStudentRepo(TimetableTest::class.java, "PlanLekcji.json").getTimetableHeaders(getLocalDate(2018, 9, 24)) }
+    }
+
     private val additional by lazy {
         runBlocking { getStudentRepo(TimetableTest::class.java, "PlanLekcji.json").getTimetableAdditional(getLocalDate(2020, 10, 9)) }
     }
 
     @Test
     fun getTimetableTest() {
+        assertEquals(5, headers.size)
         assertEquals(23, timetable.size)
         assertEquals(2, additional.size)
     }
@@ -517,6 +522,22 @@ class TimetableTest : BaseLocalTest() {
 
             assertEquals(true, canceled)
             assertEquals(false, changes)
+        }
+    }
+
+    @Test
+    fun getDayHeader_empty() {
+        with(headers[0]) {
+            assertEquals(getLocalDate(2018, 9, 24), date)
+            assertEquals("", content)
+        }
+    }
+
+    @Test
+    fun getDayHeader_withContent() {
+        with(headers[4]) {
+            assertEquals(getLocalDate(2018, 9, 28), date)
+            assertEquals("Wiosenna przerwa świąteczna", content)
         }
     }
 

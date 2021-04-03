@@ -32,6 +32,8 @@ import io.github.wulkanowy.sdk.mapper.mapSubjects
 import io.github.wulkanowy.sdk.mapper.mapTeachers
 import io.github.wulkanowy.sdk.mapper.mapTimetable
 import io.github.wulkanowy.sdk.mapper.mapTimetableAdditional
+import io.github.wulkanowy.sdk.mapper.mapTimetableDayHeaders
+import io.github.wulkanowy.sdk.mapper.mapTimetableFull
 import io.github.wulkanowy.sdk.mapper.mapToScrapperAbsent
 import io.github.wulkanowy.sdk.mapper.mapToUnits
 import io.github.wulkanowy.sdk.mapper.mapToken
@@ -492,10 +494,24 @@ class Sdk {
         }
     }
 
+    suspend fun getTimetableFull(start: LocalDate, end: LocalDate) = withContext(Dispatchers.IO) {
+        when (mode) {
+            Mode.SCRAPPER -> scrapper.getTimetableFull(start, end).mapTimetableFull()
+            Mode.HYBRID, Mode.API -> mobile.getTimetable(start, end, 0).mapTimetableFull(mobile.getDictionaries())
+        }
+    }
+
     suspend fun getTimetable(start: LocalDate, end: LocalDate) = withContext(Dispatchers.IO) {
         when (mode) {
             Mode.SCRAPPER -> scrapper.getTimetable(start, end).let { (normal, additional) -> normal.mapTimetable() to additional.mapTimetableAdditional() }
             Mode.HYBRID, Mode.API -> mobile.getTimetable(start, end, 0).mapTimetable(mobile.getDictionaries()) to emptyList()
+        }
+    }
+
+    suspend fun getTimetableHeaders(start: LocalDate, end: LocalDate) = withContext(Dispatchers.IO) {
+        when (mode) {
+            Mode.SCRAPPER -> scrapper.getTimetableHeaders(start).mapTimetableDayHeaders()
+            Mode.HYBRID, Mode.API -> throw FeatureNotAvailableException("Timetable headers are not available in API mode")
         }
     }
 
