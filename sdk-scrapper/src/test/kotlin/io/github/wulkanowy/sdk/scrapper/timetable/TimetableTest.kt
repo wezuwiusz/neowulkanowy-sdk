@@ -537,7 +537,7 @@ class TimetableTest : BaseLocalTest() {
     fun getDayHeader_withContent() {
         with(headers[4]) {
             assertEquals(getLocalDate(2018, 9, 28), date)
-            assertEquals("Wiosenna przerwa świąteczna", content)
+            assertEquals("Piątek Wielkanocny<br />Wiosenna przerwa świąteczna", content)
         }
     }
 

@@ -32,7 +32,7 @@ fun TimetableResponse.mapTimetableHeaders() = headers.drop(1).map {
     val header = it.date.split("<br />")
     TimetableDayHeader(
         date = header[1].toDate("dd.MM.yyyy").toLocalDate(),
-        content = header.getOrNull(2).orEmpty()
+        content = header.drop(2).joinToString(separator = "<br />")
     )
 }
 
