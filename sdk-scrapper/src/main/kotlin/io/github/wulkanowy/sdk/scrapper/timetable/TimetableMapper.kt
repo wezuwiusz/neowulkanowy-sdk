@@ -14,7 +14,8 @@ private val parser = TimetableParser()
 fun TimetableResponse.mapTimetableList(startDate: LocalDate, endDate: LocalDate?) = rows.flatMap { lessons ->
     lessons.drop(1).mapIndexed { i, it ->
         val times = lessons[0].split("<br />")
-        val date = headers.union(_headersOld).drop(1)[i].date.split("<br />")[1].toDate("dd.MM.yyyy")
+        val header = headers.drop(1)[i].date.split("<br />")
+        val date = header[1].toDate("dd.MM.yyyy")
         TimetableCell(
             date = date,
             start = "${date.toLocalDate().toFormat("yyyy-MM-dd")} ${times[1]}".toDate("yyyy-MM-dd HH:mm"),

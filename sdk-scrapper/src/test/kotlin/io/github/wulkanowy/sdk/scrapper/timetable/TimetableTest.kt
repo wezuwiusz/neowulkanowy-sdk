@@ -12,10 +12,6 @@ class TimetableTest : BaseLocalTest() {
         runBlocking { getStudentRepo(TimetableTest::class.java, "PlanLekcji.json").getTimetableNormal(getLocalDate(2018, 9, 24)) }
     }
 
-    private val timetableBefore1911 by lazy {
-        runBlocking { getStudentRepo(TimetableTest::class.java, "PlanLekcji-before-19.11.json").getTimetableNormal(getLocalDate(2018, 9, 24)) }
-    }
-
     private val additional by lazy {
         runBlocking { getStudentRepo(TimetableTest::class.java, "PlanLekcji.json").getTimetableAdditional(getLocalDate(2020, 10, 9)) }
     }
@@ -23,7 +19,7 @@ class TimetableTest : BaseLocalTest() {
     @Test
     fun getTimetableTest() {
         assertEquals(23, timetable.size)
-        assertEquals(18, timetableBefore1911.size)
+        assertEquals(2, additional.size)
     }
 
     @Test

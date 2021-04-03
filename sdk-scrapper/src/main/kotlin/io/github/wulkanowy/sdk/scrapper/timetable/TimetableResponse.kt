@@ -8,9 +8,6 @@ import java.util.Date
 @JsonClass(generateAdapter = true)
 data class TimetableResponse(
 
-    @Json(name = "Header")
-    val _headersOld: List<TimetableHeader> = emptyList(),
-
     @Json(name = "Headers")
     val headers: List<TimetableHeader> = emptyList(),
 
