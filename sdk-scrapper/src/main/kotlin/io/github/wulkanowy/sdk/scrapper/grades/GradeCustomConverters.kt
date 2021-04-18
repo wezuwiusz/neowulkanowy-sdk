@@ -19,7 +19,7 @@ fun getGradeValueWithModifier(grade: String): Pair<Int, Double> {
                 matches(gradePlus) -> replace("+", "").toInt() to modifierWeight
                 matches(gradeDoublePlus) -> replace("++", "").toInt() to .5
                 matches(gradeDoubleMinus) -> replace("[-|=]{1,2}".toRegex(), "").toInt() to -.5
-                else -> toInt() to .0
+                else -> (toIntOrNull() ?: 0) to .0
             }
         } else 0 to .0
     }
