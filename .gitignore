@@ -42,3 +42,4 @@ gradle-app.setting
 
 *iml
 classes
+.DS_Store
