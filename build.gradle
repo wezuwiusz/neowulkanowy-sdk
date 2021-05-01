@@ -11,7 +11,7 @@ ext {
 
     jspoon = "1.3.2"
     okhttp3 = "4.9.1"
-    retrofit = "2.6.4"
+    retrofit = "2.9.0"
     slf4j = "1.7.30"
     moshi = "1.11.0"
 }
@@ -81,9 +81,12 @@ subprojects {
 
     compileKotlin {
         kotlinOptions {
-            jvmTarget = "1.6"
+            jvmTarget = "1.8"
             javaParameters = true
         }
+    }
+    compileTestKotlin {
+        kotlinOptions.jvmTarget = "1.8"
     }
 
     dependencies {
