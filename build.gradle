@@ -85,11 +85,13 @@ allprojects {
             }
         }
 
-        signing {
-            def signingKey = System.getenv("MAVEN_SIGNING_KEY") ?: ""
-            def signingPassword = System.getenv("MAVEN_SIGNING_PASSWORD")
-            useInMemoryPgpKeys(new String(signingKey.decodeBase64()), signingPassword)
-            sign publishing.publications.sdk
+        if (System.getenv("MAVEN_SIGNING_KEY")) {
+            signing {
+                def signingKey = System.getenv("MAVEN_SIGNING_KEY") ?: ""
+                def signingPassword = System.getenv("MAVEN_SIGNING_PASSWORD")
+                useInMemoryPgpKeys(new String(signingKey.decodeBase64()), signingPassword)
+                sign publishing.publications.sdk
+            }
         }
 
         javadoc {
