@@ -94,7 +94,7 @@ subprojects {
         testImplementation "junit:junit:4.13.2"
         testImplementation "com.squareup.okhttp3:mockwebserver:$okhttp3"
         testImplementation "com.squareup.retrofit2:retrofit-mock:$retrofit"
-        testImplementation 'org.jetbrains.kotlinx:kotlinx-coroutines-test:1.4.2'
+        testImplementation 'org.jetbrains.kotlinx:kotlinx-coroutines-test:1.4.3'
     }
 
     jacocoTestReport {
