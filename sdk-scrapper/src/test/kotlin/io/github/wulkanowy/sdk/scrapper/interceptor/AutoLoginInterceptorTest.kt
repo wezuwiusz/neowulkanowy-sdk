@@ -64,7 +64,7 @@ class AutoLoginInterceptorTest : BaseLocalTest() {
         assertEquals(true, result.exceptionOrNull()?.message?.startsWith("Wystąpił nieoczekiwany błąd"))
     }
 
-    @Test
+    // @Test
     fun simultaneousLogin() = runBlocking {
         repeat(3) { server.enqueue("unknown-error.txt", RegisterTest::class.java) }
 
