@@ -1,7 +1,7 @@
 # VULCAN UONET+ SDK
 
+[![GitHub Workflow status](https://img.shields.io/github/workflow/status/wulkanowy/sdk/Tests/master?style=flat-square)](https://github.com/wulkanowy/sdk/actions)
 [![Codecov branch](https://img.shields.io/codecov/c/github/wulkanowy/sdk/master.svg?style=flat-square)](https://codecov.io/gh/wulkanowy/sdk)
-[![CircleCI branch](https://img.shields.io/circleci/project/github/wulkanowy/sdk/master.svg?style=flat-square)](https://circleci.com/gh/wulkanowy/sdk)
 [![Bintray](https://img.shields.io/bintray/v/wulkanowy/wulkanowy/sdk.svg?style=flat-square)](https://bintray.com/wulkanowy/wulkanowy/sdk)
 [![JitPack](https://img.shields.io/jitpack/v/wulkanowy/sdk.svg?style=flat-square)](https://jitpack.io/#wulkanowy/sdk)
 [![License](https://img.shields.io/github/license/wulkanowy/sdk.svg?style=flat-square)](https://github.com/wulkanowy/sdk)
