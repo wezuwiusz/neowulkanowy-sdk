@@ -287,7 +287,7 @@ class RegisterRepositoryTest : BaseLocalTest() {
         }
 
         assertEquals("/Default/Account/LogOn", server.takeRequest().path)
-        assertTrue(server.takeRequest().path.startsWith("/Account/LogOn?ReturnUrl=%2FDefault"))
+        assertEquals(true, server.takeRequest().path?.startsWith("/Account/LogOn?ReturnUrl=%2FDefault"))
         assertEquals("/powiatwulkanowy/LoginEndpoint.aspx", server.takeRequest().path)
         assertEquals("/glubczyce2/LoginEndpoint.aspx", server.takeRequest().path)
     }

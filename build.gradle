@@ -10,7 +10,7 @@ ext {
     GIT_URL = 'https://github.com/wulkanowy/sdk.git'
 
     jspoon = "1.3.2"
-    okhttp3 = "3.12.13"
+    okhttp3 = "4.9.1"
     retrofit = "2.6.4"
     slf4j = "1.7.30"
     moshi = "1.11.0"

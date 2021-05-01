@@ -19,7 +19,7 @@ class SignInterceptor(
 
         if (privateKey.isNotBlank()) {
             val signature = Buffer().run {
-                original.body()?.writeTo(this)
+                original.body?.writeTo(this)
                 signContent(privateKey, readString(Charset.defaultCharset()))
             }
 
@@ -27,6 +27,6 @@ class SignInterceptor(
             request.header("RequestSignatureValue", signature)
         }
 
-        return chain.proceed(request.method(original.method(), original.body()).build())
+        return chain.proceed(request.method(original.method, original.body).build())
     }
 }

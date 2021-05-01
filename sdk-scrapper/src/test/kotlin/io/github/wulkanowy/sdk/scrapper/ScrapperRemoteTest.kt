@@ -34,7 +34,7 @@ class ScrapperRemoteTest : BaseTest() {
             androidVersion = "9.0"
             buildTag = "Wulkanowy"
             addInterceptor({
-                println("Request event ${it.request().url().host()}")
+                println("Request event ${it.request().url.host}")
                 it.proceed(it.request())
             }, true)
         }
