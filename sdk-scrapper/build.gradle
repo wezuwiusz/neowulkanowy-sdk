@@ -13,9 +13,9 @@ dependencies {
     implementation "com.squareup.retrofit2:converter-scalars:$retrofit"
     implementation "pl.droidsonroids.retrofit2:converter-jspoon:$jspoon"
 
-    implementation "com.squareup.moshi:moshi:1.11.0"
-    implementation 'com.squareup.moshi:moshi-adapters:1.11.0'
-    kapt "com.squareup.moshi:moshi-kotlin-codegen:1.11.0"
+    implementation "com.squareup.moshi:moshi:$moshi"
+    implementation "com.squareup.moshi:moshi-adapters:$moshi"
+    kapt "com.squareup.moshi:moshi-kotlin-codegen:$moshi"
 
     implementation "com.squareup.okhttp3:okhttp-urlconnection:$okhttp3"
 }
