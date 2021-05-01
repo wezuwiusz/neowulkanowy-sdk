@@ -23,7 +23,7 @@ data class Grade(
     val weightValue: Double = .0,
 
     @Json(name = "DataOceny")
-    internal val privateDate: GradeDate = GradeDate(),
+    internal val privateDate: GradeDate? = GradeDate(),
 
     @Json(name = "Nauczyciel")
     val teacher: String = ""

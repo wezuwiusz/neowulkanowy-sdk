@@ -40,7 +40,7 @@ fun GradesResponse.mapGradesList() = gradesWithSubjects.map { gradesSubject ->
             value = gradeValue
             modifier = gradeModifier
             weight = String.format(Locale.FRANCE, "%.2f", grade.weightValue)
-            date = grade.privateDate
+            date = grade.privateDate ?: GradeDate()
         }
     }
 }.flatten().sortedByDescending { it.date }
