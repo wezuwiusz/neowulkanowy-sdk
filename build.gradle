@@ -1,11 +1,11 @@
 plugins {
     id 'org.jetbrains.kotlin.jvm' version '1.4.32' apply false
     id "org.jlleitschuh.gradle.ktlint" version "9.2.1"
-    id 'com.jfrog.bintray' version '1.8.5'
+    id "io.github.gradle-nexus.publish-plugin" version "1.1.0"
 }
 
 ext {
-    PUBLISH_VERSION = '1.1.5'
+    PUBLISH_VERSION = '1.2.0-SNAPSHOT'
     SITE_URL = 'https://github.com/wulkanowy/sdk'
     GIT_URL = 'https://github.com/wulkanowy/sdk.git'
 
@@ -16,12 +16,26 @@ ext {
     moshi = "1.12.0"
 }
 
+version = PUBLISH_VERSION
+group = "io.github.wulkanowy"
+
+nexusPublishing {
+    repositories {
+        sonatype {
+            nexusUrl.set(uri("https://s01.oss.sonatype.org/service/local/"))
+            snapshotRepositoryUrl.set(uri("https://s01.oss.sonatype.org/content/repositories/snapshots/"))
+            username = System.getenv("MAVEN_USERNAME")
+            password = System.getenv("MAVEN_PASSWORD")
+        }
+    }
+}
+
 allprojects {
     apply plugin: 'java'
-    apply plugin: 'maven'
     apply plugin: 'kotlin'
+    apply plugin: 'maven-publish'
+    apply plugin: 'signing'
     apply plugin: "org.jlleitschuh.gradle.ktlint"
-    apply plugin: 'com.jfrog.bintray'
 
     repositories {
         mavenCentral()
@@ -34,32 +48,53 @@ allprojects {
         testImplementation "org.slf4j:slf4j-simple:$slf4j"
     }
 
-    version = PUBLISH_VERSION
-    group = "io.github.wulkanowy"
+    java {
+        withJavadocJar()
+        withSourcesJar()
+    }
 
-    bintray {
-        user = System.getenv('BINTRAY_USER')
-        key = System.getenv('BINTRAY_KEY')
-        configurations = ['archives']
+    publishing {
+        publications {
+            sdk(MavenPublication) {
+                from components.java
+                version = rootProject.version
 
-        pkg {
-            repo = 'wulkanowy'
-            name = 'sdk'
-            desc = 'Unified way of retrieving data from the UONET+ register through mobile api and scraping api'
+                pom {
+                    name = 'VULCAN UONET+ SDK'
+                    description = 'Unified way of retrieving data from the UONET+ register through mobile api and scraping api'
+                    url = 'https://github.com/wulkanowy/sdk'
+                    licenses {
+                        license {
+                            name = 'The Apache License, Version 2.0'
+                            url = 'https://www.apache.org/licenses/LICENSE-2.0.txt'
+                        }
+                    }
+                    developers {
+                        developer {
+                            id = 'mklkj'
+                            name = 'Mikołaj Pich'
+                            email = 'm.pich@outlook.com'
+                        }
+                    }
+                    scm {
+                        connection = 'https://github.com/wulkanowy/sdk.git'
+                        developerConnection = 'git@github.com:wulkanowy/sdk.git'
+                        url = 'https://github.com/wulkanowy/sdk'
+                    }
+                }
+            }
+        }
 
-            websiteUrl = 'https://github.com/wulkanowy/sdk'
-            issueTrackerUrl = 'https://github.com/wulkanowy/sdk/issues'
-            vcsUrl = 'https://github.com/wulkanowy/sdk.git'
-            licenses = ['Apache-2.0']
-            userOrg = 'wulkanowy'
-            labels = ['wulkanowy', 'sdk']
-            publicDownloadNumbers = true
-            publish = true
+        signing {
+            def signingKey = System.getenv("MAVEN_SIGNING_KEY") ?: ""
+            def signingPassword = System.getenv("MAVEN_SIGNING_PASSWORD")
+            useInMemoryPgpKeys(new String(signingKey.decodeBase64()), signingPassword)
+            sign publishing.publications.sdk
+        }
 
-            version {
-                name = PUBLISH_VERSION
-                vcsTag = PUBLISH_VERSION
-                released  = new Date()
+        javadoc {
+            if (JavaVersion.current().isJava9Compatible()) {
+                options.addBooleanOption('html5', true)
             }
         }
     }
@@ -112,23 +147,6 @@ subprojects {
     }
 
     group = "io.github.wulkanowy.sdk"
-    if (project.plugins.hasPlugin('java')) {
-
-        task sourcesJar(type: Jar, dependsOn: classes) {
-            classifier = 'sources'
-            from sourceSets.main.allSource
-        }
-
-        task javadocJar(type: Jar, dependsOn: javadoc) {
-            classifier = 'javadoc'
-            from javadoc.destinationDir
-        }
-
-        artifacts {
-            archives sourcesJar
-            archives javadocJar
-        }
-    }
 }
 
 dependencies {
