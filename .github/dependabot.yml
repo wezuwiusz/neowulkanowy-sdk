@@ -1,0 +1,17 @@
+version: 2
+updates:
+- package-ecosystem: gradle
+  directory: "/"
+  schedule:
+    interval: monthly
+  open-pull-requests-limit: 10
+  ignore:
+  - dependency-name: org.jetbrains.kotlinx:kotlinx-coroutines-core
+    versions:
+    - 1.4.3-native-mt
+  - dependency-name: org.jetbrains.kotlinx:kotlinx-coroutines-test
+    versions:
+    - 1.4.3-native-mt
+  - dependency-name: org.jlleitschuh.gradle.ktlint
+    versions:
+    - 9.4.1
