@@ -36,6 +36,6 @@ private fun ScrapperStudentGuardian.toFamilyMember() = StudentGuardian(
     fullName = fullName,
     email = email.orEmpty(),
     address = address,
-    kinship = kinship,
+    kinship = kinship.orEmpty(),
     phones = phone
 )

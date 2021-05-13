@@ -16,7 +16,7 @@ data class StudentGuardian(
     val lastName: String,
 
     @Json(name = "StPokrewienstwa")
-    val kinship: String,
+    val kinship: String?,
 
     @Json(name = "Adres")
     val address: String,
