@@ -142,6 +142,9 @@ subprojects {
             xml.enabled true
         }
     }
+    jacoco {
+        toolVersion "0.8.7"
+    }
 
     test {
         testLogging.showStandardStreams = false
