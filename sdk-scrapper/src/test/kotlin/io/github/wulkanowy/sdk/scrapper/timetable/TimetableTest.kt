@@ -31,7 +31,7 @@ class TimetableTest : BaseLocalTest() {
     @Test
     fun getTimetableTest() {
         assertEquals(5, headers.size)
-        assertEquals(24, timetable.size)
+        assertEquals(25, timetable.size)
         assertEquals(2, additional.size)
     }
 
@@ -552,6 +552,28 @@ class TimetableTest : BaseLocalTest() {
 
             assertEquals(true, canceled)
             assertEquals(false, changes)
+        }
+    }
+
+    @Test
+    fun getLightLesson_withoutClasses_withSubstitution() {
+        with(timetable[FRIDAY_OFFSET + 4]) {
+            // piątek, 4
+            assertEquals(4, number)
+            assertEquals(getDate(2018, 9, 28, 10, 50, 0), start)
+            assertEquals(getDate(2018, 9, 28, 11, 35, 0), end)
+
+            assertEquals("pracownia programowania", subject)
+            assertEquals("JA 2", group)
+            assertEquals("", teacher)
+            assertEquals("B149", room)
+            assertEquals("zastępstwo: Tabaluga Jakub", info)
+            assertEquals("", subjectOld)
+            assertEquals("", teacherOld)
+            assertEquals("", roomOld)
+
+            assertEquals(false, canceled)
+            assertEquals(true, changes)
         }
     }
 
