@@ -134,13 +134,18 @@ class TimetableParser {
         return getLessonWithReplacement(lesson, spans, 1)
     }
 
-    private fun getLessonLight(lesson: Timetable, spans: Elements, info: String) = lesson.copy(
-        subject = getLessonAndGroupInfoFromSpan(spans[0])[0],
-        group = getLessonAndGroupInfoFromSpan(spans[0])[1],
-        room = spans[1].text(),
-        info = getFormattedLessonInfo(info),
-        changes = info.isNotBlank()
-    )
+    private fun getLessonLight(lesson: Timetable, spans: Elements, info: String): Timetable {
+        val firstElementClasses = spans.first().classNames()
+        val isCanceled = CLASS_MOVED_OR_CANCELED in firstElementClasses
+        return lesson.copy(
+            subject = getLessonAndGroupInfoFromSpan(spans[0])[0],
+            group = getLessonAndGroupInfoFromSpan(spans[0])[1],
+            room = spans[1].text(),
+            info = getFormattedLessonInfo(info),
+            canceled = isCanceled,
+            changes = (info.isNotBlank() && !isCanceled) || CLASS_CHANGES in firstElementClasses
+        )
+    }
 
     private fun getLesson(lesson: Timetable, spans: Elements, offset: Int = 0, infoExtraOffset: Int = 0, changes: String = "") = lesson.copy(
         subject = getLessonAndGroupInfoFromSpan(spans[0])[0],

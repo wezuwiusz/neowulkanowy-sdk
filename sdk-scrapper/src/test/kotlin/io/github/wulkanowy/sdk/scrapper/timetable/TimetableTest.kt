@@ -25,13 +25,13 @@ class TimetableTest : BaseLocalTest() {
         private const val TUESDAY_OFFSET = 5
         private const val WEDNESDAY_OFFSET = 10
         private const val THURSDAY_OFFSET = 15
-        private const val FRIDAY_OFFSET = 19
+        private const val FRIDAY_OFFSET = 20
     }
 
     @Test
     fun getTimetableTest() {
         assertEquals(5, headers.size)
-        assertEquals(23, timetable.size)
+        assertEquals(24, timetable.size)
         assertEquals(2, additional.size)
     }
 
@@ -490,7 +490,7 @@ class TimetableTest : BaseLocalTest() {
     }
 
     @Test
-    fun getLightLesson_withChanges() {
+    fun getLightLesson_withChanges_butWithoutClasses() {
         with(timetable[TUESDAY_OFFSET + 4]) {
             // wtorek, 4
             assertEquals(4, number)
@@ -524,6 +524,28 @@ class TimetableTest : BaseLocalTest() {
             assertEquals("", teacher)
             assertEquals("A315", room)
             assertEquals("nieobecność nauczyciela: czytelnia", info)
+            assertEquals("", subjectOld)
+            assertEquals("", teacherOld)
+            assertEquals("", roomOld)
+
+            assertEquals(true, canceled)
+            assertEquals(false, changes)
+        }
+    }
+
+    @Test
+    fun getLightLesson_withChanges_withInvClass() {
+        with(timetable[THURSDAY_OFFSET + 4]) {
+            // czwartek, 4
+            assertEquals(4, number)
+            assertEquals(getDate(2018, 9, 27, 10, 50, 0), start)
+            assertEquals(getDate(2018, 9, 27, 11, 35, 0), end)
+
+            assertEquals("Fizyka", subject)
+            assertEquals("", group)
+            assertEquals("", teacher)
+            assertEquals("A10", room)
+            assertEquals("nieobecność nauczyciela: uczniowie przychodzą później", info)
             assertEquals("", subjectOld)
             assertEquals("", teacherOld)
             assertEquals("", roomOld)
