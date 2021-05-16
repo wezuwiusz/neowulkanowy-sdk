@@ -22,7 +22,7 @@ fun GradesResponse.mapGradesList() = gradesWithSubjects.map { gradesSubject ->
                     else -> removeSurrounding("(", ")")
                 }
             },
-            color = if ("0" == grade.color) "000000" else grade.color.toInt().toString(16).toUpperCase(),
+            color = if ("0" == grade.color) "000000" else grade.color.toInt().toString(16).uppercase(),
             symbol = grade.symbol.orEmpty(),
             description = grade.description.orEmpty(),
             weightValue = if (isGradeValid(gradeEntryWithoutComment)) grade.weightValue else .0,

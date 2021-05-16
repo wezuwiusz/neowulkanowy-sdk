@@ -1,5 +1,6 @@
 package io.github.wulkanowy.sdk.scrapper.timetable
 
+import io.github.wulkanowy.sdk.scrapper.capitalise
 import org.jsoup.nodes.Element
 import org.jsoup.select.Elements
 
@@ -31,7 +32,7 @@ class TimetableParser {
                             subjectOld = old.subject,
                             teacherOld = old.teacher,
                             roomOld = old.room,
-                            info = stripLessonInfo("${getFormattedLessonInfo(info)}, ${old.info}").replace("$subject ", "").capitalize()
+                            info = stripLessonInfo("${getFormattedLessonInfo(info)}, ${old.info}").replace("$subject ", "").capitalise()
                         )
                     }
                     else -> getLessonInfo(lesson, divs[1])

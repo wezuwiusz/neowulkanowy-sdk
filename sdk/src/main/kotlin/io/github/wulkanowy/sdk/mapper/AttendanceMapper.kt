@@ -11,6 +11,7 @@ import io.github.wulkanowy.sdk.scrapper.attendance.AttendanceCategory.EXCUSED_LA
 import io.github.wulkanowy.sdk.scrapper.attendance.AttendanceCategory.EXEMPTION
 import io.github.wulkanowy.sdk.scrapper.attendance.AttendanceCategory.PRESENCE
 import io.github.wulkanowy.sdk.scrapper.attendance.AttendanceCategory.UNEXCUSED_LATENESS
+import io.github.wulkanowy.sdk.scrapper.capitalise
 import io.github.wulkanowy.sdk.scrapper.toLocalDate
 import io.github.wulkanowy.sdk.toLocalDate
 import io.github.wulkanowy.sdk.mobile.attendance.Attendance as ApiAttendance
@@ -22,7 +23,7 @@ fun List<ApiAttendance>.mapAttendance(dictionaries: Dictionaries) = map {
     val category = dictionaries.attendanceCategories.singleOrNull { cat -> cat.id == it.categoryId }
     Attendance(
         number = it.number,
-        name = category?.name?.capitalize() ?: "Nieznany",
+        name = category?.name?.capitalise() ?: "Nieznany",
         subject = it.subjectName,
         date = it.date.toLocalDate(),
         timeId = -1,

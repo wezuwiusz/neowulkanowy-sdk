@@ -58,9 +58,11 @@ fun getScriptParam(name: String, content: String, fallback: String = ""): String
 }
 
 fun String.getNormalizedSymbol(): String {
-    return trim().toLowerCase().replace("default", "").run {
+    return trim().lowercase().replace("default", "").run {
         Normalizer.normalize(this, Normalizer.Form.NFD).run {
             "\\p{InCombiningDiacriticalMarks}+".toRegex().replace(this, "")
         }
     }.replace("[^a-z0-9]".toRegex(), "").ifBlank { "Default" }
 }
+
+fun String.capitalise() = replaceFirstChar { if (it.isLowerCase()) it.titlecase() else it.toString() }
