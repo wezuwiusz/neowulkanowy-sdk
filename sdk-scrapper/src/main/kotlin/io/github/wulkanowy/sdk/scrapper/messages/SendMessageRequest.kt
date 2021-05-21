@@ -10,7 +10,7 @@ data class SendMessageRequest(
     val incoming: Incoming,
 
     @Json(name = "incomming")
-    val incomming: Incoming, // for compatibility sake
+    val incomming: Incoming // for compatibility sake
 
 ) {
 
