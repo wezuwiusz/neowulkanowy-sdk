@@ -91,14 +91,15 @@ class MessagesRepository(private val api: MessagesService) {
         logger.debug("Subject length: ${subject.length}, content length: ${content.length}, recipients number: ${recipients.size}")
         val res = api.getStart()
         logger.debug("Start page length: ${res.length}")
+
+        val incoming = SendMessageRequest.Incoming(
+            recipients = recipients,
+            subject = subject,
+            content = content
+        )
+
         return api.sendMessage(
-            sendMessageRequest = SendMessageRequest(
-                SendMessageRequest.Incoming(
-                    recipients = recipients,
-                    subject = subject,
-                    content = content
-                )
-            ),
+            sendMessageRequest = SendMessageRequest(incoming, incoming),
             token = getScriptParam("antiForgeryToken", res).ifBlank { throw ScrapperException("Can't find antiForgeryToken property!") },
             appGuid = getScriptParam("appGuid", res),
             appVersion = getScriptParam("version", res)

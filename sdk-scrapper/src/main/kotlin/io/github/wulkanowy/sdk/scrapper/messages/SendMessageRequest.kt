@@ -6,8 +6,11 @@ import com.squareup.moshi.JsonClass
 @JsonClass(generateAdapter = true)
 data class SendMessageRequest(
 
+    @Json(name = "incoming")
+    val incoming: Incoming,
+
     @Json(name = "incomming")
-    val incoming: Incoming
+    val incomming: Incoming, // for compatibility sake
 
 ) {
 
