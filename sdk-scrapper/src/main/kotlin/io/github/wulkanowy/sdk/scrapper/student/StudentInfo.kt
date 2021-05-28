@@ -23,7 +23,7 @@ data class StudentInfo(
     val birthDate: Date,
 
     @Json(name = "MiejsceUrodzenia")
-    val birthPlace: String,
+    val birthPlace: String?,
 
     @Json(name = "NazwiskoRodowe")
     val familyName: String?,
