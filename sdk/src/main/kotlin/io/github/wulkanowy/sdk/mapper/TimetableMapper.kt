@@ -46,11 +46,12 @@ fun List<ApiTimetable>.mapTimetable(dictionaries: Dictionaries) = map {
 }.groupBy { Triple(it.date, it.number, it.studentPlan) }.map { (_, lessons) ->
     if (lessons.size > 1 && lessons.any { !it.canceled } && lessons.any { it.canceled }) {
         val canceled = lessons.first { it.canceled }
-        listOf(lessons.first { !it.canceled }.copy(
+        val lesson = lessons.first { !it.canceled }.copy(
             subjectOld = canceled.subject,
             teacherOld = canceled.teacher,
             roomOld = canceled.room
-        ))
+        )
+        listOf(lesson)
     } else lessons
 }.flatten()
 

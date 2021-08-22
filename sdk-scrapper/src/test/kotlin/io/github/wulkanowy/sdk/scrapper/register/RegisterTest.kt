@@ -20,16 +20,23 @@ import java.net.CookieManager
 class RegisterTest : BaseLocalTest() {
 
     private val login by lazy {
-        LoginHelper(Scrapper.LoginType.STANDARD, "http", "fakelog.localhost:3000", "default", CookieManager(),
-            getService(LoginService::class.java, "http://fakelog.localhost:3000/", true, getOkHttp(true, false, Scrapper.LoginType.STANDARD)))
+        LoginHelper(
+            loginType = Scrapper.LoginType.STANDARD,
+            schema = "http",
+            host = "fakelog.localhost:3000",
+            symbol = "default",
+            cookies = CookieManager(),
+            api = getService(LoginService::class.java, "http://fakelog.localhost:3000/", true, getOkHttp(true, false, Scrapper.LoginType.STANDARD))
+        )
     }
 
     private val registerStudent by lazy {
-        RegisterRepository("default", "jan@fakelog.localhost", "jan123", login,
-            getService(RegisterService::class.java, "http://fakelog.localhost:3000/Default/", true, getOkHttp(false, false)),
-            getService(MessagesService::class.java, "http://fakelog.localhost:3000", false),
-            getService(StudentService::class.java, "http://fakelog.localhost:3000", false),
-            ServiceManager.UrlGenerator("http", "fakelog.localhost:3000", "default", "123")
+        RegisterRepository(
+            startSymbol = "default", email = "jan@fakelog.localhost", password = "jan123", loginHelper = login,
+            register = getService(RegisterService::class.java, "http://fakelog.localhost:3000/Default/", true, getOkHttp(false, false)),
+            messages = getService(MessagesService::class.java, "http://fakelog.localhost:3000", false),
+            student = getService(StudentService::class.java, "http://fakelog.localhost:3000", false),
+            url = ServiceManager.UrlGenerator("http", "fakelog.localhost:3000", "default", "123")
         )
     }
 

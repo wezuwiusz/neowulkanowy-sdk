@@ -106,13 +106,14 @@ class Mobile {
         }
 
         val cert = certRes.tokenCert!!
-        certKey = cert.certificateKey
-        baseUrl = cert.baseUrl.removeSuffix("/")
-        privateKey = getPrivateKeyFromCert(apiKey.ifEmpty {
+        val privateKeyValue = apiKey.ifEmpty {
             Base64.decode(if (cert.baseUrl.contains("fakelog")) "KDAxMjM0NTY3ODkwMTIzNDU2Nzg5MDEyMzQ1Njc4OUFCKQ==" else "KENFNzVFQTU5OEM3NzQzQUQ5QjBCNzMyOERFRDg1QjA2KQ==")
                 .toString(Charset.defaultCharset())
                 .removeSurrounding("(", ")")
-        }, cert.certificatePfx)
+        }
+        certKey = cert.certificateKey
+        baseUrl = cert.baseUrl.removeSuffix("/")
+        privateKey = getPrivateKeyFromCert(privateKeyValue, cert.certificatePfx)
 
         return serviceManager.getRegisterRepository(cert.baseUrl).getStudents().map {
             it.copy().apply {

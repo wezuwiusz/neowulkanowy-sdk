@@ -31,3 +31,24 @@ jobs:
             ./gradlew test --stacktrace
             ./gradlew jacocoTestReport --stacktrace
         - uses: codecov/codecov-action@v1
+
+  link:
+      name: Lint check
+      runs-on: ubuntu-latest
+      timeout-minutes: 10
+      steps:
+        - uses: fkirc/skip-duplicate-actions@master
+        - uses: actions/checkout@v2
+        - uses: actions/setup-java@v1
+          with:
+            java-version: 11
+        - uses: actions/cache@v2
+          with:
+            path: |
+              ~/.gradle/caches
+              ~/.gradle/wrapper
+            key: gradle-${{ runner.os }}-${{ hashFiles('**/*.gradle*') }}
+        - name: Lint
+          run: |
+            ./gradlew ktlintCheck --stacktrace
+        - uses: codecov/codecov-action@v1

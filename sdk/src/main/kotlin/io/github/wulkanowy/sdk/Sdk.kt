@@ -196,9 +196,10 @@ class Sdk {
 
     fun setSimpleHttpLogger(logger: (String) -> Unit) {
         logLevel = HttpLoggingInterceptor.Level.NONE
-        addInterceptor(HttpLoggingInterceptor(HttpLoggingInterceptor.Logger {
+        val interceptor = HttpLoggingInterceptor {
             logger(it)
-        }).setLevel(HttpLoggingInterceptor.Level.BASIC))
+        }.setLevel(HttpLoggingInterceptor.Level.BASIC)
+        addInterceptor(interceptor)
     }
 
     fun addInterceptor(interceptor: Interceptor, network: Boolean = false) {
@@ -466,11 +467,15 @@ class Sdk {
     suspend fun getMessageDetails(messageId: Int, folderId: Int, read: Boolean = false, id: Int? = null) = withContext(Dispatchers.IO) {
         when (mode) {
             Mode.HYBRID, Mode.SCRAPPER -> scrapper.getMessageDetails(messageId, folderId, read, id).mapScrapperMessage()
-            Mode.API -> mobile.changeMessageStatus(messageId, when (folderId) {
-                1 -> "Odebrane"
-                2 -> "Wysłane"
-                else -> "Usunięte"
-            }, "Widoczna").let { MessageDetails("", emptyList()) }
+            Mode.API -> {
+                val folder = when (folderId) {
+                    1 -> "Odebrane"
+                    2 -> "Wysłane"
+                    else -> "Usunięte"
+                }
+                mobile.changeMessageStatus(messageId, folder, "Widoczna")
+                MessageDetails("", emptyList())
+            }
         }
     }
 
@@ -485,11 +490,12 @@ class Sdk {
         when (mode) {
             Mode.SCRAPPER -> scrapper.deleteMessages(messages, folderId)
             Mode.HYBRID, Mode.API -> messages.map { messageId ->
-                mobile.changeMessageStatus(messageId, when (folderId) {
+                val folder = when (folderId) {
                     1 -> "Odebrane"
                     2 -> "Wysłane"
                     else -> "Usunięte"
-                }, "Usunieta")
+                }
+                mobile.changeMessageStatus(messageId, folder, "Usunieta")
             }.isNotEmpty()
         }
     }

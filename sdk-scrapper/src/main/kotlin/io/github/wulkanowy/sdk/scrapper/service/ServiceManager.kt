@@ -99,12 +99,15 @@ class ServiceManager(
     }
 
     fun getAccountService(): AccountService {
-        return getRetrofit(getClientBuilder(errIntercept = false, loginIntercept = false, separateJar = true),
-            urlGenerator.generate(UrlGenerator.Site.LOGIN), false).create()
+        return getRetrofit(
+            getClientBuilder(errIntercept = false, loginIntercept = false, separateJar = true),
+            urlGenerator.generate(UrlGenerator.Site.LOGIN), false
+        ).create()
     }
 
     fun getRegisterService(): RegisterService {
-        return getRetrofit(getClientBuilder(errIntercept = false, loginIntercept = false, separateJar = true),
+        return getRetrofit(
+            getClientBuilder(errIntercept = false, loginIntercept = false, separateJar = true),
             urlGenerator.generate(UrlGenerator.Site.LOGIN),
             false
         ).create()
@@ -125,10 +128,19 @@ class ServiceManager(
         if (studentInterceptor) {
             if (0 == diaryId || 0 == studentId) throw ScrapperException("Student or/and diaryId id are not set")
 
-            client.addInterceptor(StudentCookieInterceptor(cookies, schema, host, diaryId, studentId, when (schoolYear) {
-                0 -> if (LocalDate.now().monthValue < 9) LocalDate.now().year - 1 else LocalDate.now().year // fallback
-                else -> schoolYear
-            }))
+            client.addInterceptor(
+                StudentCookieInterceptor(
+                    cookies = cookies,
+                    schema = schema,
+                    host = host,
+                    diaryId = diaryId,
+                    studentId = studentId,
+                    schoolYear = when (schoolYear) {
+                        0 -> if (LocalDate.now().monthValue < 9) LocalDate.now().year - 1 else LocalDate.now().year // fallback
+                        else -> schoolYear
+                    }
+                )
+            )
         }
         return client
     }
@@ -145,11 +157,14 @@ class ServiceManager(
         .baseUrl(baseUrl)
         .client(client.build())
         .addConverterFactory(ScalarsConverterFactory.create())
-        .addConverterFactory(if (gson) MoshiConverterFactory.create(Moshi.Builder()
-            .add(CustomDateAdapter())
-            .add(GradeDateDeserializer())
-            .build()
-        ) else JspoonConverterFactory.create())
+        .addConverterFactory(
+            if (gson) MoshiConverterFactory.create(
+                Moshi.Builder()
+                    .add(CustomDateAdapter())
+                    .add(GradeDateDeserializer())
+                    .build()
+            ) else JspoonConverterFactory.create()
+        )
         .build()
 
     private fun getClientBuilder(

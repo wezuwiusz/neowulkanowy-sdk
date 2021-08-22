@@ -88,13 +88,14 @@ class MobileRepository(private val api: MobileService) {
     }
 
     suspend fun sendMessage(sender: String, subject: String, content: String, recipients: List<Recipient>, loginId: Int, studentId: Int): Message {
-        return api.sendMessage(SendMessageRequest(
+        val request = SendMessageRequest(
             sender = sender,
             subject = subject,
             content = content,
             recipients = recipients,
             loginId = loginId,
             studentId = studentId
-        ))
+        )
+        return api.sendMessage(request)
     }
 }

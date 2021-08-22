@@ -28,10 +28,14 @@ class MessagesRepository(private val api: MessagesService) {
     }
 
     suspend fun getRecipients(unitId: Int, role: Int = 2): List<Recipient> {
-        return api.getRecipients(RecipientsRequest(RecipientsRequest.ParamsVo(
-            unitId = unitId,
-            role = role
-        ))).handleErrors().data.orEmpty().map {
+        return api.getRecipients(
+            recipientsRequest = RecipientsRequest(
+                paramsVo = RecipientsRequest.ParamsVo(
+                    unitId = unitId,
+                    role = role
+                )
+            )
+        ).handleErrors().data.orEmpty().map {
             it.copy(shortName = it.name.normalizeRecipient())
         }
     }
@@ -59,8 +63,11 @@ class MessagesRepository(private val api: MessagesService) {
     }
 
     suspend fun getMessageRecipients(messageId: Int, loginId: Int): List<Recipient> {
-        return (if (0 == loginId) api.getMessageRecipients(messageId).handleErrors()
-        else api.getMessageSender(loginId, messageId)).handleErrors().data.orEmpty().map { recipient ->
+        val recipients = when (loginId) {
+            0 -> api.getMessageRecipients(messageId).handleErrors()
+            else -> api.getMessageSender(loginId, messageId)
+        }
+        return recipients.handleErrors().data.orEmpty().map { recipient ->
             recipient.copy(shortName = recipient.name.normalizeRecipient())
         }
     }

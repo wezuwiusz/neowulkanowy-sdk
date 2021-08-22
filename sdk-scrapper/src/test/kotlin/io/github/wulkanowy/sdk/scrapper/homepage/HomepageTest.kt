@@ -81,13 +81,12 @@ class HomepageTest : BaseLocalTest() {
         server.start(3000)
 
         val res = runBlocking { repo.getLastGrades() }
-        assertEquals(
-            listOf(
-                "j. angielski: 1, 6",
-                "j. polski: 6, 1",
-                "matematyka: 4+, -"
-            ), res
+        val expected = listOf(
+            "j. angielski: 1, 6",
+            "j. polski: 6, 1",
+            "matematyka: 4+, -"
         )
+        assertEquals(expected, res)
     }
 
     @Test
@@ -97,12 +96,11 @@ class HomepageTest : BaseLocalTest() {
         server.start(3000)
 
         val res = runBlocking { repo.getFreeDays() }
-        assertEquals(
-            listOf(
-                "Czwartek (20.06.2019) - Sobota (31.08.2019) - Ferie letnie",
-                "Czwartek (15.08.2019) - Wniebowzięcie Najświętszej Maryi Panny"
-            ), res
+        val expected = listOf(
+            "Czwartek (20.06.2019) - Sobota (31.08.2019) - Ferie letnie",
+            "Czwartek (15.08.2019) - Wniebowzięcie Najświętszej Maryi Panny"
         )
+        assertEquals(expected, res)
     }
 
     @Test
@@ -148,10 +146,11 @@ class HomepageTest : BaseLocalTest() {
         server.start(3000)
 
         val numbers = runBlocking { repo.getKidsLuckyNumbers() }
-        assertEquals(listOf(
+        val expected = listOf(
             LuckyNumber("002547", "T", 37),
             LuckyNumber("010472", "ZSP Warcie", 12)
-        ), numbers)
+        )
+        assertEquals(expected, numbers)
 
         server.takeRequest()
         with(server.takeRequest().body.readUtf8()) {

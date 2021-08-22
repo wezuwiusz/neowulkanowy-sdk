@@ -202,8 +202,8 @@ class RegisterRepositoryTest : BaseLocalTest() {
             runBlocking { getRegisterRepository("Default").getStudents() }
         } catch (e: Throwable) {
             assertTrue(e is VulcanException)
-            assertEquals("Wystąpił nieoczekiwany błąd. Wystąpił błąd aplikacji. Prosimy zalogować się ponownie. Jeśli problem będzie się powtarzał, prosimy o kontakt z serwisem.",
-                e.message)
+            val expected = "Wystąpił nieoczekiwany błąd. Wystąpił błąd aplikacji. Prosimy zalogować się ponownie. Jeśli problem będzie się powtarzał, prosimy o kontakt z serwisem."
+            assertEquals(expected, e.message)
         }
 
         assertEquals("/Default/Account/LogOn", server.takeRequest().path)
@@ -222,8 +222,8 @@ class RegisterRepositoryTest : BaseLocalTest() {
             runBlocking { getRegisterRepository(" Rzeszów + ").getStudents() }
         } catch (e: Throwable) {
             assertTrue(e is VulcanException)
-            assertEquals("Wystąpił nieoczekiwany błąd. Wystąpił błąd aplikacji. Prosimy zalogować się ponownie. Jeśli problem będzie się powtarzał, prosimy o kontakt z serwisem.",
-                e.message)
+            val expected = "Wystąpił nieoczekiwany błąd. Wystąpił błąd aplikacji. Prosimy zalogować się ponownie. Jeśli problem będzie się powtarzał, prosimy o kontakt z serwisem."
+            assertEquals(expected, e.message)
         }
 
         assertEquals("/rzeszow/Account/LogOn", server.takeRequest().path)
@@ -242,8 +242,8 @@ class RegisterRepositoryTest : BaseLocalTest() {
             runBlocking { getRegisterRepository(" Niepoprawny    symbol no ale + ").getStudents() }
         } catch (e: Throwable) {
             assertTrue(e is VulcanException)
-            assertEquals("Wystąpił nieoczekiwany błąd. Wystąpił błąd aplikacji. Prosimy zalogować się ponownie. Jeśli problem będzie się powtarzał, prosimy o kontakt z serwisem.",
-                e.message)
+            val expected = "Wystąpił nieoczekiwany błąd. Wystąpił błąd aplikacji. Prosimy zalogować się ponownie. Jeśli problem będzie się powtarzał, prosimy o kontakt z serwisem."
+            assertEquals(expected, e.message)
         }
 
         assertEquals("/niepoprawnysymbolnoale/Account/LogOn", server.takeRequest().path)
@@ -262,8 +262,8 @@ class RegisterRepositoryTest : BaseLocalTest() {
             runBlocking { getRegisterRepository(" + ").getStudents() }
         } catch (e: Throwable) {
             assertTrue(e is VulcanException)
-            assertEquals("Wystąpił nieoczekiwany błąd. Wystąpił błąd aplikacji. Prosimy zalogować się ponownie. Jeśli problem będzie się powtarzał, prosimy o kontakt z serwisem.",
-                e.message)
+            val expected = "Wystąpił nieoczekiwany błąd. Wystąpił błąd aplikacji. Prosimy zalogować się ponownie. Jeśli problem będzie się powtarzał, prosimy o kontakt z serwisem."
+            assertEquals(expected, e.message)
         }
 
         assertEquals("/Default/Account/LogOn", server.takeRequest().path)
@@ -282,8 +282,8 @@ class RegisterRepositoryTest : BaseLocalTest() {
             runBlocking { getRegisterRepository("Default").getStudents() }
         } catch (e: Throwable) {
             assertTrue(e is VulcanException)
-            assertEquals("Wystąpił nieoczekiwany błąd. Wystąpił błąd aplikacji. Prosimy zalogować się ponownie. Jeśli problem będzie się powtarzał, prosimy o kontakt z serwisem.",
-                e.message)
+            val expected = "Wystąpił nieoczekiwany błąd. Wystąpił błąd aplikacji. Prosimy zalogować się ponownie. Jeśli problem będzie się powtarzał, prosimy o kontakt z serwisem."
+            assertEquals(expected, e.message)
         }
 
         assertEquals("/Default/Account/LogOn", server.takeRequest().path)

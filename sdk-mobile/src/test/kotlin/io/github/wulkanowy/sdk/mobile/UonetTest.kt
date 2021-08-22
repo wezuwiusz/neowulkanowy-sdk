@@ -38,10 +38,11 @@ class UonetTest {
             return Retrofit.Builder()
                 .addConverterFactory(ScalarsConverterFactory.create())
                 .addConverterFactory(MoshiConverterFactory.create())
-                .client(OkHttpClient().newBuilder()
-                    .addInterceptor(HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BASIC))
-                    .addInterceptor(SignInterceptor(privateKey, certKey))
-                    .build()
+                .client(
+                    OkHttpClient().newBuilder()
+                        .addInterceptor(HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BASIC))
+                        .addInterceptor(SignInterceptor(privateKey, certKey))
+                        .build()
                 )
         }
 
@@ -49,9 +50,10 @@ class UonetTest {
         @BeforeClass
         fun setUp() {
             // RegisterRepository
-            val register = RegisterRepository(getRetrofitBuilder("", "")
-                .baseUrl("$HOST/$SYMBOL/mobile-api/Uczen.v3.UczenStart/")
-                .build().create()
+            val register = RegisterRepository(
+                api = getRetrofitBuilder("", "")
+                    .baseUrl("$HOST/$SYMBOL/mobile-api/Uczen.v3.UczenStart/")
+                    .build().create()
             )
 
             val certificate = runBlocking { register.getCertificate(TOKEN, PIN, DEVICE_NAME, "8.1.0", "") }
@@ -71,9 +73,10 @@ class UonetTest {
             student = pupils[0]
 
             // MobileRepository
-            mobile = MobileRepository(getRetrofitBuilder(privateKey, certKey)
-                .baseUrl("$HOST/powiatwulkanowy/${student.reportingUnitSymbol}/mobile-api/Uczen.v3.Uczen/")
-                .build().create()
+            mobile = MobileRepository(
+                api = getRetrofitBuilder(privateKey, certKey)
+                    .baseUrl("$HOST/powiatwulkanowy/${student.reportingUnitSymbol}/mobile-api/Uczen.v3.Uczen/")
+                    .build().create()
             )
         }
     }

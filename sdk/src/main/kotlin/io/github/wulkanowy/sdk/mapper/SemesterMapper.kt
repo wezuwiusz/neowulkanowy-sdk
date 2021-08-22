@@ -40,10 +40,11 @@ fun List<Student>.mapSemesters(studentId: Int) = filter { it.id == studentId }.m
 private fun List<Semester>.mockSecondSemester(): List<Semester> {
     if (size != 1) throw VulcanException("Expected semester list size 1, get $size")
     val semester = single()
-    return (this + semester.copy(
+    val secondSemester = semester.copy(
         semesterNumber = if (semester.semesterNumber == 1) 2 else 1,
         semesterId = if (semester.semesterNumber == 1) semester.semesterId + 1 else semester.semesterId - 1,
         start = if (semester.semesterNumber == 1) semester.end.plusDays(1) else of(semester.schoolYear, 9, 1),
         end = if (semester.semesterNumber == 1) of(semester.schoolYear + 1, 8, 31) else semester.start.minusDays(1)
-    ))
+    )
+    return (this + secondSemester)
 }

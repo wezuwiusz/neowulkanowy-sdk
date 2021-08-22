@@ -33,9 +33,10 @@ open class BaseLocalTest {
     fun getRetrofitBuilder(): Retrofit.Builder = Retrofit.Builder()
         .addConverterFactory(ScalarsConverterFactory.create())
         .addConverterFactory(MoshiConverterFactory.create())
-        .client(OkHttpClient().newBuilder()
-            .addInterceptor(ErrorInterceptor())
-            .addInterceptor(HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BASIC))
-            .build()
+        .client(
+            OkHttpClient().newBuilder()
+                .addInterceptor(ErrorInterceptor())
+                .addInterceptor(HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BASIC))
+                .build()
         )
 }

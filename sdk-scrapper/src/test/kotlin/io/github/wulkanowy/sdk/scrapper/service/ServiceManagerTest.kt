@@ -20,13 +20,24 @@ class ServiceManagerTest : BaseLocalTest() {
 
     @Test
     fun interceptorTest() {
-        val manager = ServiceManager(OkHttpClientBuilderFactory(), HttpLoggingInterceptor.Level.NONE,
-            Scrapper.LoginType.STANDARD, "http", "fakelog.localhost:3000", "default", "email", "password",
-            "schoolSymbol", 123, 101, 2019, false, "", ""
+        val manager = ServiceManager(
+            okHttpClientBuilderFactory = OkHttpClientBuilderFactory(),
+            logLevel = HttpLoggingInterceptor.Level.NONE,
+            loginType = Scrapper.LoginType.STANDARD,
+            schema = "http",
+            host = "fakelog.localhost:3000",
+            symbol = "default",
+            email = "email",
+            password = "password",
+            schoolSymbol = "schoolSymbol",
+            studentId = 123,
+            diaryId = 101,
+            schoolYear = 2019,
+            emptyCookieJarIntercept = false,
+            androidVersion = "",
+            buildTag = ""
         )
-        manager.setInterceptor({
-            throw ScrapperException("Test")
-        })
+        manager.setInterceptor({ throw ScrapperException("Test") })
 
         try {
             runBlocking { manager.getStudentService().getNotes() }
@@ -39,17 +50,28 @@ class ServiceManagerTest : BaseLocalTest() {
     fun interceptorTest_prepend() {
         server.enqueue(MockResponse().setBody(NotesTest::class.java.getResource("UwagiIOsiagniecia.json").readText()))
         server.start(3000)
-        val manager = ServiceManager(OkHttpClientBuilderFactory(), HttpLoggingInterceptor.Level.NONE,
-            Scrapper.LoginType.STANDARD, "http", "fakelog.localhost:3000", "default", "email", "password",
-            "schoolSymbol", 123, 101, 2019, false, "", ""
+        val manager = ServiceManager(
+            okHttpClientBuilderFactory = OkHttpClientBuilderFactory(),
+            logLevel = HttpLoggingInterceptor.Level.NONE,
+            loginType = Scrapper.LoginType.STANDARD,
+            schema = "http",
+            host = "fakelog.localhost:3000",
+            symbol = "default",
+            email = "email",
+            password = "password",
+            schoolSymbol = "schoolSymbol",
+            studentId = 123,
+            diaryId = 101,
+            schoolYear = 2019,
+            emptyCookieJarIntercept = false,
+            androidVersion = "",
+            buildTag = ""
         )
         manager.setInterceptor({
             // throw IOException("Test")
             it.proceed(it.request())
         })
-        manager.setInterceptor({
-            throw ScrapperException("Test")
-        }, false)
+        manager.setInterceptor({ throw ScrapperException("Test") }, false)
 
         try {
             runBlocking { manager.getStudentService().getNotes() }
@@ -94,7 +116,8 @@ class ServiceManagerTest : BaseLocalTest() {
     fun autoLoginInterceptor() {
         server.enqueue(MockResponse().setResponseCode(503))
         server.start(3000)
-        val manager = ServiceManager(OkHttpClientBuilderFactory(), HttpLoggingInterceptor.Level.NONE,
+        val manager = ServiceManager(
+            OkHttpClientBuilderFactory(), HttpLoggingInterceptor.Level.NONE,
             Scrapper.LoginType.STANDARD, "http", "fakelog.localhost:3000", "default", "email", "password",
             "schoolSymbol", 123, 101, 2019, true, "", ""
         )

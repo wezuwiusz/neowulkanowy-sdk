@@ -106,10 +106,13 @@ class AttendanceMapperTest : BaseLocalTest() {
         }
     }
 
-    private fun createAttendance(cat: AttendanceCategory) = listOf(Attendance(1, Date(), "").apply {
-        number = 0
-        category = cat
-        excusable = false
-        excuseStatus = null
-    })
+    private fun createAttendance(cat: AttendanceCategory): List<Attendance> {
+        val item = Attendance(1, Date(), "").apply {
+            number = 0
+            category = cat
+            excusable = false
+            excuseStatus = null
+        }
+        return listOf(item)
+    }
 }

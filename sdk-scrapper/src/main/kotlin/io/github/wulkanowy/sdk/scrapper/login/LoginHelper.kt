@@ -91,111 +91,158 @@ class LoginHelper(
 
     suspend fun sendCertificate(cert: CertificateResponse, email: String, url: String = cert.action): SendCertificateResponse {
         cookies.cookieStore.removeAll()
-        val res = api.sendCertificate(url, mapOf(
-            "wa" to cert.wa,
-            "wresult" to cert.wresult,
-            "wctx" to cert.wctx
-        ))
+        val res = api.sendCertificate(
+            url = url,
+            certificate = mapOf(
+                "wa" to cert.wa,
+                "wresult" to cert.wresult,
+                "wctx" to cert.wctx
+            )
+        )
 
-        if (email.contains("||")) api.switchLogin("$url?rebuild=${email.substringAfter("||", "")}")
+        if (email.contains("||")) {
+            api.switchLogin("$url?rebuild=${email.substringAfter("||", "")}")
+        }
 
         return res
     }
 
     private suspend fun sendStandard(email: String, password: String): CertificateResponse {
-        return certificateAdapter.fromHtml(api.sendCredentials(firstStepReturnUrl, mapOf(
-            "LoginName" to email,
-            "Password" to password
-        )))
+        return certificateAdapter.fromHtml(
+            api.sendCredentials(
+                returnUrl = firstStepReturnUrl,
+                credentials = mapOf(
+                    "LoginName" to email,
+                    "Password" to password
+                )
+            )
+        )
     }
 
     private suspend fun sendADFSLightGeneric(email: String, password: String, type: Scrapper.LoginType): CertificateResponse {
-        val res = certificateAdapter.fromHtml(api.sendADFSForm(
-            getADFSUrl(type), mapOf(
-                "Username" to email,
-                "Password" to password,
-                "x" to "0",
-                "y" to "0"
+        val res = certificateAdapter.fromHtml(
+            api.sendADFSForm(
+                url = getADFSUrl(type),
+                values = mapOf(
+                    "Username" to email,
+                    "Password" to password,
+                    "x" to "0",
+                    "y" to "0"
+                )
             )
-        ))
+        )
 
         logger.debug("Page title after credentials sent: ${res.title}, action: ${res.action} wresult: ${res.wresult.length}, wctx: ${res.wctx}")
 
-        return certificateAdapter.fromHtml(api.sendADFSForm(
-            res.action, mapOf(
-                "wa" to res.wa,
-                "wresult" to res.wresult,
-                "wctx" to res.wctx
+        return certificateAdapter.fromHtml(
+            api.sendADFSForm(
+                url = res.action,
+                values = mapOf(
+                    "wa" to res.wa,
+                    "wresult" to res.wresult,
+                    "wctx" to res.wctx
+                )
             )
-        ))
+        )
     }
 
     private suspend fun sendADFS(email: String, password: String): CertificateResponse {
         val res = api.getForm(getADFSUrl(ADFS))
 
         if (res.formAction.isBlank()) throw VulcanException("Invalid ADFS login page: '${res.title}'. Try again")
-        val form = certificateAdapter.fromHtml(api.sendADFSForm("$schema://adfs.$host/${res.formAction.removePrefix("/")}", mapOf(
-            "__db" to res.db,
-            "__VIEWSTATE" to res.viewstate,
-            "__VIEWSTATEGENERATOR" to res.viewStateGenerator,
-            "__EVENTVALIDATION" to res.eventValidation,
-            "UsernameTextBox" to email,
-            "PasswordTextBox" to password,
-            "SubmitButton.x" to "0",
-            "SubmitButton.y" to "0"
-        )))
+        val form = certificateAdapter.fromHtml(
+            api.sendADFSForm(
+                url = "$schema://adfs.$host/${res.formAction.removePrefix("/")}",
+                values = mapOf(
+                    "__db" to res.db,
+                    "__VIEWSTATE" to res.viewstate,
+                    "__VIEWSTATEGENERATOR" to res.viewStateGenerator,
+                    "__EVENTVALIDATION" to res.eventValidation,
+                    "UsernameTextBox" to email,
+                    "PasswordTextBox" to password,
+                    "SubmitButton.x" to "0",
+                    "SubmitButton.y" to "0"
+                )
+            )
+        )
 
-        return certificateAdapter.fromHtml(api.sendADFSForm(form.action, mapOf(
-            "wa" to form.wa,
-            "wresult" to form.wresult,
-            "wctx" to form.wctx
-        )))
+        return certificateAdapter.fromHtml(
+            api.sendADFSForm(
+                url = form.action,
+                values = mapOf(
+                    "wa" to form.wa,
+                    "wresult" to form.wresult,
+                    "wctx" to form.wctx
+                )
+            )
+        )
     }
 
     private suspend fun sendADFSMS(email: String, password: String): CertificateResponse {
-        val res = api.sendADFSMSForm(getADFSUrl(ADFS), mapOf(
-            "UserName" to email,
-            "Password" to password,
-            "AuthMethod" to "FormsAuthentication"
-        ))
+        val res = api.sendADFSMSForm(
+            url = getADFSUrl(ADFS),
+            values = mapOf(
+                "UserName" to email,
+                "Password" to password,
+                "AuthMethod" to "FormsAuthentication"
+            )
+        )
 
         val form = certificateAdapter.fromHtml(res)
 
-        return certificateAdapter.fromHtml(api.sendADFSForm(form.action, mapOf(
-            "wa" to form.wa,
-            "wresult" to form.wresult,
-            "wctx" to form.wctx
-        )))
+        return certificateAdapter.fromHtml(
+            api.sendADFSForm(
+                url = form.action,
+                values = mapOf(
+                    "wa" to form.wa,
+                    "wresult" to form.wresult,
+                    "wctx" to form.wctx
+                )
+            )
+        )
     }
 
     private suspend fun sendADFSCards(email: String, password: String): CertificateResponse {
         val form = api.getForm(getADFSUrl(ADFSCards))
 
-        val form2 = api.sendADFSFormStandardChoice("$schema://adfs.$host/${form.formAction.removePrefix("/")}", mapOf(
-            "__db" to form.db,
-            "__VIEWSTATE" to form.viewstate,
-            "__VIEWSTATEGENERATOR" to form.viewStateGenerator,
-            "__EVENTVALIDATION" to form.eventValidation,
-            "PassiveSignInButton.x" to "0",
-            "PassiveSignInButton.y" to "0"
-        ))
+        val form2 = api.sendADFSFormStandardChoice(
+            url = "$schema://adfs.$host/${form.formAction.removePrefix("/")}",
+            formState = mapOf(
+                "__db" to form.db,
+                "__VIEWSTATE" to form.viewstate,
+                "__VIEWSTATEGENERATOR" to form.viewStateGenerator,
+                "__EVENTVALIDATION" to form.eventValidation,
+                "PassiveSignInButton.x" to "0",
+                "PassiveSignInButton.y" to "0"
+            )
+        )
 
-        val form3 = certificateAdapter.fromHtml(api.sendADFSForm("$schema://adfs.$host/${form2.formAction.removePrefix("/")}", mapOf(
-            "__db" to form2.db,
-            "__VIEWSTATE" to form2.viewstate,
-            "__VIEWSTATEGENERATOR" to form2.viewStateGenerator,
-            "__EVENTVALIDATION" to form2.eventValidation,
-            "SubmitButton.x" to "0",
-            "SubmitButton.y" to "0",
-            "UsernameTextBox" to email,
-            "PasswordTextBox" to password
-        )))
+        val form3 = certificateAdapter.fromHtml(
+            api.sendADFSForm(
+                url = "$schema://adfs.$host/${form2.formAction.removePrefix("/")}",
+                values = mapOf(
+                    "__db" to form2.db,
+                    "__VIEWSTATE" to form2.viewstate,
+                    "__VIEWSTATEGENERATOR" to form2.viewStateGenerator,
+                    "__EVENTVALIDATION" to form2.eventValidation,
+                    "SubmitButton.x" to "0",
+                    "SubmitButton.y" to "0",
+                    "UsernameTextBox" to email,
+                    "PasswordTextBox" to password
+                )
+            )
+        )
 
-        return certificateAdapter.fromHtml(api.sendADFSForm(form3.action, mapOf(
-            "wa" to form3.wa,
-            "wresult" to form3.wresult,
-            "wctx" to form3.wctx
-        )))
+        return certificateAdapter.fromHtml(
+            api.sendADFSForm(
+                url = form3.action,
+                values = mapOf(
+                    "wa" to form3.wa,
+                    "wresult" to form3.wresult,
+                    "wctx" to form3.wctx
+                )
+            )
+        )
     }
 
     private fun getADFSUrl(type: Scrapper.LoginType): String {

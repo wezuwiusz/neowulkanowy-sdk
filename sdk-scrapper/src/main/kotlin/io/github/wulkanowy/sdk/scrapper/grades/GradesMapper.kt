@@ -78,9 +78,11 @@ fun List<GradesStatisticsPartial>.mapGradesStatisticsPartial() = map {
 }
 
 private fun GradeStatisticsPartialSeries.addGradeValue(): GradeStatisticsPartialSeries {
-    return copy(items = items.orEmpty().reversed().mapIndexed { i, item ->
-        item.copy().apply {
-            grade = i + 1
-        }
-    }.reversed())
+    return copy(
+        items = items.orEmpty().reversed().mapIndexed { i, item ->
+            item.copy().apply {
+                grade = i + 1
+            }
+        }.reversed()
+    )
 }

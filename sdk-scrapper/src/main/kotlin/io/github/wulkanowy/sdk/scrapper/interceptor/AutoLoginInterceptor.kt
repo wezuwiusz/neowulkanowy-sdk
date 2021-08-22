@@ -103,14 +103,14 @@ class AutoLoginInterceptor(
             }
         }
 
-        if (when (loginType) {
-                STANDARD -> doc.select(SELECTOR_STANDARD)
-                ADFS -> doc.select(SELECTOR_ADFS)
-                ADFSLight, ADFSLightCufs, ADFSLightScoped -> doc.select(SELECTOR_ADFS_LIGHT)
-                ADFSCards -> doc.select(SELECTOR_ADFS_CARDS)
-                else -> Elements()
-            }.isNotEmpty()
-        ) {
+        val loginSelectors = when (loginType) {
+            STANDARD -> doc.select(SELECTOR_STANDARD)
+            ADFS -> doc.select(SELECTOR_ADFS)
+            ADFSLight, ADFSLightCufs, ADFSLightScoped -> doc.select(SELECTOR_ADFS_LIGHT)
+            ADFSCards -> doc.select(SELECTOR_ADFS_CARDS)
+            else -> Elements()
+        }
+        if (loginSelectors.isNotEmpty()) {
             throw NotLoggedInException("User not logged in")
         }
 
@@ -128,10 +128,12 @@ class AutoLoginInterceptor(
         .message(message())
         .request(request)
         .protocol(Protocol.HTTP_1_1)
-        .body(response()?.errorBody() ?: object : ResponseBody() {
-            override fun contentLength() = 0L
-            override fun contentType(): MediaType? = null
-            override fun source(): BufferedSource = Buffer()
-        })
+        .body(
+            body = response()?.errorBody() ?: object : ResponseBody() {
+                override fun contentLength() = 0L
+                override fun contentType(): MediaType? = null
+                override fun source(): BufferedSource = Buffer()
+            }
+        )
         .build()
 }

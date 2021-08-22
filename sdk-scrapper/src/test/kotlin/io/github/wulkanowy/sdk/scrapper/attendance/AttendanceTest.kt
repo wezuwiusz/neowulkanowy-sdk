@@ -16,11 +16,12 @@ import java.time.LocalDateTime
 class AttendanceTest : BaseLocalTest() {
 
     private val student by lazy {
-        runBlocking { getStudentRepo {
+        val repo = getStudentRepo {
             it.enqueue("Frekwencja.json", AttendanceTest::class.java)
             it.enqueue("WitrynaUcznia.html", RegisterTest::class.java)
             it.enqueue("UczenCache.json", RegisterTest::class.java)
-        }.getAttendance(getLocalDate(2018, 10, 1), null) }
+        }
+        runBlocking { repo.getAttendance(getLocalDate(2018, 10, 1), null) }
     }
 
     @Test
@@ -143,11 +144,12 @@ class AttendanceTest : BaseLocalTest() {
 
     @Test
     fun getAttendance_requestDateFormat() {
-        runBlocking { getStudentRepo {
+        val repo = getStudentRepo {
             it.enqueue("Frekwencja.json", AttendanceTest::class.java)
             it.enqueue("WitrynaUcznia.html", RegisterTest::class.java)
             it.enqueue("UczenCache.json", RegisterTest::class.java)
-        }.getAttendance(getLocalDate(2018, 10, 1), null) }
+        }
+        runBlocking { repo.getAttendance(getLocalDate(2018, 10, 1), null) }
 
         val request = server.takeRequest()
         val adapter = AttendanceRequestJsonAdapter(Moshi.Builder().add(CustomDateAdapter()).build())

@@ -37,17 +37,18 @@ class RepositoryManager(
         return Retrofit.Builder()
             .addConverterFactory(ScalarsConverterFactory.create())
             .addConverterFactory(MoshiConverterFactory.create())
-            .client(OkHttpClient().newBuilder()
-                .addInterceptor(HttpLoggingInterceptor().setLevel(logLevel))
-                .addInterceptor(ErrorInterceptor())
-                .addInterceptor(SignInterceptor(privateKey, certKey))
-                .apply {
-                    interceptors.forEach {
-                        if (it.second) addNetworkInterceptor(it.first)
-                        else addInterceptor(it.first)
+            .client(
+                OkHttpClient().newBuilder()
+                    .addInterceptor(HttpLoggingInterceptor().setLevel(logLevel))
+                    .addInterceptor(ErrorInterceptor())
+                    .addInterceptor(SignInterceptor(privateKey, certKey))
+                    .apply {
+                        interceptors.forEach {
+                            if (it.second) addNetworkInterceptor(it.first)
+                            else addInterceptor(it.first)
+                        }
                     }
-                }
-                .build()
+                    .build()
             )
     }
 }

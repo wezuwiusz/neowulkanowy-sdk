@@ -9,13 +9,14 @@ import io.github.wulkanowy.sdk.mobile.service.RegisterService
 class RegisterRepository(private val api: RegisterService) {
 
     suspend fun getCertificate(token: String, pin: String, deviceName: String, android: String, firebaseToken: String): CertificateResponse {
-        return api.getCertificate(CertificateRequest(
+        val request = CertificateRequest(
             tokenKey = token,
             pin = pin,
             deviceName = "$deviceName (Wulkanowy)",
             deviceSystemVersion = android,
             firebaseToken = firebaseToken
-        ))
+        )
+        return api.getCertificate(request)
     }
 
     suspend fun getStudents(): List<Student> = api.getPupils(object : ApiRequest() {}).data.orEmpty()

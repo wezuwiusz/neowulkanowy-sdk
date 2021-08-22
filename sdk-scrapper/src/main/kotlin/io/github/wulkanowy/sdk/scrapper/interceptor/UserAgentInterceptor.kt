@@ -15,13 +15,14 @@ class UserAgentInterceptor(
 ) : Interceptor {
 
     override fun intercept(chain: Interceptor.Chain): Response {
-        return chain.proceed(chain.request().newBuilder()
-            .addHeader("User-Agent",
+        return chain.proceed(
+            chain.request().newBuilder().addHeader(
+                "User-Agent",
                 "Mozilla/5.0 (Linux; Android $androidVersion; $buildTag) " +
                     "AppleWebKit/$webKitRev (KHTML, like Gecko) " +
                     "Chrome/$chromeRev Mobile " +
-                    "Safari/$webKitRev")
-            .build()
+                    "Safari/$webKitRev"
+            ).build()
         )
     }
 }

@@ -33,10 +33,13 @@ class ScrapperRemoteTest : BaseTest() {
             classId = 1
             androidVersion = "9.0"
             buildTag = "Wulkanowy"
-            addInterceptor({
-                println("Request event ${it.request().url.host}")
-                it.proceed(it.request())
-            }, true)
+            addInterceptor(
+                interceptor = {
+                    println("Request event ${it.request().url.host}")
+                    it.proceed(it.request())
+                },
+                network = true
+            )
         }
     }
 
@@ -51,10 +54,12 @@ class ScrapperRemoteTest : BaseTest() {
     @Test
     fun sendPasswordResetRequest() {
         val res = runBlocking {
-            api.sendPasswordResetRequest("https://fakelog.cf",
-                "Default",
-                "jan@fakelog.cf",
-                "03AOLTBLQRPyr0pWvWLRAgD4hRLfxktoqD2IVweeMuXwbkpR_8S9YQtcS3cAXqUOyEw3NxfvwzV0lTjgFWyl8j3UXGQpsc2nvQcqIofj1N8DYfxvtZO-h24W_S0Z9-fDnfXErd7vERS-Ny4d5IU1FupBAEKvT8rrf3OA3GYYbMM7TwB8b_o9Tt192TqYnSxkyIYE4UdaZnLBA0KIXxlBAoqM6QGlPEsSPK9gmCGx-0hn68w-UBQkv_ghRruf4kpv2Shw5emcP-qHBlv3YjAagsb_358K0v8uGJeyLrx4dXN9Ky02TXFMKYWNHz29fjhfunxT73u_PrsLj56f-MjOXrqO894NkUlJ7RkTTclwIsqXtJ794LEBH--mtsqZBND0miR5-odmZszqiNB3V5UsS5ObsqF_fWMl2TCWyNTTvF4elOGwOEeKiumVpjB6e740COxvxN3vbkNWxP9eeghpd5nPN5l2wUV3VL2R5s44TbqHqkrkNpUOd3h7efs3cQtCfGc-tCXoqLC26LxT7aztvKpjXMuqGEf-7wbQ")
+            api.sendPasswordResetRequest(
+                registerBaseUrl = "https://fakelog.cf",
+                symbol = "Default",
+                email = "jan@fakelog.cf",
+                captchaCode = "03AOLTBLQRPyr0pWvWLRAgD4hRLfxktoqD2IVweeMuXwbkpR_8S9YQtcS3cAXqUOyEw3NxfvwzV0lTjgFWyl8j3UXGQpsc2nvQcqIofj1N8DYfxvtZO-h24W_S0Z9-fDnfXErd7vERS-Ny4d5IU1FupBAEKvT8rrf3OA3GYYbMM7TwB8b_o9Tt192TqYnSxkyIYE4UdaZnLBA0KIXxlBAoqM6QGlPEsSPK9gmCGx-0hn68w-UBQkv_ghRruf4kpv2Shw5emcP-qHBlv3YjAagsb_358K0v8uGJeyLrx4dXN9Ky02TXFMKYWNHz29fjhfunxT73u_PrsLj56f-MjOXrqO894NkUlJ7RkTTclwIsqXtJ794LEBH--mtsqZBND0miR5-odmZszqiNB3V5UsS5ObsqF_fWMl2TCWyNTTvF4elOGwOEeKiumVpjB6e740COxvxN3vbkNWxP9eeghpd5nPN5l2wUV3VL2R5s44TbqHqkrkNpUOd3h7efs3cQtCfGc-tCXoqLC26LxT7aztvKpjXMuqGEf-7wbQ"
+            )
         }
 
         assertTrue(res.startsWith("Wysłano wiadomość na zapisany w systemie adres e-mail"))
@@ -342,8 +347,10 @@ class ScrapperRemoteTest : BaseTest() {
     @Test
     fun sendMessage() {
         runBlocking {
-            api.sendMessage("Temat wiadomości", "Treść",
-                listOf(Recipient("0", "Kowalski Jan", 0, 0, 2, "hash"))
+            api.sendMessage(
+                subject = "Temat wiadomości",
+                content = "Treść",
+                recipients = listOf(Recipient("0", "Kowalski Jan", 0, 0, 2, "hash")),
             )
         }
     }

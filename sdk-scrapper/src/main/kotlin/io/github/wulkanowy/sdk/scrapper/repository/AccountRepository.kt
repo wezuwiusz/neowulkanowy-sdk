@@ -41,9 +41,15 @@ class AccountRepository(private val account: AccountService) {
             ADFSLight, ADFSLightScoped, ADFSLightCufs -> account.sendPasswordResetRequestADFSLight(url, email, captchaCode)
             ADFS, ADFSCards -> {
                 val page = account.getPasswordResetPageADFS(url)
-                account.sendPasswordResetRequestADFS(url, email, captchaCode, (page.html.select("[type=hidden]").map { input ->
+                val formFields = page.html.select("[type=hidden]").map { input ->
                     input.attr("name") to input.attr("value")
-                }).toMap().plus("btSend.x" to "5").plus("btSend.y" to "6"))
+                }.toMap()
+                account.sendPasswordResetRequestADFS(
+                    url = url,
+                    username = email,
+                    captchaCode = captchaCode,
+                    viewStateParams = formFields.plus("btSend.x" to "5").plus("btSend.y" to "6")
+                )
             }
             else -> throw ScrapperException("Never happen")
         }

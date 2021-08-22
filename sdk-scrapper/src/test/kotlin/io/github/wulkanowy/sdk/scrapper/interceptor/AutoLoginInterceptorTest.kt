@@ -83,7 +83,7 @@ class AutoLoginInterceptorTest : BaseLocalTest() {
 
         val a = awaitAll(notes1, notes2, notes3)
 
-        assertEquals(1 + 1 + 1, a.size)
+        assertEquals((1 + 1 + 1), a.size)
     }
 
     // @Test
