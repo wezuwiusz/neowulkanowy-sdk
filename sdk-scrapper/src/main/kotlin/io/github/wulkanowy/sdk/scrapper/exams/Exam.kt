@@ -10,7 +10,7 @@ data class Exam(
     @Json(name = "DataModyfikacji")
     val entryDate: Date,
 
-    @Json(name = "DisplayValue")
+    @Json(name = "Nazwa")
     val subject: String,
 
     @Json(name = "Rodzaj")
@@ -19,7 +19,7 @@ data class Exam(
     @Json(name = "Opis")
     val description: String,
 
-    @Json(name = "PracownikModyfikujacyDisplay")
+    @Json(name = "Pracownik")
     val teacher: String
 ) {
 
