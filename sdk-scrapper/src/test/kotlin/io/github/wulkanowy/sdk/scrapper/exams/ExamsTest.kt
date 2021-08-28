@@ -20,7 +20,6 @@ class ExamsTest : BaseLocalTest() {
     fun getExam_normal() {
         with(exams[0]) {
             assertEquals("Język polski", subject)
-            assertEquals("", group)
             assertEquals("Sprawdzian", type)
             assertEquals("Dwudziestolecie", description)
             assertEquals("Czerwieńska Agata", teacher)
@@ -33,7 +32,6 @@ class ExamsTest : BaseLocalTest() {
     fun getExam_group() {
         with(exams[1]) {
             assertEquals("Język angielski", subject)
-            assertEquals("J1", group)
             assertEquals("Sprawdzian", type)
             assertEquals("Czasy teraźniejsze", description)
             assertEquals("Natalia Nowak", teacher)
@@ -46,7 +44,6 @@ class ExamsTest : BaseLocalTest() {
     fun getExam_type() {
         with(exams[2]) {
             assertEquals("Metodologia programowania", subject)
-            assertEquals("zaw1", group)
             assertEquals("Kartkówka", type)
             assertEquals("programowanie obiektowe", description)
             assertEquals("Małgorzata Nowacka", teacher)
@@ -59,7 +56,6 @@ class ExamsTest : BaseLocalTest() {
     fun getExam_emptyDescription() {
         with(exams[3]) {
             assertEquals("Metodologia programowania", subject)
-            assertEquals("zaw2", group)
             assertEquals("Praca klasowa", type)
             assertEquals("", description)
             assertEquals("Małgorzata Nowacka", teacher)

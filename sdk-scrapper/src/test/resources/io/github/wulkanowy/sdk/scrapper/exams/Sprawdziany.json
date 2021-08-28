@@ -6,7 +6,7 @@
           "Data": "2018-10-01 00:00:00",
           "Sprawdziany": [
             {
-              "Nazwa": "Język polski 3Ti",
+              "Nazwa": "Język polski",
               "Pracownik": "Czerwieńska Agata [CA]",
               "DataModyfikacji": "2018-09-16 00:00:00",
               "GodzinaOd": null,
@@ -23,7 +23,7 @@
           "Data": "2018-10-02 00:00:00",
           "Sprawdziany": [
             {
-              "Nazwa": "Język angielski 3Ti|J1",
+              "Nazwa": "Język angielski",
               "Pracownik": "Natalia Nowak [NN]",
               "DataModyfikacji": "2018-09-17 00:00:00",
               "GodzinaOd": null,
@@ -40,7 +40,7 @@
           "Data": "2018-10-03 00:00:00",
           "Sprawdziany": [
             {
-              "Nazwa": "Metodologia programowania 3Ti|zaw1",
+              "Nazwa": "Metodologia programowania",
               "Pracownik": "Małgorzata Nowacka [MN]",
               "DataModyfikacji": "2018-09-16 00:00:00",
               "GodzinaOd": null,
@@ -51,7 +51,7 @@
               "Rodzaj": 2
             },
             {
-              "Nazwa": "Metodologia programowania 3Ti|zaw2",
+              "Nazwa": "Metodologia programowania",
               "Pracownik": "Małgorzata Nowacka [MN]",
               "DataModyfikacji": "2018-09-16 00:00:00",
               "GodzinaOd": null,
@@ -68,7 +68,7 @@
           "Data": "2018-10-04 00:00:00",
           "Sprawdziany": [
             {
-              "Nazwa": "Sieci komputerowe 3Ti|zaw2",
+              "Nazwa": "Sieci komputerowe",
               "Pracownik": "Adam Wiśniewski [AW]",
               "DataModyfikacji": "2018-09-15 00:00:00",
               "GodzinaOd": null,
@@ -85,7 +85,7 @@
           "Data": "2018-10-05 00:00:00",
           "Sprawdziany": [
             {
-              "Nazwa": "Język angielski 3Ti|J2",
+              "Nazwa": "Język angielski",
               "Pracownik": "Natalia Nowak [NN]",
               "DataModyfikacji": "2018-09-17 00:00:00",
               "GodzinaOd": null,

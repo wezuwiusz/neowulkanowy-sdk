@@ -175,7 +175,6 @@ class ScrapperRemoteTest : BaseTest() {
             assertEquals(getDate(2018, 5, 7), date)
             assertEquals(getDate(1970, 1, 1), entryDate)
             assertEquals("Matematyka", subject)
-            assertEquals("", group)
             assertEquals("Sprawdzian", type)
             assertEquals("Figury na płaszczyźnie.", description)
             assertEquals("Aleksandra Krajewska", teacher)

@@ -27,8 +27,5 @@ data class Exam(
     lateinit var date: Date
 
     @Transient
-    lateinit var group: String
-
-    @Transient
     lateinit var teacherSymbol: String
 }

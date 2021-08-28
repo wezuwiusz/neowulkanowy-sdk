@@ -10,7 +10,7 @@ fun List<ExamResponse>.mapExamsList(startDate: LocalDate, endDate: LocalDate?): 
             day.exams.map { exam ->
                 exam.copy(
                     teacher = exam.teacher.split(" [").first(),
-                    subject = exam.subject.substringBeforeLast(" "),
+                    subject = exam.subject,
                     type = when (exam.type) {
                         "1" -> "Sprawdzian"
                         "2" -> "Kartkówka"
@@ -20,8 +20,6 @@ fun List<ExamResponse>.mapExamsList(startDate: LocalDate, endDate: LocalDate?): 
                     date = day.date
 
                     teacherSymbol = exam.teacher.split(" [").last().removeSuffix("]")
-                    group = exam.subject.split("|").last()
-                    if (group.contains(" ")) group = ""
                 }
             }
         }.flatten()
