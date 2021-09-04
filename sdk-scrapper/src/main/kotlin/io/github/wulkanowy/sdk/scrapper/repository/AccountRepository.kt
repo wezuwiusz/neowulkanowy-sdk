@@ -41,9 +41,9 @@ class AccountRepository(private val account: AccountService) {
             ADFSLight, ADFSLightScoped, ADFSLightCufs -> account.sendPasswordResetRequestADFSLight(url, email, captchaCode)
             ADFS, ADFSCards -> {
                 val page = account.getPasswordResetPageADFS(url)
-                val formFields = page.html.select("[type=hidden]").map { input ->
+                val formFields = page.html.select("[type=hidden]").associate { input ->
                     input.attr("name") to input.attr("value")
-                }.toMap()
+                }
                 account.sendPasswordResetRequestADFS(
                     url = url,
                     username = email,
@@ -55,10 +55,10 @@ class AccountRepository(private val account: AccountService) {
         }
 
         with(res.html) {
-            select(".ErrorMessage")?.text()?.let { // STANDARD
+            select(".ErrorMessage").text().let { // STANDARD
                 if (it.contains("Niepoprawny adres email")) throw InvalidEmailException(it)
             }
-            select(".ErrorMessage, #ErrorTextLabel, #lblStatus")?.text()?.let { // STANDARD, ADFSLight, ADFSCards
+            select(".ErrorMessage, #ErrorTextLabel, #lblStatus").text()?.let { // STANDARD, ADFSLight, ADFSCards
                 if (it.contains("nie zostało odnalezione lub zostało zablokowane")) throw NoAccountFoundException(it)
                 if (it.contains("nie ma w systemie zarejestrowanych")) throw NoAccountFoundException(it) // 😀
                 if (it.contains("żądanie nie zostało poprawnie autoryzowane")) throw InvalidCaptchaException(it)
@@ -101,7 +101,7 @@ class AccountRepository(private val account: AccountService) {
             page.select(SELECTOR_STANDARD).isNotEmpty() -> STANDARD
             page.select(SELECTOR_ADFS).isNotEmpty() -> ADFS
             page.select(SELECTOR_ADFS_LIGHT).isNotEmpty() -> {
-                page.selectFirst("form").attr("action").run {
+                page.selectFirst("form")?.attr("action").orEmpty().run {
                     when {
                         contains("cufs.edu.lublin.eu") -> ADFSLightCufs
                         startsWith("/LoginPage.aspx") -> ADFSLight

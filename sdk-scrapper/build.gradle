@@ -6,6 +6,7 @@ plugins {
 
 dependencies {
     implementation "pl.droidsonroids:jspoon:$jspoon"
+    implementation "org.jsoup:jsoup:$jsoup"
 
     testImplementation "com.squareup.okhttp3:mockwebserver:$okhttp3"
     implementation "com.squareup.retrofit2:retrofit:$retrofit"

@@ -25,7 +25,7 @@ fun TimetableResponse.mapTimetableList(startDate: LocalDate, endDate: LocalDate?
         )
     }.mapNotNull { parser.getTimetable(it) }
 }.asSequence().filter {
-    it.date.toLocalDate() >= startDate && it.date.toLocalDate() <= endDate ?: startDate.plusDays(4)
+    it.date.toLocalDate() >= startDate && it.date.toLocalDate() <= (endDate ?: startDate.plusDays(4))
 }.sortedWith(compareBy({ it.date }, { it.number })).toList()
 
 fun TimetableResponse.mapTimetableHeaders() = headers.drop(1).map {
@@ -70,6 +70,6 @@ fun ApiResponse<*>.mapCompletedLessonsList(start: LocalDate, endDate: LocalDate?
                 teacher = teacher.substringBefore(" [")
             }
         }.sortedWith(compareBy({ it.date }, { it.number })).toList().filter {
-            it.date.toLocalDate() >= start && it.date.toLocalDate() <= endDate ?: start.plusDays(4)
+            it.date.toLocalDate() >= start && it.date.toLocalDate() <= (endDate ?: start.plusDays(4))
         }
 }

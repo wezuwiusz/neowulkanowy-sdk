@@ -108,10 +108,10 @@ class TimetableParser {
         when {
             size == 2 -> getLessonLight(lesson, this, div.ownText())
             size == 3 -> getSimpleLesson(lesson, this, changes = div.ownText())
-            size == 4 && last().hasClass(CLASS_REALIZED) -> getSimpleLesson(lesson, this, changes = div.ownText())
+            size == 4 && last()?.hasClass(CLASS_REALIZED) == true -> getSimpleLesson(lesson, this, changes = div.ownText())
             size == 4 -> getGroupLesson(lesson, this)
-            size == 5 && first().hasClass(CLASS_CHANGES) && select(".$CLASS_REALIZED").size == 2 -> getSimpleLesson(lesson, this, 1, changes = div.ownText())
-            size == 5 && last().hasClass(CLASS_REALIZED) -> getGroupLesson(lesson, this)
+            size == 5 && first()?.hasClass(CLASS_CHANGES) == true && select(".$CLASS_REALIZED").size == 2 -> getSimpleLesson(lesson, this, 1, changes = div.ownText())
+            size == 5 && last()?.hasClass(CLASS_REALIZED) == true -> getGroupLesson(lesson, this)
             size == 7 -> getSimpleLessonWithReplacement(lesson, this)
             size == 9 -> getGroupLessonWithReplacement(lesson, this)
             else -> lesson
@@ -135,7 +135,7 @@ class TimetableParser {
     }
 
     private fun getLessonLight(lesson: Timetable, spans: Elements, info: String): Timetable {
-        val firstElementClasses = spans.first().classNames()
+        val firstElementClasses = spans.first()?.classNames().orEmpty()
         val isCanceled = CLASS_MOVED_OR_CANCELED in firstElementClasses
         return lesson.copy(
             subject = getLessonAndGroupInfoFromSpan(spans[0])[0],
@@ -148,7 +148,7 @@ class TimetableParser {
     }
 
     private fun getLesson(lesson: Timetable, spans: Elements, offset: Int = 0, infoExtraOffset: Int = 0, changes: String = ""): Timetable {
-        val firstElementClasses = spans.first().classNames()
+        val firstElementClasses = spans.first()?.classNames().orEmpty()
         val isCanceled = CLASS_MOVED_OR_CANCELED in firstElementClasses
         return lesson.copy(
             subject = getLessonAndGroupInfoFromSpan(spans[0])[0],
@@ -169,7 +169,7 @@ class TimetableParser {
         teacherOld = spans[1 + o].text(),
         room = spans[5 + o * 2].text(),
         roomOld = spans[2 + o].text(),
-        info = "${getFormattedLessonInfo(spans.last().text())}, poprzednio: ${getLessonAndGroupInfoFromSpan(spans[0])[0]}",
+        info = "${getFormattedLessonInfo(spans.last()?.text())}, poprzednio: ${getLessonAndGroupInfoFromSpan(spans[0])[0]}",
         changes = true
     )
 

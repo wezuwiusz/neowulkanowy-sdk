@@ -43,8 +43,8 @@ class ErrorInterceptor : Interceptor {
         }
 
         doc.select("#MainPage_ErrorDiv div").let {
-            if (it?.text()?.contains("Trwa aktualizacja bazy danych") == true) throw ServiceUnavailableException(it.last().ownText())
-            if (it?.last()?.ownText()?.contains("czasowo wyłączona") == true) throw TemporarilyDisabledException(it.last().ownText())
+            if (it.text().contains("Trwa aktualizacja bazy danych")) throw ServiceUnavailableException(it.last()?.ownText().orEmpty())
+            if (it.last()?.ownText()?.contains("czasowo wyłączona") == true) throw TemporarilyDisabledException(it.last()?.ownText().orEmpty())
             if (it.isNotEmpty()) throw VulcanException(it[0].ownText())
         }
 
@@ -52,7 +52,7 @@ class ErrorInterceptor : Interceptor {
             if (it.isNotEmpty()) throw AccountPermissionException(it.text())
         }
 
-        doc.select("form")?.attr("action")?.let {
+        doc.selectFirst("form")?.attr("action")?.let {
             if ("SetNewPassword" in it) {
                 logger.debug("Set new password action url: $redirectUrl")
                 throw PasswordChangeRequiredException("Wymagana zmiana hasła użytkownika", redirectUrl)
@@ -62,10 +62,10 @@ class ErrorInterceptor : Interceptor {
         when (doc.title()) {
             "Błąd" -> throw VulcanException(doc.body().text())
             "Błąd strony" -> throw VulcanException(doc.select(".errorMessage").text())
-            "Logowanie" -> throw AccountPermissionException(doc.select("div").last().ownText().split(" Jeśli")[0])
+            "Logowanie" -> throw AccountPermissionException(doc.select("div").last()?.ownText().orEmpty().split(" Jeśli")[0])
             "Przerwa techniczna" -> throw ServiceUnavailableException(doc.title())
             "Strona nie została odnaleziona" -> throw ScrapperException(doc.title())
-            "Strona nie znaleziona" -> throw ScrapperException(doc.selectFirst("div div").text())
+            "Strona nie znaleziona" -> throw ScrapperException(doc.selectFirst("div div")?.text().orEmpty())
         }
 
         doc.select("h2").text().let {
