@@ -5,7 +5,6 @@ import io.github.wulkanowy.sdk.scrapper.home.LuckyNumber
 import io.github.wulkanowy.sdk.scrapper.repository.HomepageRepository
 import io.github.wulkanowy.sdk.scrapper.service.HomepageService
 import kotlinx.coroutines.runBlocking
-import okhttp3.mockwebserver.MockResponse
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Test
@@ -19,9 +18,11 @@ class HomepageTest : BaseLocalTest() {
 
     @Test
     fun getDirectorInformation() {
-        server.enqueue(MockResponse().setBody(HomepageTest::class.java.getResource("Index.html").readText()))
-        server.enqueue("GetDirectorInformation.json")
-        server.start(3000)
+        with(server) {
+            enqueue("Index.html")
+            enqueue("GetDirectorInformation.json")
+            start(3000)
+        }
 
         val infos = runBlocking { repo.getDirectorInformation() }
         assertEquals(2, infos.size)
@@ -41,9 +42,11 @@ class HomepageTest : BaseLocalTest() {
 
     @Test
     fun getSelfGovernments() {
-        server.enqueue(MockResponse().setBody(HomepageTest::class.java.getResource("Index.html").readText()))
-        server.enqueue("GetSelfGovernments.json")
-        server.start(3000)
+        with(server) {
+            enqueue("Index.html")
+            enqueue("GetSelfGovernments.json")
+            start(3000)
+        }
 
         val units = runBlocking { repo.getSelfGovernments() }
         assertEquals(1, units.size)
@@ -65,9 +68,11 @@ class HomepageTest : BaseLocalTest() {
 
     @Test
     fun getStudentThreats() {
-        server.enqueue(MockResponse().setBody(HomepageTest::class.java.getResource("Index.html").readText()))
-        server.enqueue("GetStudentThreats.json")
-        server.start(3000)
+        with(server) {
+            enqueue("Index.html")
+            enqueue("GetStudentThreats.json")
+            start(3000)
+        }
 
         val threats = runBlocking { repo.getStudentThreats() }
         assertEquals(1, threats.size)
@@ -76,9 +81,11 @@ class HomepageTest : BaseLocalTest() {
 
     @Test
     fun getLastGrades() {
-        server.enqueue(MockResponse().setBody(HomepageTest::class.java.getResource("Index.html").readText()))
-        server.enqueue(MockResponse().setBody(HomepageTest::class.java.getResource("GetLastNotes.json").readText()))
-        server.start(3000)
+        with(server) {
+            enqueue("Index.html")
+            enqueue("GetLastNotes.json")
+            start(3000)
+        }
 
         val res = runBlocking { repo.getLastGrades() }
         val expected = listOf(
@@ -91,9 +98,11 @@ class HomepageTest : BaseLocalTest() {
 
     @Test
     fun getFreeDays() {
-        server.enqueue(MockResponse().setBody(HomepageTest::class.java.getResource("Index.html").readText()))
-        server.enqueue(MockResponse().setBody(HomepageTest::class.java.getResource("GetFreeDays.json").readText()))
-        server.start(3000)
+        with(server) {
+            enqueue("Index.html")
+            enqueue("GetFreeDays.json")
+            start(3000)
+        }
 
         val res = runBlocking { repo.getFreeDays() }
         val expected = listOf(
@@ -125,9 +134,11 @@ class HomepageTest : BaseLocalTest() {
 
     @Test
     fun getLuckyNumber_single() {
-        server.enqueue(MockResponse().setBody(HomepageTest::class.java.getResource("Index.html").readText()))
-        server.enqueue(MockResponse().setBody(HomepageTest::class.java.getResource("GetKidsLuckyNumbers.json").readText()))
-        server.start(3000)
+        with(server) {
+            enqueue("Index.html")
+            enqueue("GetKidsLuckyNumbers.json")
+            start(3000)
+        }
 
         val number = runBlocking { repo.getKidsLuckyNumbers() }
         assertEquals(listOf(LuckyNumber("", "SPL", 18)), number)
@@ -141,9 +152,11 @@ class HomepageTest : BaseLocalTest() {
 
     @Test
     fun getLuckyNumber_multi() {
-        server.enqueue(MockResponse().setBody(HomepageTest::class.java.getResource("Index.html").readText()))
-        server.enqueue(MockResponse().setBody(HomepageTest::class.java.getResource("GetKidsLuckyNumbers-multi-institution.json").readText()))
-        server.start(3000)
+        with(server) {
+            enqueue("Index.html")
+            enqueue("GetKidsLuckyNumbers-multi-institution.json")
+            start(3000)
+        }
 
         val numbers = runBlocking { repo.getKidsLuckyNumbers() }
         val expected = listOf(

@@ -14,7 +14,7 @@ class AttendanceSummaryTest : BaseLocalTest() {
         runBlocking { getStudentRepo(AttendanceSummaryTest::class.java, "StatystykiFrekwencji.json").getAttendanceSummary(-1) }
     }
 
-    private val subjets by lazy {
+    private val subjects by lazy {
         runBlocking { getStudentRepo(AttendanceSummaryTest::class.java, "Przedmioty.json").getSubjects() }
     }
 
@@ -25,7 +25,7 @@ class AttendanceSummaryTest : BaseLocalTest() {
 
     @Test
     fun getSubjects() {
-        with(subjets[0]) {
+        with(subjects[0]) {
             assertEquals("Wszystkie", name)
             assertEquals(-1, value)
         }

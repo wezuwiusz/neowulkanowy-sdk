@@ -29,6 +29,8 @@ abstract class BaseLocalTest : BaseTest() {
         enqueue(MockResponse().setBody(clazz.getResource(fileName).readText()))
     }
 
+    fun <T : Any> Class<T>.getResourceText(name: String): String = this::class.java.getResource(name)?.readText().let { requireNotNull(it) }
+
     @After
     fun tearDown() {
         server.shutdown()

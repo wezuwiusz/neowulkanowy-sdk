@@ -5,7 +5,6 @@ import io.github.wulkanowy.sdk.scrapper.BaseLocalTest
 import io.github.wulkanowy.sdk.scrapper.adapter.CustomDateAdapter
 import io.github.wulkanowy.sdk.scrapper.register.RegisterTest
 import kotlinx.coroutines.runBlocking
-import okhttp3.mockwebserver.MockResponse
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNull
@@ -160,7 +159,7 @@ class AttendanceTest : BaseLocalTest() {
 
     @Test
     fun excuseForAbsence() {
-        server.enqueue(MockResponse().setBody(RegisterTest::class.java.getResource("WitrynaUcznia.html").readText()))
+        server.enqueue("WitrynaUcznia.html", RegisterTest::class.java)
 
         val absents = listOf(
             Absent(

@@ -6,7 +6,6 @@ import io.github.wulkanowy.sdk.scrapper.exception.VulcanException
 import io.github.wulkanowy.sdk.scrapper.interceptor.ErrorInterceptorTest
 import io.github.wulkanowy.sdk.scrapper.service.LoginService
 import kotlinx.coroutines.runBlocking
-import okhttp3.mockwebserver.MockResponse
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
@@ -33,18 +32,29 @@ class LoginTest : BaseLocalTest() {
             host = "fakelog.localhost:3000",
             symbol = "default",
             cookies = CookieManager(),
-            api = getService(LoginService::class.java, "http://fakelog.localhost:3000/", true, getOkHttp(true, false, Scrapper.LoginType.ADFSCards))
+            api = getService(
+                service = LoginService::class.java,
+                url = "http://fakelog.localhost:3000/",
+                html = true,
+                okHttp = getOkHttp(
+                    errorInterceptor = true,
+                    autoLoginInterceptorOn = false,
+                    loginType = Scrapper.LoginType.ADFSCards,
+                ),
+            ),
         )
     }
 
     @Test
     fun adfsTest() {
-        server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("ADFS-form-1.html").readText()))
-        server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("ADFS-form-2.html").readText()))
-        server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("Logowanie-cufs.html").readText()))
-        server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("Logowanie-uonet.html").readText()))
-        server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("Login-success.html").readText()))
-        server.start(3000)
+        with(server) {
+            enqueue("ADFS-form-1.html")
+            enqueue("ADFS-form-2.html")
+            enqueue("Logowanie-cufs.html")
+            enqueue("Logowanie-uonet.html")
+            enqueue("Login-success.html")
+            start(3000)
+        }
 
         val res = runBlocking { adfs.login("jan@fakelog.cf", "jan123") }
 
@@ -53,9 +63,11 @@ class LoginTest : BaseLocalTest() {
 
     @Test
     fun normalLogin() {
-        server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("Logowanie-uonet.html").readText()))
-        server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("Login-success.html").readText()))
-        server.start(3000)
+        with(server) {
+            enqueue("Logowanie-uonet.html")
+            enqueue("Login-success.html")
+            start(3000)
+        }
 
         val res = runBlocking { normal.login("jan@fakelog.cf", "jan123") }
 
@@ -64,9 +76,11 @@ class LoginTest : BaseLocalTest() {
 
     @Test
     fun multiLogin() {
-        server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("Logowanie-uonet.html").readText()))
-        server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("Login-success.html").readText()))
-        server.start(3000)
+        with(server) {
+            enqueue("Logowanie-uonet.html")
+            enqueue("Login-success.html")
+            start(3000)
+        }
 
         runBlocking { normal.login("jan@fakelog.cf", "jan123") }
 
@@ -75,10 +89,12 @@ class LoginTest : BaseLocalTest() {
 
     @Test
     fun multiLogin_withLogin() {
-        server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("Logowanie-uonet.html").readText()))
-        server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("Login-success-account-switch.html").readText()))
-        server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("Login-success-account-switch.html").readText()))
-        server.start(3000)
+        with(server) {
+            enqueue("Logowanie-uonet.html")
+            enqueue("Login-success-account-switch.html")
+            enqueue("Login-success-account-switch.html")
+            start(3000)
+        }
 
         runBlocking { normal.login("jan||jan@fakelog.cf", "jan123") }
 
@@ -87,9 +103,11 @@ class LoginTest : BaseLocalTest() {
 
     @Test
     fun normalLogin_encodingError() {
-        server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("Logowanie-uonet-encoding-error.html").readText()))
-        server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("Login-success.html").readText()))
-        server.start(3000)
+        with(server) {
+            enqueue("Logowanie-uonet-encoding-error.html")
+            enqueue("Login-success.html")
+            start(3000)
+        }
 
         runBlocking { normal.login("jan@fakelog.cf", "jan123") }
 
@@ -99,10 +117,12 @@ class LoginTest : BaseLocalTest() {
 
     @Test
     fun adfsBadCredentialsException() {
-        server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("ADFS-form-1.html").readText()))
-        server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("ADFS-form-2.html").readText()))
-        server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("Logowanie-adfs-zle-haslo.html").readText()))
-        server.start(3000)
+        with(server) {
+            enqueue("ADFS-form-1.html")
+            enqueue("ADFS-form-2.html")
+            enqueue("Logowanie-adfs-zle-haslo.html")
+            start(3000)
+        }
 
         try {
             runBlocking { adfs.login("jan@fakelog.cf", "jan1234") }
@@ -113,9 +133,11 @@ class LoginTest : BaseLocalTest() {
 
     @Test
     fun normalBadCredentialsException() {
-        server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("Logowanie-uonet.html").readText()))
-        server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("Logowanie-normal-zle-haslo.html").readText()))
-        server.start(3000)
+        with(server) {
+            enqueue("Logowanie-uonet.html")
+            enqueue("Logowanie-normal-zle-haslo.html")
+            start(3000)
+        }
 
         try {
             runBlocking { adfs.login("jan@fakelog.cf", "jan1234") }
@@ -126,9 +148,11 @@ class LoginTest : BaseLocalTest() {
 
     @Test
     fun accessPermissionException() {
-        server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("Logowanie-uonet.html").readText()))
-        server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("Logowanie-brak-dostepu.html").readText()))
-        server.start(3000)
+        with(server) {
+            enqueue("Logowanie-uonet.html")
+            enqueue("Logowanie-brak-dostepu.html")
+            start(3000)
+        }
 
         try {
             runBlocking { adfs.login("jan@fakelog.cf", "jan1234") }
@@ -140,8 +164,10 @@ class LoginTest : BaseLocalTest() {
 
     @Test
     fun invalidCertificatePage() {
-        server.enqueue(MockResponse().setBody(ErrorInterceptorTest::class.java.getResource("Offline.html").readText()))
-        server.start(3000)
+        with(server) {
+            enqueue("Offline.html", ErrorInterceptorTest::class.java)
+            start(3000)
+        }
 
         try {
             runBlocking { adfs.login("jan@fakelog.cf", "jan1234") }

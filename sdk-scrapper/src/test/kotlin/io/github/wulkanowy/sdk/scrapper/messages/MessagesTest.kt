@@ -18,8 +18,10 @@ class MessagesTest : BaseLocalTest() {
 
     @Test
     fun getRecipients() {
-        server.enqueue(MockResponse().setBody(MessagesTest::class.java.getResource("Adresaci.json").readText()))
-        server.start(3000)
+        with(server) {
+            enqueue("Adresaci.json")
+            start(3000)
+        }
 
         val recipients = runBlocking { api.getRecipients(6) }
 
@@ -48,8 +50,10 @@ class MessagesTest : BaseLocalTest() {
 
     @Test
     fun getReceivedMessagesTest() {
-        server.enqueue(MockResponse().setBody(MessagesTest::class.java.getResource("WiadomosciOdebrane.json").readText()))
-        server.start(3000)
+        with(server) {
+            enqueue("WiadomosciOdebrane.json")
+            start(3000)
+        }
 
         val messages = runBlocking { api.getReceivedMessages(null, null) }
 
@@ -70,8 +74,10 @@ class MessagesTest : BaseLocalTest() {
 
     @Test
     fun getDeletedMessagesTest() {
-        server.enqueue(MockResponse().setBody(MessagesTest::class.java.getResource("WiadomosciUsuniete.json").readText()))
-        server.start(3000)
+        with(server) {
+            enqueue("WiadomosciUsuniete.json")
+            start(3000)
+        }
 
         val messages = runBlocking { api.getDeletedMessages(null, null) }
 
@@ -81,8 +87,10 @@ class MessagesTest : BaseLocalTest() {
 
     @Test
     fun getMessagesSentTest() {
-        server.enqueue(MockResponse().setBody(MessagesTest::class.java.getResource("WiadomosciWyslane.json").readText()))
-        server.start(3000)
+        with(server) {
+            enqueue("WiadomosciWyslane.json")
+            start(3000)
+        }
 
         val messages = runBlocking { api.getSentMessages(null, null) }
 
@@ -101,8 +109,10 @@ class MessagesTest : BaseLocalTest() {
 
     @Test
     fun getMessagesSent_recipientWithDashInName() {
-        server.enqueue(MockResponse().setBody(MessagesTest::class.java.getResource("WiadomosciWyslane.json").readText()))
-        server.start(3000)
+        with(server) {
+            enqueue("WiadomosciWyslane.json")
+            start(3000)
+        }
 
         runBlocking { api.getSentMessages(null, null) }[1].run {
             assertEquals("Czerwieńska - Kowalska Joanna", recipients!![0].name)
@@ -111,8 +121,10 @@ class MessagesTest : BaseLocalTest() {
 
     @Test
     fun getMessagesSent_multiRecipients() {
-        server.enqueue(MockResponse().setBody(MessagesTest::class.java.getResource("WiadomosciWyslane.json").readText()))
-        server.start(3000)
+        with(server) {
+            enqueue("WiadomosciWyslane.json")
+            start(3000)
+        }
 
         runBlocking { api.getSentMessages(null, null) }[3].run {
             assertEquals(2, recipients?.size)
@@ -123,8 +135,10 @@ class MessagesTest : BaseLocalTest() {
 
     @Test
     fun getMessagesSent_multiRecipientsWithBraces() {
-        server.enqueue(MockResponse().setBody(MessagesTest::class.java.getResource("WiadomosciWyslane.json").readText()))
-        server.start(3000)
+        with(server) {
+            enqueue("WiadomosciWyslane.json")
+            start(3000)
+        }
 
         runBlocking { api.getSentMessages(null, null) }[5].run {
             assertEquals(2, recipients?.size)
@@ -135,8 +149,10 @@ class MessagesTest : BaseLocalTest() {
 
     @Test
     fun getMessageRecipientsTest() {
-        server.enqueue(MockResponse().setBody(MessagesTest::class.java.getResource("Adresaci.json").readText()))
-        server.start(3000)
+        with(server) {
+            enqueue("Adresaci.json")
+            start(3000)
+        }
 
         runBlocking { api.getMessageRecipients(421, 0) }[0].run {
             assertEquals("18rPracownik", id)
@@ -151,8 +167,10 @@ class MessagesTest : BaseLocalTest() {
 
     @Test
     fun getMessageSenderTest() {
-        server.enqueue(MockResponse().setBody(MessagesTest::class.java.getResource("Adresaci.json").readText()))
-        server.start(3000)
+        with(server) {
+            enqueue("Adresaci.json")
+            start(3000)
+        }
 
         runBlocking { api.getMessageRecipients(421, 94) }[1].run {
             assertEquals("94rPracownik", id)
@@ -162,18 +180,22 @@ class MessagesTest : BaseLocalTest() {
 
     @Test
     fun getMessageContentTest() {
-        server.enqueue(MockResponse().setBody(MessagesTest::class.java.getResource("Start.html").readText()))
-        server.enqueue(MockResponse().setBody(MessagesTest::class.java.getResource("Wiadomosc.json").readText()))
-        server.start(3000)
+        with(server) {
+            enqueue("Start.html")
+            enqueue("Wiadomosc.json")
+            start(3000)
+        }
 
         assertEquals(90, runBlocking { api.getMessage(1, 1, false, 0) }.length)
     }
 
     @Test
     fun getMessageAttachmentsTest() {
-        server.enqueue(MockResponse().setBody(MessagesTest::class.java.getResource("Start.html").readText()))
-        server.enqueue(MockResponse().setBody(MessagesTest::class.java.getResource("Wiadomosc.json").readText()))
-        server.start(3000)
+        with(server) {
+            enqueue("Start.html")
+            enqueue("Wiadomosc.json")
+            start(3000)
+        }
 
         val attachments = runBlocking { api.getMessageAttachments(1, 1) }
 
@@ -189,9 +211,11 @@ class MessagesTest : BaseLocalTest() {
 
     @Test
     fun sendMessageTest() {
-        server.enqueue(MockResponse().setBody(MessagesTest::class.java.getResource("Start.html").readText()))
-        server.enqueue(MockResponse().setBody(MessagesTest::class.java.getResource("WyslanaWiadomosc.json").readText()))
-        server.start(3000)
+        with(server) {
+            enqueue("Start.html")
+            enqueue("WyslanaWiadomosc.json")
+            start(3000)
+        }
 
         runBlocking {
             api.sendMessage(
@@ -218,9 +242,11 @@ class MessagesTest : BaseLocalTest() {
 
     @Test
     fun deleteMessageTest() {
-        server.enqueue(MockResponse().setBody(MessagesTest::class.java.getResource("Start.html").readText()))
-        server.enqueue(MockResponse().setBody("{\"success\": true}"))
-        server.start(3000)
+        with(server) {
+            enqueue("Start.html")
+            enqueue(MockResponse().setBody("{\"success\": true}"))
+            start(3000)
+        }
 
         assertEquals(runBlocking { api.deleteMessages(listOf(74, 69), 2) }, true)
 
@@ -242,9 +268,11 @@ class MessagesTest : BaseLocalTest() {
 
     @Test
     fun deleteMessage_emptyResponse() {
-        server.enqueue(MockResponse().setBody(MessagesTest::class.java.getResource("Start.html").readText()))
-        server.enqueue(MockResponse().setBody(""))
-        server.start(3000)
+        with(server) {
+            enqueue("Start.html")
+            enqueue(MockResponse().setBody(""))
+            start(3000)
+        }
 
         val res = runCatching { runBlocking { api.deleteMessages(listOf(74, 69), 3) } }
 
