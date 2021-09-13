@@ -8,8 +8,9 @@ fun List<ExamResponse>.mapExamsList(startDate: LocalDate, endDate: LocalDate?): 
     return asSequence().map { weeks ->
         weeks.weeks.map { day ->
             day.exams.map { exam ->
+                val teacherAndSymbol = exam.teacher.split(" [")
                 exam.copy(
-                    teacher = exam.teacher.split(" [").first(),
+                    teacher = teacherAndSymbol.first(),
                     subject = exam.subject,
                     type = when (exam.type) {
                         "1" -> "Sprawdzian"
@@ -19,7 +20,7 @@ fun List<ExamResponse>.mapExamsList(startDate: LocalDate, endDate: LocalDate?): 
                 ).apply {
                     date = day.date
 
-                    teacherSymbol = exam.teacher.split(" [").last().removeSuffix("]")
+                    teacherSymbol = teacherAndSymbol.last().removeSuffix("]")
                 }
             }
         }.flatten()
