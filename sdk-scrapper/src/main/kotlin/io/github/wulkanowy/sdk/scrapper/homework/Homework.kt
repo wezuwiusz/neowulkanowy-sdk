@@ -6,6 +6,7 @@ import java.util.Date
 
 @JsonClass(generateAdapter = true)
 data class Homework(
+
     @Json(name = "HomeworkId")
     val homeworkId: Int,
 

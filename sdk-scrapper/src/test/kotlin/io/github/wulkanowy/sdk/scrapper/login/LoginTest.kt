@@ -3,7 +3,6 @@ package io.github.wulkanowy.sdk.scrapper.login
 import io.github.wulkanowy.sdk.scrapper.BaseLocalTest
 import io.github.wulkanowy.sdk.scrapper.Scrapper
 import io.github.wulkanowy.sdk.scrapper.exception.VulcanException
-import io.github.wulkanowy.sdk.scrapper.homework.HomeworkTest
 import io.github.wulkanowy.sdk.scrapper.interceptor.ErrorInterceptorTest
 import io.github.wulkanowy.sdk.scrapper.service.LoginService
 import kotlinx.coroutines.runBlocking
@@ -137,14 +136,6 @@ class LoginTest : BaseLocalTest() {
             assertTrue(e is AccountPermissionException)
             assertEquals("Adres nie został zarejestrowany w dzienniku uczniowskim jako adres rodzica, bądź ucznia.", e.message)
         }
-    }
-
-    @Test
-    fun alreadyLoggedIn() {
-        server.enqueue(MockResponse().setBody(HomeworkTest::class.java.getResource("ZadaniaDomowe.html").readText()))
-        server.start(3000)
-
-        runBlocking { normal.login("jan@fakelog.cf", "jan123") }
     }
 
     @Test

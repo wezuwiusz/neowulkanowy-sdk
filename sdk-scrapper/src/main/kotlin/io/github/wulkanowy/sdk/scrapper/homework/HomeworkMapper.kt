@@ -8,13 +8,14 @@ fun List<HomeworkDay>.mapHomework(startDate: LocalDate, endDate: LocalDate?): Li
     return asSequence().map { day ->
         day.items.map { homework ->
             val teacherAndDate = homework.teacher.split(", ")
+            val teacher = teacherAndDate.first().split(" [").first()
+            val teacherCode = teacherAndDate.first().split(" [").last().removeSuffix("]")
             homework.copy(
-                teacher = teacherAndDate.first().split(" [").first()
+                teacher = teacher,
+                date = day.date,
             ).apply {
-                teacherSymbol = teacherAndDate.first().split(" [").last().removeSuffix("]")
-                _attachments = homework.attachments.map {
-                    it.url to it.filename
-                }
+                teacherSymbol = teacherCode
+                _attachments = homework.attachments.map { it.url to it.filename }
             }
         }
     }.flatten().filter {

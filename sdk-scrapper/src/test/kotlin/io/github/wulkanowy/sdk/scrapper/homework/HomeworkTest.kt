@@ -13,11 +13,11 @@ class HomeworkTest : BaseLocalTest() {
 
     @Test
     fun getHomeworkList() {
-        assertEquals(2, homework.size)
+        assertEquals(3, homework.size)
     }
 
     @Test
-    fun getHomework() {
+    fun getHomeworkWithDifferentDate() {
         with(homework[0]) {
             assertEquals(getDate(2018, 10, 1), date)
             assertEquals(getDate(2018, 9, 25), entryDate)
@@ -29,8 +29,20 @@ class HomeworkTest : BaseLocalTest() {
     }
 
     @Test
-    fun getHomeworkWithAttachments() {
+    fun getHomework() {
         with(homework[1]) {
+            assertEquals(getDate(2018, 10, 1), date)
+            assertEquals(getDate(2018, 9, 25), entryDate)
+            assertEquals("Naprawa komputera", subject)
+            assertEquals("Test diagnozujący", content)
+            assertEquals("Mickiewicz Adam", teacher)
+            assertEquals("MA", teacherSymbol)
+        }
+    }
+
+    @Test
+    fun getHomeworkWithAttachments() {
+        with(homework[2]) {
             assertEquals(getDate(2018, 10, 1), date)
             assertEquals(getDate(2018, 9, 25), entryDate)
             assertEquals("Techniki biurowe", subject)
