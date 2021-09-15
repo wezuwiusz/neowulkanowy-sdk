@@ -109,16 +109,16 @@ class TimetableParser {
             size == 2 -> getLessonLight(lesson, this, div.ownText())
             size == 3 -> getSimpleLesson(lesson, this, changes = div.ownText())
             size == 4 && last()?.hasClass(CLASS_REALIZED) == true -> getSimpleLesson(lesson, this, changes = div.ownText())
-            size == 4 -> getGroupLesson(lesson, this)
+            size == 4 -> getGroupLesson(lesson, this, changes = div.ownText())
             size == 5 && first()?.hasClass(CLASS_CHANGES) == true && select(".$CLASS_REALIZED").size == 2 -> getSimpleLesson(lesson, this, 1, changes = div.ownText())
-            size == 5 && last()?.hasClass(CLASS_REALIZED) == true -> getGroupLesson(lesson, this)
-            size == 7 -> getSimpleLessonWithReplacement(lesson, this)
-            size == 9 -> getGroupLessonWithReplacement(lesson, this)
+            size == 5 && last()?.hasClass(CLASS_REALIZED) == true -> getGroupLesson(lesson, this, changes = div.ownText())
+            size == 7 -> getSimpleLessonWithReplacement(lesson, spans = this)
+            size == 9 -> getGroupLessonWithReplacement(lesson, spans = this)
             else -> lesson
         }
     }
 
-    private fun getSimpleLesson(lesson: Timetable, spans: Elements, infoExtraOffset: Int = 0, changes: String = ""): Timetable {
+    private fun getSimpleLesson(lesson: Timetable, spans: Elements, infoExtraOffset: Int = 0, changes: String): Timetable {
         return getLesson(lesson, spans, 0, infoExtraOffset, changes)
     }
 
@@ -126,8 +126,8 @@ class TimetableParser {
         return getLessonWithReplacement(lesson, spans)
     }
 
-    private fun getGroupLesson(lesson: Timetable, spans: Elements): Timetable {
-        return getLesson(lesson, spans, 1)
+    private fun getGroupLesson(lesson: Timetable, spans: Elements, changes: String): Timetable {
+        return getLesson(lesson, spans, offset = 1, changes = changes)
     }
 
     private fun getGroupLessonWithReplacement(lesson: Timetable, spans: Elements): Timetable {
@@ -153,8 +153,8 @@ class TimetableParser {
         return lesson.copy(
             subject = getLessonAndGroupInfoFromSpan(spans[0])[0],
             group = getLessonAndGroupInfoFromSpan(spans[0])[1],
-            teacher = spans[1 + offset].text(),
-            room = spans[2 + offset].text(),
+            room = spans[1 + offset].text(),
+            teacher = spans[2 + offset].text(),
             info = getFormattedLessonInfo(spans.getOrNull(3 + offset + infoExtraOffset)?.text() ?: changes),
             canceled = isCanceled,
             changes = (changes.isNotBlank() && !isCanceled) || CLASS_CHANGES in firstElementClasses
