@@ -8,7 +8,7 @@ dependencies {
     implementation "pl.droidsonroids:jspoon:$jspoon"
     implementation "org.jsoup:jsoup:$jsoup"
 
-    testImplementation "com.squareup.okhttp3:mockwebserver:$okhttp3"
+    testImplementation "com.squareup.okhttp3:mockwebserver"
     implementation "com.squareup.retrofit2:retrofit:$retrofit"
     implementation "com.squareup.retrofit2:converter-moshi:$retrofit"
     implementation "com.squareup.retrofit2:converter-scalars:$retrofit"
@@ -18,5 +18,5 @@ dependencies {
     implementation "com.squareup.moshi:moshi-adapters:$moshi"
     kapt "com.squareup.moshi:moshi-kotlin-codegen:$moshi"
 
-    implementation "com.squareup.okhttp3:okhttp-urlconnection:$okhttp3"
+    implementation "com.squareup.okhttp3:okhttp-urlconnection"
 }
