@@ -39,7 +39,7 @@ class ErrorInterceptor : Interceptor {
         }
 
         doc.select(".ErrorMessage, #ErrorTextLabel, #loginArea #errorText").let {
-            if (it.isNotEmpty()) throw BadCredentialsException(it.text())
+            if (it.isNotEmpty()) throw BadCredentialsException(it.text().trimEnd('.'))
         }
 
         doc.select("#MainPage_ErrorDiv div").let {
