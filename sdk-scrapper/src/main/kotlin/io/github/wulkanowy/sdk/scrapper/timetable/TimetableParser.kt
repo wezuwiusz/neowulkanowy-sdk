@@ -174,7 +174,7 @@ class TimetableParser {
             group = getLessonAndGroupInfoFromSpan(spans[0])[1],
             room = spans[2 + offset].text(),
             teacher = getFormattedTeacher(changes),
-            teacherOld = spans[3 + offset].text(),
+            teacherOld = spans[3 + offset].text().split(" ").asReversed().joinToString(" "),
             info = getFormattedLessonInfo(spans.getOrNull(4 + offset + infoExtraOffset)?.text() ?: changes),
             canceled = isCanceled,
             changes = (changes.isNotBlank() && !isCanceled) || CLASS_CHANGES in firstElementClasses
