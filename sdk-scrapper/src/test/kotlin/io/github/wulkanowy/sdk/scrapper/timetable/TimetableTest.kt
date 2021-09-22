@@ -591,7 +591,7 @@ class TimetableTest : BaseLocalTest() {
             assertEquals("SG2", room)
             assertEquals("zastępstwo: Nowak Jan", info)
             assertEquals("", subjectOld)
-            assertEquals("Kowalska Joanna", teacherOld)
+            assertEquals("Joanna Kowalska", teacherOld)
             assertEquals("", roomOld)
 
             assertEquals(false, canceled)
@@ -613,7 +613,7 @@ class TimetableTest : BaseLocalTest() {
             assertEquals("SG2", room)
             assertEquals("zastępstwo: Kowalska Joanna", info)
             assertEquals("", subjectOld)
-            assertEquals("Kowalska Joanna", teacherOld)
+            assertEquals("Joanna Kowalska", teacherOld)
             assertEquals("", roomOld)
 
             assertEquals(false, canceled)
