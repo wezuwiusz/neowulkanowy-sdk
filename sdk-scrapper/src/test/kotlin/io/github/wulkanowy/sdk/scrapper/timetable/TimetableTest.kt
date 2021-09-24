@@ -565,9 +565,9 @@ class TimetableTest : BaseLocalTest() {
 
             assertEquals("pracownia programowania", subject)
             assertEquals("JA 2", group)
-            assertEquals("Tabaluga Jakub", teacher)
+            assertEquals("Jakub Tabaluga", teacher)
             assertEquals("B149", room)
-            assertEquals("zastępstwo: Tabaluga Jakub", info)
+            assertEquals("", info)
             assertEquals("", subjectOld)
             assertEquals("", teacherOld)
             assertEquals("", roomOld)
@@ -578,7 +578,7 @@ class TimetableTest : BaseLocalTest() {
     }
 
     @Test
-    fun getLightLesson_withoutClasses_withSubstitution_withTeacher() {
+    fun getLightGroupLesson_withoutClasses_withSubstitution_withTeacher() {
         with(timetable[MONDAY_OFFSET + 5]) {
             // poniedziałek, 5
             assertEquals(5, number)
@@ -587,11 +587,11 @@ class TimetableTest : BaseLocalTest() {
 
             assertEquals("Wychowanie fizyczne", subject)
             assertEquals("2/2", group)
-            assertEquals("Nowak Jan", teacher)
+            assertEquals("Jan Nowak", teacher)
             assertEquals("SG2", room)
-            assertEquals("zastępstwo: Nowak Jan", info)
+            assertEquals("", info)
             assertEquals("", subjectOld)
-            assertEquals("Kowalska Joanna", teacherOld)
+            assertEquals("Joanna Kowalska", teacherOld)
             assertEquals("", roomOld)
 
             assertEquals(false, canceled)
@@ -600,20 +600,20 @@ class TimetableTest : BaseLocalTest() {
     }
 
     @Test
-    fun getLightLesson_withoutClasses_withSubstitution_withTheSameTeacher() {
+    fun getLightLesson_withSubstitution() {
         with(timetable[TUESDAY_OFFSET + 5]) {
             // wtorek, 5
             assertEquals(5, number)
             assertEquals(getDate(2018, 9, 25, 11, 45, 0), start)
             assertEquals(getDate(2018, 9, 25, 12, 30, 0), end)
 
-            assertEquals("Wychowanie fizyczne", subject)
-            assertEquals("2/2", group)
-            assertEquals("Kowalska Joanna", teacher)
-            assertEquals("SG2", room)
-            assertEquals("zastępstwo: Kowalska Joanna", info)
+            assertEquals("testowanie i dokumentowanie projektu informatycznego", subject)
+            assertEquals("", group)
+            assertEquals("Jan Nowak", teacher)
+            assertEquals("A220", room)
+            assertEquals("", info)
             assertEquals("", subjectOld)
-            assertEquals("Kowalska Joanna", teacherOld)
+            assertEquals("Joanna Kowalska", teacherOld)
             assertEquals("", roomOld)
 
             assertEquals(false, canceled)

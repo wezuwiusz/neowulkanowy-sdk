@@ -109,8 +109,9 @@ class TimetableParser {
     private fun getLessonInfo(lesson: Timetable, div: Element) = div.select("span").run {
         when {
             size == 2 -> getLessonLight(lesson, this, div.ownText())
+            size == 3 && div.ownText().contains(INFO_REPLACEMENT, true) -> getSimpleLessonWithNewReplacement(lesson, spans = this, offset = 0, changes = div.ownText())
             size == 3 -> getSimpleLesson(lesson, this, changes = div.ownText())
-            size == 4 && div.ownText().contains(INFO_REPLACEMENT, true) -> getSimpleLessonWithNewReplacement(lesson, spans = this, changes = div.ownText())
+            size == 4 && div.ownText().contains(INFO_REPLACEMENT, true) -> getSimpleLessonWithNewReplacement(lesson, spans = this, offset = 1, changes = div.ownText())
             size == 4 && last()?.hasClass(CLASS_REALIZED) == true -> getSimpleLesson(lesson, this, changes = div.ownText())
             size == 4 -> getGroupLesson(lesson, this, changes = div.ownText())
             size == 5 && first()?.hasClass(CLASS_CHANGES) == true && select(".$CLASS_REALIZED").size == 2 -> getSimpleLesson(lesson, this, 1, changes = div.ownText())
@@ -125,8 +126,8 @@ class TimetableParser {
         return getLesson(lesson, spans, 0, infoExtraOffset, changes)
     }
 
-    private fun getSimpleLessonWithNewReplacement(lesson: Timetable, spans: Elements, changes: String): Timetable {
-        return getLessonWithReplacementTeacher(lesson, spans, changes = changes)
+    private fun getSimpleLessonWithNewReplacement(lesson: Timetable, spans: Elements, offset: Int, changes: String): Timetable {
+        return getLessonWithReplacementTeacher(lesson, spans, offset, changes = changes)
     }
 
     private fun getSimpleLessonWithReplacement(lesson: Timetable, spans: Elements): Timetable {
@@ -170,14 +171,13 @@ class TimetableParser {
         )
     }
 
-    private fun getLessonWithReplacementTeacher(lesson: Timetable, spans: Elements, offset: Int = 0, changes: String): Timetable {
+    private fun getLessonWithReplacementTeacher(lesson: Timetable, spans: Elements, offset: Int, changes: String): Timetable {
         return lesson.copy(
             subject = getLessonAndGroupInfoFromSpan(spans[0])[0],
             group = getLessonAndGroupInfoFromSpan(spans[0])[1],
-            room = spans[2 + offset].text(),
-            teacher = getFormattedTeacher(changes),
-            teacherOld = spans[3 + offset].text().getTeacherNameInReverse(),
-            info = getFormattedLessonInfo(spans.getOrNull(4 + offset)?.text() ?: changes),
+            room = spans[1 + offset].text(),
+            teacher = getTeacherFromInfo(changes).getTeacherNameInReverse(),
+            teacherOld = spans[2 + offset].text(),
             changes = true
         )
     }
@@ -196,7 +196,7 @@ class TimetableParser {
 
     private fun getFormattedLessonInfo(info: String?) = info?.removeSurrounding("(", ")").orEmpty()
 
-    private fun getFormattedTeacher(info: String?) = info?.substringBefore(")")?.substringAfter("(zastępstwo: ").orEmpty()
+    private fun getTeacherFromInfo(info: String?) = info?.substringBefore(")")?.substringAfter("(zastępstwo: ").orEmpty()
 
     private fun String?.getTeacherNameInReverse() = orEmpty().split(" ").asReversed().joinToString(" ")
 
