@@ -22,16 +22,16 @@ class TimetableTest : BaseLocalTest() {
 
     companion object {
         private const val MONDAY_OFFSET = 0
-        private const val TUESDAY_OFFSET = 5
-        private const val WEDNESDAY_OFFSET = 10
-        private const val THURSDAY_OFFSET = 15
-        private const val FRIDAY_OFFSET = 20
+        private const val TUESDAY_OFFSET = 6
+        private const val WEDNESDAY_OFFSET = 12
+        private const val THURSDAY_OFFSET = 17
+        private const val FRIDAY_OFFSET = 22
     }
 
     @Test
     fun getTimetableTest() {
         assertEquals(5, headers.size)
-        assertEquals(25, timetable.size)
+        assertEquals(27, timetable.size)
         assertEquals(2, additional.size)
     }
 
@@ -565,11 +565,55 @@ class TimetableTest : BaseLocalTest() {
 
             assertEquals("pracownia programowania", subject)
             assertEquals("JA 2", group)
-            assertEquals("", teacher)
+            assertEquals("Jakub Tabaluga", teacher)
             assertEquals("B149", room)
-            assertEquals("zastępstwo: Tabaluga Jakub", info)
+            assertEquals("", info)
             assertEquals("", subjectOld)
             assertEquals("", teacherOld)
+            assertEquals("", roomOld)
+
+            assertEquals(false, canceled)
+            assertEquals(true, changes)
+        }
+    }
+
+    @Test
+    fun getLightGroupLesson_withoutClasses_withSubstitution_withTeacher() {
+        with(timetable[MONDAY_OFFSET + 5]) {
+            // poniedziałek, 5
+            assertEquals(5, number)
+            assertEquals(getDate(2018, 9, 24, 11, 45, 0), start)
+            assertEquals(getDate(2018, 9, 24, 12, 30, 0), end)
+
+            assertEquals("Wychowanie fizyczne", subject)
+            assertEquals("2/2", group)
+            assertEquals("Jan Nowak", teacher)
+            assertEquals("SG2", room)
+            assertEquals("", info)
+            assertEquals("", subjectOld)
+            assertEquals("Joanna Kowalska", teacherOld)
+            assertEquals("", roomOld)
+
+            assertEquals(false, canceled)
+            assertEquals(true, changes)
+        }
+    }
+
+    @Test
+    fun getLightLesson_withSubstitution() {
+        with(timetable[TUESDAY_OFFSET + 5]) {
+            // wtorek, 5
+            assertEquals(5, number)
+            assertEquals(getDate(2018, 9, 25, 11, 45, 0), start)
+            assertEquals(getDate(2018, 9, 25, 12, 30, 0), end)
+
+            assertEquals("testowanie i dokumentowanie projektu informatycznego", subject)
+            assertEquals("", group)
+            assertEquals("Jan Nowak", teacher)
+            assertEquals("A220", room)
+            assertEquals("", info)
+            assertEquals("", subjectOld)
+            assertEquals("Joanna Kowalska", teacherOld)
             assertEquals("", roomOld)
 
             assertEquals(false, canceled)
