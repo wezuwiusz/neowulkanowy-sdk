@@ -16,7 +16,6 @@ import io.github.wulkanowy.sdk.scrapper.register.toSemesters
 import io.github.wulkanowy.sdk.scrapper.repository.AccountRepository.Companion.SELECTOR_ADFS
 import io.github.wulkanowy.sdk.scrapper.repository.AccountRepository.Companion.SELECTOR_ADFS_CARDS
 import io.github.wulkanowy.sdk.scrapper.repository.AccountRepository.Companion.SELECTOR_ADFS_LIGHT
-import io.github.wulkanowy.sdk.scrapper.repository.AccountRepository.Companion.SELECTOR_ADFS_MS
 import io.github.wulkanowy.sdk.scrapper.repository.AccountRepository.Companion.SELECTOR_STANDARD
 import io.github.wulkanowy.sdk.scrapper.service.MessagesService
 import io.github.wulkanowy.sdk.scrapper.service.RegisterService
@@ -63,6 +62,7 @@ class RegisterRepository(
 
     private suspend fun getSymbols(): List<Pair<String, CertificateResponse>> {
         val symbolLoginType = getLoginType(startSymbol.getNormalizedSymbol())
+        println("Register login type: $symbolLoginType")
         val cert = loginHelper.apply { loginType = symbolLoginType }.sendCredentials(email, password)
 
         return Jsoup.parse(cert.wresult.replace(":", ""), "", Parser.xmlParser())
@@ -83,7 +83,7 @@ class RegisterRepository(
         val page = register.getFormType(urlGenerator.generate(ServiceManager.UrlGenerator.Site.LOGIN) + "Account/LogOn").page
         return when {
             page.select(SELECTOR_STANDARD).isNotEmpty() -> Scrapper.LoginType.STANDARD
-            page.select(SELECTOR_ADFS).isNotEmpty() || page.select(SELECTOR_ADFS_MS).isNotEmpty() -> Scrapper.LoginType.ADFS
+            page.select(SELECTOR_ADFS).isNotEmpty() -> Scrapper.LoginType.ADFS
             page.select(SELECTOR_ADFS_LIGHT).isNotEmpty() -> {
                 page.selectFirst("form")?.attr("action").orEmpty().run {
                     when {

@@ -7,6 +7,7 @@ import io.github.wulkanowy.sdk.scrapper.exception.VulcanException
 import io.github.wulkanowy.sdk.scrapper.login.AccountPermissionException
 import io.github.wulkanowy.sdk.scrapper.login.BadCredentialsException
 import io.github.wulkanowy.sdk.scrapper.login.PasswordChangeRequiredException
+import io.github.wulkanowy.sdk.scrapper.repository.AccountRepository.Companion.SELECTOR_ADFS
 import okhttp3.Interceptor
 import okhttp3.Response
 import org.jsoup.Jsoup
@@ -38,8 +39,12 @@ class ErrorInterceptor : Interceptor {
             }
         }
 
-        doc.select(".ErrorMessage, #ErrorTextLabel, #loginArea #errorText").let {
-            if (it.isNotEmpty()) throw BadCredentialsException(it.text().trimEnd('.'))
+        doc.select(".ErrorMessage, #ErrorTextLabel, #loginArea #errorText").takeIf { it.isNotEmpty() }?.let {
+            val errorMessage = it.text().trimEnd('.')
+            if (doc.select(SELECTOR_ADFS).isNotEmpty()) {
+                if (errorMessage.isNotBlank()) throw BadCredentialsException(errorMessage)
+                else logger.warn("Unexpected login page!")
+            } else throw BadCredentialsException(errorMessage)
         }
 
         doc.select("#MainPage_ErrorDiv div").let {

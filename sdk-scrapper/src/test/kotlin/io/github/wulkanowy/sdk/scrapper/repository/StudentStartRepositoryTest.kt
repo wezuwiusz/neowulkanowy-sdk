@@ -117,9 +117,8 @@ class StudentStartRepositoryTest : BaseLocalTest() {
 
     @Test
     fun getSemesters_ADFS() {
-        server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("ADFS-form-2.html").readText())) //
+        server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("ADFS.html").readText())) //
 
-        server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("ADFS-form-2.html").readText()))
         server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("Logowanie-cufs.html").readText()))
         server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("Logowanie-uonet.html").readText()))
         server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("Login-success.html").readText()))
@@ -168,10 +167,9 @@ class StudentStartRepositoryTest : BaseLocalTest() {
 
     @Test
     fun getSemesters_ADFSCards() {
-        server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("ADFS-form-1.html").readText()))
+        server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("ADFSCards.html").readText()))
 
-        server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("ADFS-form-1.html").readText()))
-        server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("ADFS-form-2.html").readText()))
+        server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("ADFSCards.html").readText()))
         server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("Logowanie-cufs.html").readText()))
         server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("Logowanie-uonet.html").readText()))
         server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("Login-success.html").readText()))

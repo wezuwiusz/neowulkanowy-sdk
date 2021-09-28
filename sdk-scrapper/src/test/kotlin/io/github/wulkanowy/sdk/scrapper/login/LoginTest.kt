@@ -27,7 +27,7 @@ class LoginTest : BaseLocalTest() {
 
     private val adfs by lazy {
         LoginHelper(
-            loginType = Scrapper.LoginType.ADFSCards,
+            loginType = Scrapper.LoginType.ADFS,
             schema = "http",
             host = "fakelog.localhost:3000",
             symbol = "default",
@@ -39,7 +39,7 @@ class LoginTest : BaseLocalTest() {
                 okHttp = getOkHttp(
                     errorInterceptor = true,
                     autoLoginInterceptorOn = false,
-                    loginType = Scrapper.LoginType.ADFSCards,
+                    loginType = Scrapper.LoginType.ADFS,
                 ),
             ),
         )
@@ -48,8 +48,6 @@ class LoginTest : BaseLocalTest() {
     @Test
     fun adfsTest() {
         with(server) {
-            enqueue("ADFS-form-1.html")
-            enqueue("ADFS-form-2.html")
             enqueue("Logowanie-cufs.html")
             enqueue("Logowanie-uonet.html")
             enqueue("Login-success.html")
@@ -118,8 +116,6 @@ class LoginTest : BaseLocalTest() {
     @Test
     fun adfsBadCredentialsException() {
         with(server) {
-            enqueue("ADFS-form-1.html")
-            enqueue("ADFS-form-2.html")
             enqueue("Logowanie-adfs-zle-haslo.html")
             start(3000)
         }

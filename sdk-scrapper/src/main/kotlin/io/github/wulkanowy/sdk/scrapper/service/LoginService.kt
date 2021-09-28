@@ -29,10 +29,6 @@ interface LoginService {
 
     @POST
     @FormUrlEncoded
-    suspend fun sendADFSFormStandardChoice(@Url url: String, @FieldMap formState: Map<String, String>): ADFSFormResponse
-
-    @POST
-    @FormUrlEncoded
     suspend fun sendADFSForm(@Url url: String, @FieldMap values: Map<String, String>): String
 
     @POST
