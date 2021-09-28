@@ -156,9 +156,9 @@ subprojects {
 }
 
 dependencies {
-    compile project(":sdk")
-    compile project(":sdk-mobile")
-    compile project(":sdk-scrapper")
+    api project(":sdk")
+    api project(":sdk-mobile")
+    api project(":sdk-scrapper")
 
-    compile "com.squareup.okhttp3:okhttp"
+    api "com.squareup.okhttp3:okhttp"
 }

@@ -7,8 +7,8 @@ dependencies {
     implementation project(":sdk-mobile")
     implementation project(":sdk-scrapper")
 
-    testCompile files(this.project(':sdk-mobile').sourceSets.test.output)
-    testCompile files(this.project(':sdk-mobile').sourceSets.test.runtimeClasspath)
+    testImplementation files(this.project(':sdk-mobile').sourceSets.test.output)
+    testImplementation files(this.project(':sdk-mobile').sourceSets.test.runtimeClasspath)
 }
 
 sourceSets {
