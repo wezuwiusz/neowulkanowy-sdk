@@ -622,7 +622,7 @@ class TimetableTest : BaseLocalTest() {
     }
 
     @Test
-    fun getLesson_tripleChange3() {
+    fun getLesson_multipleInfos() {
         with(timetable[WEDNESDAY_OFFSET + 5]) {
             // środa, 5
             assertEquals(5, number)
@@ -636,7 +636,7 @@ class TimetableTest : BaseLocalTest() {
             assertEquals("Podstawy przedsiębiorczości", subjectOld)
             assertEquals("Izabela Makrowska", teacherOld)
             assertEquals("B29", roomOld)
-            assertEquals("Poprzednio: Podstawy przedsiębiorczości (nieobecność nauczyciela: okienko dla uczniów)(przeniesiona z lekcji 8, 06.10.2021) ", info)
+            assertEquals("przeniesiona z lekcji 8, 06.10.2021", info)
 
             assertEquals(false, canceled)
             assertEquals(true, changes)

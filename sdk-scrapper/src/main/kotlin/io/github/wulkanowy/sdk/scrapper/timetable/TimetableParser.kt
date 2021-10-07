@@ -61,7 +61,7 @@ class TimetableParser {
                         subjectOld = old.subject,
                         teacherOld = old.teacher,
                         roomOld = old.room,
-                        info = "Poprzednio: ${old.subject} (${old.info})${this.info}"
+                        info = getFormattedLessonInfo(info).ifEmpty { "Poprzednio: ${old.subject} (${old.info})" },
                     )
                 }
             }
@@ -195,7 +195,7 @@ class TimetableParser {
         changes = true
     )
 
-    private fun getFormattedLessonInfo(info: String?) = info?.removeSurrounding("(", ")").orEmpty()
+    private fun getFormattedLessonInfo(info: String?) = info?.trim()?.removeSurrounding("(", ")").orEmpty()
 
     private fun getTeacherFromInfo(info: String?) = info?.substringAfter("(zastępstwo: ")?.substringBefore(")").orEmpty()
 
