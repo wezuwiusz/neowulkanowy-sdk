@@ -15,7 +15,7 @@ ext {
     retrofit = "2.9.0"
     slf4j = "1.7.32"
     moshi = "1.12.0"
-    coroutines = "1.5.1"
+    coroutines = "1.5.2"
 }
 
 version = PUBLISH_VERSION
