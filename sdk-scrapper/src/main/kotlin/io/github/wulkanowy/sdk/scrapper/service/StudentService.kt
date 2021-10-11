@@ -13,9 +13,9 @@ import io.github.wulkanowy.sdk.scrapper.exams.ExamResponse
 import io.github.wulkanowy.sdk.scrapper.grades.GradePointsSummaryResponse
 import io.github.wulkanowy.sdk.scrapper.grades.GradeRequest
 import io.github.wulkanowy.sdk.scrapper.grades.GradesResponse
-import io.github.wulkanowy.sdk.scrapper.grades.GradesStatisticsSemester
 import io.github.wulkanowy.sdk.scrapper.grades.GradesStatisticsPartial
 import io.github.wulkanowy.sdk.scrapper.grades.GradesStatisticsRequest
+import io.github.wulkanowy.sdk.scrapper.grades.GradesStatisticsSemester
 import io.github.wulkanowy.sdk.scrapper.homework.HomeworkDay
 import io.github.wulkanowy.sdk.scrapper.homework.HomeworkRequest
 import io.github.wulkanowy.sdk.scrapper.mobile.Device
@@ -25,6 +25,7 @@ import io.github.wulkanowy.sdk.scrapper.notes.NotesResponse
 import io.github.wulkanowy.sdk.scrapper.register.Diary
 import io.github.wulkanowy.sdk.scrapper.school.SchoolAndTeachersResponse
 import io.github.wulkanowy.sdk.scrapper.student.StudentInfo
+import io.github.wulkanowy.sdk.scrapper.student.StudentPhoto
 import io.github.wulkanowy.sdk.scrapper.timetable.CacheResponse
 import io.github.wulkanowy.sdk.scrapper.timetable.CompletedLessonsRequest
 import io.github.wulkanowy.sdk.scrapper.timetable.TimetableRequest
@@ -135,4 +136,7 @@ interface StudentService {
 
     @POST("Uczen.mvc/Get")
     suspend fun getStudentInfo(): ApiResponse<StudentInfo>
+
+    @POST("UczenZdjecie.mvc/Get")
+    suspend fun getStudentPhoto(): ApiResponse<StudentPhoto>
 }
