@@ -5,7 +5,7 @@ plugins {
 }
 
 dependencies {
-    implementation "io.github.wulkanowy:uonet-request-signer:36c4365"
+    implementation "com.github.wulkanowy:uonet-request-signer:9fab1bcd6e"
 
     implementation "com.brsanthu:migbase64:2.2"
 
