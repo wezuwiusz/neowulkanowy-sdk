@@ -17,7 +17,7 @@ class GradesTest : BaseLocalTest() {
 
     @Test
     fun getAllTest() {
-        assertEquals(13, grades.size)
+        assertEquals(14, grades.size)
         assertEquals(4, points.size)
     }
 
@@ -324,6 +324,24 @@ class GradesTest : BaseLocalTest() {
             assertEquals(.0, weightValue, .0)
             assertEquals(getDate(2017, 9, 1), date)
             assertEquals("Klaudia Dziedzic", teacher)
+        }
+    }
+
+    @Test
+    fun getGrade_nullableDate() {
+        with(grades[13]) {
+            assertEquals("Edukacja dla bezpieczeństwa", subject)
+            assertEquals("4", entry)
+            assertEquals(4, value)
+            assertEquals(.0, modifier, .0)
+            assertEquals("", comment)
+            assertEquals("F04C4C", color)
+            assertEquals("S1", symbol)
+            assertEquals("Rodzaje broni chemicznych", description)
+            assertEquals("5,00", weight)
+            assertEquals(5.0, weightValue, .0)
+            assertEquals(getDate(1970, 1, 1, 1, 0, 0), date)
+            assertEquals("Weronika Ratajczak", teacher)
         }
     }
 }

@@ -8,18 +8,19 @@ import com.squareup.moshi.ToJson
 import io.github.wulkanowy.sdk.scrapper.grades.GradeDate
 import io.github.wulkanowy.sdk.scrapper.toDate
 
-class GradeDateDeserializer : JsonAdapter<GradeDate>() {
+class GradeDateDeserializer : JsonAdapter<GradeDate?>() {
 
     companion object {
         const val SERVER_FORMAT = GradeDate.FORMAT
     }
 
     @FromJson
-    override fun fromJson(reader: JsonReader): GradeDate {
-        val dateAsString = reader.nextString()
+    override fun fromJson(reader: JsonReader): GradeDate? {
+        val value = reader.readJsonValue()
+        val dateAsString = value?.toString()
         return synchronized(reader) {
             GradeDate::class.java.getDeclaredConstructor().newInstance().apply {
-                time = dateAsString.toDate(SERVER_FORMAT).time
+                time = dateAsString?.toDate(SERVER_FORMAT)?.time ?: 0
             }
         }
     }
