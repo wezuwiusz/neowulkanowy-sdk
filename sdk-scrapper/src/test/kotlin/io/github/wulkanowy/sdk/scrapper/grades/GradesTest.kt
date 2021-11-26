@@ -340,7 +340,7 @@ class GradesTest : BaseLocalTest() {
             assertEquals("Rodzaje broni chemicznych", description)
             assertEquals("5,00", weight)
             assertEquals(5.0, weightValue, .0)
-            assertEquals(getDate(1970, 1, 1, 1, 0, 0), date)
+            assertEquals(getDate(1970, 1, 1, 0, 0, 0), date)
             assertEquals("Weronika Ratajczak", teacher)
         }
     }

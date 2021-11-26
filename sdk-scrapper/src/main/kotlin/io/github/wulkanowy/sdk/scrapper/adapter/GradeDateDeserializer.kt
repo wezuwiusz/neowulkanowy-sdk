@@ -20,7 +20,7 @@ class GradeDateDeserializer : JsonAdapter<GradeDate?>() {
         val dateAsString = value?.toString()
         return synchronized(reader) {
             GradeDate::class.java.getDeclaredConstructor().newInstance().apply {
-                time = dateAsString?.toDate(SERVER_FORMAT)?.time ?: 0
+                time = (dateAsString ?: "01.01.1970").toDate(SERVER_FORMAT).time
             }
         }
     }
