@@ -48,6 +48,7 @@ class RegisterRepository(
             val cert = try {
                 loginHelper.sendCertificate(certificate, email, certificate.action.replace(startSymbol.getNormalizedSymbol(), symbol))
             } catch (e: AccountPermissionException) {
+                logger.debug("Certificate send failed", e)
                 return@flatMap emptyList<Student>()
             }
 
@@ -90,12 +91,12 @@ class RegisterRepository(
                         contains("cufs.edu.lublin.eu") -> Scrapper.LoginType.ADFSLightCufs
                         startsWith("/LoginPage.aspx") -> Scrapper.LoginType.ADFSLight
                         startsWith("/${urlGenerator.symbol}/LoginPage.aspx") -> Scrapper.LoginType.ADFSLightScoped
-                        else -> throw ScrapperException("Nieznany typ dziennika ADFS")
+                        else -> throw ScrapperException("Nieznany typ dziennika ADFS: ${page.text()}")
                     }
                 }
             }
             page.select(SELECTOR_ADFS_CARDS).isNotEmpty() -> Scrapper.LoginType.ADFSCards
-            else -> throw ScrapperException("Nieznany typ dziennika")
+            else -> throw ScrapperException("Nieznany typ dziennika: ${page.text()}")
         }
     }
 
@@ -107,6 +108,7 @@ class RegisterRepository(
         val startPage = try {
             student.getStart(url.generate(ServiceManager.UrlGenerator.Site.STUDENT) + "Start")
         } catch (e: TemporarilyDisabledException) {
+            logger.debug("Start page is unavailable", e)
             return listOf()
         }
 
@@ -140,7 +142,7 @@ class RegisterRepository(
                     .flatMap { it.toSemesters() }
             )
         }.ifEmpty {
-            logger.debug("No supported student found in diaries: $diaries")
+            logger.error("No supported student found in diaries: $diaries")
             emptyList()
         }
     }
