@@ -88,6 +88,7 @@ class RegisterRepository(
             page.select(SELECTOR_ADFS_LIGHT).isNotEmpty() -> {
                 page.selectFirst("form")?.attr("action").orEmpty().run {
                     when {
+                        contains("cufs.edu.gdansk.pl") -> Scrapper.LoginType.ADFS // for compatibility with old accounts
                         contains("cufs.edu.lublin.eu") -> Scrapper.LoginType.ADFSLightCufs
                         startsWith("/LoginPage.aspx") -> Scrapper.LoginType.ADFSLight
                         startsWith("/${urlGenerator.symbol}/LoginPage.aspx") -> Scrapper.LoginType.ADFSLightScoped

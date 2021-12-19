@@ -73,7 +73,6 @@ class LoginHelper(
                             sendADFSMS(login, password)
                         }
                         "edu.gdansk.pl" -> {
-                            // hotfix for old users
                             sendADFSLightGeneric(email, password, ADFSLightCufs)
                         }
                         "eduportal.koszalin.pl" -> {
@@ -87,15 +86,7 @@ class LoginHelper(
                         else -> sendADFSMS(it, password)
                     }
                 }
-                ADFSLight, ADFSLightScoped, ADFSLightCufs -> {
-                    when (host) {
-                        // hotfix for new users
-                        "edu.gdansk.pl" -> {
-                            sendADFSLightGeneric(email, password, ADFSLightCufs)
-                        }
-                        else -> sendADFSLightGeneric(it, password, loginType)
-                    }
-                }
+                ADFSLight, ADFSLightScoped, ADFSLightCufs -> sendADFSLightGeneric(it, password, loginType)
                 ADFSCards -> sendADFSCards(it, password)
             }
         }
