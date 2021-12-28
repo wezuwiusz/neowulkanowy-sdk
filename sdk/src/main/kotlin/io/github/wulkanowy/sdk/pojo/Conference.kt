@@ -1,6 +1,7 @@
 package io.github.wulkanowy.sdk.pojo
 
 import java.time.LocalDateTime
+import java.time.ZonedDateTime
 
 data class Conference(
     val title: String,
@@ -9,5 +10,7 @@ data class Conference(
     val presentOnConference: String,
     val online: Any?,
     val id: Int,
-    val date: LocalDateTime
+    @Deprecated("use dateZoned instead")
+    val date: LocalDateTime,
+    val dateZoned: ZonedDateTime,
 )

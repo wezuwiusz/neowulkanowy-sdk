@@ -9,6 +9,7 @@ import io.github.wulkanowy.sdk.pojo.TimetableFull
 import io.github.wulkanowy.sdk.scrapper.toLocalDate
 import io.github.wulkanowy.sdk.toLocalDate
 import io.github.wulkanowy.sdk.toLocalDateTime
+import java.time.ZoneId
 import io.github.wulkanowy.sdk.mobile.timetable.Lesson as ApiTimetable
 import io.github.wulkanowy.sdk.scrapper.timetable.CompletedLesson as ScrapperCompletedLesson
 import io.github.wulkanowy.sdk.scrapper.timetable.Timetable as ScrapperTimetable
@@ -16,22 +17,26 @@ import io.github.wulkanowy.sdk.scrapper.timetable.TimetableAdditional as Scrappe
 import io.github.wulkanowy.sdk.scrapper.timetable.TimetableDayHeader as ScrapperTimetableDayHeader
 import io.github.wulkanowy.sdk.scrapper.timetable.TimetableFull as ScrapperTimetableFull
 
-fun List<ApiTimetable>.mapTimetableFull(dictionaries: Dictionaries) = TimetableFull(
+fun List<ApiTimetable>.mapTimetableFull(dictionaries: Dictionaries, zoneId: ZoneId) = TimetableFull(
     headers = emptyList(),
-    lessons = mapTimetable(dictionaries),
+    lessons = mapTimetable(dictionaries, zoneId),
     additional = emptyList()
 )
 
-fun List<ApiTimetable>.mapTimetable(dictionaries: Dictionaries) = map {
+fun List<ApiTimetable>.mapTimetable(dictionaries: Dictionaries, zoneId: ZoneId) = map {
     val teacher = dictionaries.employees.singleOrNull { employee -> employee.id == it.employeeId }
     val teacherOld = dictionaries.employees.singleOrNull { employee -> employee.id == it.employeeOldId }
     val time = dictionaries.lessonTimes.single { time -> time.id == it.lessonTimeId }
+    val startDateTime = "${it.dayText} ${time.startText}".toLocalDateTime("yyyy-MM-dd HH:mm")
+    val endDateTime = "${it.dayText} ${time.endText}".toLocalDateTime("yyyy-MM-dd HH:mm")
     Timetable(
         canceled = it.overriddenName,
         changes = it.boldName || (!it.annotationAboutChange.isNullOrBlank() && !it.overriddenName),
         date = it.day.toLocalDate(),
-        start = "${it.dayText} ${time.startText}".toLocalDateTime("yyyy-MM-dd HH:mm"),
-        end = "${it.dayText} ${time.endText}".toLocalDateTime("yyyy-MM-dd HH:mm"),
+        start = startDateTime,
+        end = endDateTime,
+        startZoned = startDateTime.atZone(zoneId),
+        endZoned = endDateTime.atZone(zoneId),
         group = it.divisionShort.orEmpty(),
         info = it.annotationAboutChange?.substringAfter("(")?.substringBefore(")").orEmpty(),
         number = it.lessonNumber,
@@ -55,24 +60,26 @@ fun List<ApiTimetable>.mapTimetable(dictionaries: Dictionaries) = map {
     } else lessons
 }.flatten()
 
-fun ScrapperTimetableFull.mapTimetableFull() = TimetableFull(
+fun ScrapperTimetableFull.mapTimetableFull(zoneId: ZoneId) = TimetableFull(
     headers = headers.mapTimetableDayHeaders(),
-    lessons = lessons.mapTimetable(),
-    additional = additional.mapTimetableAdditional()
+    lessons = lessons.mapTimetable(zoneId),
+    additional = additional.mapTimetableAdditional(zoneId)
 )
 
-fun List<ScrapperTimetable>.mapTimetable() = map {
+fun List<ScrapperTimetable>.mapTimetable(zoneId: ZoneId) = map {
     Timetable(
         canceled = it.canceled,
         changes = it.changes,
         date = it.date.toLocalDate(),
+        start = it.start.toLocalDateTime(),
         end = it.end.toLocalDateTime(),
+        startZoned = it.start.toLocalDateTime().atZone(zoneId),
+        endZoned = it.end.toLocalDateTime().atZone(zoneId),
         group = it.group,
         info = it.info,
         number = it.number,
         room = it.room,
         roomOld = it.roomOld,
-        start = it.start.toLocalDateTime(),
         subject = it.subject,
         subjectOld = it.subjectOld,
         studentPlan = true,
@@ -88,12 +95,14 @@ fun List<ScrapperTimetableDayHeader>.mapTimetableDayHeaders() = map {
     )
 }
 
-fun List<ScrapperTimetableAdditional>.mapTimetableAdditional() = map {
+fun List<ScrapperTimetableAdditional>.mapTimetableAdditional(zoneId: ZoneId) = map {
     TimetableAdditional(
         subject = it.subject,
         date = it.date.toLocalDate(),
         start = it.start.toLocalDateTime(),
-        end = it.end.toLocalDateTime()
+        end = it.end.toLocalDateTime(),
+        startZoned = it.start.toLocalDateTime().atZone(zoneId),
+        endZoned = it.end.toLocalDateTime().atZone(zoneId),
     )
 }
 

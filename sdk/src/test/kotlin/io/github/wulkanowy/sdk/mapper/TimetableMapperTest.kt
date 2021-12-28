@@ -8,6 +8,8 @@ import org.junit.Assert.assertEquals
 import org.junit.Test
 import java.time.LocalDate.of
 import java.time.LocalDateTime
+import java.time.ZoneId
+import java.time.ZonedDateTime
 
 class TimetableMapperTest : BaseLocalTest() {
 
@@ -30,6 +32,8 @@ class TimetableMapperTest : BaseLocalTest() {
             assertEquals(2, number)
             assertEquals(LocalDateTime.of(2020, 2, 3, 8, 55, 0), start)
             assertEquals(LocalDateTime.of(2020, 2, 3, 9, 40, 0), end)
+            assertEquals(ZonedDateTime.of(LocalDateTime.of(2020, 2, 3, 8, 55, 0), ZoneId.of("Europe/Warsaw")), startZoned)
+            assertEquals(ZonedDateTime.of(LocalDateTime.of(2020, 2, 3, 9, 40, 0), ZoneId.of("Europe/Warsaw")), endZoned)
 
             assertEquals("Sieci komputerowe", subject)
             assertEquals("t.infor", group)

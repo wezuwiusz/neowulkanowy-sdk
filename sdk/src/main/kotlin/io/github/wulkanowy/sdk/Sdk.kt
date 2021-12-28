@@ -50,6 +50,7 @@ import okhttp3.logging.HttpLoggingInterceptor
 import org.slf4j.LoggerFactory
 import java.time.LocalDate
 import java.time.LocalDateTime
+import java.time.ZoneId
 
 class Sdk {
 
@@ -72,6 +73,8 @@ class Sdk {
     private val mobile = Mobile()
 
     private val scrapper = Scrapper()
+
+    private val registerTimeZone = ZoneId.of("Europe/Warsaw")
 
     var mode = Mode.HYBRID
 
@@ -367,14 +370,14 @@ class Sdk {
 
     suspend fun getConferences() = withContext(Dispatchers.IO) {
         when (mode) {
-            Mode.HYBRID, Mode.SCRAPPER -> scrapper.getConferences().mapConferences()
+            Mode.HYBRID, Mode.SCRAPPER -> scrapper.getConferences().mapConferences(registerTimeZone)
             Mode.API -> throw FeatureNotAvailableException("Conferences is not available in API mode")
         }
     }
 
     suspend fun getRegisteredDevices() = withContext(Dispatchers.IO) {
         when (mode) {
-            Mode.HYBRID, Mode.SCRAPPER -> scrapper.getRegisteredDevices().mapDevices()
+            Mode.HYBRID, Mode.SCRAPPER -> scrapper.getRegisteredDevices().mapDevices(registerTimeZone)
             Mode.API -> throw FeatureNotAvailableException("Devices management is not available in API mode")
         }
     }
@@ -438,22 +441,22 @@ class Sdk {
 
     suspend fun getReceivedMessages(start: LocalDateTime, end: LocalDateTime) = withContext(Dispatchers.IO) {
         when (mode) {
-            Mode.HYBRID, Mode.SCRAPPER -> scrapper.getReceivedMessages(start, end).mapMessages()
-            Mode.API -> mobile.getMessages(start, end).mapMessages(mobile.getDictionaries())
+            Mode.HYBRID, Mode.SCRAPPER -> scrapper.getReceivedMessages(start, end).mapMessages(registerTimeZone)
+            Mode.API -> mobile.getMessages(start, end).mapMessages(mobile.getDictionaries(), registerTimeZone)
         }
     }
 
     suspend fun getSentMessages(start: LocalDateTime, end: LocalDateTime) = withContext(Dispatchers.IO) {
         when (mode) {
-            Mode.HYBRID, Mode.SCRAPPER -> scrapper.getSentMessages(start, end).mapMessages()
-            Mode.API -> mobile.getMessagesSent(start, end).mapMessages(mobile.getDictionaries())
+            Mode.HYBRID, Mode.SCRAPPER -> scrapper.getSentMessages(start, end).mapMessages(registerTimeZone)
+            Mode.API -> mobile.getMessagesSent(start, end).mapMessages(mobile.getDictionaries(), registerTimeZone)
         }
     }
 
     suspend fun getDeletedMessages(start: LocalDateTime, end: LocalDateTime) = withContext(Dispatchers.IO) {
         when (mode) {
-            Mode.HYBRID, Mode.SCRAPPER -> scrapper.getDeletedMessages(start, end).mapMessages()
-            Mode.API -> mobile.getMessagesDeleted(start, end).mapMessages(mobile.getDictionaries())
+            Mode.HYBRID, Mode.SCRAPPER -> scrapper.getDeletedMessages(start, end).mapMessages(registerTimeZone)
+            Mode.API -> mobile.getMessagesDeleted(start, end).mapMessages(mobile.getDictionaries(), registerTimeZone)
         }
     }
 
@@ -502,15 +505,15 @@ class Sdk {
 
     suspend fun getTimetableFull(start: LocalDate, end: LocalDate) = withContext(Dispatchers.IO) {
         when (mode) {
-            Mode.SCRAPPER -> scrapper.getTimetableFull(start, end).mapTimetableFull()
-            Mode.HYBRID, Mode.API -> mobile.getTimetable(start, end, 0).mapTimetableFull(mobile.getDictionaries())
+            Mode.SCRAPPER -> scrapper.getTimetableFull(start, end).mapTimetableFull(registerTimeZone)
+            Mode.HYBRID, Mode.API -> mobile.getTimetable(start, end, 0).mapTimetableFull(mobile.getDictionaries(), registerTimeZone)
         }
     }
 
     suspend fun getTimetable(start: LocalDate, end: LocalDate) = withContext(Dispatchers.IO) {
         when (mode) {
-            Mode.SCRAPPER -> scrapper.getTimetable(start, end).let { (normal, additional) -> normal.mapTimetable() to additional.mapTimetableAdditional() }
-            Mode.HYBRID, Mode.API -> mobile.getTimetable(start, end, 0).mapTimetable(mobile.getDictionaries()) to emptyList()
+            Mode.SCRAPPER -> scrapper.getTimetable(start, end).let { (normal, additional) -> normal.mapTimetable(registerTimeZone) to additional.mapTimetableAdditional(registerTimeZone) }
+            Mode.HYBRID, Mode.API -> mobile.getTimetable(start, end, 0).mapTimetable(mobile.getDictionaries(), registerTimeZone) to emptyList()
         }
     }
 
@@ -523,14 +526,14 @@ class Sdk {
 
     suspend fun getTimetableNormal(start: LocalDate, end: LocalDate) = withContext(Dispatchers.IO) {
         when (mode) {
-            Mode.SCRAPPER -> scrapper.getTimetableNormal(start, end).mapTimetable()
-            Mode.HYBRID, Mode.API -> mobile.getTimetable(start, end, 0).mapTimetable(mobile.getDictionaries())
+            Mode.SCRAPPER -> scrapper.getTimetableNormal(start, end).mapTimetable(registerTimeZone)
+            Mode.HYBRID, Mode.API -> mobile.getTimetable(start, end, 0).mapTimetable(mobile.getDictionaries(), registerTimeZone)
         }
     }
 
     suspend fun getTimetableAdditional(start: LocalDate) = withContext(Dispatchers.IO) {
         when (mode) {
-            Mode.SCRAPPER -> scrapper.getTimetableAdditional(start).mapTimetableAdditional()
+            Mode.SCRAPPER -> scrapper.getTimetableAdditional(start).mapTimetableAdditional(registerTimeZone)
             Mode.HYBRID, Mode.API -> throw FeatureNotAvailableException("Additional timetable lessons are not available in API mode")
         }
     }
@@ -566,7 +569,7 @@ class Sdk {
     suspend fun getDirectorInformation() = withContext(Dispatchers.IO) {
         when (mode) {
             Mode.HYBRID, Mode.SCRAPPER -> scrapper.getDirectorInformation().mapDirectorInformation()
-            Mode.API -> throw FeatureNotAvailableException("Director informations is not available in API mode")
+            Mode.API -> throw FeatureNotAvailableException("Director information is not available in API mode")
         }
     }
 

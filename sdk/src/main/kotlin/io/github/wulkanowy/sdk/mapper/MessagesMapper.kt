@@ -7,11 +7,12 @@ import io.github.wulkanowy.sdk.pojo.MessageAttachment
 import io.github.wulkanowy.sdk.pojo.MessageDetails
 import io.github.wulkanowy.sdk.pojo.Sender
 import io.github.wulkanowy.sdk.toLocalDateTime
+import java.time.ZoneId
 import io.github.wulkanowy.sdk.mobile.messages.Message as ApiMessage
 import io.github.wulkanowy.sdk.scrapper.messages.Message as ScrapperMessage
 
 @JvmName("mapApiMessages")
-fun List<ApiMessage>.mapMessages(dictionaries: Dictionaries) = map {
+fun List<ApiMessage>.mapMessages(dictionaries: Dictionaries, zoneId: ZoneId) = map {
     Message(
         id = it.messageId,
         unreadBy = it.unread?.toInt(),
@@ -35,16 +36,18 @@ fun List<ApiMessage>.mapMessages(dictionaries: Dictionaries) = map {
         },
         content = it.content,
         date = it.sentDateTime.toLocalDateTime(),
+        dateZoned = it.sentDateTime.toLocalDateTime().atZone(zoneId),
         subject = it.subject,
         hasAttachments = false
     )
 }
 
-fun List<ScrapperMessage>.mapMessages() = map {
+fun List<ScrapperMessage>.mapMessages(zoneId: ZoneId) = map {
     Message(
         id = it.id,
         subject = it.subject.orEmpty(),
         date = it.date?.toLocalDateTime(),
+        dateZoned = it.date?.toLocalDateTime()?.atZone(zoneId),
         content = it.content,
         folderId = it.folderId,
         messageId = it.messageId,
