@@ -3,7 +3,8 @@ package io.github.wulkanowy.sdk.scrapper.timetable
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 import org.jsoup.nodes.Element
-import java.util.Date
+import java.time.LocalDate
+import java.time.LocalDateTime
 
 @JsonClass(generateAdapter = true)
 data class TimetableResponse(
@@ -44,8 +45,8 @@ data class TimetableAdditionalLesson(
 
 data class TimetableCell(
     val number: Int = 0,
-    val start: Date,
-    val end: Date,
-    val date: Date,
+    val start: LocalDateTime,
+    val end: LocalDateTime,
+    val date: LocalDate,
     val td: Element
 )

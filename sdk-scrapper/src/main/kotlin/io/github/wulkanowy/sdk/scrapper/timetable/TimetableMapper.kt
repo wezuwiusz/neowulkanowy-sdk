@@ -4,8 +4,8 @@ import com.squareup.moshi.Moshi
 import com.squareup.moshi.Types
 import io.github.wulkanowy.sdk.scrapper.ApiResponse
 import io.github.wulkanowy.sdk.scrapper.toDate
-import io.github.wulkanowy.sdk.scrapper.toFormat
 import io.github.wulkanowy.sdk.scrapper.toLocalDate
+import io.github.wulkanowy.sdk.scrapper.toLocalTime
 import org.jsoup.Jsoup
 import java.time.LocalDate
 
@@ -15,17 +15,17 @@ fun TimetableResponse.mapTimetableList(startDate: LocalDate, endDate: LocalDate?
     lessons.drop(1).mapIndexed { i, it ->
         val times = lessons[0].split("<br />")
         val header = headers.drop(1)[i].date.split("<br />")
-        val date = header[1].toDate("dd.MM.yyyy")
+        val date = header[1].toLocalDate("dd.MM.yyyy")
         TimetableCell(
             date = date,
-            start = "${date.toLocalDate().toFormat("yyyy-MM-dd")} ${times[1]}".toDate("yyyy-MM-dd HH:mm"),
-            end = "${date.toLocalDate().toFormat("yyyy-MM-dd")} ${times[2]}".toDate("yyyy-MM-dd HH:mm"),
+            start = date.atTime(times[1].toLocalTime()),
+            end = date.atTime(times[2].toLocalTime()),
             number = times[0].toInt(),
             td = Jsoup.parse(it)
         )
     }.mapNotNull { parser.getTimetable(it) }
 }.asSequence().filter {
-    it.date.toLocalDate() >= startDate && it.date.toLocalDate() <= (endDate ?: startDate.plusDays(4))
+    it.date >= startDate && it.date <= (endDate ?: startDate.plusDays(4))
 }.sortedWith(compareBy({ it.date }, { it.number })).toList()
 
 fun TimetableResponse.mapTimetableHeaders() = headers.drop(1).map {
@@ -37,15 +37,15 @@ fun TimetableResponse.mapTimetableHeaders() = headers.drop(1).map {
 }
 
 fun TimetableResponse.mapTimetableAdditional() = additional.flatMap { day ->
-    val date = day.header.substringAfter(", ").toDate("dd.MM.yyyy")
+    val date = day.header.substringAfter(", ").toLocalDate("dd.MM.yyyy")
     day.descriptions.map { lesson ->
         val description = Jsoup.parse(lesson.description).text()
         val startTime = description.substringBefore(" - ")
         val endTime = description.split(" ")[2]
         TimetableAdditional(
             date = date,
-            start = "${date.toLocalDate().toFormat("yyyy-MM-dd")} $startTime".toDate("yyyy-MM-dd HH:mm"),
-            end = "${date.toLocalDate().toFormat("yyyy-MM-dd")} $endTime".toDate("yyyy-MM-dd HH:mm"),
+            start = date.atTime(startTime.toLocalTime()),
+            end = date.atTime(endTime.toLocalTime()),
             subject = description.substringAfter("$endTime ")
         )
     }

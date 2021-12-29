@@ -7,6 +7,7 @@ import java.time.DayOfWeek.MONDAY
 import java.time.Instant.ofEpochMilli
 import java.time.LocalDate
 import java.time.LocalDateTime
+import java.time.LocalTime
 import java.time.ZoneId.systemDefault
 import java.time.format.DateTimeFormatter.ofPattern
 import java.time.temporal.TemporalAdjusters.previousOrSame
@@ -14,6 +15,10 @@ import java.util.Date
 import kotlin.math.roundToInt
 
 fun String.toDate(format: String): Date = SimpleDateFormat(format).parse(this)
+
+fun String.toLocalDate(format: String): LocalDate = LocalDate.parse(this, ofPattern(format))
+
+fun String.toLocalTime(): LocalTime = LocalTime.parse(this)
 
 fun Date.toLocalDate(): LocalDate = ofEpochMilli(time).atZone(systemDefault()).toLocalDate()
 

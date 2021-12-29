@@ -40,8 +40,8 @@ class TimetableTest : BaseLocalTest() {
         with(timetable[MONDAY_OFFSET]) {
             // poniedziałek, 0
             assertEquals(0, number)
-            assertEquals(getDate(2018, 9, 24, 7, 10, 0), start)
-            assertEquals(getDate(2018, 9, 24, 7, 55, 0), end)
+            assertEquals(getLocalDateTime(2018, 9, 24, 7, 10, 0), start)
+            assertEquals(getLocalDateTime(2018, 9, 24, 7, 55, 0), end)
 
             assertEquals("Matematyka", subject)
             assertEquals("Rachunek Beata", teacher)
@@ -63,7 +63,7 @@ class TimetableTest : BaseLocalTest() {
         with(timetable[TUESDAY_OFFSET]) {
             // wtorek, 0
             assertEquals(0, number)
-            assertEquals(getDate(2018, 9, 25, 7, 10, 0), start)
+            assertEquals(getLocalDateTime(2018, 9, 25, 7, 10, 0), start)
 
             assertEquals("Język polski", subject)
             assertEquals("Polonistka Joanna", teacher)
@@ -84,7 +84,7 @@ class TimetableTest : BaseLocalTest() {
         with(timetable[WEDNESDAY_OFFSET]) {
             // środa, 0
             assertEquals(0, number)
-            assertEquals(getDate(2018, 9, 26, 7, 10, 0), start)
+            assertEquals(getLocalDateTime(2018, 9, 26, 7, 10, 0), start)
 
             assertEquals("Język polski", subject)
             assertEquals("Polonistka Joanna", teacher)
@@ -106,7 +106,7 @@ class TimetableTest : BaseLocalTest() {
         with(timetable[THURSDAY_OFFSET]) {
             // czwartek, 0
             assertEquals(0, number)
-            assertEquals(getDate(2018, 9, 27, 7, 10, 0), start)
+            assertEquals(getLocalDateTime(2018, 9, 27, 7, 10, 0), start)
 
             assertEquals("Wychowanie do życia w rodzinie", subject)
             assertEquals("Telichowska Aleksandra", teacher)
@@ -128,7 +128,7 @@ class TimetableTest : BaseLocalTest() {
         with(timetable[FRIDAY_OFFSET]) {
             // piątek, 0
             assertEquals(0, number)
-            assertEquals(getDate(2018, 9, 28, 7, 10, 0), start)
+            assertEquals(getLocalDateTime(2018, 9, 28, 7, 10, 0), start)
 
             assertEquals("Fizyka", subject)
             assertEquals("zaw2", group)
@@ -150,7 +150,7 @@ class TimetableTest : BaseLocalTest() {
         with(timetable[MONDAY_OFFSET + 1]) {
             // poniedziałek, 1
             assertEquals(1, number)
-            assertEquals(getDate(2018, 9, 24, 8, 0, 0), start)
+            assertEquals(getLocalDateTime(2018, 9, 24, 8, 0, 0), start)
 
             assertEquals("Język angielski", subject)
             assertEquals("J1", group)
@@ -171,7 +171,7 @@ class TimetableTest : BaseLocalTest() {
         with(timetable[TUESDAY_OFFSET + 1]) {
             // wtorek, 1
             assertEquals(1, number)
-            assertEquals(getDate(2018, 9, 25, 8, 0, 0), start)
+            assertEquals(getLocalDateTime(2018, 9, 25, 8, 0, 0), start)
 
             assertEquals("Wychowanie fizyczne", subject)
             assertEquals("zaw2", group)
@@ -192,7 +192,7 @@ class TimetableTest : BaseLocalTest() {
         with(timetable[WEDNESDAY_OFFSET + 1]) {
             // środa, 1
             assertEquals(1, number)
-            assertEquals(getDate(2018, 9, 26, 8, 0, 0), start)
+            assertEquals(getLocalDateTime(2018, 9, 26, 8, 0, 0), start)
 
             assertEquals("Tworzenie i administrowanie bazami danych", subject)
             assertEquals("Kobyliński Leszek", teacher)
@@ -214,7 +214,7 @@ class TimetableTest : BaseLocalTest() {
         with(timetable[THURSDAY_OFFSET + 1]) {
             // czwartek, 1
             assertEquals(1, number)
-            assertEquals(getDate(2018, 9, 27, 8, 0, 0), start)
+            assertEquals(getLocalDateTime(2018, 9, 27, 8, 0, 0), start)
 
             assertEquals("Język polski", subject)
             assertEquals("Polonistka Joanna", teacher)
@@ -236,7 +236,7 @@ class TimetableTest : BaseLocalTest() {
         with(timetable[FRIDAY_OFFSET + 1]) {
             // piątek, 1
             assertEquals(1, number)
-            assertEquals(getDate(2018, 9, 28, 8, 0, 0), start)
+            assertEquals(getLocalDateTime(2018, 9, 28, 8, 0, 0), start)
 
             assertEquals("Wychowanie fizyczne", subject)
             assertEquals("zaw2", group)
@@ -257,7 +257,7 @@ class TimetableTest : BaseLocalTest() {
         with(timetable[MONDAY_OFFSET + 2]) {
             // poniedziałek, 2
             assertEquals(2, number)
-            assertEquals(getDate(2018, 9, 24, 8, 50, 0), start)
+            assertEquals(getLocalDateTime(2018, 9, 24, 8, 50, 0), start)
 
             assertEquals("Geografia", subject)
             assertEquals("", group)
@@ -278,7 +278,7 @@ class TimetableTest : BaseLocalTest() {
         with(timetable[TUESDAY_OFFSET + 2]) {
             // wtorek, 2
             assertEquals(2, number)
-            assertEquals(getDate(2018, 9, 25, 8, 50, 0), start)
+            assertEquals(getLocalDateTime(2018, 9, 25, 8, 50, 0), start)
 
             assertEquals("Język angielski", subject)
             assertEquals("", group)
@@ -299,7 +299,7 @@ class TimetableTest : BaseLocalTest() {
         with(timetable[WEDNESDAY_OFFSET + 2]) {
             // środa, 2
             assertEquals(2, number)
-            assertEquals(getDate(2018, 9, 26, 8, 50, 0), start)
+            assertEquals(getLocalDateTime(2018, 9, 26, 8, 50, 0), start)
 
             assertEquals("Język angielski", subject)
             assertEquals("", group)
@@ -320,7 +320,7 @@ class TimetableTest : BaseLocalTest() {
         with(timetable[THURSDAY_OFFSET + 2]) {
             // czwartek, 2
             assertEquals(2, number)
-            assertEquals(getDate(2018, 9, 27, 8, 50, 0), start)
+            assertEquals(getLocalDateTime(2018, 9, 27, 8, 50, 0), start)
 
             assertEquals("Podstawy przedsiębiorczości", subject)
             assertEquals("", group)
@@ -341,7 +341,7 @@ class TimetableTest : BaseLocalTest() {
         with(timetable[FRIDAY_OFFSET + 2]) {
             // piątek, 2
             assertEquals(2, number)
-            assertEquals(getDate(2018, 9, 28, 8, 50, 0), start)
+            assertEquals(getLocalDateTime(2018, 9, 28, 8, 50, 0), start)
 
             assertEquals("Wychowanie fizyczne", subject)
             assertEquals("CH", group)
@@ -362,8 +362,8 @@ class TimetableTest : BaseLocalTest() {
         with(timetable[MONDAY_OFFSET + 3]) {
             // poniedziałek, 3
             assertEquals(3, number)
-            assertEquals(getDate(2018, 9, 24, 9, 45, 0), start)
-            assertEquals(getDate(2018, 9, 24, 10, 40, 0), end)
+            assertEquals(getLocalDateTime(2018, 9, 24, 9, 45, 0), start)
+            assertEquals(getLocalDateTime(2018, 9, 24, 10, 40, 0), end)
 
             assertEquals("Historia", subject)
             assertEquals("", group)
@@ -384,8 +384,8 @@ class TimetableTest : BaseLocalTest() {
         with(timetable[TUESDAY_OFFSET + 3]) {
             // wtorek, 3
             assertEquals(3, number)
-            assertEquals(getDate(2018, 9, 25, 9, 45, 0), start)
-            assertEquals(getDate(2018, 9, 25, 10, 40, 0), end)
+            assertEquals(getLocalDateTime(2018, 9, 25, 9, 45, 0), start)
+            assertEquals(getLocalDateTime(2018, 9, 25, 10, 40, 0), end)
 
             assertEquals("Administracja i eksploatacja systemów komputerowych, urządzeń peryferyjnych i lokalnych sieci komputerowych", subject)
             assertEquals("", group)
@@ -406,8 +406,8 @@ class TimetableTest : BaseLocalTest() {
         with(timetable[WEDNESDAY_OFFSET + 3]) {
             // środa 3
             assertEquals(3, number)
-            assertEquals(getDate(2018, 9, 26, 9, 45, 0), start)
-            assertEquals(getDate(2018, 9, 26, 10, 40, 0), end)
+            assertEquals(getLocalDateTime(2018, 9, 26, 9, 45, 0), start)
+            assertEquals(getLocalDateTime(2018, 9, 26, 10, 40, 0), end)
 
             assertEquals("Eksploatacja urządzeń techniki komputerowej", subject)
             assertEquals("t.infor.", group)
@@ -428,8 +428,8 @@ class TimetableTest : BaseLocalTest() {
         with(timetable[THURSDAY_OFFSET + 3]) {
             // czwartek, 3
             assertEquals(3, number)
-            assertEquals(getDate(2018, 9, 27, 9, 45, 0), start)
-            assertEquals(getDate(2018, 9, 27, 10, 40, 0), end)
+            assertEquals(getLocalDateTime(2018, 9, 27, 9, 45, 0), start)
+            assertEquals(getLocalDateTime(2018, 9, 27, 10, 40, 0), end)
 
             assertEquals("systemy operacyjne", subject)
             assertEquals("t.infor.", group)
@@ -450,8 +450,8 @@ class TimetableTest : BaseLocalTest() {
         with(timetable[FRIDAY_OFFSET + 3]) {
             // piątek, 3
             assertEquals(3, number)
-            assertEquals(getDate(2018, 9, 28, 9, 45, 0), start)
-            assertEquals(getDate(2018, 9, 28, 10, 40, 0), end)
+            assertEquals(getLocalDateTime(2018, 9, 28, 9, 45, 0), start)
+            assertEquals(getLocalDateTime(2018, 9, 28, 10, 40, 0), end)
 
             assertEquals("Matematyka", subject)
             assertEquals("", group)
@@ -472,8 +472,8 @@ class TimetableTest : BaseLocalTest() {
         with(timetable[MONDAY_OFFSET + 4]) {
             // poniedziałek, 4
             assertEquals(4, number)
-            assertEquals(getDate(2018, 9, 24, 10, 50, 0), start)
-            assertEquals(getDate(2018, 9, 24, 11, 35, 0), end)
+            assertEquals(getLocalDateTime(2018, 9, 24, 10, 50, 0), start)
+            assertEquals(getLocalDateTime(2018, 9, 24, 11, 35, 0), end)
 
             assertEquals("Fizyka", subject)
             assertEquals("", group)
@@ -494,8 +494,8 @@ class TimetableTest : BaseLocalTest() {
         with(timetable[TUESDAY_OFFSET + 4]) {
             // wtorek, 4
             assertEquals(4, number)
-            assertEquals(getDate(2018, 9, 25, 10, 50, 0), start)
-            assertEquals(getDate(2018, 9, 25, 11, 35, 0), end)
+            assertEquals(getLocalDateTime(2018, 9, 25, 10, 50, 0), start)
+            assertEquals(getLocalDateTime(2018, 9, 25, 11, 35, 0), end)
 
             assertEquals("podstawy algorytmiki i programowania", subject)
             assertEquals("", group)
@@ -516,8 +516,8 @@ class TimetableTest : BaseLocalTest() {
         with(timetable[WEDNESDAY_OFFSET + 4]) {
             // środa, 4
             assertEquals(4, number)
-            assertEquals(getDate(2018, 9, 26, 10, 50, 0), start)
-            assertEquals(getDate(2018, 9, 26, 11, 35, 0), end)
+            assertEquals(getLocalDateTime(2018, 9, 26, 10, 50, 0), start)
+            assertEquals(getLocalDateTime(2018, 9, 26, 11, 35, 0), end)
 
             assertEquals("Język angielski", subject)
             assertEquals("JA 2", group)
@@ -538,8 +538,8 @@ class TimetableTest : BaseLocalTest() {
         with(timetable[THURSDAY_OFFSET + 4]) {
             // czwartek, 4
             assertEquals(4, number)
-            assertEquals(getDate(2018, 9, 27, 10, 50, 0), start)
-            assertEquals(getDate(2018, 9, 27, 11, 35, 0), end)
+            assertEquals(getLocalDateTime(2018, 9, 27, 10, 50, 0), start)
+            assertEquals(getLocalDateTime(2018, 9, 27, 11, 35, 0), end)
 
             assertEquals("Fizyka", subject)
             assertEquals("", group)
@@ -560,8 +560,8 @@ class TimetableTest : BaseLocalTest() {
         with(timetable[FRIDAY_OFFSET + 4]) {
             // piątek, 4
             assertEquals(4, number)
-            assertEquals(getDate(2018, 9, 28, 10, 50, 0), start)
-            assertEquals(getDate(2018, 9, 28, 11, 35, 0), end)
+            assertEquals(getLocalDateTime(2018, 9, 28, 10, 50, 0), start)
+            assertEquals(getLocalDateTime(2018, 9, 28, 11, 35, 0), end)
 
             assertEquals("pracownia programowania", subject)
             assertEquals("JA 2", group)
@@ -582,8 +582,8 @@ class TimetableTest : BaseLocalTest() {
         with(timetable[MONDAY_OFFSET + 5]) {
             // poniedziałek, 5
             assertEquals(5, number)
-            assertEquals(getDate(2018, 9, 24, 11, 45, 0), start)
-            assertEquals(getDate(2018, 9, 24, 12, 30, 0), end)
+            assertEquals(getLocalDateTime(2018, 9, 24, 11, 45, 0), start)
+            assertEquals(getLocalDateTime(2018, 9, 24, 12, 30, 0), end)
 
             assertEquals("Wychowanie fizyczne", subject)
             assertEquals("2/2", group)
@@ -604,8 +604,8 @@ class TimetableTest : BaseLocalTest() {
         with(timetable[TUESDAY_OFFSET + 5]) {
             // wtorek, 5
             assertEquals(5, number)
-            assertEquals(getDate(2018, 9, 25, 11, 45, 0), start)
-            assertEquals(getDate(2018, 9, 25, 12, 30, 0), end)
+            assertEquals(getLocalDateTime(2018, 9, 25, 11, 45, 0), start)
+            assertEquals(getLocalDateTime(2018, 9, 25, 12, 30, 0), end)
 
             assertEquals("testowanie i dokumentowanie projektu informatycznego", subject)
             assertEquals("", group)
@@ -626,8 +626,8 @@ class TimetableTest : BaseLocalTest() {
         with(timetable[WEDNESDAY_OFFSET + 5]) {
             // środa, 5
             assertEquals(5, number)
-            assertEquals(getDate(2018, 9, 26, 11, 45, 0), start)
-            assertEquals(getDate(2018, 9, 26, 12, 30, 0), end)
+            assertEquals(getLocalDateTime(2018, 9, 26, 11, 45, 0), start)
+            assertEquals(getLocalDateTime(2018, 9, 26, 12, 30, 0), end)
 
             assertEquals("Chemia", subject)
             assertEquals("", group)
@@ -662,9 +662,9 @@ class TimetableTest : BaseLocalTest() {
     @Test
     fun getAdditionalLesson() {
         with(additional[0]) {
-            assertEquals(getDate(2020, 3, 9), date)
-            assertEquals(getDate(2020, 3, 9, 14, 50, 0), start)
-            assertEquals(getDate(2020, 3, 9, 15, 35, 0), end)
+            assertEquals(getLocalDate(2020, 3, 9), date)
+            assertEquals(getLocalDateTime(2020, 3, 9, 14, 50, 0), start)
+            assertEquals(getLocalDateTime(2020, 3, 9, 15, 35, 0), end)
 
             assertEquals("zajęcia wyrównawcze dla kl. 6d", subject)
         }
@@ -673,9 +673,9 @@ class TimetableTest : BaseLocalTest() {
     @Test
     fun getAdditionalLessonWithSpan() {
         with(additional[1]) {
-            assertEquals(getDate(2020, 3, 11), date)
-            assertEquals(getDate(2020, 3, 11, 13, 20, 0), start)
-            assertEquals(getDate(2020, 3, 11, 14, 5, 0), end)
+            assertEquals(getLocalDate(2020, 3, 11), date)
+            assertEquals(getLocalDateTime(2020, 3, 11, 13, 20, 0), start)
+            assertEquals(getLocalDateTime(2020, 3, 11, 14, 5, 0), end)
 
             assertEquals("Zajęcia dodatkowe 2", subject)
         }

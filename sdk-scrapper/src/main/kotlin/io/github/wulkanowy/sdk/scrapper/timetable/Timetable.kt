@@ -1,7 +1,7 @@
 package io.github.wulkanowy.sdk.scrapper.timetable
 
 import java.time.LocalDate
-import java.util.Date
+import java.time.LocalDateTime
 
 data class TimetableFull(
     val headers: List<TimetableDayHeader>,
@@ -11,9 +11,9 @@ data class TimetableFull(
 
 data class Timetable(
     val number: Int = 0,
-    val start: Date = Date(),
-    val end: Date = Date(),
-    val date: Date = Date(),
+    val start: LocalDateTime,
+    val end: LocalDateTime,
+    val date: LocalDate,
     val subject: String = "",
     val subjectOld: String = "",
     val group: String = "",
@@ -32,8 +32,8 @@ data class TimetableDayHeader(
 )
 
 data class TimetableAdditional(
-    val start: Date,
-    val end: Date,
-    val date: Date,
+    val start: LocalDateTime,
+    val end: LocalDateTime,
+    val date: LocalDate,
     val subject: String
 )

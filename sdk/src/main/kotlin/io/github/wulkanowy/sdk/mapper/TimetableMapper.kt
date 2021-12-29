@@ -70,11 +70,11 @@ fun List<ScrapperTimetable>.mapTimetable(zoneId: ZoneId) = map {
     Timetable(
         canceled = it.canceled,
         changes = it.changes,
-        date = it.date.toLocalDate(),
-        start = it.start.toLocalDateTime(),
-        end = it.end.toLocalDateTime(),
-        startZoned = it.start.toLocalDateTime().atZone(zoneId),
-        endZoned = it.end.toLocalDateTime().atZone(zoneId),
+        date = it.date,
+        start = it.start,
+        end = it.end,
+        startZoned = it.start.atZone(zoneId),
+        endZoned = it.end.atZone(zoneId),
         group = it.group,
         info = it.info,
         number = it.number,
@@ -98,11 +98,11 @@ fun List<ScrapperTimetableDayHeader>.mapTimetableDayHeaders() = map {
 fun List<ScrapperTimetableAdditional>.mapTimetableAdditional(zoneId: ZoneId) = map {
     TimetableAdditional(
         subject = it.subject,
-        date = it.date.toLocalDate(),
-        start = it.start.toLocalDateTime(),
-        end = it.end.toLocalDateTime(),
-        startZoned = it.start.toLocalDateTime().atZone(zoneId),
-        endZoned = it.end.toLocalDateTime().atZone(zoneId),
+        date = it.date,
+        start = it.start,
+        end = it.end,
+        startZoned = it.start.atZone(zoneId),
+        endZoned = it.end.atZone(zoneId),
     )
 }
 
