@@ -147,6 +147,12 @@ class Sdk {
             scrapper.diaryId = value
         }
 
+    var kindergartenDiaryId = 0
+        set(value) {
+            field = value
+            scrapper.kindergartenDiaryId = value
+        }
+
     var schoolYear = 0
         set(value) {
             field = value

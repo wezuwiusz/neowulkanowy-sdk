@@ -4,6 +4,7 @@ import java.time.LocalDate
 
 data class Semester(
     val diaryId: Int,
+    val kindergartenDiaryId: Int,
     val diaryName: String,
     val schoolYear: Int,
     val semesterId: Int,

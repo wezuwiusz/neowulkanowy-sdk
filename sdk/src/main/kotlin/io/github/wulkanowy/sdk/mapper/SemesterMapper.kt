@@ -12,6 +12,7 @@ import io.github.wulkanowy.sdk.scrapper.register.Semester as ScrapperSemester
 fun List<ScrapperSemester>.mapSemesters() = map {
     Semester(
         diaryId = it.diaryId,
+        kindergartenDiaryId = it.kindergartenDiaryId,
         diaryName = it.diaryName,
         schoolYear = it.schoolYear,
         semesterId = it.semesterId,
@@ -26,6 +27,7 @@ fun List<ScrapperSemester>.mapSemesters() = map {
 fun List<Student>.mapSemesters(studentId: Int) = filter { it.id == studentId }.map {
     Semester(
         diaryId = 0,
+        kindergartenDiaryId = 0,
         diaryName = it.classSymbol,
         schoolYear = it.periodDateFrom.toLocalDate().let { start -> if (start.month == Month.SEPTEMBER) start.year else start.year - 1 },
         semesterId = it.classificationPeriodId,
