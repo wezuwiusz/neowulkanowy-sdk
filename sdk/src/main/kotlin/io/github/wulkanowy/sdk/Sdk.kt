@@ -217,9 +217,15 @@ class Sdk {
         interceptors.add(interceptor to network)
     }
 
+    @Deprecated("use switchDiary(int, int, int) instead", ReplaceWith("switchDiary(diaryId, 0, schoolYear)"))
     fun switchDiary(diaryId: Int, schoolYear: Int): Sdk {
+        return switchDiary(diaryId, 0, schoolYear)
+    }
+
+    fun switchDiary(diaryId: Int, kindergartenDiaryId: Int, schoolYear: Int): Sdk {
         return also {
             it.diaryId = diaryId
+            it.kindergartenDiaryId = kindergartenDiaryId
             it.schoolYear = schoolYear
         }
     }
