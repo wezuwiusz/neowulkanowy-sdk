@@ -43,6 +43,7 @@ class ServiceManager(
     private val schoolSymbol: String,
     private val studentId: Int,
     private val diaryId: Int,
+    private val kindergartenDiaryId: Int,
     private val schoolYear: Int,
     emptyCookieJarIntercept: Boolean,
     androidVersion: String,
@@ -126,7 +127,7 @@ class ServiceManager(
 
         val client = getClientBuilder(loginIntercept = withLogin)
         if (studentInterceptor) {
-            if (0 == diaryId || 0 == studentId) throw ScrapperException("Student or/and diaryId id are not set")
+            if ((0 == diaryId && 0 == kindergartenDiaryId) || 0 == studentId) throw ScrapperException("Student or/and diaryId id are not set")
 
             client.addInterceptor(
                 StudentCookieInterceptor(
@@ -134,6 +135,7 @@ class ServiceManager(
                     schema = schema,
                     host = host,
                     diaryId = diaryId,
+                    kindergartenDiaryId = kindergartenDiaryId,
                     studentId = studentId,
                     schoolYear = when (schoolYear) {
                         0 -> if (LocalDate.now().monthValue < 9) LocalDate.now().year - 1 else LocalDate.now().year // fallback

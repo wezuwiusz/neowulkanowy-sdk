@@ -32,6 +32,7 @@ class ServiceManagerTest : BaseLocalTest() {
             schoolSymbol = "schoolSymbol",
             studentId = 123,
             diaryId = 101,
+            kindergartenDiaryId = 0,
             schoolYear = 2019,
             emptyCookieJarIntercept = false,
             androidVersion = "",
@@ -62,6 +63,7 @@ class ServiceManagerTest : BaseLocalTest() {
             schoolSymbol = "schoolSymbol",
             studentId = 123,
             diaryId = 101,
+            kindergartenDiaryId = 0,
             schoolYear = 2019,
             emptyCookieJarIntercept = false,
             androidVersion = "",
@@ -117,9 +119,22 @@ class ServiceManagerTest : BaseLocalTest() {
         server.enqueue(MockResponse().setResponseCode(503))
         server.start(3000)
         val manager = ServiceManager(
-            OkHttpClientBuilderFactory(), HttpLoggingInterceptor.Level.NONE,
-            Scrapper.LoginType.STANDARD, "http", "fakelog.localhost:3000", "default", "email", "password",
-            "schoolSymbol", 123, 101, 2019, true, "", ""
+            okHttpClientBuilderFactory = OkHttpClientBuilderFactory(),
+            logLevel = HttpLoggingInterceptor.Level.NONE,
+            loginType = Scrapper.LoginType.STANDARD,
+            schema = "http",
+            host = "fakelog.localhost:3000",
+            symbol = "default",
+            email = "email",
+            password = "password",
+            schoolSymbol = "schoolSymbol",
+            studentId = 123,
+            diaryId = 101,
+            kindergartenDiaryId = 0,
+            schoolYear = 2019,
+            emptyCookieJarIntercept = true,
+            androidVersion = "",
+            buildTag = "",
         )
 
         val res = runCatching {

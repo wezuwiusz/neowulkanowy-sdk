@@ -70,14 +70,21 @@ class AutoLoginInterceptorTest : BaseLocalTest() {
 
     // @Test
     fun simultaneousLogin() = runBlocking {
-        repeat(3) { server.enqueue("unknown-error.txt", RegisterTest::class.java) }
+        with(server) {
+            repeat(3) {
+                enqueue("unknown-error.txt", RegisterTest::class.java)
+            }
 
-        server.enqueue("Logowanie-uonet.html", LoginTest::class.java)
-        server.enqueue("Login-success.html", LoginTest::class.java)
+            enqueue("Logowanie-uonet.html", LoginTest::class.java)
+            enqueue("Login-success.html", LoginTest::class.java)
 
-        repeat(3) { server.enqueue("UwagiIOsiagniecia.json", NotesTest::class.java) }
+            repeat(3) {
+                enqueue("UwagiIOsiagniecia.json", NotesTest::class.java)
+            }
 
-        server.start(3000)
+            start(3000)
+        }
+
         init()
         val service = getService { loginHelper.login("", "") }
 
@@ -92,14 +99,21 @@ class AutoLoginInterceptorTest : BaseLocalTest() {
 
     // @Test
     fun simultaneousLoginWithError() = runBlocking {
-        repeat(3) { server.enqueue("unknown-error.txt", RegisterTest::class.java) }
+        with(server) {
+            repeat(3) {
+                enqueue("unknown-error.txt", RegisterTest::class.java)
+            }
 
-        server.enqueue("Logowanie-uonet.html", LoginTest::class.java)
-        server.enqueue("Offline.html", AutoLoginInterceptor::class.java)
+            enqueue("Logowanie-uonet.html", LoginTest::class.java)
+            enqueue("Offline.html", AutoLoginInterceptor::class.java)
 
-        repeat(3) { server.enqueue("unknown-error.txt", RegisterTest::class.java) }
+            repeat(3) {
+                enqueue("unknown-error.txt", RegisterTest::class.java)
+            }
 
-        server.start(3000)
+            start(3000)
+        }
+
         init()
 
         val service = getService { loginHelper.login("", "") }

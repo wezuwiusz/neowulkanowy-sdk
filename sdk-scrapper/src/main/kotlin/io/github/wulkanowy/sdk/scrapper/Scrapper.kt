@@ -107,6 +107,18 @@ class Scrapper {
             field = value
         }
 
+    var unitId: Int = 0
+        set(value) {
+            if (field != value) changeManager.reset()
+            field = value
+        }
+
+    var kindergartenDiaryId: Int = 0
+        set(value) {
+            if (field != value) changeManager.reset()
+            field = value
+        }
+
     var schoolYear: Int = 0
         set(value) {
             if (field != value) changeManager.reset()
@@ -160,6 +172,7 @@ class Scrapper {
             schoolSymbol = schoolSymbol,
             studentId = studentId,
             diaryId = diaryId,
+            kindergartenDiaryId = kindergartenDiaryId,
             schoolYear = schoolYear,
             androidVersion = androidVersion,
             buildTag = buildTag,
@@ -175,12 +188,21 @@ class Scrapper {
 
     private val register by resettableLazy(changeManager) {
         RegisterRepository(
-            normalizedSymbol, email, password,
-            LoginHelper(loginType, schema, host, normalizedSymbol, serviceManager.getCookieManager(), serviceManager.getLoginService()),
-            serviceManager.getRegisterService(),
-            serviceManager.getMessagesService(withLogin = false),
-            serviceManager.getStudentService(withLogin = false, studentInterceptor = false),
-            serviceManager.urlGenerator
+            startSymbol = normalizedSymbol,
+            email = email,
+            password = password,
+            loginHelper = LoginHelper(
+                loginType = loginType,
+                schema = schema,
+                host = host,
+                symbol = normalizedSymbol,
+                cookies = serviceManager.getCookieManager(),
+                api = serviceManager.getLoginService()
+            ),
+            register = serviceManager.getRegisterService(),
+            messages = serviceManager.getMessagesService(withLogin = false),
+            student = serviceManager.getStudentService(withLogin = false, studentInterceptor = false),
+            url = serviceManager.urlGenerator
         )
     }
 
@@ -190,6 +212,7 @@ class Scrapper {
         StudentStartRepository(
             studentId = studentId,
             classId = classId,
+            unitId = unitId,
             api = serviceManager.getStudentService(withLogin = true, studentInterceptor = false)
         )
     }

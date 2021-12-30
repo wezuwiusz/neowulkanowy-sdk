@@ -33,7 +33,11 @@ class RegisterRepositoryTest : BaseLocalTest() {
                 Scrapper.LoginType.STANDARD, "http", "fakelog.localhost:3000", symbol, CookieManager(),
                 getService(LoginService::class.java, "http://fakelog.localhost:3000/")
             ),
-            register = getService(service = RegisterService::class.java, url = "http://fakelog.localhost:3000/", okHttp = getOkHttp(errorInterceptor = false, autoLoginInterceptorOn = false)),
+            register = getService(
+                service = RegisterService::class.java,
+                url = "http://fakelog.localhost:3000/",
+                okHttp = getOkHttp(errorInterceptor = false, autoLoginInterceptorOn = false)
+            ),
             messages = getService(service = MessagesService::class.java, html = false),
             student = getService(service = StudentService::class.java, html = false),
             url = ServiceManager.UrlGenerator("http", "fakelog.localhost:3000", symbol, "")
@@ -42,20 +46,22 @@ class RegisterRepositoryTest : BaseLocalTest() {
 
     @Test
     fun normalLogin_one() {
-        server.enqueue("LoginPage-standard.html", LoginTest::class.java)
-        server.enqueue("Logowanie-uonet.html", LoginTest::class.java)
-        server.enqueue("Login-success.html", LoginTest::class.java)
+        with(server) {
+            enqueue("LoginPage-standard.html", LoginTest::class.java)
+            enqueue("Logowanie-uonet.html", LoginTest::class.java)
+            enqueue("Login-success.html", LoginTest::class.java)
 
-        server.enqueue("JednostkiUzytkownika.json", MessagesTest::class.java)
-        server.enqueue("LoginPage-standard.html", LoginTest::class.java)
-        server.enqueue("WitrynaUcznia.html", RegisterTest::class.java)
-        server.enqueue("UczenCache.json", RegisterTest::class.java)
-        server.enqueue("UczenDziennik-no-semester.json", RegisterTest::class.java)
+            enqueue("JednostkiUzytkownika.json", MessagesTest::class.java)
+            enqueue("LoginPage-standard.html", LoginTest::class.java)
+            enqueue("WitrynaUcznia.html", RegisterTest::class.java)
+            enqueue("UczenCache.json", RegisterTest::class.java)
+            enqueue("UczenDziennik-no-semester.json", RegisterTest::class.java)
 
-        (1..4).onEach { // 4x symbol
-            server.enqueue("Logowanie-brak-dostepu.html", LoginTest::class.java)
+            (1..4).onEach { // 4x symbol
+                enqueue("Logowanie-brak-dostepu.html", LoginTest::class.java)
+            }
+            start(3000)
         }
-        server.start(3000)
 
         val students = runBlocking { getRegisterRepository("Default").getStudents() }
 
@@ -69,20 +75,22 @@ class RegisterRepositoryTest : BaseLocalTest() {
 
     @Test
     fun normalLogin_semesters() {
-        server.enqueue("LoginPage-standard.html", LoginTest::class.java)
-        server.enqueue("Logowanie-uonet.html", LoginTest::class.java)
-        server.enqueue("Login-success.html", LoginTest::class.java)
+        with(server) {
+            enqueue("LoginPage-standard.html", LoginTest::class.java)
+            enqueue("Logowanie-uonet.html", LoginTest::class.java)
+            enqueue("Login-success.html", LoginTest::class.java)
 
-        server.enqueue("JednostkiUzytkownika.json", MessagesTest::class.java)
-        server.enqueue("LoginPage-standard.html", LoginTest::class.java)
-        server.enqueue("WitrynaUcznia.html", RegisterTest::class.java)
-        server.enqueue("UczenCache.json", RegisterTest::class.java)
-        server.enqueue("UczenDziennik.json", RegisterTest::class.java)
+            enqueue("JednostkiUzytkownika.json", MessagesTest::class.java)
+            enqueue("LoginPage-standard.html", LoginTest::class.java)
+            enqueue("WitrynaUcznia.html", RegisterTest::class.java)
+            enqueue("UczenCache.json", RegisterTest::class.java)
+            enqueue("UczenDziennik.json", RegisterTest::class.java)
 
-        (1..4).onEach { // 4x symbol
-            server.enqueue("Logowanie-brak-dostepu.html", LoginTest::class.java)
+            (1..4).onEach { // 4x symbol
+                enqueue("Logowanie-brak-dostepu.html", LoginTest::class.java)
+            }
+            start(3000)
         }
-        server.start(3000)
 
         val students = runBlocking { getRegisterRepository("Default").getStudents() }
 
@@ -97,22 +105,24 @@ class RegisterRepositoryTest : BaseLocalTest() {
 
     @Test
     fun normalLogin_triple() {
-        server.enqueue("LoginPage-standard.html", LoginTest::class.java)
-        server.enqueue("Logowanie-uonet.html", LoginTest::class.java)
-        server.enqueue("Login-success-triple.html", LoginTest::class.java)
+        with(server) {
+            enqueue("LoginPage-standard.html", LoginTest::class.java)
+            enqueue("Logowanie-uonet.html", LoginTest::class.java)
+            enqueue("Login-success-triple.html", LoginTest::class.java)
 
-        server.enqueue("JednostkiUzytkownika.json", MessagesTest::class.java)
-        (0..2).onEach {
-            server.enqueue("LoginPage-standard.html", LoginTest::class.java)
-            server.enqueue("WitrynaUcznia.html", RegisterTest::class.java)
-            server.enqueue("UczenCache.json", RegisterTest::class.java)
-            server.enqueue("UczenDziennik-no-semester.json", RegisterTest::class.java)
-        }
+            enqueue("JednostkiUzytkownika.json", MessagesTest::class.java)
+            (0..2).onEach {
+                enqueue("LoginPage-standard.html", LoginTest::class.java)
+                enqueue("WitrynaUcznia.html", RegisterTest::class.java)
+                enqueue("UczenCache.json", RegisterTest::class.java)
+                enqueue("UczenDziennik-no-semester.json", RegisterTest::class.java)
+            }
 
-        (1..4).onEach { // 4x symbol
-            server.enqueue("Logowanie-brak-dostepu.html", LoginTest::class.java)
+            (1..4).onEach { // 4x symbol
+                enqueue("Logowanie-brak-dostepu.html", LoginTest::class.java)
+            }
+            start(3000)
         }
-        server.start(3000)
 
         val students = runBlocking { getRegisterRepository("Default").getStudents() }
         assertEquals(3, students.size)
@@ -135,25 +145,27 @@ class RegisterRepositoryTest : BaseLocalTest() {
 
     @Test
     fun normalLogin_temporarilyOff() {
-        server.enqueue("LoginPage-standard.html", LoginTest::class.java)
-        server.enqueue("Logowanie-uonet.html", LoginTest::class.java)
-        server.enqueue("Login-success-triple.html", LoginTest::class.java)
+        with(server) {
+            enqueue("LoginPage-standard.html", LoginTest::class.java)
+            enqueue("Logowanie-uonet.html", LoginTest::class.java)
+            enqueue("Login-success-triple.html", LoginTest::class.java)
 
-        server.enqueue("JednostkiUzytkownika.json", MessagesTest::class.java)
-        (0..1).onEach {
-            server.enqueue("LoginPage-standard.html", LoginTest::class.java)
-            server.enqueue("WitrynaUcznia.html", RegisterTest::class.java)
-            server.enqueue("UczenCache.json", RegisterTest::class.java)
-            server.enqueue("UczenDziennik-no-semester.json", RegisterTest::class.java)
+            enqueue("JednostkiUzytkownika.json", MessagesTest::class.java)
+            (0..1).onEach {
+                enqueue("LoginPage-standard.html", LoginTest::class.java)
+                enqueue("WitrynaUcznia.html", RegisterTest::class.java)
+                enqueue("UczenCache.json", RegisterTest::class.java)
+                enqueue("UczenDziennik-no-semester.json", RegisterTest::class.java)
+            }
+
+            enqueue("LoginPage-standard.html", LoginTest::class.java)
+            enqueue("AplikacjaCzasowoWyłączona.html", ErrorInterceptorTest::class.java)
+
+            (1..4).onEach { // 4x symbol
+                enqueue("Logowanie-brak-dostepu.html", LoginTest::class.java)
+            }
+            start(3000)
         }
-
-        server.enqueue("LoginPage-standard.html", LoginTest::class.java)
-        server.enqueue("AplikacjaCzasowoWyłączona.html", ErrorInterceptorTest::class.java)
-
-        (1..4).onEach { // 4x symbol
-            server.enqueue("Logowanie-brak-dostepu.html", LoginTest::class.java)
-        }
-        server.start(3000)
 
         val students = runBlocking { getRegisterRepository("Default").getStudents() }
         assertEquals(2, students.size)
@@ -176,27 +188,32 @@ class RegisterRepositoryTest : BaseLocalTest() {
 
     @Test
     fun filterSymbolsWithSpaces() {
-        server.enqueue("LoginPage-standard.html", LoginTest::class.java)
-        server.enqueue("Logowanie-uonet.html", LoginTest::class.java)
+        with(server) {
+            enqueue("LoginPage-standard.html", LoginTest::class.java)
+            enqueue("Logowanie-uonet.html", LoginTest::class.java)
 
-        (1..5).onEach {
-            server.enqueue("Login-success-old.html", LoginTest::class.java)
-            server.enqueue("JednostkiUzytkownika.json", MessagesTest::class.java)
+            (1..5).onEach {
+                enqueue("Login-success-old.html", LoginTest::class.java)
+                enqueue("JednostkiUzytkownika.json", MessagesTest::class.java)
+            }
+
+            start(3000)
         }
 
-        server.start(3000)
-
-        runBlocking { normal.getStudents() }
+        val students = runBlocking { normal.getStudents() }
+        assertEquals(0, students.size)
     }
 
     @Test
     fun normalizeInvalidSymbol_default() {
-        server.enqueue("LoginPage-standard.html", LoginTest::class.java)
-        server.enqueue("Logowanie-uonet.html", LoginTest::class.java)
-        server.enqueue("Logowanie-brak-dostepu.html", LoginTest::class.java)
-        server.enqueue("Offline.html", ErrorInterceptorTest::class.java)
+        with(server) {
+            enqueue("LoginPage-standard.html", LoginTest::class.java)
+            enqueue("Logowanie-uonet.html", LoginTest::class.java)
+            enqueue("Logowanie-brak-dostepu.html", LoginTest::class.java)
+            enqueue("Offline.html", ErrorInterceptorTest::class.java)
 
-        server.start(3000)
+            start(3000)
+        }
 
         try {
             runBlocking { getRegisterRepository("Default").getStudents() }
@@ -211,12 +228,14 @@ class RegisterRepositoryTest : BaseLocalTest() {
 
     @Test
     fun normalizeInvalidSymbol_custom() {
-        server.enqueue("LoginPage-standard.html", LoginTest::class.java)
-        server.enqueue("Logowanie-uonet.html", LoginTest::class.java)
-        server.enqueue("Logowanie-brak-dostepu.html", LoginTest::class.java)
-        server.enqueue("Offline.html", ErrorInterceptorTest::class.java)
+        with(server) {
+            enqueue("LoginPage-standard.html", LoginTest::class.java)
+            enqueue("Logowanie-uonet.html", LoginTest::class.java)
+            enqueue("Logowanie-brak-dostepu.html", LoginTest::class.java)
+            enqueue("Offline.html", ErrorInterceptorTest::class.java)
 
-        server.start(3000)
+            start(3000)
+        }
 
         try {
             runBlocking { getRegisterRepository(" Rzeszów + ").getStudents() }
@@ -231,12 +250,14 @@ class RegisterRepositoryTest : BaseLocalTest() {
 
     @Test
     fun normalizeInvalidSymbol_trimMultipleSpaces() {
-        server.enqueue("LoginPage-standard.html", LoginTest::class.java)
-        server.enqueue("Logowanie-uonet.html", LoginTest::class.java)
-        server.enqueue("Logowanie-brak-dostepu.html", LoginTest::class.java)
-        server.enqueue("Offline.html", ErrorInterceptorTest::class.java)
+        with(server) {
+            enqueue("LoginPage-standard.html", LoginTest::class.java)
+            enqueue("Logowanie-uonet.html", LoginTest::class.java)
+            enqueue("Logowanie-brak-dostepu.html", LoginTest::class.java)
+            enqueue("Offline.html", ErrorInterceptorTest::class.java)
 
-        server.start(3000)
+            start(3000)
+        }
 
         try {
             runBlocking { getRegisterRepository(" Niepoprawny    symbol no ale + ").getStudents() }
@@ -251,12 +272,14 @@ class RegisterRepositoryTest : BaseLocalTest() {
 
     @Test
     fun normalizeInvalidSymbol_emptyFallback() {
-        server.enqueue("LoginPage-standard.html", LoginTest::class.java)
-        server.enqueue("Logowanie-uonet.html", LoginTest::class.java)
-        server.enqueue("Logowanie-brak-dostepu.html", LoginTest::class.java)
-        server.enqueue("Offline.html", ErrorInterceptorTest::class.java)
+        with(server) {
+            enqueue("LoginPage-standard.html", LoginTest::class.java)
+            enqueue("Logowanie-uonet.html", LoginTest::class.java)
+            enqueue("Logowanie-brak-dostepu.html", LoginTest::class.java)
+            enqueue("Offline.html", ErrorInterceptorTest::class.java)
 
-        server.start(3000)
+            start(3000)
+        }
 
         try {
             runBlocking { getRegisterRepository(" + ").getStudents() }
@@ -271,12 +294,14 @@ class RegisterRepositoryTest : BaseLocalTest() {
 
     @Test
     fun normalizeInvalidSymbol_digits() {
-        server.enqueue("LoginPage-standard.html", LoginTest::class.java)
-        server.enqueue("Logowanie-uonet.html", LoginTest::class.java)
-        server.enqueue("Logowanie-brak-dostepu.html", LoginTest::class.java)
-        server.enqueue("Offline.html", ErrorInterceptorTest::class.java)
+        with(server) {
+            enqueue("LoginPage-standard.html", LoginTest::class.java)
+            enqueue("Logowanie-uonet.html", LoginTest::class.java)
+            enqueue("Logowanie-brak-dostepu.html", LoginTest::class.java)
+            enqueue("Offline.html", ErrorInterceptorTest::class.java)
 
-        server.start(3000)
+            start(3000)
+        }
 
         try {
             runBlocking { getRegisterRepository("Default").getStudents() }

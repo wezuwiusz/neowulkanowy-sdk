@@ -35,6 +35,8 @@
           "Id": 1234564
         }
       ],
+      "DziennikDataOd": "2016-08-31 22:00:00",
+      "DziennikDataDo": "2017-08-30 23:00:00",
       "IdSioTyp": 11,
       "IsDorosli": false,
       "IsPolicealna": false,
@@ -80,6 +82,8 @@
           "Id": 1234566
         }
       ],
+      "DziennikDataOd": "2017-08-31 22:00:00",
+      "DziennikDataDo": "2018-08-30 23:00:00",
       "IdSioTyp": 11,
       "IsDorosli": false,
       "IsPolicealna": false,
@@ -125,6 +129,8 @@
           "Id": 1234568
         }
       ],
+      "DziennikDataOd": "2018-08-31 22:00:00",
+      "DziennikDataDo": "2019-08-30 23:00:00",
       "IdSioTyp": 11,
       "IsDorosli": false,
       "IsPolicealna": false,
@@ -170,6 +176,8 @@
           "Id": 1234568
         }
       ],
+      "DziennikDataOd": "2015-09-01 00:00:00",
+      "DziennikDataDo": "2016-08-31 08:00:00",
       "IdSioTyp": 11,
       "IsDorosli": false,
       "IsPolicealna": false,
@@ -215,6 +223,8 @@
           "Id": 6
         }
       ],
+      "DziennikDataOd": "2016-09-01 00:00:00",
+      "DziennikDataDo": "2017-08-31 00:00:00",
       "IdSioTyp": 11,
       "IsDorosli": false,
       "IsPolicealna": false,
@@ -260,6 +270,8 @@
           "Id": 4
         }
       ],
+      "DziennikDataOd": "2017-09-01 00:00:00",
+      "DziennikDataDo": "2018-08-31 00:00:00",
       "IdSioTyp": 11,
       "IsDorosli": false,
       "IsPolicealna": false,

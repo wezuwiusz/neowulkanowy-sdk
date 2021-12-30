@@ -10,7 +10,7 @@ import io.github.wulkanowy.sdk.scrapper.Scrapper.LoginType.AUTO
 import io.github.wulkanowy.sdk.scrapper.Scrapper.LoginType.STANDARD
 import io.github.wulkanowy.sdk.scrapper.exception.ScrapperException
 import io.github.wulkanowy.sdk.scrapper.exception.VulcanException
-import io.github.wulkanowy.sdk.scrapper.register.SendCertificateResponse
+import io.github.wulkanowy.sdk.scrapper.register.HomePageResponse
 import io.github.wulkanowy.sdk.scrapper.service.LoginService
 import org.slf4j.LoggerFactory
 import pl.droidsonroids.jspoon.Jspoon
@@ -48,11 +48,11 @@ class LoginHelper(
         Jspoon.create().adapter(CertificateResponse::class.java)
     }
 
-    suspend fun login(email: String, password: String): SendCertificateResponse {
+    suspend fun login(email: String, password: String): HomePageResponse {
         val res = sendCredentials(email, password)
         logger.info("Login ${loginType.name} started")
         when {
-            res.title.startsWith("Witryna ucznia i rodzica") -> return SendCertificateResponse()
+            res.title.startsWith("Witryna ucznia i rodzica") -> return HomePageResponse()
             res.action.isBlank() -> throw VulcanException("Invalid certificate page: '${res.title}'. Try again")
         }
 
@@ -92,7 +92,7 @@ class LoginHelper(
         }
     }
 
-    suspend fun sendCertificate(cert: CertificateResponse, email: String, url: String = cert.action): SendCertificateResponse {
+    suspend fun sendCertificate(cert: CertificateResponse, email: String, url: String = cert.action): HomePageResponse {
         cookies.cookieStore.removeAll()
         val res = api.sendCertificate(
             url = url,

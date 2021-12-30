@@ -11,6 +11,7 @@ class StudentCookieInterceptor(
     private val schema: String,
     private val host: String,
     private val diaryId: Int,
+    private val kindergartenDiaryId: Int,
     private val studentId: Int,
     private val schoolYear: Int
 ) : Interceptor {
@@ -19,7 +20,7 @@ class StudentCookieInterceptor(
         arrayOf(
             "idBiezacyDziennik" to diaryId,
             "idBiezacyUczen" to studentId,
-            "idBiezacyDziennikPrzedszkole" to 0,
+            "idBiezacyDziennikPrzedszkole" to kindergartenDiaryId,
             "biezacyRokSzkolny" to schoolYear
         ).forEach { (name, value) ->
             HttpCookie(name, value.toString()).let {

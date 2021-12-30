@@ -12,7 +12,6 @@ import io.github.wulkanowy.sdk.scrapper.service.RegisterService
 import io.github.wulkanowy.sdk.scrapper.service.ServiceManager
 import io.github.wulkanowy.sdk.scrapper.service.StudentService
 import kotlinx.coroutines.runBlocking
-import okhttp3.mockwebserver.MockResponse
 import org.junit.Assert.assertEquals
 import org.junit.Test
 import java.net.CookieManager
@@ -26,14 +25,34 @@ class RegisterTest : BaseLocalTest() {
             host = "fakelog.localhost:3000",
             symbol = "default",
             cookies = CookieManager(),
-            api = getService(LoginService::class.java, "http://fakelog.localhost:3000/", true, getOkHttp(true, false, Scrapper.LoginType.STANDARD))
+            api = getService(
+                service = LoginService::class.java,
+                url = "http://fakelog.localhost:3000/",
+                html = true,
+                okHttp = getOkHttp(
+                    errorInterceptor = true,
+                    autoLoginInterceptorOn = false,
+                    loginType = Scrapper.LoginType.STANDARD
+                )
+            )
         )
     }
 
     private val registerStudent by lazy {
         RegisterRepository(
-            startSymbol = "default", email = "jan@fakelog.localhost", password = "jan123", loginHelper = login,
-            register = getService(RegisterService::class.java, "http://fakelog.localhost:3000/Default/", true, getOkHttp(false, false)),
+            startSymbol = "default",
+            email = "jan@fakelog.localhost",
+            password = "jan123",
+            loginHelper = login,
+            register = getService(
+                service = RegisterService::class.java,
+                url = "http://fakelog.localhost:3000/Default/",
+                html = true,
+                okHttp = getOkHttp(
+                    errorInterceptor = false,
+                    autoLoginInterceptorOn = false
+                )
+            ),
             messages = getService(MessagesService::class.java, "http://fakelog.localhost:3000", false),
             student = getService(StudentService::class.java, "http://fakelog.localhost:3000", false),
             url = ServiceManager.UrlGenerator("http", "fakelog.localhost:3000", "default", "123")
@@ -42,19 +61,21 @@ class RegisterTest : BaseLocalTest() {
 
     @Test
     fun filterStudentsByClass() {
-        server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("LoginPage-standard.html").readText()))
-        server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("Logowanie-uonet.html").readText()))
-        server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("Login-success.html").readText()))
-        server.enqueue("JednostkiUzytkownika.json", MessagesTest::class.java)
-        server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("LoginPage-standard.html").readText()))
-        server.enqueue(MockResponse().setBody(RegisterTest::class.java.getResource("WitrynaUcznia.html").readText()))
-        server.enqueue(MockResponse().setBody(RegisterTest::class.java.getResource("UczenCache.json").readText()))
-        server.enqueue(MockResponse().setBody(RegisterTest::class.java.getResource("UczenDziennik-multi.json").readText()))
-        (1..4).onEach { // 4x symbol
-            server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("Logowanie-brak-dostepu.html").readText()))
-        }
+        with(server) {
+            enqueue("LoginPage-standard.html", LoginTest::class.java)
+            enqueue("Logowanie-uonet.html", LoginTest::class.java)
+            enqueue("Login-success.html", LoginTest::class.java)
+            enqueue("JednostkiUzytkownika.json", MessagesTest::class.java)
+            enqueue("LoginPage-standard.html", LoginTest::class.java)
+            enqueue("WitrynaUcznia.html", RegisterTest::class.java)
+            enqueue("UczenCache.json", RegisterTest::class.java)
+            enqueue("UczenDziennik-multi.json", RegisterTest::class.java)
+            (1..4).onEach { // 4x symbol
+                enqueue("Logowanie-brak-dostepu.html", LoginTest::class.java)
+            }
 
-        server.start(3000)
+            start(3000)
+        }
 
         val res = runBlocking { registerStudent.getStudents() }
 
@@ -80,20 +101,24 @@ class RegisterTest : BaseLocalTest() {
     }
 
     @Test
-    fun getStudents_filterDiariesWithoutSemester() {
-        server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("LoginPage-standard.html").readText()))
-        server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("Logowanie-uonet.html").readText()))
-        server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("Login-success.html").readText()))
-        server.enqueue("JednostkiUzytkownika.json", MessagesTest::class.java)
-        server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("LoginPage-standard.html").readText()))
-        server.enqueue(MockResponse().setBody(RegisterTest::class.java.getResource("WitrynaUcznia.html").readText()))
-        server.enqueue(MockResponse().setBody(RegisterTest::class.java.getResource("UczenCache.json").readText()))
-        server.enqueue(MockResponse().setBody(RegisterTest::class.java.getResource("UczenDziennik-no-semester.json").readText()))
-        (1..4).onEach { // 4x symbol
-            server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("Logowanie-brak-dostepu.html").readText()))
-        }
+    fun getStudents_filterKindergartenDiaries() {
+        with(server) {
+            enqueue("LoginPage-standard.html", LoginTest::class.java)
+            enqueue("Logowanie-uonet.html", LoginTest::class.java)
+            enqueue("Login-success.html", LoginTest::class.java)
+            enqueue("JednostkiUzytkownika.json", MessagesTest::class.java)
 
-        server.start(3000)
+            enqueue("LoginPage-standard.html", LoginTest::class.java)
+            enqueue("WitrynaUcznia.html", RegisterTest::class.java)
+            enqueue("UczenCache.json", RegisterTest::class.java)
+            enqueue("UczenDziennik-no-semester.json", RegisterTest::class.java)
+
+            (1..4).onEach { // 4x symbol
+                enqueue("Logowanie-brak-dostepu.html", LoginTest::class.java)
+            }
+
+            start(3000)
+        }
 
         val res = runBlocking { registerStudent.getStudents() }
 
@@ -103,56 +128,31 @@ class RegisterTest : BaseLocalTest() {
             assertEquals(1, studentId)
             assertEquals("Jan", studentName)
             assertEquals("Kowalski", studentSurname)
-            assertEquals(1, classId)
+            assertEquals(0, classId) // always 0 for kindergarten
             assertEquals("Publiczna szkoła Wulkanowego nr 1 w fakelog.cf", schoolName)
-        }
-    }
-
-    @Test
-    fun getStudents_filterDiariesWithEmptySemester() {
-        server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("LoginPage-standard.html").readText()))
-        server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("Logowanie-uonet.html").readText()))
-        server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("Login-success.html").readText()))
-        server.enqueue("JednostkiUzytkownika.json", MessagesTest::class.java)
-        server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("LoginPage-standard.html").readText()))
-        server.enqueue(MockResponse().setBody(RegisterTest::class.java.getResource("WitrynaUcznia.html").readText()))
-        server.enqueue(MockResponse().setBody(RegisterTest::class.java.getResource("UczenCache.json").readText()))
-        server.enqueue(MockResponse().setBody(RegisterTest::class.java.getResource("UczenDziennik-empty-semester.json").readText()))
-        (1..4).onEach { // 4x symbol
-            server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("Logowanie-brak-dostepu.html").readText()))
-        }
-
-        server.start(3000)
-
-        val res = runBlocking { registerStudent.getStudents() }
-
-        assertEquals(1, res.size)
-
-        res[0].run {
-            assertEquals(1, studentId)
-            assertEquals("Jan", studentName)
-            assertEquals("Kowalski", studentSurname)
-            assertEquals(1, classId)
-            assertEquals("Publiczna szkoła Wulkanowego nr 1 w fakelog.cf", schoolName)
-            assertEquals("A", className)
+            assertEquals(2, semesters.size)
+            assertEquals(2016, semesters[0].schoolYear)
+            assertEquals(2017, semesters[1].schoolYear)
         }
     }
 
     @Test
     fun getStudents_classNameOrder() {
-        server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("LoginPage-standard.html").readText()))
-        server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("Logowanie-uonet.html").readText()))
-        server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("Login-success.html").readText()))
-        server.enqueue("JednostkiUzytkownika.json", MessagesTest::class.java)
-        server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("LoginPage-standard.html").readText()))
-        server.enqueue(MockResponse().setBody(RegisterTest::class.java.getResource("WitrynaUcznia.html").readText()))
-        server.enqueue(MockResponse().setBody(RegisterTest::class.java.getResource("UczenCache.json").readText()))
-        server.enqueue(MockResponse().setBody(RegisterTest::class.java.getResource("UczenDziennik.json").readText()))
-        (1..4).onEach { // 4x symbol
-            server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("Logowanie-brak-dostepu.html").readText()))
-        }
+        with(server) {
+            enqueue("LoginPage-standard.html", LoginTest::class.java)
+            enqueue("Logowanie-uonet.html", LoginTest::class.java)
+            enqueue("Login-success.html", LoginTest::class.java)
+            enqueue("JednostkiUzytkownika.json", MessagesTest::class.java)
+            enqueue("LoginPage-standard.html", LoginTest::class.java)
+            enqueue("WitrynaUcznia.html", RegisterTest::class.java)
+            enqueue("UczenCache.json", RegisterTest::class.java)
+            enqueue("UczenDziennik.json", RegisterTest::class.java)
+            (1..4).onEach { // 4x symbol
+                enqueue("Logowanie-brak-dostepu.html", LoginTest::class.java)
+            }
 
-        server.start(3000)
+            start(3000)
+        }
 
         val res = runBlocking { registerStudent.getStudents() }
 

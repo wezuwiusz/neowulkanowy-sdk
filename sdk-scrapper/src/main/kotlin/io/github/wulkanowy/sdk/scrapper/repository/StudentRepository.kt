@@ -78,9 +78,9 @@ class StudentRepository(private val api: StudentService) {
         val it = api.getStart("Start")
 
         val res = api.getUserCache(
-            getScriptParam("antiForgeryToken", it),
-            getScriptParam("appGuid", it),
-            getScriptParam("version", it)
+            token = getScriptParam("antiForgeryToken", it),
+            appGuid = getScriptParam("appGuid", it),
+            appVersion = getScriptParam("version", it)
         ).handleErrors()
 
         val data = requireNotNull(res.data) {
@@ -113,10 +113,10 @@ class StudentRepository(private val api: StudentService) {
     suspend fun excuseForAbsence(absents: List<Absent>, content: String?): Boolean {
         val it = api.getStart("Start")
         return api.excuseForAbsence(
-            getScriptParam("antiForgeryToken", it),
-            getScriptParam("appGuid", it),
-            getScriptParam("version", it),
-            AttendanceExcuseRequest(
+            token = getScriptParam("antiForgeryToken", it),
+            appGuid = getScriptParam("appGuid", it),
+            appVersion = getScriptParam("version", it),
+            attendanceExcuseRequest = AttendanceExcuseRequest(
                 AttendanceExcuseRequest.Excuse(
                     absents = absents.map { absence ->
                         AttendanceExcuseRequest.Excuse.Absent(

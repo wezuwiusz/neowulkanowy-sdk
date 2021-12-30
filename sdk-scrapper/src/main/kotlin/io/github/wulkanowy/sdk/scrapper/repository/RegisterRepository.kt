@@ -1,5 +1,7 @@
 package io.github.wulkanowy.sdk.scrapper.repository
 
+import com.migcomponents.migbase64.Base64
+import com.squareup.moshi.Moshi
 import io.github.wulkanowy.sdk.scrapper.Scrapper
 import io.github.wulkanowy.sdk.scrapper.exception.ScrapperException
 import io.github.wulkanowy.sdk.scrapper.exception.TemporarilyDisabledException
@@ -11,6 +13,8 @@ import io.github.wulkanowy.sdk.scrapper.login.CertificateResponse
 import io.github.wulkanowy.sdk.scrapper.login.LoginHelper
 import io.github.wulkanowy.sdk.scrapper.messages.ReportingUnit
 import io.github.wulkanowy.sdk.scrapper.register.Diary
+import io.github.wulkanowy.sdk.scrapper.register.Permission
+import io.github.wulkanowy.sdk.scrapper.register.PermissionJsonAdapter
 import io.github.wulkanowy.sdk.scrapper.register.Student
 import io.github.wulkanowy.sdk.scrapper.register.toSemesters
 import io.github.wulkanowy.sdk.scrapper.repository.AccountRepository.Companion.SELECTOR_ADFS
@@ -26,6 +30,7 @@ import org.jsoup.nodes.Element
 import org.jsoup.parser.Parser
 import org.slf4j.LoggerFactory
 import java.net.URL
+import java.nio.charset.StandardCharsets
 
 class RegisterRepository(
     private val startSymbol: String,
@@ -43,6 +48,8 @@ class RegisterRepository(
         private val logger = LoggerFactory.getLogger(this::class.java)
     }
 
+    private val moshi by lazy { Moshi.Builder().build() }
+
     suspend fun getStudents(): List<Student> {
         return getSymbols().flatMap { (symbol, certificate) ->
             val cert = try {
@@ -54,9 +61,11 @@ class RegisterRepository(
 
             url.symbol = symbol
             val unitsUrl = url.generate(ServiceManager.UrlGenerator.Site.MESSAGES) + "NowaWiadomosc.mvc/GetJednostkiUzytkownika"
+
             val units = messages.getUserReportingUnits(unitsUrl).handleErrors().data.orEmpty()
+            val permissions = getPermissions(cert.document.toString())
             cert.studentSchools.flatMap { moduleUrl ->
-                getStudentsBySymbol(symbol, moduleUrl, units)
+                getStudentsBySymbol(symbol, moduleUrl, permissions, units)
             }
         }.distinctBy { pupil -> listOf(pupil.studentId, pupil.classId, pupil.schoolSymbol) }
     }
@@ -101,24 +110,30 @@ class RegisterRepository(
         }
     }
 
-    private suspend fun getStudentsBySymbol(symbol: String, moduleUrl: Element, units: List<ReportingUnit>): List<Student> {
+    private suspend fun getStudentsBySymbol(
+        symbol: String,
+        moduleUrl: Element,
+        permissions: Permission?,
+        units: List<ReportingUnit>
+    ): List<Student> {
         val loginType = getLoginType(symbol)
         val schoolUrl = moduleUrl.attr("href")
         url.schoolId = getExtractedSchoolSymbolFromUrl(schoolUrl)
 
-        val startPage = try {
+        val studentStartPage = try {
             student.getStart(url.generate(ServiceManager.UrlGenerator.Site.STUDENT) + "Start")
         } catch (e: TemporarilyDisabledException) {
             logger.debug("Start page is unavailable", e)
             return listOf()
         }
 
-        val cache = getStudentCache(startPage)
+        val cache = getStudentCache(studentStartPage)
 
         val diaries = getStudentDiaries()
         return diaries.filterDiaries().map { diary ->
+            val unit = units.getUnitByStudentId(diary, permissions)
             val schoolSymbol = getExtractedSchoolSymbolFromUrl(schoolUrl)
-            val unit = units.firstOrNull { it.unitId == diary.semesters!![0].unitId }
+            val classId = diary.semesters?.firstOrNull()?.classId ?: 0
 
             Student(
                 email = email,
@@ -132,15 +147,13 @@ class RegisterRepository(
                 studentSurname = diary.studentSurname,
                 schoolSymbol = schoolSymbol,
                 schoolShortName = moduleUrl.text().takeIf { "Uczeń" !in it }.orEmpty(),
-                schoolName = getScriptParam("organizationName", startPage, diary.symbol + " " + (diary.year - diary.level + 1)),
+                schoolName = getScriptParam("organizationName", studentStartPage, diary.symbol + " " + (diary.year - diary.level + 1)),
                 className = diary.symbol.orEmpty(),
-                classId = diary.semesters!![0].classId,
+                classId = classId,
                 baseUrl = url.generate(ServiceManager.UrlGenerator.Site.BASE),
                 loginType = loginType,
                 isParent = cache?.isParent == true,
-                semesters = diaries
-                    .filter { it.studentId == diary.studentId && it.semesters?.getOrNull(0)?.classId == diary.semesters[0].classId }
-                    .flatMap { it.toSemesters() }
+                semesters = diaries.toSemesters(diary.studentId, classId, unit?.unitId ?: 0),
             )
         }.ifEmpty {
             logger.error("No supported student found in diaries: $diaries")
@@ -161,12 +174,27 @@ class RegisterRepository(
         .data.orEmpty()
 
     private fun List<Diary>.filterDiaries() = this
-        .filter { it.semesters.orEmpty().isNotEmpty() }
+        .filter { it.semesters.orEmpty().isNotEmpty() || it.kindergartenDiaryId != 0 }
         .sortedByDescending { it.level }
-        .distinctBy { listOf(it.studentId, it.semesters!![0].classId) }
+        .distinctBy { listOf(it.studentId, it.semesters?.firstOrNull()?.classId ?: 0) }
 
     private fun getExtractedSchoolSymbolFromUrl(snpPageUrl: String): String {
         val path = URL(snpPageUrl).path.split("/")
         return path[2]
+    }
+
+    private fun List<ReportingUnit>.getUnitByStudentId(diary: Diary, permissions: Permission?): ReportingUnit? {
+        val idFromPermissions = permissions?.authInfos.orEmpty().firstOrNull { it.studentIds.contains(diary.studentId) }?.unitId
+        val idFromSemesters = diary.semesters?.getOrNull(0)?.unitId
+        val unitId = idFromSemesters ?: idFromPermissions
+
+        return firstOrNull { it.unitId == unitId }
+    }
+
+    private fun getPermissions(homepage: String): Permission? {
+        val base64 = getScriptParam("permissions", homepage).substringBefore("|")
+        return Base64.decode(base64).toString(StandardCharsets.UTF_8).takeIf { it.isNotBlank() }?.let {
+            PermissionJsonAdapter(moshi).fromJson(it)
+        }
     }
 }

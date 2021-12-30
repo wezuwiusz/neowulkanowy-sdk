@@ -46,6 +46,12 @@ data class Diary(
     @Json(name = "Okresy")
     val semesters: List<Semester>? = emptyList(),
 
+    @Json(name = "DziennikDataOd")
+    val start: Date,
+
+    @Json(name = "DziennikDataDo")
+    val end: Date,
+
     @Json(name = "UczenPelnaNazwa")
     val fullName: String
 ) {

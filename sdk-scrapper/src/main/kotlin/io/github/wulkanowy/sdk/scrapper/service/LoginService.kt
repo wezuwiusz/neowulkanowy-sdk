@@ -1,7 +1,7 @@
 package io.github.wulkanowy.sdk.scrapper.service
 
 import io.github.wulkanowy.sdk.scrapper.login.ADFSFormResponse
-import io.github.wulkanowy.sdk.scrapper.register.SendCertificateResponse
+import io.github.wulkanowy.sdk.scrapper.register.HomePageResponse
 import retrofit2.http.FieldMap
 import retrofit2.http.FormUrlEncoded
 import retrofit2.http.GET
@@ -17,10 +17,10 @@ interface LoginService {
 
     @POST
     @FormUrlEncoded
-    suspend fun sendCertificate(@Url url: String, @FieldMap certificate: Map<String, String>): SendCertificateResponse
+    suspend fun sendCertificate(@Url url: String, @FieldMap certificate: Map<String, String>): HomePageResponse
 
     @GET
-    suspend fun switchLogin(@Url url: String): SendCertificateResponse
+    suspend fun switchLogin(@Url url: String): HomePageResponse
 
     // ADFS
 

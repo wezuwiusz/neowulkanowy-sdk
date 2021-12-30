@@ -2,15 +2,16 @@ package io.github.wulkanowy.sdk.scrapper
 
 import io.github.wulkanowy.sdk.scrapper.attendance.AttendanceSummaryTest
 import kotlinx.coroutines.runBlocking
-import okhttp3.mockwebserver.MockResponse
 import org.junit.Test
 
 class ScrapperTest : BaseLocalTest() {
 
     @Test
     fun changeTest() {
-        server.enqueue(MockResponse().setBody(AttendanceSummaryTest::class.java.getResource("Przedmioty.json").readText()))
-        server.start(3000) //
+        with(server) {
+            enqueue("Przedmioty.json", AttendanceSummaryTest::class.java)
+            start(3000) //
+        }
 
         val api = Scrapper().apply {
             loginType = Scrapper.LoginType.STANDARD

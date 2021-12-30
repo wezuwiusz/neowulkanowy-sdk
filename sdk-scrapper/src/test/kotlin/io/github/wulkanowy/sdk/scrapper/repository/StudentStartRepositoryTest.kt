@@ -5,7 +5,6 @@ import io.github.wulkanowy.sdk.scrapper.Scrapper
 import io.github.wulkanowy.sdk.scrapper.login.LoginTest
 import io.github.wulkanowy.sdk.scrapper.register.RegisterTest
 import kotlinx.coroutines.runBlocking
-import okhttp3.mockwebserver.MockResponse
 import org.junit.Assert.assertEquals
 import org.junit.Test
 
@@ -26,8 +25,10 @@ class StudentStartRepositoryTest : BaseLocalTest() {
 
     @Test
     fun getSemesters() {
-        server.enqueue(MockResponse().setBody(RegisterTest::class.java.getResource("UczenDziennik.json").readText()))
-        server.start(3000) //
+        with(server) {
+            enqueue("UczenDziennik.json", RegisterTest::class.java)
+            start(3000) //
+        }
 
         api.studentId = 1
         api.classId = 1
@@ -48,8 +49,10 @@ class StudentStartRepositoryTest : BaseLocalTest() {
 
     @Test
     fun getSemesters_empty() {
-        server.enqueue(MockResponse().setBody(RegisterTest::class.java.getResource("UczenDziennik.json").readText()))
-        server.start(3000) //
+        with(server) {
+            enqueue("UczenDziennik.json", RegisterTest::class.java)
+            start(3000) //
+        }
 
         api.studentId = 1
         api.classId = 2 //
@@ -61,8 +64,10 @@ class StudentStartRepositoryTest : BaseLocalTest() {
 
     @Test
     fun getSemesters_studentWithMultiClasses() {
-        server.enqueue(MockResponse().setBody(RegisterTest::class.java.getResource("UczenDziennik-multi.json").readText()))
-        server.start(3000) //
+        with(server) {
+            enqueue("UczenDziennik-multi.json", RegisterTest::class.java)
+            start(3000)
+        }
 
         api.studentId = 3881
         api.classId = 121
@@ -77,8 +82,10 @@ class StudentStartRepositoryTest : BaseLocalTest() {
 
     @Test
     fun getSemesters_graduate() {
-        server.enqueue(MockResponse().setBody(RegisterTest::class.java.getResource("UczenDziennik.json").readText()))
-        server.start(3000) //
+        with(server) {
+            enqueue("UczenDziennik.json", RegisterTest::class.java)
+            start(3000) //
+        }
 
         api.studentId = 2
         api.classId = 2
@@ -93,13 +100,15 @@ class StudentStartRepositoryTest : BaseLocalTest() {
 
     @Test
     fun getSemesters_normal() {
-        server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("Logowanie-standard.html").readText()))
+        with(server) {
+            enqueue("Logowanie-standard.html", LoginTest::class.java)
 
-        server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("Logowanie-uonet.html").readText()))
-        server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("Login-success.html").readText()))
+            enqueue("Logowanie-uonet.html", LoginTest::class.java)
+            enqueue("Login-success.html", LoginTest::class.java)
 
-        server.enqueue(MockResponse().setBody(RegisterTest::class.java.getResource("UczenDziennik.json").readText()))
-        server.start(3000) //
+            enqueue("UczenDziennik.json", RegisterTest::class.java)
+            start(3000) //
+        }
 
         with(api) {
             studentId = 1
@@ -117,14 +126,16 @@ class StudentStartRepositoryTest : BaseLocalTest() {
 
     @Test
     fun getSemesters_ADFS() {
-        server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("ADFS.html").readText())) //
+        with(server) {
+            enqueue("ADFS.html", LoginTest::class.java) //
 
-        server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("Logowanie-cufs.html").readText()))
-        server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("Logowanie-uonet.html").readText()))
-        server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("Login-success.html").readText()))
+            enqueue("Logowanie-cufs.html", LoginTest::class.java)
+            enqueue("Logowanie-uonet.html", LoginTest::class.java)
+            enqueue("Login-success.html", LoginTest::class.java)
 
-        server.enqueue(MockResponse().setBody(RegisterTest::class.java.getResource("UczenDziennik.json").readText()))
-        server.start(3000) //
+            enqueue("UczenDziennik.json", RegisterTest::class.java)
+            start(3000) //
+        }
 
         with(api) {
             studentId = 1
@@ -142,14 +153,16 @@ class StudentStartRepositoryTest : BaseLocalTest() {
 
     @Test
     fun getSemesters_ADFSLight() {
-        server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("ADFSLight-form-1.html").readText()))
+        with(server) {
+            enqueue("ADFSLight-form-1.html", LoginTest::class.java)
 
-        server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("Logowanie-cufs.html").readText()))
-        server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("Logowanie-uonet.html").readText()))
-        server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("Login-success.html").readText()))
+            enqueue("Logowanie-cufs.html", LoginTest::class.java)
+            enqueue("Logowanie-uonet.html", LoginTest::class.java)
+            enqueue("Login-success.html", LoginTest::class.java)
 
-        server.enqueue(MockResponse().setBody(RegisterTest::class.java.getResource("UczenDziennik.json").readText()))
-        server.start(3000) //
+            enqueue("UczenDziennik.json", RegisterTest::class.java)
+            start(3000) //
+        }
 
         with(api) {
             studentId = 1
@@ -167,15 +180,17 @@ class StudentStartRepositoryTest : BaseLocalTest() {
 
     @Test
     fun getSemesters_ADFSCards() {
-        server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("ADFSCards.html").readText()))
+        with(server) {
+            enqueue("ADFSCards.html", LoginTest::class.java)
 
-        server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("ADFSCards.html").readText()))
-        server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("Logowanie-cufs.html").readText()))
-        server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("Logowanie-uonet.html").readText()))
-        server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("Login-success.html").readText()))
+            enqueue("ADFSCards.html", LoginTest::class.java)
+            enqueue("Logowanie-cufs.html", LoginTest::class.java)
+            enqueue("Logowanie-uonet.html", LoginTest::class.java)
+            enqueue("Login-success.html", LoginTest::class.java)
 
-        server.enqueue(MockResponse().setBody(RegisterTest::class.java.getResource("UczenDziennik.json").readText()))
-        server.start(3000) //
+            enqueue("UczenDziennik.json", RegisterTest::class.java)
+            start(3000) //
+        }
 
         with(api) {
             studentId = 1

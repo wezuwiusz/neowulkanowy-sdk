@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory
 class StudentStartRepository(
     private val studentId: Int,
     private val classId: Int,
+    private val unitId: Int,
     private val api: StudentService
 ) {
 
@@ -19,15 +20,8 @@ class StudentStartRepository(
 
     suspend fun getSemesters(): List<Semester> {
         val diaries = api.getDiaries().handleErrors().data
-        return diaries.orEmpty()
-            .asSequence()
-            .filter { it.semesters.orEmpty().isNotEmpty() }
-            .filter { it.studentId == studentId }
-            .filter { it.semesters!![0].classId == classId }
-            .map { it.toSemesters() }
-            .flatten()
+        return diaries?.toSemesters(studentId, classId, unitId).orEmpty()
             .sortedByDescending { it.semesterId }
-            .toList()
             .ifEmpty {
                 logger.debug("Student $studentId, class $classId not found in diaries: $diaries")
                 emptyList()
