@@ -1,0 +1,31 @@
+{
+  "data": [
+    {
+      "Id": 1,
+      "IdUczen": 1,
+      "UczenImie": "Jan",
+      "UczenImie2": "Marek",
+      "UczenNazwisko": "Kowalski",
+      "IsDziennik": false,
+      "IdDziennik": 0,
+      "IdPrzedszkoleDziennik": 0,
+      "Poziom": 0,
+      "Symbol": null,
+      "Nazwa": null,
+      "DziennikRokSzkolny": 0,
+      "Okresy": null,
+      "DziennikDataOd": "2016-09-01 00:00:00",
+      "DziennikDataDo": "2017-08-31 00:00:00",
+      "IdSioTyp": 11,
+      "IsDorosli": false,
+      "IsPolicealna": false,
+      "Is13": false,
+      "IsArtystyczna": false,
+      "IsArtystyczna13": false,
+      "IsSpecjalny": false,
+      "IsPrzedszkola": false,
+      "UczenPelnaNazwa": "Jan Kowalski"
+    }
+  ],
+  "success": true
+}

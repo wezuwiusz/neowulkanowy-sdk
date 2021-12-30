@@ -70,7 +70,7 @@ class RegisterTest : BaseLocalTest() {
             enqueue("WitrynaUcznia.html", RegisterTest::class.java)
             enqueue("UczenCache.json", RegisterTest::class.java)
             enqueue("UczenDziennik-multi.json", RegisterTest::class.java)
-            (1..4).onEach { // 4x symbol
+            repeat(4) { // 4x symbol
                 enqueue("Logowanie-brak-dostepu.html", LoginTest::class.java)
             }
 
@@ -101,7 +101,7 @@ class RegisterTest : BaseLocalTest() {
     }
 
     @Test
-    fun getStudents_filterKindergartenDiaries() {
+    fun getStudents_kindergartenDiaries() {
         with(server) {
             enqueue("LoginPage-standard.html", LoginTest::class.java)
             enqueue("Logowanie-uonet.html", LoginTest::class.java)
@@ -113,7 +113,7 @@ class RegisterTest : BaseLocalTest() {
             enqueue("UczenCache.json", RegisterTest::class.java)
             enqueue("UczenDziennik-no-semester.json", RegisterTest::class.java)
 
-            (1..4).onEach { // 4x symbol
+            repeat(4) { // 4x symbol
                 enqueue("Logowanie-brak-dostepu.html", LoginTest::class.java)
             }
 
@@ -137,6 +137,31 @@ class RegisterTest : BaseLocalTest() {
     }
 
     @Test
+    fun getStudents_filterNoDiares() {
+        with(server) {
+            enqueue("LoginPage-standard.html", LoginTest::class.java)
+            enqueue("Logowanie-uonet.html", LoginTest::class.java)
+            enqueue("Login-success.html", LoginTest::class.java)
+            enqueue("JednostkiUzytkownika.json", MessagesTest::class.java)
+
+            enqueue("LoginPage-standard.html", LoginTest::class.java)
+            enqueue("WitrynaUcznia.html", RegisterTest::class.java)
+            enqueue("UczenCache.json", RegisterTest::class.java)
+            enqueue("UczenDziennik-no-diary.json", RegisterTest::class.java)
+
+            repeat(4) { // 4x symbol
+                enqueue("Logowanie-brak-dostepu.html", LoginTest::class.java)
+            }
+
+            start(3000)
+        }
+
+        val res = runBlocking { registerStudent.getStudents() }
+
+        assertEquals(0, res.size)
+    }
+
+    @Test
     fun getStudents_classNameOrder() {
         with(server) {
             enqueue("LoginPage-standard.html", LoginTest::class.java)
@@ -147,7 +172,7 @@ class RegisterTest : BaseLocalTest() {
             enqueue("WitrynaUcznia.html", RegisterTest::class.java)
             enqueue("UczenCache.json", RegisterTest::class.java)
             enqueue("UczenDziennik.json", RegisterTest::class.java)
-            (1..4).onEach { // 4x symbol
+            repeat(4) { // 4x symbol
                 enqueue("Logowanie-brak-dostepu.html", LoginTest::class.java)
             }
 

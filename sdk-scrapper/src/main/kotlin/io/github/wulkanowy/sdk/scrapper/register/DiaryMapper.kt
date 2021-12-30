@@ -1,6 +1,10 @@
 package io.github.wulkanowy.sdk.scrapper.register
 
+import io.github.wulkanowy.sdk.scrapper.repository.RegisterRepository
 import io.github.wulkanowy.sdk.scrapper.toLocalDate
+import org.slf4j.LoggerFactory
+
+private val logger = LoggerFactory.getLogger(RegisterRepository::class.java)
 
 fun List<Diary>.toSemesters(studentId: Int, classId: Int, unitId: Int): List<Semester> = this
     .filter { it.studentId == studentId }
@@ -35,6 +39,9 @@ fun List<Diary>.toSemesters(studentId: Int, classId: Int, unitId: Int): List<Sem
                     unitId = it.unitId
                 )
             }
-            else -> throw IllegalArgumentException("Unknown diary format: $diary")
+            else -> {
+                logger.error("No supported student found in diaries: $this")
+                emptyList()
+            }
         }
     }

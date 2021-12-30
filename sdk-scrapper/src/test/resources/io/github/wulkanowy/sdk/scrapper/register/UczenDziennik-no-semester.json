@@ -39,7 +39,7 @@
       "Symbol": "A",
       "Nazwa": null,
       "DziennikRokSzkolny": 2017,
-      "Okresy": null,
+      "Okresy": [],
       "DziennikDataOd": "2017-09-01 00:00:00",
       "DziennikDataDo": "2018-08-31 00:00:00",
       "IdSioTyp": 11,
