@@ -130,7 +130,8 @@ class RegisterTest : BaseLocalTest() {
             assertEquals("Kowalski", studentSurname)
             assertEquals(0, classId) // always 0 for kindergarten
             assertEquals("Publiczna szkoła Wulkanowego nr 1 w fakelog.cf", schoolName)
-            assertEquals(2, semesters.size)
+            assertEquals("123456", schoolSymbol)
+            assertEquals(1, userLoginId)
             assertEquals(2016, semesters[0].schoolYear)
             assertEquals(2017, semesters[1].schoolYear)
         }

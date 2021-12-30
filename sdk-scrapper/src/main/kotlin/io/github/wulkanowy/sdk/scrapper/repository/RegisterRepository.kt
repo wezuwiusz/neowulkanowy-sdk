@@ -131,7 +131,7 @@ class RegisterRepository(
 
         val diaries = getStudentDiaries()
         return diaries.filterDiaries().map { diary ->
-            val unit = units.getUnitByStudentId(diary, permissions)
+            val unit = units.getUnitByStudentId(diary, url.schoolId, permissions)
             val schoolSymbol = getExtractedSchoolSymbolFromUrl(schoolUrl)
             val classId = diary.semesters?.firstOrNull()?.classId ?: 0
 
@@ -183,9 +183,9 @@ class RegisterRepository(
         return path[2]
     }
 
-    private fun List<ReportingUnit>.getUnitByStudentId(diary: Diary, permissions: Permission?): ReportingUnit? {
-        val idFromPermissions = permissions?.authInfos.orEmpty().firstOrNull { it.studentIds.contains(diary.studentId) }?.unitId
-        val idFromSemesters = diary.semesters?.getOrNull(0)?.unitId
+    private fun List<ReportingUnit>.getUnitByStudentId(diary: Diary, schoolId: String, permissions: Permission?): ReportingUnit? {
+        val idFromPermissions = permissions?.units?.firstOrNull { it.symbol == schoolId }?.id
+        val idFromSemesters = diary.semesters?.firstOrNull()?.unitId
         val unitId = idFromSemesters ?: idFromPermissions
 
         return firstOrNull { it.unitId == unitId }

@@ -66,7 +66,7 @@ class RegisterRepositoryTest : BaseLocalTest() {
 
         assertEquals(1, students.size)
         with(students[0]) {
-            assertEquals("012345", schoolSymbol)
+            assertEquals("123456", schoolSymbol)
             assertEquals("", schoolShortName)
             assertEquals(2, semesters.size)
         }
@@ -95,7 +95,7 @@ class RegisterRepositoryTest : BaseLocalTest() {
 
         assertEquals(2, students.size)
         with(students[0]) {
-            assertEquals("012345", schoolSymbol)
+            assertEquals("123456", schoolSymbol)
             assertEquals("", schoolShortName)
             assertEquals(6, semesters.size)
         }
