@@ -10,7 +10,9 @@ import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Ignore
 import org.junit.Test
+import java.time.LocalDate
 import java.time.Month
+import java.util.Date
 
 @Ignore
 class ScrapperRemoteTest : BaseTest() {
@@ -188,7 +190,7 @@ class ScrapperRemoteTest : BaseTest() {
 
         homework[1].run {
             assertEquals(getDate(2018, 9, 11), date)
-            assertEquals(getDate(2017, 10, 26), entryDate)
+            assertEquals(getDate(2018, 9, 11), entryDate)
             assertEquals("Etyka", subject)
             assertEquals("Notatka własna do zajęć o ks. Jerzym Popiełuszko.", content)
             assertEquals("Michał Mazur", teacher)
@@ -213,7 +215,8 @@ class ScrapperRemoteTest : BaseTest() {
     fun gradesTest() {
         val grades = runBlocking { api.getGradesDetails(865) }
 
-        grades[5].run {
+        // dynamic grade
+        grades[7].run {
             assertEquals("Religia", subject)
             assertEquals("1", entry)
             assertEquals("6ECD07", color)
@@ -221,11 +224,11 @@ class ScrapperRemoteTest : BaseTest() {
             assertEquals("", description)
             assertEquals("3,00", weight)
             assertEquals(3.0, weightValue, .0)
-            assertEquals(getDate(2018, 11, 19), date)
+            assertEquals(LocalDate.now().toDate(), date)
             assertEquals("Michał Mazur", teacher)
         }
 
-        grades[0].run {
+        grades[2].run {
             assertEquals("Bież", symbol)
             assertEquals("", description)
         }
@@ -238,13 +241,13 @@ class ScrapperRemoteTest : BaseTest() {
         summary[2].run {
             assertEquals("Etyka", name)
             assertEquals("4", predicted)
-            assertEquals("4", final)
+            assertEquals("3", final)
         }
 
         summary[5].run {
             assertEquals("Historia", name)
             assertEquals("4", predicted)
-            assertEquals("4", final)
+            assertEquals("2+", final)
         }
 
         summary[8].run {
@@ -259,7 +262,7 @@ class ScrapperRemoteTest : BaseTest() {
         val stats = runBlocking { api.getGradesPartialStatistics(321) }
 
         assertEquals("Język polski", stats[0].subject)
-        assertEquals("Matematyka", stats[7].subject)
+        assertEquals("Matematyka", stats[1].subject)
 
         val annual = runBlocking { api.getGradesSemesterStatistics(123) }
 
@@ -337,7 +340,7 @@ class ScrapperRemoteTest : BaseTest() {
         assertEquals(1, trash.size)
 
         val mRecipients = runBlocking { api.getMessageRecipients(trash[0].messageId ?: 0) }
-        assertEquals(2, mRecipients.size)
+        assertEquals(1, mRecipients.size)
 
         val details = runBlocking { api.getMessageDetails(trash[0].messageId ?: 0, trash[0].folderId) }
         assertEquals(27214, details.id)
