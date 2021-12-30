@@ -6,6 +6,7 @@ import io.github.wulkanowy.sdk.scrapper.login.LoginHelper
 import io.github.wulkanowy.sdk.scrapper.messages.Folder
 import io.github.wulkanowy.sdk.scrapper.messages.Message
 import io.github.wulkanowy.sdk.scrapper.messages.Recipient
+import io.github.wulkanowy.sdk.scrapper.register.Semester
 import io.github.wulkanowy.sdk.scrapper.repository.AccountRepository
 import io.github.wulkanowy.sdk.scrapper.repository.HomepageRepository
 import io.github.wulkanowy.sdk.scrapper.repository.MessagesRepository
@@ -208,7 +209,7 @@ class Scrapper {
 
     private val studentStart by resettableLazy(changeManager) {
         if (0 == studentId) throw ScrapperException("Student id is not set")
-        if (0 == classId) throw ScrapperException("Class id is not set")
+        if (0 == classId && 0 == kindergartenDiaryId) throw ScrapperException("Class id is not set")
         StudentStartRepository(
             studentId = studentId,
             classId = classId,
@@ -237,7 +238,7 @@ class Scrapper {
 
     suspend fun getStudents() = register.getStudents()
 
-    suspend fun getSemesters() = studentStart.getSemesters()
+    suspend fun getSemesters(): List<Semester> = studentStart.getSemesters()
 
     suspend fun getAttendance(startDate: LocalDate, endDate: LocalDate? = null) = student.getAttendance(startDate, endDate)
 

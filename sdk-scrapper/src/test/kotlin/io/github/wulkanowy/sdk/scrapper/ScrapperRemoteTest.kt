@@ -32,6 +32,7 @@ class ScrapperRemoteTest : BaseTest() {
             schoolSymbol = "123456"
             studentId = 1
             diaryId = 101
+            kindergartenDiaryId = 1
             classId = 1
             androidVersion = "9.0"
             buildTag = "Wulkanowy"
