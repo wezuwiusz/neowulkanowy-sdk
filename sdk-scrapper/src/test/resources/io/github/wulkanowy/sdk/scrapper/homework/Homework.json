@@ -87,8 +87,30 @@
       "Show": true
     },
     {
-      "Date": "2020-05-19 00:00:00",
-      "Homework": [],
+      "Date": "2018-10-02 00:00:00",
+      "Homework": [
+        {
+          "HomeworkId": 88125,
+          "Subject": "Matematyka",
+          "Teacher": "Borowska Agnieszka [BO], 02.10.2018",
+          "Description": "OneNote -&gt; Biblioteka zawartości -&gt; 4_matura -&gt; praca domowa - zadania maturalne",
+          "Date": "2018-10-02 00:00:00",
+          "ModificationDate": "2018-10-01 18:42:32",
+          "Status": 1,
+          "AnswerRequired": false,
+          "TimeLimit": "2018-11-05 00:00:00",
+          "Attachments": [],
+          "AnswerDate": null,
+          "TeachersComment": null,
+          "Answer": null,
+          "AnswerAttachments": [],
+          "ZadanieUrls": [],
+          "ZadanieUczenUrls": [],
+          "CanReply": true,
+          "Readonly": true,
+          "Id": 1143073
+        }
+      ],
       "Show": true
     },
     {

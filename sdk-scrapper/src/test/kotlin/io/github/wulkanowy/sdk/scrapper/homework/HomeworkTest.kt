@@ -8,12 +8,17 @@ import org.junit.Test
 class HomeworkTest : BaseLocalTest() {
 
     private val homework by lazy {
-        runBlocking { getStudentRepo(HomeworkTest::class.java, "Homework.json").getHomework(getLocalDate(2018, 10, 1)) }
+        runBlocking {
+            getStudentRepo(HomeworkTest::class.java, "Homework.json").getHomework(
+                startDate = getLocalDate(2018, 10, 1),
+                endDate = getLocalDate(2018, 10, 2),
+            )
+        }
     }
 
     @Test
     fun getHomeworkList() {
-        assertEquals(3, homework.size)
+        assertEquals(4, homework.size)
     }
 
     @Test
@@ -56,6 +61,19 @@ class HomeworkTest : BaseLocalTest() {
                 assertEquals("https://wulkanowy.github.io/", first)
                 assertEquals("Strona główna Wulkanowego", second)
             }
+        }
+    }
+
+    @Test
+    fun getHomeworkWithHtml() {
+        with(homework[3]) {
+            assertEquals(getDate(2018, 10, 2), date)
+            assertEquals(getDate(2018, 10, 1, 18, 42, 32), entryDate)
+            assertEquals("Matematyka", subject)
+            assertEquals("OneNote -> Biblioteka zawartości -> 4_matura -> praca domowa - zadania maturalne", content)
+            assertEquals("Borowska Agnieszka", teacher)
+            assertEquals("BO", teacherSymbol)
+            assertEquals(0, attachments.size)
         }
     }
 }
