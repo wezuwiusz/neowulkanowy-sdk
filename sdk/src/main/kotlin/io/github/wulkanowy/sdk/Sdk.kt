@@ -178,13 +178,13 @@ class Sdk {
             mobile.logLevel = value
         }
 
-    var androidVersion = "8.1.0"
+    var androidVersion = "7.0"
         set(value) {
             field = value
             scrapper.androidVersion = value
         }
 
-    var buildTag = "SM-J500H Build/LMY48B"
+    var buildTag = "SM-G950F Build/NRD90M"
         set(value) {
             field = value
             scrapper.buildTag = value
