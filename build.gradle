@@ -13,7 +13,7 @@ ext {
     jsoup = "1.14.3"
     okhttp3 = "4.9.3"
     retrofit = "2.9.0"
-    slf4j = "1.7.32"
+    slf4j = "1.7.35"
     moshi = "1.12.0"
     coroutines = "1.5.2"
 }
