@@ -25,13 +25,13 @@ class TimetableTest : BaseLocalTest() {
         private const val TUESDAY_OFFSET = 6
         private const val WEDNESDAY_OFFSET = 12
         private const val THURSDAY_OFFSET = 18
-        private const val FRIDAY_OFFSET = 23
+        private const val FRIDAY_OFFSET = 24
     }
 
     @Test
     fun getTimetableTest() {
         assertEquals(5, headers.size)
-        assertEquals(28, timetable.size)
+        assertEquals(30, timetable.size)
         assertEquals(2, additional.size)
     }
 
@@ -637,6 +637,50 @@ class TimetableTest : BaseLocalTest() {
             assertEquals("Izabela Makrowska", teacherOld)
             assertEquals("B29", roomOld)
             assertEquals("przeniesiona z lekcji 8, 06.10.2021", info)
+
+            assertEquals(false, canceled)
+            assertEquals(true, changes)
+        }
+    }
+
+    @Test
+    fun getGroupLesson_replacementDifferentRoom() {
+        with(timetable[THURSDAY_OFFSET + 5]) {
+            // czwartek, 5
+            assertEquals(5, number)
+            assertEquals(getLocalDateTime(2018, 9, 27, 11, 45, 0), start)
+            assertEquals(getLocalDateTime(2018, 9, 27, 12, 30, 0), end)
+
+            assertEquals("Język angielski", subject)
+            assertEquals("", subjectOld)
+            assertEquals("Marcin Gierczak", teacher)
+            assertEquals("", teacherOld)
+            assertEquals("p4", room)
+            assertEquals("42", roomOld)
+            assertEquals("", info)
+            assertEquals("1\\2", group)
+
+            assertEquals(false, canceled)
+            assertEquals(true, changes)
+        }
+    }
+
+    @Test
+    fun getSimpleLesson_replacementDifferentRoom() {
+        with(timetable[FRIDAY_OFFSET + 5]) {
+            // piątek, 5
+            assertEquals(5, number)
+            assertEquals(getLocalDateTime(2018, 9, 28, 11, 45, 0), start)
+            assertEquals(getLocalDateTime(2018, 9, 28, 12, 30, 0), end)
+
+            assertEquals("Język francuski", subject)
+            assertEquals("", subjectOld)
+            assertEquals("Franek Rosół", teacher)
+            assertEquals("", teacherOld)
+            assertEquals("gim11", room)
+            assertEquals("18", roomOld)
+            assertEquals("", info)
+            assertEquals("", group)
 
             assertEquals(false, canceled)
             assertEquals(true, changes)
