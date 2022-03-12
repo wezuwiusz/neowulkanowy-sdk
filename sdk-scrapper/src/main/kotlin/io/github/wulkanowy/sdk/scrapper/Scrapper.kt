@@ -292,6 +292,8 @@ class Scrapper {
 
     suspend fun getStudentInfo() = student.getStudentInfo()
 
+    suspend fun getStudentPhoto() = student.getStudentPhoto()
+
     suspend fun getReportingUnits() = messages.getReportingUnits()
 
     suspend fun getRecipients(unitId: Int, role: Int = 2) = messages.getRecipients(unitId, role)

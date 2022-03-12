@@ -3,9 +3,11 @@ package io.github.wulkanowy.sdk.mapper
 import io.github.wulkanowy.sdk.pojo.StudentGender
 import io.github.wulkanowy.sdk.pojo.StudentGuardian
 import io.github.wulkanowy.sdk.pojo.StudentInfo
+import io.github.wulkanowy.sdk.pojo.StudentPhoto
 import io.github.wulkanowy.sdk.scrapper.toLocalDate
 import io.github.wulkanowy.sdk.scrapper.student.StudentGuardian as ScrapperStudentGuardian
 import io.github.wulkanowy.sdk.scrapper.student.StudentInfo as ScrapperStudentInfo
+import io.github.wulkanowy.sdk.scrapper.student.StudentPhoto as ScrapperStudentPhoto
 
 fun ScrapperStudentInfo.mapStudent() = StudentInfo(
     fullName = fullName,
@@ -31,6 +33,8 @@ fun ScrapperStudentInfo.mapStudent() = StudentInfo(
     guardianFirst = guardianFirst?.toFamilyMember(),
     guardianSecond = guardianSecond?.toFamilyMember()
 )
+
+fun ScrapperStudentPhoto.mapPhoto() = StudentPhoto(photoBase64 = photoBase64.orEmpty())
 
 private fun ScrapperStudentGuardian.toFamilyMember() = StudentGuardian(
     fullName = fullName,

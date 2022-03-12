@@ -20,6 +20,7 @@ import io.github.wulkanowy.sdk.mapper.mapHomework
 import io.github.wulkanowy.sdk.mapper.mapLuckyNumbers
 import io.github.wulkanowy.sdk.mapper.mapMessages
 import io.github.wulkanowy.sdk.mapper.mapNotes
+import io.github.wulkanowy.sdk.mapper.mapPhoto
 import io.github.wulkanowy.sdk.mapper.mapRecipients
 import io.github.wulkanowy.sdk.mapper.mapReportingUnits
 import io.github.wulkanowy.sdk.mapper.mapSchool
@@ -426,6 +427,13 @@ class Sdk {
         when (mode) {
             Mode.HYBRID, Mode.SCRAPPER -> scrapper.getStudentInfo().mapStudent()
             Mode.API -> throw FeatureNotAvailableException("Student info is not available in API mode")
+        }
+    }
+
+    suspend fun getStudentPhoto() = withContext(Dispatchers.IO) {
+        when (mode) {
+            Mode.HYBRID, Mode.SCRAPPER -> scrapper.getStudentPhoto().mapPhoto()
+            Mode.API -> throw FeatureNotAvailableException("Student photo is not available in API mode")
         }
     }
 
