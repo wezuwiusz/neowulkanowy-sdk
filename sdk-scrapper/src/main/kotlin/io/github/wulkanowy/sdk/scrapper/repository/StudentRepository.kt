@@ -142,10 +142,11 @@ class StudentRepository(private val api: StudentService) {
     }
 
     suspend fun getGrades(semesterId: Int?): Pair<List<Grade>, List<GradeSummary>> {
-        val res = api.getGrades(GradeRequest(semesterId)).handleErrors()
-        return requireNotNull(res.data) {
-            "Required value was null. $res"
-        }.mapGradesList() to res.data.mapGradesSummary()
+        val data = api.getGrades(GradeRequest(semesterId)).handleErrors().data
+        return Pair(
+            first = data?.mapGradesList().orEmpty(),
+            second = data?.mapGradesSummary().orEmpty(),
+        )
     }
 
     suspend fun getGradesDetails(semesterId: Int?): List<Grade> {
