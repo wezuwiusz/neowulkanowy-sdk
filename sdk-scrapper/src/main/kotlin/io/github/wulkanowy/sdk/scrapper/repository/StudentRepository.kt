@@ -202,14 +202,12 @@ class StudentRepository(private val api: StudentService) {
     }
 
     suspend fun getTimetableFull(startDate: LocalDate, endDate: LocalDate? = null): TimetableFull {
-        val res = api.getTimetable(TimetableRequest(startDate.toISOFormat())).handleErrors()
-
-        val data = requireNotNull(res.data) { "Required value was null. $res" }
+        val data = api.getTimetable(TimetableRequest(startDate.toISOFormat())).handleErrors().data
 
         return TimetableFull(
-            headers = data.mapTimetableHeaders(),
-            lessons = data.mapTimetableList(startDate, endDate),
-            additional = data.mapTimetableAdditional()
+            headers = data?.mapTimetableHeaders().orEmpty(),
+            lessons = data?.mapTimetableList(startDate, endDate).orEmpty(),
+            additional = data?.mapTimetableAdditional().orEmpty(),
         )
     }
 
