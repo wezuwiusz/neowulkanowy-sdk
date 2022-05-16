@@ -49,13 +49,13 @@ fun GradesResponse.mapGradesSummary() = gradesWithSubjects.map { subject ->
     GradeSummary(
         visibleSubject = subject.visibleSubject,
         order = subject.order,
-        name = subject.name,
+        name = subject.name.trim(),
         average = subject.average,
         predicted = getGradeShortValue(subject.proposed),
         final = getGradeShortValue(subject.annual),
-        pointsSum = subject.pointsSum.takeIf { it != "-" }.orEmpty(),
-        proposedPoints = subject.proposedPoints.orEmpty(),
-        finalPoints = subject.finalPoints.orEmpty()
+        pointsSum = subject.pointsSum.takeIf { it != "-" }.orEmpty().trim(),
+        proposedPoints = subject.proposedPoints.orEmpty().trim(),
+        finalPoints = subject.finalPoints.orEmpty().trim(),
     )
 }.sortedBy { it.name }.toList()
 

@@ -33,14 +33,14 @@ fun LocalDate.getLastMonday(): LocalDate = with(previousOrSame(MONDAY))
 fun LocalDate.getSchoolYear(): Int = if (month.value > 8) year else year - 1
 
 fun getGradeShortValue(value: String?): String {
-    return when (value) {
+    return when (value?.trim()) {
         "celujący" -> "6"
         "bardzo dobry" -> "5"
         "dobry" -> "4"
         "dostateczny" -> "3"
         "dopuszczający" -> "2"
         "niedostateczny" -> "1"
-        else -> value ?: ""
+        else -> value.orEmpty().trim()
     }
 }
 
