@@ -25,7 +25,7 @@ class AttendanceTest : BaseLocalTest() {
 
     @Test
     fun getAttendance() {
-        assertEquals(8, student.size)
+        assertEquals(9, student.size)
     }
 
     @Test
@@ -135,6 +135,20 @@ class AttendanceTest : BaseLocalTest() {
             assertEquals(77, timeId)
             assertEquals(getDate(2018, 10, 5), date)
             assertEquals("Informatyka", subject)
+            assertEquals(AttendanceCategory.UNKNOWN, category)
+            assertNull(excuseStatus)
+            assertFalse(excusable)
+        }
+    }
+
+    @Test
+    fun getAttendance_unknownSubject() {
+        student[8].run {
+            // piątek, 3
+            assertEquals(3, number)
+            assertEquals(78, timeId)
+            assertEquals(getDate(2018, 10, 5), date)
+            assertEquals(null, subject)
             assertEquals(AttendanceCategory.UNKNOWN, category)
             assertNull(excuseStatus)
             assertFalse(excusable)

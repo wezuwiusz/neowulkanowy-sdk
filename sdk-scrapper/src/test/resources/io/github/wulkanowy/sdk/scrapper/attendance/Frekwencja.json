@@ -99,6 +99,17 @@
         "IdPoraLekcji": 77,
         "Data": "2018-10-05 00:00:00",
         "LekcjaOddzialId": 4573303200
+      },
+      {
+        "IdKategoria": 99,
+        "NrDnia": 5,
+        "Symbol": "/",
+        "SymbolImage": "data:image/gif;base64,R0lGODlhAQABAIAAAMLCwgAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==",
+        "PrzedmiotNazwa": null,
+        "Wycieczka nazwa": null,
+        "IdPoraLekcji": 78,
+        "Data": "2018-10-05 00:00:00",
+        "LekcjaOddzialId": 4573303200
       }
     ]
   },

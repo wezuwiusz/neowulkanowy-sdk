@@ -14,7 +14,7 @@ data class Attendance(
     val date: Date,
 
     @Json(name = "PrzedmiotNazwa")
-    val subject: String,
+    val subject: String?,
 
     @Json(name = "IdKategoria")
     val categoryId: Int = -1

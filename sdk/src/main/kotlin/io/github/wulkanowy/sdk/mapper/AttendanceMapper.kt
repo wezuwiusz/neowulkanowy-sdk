@@ -43,7 +43,7 @@ fun List<ScrapperAttendance>.mapAttendance() = map {
     Attendance(
         number = it.number,
         name = it.category.name,
-        subject = it.subject,
+        subject = it.subject.orEmpty(),
         date = it.date.toLocalDate(),
         timeId = it.timeId,
         categoryId = it.categoryId,
