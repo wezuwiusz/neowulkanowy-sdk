@@ -8,7 +8,6 @@ data class RecipientsRequest(
     @Json(name = "paramsVo")
     val paramsVo: ParamsVo
 ) {
-
     @JsonClass(generateAdapter = true)
     data class ParamsVo(
 
