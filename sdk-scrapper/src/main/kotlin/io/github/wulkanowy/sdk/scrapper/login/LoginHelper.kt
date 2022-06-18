@@ -95,6 +95,7 @@ class LoginHelper(
     suspend fun sendCertificate(cert: CertificateResponse, email: String, url: String = cert.action): HomePageResponse {
         cookies.cookieStore.removeAll()
         val res = api.sendCertificate(
+            referer = "$schema://cufs.$host/",
             url = url,
             certificate = mapOf(
                 "wa" to cert.wa,
