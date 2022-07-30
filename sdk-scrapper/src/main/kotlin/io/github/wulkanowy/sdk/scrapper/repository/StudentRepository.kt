@@ -65,44 +65,29 @@ import java.time.LocalDate
 
 class StudentRepository(private val api: StudentService) {
 
-    private lateinit var cache: CacheResponse
-
-    private lateinit var times: List<CacheResponse.Time>
-
     private val moshi by lazy { Moshi.Builder().add(CustomDateAdapter()) }
 
     private fun LocalDate.toISOFormat(): String = toFormat("yyyy-MM-dd'T00:00:00'")
 
     private suspend fun getCache(): CacheResponse {
-        if (::cache.isInitialized) return cache
-
-        val it = api.getStart("Start")
+        val startPage = api.getStart("Start")
 
         val res = api.getUserCache(
-            token = getScriptParam("antiForgeryToken", it),
-            appGuid = getScriptParam("appGuid", it),
-            appVersion = getScriptParam("version", it)
+            token = getScriptParam("antiForgeryToken", startPage),
+            appGuid = getScriptParam("appGuid", startPage),
+            appVersion = getScriptParam("version", startPage)
         ).handleErrors()
 
         val data = requireNotNull(res.data) {
             "Required value was null. $res"
         }
-        cache = data
         return data
-    }
-
-    private suspend fun getTimes(): List<CacheResponse.Time> {
-        if (::times.isInitialized) return times
-
-        val res = getCache()
-        times = res.times
-        return res.times
     }
 
     suspend fun getAttendance(startDate: LocalDate, endDate: LocalDate?): List<Attendance> {
         return api.getAttendance(AttendanceRequest(startDate.toDate()))
             .handleErrors()
-            .data?.mapAttendanceList(startDate, endDate, getTimes()).orEmpty()
+            .data?.mapAttendanceList(startDate, endDate, getCache().times).orEmpty()
     }
 
     suspend fun getAttendanceSummary(subjectId: Int?): List<AttendanceSummary> {
@@ -112,11 +97,11 @@ class StudentRepository(private val api: StudentService) {
     }
 
     suspend fun excuseForAbsence(absents: List<Absent>, content: String?): Boolean {
-        val it = api.getStart("Start")
+        val startPage = api.getStart("Start")
         return api.excuseForAbsence(
-            token = getScriptParam("antiForgeryToken", it),
-            appGuid = getScriptParam("appGuid", it),
-            appVersion = getScriptParam("version", it),
+            token = getScriptParam("antiForgeryToken", startPage),
+            appGuid = getScriptParam("appGuid", startPage),
+            appVersion = getScriptParam("version", startPage),
             attendanceExcuseRequest = AttendanceExcuseRequest(
                 AttendanceExcuseRequest.Excuse(
                     absents = absents.map { absence ->
