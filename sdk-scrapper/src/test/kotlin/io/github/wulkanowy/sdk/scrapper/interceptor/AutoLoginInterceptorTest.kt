@@ -1,7 +1,6 @@
 package io.github.wulkanowy.sdk.scrapper.interceptor
 
 import io.github.wulkanowy.sdk.scrapper.BaseLocalTest
-import io.github.wulkanowy.sdk.scrapper.MainCoroutineRule
 import io.github.wulkanowy.sdk.scrapper.Scrapper
 import io.github.wulkanowy.sdk.scrapper.login.LoginHelper
 import io.github.wulkanowy.sdk.scrapper.login.LoginTest
@@ -15,23 +14,14 @@ import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.supervisorScope
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
-import org.junit.Before
-import org.junit.Rule
 import org.junit.Test
 import java.net.CookieManager
 
 class AutoLoginInterceptorTest : BaseLocalTest() {
 
-    @get:Rule
-    val coroutineRule = MainCoroutineRule()
-
     lateinit var loginService: LoginService
 
     lateinit var loginHelper: LoginHelper
-
-    @Before
-    fun setUp() {
-    }
 
     @Test
     fun oneLoginAtTime() = runBlocking {
