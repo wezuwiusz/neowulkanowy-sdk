@@ -1,5 +1,5 @@
 plugins {
-    id 'org.jetbrains.kotlin.jvm' version '1.7.0' apply false
+    id 'org.jetbrains.kotlin.jvm' version '1.7.10' apply false
     id "org.jlleitschuh.gradle.ktlint" version "10.3.0"
     id "io.github.gradle-nexus.publish-plugin" version "1.1.0"
 }
@@ -10,7 +10,7 @@ ext {
     GIT_URL = 'https://github.com/wulkanowy/sdk.git'
 
     jspoon = "1.3.2"
-    jsoup = "1.15.1"
+    jsoup = "1.15.2"
     okhttp3 = "4.10.0"
     retrofit = "2.9.0"
     slf4j = "1.7.36"
@@ -116,11 +116,11 @@ subprojects {
         ]
     }
 
-    sourceCompatibility = 1.8
+    sourceCompatibility = 11
 
     compileKotlin {
         kotlinOptions {
-            jvmTarget = "1.8"
+            jvmTarget = "11"
             javaParameters = true
         }
     }

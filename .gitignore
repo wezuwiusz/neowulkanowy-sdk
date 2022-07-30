@@ -72,3 +72,4 @@ gradle-app.setting
 classes
 .DS_Store
 .idea/libraries-with-intellij-classes.xml
+.idea/kotlinc.xml
