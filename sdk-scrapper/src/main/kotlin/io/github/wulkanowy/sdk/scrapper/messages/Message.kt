@@ -1,49 +1,51 @@
 package io.github.wulkanowy.sdk.scrapper.messages
 
-import com.squareup.moshi.Json
-import com.squareup.moshi.JsonClass
-import java.util.Date
+import io.github.wulkanowy.sdk.scrapper.adapter.CustomDateAdapter
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
+import java.time.LocalDateTime
 
-@JsonClass(generateAdapter = true)
+@Serializable
 data class Message(
 
-    @Json(name = "Id")
+    @SerialName("Id")
     val id: Int?,
 
-    @Json(name = "Nieprzeczytana")
+    @SerialName("Nieprzeczytana")
     val unread: Boolean?,
 
-    @Json(name = "Nieprzeczytane")
+    @SerialName("Nieprzeczytane")
     val unreadBy: Int?,
 
-    @Json(name = "Przeczytane")
+    @SerialName("Przeczytane")
     val readBy: Int?,
 
-    @Json(name = "Data")
-    val date: Date?,
+    @SerialName("Data")
+    @Serializable(with = CustomDateAdapter::class)
+    val date: LocalDateTime?,
 
-    @Json(name = "Tresc")
+    @SerialName("Tresc")
     val content: String?,
 
-    @Json(name = "Temat")
+    @SerialName("Temat")
     val subject: String?,
 
-    @Json(name = "Nadawca")
+    @SerialName("Nadawca")
     val sender: Recipient?,
 
-    @Json(name = "IdWiadomosci")
+    @SerialName("IdWiadomosci")
     val messageId: Int?,
 
-    @Json(name = "HasZalaczniki")
+    @SerialName("HasZalaczniki")
     val hasAttachments: Boolean = false,
 
-    @Json(name = "FolderWiadomosci")
+    @SerialName("FolderWiadomosci")
     val folderId: Int = 0,
 
-    @Json(name = "Adresaci")
+    @SerialName("Adresaci")
     val recipients: List<Recipient>?,
 
-    @Json(name = "Zalaczniki")
+    @SerialName("Zalaczniki")
     val attachments: List<Attachment>? = emptyList() // nullable just to make sure it doesn't break anything
 ) {
     var removed: Boolean = false

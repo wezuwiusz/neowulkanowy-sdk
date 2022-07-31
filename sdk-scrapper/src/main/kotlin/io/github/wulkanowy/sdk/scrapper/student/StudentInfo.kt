@@ -1,84 +1,86 @@
 package io.github.wulkanowy.sdk.scrapper.student
 
-import com.squareup.moshi.Json
-import com.squareup.moshi.JsonClass
-import java.util.Date
+import io.github.wulkanowy.sdk.scrapper.adapter.CustomDateAdapter
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
+import java.time.LocalDateTime
 
-@JsonClass(generateAdapter = true)
+@Serializable
 data class StudentInfo(
 
-    @Json(name = "Imie")
+    @SerialName("Imie")
     val name: String,
 
-    @Json(name = "Imie2")
+    @SerialName("Imie2")
     val middleName: String?,
 
-    @Json(name = "NumerDokumentu")
-    val idNumber: Any?,
+    // @SerialName("NumerDokumentu")
+    // val idNumber: Any?,
 
-    @Json(name = "Nazwisko")
+    @SerialName("Nazwisko")
     val lastName: String,
 
-    @Json(name = "DataUrodzenia")
-    val birthDate: Date,
+    @SerialName("DataUrodzenia")
+    @Serializable(with = CustomDateAdapter::class)
+    val birthDate: LocalDateTime,
 
-    @Json(name = "MiejsceUrodzenia")
+    @SerialName("MiejsceUrodzenia")
     val birthPlace: String?,
 
-    @Json(name = "NazwiskoRodowe")
+    @SerialName("NazwiskoRodowe")
     val familyName: String?,
 
-    @Json(name = "ObywatelstwoPolskie")
+    @SerialName("ObywatelstwoPolskie")
     val polishCitizenship: Int,
 
-    @Json(name = "ImieMatki")
+    @SerialName("ImieMatki")
     val motherName: String?,
 
-    @Json(name = "ImieOjca")
+    @SerialName("ImieOjca")
     val fatherName: String?,
 
-    @Json(name = "Plec")
+    @SerialName("Plec")
     val gender: Boolean,
 
-    @Json(name = "AdresZamieszkania")
+    @SerialName("AdresZamieszkania")
     val address: String,
 
-    @Json(name = "AdresZameldowania")
+    @SerialName("AdresZameldowania")
     val registeredAddress: String,
 
-    @Json(name = "AdresKorespondencji")
+    @SerialName("AdresKorespondencji")
     val correspondenceAddress: String,
 
-    @Json(name = "TelDomowy")
+    @SerialName("TelDomowy")
     val homePhone: String?,
 
-    @Json(name = "TelKomorkowy")
+    @SerialName("TelKomorkowy")
     val cellPhone: String?,
 
-    @Json(name = "Email")
+    @SerialName("Email")
     val email: String?,
 
-    @Json(name = "CzyWidocznyPesel")
+    @SerialName("CzyWidocznyPesel")
     val isVisiblePesel: Boolean,
 
-    @Json(name = "Opiekun1")
+    @SerialName("Opiekun1")
     val guardianFirst: StudentGuardian?,
 
-    @Json(name = "Opiekun2")
+    @SerialName("Opiekun2")
     val guardianSecond: StudentGuardian?,
 
-    @Json(name = "UkryteDaneAdresowe")
+    @SerialName("UkryteDaneAdresowe")
     val hideAddress: Boolean,
 
-    @Json(name = "ImieNazwisko")
+    @SerialName("ImieNazwisko")
     val fullName: String,
 
-    @Json(name = "PosiadaPesel")
+    @SerialName("PosiadaPesel")
     val hasPesel: Boolean,
 
-    @Json(name = "Polak")
+    @SerialName("Polak")
     val isPole: Boolean,
 
-    @Json(name = "ImieMatkiIOjca")
+    @SerialName("ImieMatkiIOjca")
     val motherAndFatherNames: String?
 )

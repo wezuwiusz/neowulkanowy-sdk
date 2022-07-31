@@ -1,27 +1,28 @@
 package io.github.wulkanowy.sdk.scrapper.messages
 
-import com.squareup.moshi.Json
-import com.squareup.moshi.JsonClass
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.Transient
 
-@JsonClass(generateAdapter = true)
+@Serializable
 data class Recipient(
 
-    @Json(name = "Id")
+    @SerialName("Id")
     val id: String,
 
-    @Json(name = "Name")
+    @SerialName("Name")
     val name: String,
 
-    @Json(name = "IdLogin")
+    @SerialName("IdLogin")
     val loginId: Int,
 
-    @Json(name = "UnitId")
+    @SerialName("UnitId")
     val reportingUnitId: Int?,
 
-    @Json(name = "Role")
+    @SerialName("Role")
     val role: Int,
 
-    @Json(name = "Hash")
+    @SerialName("Hash")
     val hash: String,
 
     @Transient

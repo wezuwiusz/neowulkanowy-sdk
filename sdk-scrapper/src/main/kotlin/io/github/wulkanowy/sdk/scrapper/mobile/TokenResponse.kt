@@ -1,20 +1,20 @@
 package io.github.wulkanowy.sdk.scrapper.mobile
 
-import com.squareup.moshi.Json
-import com.squareup.moshi.JsonClass
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
-@JsonClass(generateAdapter = true)
+@Serializable
 data class TokenResponse(
 
-    @Json(name = "TokenKey")
+    @SerialName("TokenKey")
     val token: String,
 
-    @Json(name = "CustomerGroup")
+    @SerialName("CustomerGroup")
     val symbol: String,
 
-    @Json(name = "PIN")
+    @SerialName("PIN")
     val pin: String,
 
-    @Json(name = "QrCodeImage")
+    @SerialName("QrCodeImage")
     val qrCodeImage: String
 )

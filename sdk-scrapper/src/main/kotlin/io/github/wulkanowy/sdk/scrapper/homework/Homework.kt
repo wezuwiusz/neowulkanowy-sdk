@@ -1,37 +1,41 @@
 package io.github.wulkanowy.sdk.scrapper.homework
 
-import com.squareup.moshi.Json
-import com.squareup.moshi.JsonClass
-import java.util.Date
+import io.github.wulkanowy.sdk.scrapper.adapter.CustomDateAdapter
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.Transient
+import java.time.LocalDateTime
 
-@JsonClass(generateAdapter = true)
+@Serializable
 data class Homework(
 
-    @Json(name = "HomeworkId")
+    @SerialName("HomeworkId")
     val homeworkId: Int,
 
-    @Json(name = "Subject")
+    @SerialName("Subject")
     val subject: String,
 
-    @Json(name = "Teacher")
+    @SerialName("Teacher")
     val teacher: String,
 
-    @Json(name = "Description")
+    @SerialName("Description")
     val content: String,
 
-    @Json(name = "Date")
-    val date: Date,
+    @SerialName("Date")
+    @Serializable(with = CustomDateAdapter::class)
+    val date: LocalDateTime,
 
-    @Json(name = "ModificationDate")
-    val entryDate: Date,
+    @SerialName("ModificationDate")
+    @Serializable(with = CustomDateAdapter::class)
+    val entryDate: LocalDateTime,
 
-    @Json(name = "Status")
-    val status: String,
+    @SerialName("Status")
+    val status: Int,
 
-    @Json(name = "AnswerRequired")
+    @SerialName("AnswerRequired")
     val isAnswerRequired: Boolean,
 
-    @Json(name = "Attachments")
+    @SerialName("Attachments")
     val attachments: List<HomeworkAttachment>
 ) {
 

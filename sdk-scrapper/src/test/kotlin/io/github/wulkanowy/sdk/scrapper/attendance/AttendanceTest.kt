@@ -1,10 +1,10 @@
 package io.github.wulkanowy.sdk.scrapper.attendance
 
-import com.squareup.moshi.Moshi
 import io.github.wulkanowy.sdk.scrapper.BaseLocalTest
-import io.github.wulkanowy.sdk.scrapper.adapter.CustomDateAdapter
 import io.github.wulkanowy.sdk.scrapper.register.RegisterTest
 import kotlinx.coroutines.runBlocking
+import kotlinx.serialization.decodeFromString
+import kotlinx.serialization.json.Json
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNull
@@ -165,10 +165,10 @@ class AttendanceTest : BaseLocalTest() {
         runBlocking { repo.getAttendance(getLocalDate(2018, 10, 1), null) }
 
         val request = server.takeRequest()
-        val adapter = AttendanceRequestJsonAdapter(Moshi.Builder().add(CustomDateAdapter()).build())
-        val requestObject = adapter.fromJson(request.body.readUtf8())
-        assertEquals(getDate(2018, 10, 1, 0, 0, 0), requestObject?.date)
-        assertEquals(-1, requestObject?.typeId)
+
+        val requestObject = Json.decodeFromString<AttendanceRequest>(request.body.readUtf8())
+        assertEquals(getDate(2018, 10, 1, 0, 0, 0), requestObject.date)
+        assertEquals(-1, requestObject.typeId)
     }
 
     @Test
@@ -205,10 +205,8 @@ class AttendanceTest : BaseLocalTest() {
 
         val request = server.takeRequest()
 
-        val adapter = AttendanceExcuseRequestJsonAdapter(Moshi.Builder().build())
-
-        val expected = adapter.fromJson(AttendanceTest::class.java.getResource("Usprawiedliwienie.json").readText())
-        val actual = adapter.fromJson(request.body.readUtf8())
+        val expected = Json.decodeFromString<AttendanceExcuseRequest>(AttendanceTest::class.java.getResource("Usprawiedliwienie.json")!!.readText())
+        val actual = Json.decodeFromString<AttendanceExcuseRequest>(request.body.readUtf8())
 
         assertEquals(expected, actual)
         assertEquals(

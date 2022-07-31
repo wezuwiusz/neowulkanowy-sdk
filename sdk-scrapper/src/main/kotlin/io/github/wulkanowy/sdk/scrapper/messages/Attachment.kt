@@ -1,23 +1,23 @@
 package io.github.wulkanowy.sdk.scrapper.messages
 
-import com.squareup.moshi.Json
-import com.squareup.moshi.JsonClass
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
-@JsonClass(generateAdapter = true)
+@Serializable
 data class Attachment(
 
-    @Json(name = "Url")
+    @SerialName("Url")
     val url: String,
 
-    @Json(name = "IdOneDrive")
+    @SerialName("IdOneDrive")
     val oneDriveId: String,
 
-    @Json(name = "IdWiadomosc")
+    @SerialName("IdWiadomosc")
     val messageId: Int,
 
-    @Json(name = "NazwaPliku")
+    @SerialName("NazwaPliku")
     val filename: String,
 
-    @Json(name = "Id")
+    @SerialName("Id")
     val id: Int
 )

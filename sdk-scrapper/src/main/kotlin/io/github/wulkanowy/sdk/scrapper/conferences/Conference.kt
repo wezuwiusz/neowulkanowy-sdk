@@ -1,28 +1,29 @@
 package io.github.wulkanowy.sdk.scrapper.conferences
 
-import com.squareup.moshi.Json
-import com.squareup.moshi.JsonClass
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.Transient
 import java.time.LocalDateTime
 
-@JsonClass(generateAdapter = true)
+@Serializable
 data class Conference(
 
-    @Json(name = "Tytul")
+    @SerialName("Tytul")
     val title: String,
 
-    @Json(name = "TematZebrania")
+    @SerialName("TematZebrania")
     val subject: String,
 
-    @Json(name = "Agenda")
+    @SerialName("Agenda")
     val agenda: String,
 
-    @Json(name = "ObecniNaZebraniu")
+    @SerialName("ObecniNaZebraniu")
     val presentOnConference: String,
 
-    @Json(name = "ZebranieOnline")
-    val online: Any?,
+    @SerialName("ZebranieOnline")
+    val online: String?,
 
-    @Json(name = "Id")
+    @SerialName("Id")
     val id: Int,
 
     @Transient

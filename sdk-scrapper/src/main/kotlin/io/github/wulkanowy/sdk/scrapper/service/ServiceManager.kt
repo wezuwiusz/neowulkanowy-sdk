@@ -1,25 +1,28 @@
 package io.github.wulkanowy.sdk.scrapper.service
 
-import com.squareup.moshi.Moshi
-import io.github.wulkanowy.sdk.scrapper.adapter.CustomDateAdapter
+import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import io.github.wulkanowy.sdk.scrapper.OkHttpClientBuilderFactory
 import io.github.wulkanowy.sdk.scrapper.Scrapper
-import io.github.wulkanowy.sdk.scrapper.exception.ScrapperException
 import io.github.wulkanowy.sdk.scrapper.TLSSocketFactory
-import io.github.wulkanowy.sdk.scrapper.adapter.GradeDateDeserializer
+import io.github.wulkanowy.sdk.scrapper.adapter.ObjectSerializer
+import io.github.wulkanowy.sdk.scrapper.exception.ScrapperException
 import io.github.wulkanowy.sdk.scrapper.interceptor.AutoLoginInterceptor
 import io.github.wulkanowy.sdk.scrapper.interceptor.ErrorInterceptor
 import io.github.wulkanowy.sdk.scrapper.interceptor.HttpErrorInterceptor
 import io.github.wulkanowy.sdk.scrapper.interceptor.StudentCookieInterceptor
 import io.github.wulkanowy.sdk.scrapper.interceptor.UserAgentInterceptor
 import io.github.wulkanowy.sdk.scrapper.login.LoginHelper
+import kotlinx.serialization.ExperimentalSerializationApi
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.modules.SerializersModule
+import kotlinx.serialization.modules.contextual
 import okhttp3.Interceptor
 import okhttp3.JavaNetCookieJar
+import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import pl.droidsonroids.retrofit2.JspoonConverterFactory
 import retrofit2.Retrofit
-import retrofit2.converter.moshi.MoshiConverterFactory
 import retrofit2.converter.scalars.ScalarsConverterFactory
 import retrofit2.create
 import java.net.CookieManager
@@ -62,6 +65,18 @@ class ServiceManager(
 
     val urlGenerator by lazy {
         UrlGenerator(schema, host, symbol, schoolSymbol)
+    }
+
+    @OptIn(ExperimentalSerializationApi::class)
+    val json by lazy {
+        Json {
+            explicitNulls = false
+            ignoreUnknownKeys = true
+            coerceInputValues = true
+            serializersModule = SerializersModule {
+                contextual(ObjectSerializer)
+            }
+        }
     }
 
     private val interceptors: MutableList<Pair<Interceptor, Boolean>> = mutableListOf(
@@ -155,17 +170,14 @@ class ServiceManager(
         return getRetrofit(getClientBuilder(), urlGenerator.generate(UrlGenerator.Site.HOME), gson = true).create()
     }
 
+    @OptIn(ExperimentalSerializationApi::class)
     private fun getRetrofit(client: OkHttpClient.Builder, baseUrl: String, gson: Boolean = false) = Retrofit.Builder()
         .baseUrl(baseUrl)
         .client(client.build())
         .addConverterFactory(ScalarsConverterFactory.create())
         .addConverterFactory(
-            if (gson) MoshiConverterFactory.create(
-                Moshi.Builder()
-                    .add(CustomDateAdapter())
-                    .add(GradeDateDeserializer())
-                    .build()
-            ) else JspoonConverterFactory.create()
+            if (gson) json.asConverterFactory("application/json".toMediaType())
+            else JspoonConverterFactory.create()
         )
         .build()
 

@@ -1,30 +1,36 @@
 package io.github.wulkanowy.sdk.scrapper.exams
 
-import com.squareup.moshi.Json
-import com.squareup.moshi.JsonClass
-import java.util.Date
+import io.github.wulkanowy.sdk.scrapper.adapter.CustomDateAdapter
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.Transient
+import java.time.LocalDateTime
 
-@JsonClass(generateAdapter = true)
+@Serializable
 data class Exam(
 
-    @Json(name = "DataModyfikacji")
-    val entryDate: Date,
+    @SerialName("DataModyfikacji")
+    @Serializable(with = CustomDateAdapter::class)
+    val entryDate: LocalDateTime,
 
-    @Json(name = "Nazwa")
+    @SerialName("Nazwa")
     val subject: String,
 
-    @Json(name = "Rodzaj")
-    val type: String,
+    @SerialName("Rodzaj")
+    val type: Int,
 
-    @Json(name = "Opis")
+    @SerialName("Opis")
     val description: String,
 
-    @Json(name = "Pracownik")
+    @SerialName("Pracownik")
     val teacher: String
 ) {
 
     @Transient
-    lateinit var date: Date
+    lateinit var typeName: String
+
+    @Transient
+    lateinit var date: LocalDateTime
 
     @Transient
     lateinit var teacherSymbol: String

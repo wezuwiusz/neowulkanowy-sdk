@@ -1,31 +1,32 @@
 package io.github.wulkanowy.sdk.scrapper.grades
 
-import com.squareup.moshi.Json
-import com.squareup.moshi.JsonClass
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.Transient
 
-@JsonClass(generateAdapter = true)
+@Serializable
 data class GradesStatisticsSemester(
 
-    @Json(name = "Subject")
+    @SerialName("Subject")
     val subject: String,
 
-    @Json(name = "IsEmpty")
+    @SerialName("IsEmpty")
     val isEmpty: Boolean,
 
-    @Json(name = "Items")
+    @SerialName("Items")
     val items: List<GradesStatisticsSemesterSubItem>?
 )
 
-@JsonClass(generateAdapter = true)
+@Serializable
 data class GradesStatisticsSemesterSubItem(
 
-    @Json(name = "Label")
+    @SerialName("Label")
     internal val label: String,
 
-    @Json(name = "Description")
+    @SerialName("Description")
     internal val description: String,
 
-    @Json(name = "Value")
+    @SerialName("Value")
     val amount: Int
 ) {
 

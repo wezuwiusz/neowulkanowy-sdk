@@ -1,14 +1,14 @@
 package io.github.wulkanowy.sdk.scrapper.messages
 
-import com.squareup.moshi.Json
-import com.squareup.moshi.JsonClass
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
-@JsonClass(generateAdapter = true)
+@Serializable
 data class DeleteMessageRequest(
 
-    @Json(name = "folder")
+    @SerialName("folder")
     val folder: Int,
 
-    @Json(name = "messages")
+    @SerialName("messages")
     val messages: List<Int>
 )

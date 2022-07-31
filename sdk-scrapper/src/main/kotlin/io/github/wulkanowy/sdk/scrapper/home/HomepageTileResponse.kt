@@ -1,32 +1,32 @@
 package io.github.wulkanowy.sdk.scrapper.home
 
-import com.squareup.moshi.Json
-import com.squareup.moshi.JsonClass
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
-@JsonClass(generateAdapter = true)
+@Serializable
 data class HomepageTileResponse(
 
-    @Json(name = "IkonkaNazwa")
+    @SerialName("IkonkaNazwa")
     val iconName: String?,
 
-    @Json(name = "Num")
+    @SerialName("Num")
     val number: Int?,
 
-    @Json(name = "Zawartosc")
+    @SerialName("Zawartosc")
     val content: List<HomepageTileResponse>,
 
-    @Json(name = "Nazwa")
+    @SerialName("Nazwa")
     val name: String,
 
-    @Json(name = "Url")
+    @SerialName("Url")
     val url: String?,
 
-    @Json(name = "Dane")
+    @SerialName("Dane")
     val data: String?,
 
-    @Json(name = "Symbol")
+    @SerialName("Symbol")
     val symbol: String?,
 
-    @Json(name = "Nieaktywny")
+    @SerialName("Nieaktywny")
     val inactive: Boolean
 )

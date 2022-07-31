@@ -6,7 +6,6 @@ import io.github.wulkanowy.sdk.pojo.Timetable
 import io.github.wulkanowy.sdk.pojo.TimetableAdditional
 import io.github.wulkanowy.sdk.pojo.TimetableDayHeader
 import io.github.wulkanowy.sdk.pojo.TimetableFull
-import io.github.wulkanowy.sdk.scrapper.toLocalDate
 import io.github.wulkanowy.sdk.toLocalDate
 import io.github.wulkanowy.sdk.toLocalDateTime
 import java.time.ZoneId
@@ -110,12 +109,12 @@ fun List<ScrapperCompletedLesson>.mapCompletedLessons() = map {
     CompletedLesson(
         date = it.date.toLocalDate(),
         number = it.number,
-        subject = it.subject,
-        topic = it.topic,
-        teacher = it.teacher,
-        teacherSymbol = it.teacherSymbol,
-        substitution = it.substitution,
-        absence = it.absence,
-        resources = it.resources
+        subject = it.subject.orEmpty(),
+        topic = it.topic.orEmpty(),
+        teacher = it.teacher.orEmpty(),
+        teacherSymbol = it.teacherSymbol.orEmpty(),
+        substitution = it.substitution.orEmpty(),
+        absence = it.absence.orEmpty(),
+        resources = it.resources.orEmpty(),
     )
 }

@@ -1,11 +1,11 @@
 package io.github.wulkanowy.sdk.scrapper.mobile
 
-import com.squareup.moshi.Json
-import com.squareup.moshi.JsonClass
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
-@JsonClass(generateAdapter = true)
+@Serializable
 data class UnregisterDeviceRequest(
 
-    @Json(name = "id")
+    @SerialName("id")
     val id: Int
 )

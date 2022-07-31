@@ -1,15 +1,16 @@
 package io.github.wulkanowy.sdk.scrapper.school
 
-import com.squareup.moshi.Json
-import com.squareup.moshi.JsonClass
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.Transient
 
-@JsonClass(generateAdapter = true)
+@Serializable
 data class Teacher(
 
-    @Json(name = "Nauczyciel")
+    @SerialName("Nauczyciel")
     val name: String,
 
-    @Json(name = "Nazwa")
+    @SerialName("Nazwa")
     val subject: String
 ) {
 

@@ -6,7 +6,7 @@ import io.github.wulkanowy.sdk.scrapper.attendance.AttendanceCategory
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Test
-import java.util.Date
+import java.time.LocalDateTime
 
 class AttendanceMapperTest : BaseLocalTest() {
 
@@ -107,7 +107,7 @@ class AttendanceMapperTest : BaseLocalTest() {
     }
 
     private fun createAttendance(cat: AttendanceCategory): List<Attendance> {
-        val item = Attendance(1, Date(), "").apply {
+        val item = Attendance(1, LocalDateTime.now(), "").apply {
             number = 0
             category = cat
             excusable = false

@@ -1,46 +1,50 @@
 package io.github.wulkanowy.sdk.scrapper.timetable
 
-import com.squareup.moshi.Json
-import com.squareup.moshi.JsonClass
-import java.util.Date
+import io.github.wulkanowy.sdk.scrapper.adapter.CustomDateAdapter
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
+import java.time.LocalDateTime
 
-@JsonClass(generateAdapter = true)
+@Serializable
 class CacheResponse {
 
-    @Json(name = "isParentUser")
+    @SerialName("isParentUser")
     var isParent: Boolean = false
 
-    @Json(name = "poryLekcji")
+    @SerialName("poryLekcji")
     lateinit var times: List<Time>
 
-    @Json(name = "isMenuOn")
+    @SerialName("isMenuOn")
     var isMenu: Boolean = false
 
-    @Json(name = "pokazLekcjeZrealizowane")
+    @SerialName("pokazLekcjeZrealizowane")
     var showCompletedLessons: Boolean = false
 
-    @JsonClass(generateAdapter = true)
+    @Serializable
     class Time {
 
-        @Json(name = "Id")
+        @SerialName("Id")
         var id: Int = 0
 
-        @Json(name = "Numer")
+        @SerialName("Numer")
         var number: Int = 0
 
-        @Json(name = "Poczatek")
-        lateinit var start: Date
+        @SerialName("Poczatek")
+        @Serializable(with = CustomDateAdapter::class)
+        lateinit var start: LocalDateTime
 
-        @Json(name = "Koniec")
-        lateinit var end: Date
+        @SerialName("Koniec")
+        @Serializable(with = CustomDateAdapter::class)
+        lateinit var end: LocalDateTime
 
-        @Json(name = "DataModyfikacji")
-        lateinit var modified: Date
+        @SerialName("DataModyfikacji")
+        @Serializable(with = CustomDateAdapter::class)
+        lateinit var modified: LocalDateTime
 
-        @Json(name = "IdJednostkaSprawozdawcza")
+        @SerialName("IdJednostkaSprawozdawcza")
         var organizationUnitId: Int = 0
 
-        @Json(name = "Nazwa")
+        @SerialName("Nazwa")
         lateinit var name: String
     }
 }

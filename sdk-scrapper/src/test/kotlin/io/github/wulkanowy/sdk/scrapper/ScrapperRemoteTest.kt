@@ -177,7 +177,7 @@ class ScrapperRemoteTest : BaseTest() {
             assertEquals(getDate(2018, 5, 7), date)
             assertEquals(getDate(1970, 1, 1), entryDate)
             assertEquals("Matematyka", subject)
-            assertEquals("Sprawdzian", type)
+            assertEquals("Sprawdzian", typeName)
             assertEquals("Figury na płaszczyźnie.", description)
             assertEquals("Aleksandra Krajewska", teacher)
             assertEquals("AK", teacherSymbol)
@@ -219,12 +219,12 @@ class ScrapperRemoteTest : BaseTest() {
         grades[7].run {
             assertEquals("Religia", subject)
             assertEquals("1", entry)
-            assertEquals("6ECD07", color)
+            assertEquals("6ECD07", colorHex)
             assertEquals("Kart", symbol)
             assertEquals("", description)
             assertEquals("3,00", weight)
             assertEquals(3.0, weightValue, .0)
-            assertEquals(LocalDate.now().toDate(), date)
+            assertEquals(LocalDate.now(), date)
             assertEquals("Michał Mazur", teacher)
         }
 

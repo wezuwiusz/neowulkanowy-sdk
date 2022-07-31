@@ -1,14 +1,14 @@
 package io.github.wulkanowy.sdk.scrapper.home
 
-import com.squareup.moshi.Json
-import com.squareup.moshi.JsonClass
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
-@JsonClass(generateAdapter = true)
+@Serializable
 data class GovernmentUnit(
 
-    @Json(name = "UnitName")
+    @SerialName( "UnitName")
     val unitName: String,
 
-    @Json(name = "People")
+    @SerialName( "People")
     val people: List<GovernmentMember>
 )

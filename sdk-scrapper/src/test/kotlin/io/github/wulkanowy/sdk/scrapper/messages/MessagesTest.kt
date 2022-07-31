@@ -1,14 +1,15 @@
 package io.github.wulkanowy.sdk.scrapper.messages
 
-import com.squareup.moshi.Moshi
 import io.github.wulkanowy.sdk.scrapper.BaseLocalTest
 import io.github.wulkanowy.sdk.scrapper.repository.MessagesRepository
 import io.github.wulkanowy.sdk.scrapper.service.MessagesService
 import kotlinx.coroutines.runBlocking
+import kotlinx.serialization.SerializationException
+import kotlinx.serialization.decodeFromString
+import kotlinx.serialization.json.Json
 import okhttp3.mockwebserver.MockResponse
 import org.junit.Assert.assertEquals
 import org.junit.Test
-import java.io.EOFException
 
 class MessagesTest : BaseLocalTest() {
 
@@ -226,10 +227,9 @@ class MessagesTest : BaseLocalTest() {
 
         server.takeRequest()
 
-        val adapter = SendMessageRequestJsonAdapter(Moshi.Builder().build())
-        val expected = adapter.fromJson(MessagesTest::class.java.getResource("NowaWiadomosc.json").readText())
+        val expected = Json.decodeFromString<SendMessageRequest>(MessagesTest::class.java.getResource("NowaWiadomosc.json")!!.readText())
         val request = server.takeRequest()
-        val actual = adapter.fromJson(request.body.readUtf8())
+        val actual = Json.decodeFromString<SendMessageRequest>(request.body.readUtf8())
 
         assertEquals(expected, actual)
         assertEquals(
@@ -252,10 +252,9 @@ class MessagesTest : BaseLocalTest() {
 
         server.takeRequest()
 
-        val adapter = DeleteMessageRequestJsonAdapter(Moshi.Builder().build())
-        val expected = adapter.fromJson(MessagesTest::class.java.getResource("UsunWiadomosc.json").readText())
+        val expected = Json.decodeFromString<DeleteMessageRequest>(MessagesTest::class.java.getResource("UsunWiadomosc.json")!!.readText())
         val request = server.takeRequest()
-        val actual = adapter.fromJson(request.body.readUtf8())
+        val actual = Json.decodeFromString<DeleteMessageRequest>(request.body.readUtf8())
 
         assertEquals(expected, actual)
         assertEquals(
@@ -277,7 +276,7 @@ class MessagesTest : BaseLocalTest() {
         val res = runCatching { runBlocking { api.deleteMessages(listOf(74, 69), 3) } }
 
         val exception = res.exceptionOrNull()!!
-        assertEquals(EOFException::class.java, exception::class.java)
-        assertEquals("End of input", exception.message)
+        assert(exception is SerializationException)
+        assertEquals("Expected start of the object '{', but had 'EOF' instead at path: \$\nJSON input: ", exception.message)
     }
 }

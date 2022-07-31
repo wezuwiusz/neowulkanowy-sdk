@@ -1,24 +1,27 @@
 package io.github.wulkanowy.sdk.scrapper.mobile
 
-import com.squareup.moshi.Json
-import com.squareup.moshi.JsonClass
-import java.util.Date
+import io.github.wulkanowy.sdk.scrapper.adapter.CustomDateAdapter
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
+import java.time.LocalDateTime
 
-@JsonClass(generateAdapter = true)
+@Serializable
 data class Device(
 
-    @Json(name = "Id")
+    @SerialName("Id")
     val id: Int = 0,
 
-    @Json(name = "IdentyfikatorUrzadzenia")
+    @SerialName("IdentyfikatorUrzadzenia")
     val deviceId: String? = null,
 
-    @Json(name = "NazwaUrzadzenia")
+    @SerialName("NazwaUrzadzenia")
     val name: String? = null,
 
-    @Json(name = "DataUtworzenia")
-    val createDate: Date? = null,
+    @SerialName("DataUtworzenia")
+    @Serializable(with = CustomDateAdapter::class)
+    val createDate: LocalDateTime? = null,
 
-    @Json(name = "DataModyfikacji")
-    val modificationDate: Date? = null
+    @SerialName("DataModyfikacji")
+    @Serializable(with = CustomDateAdapter::class)
+    val modificationDate: LocalDateTime? = null
 )

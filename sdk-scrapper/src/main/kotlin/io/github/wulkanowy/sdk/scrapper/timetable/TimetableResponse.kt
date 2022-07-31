@@ -1,45 +1,45 @@
 package io.github.wulkanowy.sdk.scrapper.timetable
 
-import com.squareup.moshi.Json
-import com.squareup.moshi.JsonClass
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 import org.jsoup.nodes.Element
 import java.time.LocalDate
 import java.time.LocalDateTime
 
-@JsonClass(generateAdapter = true)
+@Serializable
 data class TimetableResponse(
 
-    @Json(name = "Headers")
+    @SerialName("Headers")
     val headers: List<TimetableHeader> = emptyList(),
 
-    @Json(name = "Rows")
+    @SerialName("Rows")
     val rows: List<List<String>> = emptyList(),
 
-    @Json(name = "Additionals")
+    @SerialName("Additionals")
     val additional: List<TimetableAdditionalDay>
 )
 
-@JsonClass(generateAdapter = true)
+@Serializable
 data class TimetableHeader(
 
-    @Json(name = "Text")
+    @SerialName("Text")
     val date: String
 )
 
-@JsonClass(generateAdapter = true)
+@Serializable
 data class TimetableAdditionalDay(
 
-    @Json(name = "Header")
+    @SerialName("Header")
     val header: String,
 
-    @Json(name = "Descriptions")
+    @SerialName("Descriptions")
     val descriptions: List<TimetableAdditionalLesson>
 )
 
-@JsonClass(generateAdapter = true)
+@Serializable
 data class TimetableAdditionalLesson(
 
-    @Json(name = "Description")
+    @SerialName("Description")
     val description: String
 )
 

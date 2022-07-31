@@ -1,22 +1,25 @@
 package io.github.wulkanowy.sdk.scrapper.attendance
 
-import com.squareup.moshi.Json
-import com.squareup.moshi.JsonClass
-import java.util.Date
+import io.github.wulkanowy.sdk.scrapper.adapter.CustomDateAdapter
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.Transient
+import java.time.LocalDateTime
 
-@JsonClass(generateAdapter = true)
+@Serializable
 data class Attendance(
 
-    @Json(name = "IdPoraLekcji")
+    @SerialName("IdPoraLekcji")
     val timeId: Int = 0,
 
-    @Json(name = "Data")
-    val date: Date,
+    @SerialName("Data")
+    @Serializable(with = CustomDateAdapter::class)
+    val date: LocalDateTime,
 
-    @Json(name = "PrzedmiotNazwa")
+    @SerialName("PrzedmiotNazwa")
     val subject: String?,
 
-    @Json(name = "IdKategoria")
+    @SerialName("IdKategoria")
     val categoryId: Int = -1
 ) {
 

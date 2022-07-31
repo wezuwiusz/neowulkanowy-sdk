@@ -1,36 +1,27 @@
 package io.github.wulkanowy.sdk.scrapper.adapter
 
-import com.squareup.moshi.FromJson
-import com.squareup.moshi.JsonAdapter
-import com.squareup.moshi.JsonReader
-import com.squareup.moshi.JsonWriter
-import com.squareup.moshi.ToJson
-import java.text.SimpleDateFormat
-import java.util.Date
-import java.util.Locale
+import kotlinx.serialization.ExperimentalSerializationApi
+import kotlinx.serialization.KSerializer
+import kotlinx.serialization.Serializer
+import kotlinx.serialization.encoding.Decoder
+import kotlinx.serialization.encoding.Encoder
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 
-class CustomDateAdapter : JsonAdapter<Date>() {
+@OptIn(ExperimentalSerializationApi::class)
+@Serializer(forClass = LocalDateTime::class)
+object CustomDateAdapter : KSerializer<LocalDateTime> {
 
-    private val dateFormat = SimpleDateFormat(SERVER_FORMAT, Locale.getDefault())
+    private const val SERVER_FORMAT = "yyyy-MM-dd HH:mm:ss"
+    private val formatter = DateTimeFormatter.ofPattern(SERVER_FORMAT)
 
-    companion object {
-        const val SERVER_FORMAT = "yyyy-MM-dd HH:mm:ss"
+    override fun deserialize(decoder: Decoder): LocalDateTime {
+        val date = decoder.decodeString()
+
+        return LocalDateTime.parse(date, formatter)
     }
 
-    @FromJson
-    override fun fromJson(reader: JsonReader): Date? {
-        val dateAsString = reader.nextString()
-        return synchronized(dateFormat) {
-            dateFormat.parse(dateAsString)
-        }
-    }
-
-    @ToJson
-    override fun toJson(writer: JsonWriter, value: Date?) {
-        if (value != null) {
-            synchronized(dateFormat) {
-                writer.value(dateFormat.format(value))
-            }
-        }
+    override fun serialize(encoder: Encoder, value: LocalDateTime) {
+        encoder.encodeString(value.format(formatter))
     }
 }

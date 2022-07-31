@@ -1,31 +1,34 @@
 package io.github.wulkanowy.sdk.scrapper.notes
 
-import com.squareup.moshi.Json
-import com.squareup.moshi.JsonClass
-import java.util.Date
+import io.github.wulkanowy.sdk.scrapper.adapter.CustomDateAdapter
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.Transient
+import java.time.LocalDateTime
 
-@JsonClass(generateAdapter = true)
+@Serializable
 data class Note(
 
-    @Json(name = "DataWpisu")
-    val date: Date,
+    @SerialName("DataWpisu")
+    @Serializable(with = CustomDateAdapter::class)
+    val date: LocalDateTime,
 
-    @Json(name = "Nauczyciel")
+    @SerialName("Nauczyciel")
     val teacher: String,
 
-    @Json(name = "Kategoria")
+    @SerialName("Kategoria")
     val category: String,
 
-    @Json(name = "TrescUwagi")
+    @SerialName("TrescUwagi")
     val content: String,
 
-    @Json(name = "Punkty")
+    @SerialName("Punkty")
     val points: String = "",
 
-    @Json(name = "PokazPunkty")
+    @SerialName("PokazPunkty")
     val showPoints: Boolean = false,
 
-    @Json(name = "KategoriaTyp")
+    @SerialName("KategoriaTyp")
     val categoryType: Int = 0
 ) {
 

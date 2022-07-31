@@ -1,35 +1,37 @@
 package io.github.wulkanowy.sdk.scrapper.timetable
 
-import com.squareup.moshi.Json
-import com.squareup.moshi.JsonClass
-import java.util.Date
+import io.github.wulkanowy.sdk.scrapper.adapter.CustomDateAdapter
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
+import java.time.LocalDateTime
 
-@JsonClass(generateAdapter = true)
-class CompletedLesson {
+@Serializable
+data class CompletedLesson(
 
-    @Json(name = "Data")
-    lateinit var date: Date
+    @SerialName("Data")
+    @Serializable(with = CustomDateAdapter::class)
+    val date: LocalDateTime,
 
-    @Json(name = "NrLekcji")
-    var number: Int = 0
+    @SerialName("NrLekcji")
+    val number: Int = 0,
 
-    @Json(name = "Przedmiot")
-    var subject: String = ""
+    @SerialName("Przedmiot")
+    val subject: String? = "",
 
-    @Json(name = "Temat")
-    var topic: String = ""
+    @SerialName("Temat")
+    val topic: String? = "",
 
-    @Json(name = "Nauczyciel")
-    var teacher: String = ""
+    @SerialName("Nauczyciel")
+    val teacher: String? = "",
 
-    var teacherSymbol: String = ""
+    val teacherSymbol: String? = "",
 
-    @Json(name = "Zastepstwo")
-    var substitution: String = ""
+    @SerialName("Zastepstwo")
+    val substitution: String? = "",
 
-    @Json(name = "Nieobecnosc")
-    var absence: String = ""
+    @SerialName("Nieobecnosc")
+    val absence: String? = "",
 
-    @Json(name = "ZasobyPubliczne")
-    var resources: String = ""
-}
+    @SerialName("ZasobyPubliczne")
+    val resources: String? = "",
+)

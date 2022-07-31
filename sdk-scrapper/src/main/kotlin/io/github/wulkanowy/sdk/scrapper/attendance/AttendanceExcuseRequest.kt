@@ -1,33 +1,33 @@
 package io.github.wulkanowy.sdk.scrapper.attendance
 
-import com.squareup.moshi.Json
-import com.squareup.moshi.JsonClass
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
-@JsonClass(generateAdapter = true)
+@Serializable
 data class AttendanceExcuseRequest(
 
-    @Json(name = "usprawiedliwienie")
+    @SerialName("usprawiedliwienie")
     val excuse: Excuse
 ) {
 
-    @JsonClass(generateAdapter = true)
+    @Serializable
     data class Excuse(
 
-        @Json(name = "Nieobecnosci")
+        @SerialName("Nieobecnosci")
         val absents: List<Absent>,
 
-        @Json(name = "Tresc")
+        @SerialName("Tresc")
         val content: String?
     ) {
 
-        @JsonClass(generateAdapter = true)
+        @Serializable
         data class Absent(
 
-            @Json(name = "Data")
+            @SerialName("Data")
             val date: String,
 
-            @Json(name = "IdPoraLekcji")
-            val timeId: Int?
+            @SerialName("IdPoraLekcji")
+            val timeId: Int? = null,
         )
     }
 }
