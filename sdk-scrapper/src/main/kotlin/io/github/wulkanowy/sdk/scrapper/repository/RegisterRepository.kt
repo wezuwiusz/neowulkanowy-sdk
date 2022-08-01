@@ -48,6 +48,10 @@ class RegisterRepository(
         private val logger = LoggerFactory.getLogger(this::class.java)
     }
 
+    private val json = Json {
+        ignoreUnknownKeys = true
+    }
+
     suspend fun getStudents(): List<Student> {
         return getSymbols().flatMap { (symbol, certificate) ->
             val cert = try {
@@ -193,7 +197,7 @@ class RegisterRepository(
     private fun getPermissions(homepage: String): Permission? {
         val base64 = getScriptParam("permissions", homepage).substringBefore("|")
         return Base64.decode(base64).toString(StandardCharsets.UTF_8).takeIf { it.isNotBlank() }?.let {
-            Json.decodeFromString<Permission>(it)
+            json.decodeFromString<Permission>(it)
         }
     }
 }
