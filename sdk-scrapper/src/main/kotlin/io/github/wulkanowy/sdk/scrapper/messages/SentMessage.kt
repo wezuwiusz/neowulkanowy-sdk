@@ -22,5 +22,5 @@ data class SentMessage(
     val isWelcomeMessage: Boolean,
 
     @SerialName("Id")
-    val id: Int
+    val id: Int = -1,
 )

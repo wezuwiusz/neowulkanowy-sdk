@@ -73,6 +73,7 @@ class ServiceManager(
             explicitNulls = false
             ignoreUnknownKeys = true
             coerceInputValues = true
+            isLenient = true
             serializersModule = SerializersModule {
                 contextual(ObjectSerializer)
             }

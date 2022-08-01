@@ -328,16 +328,16 @@ class ScrapperRemoteTest : BaseTest() {
         assertEquals(10, recipients.size)
 
         val messages = runBlocking { api.getMessages(Folder.RECEIVED) }
-        assertEquals(2, messages.size)
+        assertEquals(19, messages.size)
 
         val inbox = runBlocking { api.getReceivedMessages(getLocalDateTime(2015, 10, 5)) }
-        assertEquals(2, inbox.size)
+        assertEquals(19, inbox.size)
 
         val sent = runBlocking { api.getSentMessages() }
         assertEquals(1, sent.size)
 
         val trash = runBlocking { api.getDeletedMessages() }
-        assertEquals(1, trash.size)
+        assertEquals(8, trash.size)
 
         val mRecipients = runBlocking { api.getMessageRecipients(trash[0].messageId ?: 0) }
         assertEquals(1, mRecipients.size)
@@ -417,7 +417,7 @@ class ScrapperRemoteTest : BaseTest() {
     fun luckyNumberTest() {
         val luckyNumber = runBlocking { api.getKidsLuckyNumbers() }
 
-        assertEquals(37, luckyNumber[0].number)
+        assertEquals(25, luckyNumber[0].number)
     }
 
     @Test
