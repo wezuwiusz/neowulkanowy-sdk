@@ -1,39 +1,34 @@
 package io.github.wulkanowy.sdk.scrapper
 
-import com.squareup.moshi.Json
-import com.squareup.moshi.JsonClass
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
-@JsonClass(generateAdapter = true)
+@Serializable
 data class ApiResponse<out T>(
-
     val success: Boolean,
-
     val data: T?,
-
     val feedback: Feedback? = null,
-
     val errorMessage: String? = null
-) {
+)
 
-    @JsonClass(generateAdapter = true)
-    data class Feedback(
+@Serializable
+data class Feedback(
 
-        @Json(name = "Handled")
-        val handled: Boolean?,
+    @SerialName("Handled")
+    val handled: Boolean?,
 
-        @Json(name = "FType")
-        val type: String,
+    @SerialName("FType")
+    val type: String,
 
-        @Json(name = "Message")
-        val message: String,
+    @SerialName("Message")
+    val message: String,
 
-        @Json(name = "ExceptionMessage")
-        val exceptionMessage: String?,
+    @SerialName("ExceptionMessage")
+    val exceptionMessage: String?,
 
-        @Json(name = "InnerExceptionMessage")
-        val innerExceptionMessage: String?,
+    @SerialName("InnerExceptionMessage")
+    val innerExceptionMessage: String?,
 
-        @Json(name = "success")
-        val success: Boolean? = null
-    )
-}
+    @SerialName("success")
+    val success: Boolean? = null,
+)

@@ -27,6 +27,7 @@ import io.github.wulkanowy.sdk.scrapper.school.SchoolAndTeachersResponse
 import io.github.wulkanowy.sdk.scrapper.student.StudentInfo
 import io.github.wulkanowy.sdk.scrapper.student.StudentPhoto
 import io.github.wulkanowy.sdk.scrapper.timetable.CacheResponse
+import io.github.wulkanowy.sdk.scrapper.timetable.CompletedLesson
 import io.github.wulkanowy.sdk.scrapper.timetable.CompletedLessonsRequest
 import io.github.wulkanowy.sdk.scrapper.timetable.TimetableRequest
 import io.github.wulkanowy.sdk.scrapper.timetable.TimetableResponse
@@ -47,7 +48,7 @@ interface StudentService {
         @Header("X-V-RequestVerificationToken") token: String,
         @Header("X-V-AppGuid") appGuid: String,
         @Header("X-V-AppVersion") appVersion: String,
-        @Body body: Any = Object()
+        @Body body: Any = Any()
     ): ApiResponse<CacheResponse>
 
     @POST("UczenCache.mvc/Get")
@@ -55,14 +56,14 @@ interface StudentService {
         @Header("X-V-RequestVerificationToken") token: String,
         @Header("X-V-AppGuid") appGuid: String,
         @Header("X-V-AppVersion") appVersion: String,
-        @Body body: Any = Object()
+        @Body body: Any = Any()
     ): ApiResponse<CacheResponse>
 
     @POST
-    suspend fun getSchoolInfo(@Url url: String, @Body body: Any = Object()): ApiResponse<List<Diary>>
+    suspend fun getSchoolInfo(@Url url: String, @Body body: Any = Any()): ApiResponse<List<Diary>>
 
     @POST("UczenDziennik.mvc/Get")
-    suspend fun getDiaries(@Body body: Any = Object()): ApiResponse<List<Diary>>
+    suspend fun getDiaries(@Body body: Any = Any()): ApiResponse<List<Diary>>
 
     @POST("Oceny.mvc/Get")
     suspend fun getGrades(@Body gradeRequest: GradeRequest): ApiResponse<GradesResponse>
@@ -83,7 +84,7 @@ interface StudentService {
     suspend fun getAttendanceStatistics(@Body attendanceSummaryRequest: AttendanceSummaryRequest): ApiResponse<AttendanceSummaryResponse>
 
     @POST("FrekwencjaStatystykiPrzedmioty.mvc/Get")
-    suspend fun getAttendanceSubjects(@Body body: Any = Object()): ApiResponse<List<Subject>>
+    suspend fun getAttendanceSubjects(@Body body: Any = Any()): ApiResponse<List<Subject>>
 
     @POST("Usprawiedliwienia.mvc/Post")
     suspend fun excuseForAbsence(
@@ -91,7 +92,7 @@ interface StudentService {
         @Header("X-V-AppGuid") appGuid: String,
         @Header("X-V-AppVersion") appVersion: String,
         @Body attendanceExcuseRequest: AttendanceExcuseRequest
-    ): ApiResponse<Any>
+    ): ApiResponse<ApiResponse<String?>>
 
     @POST("EgzaminyZewnetrzne.mvc/Get")
     suspend fun getExternalExaminations()
@@ -106,22 +107,22 @@ interface StudentService {
     suspend fun getTimetable(@Body timetableRequest: TimetableRequest): ApiResponse<TimetableResponse>
 
     @POST("LekcjeZrealizowane.mvc/GetPrzedmioty")
-    suspend fun getRealizedSubjects(@Body body: Any = Object())
+    suspend fun getRealizedSubjects(@Body body: Any = Any())
 
     @POST("LekcjeZrealizowane.mvc/GetZrealizowane")
-    suspend fun getCompletedLessons(@Body completedLessonsRequest: CompletedLessonsRequest): String
+    suspend fun getCompletedLessons(@Body completedLessonsRequest: CompletedLessonsRequest): ApiResponse<Map<String, List<CompletedLesson>>>
 
     @POST("UwagiIOsiagniecia.mvc/Get")
-    suspend fun getNotes(@Body body: Any = Object()): ApiResponse<NotesResponse>
+    suspend fun getNotes(@Body body: Any = Any()): ApiResponse<NotesResponse>
 
     @POST("Zebrania.mvc/Get")
     suspend fun getConferences(): ApiResponse<List<Conference>>
 
     @POST("ZarejestrowaneUrzadzenia.mvc/Get")
-    suspend fun getRegisteredDevices(@Body body: Any = Object()): ApiResponse<List<Device>>
+    suspend fun getRegisteredDevices(@Body body: Any = Any()): ApiResponse<List<Device>>
 
     @POST("RejestracjaUrzadzeniaToken.mvc/Get")
-    suspend fun getToken(@Body body: Any = Object()): ApiResponse<TokenResponse>
+    suspend fun getToken(@Body body: Any = Any()): ApiResponse<TokenResponse>
 
     @POST("ZarejestrowaneUrzadzenia.mvc/Delete")
     suspend fun unregisterDevice(
@@ -132,7 +133,7 @@ interface StudentService {
     ): ApiResponse<Any>
 
     @POST("SzkolaINauczyciele.mvc/Get")
-    suspend fun getSchoolAndTeachers(@Body body: Any = Object()): ApiResponse<SchoolAndTeachersResponse>
+    suspend fun getSchoolAndTeachers(@Body body: Any = Any()): ApiResponse<SchoolAndTeachersResponse>
 
     @POST("Uczen.mvc/Get")
     suspend fun getStudentInfo(): ApiResponse<StudentInfo>

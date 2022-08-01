@@ -1,8 +1,5 @@
 package io.github.wulkanowy.sdk.scrapper.repository
 
-import com.squareup.moshi.Moshi
-import io.github.wulkanowy.sdk.scrapper.ApiResponseJsonAdapter
-import io.github.wulkanowy.sdk.scrapper.adapter.CustomDateAdapter
 import io.github.wulkanowy.sdk.scrapper.attendance.Absent
 import io.github.wulkanowy.sdk.scrapper.attendance.Attendance
 import io.github.wulkanowy.sdk.scrapper.attendance.AttendanceExcuseRequest
@@ -58,14 +55,11 @@ import io.github.wulkanowy.sdk.scrapper.timetable.mapCompletedLessonsList
 import io.github.wulkanowy.sdk.scrapper.timetable.mapTimetableAdditional
 import io.github.wulkanowy.sdk.scrapper.timetable.mapTimetableHeaders
 import io.github.wulkanowy.sdk.scrapper.timetable.mapTimetableList
-import io.github.wulkanowy.sdk.scrapper.toDate
 import io.github.wulkanowy.sdk.scrapper.toFormat
 import org.jsoup.Jsoup
 import java.time.LocalDate
 
 class StudentRepository(private val api: StudentService) {
-
-    private val moshi by lazy { Moshi.Builder().add(CustomDateAdapter()) }
 
     private fun LocalDate.toISOFormat(): String = toFormat("yyyy-MM-dd'T00:00:00'")
 
@@ -85,7 +79,7 @@ class StudentRepository(private val api: StudentService) {
     }
 
     suspend fun getAttendance(startDate: LocalDate, endDate: LocalDate?): List<Attendance> {
-        return api.getAttendance(AttendanceRequest(startDate.toDate()))
+        return api.getAttendance(AttendanceRequest(startDate.atStartOfDay()))
             .handleErrors()
             .data?.mapAttendanceList(startDate, endDate, getCache().times).orEmpty()
     }
@@ -93,7 +87,7 @@ class StudentRepository(private val api: StudentService) {
     suspend fun getAttendanceSummary(subjectId: Int?): List<AttendanceSummary> {
         return api.getAttendanceStatistics(AttendanceSummaryRequest(subjectId))
             .handleErrors()
-            .data?.mapAttendanceSummaryList(moshi).orEmpty()
+            .data?.mapAttendanceSummaryList().orEmpty()
     }
 
     suspend fun excuseForAbsence(absents: List<Absent>, content: String?): Boolean {
@@ -121,7 +115,7 @@ class StudentRepository(private val api: StudentService) {
     }
 
     suspend fun getExams(startDate: LocalDate, endDate: LocalDate? = null): List<Exam> {
-        return api.getExams(ExamRequest(startDate.toDate(), startDate.getSchoolYear()))
+        return api.getExams(ExamRequest(startDate.atStartOfDay(), startDate.getSchoolYear()))
             .handleErrors()
             .data.orEmpty().mapExamsList(startDate, endDate)
     }
@@ -165,7 +159,7 @@ class StudentRepository(private val api: StudentService) {
     }
 
     suspend fun getHomework(startDate: LocalDate, endDate: LocalDate? = null): List<Homework> {
-        return api.getHomework(HomeworkRequest(startDate.toDate(), startDate.getSchoolYear(), -1))
+        return api.getHomework(HomeworkRequest(startDate.atStartOfDay(), startDate.getSchoolYear(), -1))
             .handleErrors()
             .data.orEmpty().mapHomework(startDate, endDate)
     }
@@ -226,9 +220,7 @@ class StudentRepository(private val api: StudentService) {
         if (!cache.showCompletedLessons) throw FeatureDisabledException("Widok lekcji zrealizowanych został wyłączony przez Administratora szkoły")
 
         val res = api.getCompletedLessons(CompletedLessonsRequest(start.toISOFormat(), end.toISOFormat(), subjectId))
-
-        val adapter = ApiResponseJsonAdapter<Any>(moshi.build(), arrayOf(Any::class.java))
-        return adapter.fromJson(res)?.handleErrors()?.mapCompletedLessonsList(start, endDate, moshi).orEmpty()
+        return res.handleErrors().mapCompletedLessonsList(start, endDate)
     }
 
     suspend fun getTeachers(): List<Teacher> {

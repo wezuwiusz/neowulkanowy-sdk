@@ -1,151 +1,156 @@
 package io.github.wulkanowy.sdk.scrapper.register
 
-import com.squareup.moshi.Json
-import com.squareup.moshi.JsonClass
-import java.util.Date
+import io.github.wulkanowy.sdk.scrapper.adapter.CustomDateAdapter
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
+import java.time.LocalDateTime
 
-@JsonClass(generateAdapter = true)
+@Serializable
 data class Diary(
 
-    @Json(name = "Id")
+    @SerialName("Id")
     val id: Int,
 
-    @Json(name = "IdUczen")
+    @SerialName("IdUczen")
     val studentId: Int,
 
-    @Json(name = "UczenImie")
+    @SerialName("UczenImie")
     val studentName: String,
 
-    @Json(name = "UczenImie2")
+    @SerialName("UczenImie2")
     val studentSecondName: String?,
 
-    @Json(name = "UczenNazwisko")
+    @SerialName("UczenNazwisko")
     val studentSurname: String,
 
-    @Json(name = "UczenPseudonim")
+    @SerialName("UczenPseudonim")
     val studentNick: String?,
 
-    @Json(name = "IsDziennik")
+    @SerialName("IsDziennik")
     val isDiary: Boolean,
 
-    @Json(name = "IdDziennik")
+    @SerialName("IdDziennik")
     val diaryId: Int,
 
-    @Json(name = "IdPrzedszkoleDziennik")
+    @SerialName("IdPrzedszkoleDziennik")
     val kindergartenDiaryId: Int,
 
-    @Json(name = "IdWychowankowieDziennik")
+    @SerialName("IdWychowankowieDziennik")
     val fosterDiaryId: Int?,
 
-    @Json(name = "Poziom")
+    @SerialName("Poziom")
     val level: Int,
 
-    @Json(name = "Symbol")
+    @SerialName("Symbol")
     val symbol: String?,
 
-    @Json(name = "Nazwa")
+    @SerialName("Nazwa")
     val name: String?,
 
-    @Json(name = "DziennikRokSzkolny")
+    @SerialName("DziennikRokSzkolny")
     val year: Int,
 
-    @Json(name = "Okresy")
+    @SerialName("Okresy")
     val semesters: List<Semester>? = emptyList(),
 
-    @Json(name = "UczenOddzialOkresy")
-    val classSemesters: List<Any>? = emptyList(),
+    // @SerialName("UczenOddzialOkresy")
+    // val classSemesters: List<Any>? = emptyList(),
 
-    @Json(name = "DziennikDataOd")
-    val start: Date,
+    @Serializable(with = CustomDateAdapter::class)
+    @SerialName("DziennikDataOd")
+    val start: LocalDateTime,
 
-    @Json(name = "DziennikDataDo")
-    val end: Date,
+    @Serializable(with = CustomDateAdapter::class)
+    @SerialName("DziennikDataDo")
+    val end: LocalDateTime,
 
-    @Json(name = "IdJednostkaSkladowa")
+    @SerialName("IdJednostkaSkladowa")
     val componentUnitId: Int?,
 
-    @Json(name = "IdSioTyp")
+    @SerialName("IdSioTyp")
     val sioTypeId: Int?,
 
-    @Json(name = "IsDorosli")
+    @SerialName("IsDorosli")
     val isAdults: Boolean?,
 
-    @Json(name = "IsPolicealna")
+    @SerialName("IsPolicealna")
     val isPostSecondary: Boolean?,
 
-    @Json(name = "Is13")
+    @SerialName("Is13")
     val is13: Boolean?,
 
-    @Json(name = "IsArtystyczna")
+    @SerialName("IsArtystyczna")
     val isArtistic: Boolean?,
 
-    @Json(name = "IsArtystyczna13")
+    @SerialName("IsArtystyczna13")
     val isArtistic13: Boolean?,
 
-    @Json(name = "IsSpecjalny")
+    @SerialName("IsSpecjalny")
     val isSpecial: Boolean?,
 
-    @Json(name = "IsPrzedszkola")
+    @SerialName("IsPrzedszkola")
     val isKindergarten: Boolean?,
 
-    @Json(name = "IsWychowankowie")
+    @SerialName("IsWychowankowie")
     val isFoster: Boolean?,
 
-    @Json(name = "IsArchiwalny")
+    @SerialName("IsArchiwalny")
     val isArchived: Boolean?,
 
-    @Json(name = "IsOplaty")
+    @SerialName("IsOplaty")
     val isCharges: Boolean?,
 
-    @Json(name = "IsPlatnosci")
+    @SerialName("IsPlatnosci")
     val isPayments: Boolean?,
 
-    @Json(name = "IsPayButtonOn")
+    @SerialName("IsPayButtonOn")
     val isPayButtonOn: Boolean?,
 
-    @Json(name = "CanMergeAccounts")
+    @SerialName("CanMergeAccounts")
     val canMergeAccounts: Boolean?,
 
-    @Json(name = "UczenPelnaNazwa")
+    @SerialName("UczenPelnaNazwa")
     val fullName: String,
 
-    @Json(name = "O365PassType")
+    @SerialName("O365PassType")
     val o365PassType: Int?,
 
-    @Json(name = "IsAdult")
+    @SerialName("IsAdult")
     val isAdult: Boolean?,
 
-    @Json(name = "IsAuthorized")
+    @SerialName("IsAuthorized")
     val isAuthorized: Boolean?,
 
-    @Json(name = "Obywatelstwo")
+    @SerialName("Obywatelstwo")
     val citizenship: Int?,
 ) {
-    @JsonClass(generateAdapter = true)
+    @Serializable
     data class Semester(
 
-        @Json(name = "NumerOkresu")
+        @SerialName("NumerOkresu")
         val number: Int,
 
-        @Json(name = "Poziom")
+        @SerialName("Poziom")
         val level: Int,
 
-        @Json(name = "DataOd")
-        val start: Date,
+        @SerialName("DataOd")
+        @Serializable(with = CustomDateAdapter::class)
+        val start: LocalDateTime,
 
-        @Json(name = "DataDo")
-        val end: Date,
+        @SerialName("DataDo")
+        @Serializable(with = CustomDateAdapter::class)
+        val end: LocalDateTime,
 
-        @Json(name = "IdOddzial")
+        @SerialName("IdOddzial")
         val classId: Int,
 
-        @Json(name = "IdJednostkaSprawozdawcza")
+        @SerialName("IdJednostkaSprawozdawcza")
         val unitId: Int,
 
-        @Json(name = "IsLastOkres")
+        @SerialName("IsLastOkres")
         val isLast: Boolean,
 
-        @Json(name = "Id")
-        val id: Int
+        @SerialName("Id")
+        val id: Int,
     )
 }

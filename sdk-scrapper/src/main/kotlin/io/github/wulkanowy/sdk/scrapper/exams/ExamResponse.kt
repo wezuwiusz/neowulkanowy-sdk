@@ -1,22 +1,24 @@
 package io.github.wulkanowy.sdk.scrapper.exams
 
-import com.squareup.moshi.Json
-import com.squareup.moshi.JsonClass
-import java.util.Date
+import io.github.wulkanowy.sdk.scrapper.adapter.CustomDateAdapter
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
+import java.time.LocalDateTime
 
-@JsonClass(generateAdapter = true)
+@Serializable
 class ExamResponse {
 
-    @Json(name = "SprawdzianyGroupedByDayList")
+    @SerialName("SprawdzianyGroupedByDayList")
     var weeks: List<ExamDay> = emptyList()
 
-    @JsonClass(generateAdapter = true)
+    @Serializable
     class ExamDay {
 
-        @Json(name = "Data")
-        lateinit var date: Date
+        @SerialName("Data")
+        @Serializable(with = CustomDateAdapter::class)
+        lateinit var date: LocalDateTime
 
-        @Json(name = "Sprawdziany")
+        @SerialName("Sprawdziany")
         lateinit var exams: List<Exam>
     }
 }

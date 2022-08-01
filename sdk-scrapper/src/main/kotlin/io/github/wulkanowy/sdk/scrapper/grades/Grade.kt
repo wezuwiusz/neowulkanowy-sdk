@@ -1,31 +1,34 @@
 package io.github.wulkanowy.sdk.scrapper.grades
 
-import com.squareup.moshi.Json
-import com.squareup.moshi.JsonClass
-import java.util.Date
+import io.github.wulkanowy.sdk.scrapper.adapter.GradeDateDeserializer
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.Transient
+import java.time.LocalDate
 
-@JsonClass(generateAdapter = true)
+@Serializable
 data class Grade(
 
-    @Json(name = "Wpis")
+    @SerialName("Wpis")
     val entry: String = "",
 
-    @Json(name = "KolorOceny") // dec
-    val color: String = "",
+    @SerialName("KolorOceny") // dec
+    val color: Int = -1,
 
-    @Json(name = "KodKolumny")
+    @SerialName("KodKolumny")
     val symbol: String? = "",
 
-    @Json(name = "NazwaKolumny")
+    @SerialName("NazwaKolumny")
     val description: String? = "",
 
-    @Json(name = "Waga")
+    @SerialName("Waga")
     val weightValue: Double = .0,
 
-    @Json(name = "DataOceny")
-    internal val privateDate: GradeDate,
+    @SerialName("DataOceny")
+    @Serializable(with = GradeDateDeserializer::class)
+    internal val privateDate: LocalDate,
 
-    @Json(name = "Nauczyciel")
+    @SerialName("Nauczyciel")
     val teacher: String = ""
 ) {
 
@@ -45,11 +48,8 @@ data class Grade(
     var weight: String = ""
 
     @Transient
-    var date: Date = Date()
-}
+    var colorHex: String = ""
 
-class GradeDate : Date() {
-    companion object {
-        const val FORMAT = "dd.MM.yyyy"
-    }
+    @Transient
+    lateinit var date: LocalDate
 }

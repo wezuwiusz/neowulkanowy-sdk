@@ -1,63 +1,60 @@
 package io.github.wulkanowy.sdk.scrapper.attendance
 
-import com.squareup.moshi.Json
-import com.squareup.moshi.JsonClass
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
-@JsonClass(generateAdapter = true)
+@Serializable
 class AttendanceSummaryResponse {
 
-    @Json(name = "Podsumowanie")
-    var percentage: Double = .0
-
-    @Json(name = "Statystyki")
+    @SerialName("Statystyki")
     var items: List<Summary> = emptyList()
 
-    @JsonClass(generateAdapter = true)
+    @Serializable
     data class Summary(
 
-        @Json(name = "Id")
+        @SerialName("Id")
         val id: Int,
 
-        @Json(name = "NazwaTypuFrekwencji")
+        @SerialName("NazwaTypuFrekwencji")
         val type: String,
 
-        @Json(name = "Wrzesien")
+        @SerialName("Wrzesien")
         val september: Int?,
 
-        @Json(name = "Pazdziernik")
+        @SerialName("Pazdziernik")
         val october: Int?,
 
-        @Json(name = "Listopad")
+        @SerialName("Listopad")
         val november: Int?,
 
-        @Json(name = "Grudzien")
+        @SerialName("Grudzien")
         val december: Int?,
 
-        @Json(name = "Styczen")
+        @SerialName("Styczen")
         val january: Int?,
 
-        @Json(name = "Luty")
+        @SerialName("Luty")
         val february: Int?,
 
-        @Json(name = "Marzec")
+        @SerialName("Marzec")
         val march: Int?,
 
-        @Json(name = "Kwiecien")
+        @SerialName("Kwiecien")
         val april: Int?,
 
-        @Json(name = "Maj")
+        @SerialName("Maj")
         val may: Int?,
 
-        @Json(name = "Czerwiec")
+        @SerialName("Czerwiec")
         val june: Int?,
 
-        @Json(name = "Lipiec")
+        @SerialName("Lipiec")
         val july: Int?,
 
-        @Json(name = "Sierpien")
+        @SerialName("Sierpien")
         val august: Int?,
 
-        @Json(name = "Razem")
+        @SerialName("Razem")
         val total: Int?
     )
 }

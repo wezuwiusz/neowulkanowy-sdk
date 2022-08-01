@@ -177,7 +177,7 @@ class ScrapperRemoteTest : BaseTest() {
             assertEquals(getDate(2018, 5, 7), date)
             assertEquals(getDate(1970, 1, 1), entryDate)
             assertEquals("Matematyka", subject)
-            assertEquals("Sprawdzian", type)
+            assertEquals("Sprawdzian", typeName)
             assertEquals("Figury na płaszczyźnie.", description)
             assertEquals("Aleksandra Krajewska", teacher)
             assertEquals("AK", teacherSymbol)
@@ -219,12 +219,12 @@ class ScrapperRemoteTest : BaseTest() {
         grades[7].run {
             assertEquals("Religia", subject)
             assertEquals("1", entry)
-            assertEquals("6ECD07", color)
+            assertEquals("6ECD07", colorHex)
             assertEquals("Kart", symbol)
             assertEquals("", description)
             assertEquals("3,00", weight)
             assertEquals(3.0, weightValue, .0)
-            assertEquals(LocalDate.now().toDate(), date)
+            assertEquals(LocalDate.now(), date)
             assertEquals("Michał Mazur", teacher)
         }
 
@@ -328,16 +328,16 @@ class ScrapperRemoteTest : BaseTest() {
         assertEquals(10, recipients.size)
 
         val messages = runBlocking { api.getMessages(Folder.RECEIVED) }
-        assertEquals(2, messages.size)
+        assertEquals(19, messages.size)
 
         val inbox = runBlocking { api.getReceivedMessages(getLocalDateTime(2015, 10, 5)) }
-        assertEquals(2, inbox.size)
+        assertEquals(19, inbox.size)
 
         val sent = runBlocking { api.getSentMessages() }
         assertEquals(1, sent.size)
 
         val trash = runBlocking { api.getDeletedMessages() }
-        assertEquals(1, trash.size)
+        assertEquals(8, trash.size)
 
         val mRecipients = runBlocking { api.getMessageRecipients(trash[0].messageId ?: 0) }
         assertEquals(1, mRecipients.size)
@@ -417,7 +417,7 @@ class ScrapperRemoteTest : BaseTest() {
     fun luckyNumberTest() {
         val luckyNumber = runBlocking { api.getKidsLuckyNumbers() }
 
-        assertEquals(37, luckyNumber[0].number)
+        assertEquals(25, luckyNumber[0].number)
     }
 
     @Test

@@ -1,56 +1,56 @@
 package io.github.wulkanowy.sdk.scrapper.register
 
-import com.squareup.moshi.Json
-import com.squareup.moshi.JsonClass
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
-@JsonClass(generateAdapter = true)
+@Serializable
 data class Permission(
 
-    @Json(name = "AuthInfos")
+    @SerialName("AuthInfos")
     val authInfos: List<AuthInfo>,
 
-    @Json(name = "Units")
+    @SerialName("Units")
     val units: List<Unit>
 )
 
-@JsonClass(generateAdapter = true)
+@Serializable
 data class AuthInfo(
-    @Json(name = "JednostkaSprawozdawczaId")
+    @SerialName("JednostkaSprawozdawczaId")
     val unitId: Int,
 
-    @Json(name = "LinkedAccountUids")
+    @SerialName("LinkedAccountUids")
     val linkedAccountUids: List<Int>,
 
-    @Json(name = "LoginId")
+    @SerialName("LoginId")
     val loginId: Int,
 
-    @Json(name = "LoginValue")
+    @SerialName("LoginValue")
     val loginValue: String,
 
-    @Json(name = "OpiekunIds")
+    @SerialName("OpiekunIds")
     val parentIds: List<Int>,
 
-    @Json(name = "PracownikIds")
+    @SerialName("PracownikIds")
     val employeeIds: List<Int>,
 
-    @Json(name = "Roles")
+    @SerialName("Roles")
     val roles: List<Int>,
 
-    @Json(name = "UczenIds")
+    @SerialName("UczenIds")
     val studentIds: List<Int>
 )
 
-@JsonClass(generateAdapter = true)
+@Serializable
 data class Unit(
-    @Json(name = "Id")
+    @SerialName("Id")
     val id: Int,
 
-    @Json(name = "Nazwa")
+    @SerialName("Nazwa")
     val name: String,
 
-    @Json(name = "Skrot")
+    @SerialName("Skrot")
     val short: String,
 
-    @Json(name = "Symbol")
+    @SerialName("Symbol")
     val symbol: String
 )

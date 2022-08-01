@@ -2,7 +2,6 @@ package io.github.wulkanowy.sdk.mapper
 
 import io.github.wulkanowy.sdk.mobile.dictionaries.Dictionaries
 import io.github.wulkanowy.sdk.pojo.Exam
-import io.github.wulkanowy.sdk.scrapper.toLocalDate
 import io.github.wulkanowy.sdk.toLocalDate
 import io.github.wulkanowy.sdk.mobile.exams.Exam as ApiExam
 import io.github.wulkanowy.sdk.scrapper.exams.Exam as ScrapperExam
@@ -34,6 +33,6 @@ fun List<ScrapperExam>.mapExams() = map {
         teacherSymbol = it.teacherSymbol,
         teacher = it.teacher,
         subject = it.subject,
-        type = it.type
+        type = it.typeName
     )
 }

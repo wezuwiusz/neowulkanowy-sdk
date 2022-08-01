@@ -46,8 +46,8 @@ fun List<ScrapperMessage>.mapMessages(zoneId: ZoneId) = map {
     Message(
         id = it.id,
         subject = it.subject.orEmpty(),
-        date = it.date?.toLocalDateTime(),
-        dateZoned = it.date?.toLocalDateTime()?.atZone(zoneId),
+        date = it.date,
+        dateZoned = it.date?.atZone(zoneId),
         content = it.content,
         folderId = it.folderId,
         messageId = it.messageId,

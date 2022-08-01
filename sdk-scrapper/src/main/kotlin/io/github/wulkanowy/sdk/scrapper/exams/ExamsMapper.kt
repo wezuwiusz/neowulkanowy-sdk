@@ -1,6 +1,5 @@
 package io.github.wulkanowy.sdk.scrapper.exams
 
-import io.github.wulkanowy.sdk.scrapper.toLocalDate
 import java.time.LocalDate
 
 fun List<ExamResponse>.mapExamsList(startDate: LocalDate, endDate: LocalDate?): List<Exam> {
@@ -12,13 +11,13 @@ fun List<ExamResponse>.mapExamsList(startDate: LocalDate, endDate: LocalDate?): 
                 exam.copy(
                     teacher = teacherAndSymbol.first(),
                     subject = exam.subject,
-                    type = when (exam.type) {
-                        "1" -> "Sprawdzian"
-                        "2" -> "Kartkówka"
-                        else -> "Praca klasowa"
-                    }
                 ).apply {
                     date = day.date
+                    typeName = when (exam.type) {
+                        1 -> "Sprawdzian"
+                        2 -> "Kartkówka"
+                        else -> "Praca klasowa"
+                    }
 
                     teacherSymbol = teacherAndSymbol.last().removeSuffix("]")
                 }

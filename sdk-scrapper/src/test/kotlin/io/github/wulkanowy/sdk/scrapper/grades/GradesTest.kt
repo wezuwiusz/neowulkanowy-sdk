@@ -29,12 +29,12 @@ class GradesTest : BaseLocalTest() {
             assertEquals(4, value)
             assertEquals(.0, modifier, .0)
             assertEquals("", comment)
-            assertEquals("F04C4C", color)
+            assertEquals("F04C4C", colorHex)
             assertEquals("S1", symbol)
             assertEquals("PIERWSZA POMOC I RESUSCYTACJA", description)
             assertEquals("5,00", weight)
             assertEquals(5.0, weightValue, .0)
-            assertEquals(getDate(2018, 12, 12), date)
+            assertEquals(getLocalDate(2018, 12, 12), date)
             assertEquals("Weronika Ratajczak", teacher)
         }
     }
@@ -47,12 +47,12 @@ class GradesTest : BaseLocalTest() {
             assertEquals(2, value)
             assertEquals(.33, modifier, .0)
             assertEquals("", comment)
-            assertEquals("6ECD07", color)
+            assertEquals("6ECD07", colorHex)
             assertEquals("O", symbol)
             assertEquals("Odpowiedź", description)
             assertEquals("3,00", weight)
             assertEquals(3.0, weightValue, .0)
-            assertEquals(getDate(2018, 12, 5), date)
+            assertEquals(getLocalDate(2018, 12, 5), date)
             assertEquals("Jakub Michalak", teacher)
         }
     }
@@ -65,12 +65,12 @@ class GradesTest : BaseLocalTest() {
             assertEquals(5, value)
             assertEquals(-.33, modifier, .0)
             assertEquals("", comment)
-            assertEquals("1289F7", color)
+            assertEquals("1289F7", colorHex)
             assertEquals("BW3", symbol)
             assertEquals("Writing", description)
             assertEquals("3,00", weight)
             assertEquals(3.0, weightValue, .0)
-            assertEquals(getDate(2018, 11, 28), date)
+            assertEquals(getLocalDate(2018, 11, 28), date)
             assertEquals("Oliwia Woźniak", teacher)
         }
     }
@@ -83,12 +83,12 @@ class GradesTest : BaseLocalTest() {
             assertEquals(2, value)
             assertEquals(-.50, modifier, .0)
             assertEquals("", comment)
-            assertEquals("6ECD07", color)
+            assertEquals("6ECD07", colorHex)
             assertEquals("K", symbol)
             assertEquals("Kordian", description)
             assertEquals("5,00", weight)
             assertEquals(5.0, weightValue, .0)
-            assertEquals(getDate(2018, 11, 21), date)
+            assertEquals(getLocalDate(2018, 11, 21), date)
             assertEquals("Amelia Stępień", teacher)
         }
     }
@@ -101,12 +101,12 @@ class GradesTest : BaseLocalTest() {
             assertEquals(1, value)
             assertEquals(.33, modifier, .0)
             assertEquals("", comment)
-            assertEquals("6ECD07", color)
+            assertEquals("6ECD07", colorHex)
             assertEquals("STR", symbol)
             assertEquals("", description)
             assertEquals("8,00", weight)
             assertEquals(8.0, weightValue, .0)
-            assertEquals(getDate(2018, 11, 14), date)
+            assertEquals(getLocalDate(2018, 11, 14), date)
             assertEquals("Klaudia Dziedzic", teacher)
         }
     }
@@ -119,12 +119,12 @@ class GradesTest : BaseLocalTest() {
             assertEquals(5, value)
             assertEquals(.33, modifier, .0)
             assertEquals("", comment)
-            assertEquals("6ECD07", color)
+            assertEquals("6ECD07", colorHex)
             assertEquals("+Odp", symbol)
             assertEquals("Kordian", description)
             assertEquals("5,00", weight)
             assertEquals(5.0, weightValue, .0)
-            assertEquals(getDate(2018, 11, 7), date)
+            assertEquals(getLocalDate(2018, 11, 7), date)
             assertEquals("Amelia Stępień", teacher)
         }
     }
@@ -137,12 +137,12 @@ class GradesTest : BaseLocalTest() {
             assertEquals(5, value)
             assertEquals(.0, modifier, .0)
             assertEquals("pomoc przy tej uroczystości była wyjątkowa (naprawdę)", comment)
-            assertEquals("000000", color)
+            assertEquals("000000", colorHex)
             assertEquals("A1", symbol)
             assertEquals("Dzień Kobiet w naszej klasie", description)
             assertEquals("1,50", weight)
             assertEquals(1.50, weightValue, .0)
-            assertEquals(getDate(2018, 10, 31), date)
+            assertEquals(getLocalDate(2018, 10, 31), date)
             assertEquals("Patryk Maciejewski", teacher)
         }
     }
@@ -155,12 +155,12 @@ class GradesTest : BaseLocalTest() {
             assertEquals(0, value)
             assertEquals(.0, modifier, .0)
             assertEquals("%", comment)
-            assertEquals("20A4F7", color)
+            assertEquals("20A4F7", colorHex)
             assertEquals("MP1", symbol)
             assertEquals("matura próbna", description)
             assertEquals("0,00", weight)
             assertEquals(0.0, weightValue, .0)
-            assertEquals(getDate(2018, 10, 24), date)
+            assertEquals(getLocalDate(2018, 10, 24), date)
             assertEquals("Jadwiga Czerwieńska", teacher)
         }
     }
@@ -173,12 +173,12 @@ class GradesTest : BaseLocalTest() {
             assertEquals(0, value)
             assertEquals(.0, modifier, .0)
             assertEquals("", comment)
-            assertEquals("F04C4C", color)
+            assertEquals("F04C4C", colorHex)
             assertEquals("S2", symbol)
             assertEquals("słownictwo (człowiek) 4.10", description)
             assertEquals("10,00", weight)
             assertEquals(0.0, weightValue, .0)
-            assertEquals(getDate(2018, 10, 4), date)
+            assertEquals(getLocalDate(2018, 10, 4), date)
             assertEquals("Jadwiga Czerwieńska", teacher)
         }
     }
@@ -191,12 +191,12 @@ class GradesTest : BaseLocalTest() {
             assertEquals(0, value)
             assertEquals(.0, modifier, .0)
             assertEquals("dop(2.03)", comment)
-            assertEquals("F04C4C", color)
+            assertEquals("F04C4C", colorHex)
             assertEquals("ZAL", symbol)
             assertEquals("", description)
             assertEquals("10,00", weight)
             assertEquals(0.0, weightValue, .0)
-            assertEquals(getDate(2018, 10, 3), date)
+            assertEquals(getLocalDate(2018, 10, 3), date)
             assertEquals("Jadwiga Czerwieńska", teacher)
         }
     }
@@ -209,12 +209,12 @@ class GradesTest : BaseLocalTest() {
             assertEquals(0, value)
             assertEquals(.0, modifier, .0)
             assertEquals("", comment)
-            assertEquals("000000", color)
+            assertEquals("000000", colorHex)
             assertEquals("d1", symbol)
             assertEquals("Sprawozdanie - wyznaczanie przyspieczenia.", description)
             assertEquals("3,00", weight)
             assertEquals(0.0, weightValue, .0)
-            assertEquals(getDate(2017, 11, 23), date)
+            assertEquals(getLocalDate(2017, 11, 23), date)
             assertEquals("Anonimus Max", teacher)
         }
     }
@@ -227,12 +227,12 @@ class GradesTest : BaseLocalTest() {
             assertEquals(0, value)
             assertEquals(.0, modifier, .0)
             assertEquals("", comment)
-            assertEquals("000000", color)
+            assertEquals("000000", colorHex)
             assertEquals("spr", symbol)
             assertEquals("sprawdzian z tematów 11-15", description)
             assertEquals("4,00", weight)
             assertEquals(0.0, weightValue, .0)
-            assertEquals(getDate(2017, 11, 22), date)
+            assertEquals(getLocalDate(2017, 11, 22), date)
             assertEquals("Anonimus Max", teacher)
         }
     }
@@ -245,12 +245,12 @@ class GradesTest : BaseLocalTest() {
             assertEquals(0, value)
             assertEquals(.0, modifier, .0)
             assertEquals("85/100", comment)
-            assertEquals("6ECD07", color)
+            assertEquals("6ECD07", colorHex)
             assertEquals("", symbol)
             assertEquals("diagnoza", description)
             assertEquals("0,00", weight)
             assertEquals(0.0, weightValue, .0)
-            assertEquals(getDate(2019, 9, 10), date)
+            assertEquals(getLocalDate(2019, 9, 10), date)
             assertEquals("Weronika Ratajczak", teacher)
         }
     }
@@ -263,12 +263,12 @@ class GradesTest : BaseLocalTest() {
             assertEquals(0, value)
             assertEquals(.0, modifier, .0)
             assertEquals("komentarz", comment)
-            assertEquals("000000", color)
+            assertEquals("000000", colorHex)
             assertEquals("O", symbol)
             assertEquals("Odpowiedź", description)
             assertEquals("0,00", weight)
             assertEquals(0.0, weightValue, .0)
-            assertEquals(getDate(2018, 12, 5), date)
+            assertEquals(getLocalDate(2018, 12, 5), date)
             assertEquals("Jakub Michalak", teacher)
         }
     }
@@ -281,12 +281,12 @@ class GradesTest : BaseLocalTest() {
             assertEquals(0, value)
             assertEquals(.0, modifier, .0)
             assertEquals("komentarz", comment)
-            assertEquals("000000", color)
+            assertEquals("000000", colorHex)
             assertEquals("O", symbol)
             assertEquals("Odpowiedź", description)
             assertEquals("0,00", weight)
             assertEquals(0.0, weightValue, .0)
-            assertEquals(getDate(2018, 12, 4), date)
+            assertEquals(getLocalDate(2018, 12, 4), date)
             assertEquals("Jakub Michalak", teacher)
         }
     }
@@ -299,12 +299,12 @@ class GradesTest : BaseLocalTest() {
             assertEquals(0, value)
             assertEquals(.0, modifier, .0)
             assertEquals("47.5/50", comment)
-            assertEquals("000000", color)
+            assertEquals("000000", colorHex)
             assertEquals("K3", symbol)
             assertEquals("Liczebniki", description)
             assertEquals("1,00", weight)
             assertEquals(0.0, weightValue, .0)
-            assertEquals(getDate(2018, 12, 3), date)
+            assertEquals(getLocalDate(2018, 12, 3), date)
             assertEquals("Jakub Michalak", teacher)
         }
     }
@@ -317,12 +317,12 @@ class GradesTest : BaseLocalTest() {
             assertEquals(0, value)
             assertEquals(.5, modifier, .0)
             assertEquals("", comment)
-            assertEquals("000000", color)
+            assertEquals("000000", colorHex)
             assertEquals("A1", symbol)
             assertEquals("Podnoszenie ciężarów", description)
             assertEquals("0,00", weight)
             assertEquals(.0, weightValue, .0)
-            assertEquals(getDate(2017, 9, 1), date)
+            assertEquals(getLocalDate(2017, 9, 1), date)
             assertEquals("Klaudia Dziedzic", teacher)
         }
     }
@@ -335,12 +335,12 @@ class GradesTest : BaseLocalTest() {
             assertEquals(4, value)
             assertEquals(.0, modifier, .0)
             assertEquals("", comment)
-            assertEquals("F04C4C", color)
+            assertEquals("F04C4C", colorHex)
             assertEquals("S1", symbol)
             assertEquals("Rodzaje broni chemicznych", description)
             assertEquals("5,00", weight)
             assertEquals(5.0, weightValue, .0)
-            assertEquals(getDate(1970, 1, 1, 0, 0, 0), date)
+            assertEquals(getLocalDate(1970, 1, 1), date)
             assertEquals("Weronika Ratajczak", teacher)
         }
     }

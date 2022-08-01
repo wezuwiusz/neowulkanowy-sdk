@@ -1,7 +1,6 @@
 package io.github.wulkanowy.sdk.scrapper.repository
 
 import com.migcomponents.migbase64.Base64
-import com.squareup.moshi.Moshi
 import io.github.wulkanowy.sdk.scrapper.Scrapper
 import io.github.wulkanowy.sdk.scrapper.exception.ScrapperException
 import io.github.wulkanowy.sdk.scrapper.exception.TemporarilyDisabledException
@@ -14,7 +13,6 @@ import io.github.wulkanowy.sdk.scrapper.login.LoginHelper
 import io.github.wulkanowy.sdk.scrapper.messages.ReportingUnit
 import io.github.wulkanowy.sdk.scrapper.register.Diary
 import io.github.wulkanowy.sdk.scrapper.register.Permission
-import io.github.wulkanowy.sdk.scrapper.register.PermissionJsonAdapter
 import io.github.wulkanowy.sdk.scrapper.register.Student
 import io.github.wulkanowy.sdk.scrapper.register.toSemesters
 import io.github.wulkanowy.sdk.scrapper.repository.AccountRepository.Companion.SELECTOR_ADFS
@@ -25,6 +23,8 @@ import io.github.wulkanowy.sdk.scrapper.service.MessagesService
 import io.github.wulkanowy.sdk.scrapper.service.RegisterService
 import io.github.wulkanowy.sdk.scrapper.service.ServiceManager
 import io.github.wulkanowy.sdk.scrapper.service.StudentService
+import kotlinx.serialization.decodeFromString
+import kotlinx.serialization.json.Json
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Element
 import org.jsoup.parser.Parser
@@ -48,7 +48,9 @@ class RegisterRepository(
         private val logger = LoggerFactory.getLogger(this::class.java)
     }
 
-    private val moshi by lazy { Moshi.Builder().build() }
+    private val json = Json {
+        ignoreUnknownKeys = true
+    }
 
     suspend fun getStudents(): List<Student> {
         return getSymbols().flatMap { (symbol, certificate) ->
@@ -105,6 +107,7 @@ class RegisterRepository(
                     }
                 }
             }
+
             page.select(SELECTOR_ADFS_CARDS).isNotEmpty() -> Scrapper.LoginType.ADFSCards
             else -> throw ScrapperException("Nieznany typ dziennika: ${page.text()}")
         }
@@ -194,7 +197,7 @@ class RegisterRepository(
     private fun getPermissions(homepage: String): Permission? {
         val base64 = getScriptParam("permissions", homepage).substringBefore("|")
         return Base64.decode(base64).toString(StandardCharsets.UTF_8).takeIf { it.isNotBlank() }?.let {
-            PermissionJsonAdapter(moshi).fromJson(it)
+            json.decodeFromString<Permission>(it)
         }
     }
 }

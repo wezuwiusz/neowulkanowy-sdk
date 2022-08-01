@@ -1,11 +1,11 @@
 package io.github.wulkanowy.sdk.scrapper.grades
 
-import com.squareup.moshi.Json
-import com.squareup.moshi.JsonClass
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
-@JsonClass(generateAdapter = true)
+@Serializable
 data class GradeRequest(
 
-    @Json(name = "okres")
+    @SerialName("okres")
     val semesterId: Int?
 )

@@ -1,11 +1,11 @@
 package io.github.wulkanowy.sdk.scrapper.attendance
 
-import com.squareup.moshi.Moshi
-import com.squareup.moshi.Types
 import io.github.wulkanowy.sdk.scrapper.attendance.AttendanceCategory.ABSENCE_UNEXCUSED
 import io.github.wulkanowy.sdk.scrapper.attendance.AttendanceCategory.UNEXCUSED_LATENESS
 import io.github.wulkanowy.sdk.scrapper.timetable.CacheResponse.Time
-import io.github.wulkanowy.sdk.scrapper.toLocalDate
+import kotlinx.serialization.decodeFromString
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 import java.time.LocalDate
 import java.time.Month
 
@@ -24,12 +24,13 @@ fun AttendanceResponse.mapAttendanceList(start: LocalDate, end: LocalDate?, time
     }.sortedWith(compareBy({ it.date }, { it.number }))
 }
 
-fun AttendanceSummaryResponse.mapAttendanceSummaryList(moshi: Moshi.Builder): List<AttendanceSummary> {
+fun AttendanceSummaryResponse.mapAttendanceSummaryList(): List<AttendanceSummary> {
+    val jsonObject = Json {
+        isLenient = true
+    }
     val stats = items.map {
-        val json = AttendanceSummaryResponse_SummaryJsonAdapter(moshi.build()).serializeNulls().toJson(it)
-        val type = Types.newParameterizedType(MutableMap::class.java, String::class.java, String::class.java)
-        val adapter = moshi.build().adapter<Map<String, String?>>(type)
-        adapter.fromJson(json).orEmpty()
+        val json = jsonObject.encodeToString(it)
+        jsonObject.decodeFromString<Map<String, String?>>(json)
     }
 
     val getMonthValue = fun(type: Int, month: Int): Int {
@@ -38,9 +39,9 @@ fun AttendanceSummaryResponse.mapAttendanceSummaryList(moshi: Moshi.Builder): Li
 
     return (1..12).map {
         AttendanceSummary(
-            Month.of(if (it < 5) 8 + it else it - 4),
-            getMonthValue(0, it), getMonthValue(1, it), getMonthValue(2, it), getMonthValue(3, it),
-            getMonthValue(4, it), getMonthValue(5, it), getMonthValue(6, it)
+            month = Month.of(if (it < 5) 8 + it else it - 4),
+            presence = getMonthValue(0, it), absence = getMonthValue(1, it), absenceExcused = getMonthValue(2, it), absenceForSchoolReasons = getMonthValue(3, it),
+            lateness = getMonthValue(4, it), latenessExcused = getMonthValue(5, it), exemption = getMonthValue(6, it)
         )
     }.filterNot { summary ->
         summary.absence == 0 &&

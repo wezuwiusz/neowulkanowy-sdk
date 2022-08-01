@@ -1,41 +1,41 @@
 package io.github.wulkanowy.sdk.scrapper.student
 
-import com.squareup.moshi.Json
-import com.squareup.moshi.JsonClass
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
-@JsonClass(generateAdapter = true)
+@Serializable
 data class StudentGuardian(
 
-    @Json(name = "Id")
+    @SerialName("Id")
     val id: Int,
 
-    @Json(name = "Imie")
+    @SerialName("Imie")
     val name: String,
 
-    @Json(name = "Nazwisko")
+    @SerialName("Nazwisko")
     val lastName: String,
 
-    @Json(name = "StPokrewienstwa")
+    @SerialName("StPokrewienstwa")
     val kinship: String?,
 
-    @Json(name = "Adres")
+    @SerialName("Adres")
     val address: String,
 
-    @Json(name = "TelDomowy")
+    @SerialName("TelDomowy")
     val homePhone: String?,
 
-    @Json(name = "TelKomorkowy")
+    @SerialName("TelKomorkowy")
     val cellPhone: String?,
 
-    @Json(name = "TelSluzbowy")
+    @SerialName("TelSluzbowy")
     val workPhone: String?,
 
-    @Json(name = "Email")
+    @SerialName("Email")
     val email: String?,
 
-    @Json(name = "FullName")
+    @SerialName("FullName")
     val fullName: String,
 
-    @Json(name = "Telefon")
+    @SerialName("Telefon")
     val phone: String
 )

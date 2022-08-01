@@ -1,6 +1,5 @@
 package io.github.wulkanowy.sdk.scrapper.homework
 
-import io.github.wulkanowy.sdk.scrapper.toLocalDate
 import org.jsoup.parser.Parser
 import java.time.LocalDate
 

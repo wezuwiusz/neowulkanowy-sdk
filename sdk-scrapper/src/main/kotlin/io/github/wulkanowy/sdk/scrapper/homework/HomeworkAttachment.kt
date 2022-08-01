@@ -1,26 +1,26 @@
 package io.github.wulkanowy.sdk.scrapper.homework
 
-import com.squareup.moshi.Json
-import com.squareup.moshi.JsonClass
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
-@JsonClass(generateAdapter = true)
+@Serializable
 data class HomeworkAttachment(
 
-    @Json(name = "IdZadanieDomowe")
+    @SerialName("IdZadanieDomowe")
     val homeworkId: Int,
 
-    @Json(name = "HtmlTag")
+    @SerialName("HtmlTag")
     val html: String,
 
-    @Json(name = "Url")
+    @SerialName("Url")
     val url: String,
 
-    @Json(name = "NazwaPliku")
+    @SerialName("NazwaPliku")
     val filename: String,
 
-    @Json(name = "IdOneDrive")
+    @SerialName("IdOneDrive")
     val oneDriveId: String,
 
-    @Json(name = "Id")
+    @SerialName("Id")
     val id: Int
 )

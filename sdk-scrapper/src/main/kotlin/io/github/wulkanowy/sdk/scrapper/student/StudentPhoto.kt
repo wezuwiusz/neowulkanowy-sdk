@@ -1,23 +1,23 @@
 package io.github.wulkanowy.sdk.scrapper.student
 
-import com.squareup.moshi.Json
-import com.squareup.moshi.JsonClass
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
-@JsonClass(generateAdapter = true)
+@Serializable
 data class StudentPhoto(
 
-    @Json(name = "Status")
+    @SerialName("Status")
     val status: Long?,
 
-    @Json(name = "Error")
-    val error: Any?,
+    // @SerialName("Error")
+    // val error: Any?,
 
-    @Json(name = "Warning")
-    val warning: Any?,
+    // @SerialName("Warning")
+    // val warning: Any?,
 
-    @Json(name = "ZdjecieBase64")
+    @SerialName("ZdjecieBase64")
     val photoBase64: String?,
 
-    @Json(name = "Id")
+    @SerialName("Id")
     val id: Long?,
 )

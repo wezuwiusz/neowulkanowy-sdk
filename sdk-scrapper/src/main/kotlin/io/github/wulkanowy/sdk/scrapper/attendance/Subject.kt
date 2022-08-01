@@ -1,14 +1,14 @@
 package io.github.wulkanowy.sdk.scrapper.attendance
 
-import com.squareup.moshi.Json
-import com.squareup.moshi.JsonClass
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
-@JsonClass(generateAdapter = true)
+@Serializable
 data class Subject(
 
-    @Json(name = "Nazwa")
+    @SerialName("Nazwa")
     var name: String = "Wszystkie",
 
-    @Json(name = "Id")
+    @SerialName("Id")
     var value: Int = -1
 )

@@ -1,11 +1,11 @@
 package io.github.wulkanowy.sdk.scrapper.notes
 
-import com.squareup.moshi.Json
-import com.squareup.moshi.JsonClass
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
-@JsonClass(generateAdapter = true)
+@Serializable
 data class NotesResponse(
 
-    @Json(name = "Uwagi")
+    @SerialName("Uwagi")
     val notes: List<Note> = emptyList()
 )
