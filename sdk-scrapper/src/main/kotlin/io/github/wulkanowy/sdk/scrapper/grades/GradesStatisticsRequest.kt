@@ -6,6 +6,6 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class GradesStatisticsRequest(
 
-    @SerialName( "idOkres")
+    @SerialName("idOkres")
     val semesterId: Int
 )

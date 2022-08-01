@@ -6,9 +6,9 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class GovernmentUnit(
 
-    @SerialName( "UnitName")
+    @SerialName("UnitName")
     val unitName: String,
 
-    @SerialName( "People")
+    @SerialName("People")
     val people: List<GovernmentMember>
 )
