@@ -1,19 +1,48 @@
 package io.github.wulkanowy.sdk.scrapper
 
 import io.github.wulkanowy.sdk.scrapper.attendance.Absent
+import io.github.wulkanowy.sdk.scrapper.attendance.Attendance
+import io.github.wulkanowy.sdk.scrapper.attendance.AttendanceSummary
+import io.github.wulkanowy.sdk.scrapper.attendance.Subject
+import io.github.wulkanowy.sdk.scrapper.conferences.Conference
+import io.github.wulkanowy.sdk.scrapper.exams.Exam
 import io.github.wulkanowy.sdk.scrapper.exception.ScrapperException
+import io.github.wulkanowy.sdk.scrapper.grades.Grade
+import io.github.wulkanowy.sdk.scrapper.grades.GradePointsSummary
+import io.github.wulkanowy.sdk.scrapper.grades.GradeSummary
+import io.github.wulkanowy.sdk.scrapper.grades.GradesStatisticsPartial
+import io.github.wulkanowy.sdk.scrapper.grades.GradesStatisticsSemester
+import io.github.wulkanowy.sdk.scrapper.home.DirectorInformation
+import io.github.wulkanowy.sdk.scrapper.home.GovernmentUnit
+import io.github.wulkanowy.sdk.scrapper.home.LuckyNumber
+import io.github.wulkanowy.sdk.scrapper.homework.Homework
 import io.github.wulkanowy.sdk.scrapper.login.LoginHelper
 import io.github.wulkanowy.sdk.scrapper.messages.Folder
 import io.github.wulkanowy.sdk.scrapper.messages.Message
 import io.github.wulkanowy.sdk.scrapper.messages.Recipient
+import io.github.wulkanowy.sdk.scrapper.messages.ReportingUnit
+import io.github.wulkanowy.sdk.scrapper.messages.SentMessage
+import io.github.wulkanowy.sdk.scrapper.mobile.Device
+import io.github.wulkanowy.sdk.scrapper.mobile.TokenResponse
+import io.github.wulkanowy.sdk.scrapper.notes.Note
 import io.github.wulkanowy.sdk.scrapper.register.Semester
+import io.github.wulkanowy.sdk.scrapper.register.Student
 import io.github.wulkanowy.sdk.scrapper.repository.AccountRepository
 import io.github.wulkanowy.sdk.scrapper.repository.HomepageRepository
 import io.github.wulkanowy.sdk.scrapper.repository.MessagesRepository
 import io.github.wulkanowy.sdk.scrapper.repository.RegisterRepository
 import io.github.wulkanowy.sdk.scrapper.repository.StudentRepository
 import io.github.wulkanowy.sdk.scrapper.repository.StudentStartRepository
+import io.github.wulkanowy.sdk.scrapper.school.School
+import io.github.wulkanowy.sdk.scrapper.school.Teacher
 import io.github.wulkanowy.sdk.scrapper.service.ServiceManager
+import io.github.wulkanowy.sdk.scrapper.student.StudentInfo
+import io.github.wulkanowy.sdk.scrapper.student.StudentPhoto
+import io.github.wulkanowy.sdk.scrapper.timetable.CompletedLesson
+import io.github.wulkanowy.sdk.scrapper.timetable.Timetable
+import io.github.wulkanowy.sdk.scrapper.timetable.TimetableAdditional
+import io.github.wulkanowy.sdk.scrapper.timetable.TimetableDayHeader
+import io.github.wulkanowy.sdk.scrapper.timetable.TimetableFull
 import okhttp3.Interceptor
 import okhttp3.logging.HttpLoggingInterceptor
 import java.net.URL
@@ -230,73 +259,73 @@ class Scrapper {
         HomepageRepository(serviceManager.getHomepageService())
     }
 
-    suspend fun getPasswordResetCaptcha(registerBaseUrl: String, symbol: String) = account.getPasswordResetCaptcha(registerBaseUrl, symbol)
+    suspend fun getPasswordResetCaptcha(registerBaseUrl: String, symbol: String): Pair<String, String> = account.getPasswordResetCaptcha(registerBaseUrl, symbol)
 
     suspend fun sendPasswordResetRequest(registerBaseUrl: String, symbol: String, email: String, captchaCode: String): String {
         return account.sendPasswordResetRequest(registerBaseUrl, symbol, email.trim(), captchaCode)
     }
 
-    suspend fun getStudents() = register.getStudents()
+    suspend fun getStudents(): List<Student> = register.getStudents()
 
     suspend fun getSemesters(): List<Semester> = studentStart.getSemesters()
 
-    suspend fun getAttendance(startDate: LocalDate, endDate: LocalDate? = null) = student.getAttendance(startDate, endDate)
+    suspend fun getAttendance(startDate: LocalDate, endDate: LocalDate? = null): List<Attendance> = student.getAttendance(startDate, endDate)
 
-    suspend fun getAttendanceSummary(subjectId: Int? = -1) = student.getAttendanceSummary(subjectId)
+    suspend fun getAttendanceSummary(subjectId: Int? = -1): List<AttendanceSummary> = student.getAttendanceSummary(subjectId)
 
-    suspend fun excuseForAbsence(absents: List<Absent>, content: String? = null) = student.excuseForAbsence(absents, content)
+    suspend fun excuseForAbsence(absents: List<Absent>, content: String? = null): Boolean = student.excuseForAbsence(absents, content)
 
-    suspend fun getSubjects() = student.getSubjects()
+    suspend fun getSubjects(): List<Subject> = student.getSubjects()
 
-    suspend fun getExams(startDate: LocalDate, endDate: LocalDate? = null) = student.getExams(startDate, endDate)
+    suspend fun getExams(startDate: LocalDate, endDate: LocalDate? = null): List<Exam> = student.getExams(startDate, endDate)
 
-    suspend fun getGrades(semesterId: Int) = student.getGrades(semesterId)
+    suspend fun getGrades(semesterId: Int): Pair<List<Grade>, List<GradeSummary>> = student.getGrades(semesterId)
 
-    suspend fun getGradesDetails(semesterId: Int? = null) = student.getGradesDetails(semesterId)
+    suspend fun getGradesDetails(semesterId: Int? = null): List<Grade> = student.getGradesDetails(semesterId)
 
-    suspend fun getGradesSummary(semesterId: Int? = null) = student.getGradesSummary(semesterId)
+    suspend fun getGradesSummary(semesterId: Int? = null): List<GradeSummary> = student.getGradesSummary(semesterId)
 
-    suspend fun getGradesPartialStatistics(semesterId: Int) = student.getGradesPartialStatistics(semesterId)
+    suspend fun getGradesPartialStatistics(semesterId: Int): List<GradesStatisticsPartial> = student.getGradesPartialStatistics(semesterId)
 
-    suspend fun getGradesPointsStatistics(semesterId: Int) = student.getGradesPointsStatistics(semesterId)
+    suspend fun getGradesPointsStatistics(semesterId: Int): List<GradePointsSummary> = student.getGradesPointsStatistics(semesterId)
 
-    suspend fun getGradesSemesterStatistics(semesterId: Int) = student.getGradesAnnualStatistics(semesterId)
+    suspend fun getGradesSemesterStatistics(semesterId: Int): List<GradesStatisticsSemester> = student.getGradesAnnualStatistics(semesterId)
 
-    suspend fun getHomework(startDate: LocalDate, endDate: LocalDate? = null) = student.getHomework(startDate, endDate)
+    suspend fun getHomework(startDate: LocalDate, endDate: LocalDate? = null): List<Homework> = student.getHomework(startDate, endDate)
 
-    suspend fun getNotes() = student.getNotes()
+    suspend fun getNotes(): List<Note> = student.getNotes()
 
-    suspend fun getConferences() = student.getConferences()
+    suspend fun getConferences(): List<Conference> = student.getConferences()
 
-    suspend fun getTimetableFull(startDate: LocalDate, endDate: LocalDate? = null) = student.getTimetableFull(startDate, endDate)
+    suspend fun getTimetableFull(startDate: LocalDate, endDate: LocalDate? = null): TimetableFull = student.getTimetableFull(startDate, endDate)
 
-    suspend fun getTimetable(startDate: LocalDate, endDate: LocalDate? = null) = student.getTimetable(startDate, endDate)
+    suspend fun getTimetable(startDate: LocalDate, endDate: LocalDate? = null): Pair<List<Timetable>, List<TimetableAdditional>> = student.getTimetable(startDate, endDate)
 
-    suspend fun getTimetableNormal(startDate: LocalDate, endDate: LocalDate? = null) = student.getTimetableNormal(startDate, endDate)
+    suspend fun getTimetableNormal(startDate: LocalDate, endDate: LocalDate? = null): List<Timetable> = student.getTimetableNormal(startDate, endDate)
 
-    suspend fun getTimetableHeaders(startDate: LocalDate) = student.getTimetableHeaders(startDate)
+    suspend fun getTimetableHeaders(startDate: LocalDate): List<TimetableDayHeader> = student.getTimetableHeaders(startDate)
 
-    suspend fun getTimetableAdditional(startDate: LocalDate) = student.getTimetableAdditional(startDate)
+    suspend fun getTimetableAdditional(startDate: LocalDate): List<TimetableAdditional> = student.getTimetableAdditional(startDate)
 
-    suspend fun getCompletedLessons(startDate: LocalDate, endDate: LocalDate? = null, subjectId: Int = -1) = student.getCompletedLessons(startDate, endDate, subjectId)
+    suspend fun getCompletedLessons(startDate: LocalDate, endDate: LocalDate? = null, subjectId: Int = -1): List<CompletedLesson> = student.getCompletedLessons(startDate, endDate, subjectId)
 
-    suspend fun getRegisteredDevices() = student.getRegisteredDevices()
+    suspend fun getRegisteredDevices(): List<Device> = student.getRegisteredDevices()
 
-    suspend fun getToken() = student.getToken()
+    suspend fun getToken(): TokenResponse = student.getToken()
 
-    suspend fun unregisterDevice(id: Int) = student.unregisterDevice(id)
+    suspend fun unregisterDevice(id: Int): Boolean = student.unregisterDevice(id)
 
-    suspend fun getTeachers() = student.getTeachers()
+    suspend fun getTeachers(): List<Teacher> = student.getTeachers()
 
-    suspend fun getSchool() = student.getSchool()
+    suspend fun getSchool(): School = student.getSchool()
 
-    suspend fun getStudentInfo() = student.getStudentInfo()
+    suspend fun getStudentInfo(): StudentInfo = student.getStudentInfo()
 
-    suspend fun getStudentPhoto() = student.getStudentPhoto()
+    suspend fun getStudentPhoto(): StudentPhoto = student.getStudentPhoto()
 
-    suspend fun getReportingUnits() = messages.getReportingUnits()
+    suspend fun getReportingUnits(): List<ReportingUnit> = messages.getReportingUnits()
 
-    suspend fun getRecipients(unitId: Int, role: Int = 2) = messages.getRecipients(unitId, role)
+    suspend fun getRecipients(unitId: Int, role: Int = 2): List<Recipient> = messages.getRecipients(unitId, role)
 
     suspend fun getMessages(
         folder: Folder,
@@ -312,39 +341,39 @@ class Scrapper {
 
     suspend fun getReceivedMessages(startDate: LocalDateTime? = null, endDate: LocalDateTime? = null) = messages.getReceivedMessages(startDate, endDate)
 
-    suspend fun getSentMessages(startDate: LocalDateTime? = null, endDate: LocalDateTime? = null) = messages.getSentMessages(startDate, endDate)
+    suspend fun getSentMessages(startDate: LocalDateTime? = null, endDate: LocalDateTime? = null): List<Message> = messages.getSentMessages(startDate, endDate)
 
-    suspend fun getDeletedMessages(startDate: LocalDateTime? = null, endDate: LocalDateTime? = null) = messages.getDeletedMessages(startDate, endDate)
+    suspend fun getDeletedMessages(startDate: LocalDateTime? = null, endDate: LocalDateTime? = null): List<Message> = messages.getDeletedMessages(startDate, endDate)
 
-    suspend fun getMessageRecipients(messageId: Int, loginId: Int = 0) = messages.getMessageRecipients(messageId, loginId)
+    suspend fun getMessageRecipients(messageId: Int, loginId: Int = 0): List<Recipient> = messages.getMessageRecipients(messageId, loginId)
 
-    suspend fun getMessageDetails(messageId: Int, folderId: Int, read: Boolean = false, id: Int? = null) = messages.getMessageDetails(messageId, folderId, read, id)
+    suspend fun getMessageDetails(messageId: Int, folderId: Int, read: Boolean = false, id: Int? = null): Message = messages.getMessageDetails(messageId, folderId, read, id)
 
-    suspend fun getMessageContent(messageId: Int, folderId: Int, read: Boolean = false, id: Int? = null) = messages.getMessage(messageId, folderId, read, id)
+    suspend fun getMessageContent(messageId: Int, folderId: Int, read: Boolean = false, id: Int? = null): String = messages.getMessage(messageId, folderId, read, id)
 
-    suspend fun sendMessage(subject: String, content: String, recipients: List<Recipient>) = messages.sendMessage(subject, content, recipients)
+    suspend fun sendMessage(subject: String, content: String, recipients: List<Recipient>): SentMessage = messages.sendMessage(subject, content, recipients)
 
-    suspend fun deleteMessages(messagesToDelete: List<Int>, folderId: Int) = messages.deleteMessages(messagesToDelete, folderId)
+    suspend fun deleteMessages(messagesToDelete: List<Int>, folderId: Int): Boolean = messages.deleteMessages(messagesToDelete, folderId)
 
-    suspend fun getDirectorInformation() = homepage.getDirectorInformation()
+    suspend fun getDirectorInformation(): List<DirectorInformation> = homepage.getDirectorInformation()
 
-    suspend fun getSelfGovernments() = homepage.getSelfGovernments()
+    suspend fun getSelfGovernments(): List<GovernmentUnit> = homepage.getSelfGovernments()
 
-    suspend fun getStudentThreats() = homepage.getStudentThreats()
+    suspend fun getStudentThreats(): List<String> = homepage.getStudentThreats()
 
-    suspend fun getStudentsTrips() = homepage.getStudentsTrips()
+    suspend fun getStudentsTrips(): List<String> = homepage.getStudentsTrips()
 
-    suspend fun getLastGrades() = homepage.getLastGrades()
+    suspend fun getLastGrades(): List<String> = homepage.getLastGrades()
 
-    suspend fun getFreeDays() = homepage.getFreeDays()
+    suspend fun getFreeDays(): List<String> = homepage.getFreeDays()
 
-    suspend fun getKidsLuckyNumbers() = homepage.getKidsLuckyNumbers()
+    suspend fun getKidsLuckyNumbers(): List<LuckyNumber> = homepage.getKidsLuckyNumbers()
 
-    suspend fun getKidsLessonPlan() = homepage.getKidsLessonPlan()
+    suspend fun getKidsLessonPlan(): List<String> = homepage.getKidsLessonPlan()
 
-    suspend fun getLastHomework() = homepage.getLastHomework()
+    suspend fun getLastHomework(): List<String> = homepage.getLastHomework()
 
-    suspend fun getLastTests() = homepage.getLastTests()
+    suspend fun getLastTests(): List<String> = homepage.getLastTests()
 
-    suspend fun getLastStudentLessons() = homepage.getLastStudentLessons()
+    suspend fun getLastStudentLessons(): List<String> = homepage.getLastStudentLessons()
 }
