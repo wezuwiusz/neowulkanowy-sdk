@@ -54,6 +54,7 @@ import io.github.wulkanowy.sdk.pojo.GradePointsStatistics
 import io.github.wulkanowy.sdk.pojo.GradeStatisticsSemester
 import io.github.wulkanowy.sdk.pojo.GradeStatisticsSubject
 import io.github.wulkanowy.sdk.pojo.GradeSummary
+import io.github.wulkanowy.sdk.pojo.GradesFull
 import io.github.wulkanowy.sdk.pojo.Homework
 import io.github.wulkanowy.sdk.pojo.LuckyNumber
 import io.github.wulkanowy.sdk.pojo.Message
@@ -353,6 +354,13 @@ class Sdk {
         when (mode) {
             Mode.SCRAPPER -> scrapper.getExams(start, end).mapExams()
             Mode.HYBRID, Mode.API -> mobile.getExams(start, end, semesterId).mapExams(mobile.getDictionaries())
+        }
+    }
+
+    suspend fun getGradesFull(semesterId: Int): GradesFull = withContext(Dispatchers.IO) {
+        when (mode) {
+            Mode.SCRAPPER -> scrapper.getGradesFull(semesterId).mapGrades()
+            else -> TODO()
         }
     }
 

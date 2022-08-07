@@ -12,6 +12,12 @@ data class GradesResponse(
     @SerialName("IsPunkty")
     val isPoints: Boolean,
 
+    @SerialName("IsDlaDoroslych")
+    val isForAdults: Boolean,
+
+    @SerialName("TypOcen")
+    val type: Int,
+
     @SerialName("Oceny")
     val gradesWithSubjects: List<Subject>
 ) {

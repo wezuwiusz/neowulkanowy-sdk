@@ -21,6 +21,7 @@ import io.github.wulkanowy.sdk.scrapper.grades.Grade
 import io.github.wulkanowy.sdk.scrapper.grades.GradePointsSummary
 import io.github.wulkanowy.sdk.scrapper.grades.GradeRequest
 import io.github.wulkanowy.sdk.scrapper.grades.GradeSummary
+import io.github.wulkanowy.sdk.scrapper.grades.GradesFull
 import io.github.wulkanowy.sdk.scrapper.grades.GradesStatisticsPartial
 import io.github.wulkanowy.sdk.scrapper.grades.GradesStatisticsRequest
 import io.github.wulkanowy.sdk.scrapper.grades.GradesStatisticsSemester
@@ -118,6 +119,19 @@ class StudentRepository(private val api: StudentService) {
         return api.getExams(ExamRequest(startDate.atStartOfDay(), startDate.getSchoolYear()))
             .handleErrors()
             .data.orEmpty().mapExamsList(startDate, endDate)
+    }
+
+    suspend fun getGradesFull(semesterId: Int): GradesFull {
+        val data = api.getGrades(GradeRequest(semesterId)).handleErrors().data
+
+        return GradesFull(
+            details = data?.mapGradesList().orEmpty(),
+            summary = data?.mapGradesSummary().orEmpty(),
+            isAverage = data?.isAverage ?: false,
+            isPoints = data?.isPoints ?: false,
+            isForAdults = data?.isForAdults ?: false,
+            type = data?.type ?: -1,
+        )
     }
 
     suspend fun getGrades(semesterId: Int?): Pair<List<Grade>, List<GradeSummary>> {

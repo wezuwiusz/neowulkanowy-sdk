@@ -10,6 +10,7 @@ import io.github.wulkanowy.sdk.scrapper.exception.ScrapperException
 import io.github.wulkanowy.sdk.scrapper.grades.Grade
 import io.github.wulkanowy.sdk.scrapper.grades.GradePointsSummary
 import io.github.wulkanowy.sdk.scrapper.grades.GradeSummary
+import io.github.wulkanowy.sdk.scrapper.grades.GradesFull
 import io.github.wulkanowy.sdk.scrapper.grades.GradesStatisticsPartial
 import io.github.wulkanowy.sdk.scrapper.grades.GradesStatisticsSemester
 import io.github.wulkanowy.sdk.scrapper.home.DirectorInformation
@@ -278,6 +279,8 @@ class Scrapper {
     suspend fun getSubjects(): List<Subject> = student.getSubjects()
 
     suspend fun getExams(startDate: LocalDate, endDate: LocalDate? = null): List<Exam> = student.getExams(startDate, endDate)
+
+    suspend fun getGradesFull(semester: Int): GradesFull = student.getGradesFull(semester)
 
     suspend fun getGrades(semesterId: Int): Pair<List<Grade>, List<GradeSummary>> = student.getGrades(semesterId)
 
