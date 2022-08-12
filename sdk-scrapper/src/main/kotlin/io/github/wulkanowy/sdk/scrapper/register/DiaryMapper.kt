@@ -1,7 +1,6 @@
 package io.github.wulkanowy.sdk.scrapper.register
 
 import io.github.wulkanowy.sdk.scrapper.repository.RegisterRepository
-import io.github.wulkanowy.sdk.scrapper.toLocalDate
 import org.slf4j.LoggerFactory
 
 private val logger = LoggerFactory.getLogger(RegisterRepository::class.java)

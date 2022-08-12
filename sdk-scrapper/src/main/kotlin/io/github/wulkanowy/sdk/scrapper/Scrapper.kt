@@ -231,7 +231,6 @@ class Scrapper {
                 api = serviceManager.getLoginService()
             ),
             register = serviceManager.getRegisterService(),
-            messages = serviceManager.getMessagesService(withLogin = false),
             student = serviceManager.getStudentService(withLogin = false, studentInterceptor = false),
             url = serviceManager.urlGenerator
         )

@@ -4,10 +4,8 @@ import io.github.wulkanowy.sdk.scrapper.BaseLocalTest
 import io.github.wulkanowy.sdk.scrapper.Scrapper
 import io.github.wulkanowy.sdk.scrapper.login.LoginHelper
 import io.github.wulkanowy.sdk.scrapper.login.LoginTest
-import io.github.wulkanowy.sdk.scrapper.messages.MessagesTest
 import io.github.wulkanowy.sdk.scrapper.repository.RegisterRepository
 import io.github.wulkanowy.sdk.scrapper.service.LoginService
-import io.github.wulkanowy.sdk.scrapper.service.MessagesService
 import io.github.wulkanowy.sdk.scrapper.service.RegisterService
 import io.github.wulkanowy.sdk.scrapper.service.ServiceManager
 import io.github.wulkanowy.sdk.scrapper.service.StudentService
@@ -53,7 +51,6 @@ class RegisterTest : BaseLocalTest() {
                     autoLoginInterceptorOn = false
                 )
             ),
-            messages = getService(MessagesService::class.java, "http://fakelog.localhost:3000", false),
             student = getService(StudentService::class.java, "http://fakelog.localhost:3000", false),
             url = ServiceManager.UrlGenerator("http", "fakelog.localhost:3000", "default", "123")
         )
@@ -65,7 +62,6 @@ class RegisterTest : BaseLocalTest() {
             enqueue("LoginPage-standard.html", LoginTest::class.java)
             enqueue("Logowanie-uonet.html", LoginTest::class.java)
             enqueue("Login-success.html", LoginTest::class.java)
-            enqueue("JednostkiUzytkownika.json", MessagesTest::class.java)
             enqueue("LoginPage-standard.html", LoginTest::class.java)
             enqueue("WitrynaUcznia.html", RegisterTest::class.java)
             enqueue("UczenCache.json", RegisterTest::class.java)
@@ -106,7 +102,6 @@ class RegisterTest : BaseLocalTest() {
             enqueue("LoginPage-standard.html", LoginTest::class.java)
             enqueue("Logowanie-uonet.html", LoginTest::class.java)
             enqueue("Login-success.html", LoginTest::class.java)
-            enqueue("JednostkiUzytkownika.json", MessagesTest::class.java)
 
             enqueue("LoginPage-standard.html", LoginTest::class.java)
             enqueue("WitrynaUcznia.html", RegisterTest::class.java)
@@ -131,7 +126,8 @@ class RegisterTest : BaseLocalTest() {
             assertEquals(0, classId) // always 0 for kindergarten
             assertEquals("Publiczna szkoła Wulkanowego nr 1 w fakelog.cf", schoolName)
             assertEquals("123456", schoolSymbol)
-            assertEquals(1, userLoginId)
+            assertEquals(654321, userLoginId)
+            assertEquals("Jan Kowalski", userName)
             assertEquals(2016, semesters[0].schoolYear)
             assertEquals(2017, semesters[1].schoolYear)
         }
@@ -143,7 +139,6 @@ class RegisterTest : BaseLocalTest() {
             enqueue("LoginPage-standard.html", LoginTest::class.java)
             enqueue("Logowanie-uonet.html", LoginTest::class.java)
             enqueue("Login-success.html", LoginTest::class.java)
-            enqueue("JednostkiUzytkownika.json", MessagesTest::class.java)
 
             enqueue("LoginPage-standard.html", LoginTest::class.java)
             enqueue("WitrynaUcznia.html", RegisterTest::class.java)
@@ -168,7 +163,6 @@ class RegisterTest : BaseLocalTest() {
             enqueue("LoginPage-standard.html", LoginTest::class.java)
             enqueue("Logowanie-uonet.html", LoginTest::class.java)
             enqueue("Login-success.html", LoginTest::class.java)
-            enqueue("JednostkiUzytkownika.json", MessagesTest::class.java)
             enqueue("LoginPage-standard.html", LoginTest::class.java)
             enqueue("WitrynaUcznia.html", RegisterTest::class.java)
             enqueue("UczenCache.json", RegisterTest::class.java)

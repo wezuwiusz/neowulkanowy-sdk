@@ -6,10 +6,8 @@ import io.github.wulkanowy.sdk.scrapper.exception.VulcanException
 import io.github.wulkanowy.sdk.scrapper.interceptor.ErrorInterceptorTest
 import io.github.wulkanowy.sdk.scrapper.login.LoginHelper
 import io.github.wulkanowy.sdk.scrapper.login.LoginTest
-import io.github.wulkanowy.sdk.scrapper.messages.MessagesTest
 import io.github.wulkanowy.sdk.scrapper.register.RegisterTest
 import io.github.wulkanowy.sdk.scrapper.service.LoginService
-import io.github.wulkanowy.sdk.scrapper.service.MessagesService
 import io.github.wulkanowy.sdk.scrapper.service.RegisterService
 import io.github.wulkanowy.sdk.scrapper.service.ServiceManager
 import io.github.wulkanowy.sdk.scrapper.service.StudentService
@@ -37,7 +35,6 @@ class RegisterRepositoryTest : BaseLocalTest() {
                 url = "http://fakelog.localhost:3000/",
                 okHttp = getOkHttp(errorInterceptor = false, autoLoginInterceptorOn = false)
             ),
-            messages = getService(service = MessagesService::class.java, html = false),
             student = getService(service = StudentService::class.java, html = false),
             url = ServiceManager.UrlGenerator("http", "fakelog.localhost:3000", symbol, "")
         )
@@ -50,7 +47,6 @@ class RegisterRepositoryTest : BaseLocalTest() {
             enqueue("Logowanie-uonet.html", LoginTest::class.java)
             enqueue("Login-success.html", LoginTest::class.java)
 
-            enqueue("JednostkiUzytkownika.json", MessagesTest::class.java)
             enqueue("LoginPage-standard.html", LoginTest::class.java)
             enqueue("WitrynaUcznia.html", RegisterTest::class.java)
             enqueue("UczenCache.json", RegisterTest::class.java)
@@ -79,7 +75,6 @@ class RegisterRepositoryTest : BaseLocalTest() {
             enqueue("Logowanie-uonet.html", LoginTest::class.java)
             enqueue("Login-success.html", LoginTest::class.java)
 
-            enqueue("JednostkiUzytkownika.json", MessagesTest::class.java)
             enqueue("LoginPage-standard.html", LoginTest::class.java)
             enqueue("WitrynaUcznia.html", RegisterTest::class.java)
             enqueue("UczenCache.json", RegisterTest::class.java)
@@ -109,7 +104,6 @@ class RegisterRepositoryTest : BaseLocalTest() {
             enqueue("Logowanie-uonet.html", LoginTest::class.java)
             enqueue("Login-success-triple.html", LoginTest::class.java)
 
-            enqueue("JednostkiUzytkownika.json", MessagesTest::class.java)
             repeat(3) {
                 enqueue("LoginPage-standard.html", LoginTest::class.java)
                 enqueue("WitrynaUcznia.html", RegisterTest::class.java)
@@ -149,7 +143,6 @@ class RegisterRepositoryTest : BaseLocalTest() {
             enqueue("Logowanie-uonet.html", LoginTest::class.java)
             enqueue("Login-success-triple.html", LoginTest::class.java)
 
-            enqueue("JednostkiUzytkownika.json", MessagesTest::class.java)
             repeat(2) {
                 enqueue("LoginPage-standard.html", LoginTest::class.java)
                 enqueue("WitrynaUcznia.html", RegisterTest::class.java)
@@ -194,7 +187,6 @@ class RegisterRepositoryTest : BaseLocalTest() {
 
             repeat(5) {
                 enqueue("Login-success-old.html", LoginTest::class.java)
-                enqueue("JednostkiUzytkownika.json", MessagesTest::class.java)
             }
 
             start(3000)
