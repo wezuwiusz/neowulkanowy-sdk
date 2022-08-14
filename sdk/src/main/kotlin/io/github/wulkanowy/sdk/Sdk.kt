@@ -9,7 +9,6 @@ import io.github.wulkanowy.sdk.mapper.mapDevices
 import io.github.wulkanowy.sdk.mapper.mapDirectorInformation
 import io.github.wulkanowy.sdk.mapper.mapExams
 import io.github.wulkanowy.sdk.mapper.mapFromRecipientsToMobile
-import io.github.wulkanowy.sdk.mapper.mapFromRecipientsToScraper
 import io.github.wulkanowy.sdk.mapper.mapGradePointsStatistics
 import io.github.wulkanowy.sdk.mapper.mapGradeStatistics
 import io.github.wulkanowy.sdk.mapper.mapGrades
@@ -18,15 +17,14 @@ import io.github.wulkanowy.sdk.mapper.mapGradesSemesterStatistics
 import io.github.wulkanowy.sdk.mapper.mapGradesSummary
 import io.github.wulkanowy.sdk.mapper.mapHomework
 import io.github.wulkanowy.sdk.mapper.mapLuckyNumbers
+import io.github.wulkanowy.sdk.mapper.mapMailboxes
 import io.github.wulkanowy.sdk.mapper.mapMessages
 import io.github.wulkanowy.sdk.mapper.mapNotes
 import io.github.wulkanowy.sdk.mapper.mapPhoto
 import io.github.wulkanowy.sdk.mapper.mapRecipients
-import io.github.wulkanowy.sdk.mapper.mapReportingUnits
 import io.github.wulkanowy.sdk.mapper.mapSchool
 import io.github.wulkanowy.sdk.mapper.mapScrapperMessage
 import io.github.wulkanowy.sdk.mapper.mapSemesters
-import io.github.wulkanowy.sdk.mapper.mapSentMessage
 import io.github.wulkanowy.sdk.mapper.mapStudent
 import io.github.wulkanowy.sdk.mapper.mapStudents
 import io.github.wulkanowy.sdk.mapper.mapSubjects
@@ -57,14 +55,13 @@ import io.github.wulkanowy.sdk.pojo.GradeSummary
 import io.github.wulkanowy.sdk.pojo.GradesFull
 import io.github.wulkanowy.sdk.pojo.Homework
 import io.github.wulkanowy.sdk.pojo.LuckyNumber
+import io.github.wulkanowy.sdk.pojo.Mailbox
 import io.github.wulkanowy.sdk.pojo.Message
 import io.github.wulkanowy.sdk.pojo.MessageDetails
 import io.github.wulkanowy.sdk.pojo.Note
 import io.github.wulkanowy.sdk.pojo.Recipient
-import io.github.wulkanowy.sdk.pojo.ReportingUnit
 import io.github.wulkanowy.sdk.pojo.School
 import io.github.wulkanowy.sdk.pojo.Semester
-import io.github.wulkanowy.sdk.pojo.SentMessage
 import io.github.wulkanowy.sdk.pojo.Student
 import io.github.wulkanowy.sdk.pojo.StudentInfo
 import io.github.wulkanowy.sdk.pojo.StudentPhoto
@@ -476,46 +473,46 @@ class Sdk {
         }
     }
 
-    suspend fun getReportingUnits(): List<ReportingUnit> = withContext(Dispatchers.IO) {
+    suspend fun getMailboxes(): List<Mailbox> = withContext(Dispatchers.IO) {
         when (mode) {
-            Mode.HYBRID, Mode.SCRAPPER -> scrapper.getReportingUnits().mapReportingUnits()
-            Mode.API -> mobile.getStudents().mapReportingUnits(studentId)
+            Mode.HYBRID, Mode.SCRAPPER -> scrapper.getMailboxes().mapMailboxes()
+            Mode.API -> TODO()
         }
     }
 
-    suspend fun getRecipients(unitId: Int, role: Int = 2): List<Recipient> = withContext(Dispatchers.IO) {
+    suspend fun getRecipients(mailboxKey: String): List<Recipient> = withContext(Dispatchers.IO) {
         when (mode) {
-            Mode.HYBRID, Mode.SCRAPPER -> scrapper.getRecipients(unitId, role).mapRecipients()
-            Mode.API -> mobile.getDictionaries().teachers.mapRecipients(unitId)
+            Mode.HYBRID, Mode.SCRAPPER -> scrapper.getRecipients(mailboxKey).mapRecipients()
+            Mode.API -> mobile.getDictionaries().teachers.mapRecipients(-1)
         }
     }
 
-    suspend fun getMessages(folder: Folder, start: LocalDateTime, end: LocalDateTime): List<Message> = withContext(Dispatchers.IO) {
+    suspend fun getMessages(folder: Folder): List<Message> = withContext(Dispatchers.IO) {
         when (folder) {
-            Folder.RECEIVED -> getReceivedMessages(start, end)
-            Folder.SENT -> getSentMessages(start, end)
-            Folder.TRASHED -> getDeletedMessages(start, end)
+            Folder.RECEIVED -> getReceivedMessages()
+            Folder.SENT -> getSentMessages()
+            Folder.TRASHED -> getDeletedMessages()
         }
     }
 
-    suspend fun getReceivedMessages(start: LocalDateTime, end: LocalDateTime): List<Message> = withContext(Dispatchers.IO) {
+    suspend fun getReceivedMessages(): List<Message> = withContext(Dispatchers.IO) {
         when (mode) {
-            Mode.HYBRID, Mode.SCRAPPER -> scrapper.getReceivedMessages(start, end).mapMessages(registerTimeZone)
-            Mode.API -> mobile.getMessages(start, end).mapMessages(mobile.getDictionaries(), registerTimeZone)
+            Mode.HYBRID, Mode.SCRAPPER -> scrapper.getReceivedMessages().mapMessages(registerTimeZone, Folder.RECEIVED)
+            Mode.API -> mobile.getMessages(LocalDateTime.now(), LocalDateTime.now()).mapMessages(mobile.getDictionaries(), registerTimeZone)
         }
     }
 
-    suspend fun getSentMessages(start: LocalDateTime, end: LocalDateTime): List<Message> = withContext(Dispatchers.IO) {
+    suspend fun getSentMessages(): List<Message> = withContext(Dispatchers.IO) {
         when (mode) {
-            Mode.HYBRID, Mode.SCRAPPER -> scrapper.getSentMessages(start, end).mapMessages(registerTimeZone)
-            Mode.API -> mobile.getMessagesSent(start, end).mapMessages(mobile.getDictionaries(), registerTimeZone)
+            Mode.HYBRID, Mode.SCRAPPER -> scrapper.getSentMessages().mapMessages(registerTimeZone, Folder.SENT)
+            Mode.API -> mobile.getMessagesSent(LocalDateTime.now(), LocalDateTime.now()).mapMessages(mobile.getDictionaries(), registerTimeZone)
         }
     }
 
-    suspend fun getDeletedMessages(start: LocalDateTime, end: LocalDateTime): List<Message> = withContext(Dispatchers.IO) {
+    suspend fun getDeletedMessages(): List<Message> = withContext(Dispatchers.IO) {
         when (mode) {
-            Mode.HYBRID, Mode.SCRAPPER -> scrapper.getDeletedMessages(start, end).mapMessages(registerTimeZone)
-            Mode.API -> mobile.getMessagesDeleted(start, end).mapMessages(mobile.getDictionaries(), registerTimeZone)
+            Mode.HYBRID, Mode.SCRAPPER -> scrapper.getDeletedMessages().mapMessages(registerTimeZone, Folder.TRASHED)
+            Mode.API -> mobile.getMessagesDeleted(LocalDateTime.now(), LocalDateTime.now()).mapMessages(mobile.getDictionaries(), registerTimeZone)
         }
     }
 
@@ -526,39 +523,29 @@ class Sdk {
         }
     }
 
-    suspend fun getMessageDetails(messageId: Int, folderId: Int, read: Boolean = false, id: Int? = null): MessageDetails = withContext(Dispatchers.IO) {
+    suspend fun getMessageDetails(messageId: String): MessageDetails = withContext(Dispatchers.IO) {
         when (mode) {
-            Mode.HYBRID, Mode.SCRAPPER -> scrapper.getMessageDetails(messageId, folderId, read, id).mapScrapperMessage()
+            Mode.HYBRID, Mode.SCRAPPER -> scrapper.getMessageDetails(messageId).mapScrapperMessage()
             Mode.API -> {
-                val folder = when (folderId) {
-                    1 -> "Odebrane"
-                    2 -> "Wysłane"
-                    else -> "Usunięte"
-                }
-                mobile.changeMessageStatus(messageId, folder, "Widoczna")
+                mobile.changeMessageStatus(messageId, "", "Widoczna")
                 MessageDetails("", emptyList())
             }
         }
     }
 
-    suspend fun sendMessage(subject: String, content: String, recipients: List<Recipient>): SentMessage = withContext(Dispatchers.IO) {
+    suspend fun sendMessage(subject: String, content: String, recipients: List<Recipient>) = withContext(Dispatchers.IO) {
         when (mode) {
-            Mode.HYBRID, Mode.SCRAPPER -> scrapper.sendMessage(subject, content, recipients.mapFromRecipientsToScraper()).mapSentMessage()
-            Mode.API -> mobile.sendMessage(subject, content, recipients.mapFromRecipientsToMobile()).mapSentMessage(loginId)
+            Mode.HYBRID, Mode.SCRAPPER -> scrapper.sendMessage(subject, content, recipients.map { it.mailboxGlobalKey })
+            Mode.API -> mobile.sendMessage(subject, content, recipients.mapFromRecipientsToMobile())
         }
     }
 
-    suspend fun deleteMessages(messages: List<Int>, folderId: Int): Boolean = withContext(Dispatchers.IO) {
+    suspend fun deleteMessages(messages: List<String>) = withContext(Dispatchers.IO) {
         when (mode) {
-            Mode.SCRAPPER -> scrapper.deleteMessages(messages, folderId)
+            Mode.SCRAPPER -> scrapper.deleteMessages(messages)
             Mode.HYBRID, Mode.API -> messages.map { messageId ->
-                val folder = when (folderId) {
-                    1 -> "Odebrane"
-                    2 -> "Wysłane"
-                    else -> "Usunięte"
-                }
-                mobile.changeMessageStatus(messageId, folder, "Usunieta")
-            }.isNotEmpty()
+                mobile.changeMessageStatus(messageId, "", "Usunieta")
+            }.let { Unit }
         }
     }
 

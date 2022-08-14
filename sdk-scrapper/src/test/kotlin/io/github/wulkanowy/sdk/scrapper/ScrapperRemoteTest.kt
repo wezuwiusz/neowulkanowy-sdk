@@ -2,7 +2,6 @@ package io.github.wulkanowy.sdk.scrapper
 
 import io.github.wulkanowy.sdk.scrapper.attendance.AttendanceCategory
 import io.github.wulkanowy.sdk.scrapper.messages.Folder
-import io.github.wulkanowy.sdk.scrapper.messages.Recipient
 import kotlinx.coroutines.runBlocking
 import okhttp3.logging.HttpLoggingInterceptor
 import org.junit.Assert.assertEquals
@@ -321,16 +320,16 @@ class ScrapperRemoteTest : BaseTest() {
 
     @Test
     fun messagesTest() {
-        val units = runBlocking { api.getReportingUnits() }
-        assertEquals(1, units.size)
+        val mailboxes = runBlocking { api.getMailboxes() }
+        assertEquals(1, mailboxes.size)
 
-        val recipients = runBlocking { api.getRecipients(6) }
+        val recipients = runBlocking { api.getRecipients("asdf") }
         assertEquals(10, recipients.size)
 
         val messages = runBlocking { api.getMessages(Folder.RECEIVED) }
         assertEquals(19, messages.size)
 
-        val inbox = runBlocking { api.getReceivedMessages(getLocalDateTime(2015, 10, 5)) }
+        val inbox = runBlocking { api.getReceivedMessages() }
         assertEquals(19, inbox.size)
 
         val sent = runBlocking { api.getSentMessages() }
@@ -339,10 +338,10 @@ class ScrapperRemoteTest : BaseTest() {
         val trash = runBlocking { api.getDeletedMessages() }
         assertEquals(8, trash.size)
 
-        val mRecipients = runBlocking { api.getMessageRecipients(trash[0].messageId ?: 0) }
+        val mRecipients = runBlocking { api.getMessageRecipients(0) }
         assertEquals(1, mRecipients.size)
 
-        val details = runBlocking { api.getMessageDetails(trash[0].messageId ?: 0, trash[0].folderId) }
+        val details = runBlocking { api.getMessageDetails("asdf") }
         assertEquals(27214, details.id)
     }
 
@@ -352,7 +351,7 @@ class ScrapperRemoteTest : BaseTest() {
             api.sendMessage(
                 subject = "Temat wiadomości",
                 content = "Treść",
-                recipients = listOf(Recipient("0", "Kowalski Jan", 0, 0, 2, "hash")),
+                recipients = listOf("asdf"),
             )
         }
     }

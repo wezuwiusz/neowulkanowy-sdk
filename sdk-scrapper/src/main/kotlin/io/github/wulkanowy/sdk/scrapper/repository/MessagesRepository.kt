@@ -1,20 +1,12 @@
 package io.github.wulkanowy.sdk.scrapper.repository
 
-import io.github.wulkanowy.sdk.scrapper.exception.ScrapperException
-import io.github.wulkanowy.sdk.scrapper.getScriptParam
-import io.github.wulkanowy.sdk.scrapper.interceptor.handleErrors
-import io.github.wulkanowy.sdk.scrapper.messages.Attachment
-import io.github.wulkanowy.sdk.scrapper.messages.DeleteMessageRequest
+import io.github.wulkanowy.sdk.scrapper.messages.Mailbox
 import io.github.wulkanowy.sdk.scrapper.messages.Message
+import io.github.wulkanowy.sdk.scrapper.messages.MessageMeta
 import io.github.wulkanowy.sdk.scrapper.messages.Recipient
-import io.github.wulkanowy.sdk.scrapper.messages.RecipientsRequest
-import io.github.wulkanowy.sdk.scrapper.messages.ReportingUnit
 import io.github.wulkanowy.sdk.scrapper.messages.SendMessageRequest
-import io.github.wulkanowy.sdk.scrapper.messages.SentMessage
 import io.github.wulkanowy.sdk.scrapper.service.MessagesService
 import org.slf4j.LoggerFactory
-import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
 
 class MessagesRepository(private val api: MessagesService) {
 
@@ -23,121 +15,59 @@ class MessagesRepository(private val api: MessagesService) {
         private val logger = LoggerFactory.getLogger(this::class.java)
     }
 
-    suspend fun getReportingUnits(): List<ReportingUnit> {
-        return api.getUserReportingUnits().data.orEmpty()
+    suspend fun getMailboxes(): List<Mailbox> {
+        return api.getMailboxes()
     }
 
-    suspend fun getRecipients(unitId: Int, role: Int = 2): List<Recipient> {
-        return api.getRecipients(
-            recipientsRequest = RecipientsRequest(
-                paramsVo = RecipientsRequest.ParamsVo(
-                    unitId = unitId,
-                    role = role
-                )
-            )
-        ).handleErrors().data.orEmpty().map {
-            it.copy(shortName = it.name.normalizeRecipient())
-        }
+    suspend fun getRecipients(mailboxKey: String): List<Recipient> {
+        return api.getRecipients(mailboxKey)
     }
 
-    suspend fun getReceivedMessages(startDate: LocalDateTime?, endDate: LocalDateTime?): List<Message> {
-        return api.getReceived(startDate.getDate(), endDate.getDate()).handleErrors().data.orEmpty()
+    suspend fun getReceivedMessages(lastMessageKey: Int = 0, pageSize: Int = 50): List<MessageMeta> {
+        return api.getReceived(lastMessageKey, pageSize)
             .sortedBy { it.date }
-            .map { it.normalizeRecipients() }
+            // .map { it.normalizeRecipients() }
             .toList()
     }
 
-    suspend fun getSentMessages(startDate: LocalDateTime?, endDate: LocalDateTime?): List<Message> {
-        return api.getSent(startDate.getDate(), endDate.getDate()).handleErrors().data.orEmpty()
-            .map { it.normalizeRecipients() }
+    suspend fun getSentMessages(lastMessageKey: Int = 0, pageSize: Int = 50): List<MessageMeta> {
+        return api.getSent(lastMessageKey, pageSize)
+            // .map { it.normalizeRecipients() }
             .sortedBy { it.date }
             .toList()
     }
 
-    suspend fun getDeletedMessages(startDate: LocalDateTime?, endDate: LocalDateTime?): List<Message> {
-        return api.getDeleted(startDate.getDate(), endDate.getDate()).handleErrors().data.orEmpty()
-            .map { it.normalizeRecipients() }
-            .map { it.apply { removed = true } }
+    suspend fun getDeletedMessages(lastMessageKey: Int = 0, pageSize: Int = 50): List<MessageMeta> {
+        return api.getDeleted(lastMessageKey, pageSize)
+            // .map { it.normalizeRecipients() }
+            // .map { it.apply { removed = true } }
             .sortedBy { it.date }
             .toList()
     }
 
     suspend fun getMessageRecipients(messageId: Int, loginId: Int): List<Recipient> {
-        val recipients = when (loginId) {
-            0 -> api.getMessageRecipients(messageId).handleErrors()
-            else -> api.getMessageSender(loginId, messageId)
-        }
-        return recipients.handleErrors().data.orEmpty().map { recipient ->
-            recipient.copy(shortName = recipient.name.normalizeRecipient())
-        }
+        return emptyList()
     }
 
-    suspend fun getMessage(messageId: Int, folderId: Int, read: Boolean, id: Int?): String {
-        return getMessageDetails(messageId, folderId, read, id).content.orEmpty()
+    suspend fun getMessageDetails(globalKey: String): Message {
+        return api.getMessageDetails(globalKey)
     }
 
-    suspend fun getMessageAttachments(messageId: Int, folderId: Int): List<Attachment> {
-        return getMessageDetails(messageId, folderId, false, null).attachments.orEmpty()
-    }
-
-    suspend fun getMessageDetails(messageId: Int, folderId: Int, read: Boolean, id: Int?): Message {
-        val res = api.getStart()
-        logger.debug("Start page length: ${res.length}")
-        val antiForgeryToken = getScriptParam("antiForgeryToken", res).ifBlank { throw ScrapperException("Can't find antiForgeryToken property!") }
-        val appGuid = getScriptParam("appGuid", res)
-
-        return when (folderId) {
-            1 -> api.getInboxMessage(messageId, read, id, antiForgeryToken, appGuid).handleErrors().data!!
-            2 -> api.getOutboxMessage(messageId, read, id, antiForgeryToken, appGuid).handleErrors().data!!
-            3 -> api.getTrashboxMessage(messageId, read, id, antiForgeryToken, appGuid).handleErrors().data!!
-            else -> throw IllegalArgumentException("Unknown folder id: $folderId")
-        }
-    }
-
-    suspend fun sendMessage(subject: String, content: String, recipients: List<Recipient>): SentMessage {
-        logger.debug("Subject length: ${subject.length}, content length: ${content.length}, recipients number: ${recipients.size}")
-        val res = api.getStart()
-        logger.debug("Start page length: ${res.length}")
-
-        val incoming = SendMessageRequest.Incoming(
-            recipients = recipients,
+    suspend fun sendMessage(subject: String, content: String, recipients: List<String>) {
+        val body = SendMessageRequest(
+            globalKey = "",
+            threadGlobalKey = "",
+            senderMailboxGlobalKey = "",
+            recipientsMailboxGlobalKeys = recipients,
             subject = subject,
-            content = content
+            content = content,
+            attachments = emptyList(),
         )
 
-        return api.sendMessage(
-            sendMessageRequest = SendMessageRequest(incoming, incoming),
-            token = getScriptParam("antiForgeryToken", res).ifBlank { throw ScrapperException("Can't find antiForgeryToken property!") },
-            appGuid = getScriptParam("appGuid", res),
-            appVersion = getScriptParam("version", res)
-        ).handleErrors().data!!
+        return api.sendMessage(body)
     }
 
-    suspend fun deleteMessages(messages: List<Int>, folderId: Int): Boolean {
-        val startPage = api.getStart()
-
-        val items = DeleteMessageRequest(folder = folderId, messages = messages)
-        val antiForgeryToken = getScriptParam("antiForgeryToken", startPage)
-        val appGUID = getScriptParam("appGuid", startPage)
-        val version = getScriptParam("version", startPage)
-
-        return when (folderId) {
-            1 -> api.deleteInboxMessage(items, antiForgeryToken, appGUID, version)
-            2 -> api.deleteOutboxMessage(items, antiForgeryToken, appGUID, version)
-            3 -> api.deleteTrashMessages(items, antiForgeryToken, appGUID, version)
-            else -> throw IllegalArgumentException("Unknown folder id: $folderId")
-        }.success
-    }
-
-    private fun String.normalizeRecipient(): String {
-        return this.substringBeforeLast("-").substringBefore(" [").substringBeforeLast(" (").trim()
-    }
-
-    private fun Message.normalizeRecipients() = copy(
-        recipients = recipients?.map { it.copy(name = it.name.normalizeRecipient()) }
-    )
-
-    private fun LocalDateTime?.getDate(): String {
-        return this?.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")).orEmpty()
+    suspend fun deleteMessages(globalKeys: List<String>) {
+        return api.deleteMessage(globalKeys)
     }
 }

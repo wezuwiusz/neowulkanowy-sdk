@@ -6,30 +6,24 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class SendMessageRequest(
 
-    @SerialName("incoming")
-    val incoming: Incoming,
+    @SerialName("globalKey")
+    val globalKey: String,
 
-    @SerialName("incomming")
-    val incomming: Incoming // for compatibility sake
+    @SerialName("watekGlobalKey")
+    val threadGlobalKey: String,
 
-) {
+    @SerialName("nadawcaSkrzynkaGlobalKey")
+    val senderMailboxGlobalKey: String,
 
-    @Serializable
-    data class Incoming(
+    @SerialName("adresaciSkrzynkiGlobalKeys")
+    val recipientsMailboxGlobalKeys: List<String>,
 
-        @SerialName("Adresaci")
-        val recipients: List<Recipient>,
+    @SerialName("tytul")
+    val subject: String,
 
-        @SerialName("Id")
-        val id: Int = 0,
+    @SerialName("tresc")
+    val content: String,
 
-        @SerialName("Nadawca")
-        val sender: Sender = Sender(),
-
-        @SerialName("Temat")
-        val subject: String,
-
-        @SerialName("Tresc")
-        val content: String
-    )
-}
+    @SerialName("zalaczniki")
+    val attachments: List<MessageAttachment>,
+)

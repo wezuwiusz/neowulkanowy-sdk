@@ -4,11 +4,14 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class Recipient(
+data class Mailbox(
 
-    @SerialName("skrzynkaGlobalKey")
-    val mailboxGlobalKey: String,
+    @SerialName("globalKey")
+    val globalKey: String,
 
     @SerialName("nazwa")
     val name: String,
+
+    @SerialName("typUzytkownika")
+    val userType: Int,
 )

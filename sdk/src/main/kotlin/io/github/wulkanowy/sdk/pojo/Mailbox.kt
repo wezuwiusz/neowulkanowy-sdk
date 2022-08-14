@@ -1,6 +1,6 @@
 package io.github.wulkanowy.sdk.pojo
 
-data class Recipient(
-    val mailboxGlobalKey: String,
+data class Mailbox(
+    val globalKey: String,
     val name: String,
 )

@@ -8,7 +8,6 @@ import org.junit.Assert.assertEquals
 import org.junit.Ignore
 import org.junit.Test
 import java.time.LocalDate.of
-import java.time.LocalDateTime
 
 @Ignore
 @OptIn(ExperimentalCoroutinesApi::class)
@@ -273,13 +272,13 @@ class SdkRemoteTest {
             classId = 14
         }
 
-        val messages = runBlocking { sdk.getMessages(Folder.RECEIVED, LocalDateTime.of(2018, 1, 1, 0, 0, 0), LocalDateTime.of(2018, 1, 2, 0, 0, 0)) }
+        val messages = runBlocking { sdk.getMessages(Folder.RECEIVED) }
         assertEquals(2, messages.size)
 
-        val messagesSent = runBlocking { sdk.getMessages(Folder.SENT, LocalDateTime.of(2018, 1, 1, 0, 0, 0), LocalDateTime.of(2018, 1, 2, 0, 0, 0)) }
+        val messagesSent = runBlocking { sdk.getMessages(Folder.SENT) }
         assertEquals(1, messagesSent.size)
 
-        val messagesTrashed = runBlocking { sdk.getMessages(Folder.TRASHED, LocalDateTime.of(2018, 1, 1, 0, 0, 0), LocalDateTime.of(2018, 1, 2, 0, 0, 0)) }
+        val messagesTrashed = runBlocking { sdk.getMessages(Folder.TRASHED) }
         assertEquals(1, messagesTrashed.size)
     }
 
@@ -299,8 +298,8 @@ class SdkRemoteTest {
             classId = 14
         }
 
-        val message = runBlocking { sdk.getMessageDetails(1, 2, true, 1) }
-        assertEquals("Zmiana statusu wiadomości.", message)
+        val message = runBlocking { sdk.getMessageDetails("asdf") }
+        assertEquals("Zmiana statusu wiadomości.", message.content)
     }
 
     @Test
@@ -319,7 +318,6 @@ class SdkRemoteTest {
             classId = 14
         }
 
-        val isDeleted = runBlocking { sdk.deleteMessages(listOf(1, 2), 1) }
-        assertEquals(true, isDeleted)
+        val isDeleted = runBlocking { sdk.deleteMessages(listOf()) }
     }
 }

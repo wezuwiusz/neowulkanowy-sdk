@@ -5,9 +5,11 @@ import java.time.ZonedDateTime
 
 data class Message(
     val id: Int?,
-    val messageId: Int?,
+    val messageId: String?,
+    val mailbox: String,
     val sender: Sender?,
     val recipients: List<Recipient>,
+    val correspondents: String,
     val subject: String,
     val content: String?,
     @Deprecated("use dateZoned instead")
@@ -15,8 +17,5 @@ data class Message(
     val dateZoned: ZonedDateTime?,
     val folderId: Int = 0,
     val unread: Boolean?,
-    val unreadBy: Int?,
-    val readBy: Int?,
-    val removed: Boolean,
     val hasAttachments: Boolean
 )

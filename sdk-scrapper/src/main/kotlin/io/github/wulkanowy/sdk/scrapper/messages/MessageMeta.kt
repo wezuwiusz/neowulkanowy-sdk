@@ -6,7 +6,7 @@ import kotlinx.serialization.Serializable
 import java.time.LocalDateTime
 
 @Serializable
-data class Message(
+data class MessageMeta(
 
     @SerialName("apiGlobalKey")
     val apiGlobalKey: String,
@@ -15,24 +15,29 @@ data class Message(
     @Serializable(with = CustomDateAdapter::class)
     val date: LocalDateTime,
 
+    @SerialName("hasZalaczniki")
+    val isAttachments: Boolean,
+
     @SerialName("id")
     val id: Int,
 
-    @SerialName("nadawca")
-    val sender: String,
+    @SerialName("korespondenci")
+    val correspondents: String,
 
-    @SerialName("odbiorcy")
-    val receivers: List<String>,
+    // @SerialName("nieprzeczytanePrzeczytanePrzez")
 
-    @SerialName("odczytana")
+    @SerialName("przeczytana")
     val isRead: Boolean,
+
+    @SerialName("skrzynka")
+    val mailbox: String,
 
     @SerialName("temat")
     val subject: String,
 
-    @SerialName("tresc")
-    val content: String,
+    @SerialName("uzytkownikRola")
+    val userRole: Int,
 
-    @SerialName("zalaczniki")
-    val attachments: List<MessageAttachment>,
+    @SerialName("wazna")
+    val isMarked: Boolean,
 )

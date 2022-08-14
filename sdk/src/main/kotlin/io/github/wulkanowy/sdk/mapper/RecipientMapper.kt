@@ -7,60 +7,35 @@ import io.github.wulkanowy.sdk.scrapper.messages.Recipient as ScrapperRecipient
 
 fun List<ScrapperRecipient>.mapRecipients() = map {
     Recipient(
-        id = it.id,
-        hash = it.hash,
-        loginId = it.loginId,
         name = it.name,
-        reportingUnitId = it.reportingUnitId,
-        role = it.role,
-        shortName = it.shortName.orEmpty()
+        mailboxGlobalKey = it.mailboxGlobalKey,
     )
 }
 
 fun List<Recipient>.mapFromRecipientsToScraper() = map {
     ScrapperRecipient(
-        id = it.id,
-        hash = it.hash,
-        loginId = it.loginId,
         name = it.name,
-        reportingUnitId = it.reportingUnitId,
-        role = it.role,
-        shortName = it.shortName
+        mailboxGlobalKey = it.mailboxGlobalKey,
     )
 }
 
 fun List<Recipient>.mapFromRecipientsToMobile() = map {
     MobileRecipient(
-        // id = it.id,
-        // hash = it.hash,
-        loginId = it.loginId,
+        loginId = it.mailboxGlobalKey.toInt(),
         name = it.name
-        // reportingUnitId = it.reportingUnitId,
-        // role = it.role,
-        // shortName = it.shortName
     )
 }
 
 fun List<MobileRecipient>.mapFromMobileToRecipients() = map {
     Recipient(
-        id = "",
-        loginId = it.loginId,
-        hash = "",
+        mailboxGlobalKey = it.loginId.toString(),
         name = it.name,
-        reportingUnitId = 0,
-        role = 0,
-        shortName = ""
     )
 }
 
 fun List<Teacher>.mapRecipients(reportingUnitId: Int) = map {
     Recipient(
-        id = it.loginId.toString(),
-        shortName = it.code,
-        role = 2,
-        reportingUnitId = reportingUnitId,
         name = "${it.name} ${it.surname}",
-        loginId = it.loginId,
-        hash = "NIE UŻYWAJ NADAWCÓW POBRANYCH W TRYBIE API DO WYSYŁANIA WIADOMOŚCI W TRYBIE SCRAPPER ANI ODWROTNIE" // TODO: throw exception then
+        mailboxGlobalKey = reportingUnitId.toString(),
     )
 }

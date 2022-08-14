@@ -4,11 +4,11 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class DeleteMessageRequest(
+data class MessageAttachment(
 
-    @SerialName("folder")
-    val folder: Int,
+    @SerialName("url")
+    val url: String,
 
-    @SerialName("messages")
-    val messages: List<Int>
+    @SerialName("nazwaPliku")
+    val filename: String,
 )
