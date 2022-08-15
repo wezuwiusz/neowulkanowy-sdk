@@ -17,37 +17,31 @@ class MessagesTest : BaseLocalTest() {
         MessagesRepository(getService(MessagesService::class.java, "http://fakelog.localhost:3000/", false))
     }
 
-    // @Test
-    // fun getRecipients() {
-    //     with(server) {
-    //         enqueue("Adresaci.json")
-    //         start(3000)
-    //     }
-    //
-    //     val recipients = runBlocking { api.getRecipients(6) }
-    //
-    //     assertEquals(4, recipients.size)
-    //
-    //     recipients[0].run {
-    //         assertEquals("18rPracownik", id)
-    //         assertEquals("Tracz Janusz [TJ] - pracownik (Fake123456)", name)
-    //         assertEquals("Tracz Janusz", shortName)
-    //         assertEquals(18, loginId)
-    //         assertEquals(6, reportingUnitId)
-    //         assertEquals(2, role)
-    //         assertEquals("NTVhNTQwMDhhZDFiYTU4OWFhMjEwZDI2MjljMWRmNDE=", hash)
-    //     }
-    //
-    //     recipients[3].run {
-    //         assertEquals("96rPracownik", id)
-    //         assertEquals("Kowalski Jan (JK) - pracownik [Fake123456]", name)
-    //         assertEquals("Kowalski Jan", shortName)
-    //         assertEquals(96, loginId)
-    //         assertEquals(6, reportingUnitId)
-    //         assertEquals(2, role)
-    //         assertEquals("NTVhNTQwMDhhZDFiYTU4OWFhMjEwZDI2MjljMWRmNDE=", hash)
-    //     }
-    // }
+    @Test
+    fun getRecipients() = runTest{
+        with(server) {
+            enqueue("Adresaci.json")
+            start(3000)
+        }
+
+        val recipients = api.getRecipients("uuidv4")
+
+        assertEquals(4, recipients.size)
+
+        recipients[0].run {
+            assertEquals("d09e482b-692e-41ff-96e4-b0b4647d0c80", mailboxGlobalKey)
+            assertEquals("Tracz Janusz", name)
+            assertEquals("Fake123456", schoolNameShort)
+            assertEquals(RecipientType.EMPLOYEE, type)
+        }
+
+        recipients[3].run {
+            assertEquals("33eae6c8-4dc6-42dd-a4f3-c54d324aa38f", mailboxGlobalKey)
+            assertEquals("Kowalski Jan", name)
+            assertEquals("Fake123456", schoolNameShort)
+            assertEquals(RecipientType.EMPLOYEE, type)
+        }
+    }
 
     @Test
     fun getReceivedMessagesTest() = runTest {

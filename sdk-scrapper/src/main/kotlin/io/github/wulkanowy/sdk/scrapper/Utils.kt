@@ -1,5 +1,7 @@
 package io.github.wulkanowy.sdk.scrapper
 
+import io.github.wulkanowy.sdk.scrapper.messages.Recipient
+import io.github.wulkanowy.sdk.scrapper.messages.RecipientType
 import org.jsoup.Jsoup.parse
 import java.text.Normalizer
 import java.text.SimpleDateFormat
@@ -68,6 +70,21 @@ fun String.getNormalizedSymbol(): String {
             "\\p{InCombiningDiacriticalMarks}+".toRegex().replace(this, "")
         }
     }.replace("[^a-z0-9]".toRegex(), "").ifBlank { "Default" }
+}
+
+fun List<Recipient>.normalizeRecipients() = map { it.parseName() }
+
+fun Recipient.parseName(): Recipient {
+    val typeLetter = name.substringAfter(" - ").substringBefore(" - ").trim()
+    val studentName = name.substringAfter(" - $typeLetter - ").substringBefore(" - (")
+    val userName = name.substringBefore(" - ")
+    val schoolName = name.substringAfter("(").trimEnd(')')
+    return copy(
+        name = name.substringBefore(" - "),
+        type = typeLetter.let { letter -> RecipientType.values().first { it.letter == letter } },
+        schoolNameShort = schoolName,
+        studentName = studentName.takeIf { it != "($schoolName)" } ?: userName,
+    )
 }
 
 fun String.capitalise() = replaceFirstChar { if (it.isLowerCase()) it.titlecase() else it.toString() }

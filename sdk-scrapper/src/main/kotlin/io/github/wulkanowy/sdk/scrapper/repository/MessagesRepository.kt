@@ -5,42 +5,33 @@ import io.github.wulkanowy.sdk.scrapper.messages.Message
 import io.github.wulkanowy.sdk.scrapper.messages.MessageMeta
 import io.github.wulkanowy.sdk.scrapper.messages.Recipient
 import io.github.wulkanowy.sdk.scrapper.messages.SendMessageRequest
+import io.github.wulkanowy.sdk.scrapper.normalizeRecipients
 import io.github.wulkanowy.sdk.scrapper.service.MessagesService
-import org.slf4j.LoggerFactory
 
 class MessagesRepository(private val api: MessagesService) {
-
-    companion object {
-        @JvmStatic
-        private val logger = LoggerFactory.getLogger(this::class.java)
-    }
 
     suspend fun getMailboxes(): List<Mailbox> {
         return api.getMailboxes()
     }
 
     suspend fun getRecipients(mailboxKey: String): List<Recipient> {
-        return api.getRecipients(mailboxKey)
+        return api.getRecipients(mailboxKey).normalizeRecipients()
     }
 
     suspend fun getReceivedMessages(lastMessageKey: Int = 0, pageSize: Int = 50): List<MessageMeta> {
         return api.getReceived(lastMessageKey, pageSize)
             .sortedBy { it.date }
-            // .map { it.normalizeRecipients() }
             .toList()
     }
 
     suspend fun getSentMessages(lastMessageKey: Int = 0, pageSize: Int = 50): List<MessageMeta> {
         return api.getSent(lastMessageKey, pageSize)
-            // .map { it.normalizeRecipients() }
             .sortedBy { it.date }
             .toList()
     }
 
     suspend fun getDeletedMessages(lastMessageKey: Int = 0, pageSize: Int = 50): List<MessageMeta> {
         return api.getDeleted(lastMessageKey, pageSize)
-            // .map { it.normalizeRecipients() }
-            // .map { it.apply { removed = true } }
             .sortedBy { it.date }
             .toList()
     }
@@ -50,7 +41,9 @@ class MessagesRepository(private val api: MessagesService) {
     }
 
     suspend fun getMessageDetails(globalKey: String): Message {
-        return api.getMessageDetails(globalKey)
+        return api.getMessageDetails(globalKey).let {
+            it.copy(recipients = it.recipients.normalizeRecipients())
+        }
     }
 
     suspend fun sendMessage(subject: String, content: String, recipients: List<String>, senderMailboxId: String) {

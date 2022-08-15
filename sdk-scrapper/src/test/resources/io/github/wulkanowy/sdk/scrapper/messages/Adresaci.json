@@ -1,49 +1,18 @@
-{
-  "success": true,
-  "data": [
-    {
-      "Id": "18rPracownik",
-      "Name": "Tracz Janusz [TJ] - pracownik (Fake123456)",
-      "IdLogin": 18,
-      "Unreaded": false,
-      "Date": null,
-      "Role": 2,
-      "PushMessage": false,
-      "UnitId": 6,
-      "Hash": "NTVhNTQwMDhhZDFiYTU4OWFhMjEwZDI2MjljMWRmNDE="
-    },
-    {
-      "Id": "94rPracownik",
-      "Name": "Lech Wałęsa [Dd] - pracownik (Fake123456)",
-      "IdLogin": 94,
-      "UnitId": 6,
-      "Role": 2,
-      "Unreaded": false,
-      "Date": null,
-      "PushMessage": null,
-      "Hash": "NTVhNTQwMDhhZDFiYTU4OWFhMjEwZDI2MjljMWRmNDE="
-    },
-    {
-      "Id": "95rPracownik",
-      "Name": "Czerwieńska - Kowalska Joanna [CJ] - pracownik (Fake123456)",
-      "IdLogin": 95,
-      "UnitId": 6,
-      "Role": 2,
-      "Unreaded": false,
-      "Date": null,
-      "PushMessage": null,
-      "Hash": "NTVhNTQwMDhhZDFiYTU4OWFhMjEwZDI2MjljMWRmNDE="
-    },
-    {
-      "Id": "96rPracownik",
-      "Name": "Kowalski Jan (JK) - pracownik [Fake123456]",
-      "IdLogin": 96,
-      "UnitId": 6,
-      "Role": 2,
-      "Unreaded": false,
-      "Date": null,
-      "PushMessage": null,
-      "Hash": "NTVhNTQwMDhhZDFiYTU4OWFhMjEwZDI2MjljMWRmNDE="
-    }
-  ]
-}
+[
+  {
+    "skrzynkaGlobalKey": "d09e482b-692e-41ff-96e4-b0b4647d0c80",
+    "nazwa": "Tracz Janusz - P - (Fake123456)"
+  },
+  {
+    "skrzynkaGlobalKey": "c6fcbc2d-c0ea-44cb-a43f-75a0269cb56a",
+    "nazwa": "Lech Wałęsa - P - (Fake123456)"
+  },
+  {
+    "skrzynkaGlobalKey": "9c5cf033-ed3b-4614-8069-e2b42a130ca8",
+    "nazwa": "Czerwieńska-Kowalska Joanna - P - (Fake123456)"
+  },
+  {
+    "skrzynkaGlobalKey": "33eae6c8-4dc6-42dd-a4f3-c54d324aa38f",
+    "nazwa": "Kowalski Jan - P - (Fake123456)"
+  }
+]
