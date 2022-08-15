@@ -1,12 +1,21 @@
 package io.github.wulkanowy.sdk.scrapper.messages
 
 import io.github.wulkanowy.sdk.scrapper.BaseLocalTest
+import io.github.wulkanowy.sdk.scrapper.repository.MessagesRepository
+import io.github.wulkanowy.sdk.scrapper.service.MessagesService
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.runTest
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
+import org.junit.Assert.assertTrue
+import org.junit.Test
 
+@OptIn(ExperimentalCoroutinesApi::class)
 class MessagesTest : BaseLocalTest() {
 
-    // private val api by lazy {
-    //     MessagesRepository(getService(MessagesService::class.java, "http://fakelog.localhost:3000/", false))
-    // }
+    private val api by lazy {
+        MessagesRepository(getService(MessagesService::class.java, "http://fakelog.localhost:3000/", false))
+    }
 
     // @Test
     // fun getRecipients() {
@@ -40,29 +49,30 @@ class MessagesTest : BaseLocalTest() {
     //     }
     // }
 
-    // @Test
-    // fun getReceivedMessagesTest() {
-    //     with(server) {
-    //         enqueue("WiadomosciOdebrane.json")
-    //         start(3000)
-    //     }
-    //
-    //     val messages = runBlocking { api.getReceivedMessages(null, null) }
-    //
-    //     assertEquals(2, messages.size)
-    //     with(messages[0]) {
-    //         assertEquals(false, unread)
-    //         assertEquals(null, content)
-    //         assertEquals("Temat wiadomości", subject)
-    //         assertEquals("Nazwisko Imię", sender?.name)
-    //         assertEquals("Jan Kowalski", recipients!![0].name)
-    //         assertEquals(27214, messageId)
-    //         assertEquals(3617, sender?.loginId)
-    //         assertEquals(true, hasAttachments)
-    //         assertEquals(35232, id)
-    //     }
-    //     assertEquals(false, messages[1].hasAttachments)
-    // }
+    @Test
+    fun getReceivedMessagesTest() = runTest {
+        with(server) {
+            enqueue("Odebrane.json")
+            start(3000)
+        }
+
+        val messages = api.getReceivedMessages(0, 50)
+
+        assertEquals(2, messages.size)
+        with(messages[0]) {
+            assertTrue(isRead)
+            assertEquals("Temat wiadomości", subject)
+            assertEquals("5be515a7-ded9-4e4d-bb29-15cc254e341f", apiGlobalKey)
+            assertEquals(getLocalDateTime(2022, 8, 15, 14, 17, 11), date)
+            assertEquals("Jan Sierpień - P - (123456)", correspondents)
+            assertEquals("Jan Kowalski - U - (123456)", mailbox)
+            assertEquals(2, userRole)
+            assertFalse(isMarked)
+            assertFalse(isAttachments)
+            assertEquals(35232, id)
+        }
+        assertEquals(true, messages[1].isAttachments)
+    }
 
     // @Test
     // fun getDeletedMessagesTest() {
