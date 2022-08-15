@@ -76,12 +76,14 @@ fun String.getNormalizedSymbol(): String {
 fun List<Recipient>.normalizeRecipients() = map { it.parseName() }
 
 fun Recipient.parseName(): Recipient {
-    val typeLetter = name.substringAfter(" - ").substringBefore(" - ").trim()
+    val typeSeparatorPosition = name.indexOfAny(RecipientType.values().map { " - ${it.letter} - " })
+
+    val userName = name.substring(0..typeSeparatorPosition).trim()
+    val typeLetter = name.substring(typeSeparatorPosition..typeSeparatorPosition + 3 * 2 + 1).substringAfter(" - ").substringBefore(" - ")
     val studentName = name.substringAfter(" - $typeLetter - ").substringBefore(" - (")
-    val userName = name.substringBefore(" - ")
     val schoolName = name.substringAfter("(").trimEnd(')')
     return copy(
-        name = name.substringBefore(" - "),
+        name = userName,
         type = typeLetter.let { letter -> RecipientType.values().first { it.letter == letter } },
         schoolNameShort = schoolName,
         studentName = studentName.takeIf { it != "($schoolName)" } ?: userName,

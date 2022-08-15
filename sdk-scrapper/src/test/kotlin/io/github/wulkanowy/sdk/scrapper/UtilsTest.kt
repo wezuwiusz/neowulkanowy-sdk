@@ -26,6 +26,15 @@ class UtilsTest {
     }
 
     @Test
+    fun `test parsing recipient name with multiple dashes and spaces`() {
+        val recipient = Recipient("", "Kazimierz Przerwa  - Tetmajer - P - (000011)").parseName()
+        assertEquals("Kazimierz Przerwa  - Tetmajer", recipient.name)
+        assertEquals("Kazimierz Przerwa  - Tetmajer", recipient.studentName)
+        assertEquals(RecipientType.EMPLOYEE, recipient.type)
+        assertEquals("000011", recipient.schoolNameShort)
+    }
+
+    @Test
     fun `test parsing recipient name with initials only`() {
         val recipient = Recipient("", "U R - P - (000011)").parseName()
         assertEquals("U R", recipient.name)
