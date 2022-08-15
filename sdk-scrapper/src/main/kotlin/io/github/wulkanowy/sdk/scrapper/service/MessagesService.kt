@@ -36,7 +36,7 @@ interface MessagesService {
         @Query("pageSize") pageSize: Int = 50,
     ): List<MessageMeta>
 
-    @POST("api/WiadomoscSzczegoly")
+    @POST("api/WiadomoscOdpowiedzPrzekaz")
     suspend fun getMessageDetails(@Query("apiGlobalKey") globalKey: String): Message
 
     @POST("api/WiadomoscNowa")

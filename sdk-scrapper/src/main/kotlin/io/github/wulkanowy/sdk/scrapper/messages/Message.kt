@@ -15,17 +15,17 @@ data class Message(
     @Serializable(with = CustomDateAdapter::class)
     val date: LocalDateTime,
 
-    @SerialName("id")
-    val id: Int,
+    @SerialName("uzytkownikSkrzynkaGlobalKey")
+    val mailboxId: String,
 
-    @SerialName("nadawca")
-    val sender: String,
+    @SerialName("nadawcaSkrzynkaGlobalKey")
+    val senderMailboxId: String,
 
-    @SerialName("odbiorcy")
-    val receivers: List<String>,
+    @SerialName("nadawcaSkrzynkaNazwa")
+    val senderMailboxName: String,
 
-    @SerialName("odczytana")
-    val isRead: Boolean,
+    @SerialName("adresaci")
+    val recipients: List<Recipient>,
 
     @SerialName("temat")
     val subject: String,
@@ -35,4 +35,7 @@ data class Message(
 
     @SerialName("zalaczniki")
     val attachments: List<MessageAttachment>,
+
+    @SerialName("id")
+    val id: Int,
 )

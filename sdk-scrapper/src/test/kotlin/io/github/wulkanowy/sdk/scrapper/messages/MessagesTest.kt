@@ -180,16 +180,16 @@ class MessagesTest : BaseLocalTest() {
     //     }
     // }
 
-    // @Test
-    // fun getMessageContentTest() {
-    //     with(server) {
-    //         enqueue("Start.html")
-    //         enqueue("Wiadomosc.json")
-    //         start(3000)
-    //     }
-    //
-    //     assertEquals(90, runBlocking { api.getMessage(1, 1, false, 0) }.length)
-    // }
+    @Test
+    fun getMessageContentTest() = runTest {
+        with(server) {
+            enqueue("WiadomoscOdpowiedzPrzekaz.json")
+            start(3000)
+        }
+
+        val res = api.getMessageDetails("uuidv4")
+        assertEquals(125, res.content.length)
+    }
 
     // @Test
     // fun sendMessageTest() {
