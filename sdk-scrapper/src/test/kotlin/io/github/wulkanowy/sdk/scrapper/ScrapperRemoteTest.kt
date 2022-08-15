@@ -338,7 +338,7 @@ class ScrapperRemoteTest : BaseTest() {
         val trash = runBlocking { api.getDeletedMessages() }
         assertEquals(8, trash.size)
 
-        val mRecipients = runBlocking { api.getMessageRecipients(0) }
+        val mRecipients = runBlocking { api.getMessageRecipients("uuidv4") }
         assertEquals(1, mRecipients.size)
 
         val details = runBlocking { api.getMessageDetails("asdf") }
@@ -352,6 +352,7 @@ class ScrapperRemoteTest : BaseTest() {
                 subject = "Temat wiadomości",
                 content = "Treść",
                 recipients = listOf("asdf"),
+                senderMailboxId = "uuidv4"
             )
         }
     }

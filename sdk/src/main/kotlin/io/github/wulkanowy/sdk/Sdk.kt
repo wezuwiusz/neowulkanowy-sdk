@@ -516,9 +516,9 @@ class Sdk {
         }
     }
 
-    suspend fun getMessageRecipients(messageId: Int, senderId: Int): List<Recipient> = withContext(Dispatchers.IO) {
+    suspend fun getMessageRecipients(messageId: String): List<Recipient> = withContext(Dispatchers.IO) {
         when (mode) {
-            Mode.HYBRID, Mode.SCRAPPER -> scrapper.getMessageRecipients(messageId, senderId).mapRecipients()
+            Mode.HYBRID, Mode.SCRAPPER -> scrapper.getMessageRecipients(messageId).mapRecipients()
             Mode.API -> TODO()
         }
     }
@@ -528,14 +528,14 @@ class Sdk {
             Mode.HYBRID, Mode.SCRAPPER -> scrapper.getMessageDetails(messageId).mapScrapperMessage()
             Mode.API -> {
                 mobile.changeMessageStatus(messageId, "", "Widoczna")
-                MessageDetails("", emptyList())
+                TODO()
             }
         }
     }
 
-    suspend fun sendMessage(subject: String, content: String, recipients: List<Recipient>) = withContext(Dispatchers.IO) {
+    suspend fun sendMessage(subject: String, content: String, recipients: List<Recipient>, mailboxId: String) = withContext(Dispatchers.IO) {
         when (mode) {
-            Mode.HYBRID, Mode.SCRAPPER -> scrapper.sendMessage(subject, content, recipients.map { it.mailboxGlobalKey })
+            Mode.HYBRID, Mode.SCRAPPER -> scrapper.sendMessage(subject, content, recipients.map { it.mailboxGlobalKey }, mailboxId)
             Mode.API -> mobile.sendMessage(subject, content, recipients.mapFromRecipientsToMobile())
         }
     }

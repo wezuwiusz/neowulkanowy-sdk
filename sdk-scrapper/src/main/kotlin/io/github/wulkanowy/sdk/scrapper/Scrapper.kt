@@ -345,11 +345,11 @@ class Scrapper {
 
     suspend fun getDeletedMessages(lastMessageKey: Int = 0, pageSize: Int = 50): List<MessageMeta> = messages.getDeletedMessages(lastMessageKey, pageSize)
 
-    suspend fun getMessageRecipients(messageId: Int, loginId: Int = 0): List<Recipient> = messages.getMessageRecipients(messageId, loginId)
+    suspend fun getMessageRecipients(globalKey: String): List<Recipient> = messages.getMessageRecipients(globalKey)
 
     suspend fun getMessageDetails(globalKey: String): Message = messages.getMessageDetails(globalKey)
 
-    suspend fun sendMessage(subject: String, content: String, recipients: List<String>) = messages.sendMessage(subject, content, recipients)
+    suspend fun sendMessage(subject: String, content: String, recipients: List<String>, senderMailboxId: String) = messages.sendMessage(subject, content, recipients, senderMailboxId)
 
     suspend fun deleteMessages(messagesToDelete: List<String>) = messages.deleteMessages(messagesToDelete)
 

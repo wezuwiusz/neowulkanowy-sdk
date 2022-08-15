@@ -56,17 +56,25 @@ fun List<ScrapperMessageMeta>.mapMessages(zoneId: ZoneId, folderId: Folder) = ma
         recipients = emptyList(),
         sender = null,
         correspondents = it.correspondents,
-        unread = it.isRead,
+        unread = !it.isRead,
         hasAttachments = it.isAttachments,
     )
 }
 
 fun ScrapperMessage.mapScrapperMessage() = MessageDetails(
     content = content,
+    apiGlobalKey = apiGlobalKey,
+    date = date,
+    mailboxId = mailboxId,
+    senderMailboxId = senderMailboxId,
+    senderMailboxName = senderMailboxName,
+    recipients = recipients.mapRecipients(),
+    subject = subject,
+    id = id,
     attachments = attachments.map {
         MessageAttachment(
             url = it.url,
             filename = it.filename
         )
-    }
+    },
 )

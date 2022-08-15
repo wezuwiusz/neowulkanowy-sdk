@@ -45,19 +45,19 @@ class MessagesRepository(private val api: MessagesService) {
             .toList()
     }
 
-    suspend fun getMessageRecipients(messageId: Int, loginId: Int): List<Recipient> {
-        return emptyList()
+    suspend fun getMessageRecipients(globalKey: String): List<Recipient> {
+        return api.getMessageDetails(globalKey).recipients
     }
 
     suspend fun getMessageDetails(globalKey: String): Message {
         return api.getMessageDetails(globalKey)
     }
 
-    suspend fun sendMessage(subject: String, content: String, recipients: List<String>) {
+    suspend fun sendMessage(subject: String, content: String, recipients: List<String>, senderMailboxId: String) {
         val body = SendMessageRequest(
-            globalKey = "",
-            threadGlobalKey = "",
-            senderMailboxGlobalKey = "",
+            globalKey = "00000000-0000-0000-0000-000000000000",
+            threadGlobalKey = "00000000-0000-0000-0000-000000000000",
+            senderMailboxGlobalKey = senderMailboxId,
             recipientsMailboxGlobalKeys = recipients,
             subject = subject,
             content = content,
