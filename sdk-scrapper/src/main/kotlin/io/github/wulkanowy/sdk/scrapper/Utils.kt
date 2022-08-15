@@ -1,5 +1,6 @@
 package io.github.wulkanowy.sdk.scrapper
 
+import io.github.wulkanowy.sdk.scrapper.messages.Mailbox
 import io.github.wulkanowy.sdk.scrapper.messages.Recipient
 import io.github.wulkanowy.sdk.scrapper.messages.RecipientType
 import org.jsoup.Jsoup.parse
@@ -86,5 +87,16 @@ fun Recipient.parseName(): Recipient {
         studentName = studentName.takeIf { it != "($schoolName)" } ?: userName,
     )
 }
+
+fun Mailbox.toRecipient() = Recipient(
+    mailboxGlobalKey = globalKey,
+    name = name,
+)
+
+fun Recipient.toMailbox() = Mailbox(
+    globalKey = mailboxGlobalKey,
+    name = name,
+    userType = -1,
+)
 
 fun String.capitalise() = replaceFirstChar { if (it.isLowerCase()) it.titlecase() else it.toString() }

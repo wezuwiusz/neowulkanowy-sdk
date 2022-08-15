@@ -6,12 +6,19 @@ import io.github.wulkanowy.sdk.scrapper.messages.MessageMeta
 import io.github.wulkanowy.sdk.scrapper.messages.Recipient
 import io.github.wulkanowy.sdk.scrapper.messages.SendMessageRequest
 import io.github.wulkanowy.sdk.scrapper.normalizeRecipients
+import io.github.wulkanowy.sdk.scrapper.parseName
 import io.github.wulkanowy.sdk.scrapper.service.MessagesService
+import io.github.wulkanowy.sdk.scrapper.toMailbox
+import io.github.wulkanowy.sdk.scrapper.toRecipient
 
 class MessagesRepository(private val api: MessagesService) {
 
     suspend fun getMailboxes(): List<Mailbox> {
-        return api.getMailboxes()
+        return api.getMailboxes().map {
+            it.toRecipient()
+                .parseName()
+                .toMailbox()
+        }
     }
 
     suspend fun getRecipients(mailboxKey: String): List<Recipient> {

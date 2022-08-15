@@ -18,7 +18,7 @@ class MessagesTest : BaseLocalTest() {
     }
 
     @Test
-    fun getRecipients() = runTest{
+    fun getRecipients() = runTest {
         with(server) {
             enqueue("Adresaci.json")
             start(3000)
