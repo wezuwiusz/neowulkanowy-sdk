@@ -1,7 +1,8 @@
 package io.github.wulkanowy.sdk.scrapper.service
 
 import io.github.wulkanowy.sdk.scrapper.messages.Mailbox
-import io.github.wulkanowy.sdk.scrapper.messages.Message
+import io.github.wulkanowy.sdk.scrapper.messages.MessageDetails
+import io.github.wulkanowy.sdk.scrapper.messages.MessageReplayDetails
 import io.github.wulkanowy.sdk.scrapper.messages.MessageMeta
 import io.github.wulkanowy.sdk.scrapper.messages.Recipient
 import io.github.wulkanowy.sdk.scrapper.messages.SendMessageRequest
@@ -57,8 +58,11 @@ interface MessagesService {
         @Query("pageSize") pageSize: Int = 50,
     ): List<MessageMeta>
 
+    @GET("api/WiadomoscSzczegoly")
+    suspend fun getMessageDetails(@Query("apiGlobalKey") globalKey: String): MessageDetails
+
     @GET("api/WiadomoscOdpowiedzPrzekaz")
-    suspend fun getMessageDetails(@Query("apiGlobalKey") globalKey: String): Message
+    suspend fun getMessageReplayDetails(@Query("apiGlobalKey") globalKey: String): MessageReplayDetails
 
     @POST("api/WiadomoscNowa")
     suspend fun sendMessage(@Body sendMessageRequest: SendMessageRequest)

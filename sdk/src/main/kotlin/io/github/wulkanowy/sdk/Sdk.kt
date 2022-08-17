@@ -58,6 +58,7 @@ import io.github.wulkanowy.sdk.pojo.LuckyNumber
 import io.github.wulkanowy.sdk.pojo.Mailbox
 import io.github.wulkanowy.sdk.pojo.Message
 import io.github.wulkanowy.sdk.pojo.MessageDetails
+import io.github.wulkanowy.sdk.pojo.MessageReplayDetails
 import io.github.wulkanowy.sdk.pojo.Note
 import io.github.wulkanowy.sdk.pojo.Recipient
 import io.github.wulkanowy.sdk.pojo.School
@@ -516,18 +517,18 @@ class Sdk {
         }
     }
 
-    suspend fun getMessageRecipients(messageId: String): List<Recipient> = withContext(Dispatchers.IO) {
+    suspend fun getMessageReplayDetails(messageKey: String): MessageReplayDetails = withContext(Dispatchers.IO) {
         when (mode) {
-            Mode.HYBRID, Mode.SCRAPPER -> scrapper.getMessageRecipients(messageId).mapRecipients()
+            Mode.HYBRID, Mode.SCRAPPER -> scrapper.getMessageReplayDetails(messageKey).mapScrapperMessage()
             Mode.API -> TODO()
         }
     }
 
-    suspend fun getMessageDetails(messageId: String): MessageDetails = withContext(Dispatchers.IO) {
+    suspend fun getMessageDetails(messageKey: String): MessageDetails = withContext(Dispatchers.IO) {
         when (mode) {
-            Mode.HYBRID, Mode.SCRAPPER -> scrapper.getMessageDetails(messageId).mapScrapperMessage()
+            Mode.HYBRID, Mode.SCRAPPER -> scrapper.getMessageDetails(messageKey).mapScrapperMessage()
             Mode.API -> {
-                mobile.changeMessageStatus(messageId, "", "Widoczna")
+                mobile.changeMessageStatus(messageKey, "", "Widoczna")
                 TODO()
             }
         }

@@ -5,10 +5,12 @@ import io.github.wulkanowy.sdk.pojo.Folder
 import io.github.wulkanowy.sdk.pojo.Message
 import io.github.wulkanowy.sdk.pojo.MessageAttachment
 import io.github.wulkanowy.sdk.pojo.MessageDetails
+import io.github.wulkanowy.sdk.pojo.MessageReplayDetails
 import io.github.wulkanowy.sdk.toLocalDateTime
 import java.time.ZoneId
 import io.github.wulkanowy.sdk.mobile.messages.Message as ApiMessage
-import io.github.wulkanowy.sdk.scrapper.messages.Message as ScrapperMessage
+import io.github.wulkanowy.sdk.scrapper.messages.MessageReplayDetails as ScrapperReplayDetailsMessage
+import io.github.wulkanowy.sdk.scrapper.messages.MessageDetails as ScrapperDetailsMessage
 import io.github.wulkanowy.sdk.scrapper.messages.MessageMeta as ScrapperMessageMeta
 
 @JvmName("mapApiMessages")
@@ -50,7 +52,23 @@ fun List<ScrapperMessageMeta>.mapMessages(zoneId: ZoneId, folderId: Folder) = ma
     )
 }
 
-fun ScrapperMessage.mapScrapperMessage() = MessageDetails(
+fun ScrapperDetailsMessage.mapScrapperMessage() = MessageDetails(
+    content = content,
+    apiGlobalKey = apiGlobalKey,
+    date = date,
+    sender = sender,
+    recipients = recipients,
+    subject = subject,
+    id = id,
+    attachments = attachments.map {
+        MessageAttachment(
+            url = it.url,
+            filename = it.filename
+        )
+    },
+)
+
+fun ScrapperReplayDetailsMessage.mapScrapperMessage() = MessageReplayDetails(
     content = content,
     apiGlobalKey = apiGlobalKey,
     date = date,

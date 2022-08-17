@@ -20,7 +20,8 @@ import io.github.wulkanowy.sdk.scrapper.homework.Homework
 import io.github.wulkanowy.sdk.scrapper.login.LoginHelper
 import io.github.wulkanowy.sdk.scrapper.messages.Folder
 import io.github.wulkanowy.sdk.scrapper.messages.Mailbox
-import io.github.wulkanowy.sdk.scrapper.messages.Message
+import io.github.wulkanowy.sdk.scrapper.messages.MessageDetails
+import io.github.wulkanowy.sdk.scrapper.messages.MessageReplayDetails
 import io.github.wulkanowy.sdk.scrapper.messages.MessageMeta
 import io.github.wulkanowy.sdk.scrapper.messages.Recipient
 import io.github.wulkanowy.sdk.scrapper.mobile.Device
@@ -346,9 +347,9 @@ class Scrapper {
 
     suspend fun getDeletedMessages(mailboxKey: String? = null, lastMessageKey: Int = 0, pageSize: Int = 50): List<MessageMeta> = messages.getDeletedMessages(mailboxKey, lastMessageKey, pageSize)
 
-    suspend fun getMessageRecipients(globalKey: String): List<Recipient> = messages.getMessageRecipients(globalKey)
+    suspend fun getMessageReplayDetails(globalKey: String): MessageReplayDetails = messages.getMessageReplayDetails(globalKey)
 
-    suspend fun getMessageDetails(globalKey: String): Message = messages.getMessageDetails(globalKey)
+    suspend fun getMessageDetails(globalKey: String): MessageDetails = messages.getMessageDetails(globalKey)
 
     suspend fun sendMessage(subject: String, content: String, recipients: List<String>, senderMailboxId: String) = messages.sendMessage(subject, content, recipients, senderMailboxId)
 

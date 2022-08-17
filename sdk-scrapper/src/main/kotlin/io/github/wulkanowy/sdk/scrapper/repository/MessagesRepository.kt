@@ -1,8 +1,9 @@
 package io.github.wulkanowy.sdk.scrapper.repository
 
 import io.github.wulkanowy.sdk.scrapper.messages.Mailbox
-import io.github.wulkanowy.sdk.scrapper.messages.Message
+import io.github.wulkanowy.sdk.scrapper.messages.MessageDetails
 import io.github.wulkanowy.sdk.scrapper.messages.MessageMeta
+import io.github.wulkanowy.sdk.scrapper.messages.MessageReplayDetails
 import io.github.wulkanowy.sdk.scrapper.messages.Recipient
 import io.github.wulkanowy.sdk.scrapper.messages.SendMessageRequest
 import io.github.wulkanowy.sdk.scrapper.normalizeRecipients
@@ -57,14 +58,12 @@ class MessagesRepository(private val api: MessagesService) {
             .toList()
     }
 
-    suspend fun getMessageRecipients(globalKey: String): List<Recipient> {
-        return api.getMessageDetails(globalKey).recipients
+    suspend fun getMessageReplayDetails(globalKey: String): MessageReplayDetails {
+        return api.getMessageReplayDetails(globalKey)
     }
 
-    suspend fun getMessageDetails(globalKey: String): Message {
-        return api.getMessageDetails(globalKey).let {
-            it.copy(recipients = it.recipients.normalizeRecipients())
-        }
+    suspend fun getMessageDetails(globalKey: String): MessageDetails {
+        return api.getMessageDetails(globalKey)
     }
 
     suspend fun sendMessage(subject: String, content: String, recipients: List<String>, senderMailboxId: String) {

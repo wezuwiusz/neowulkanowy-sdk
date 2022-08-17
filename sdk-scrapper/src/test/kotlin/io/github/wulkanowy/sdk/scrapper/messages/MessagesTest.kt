@@ -181,7 +181,7 @@ class MessagesTest : BaseLocalTest() {
             start(3000)
         }
 
-        val res = api.getMessageDetails("uuidv4")
+        val res = api.getMessageReplayDetails("uuidv4")
         assertEquals(125, res.content.length)
     }
 
