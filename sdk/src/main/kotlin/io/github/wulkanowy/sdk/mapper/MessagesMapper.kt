@@ -1,12 +1,10 @@
 package io.github.wulkanowy.sdk.mapper
 
-import io.github.wulkanowy.sdk.mobile.dictionaries.Dictionaries
 import io.github.wulkanowy.sdk.normalizeRecipient
 import io.github.wulkanowy.sdk.pojo.Folder
 import io.github.wulkanowy.sdk.pojo.Message
 import io.github.wulkanowy.sdk.pojo.MessageAttachment
 import io.github.wulkanowy.sdk.pojo.MessageDetails
-import io.github.wulkanowy.sdk.pojo.Sender
 import io.github.wulkanowy.sdk.toLocalDateTime
 import java.time.ZoneId
 import io.github.wulkanowy.sdk.mobile.messages.Message as ApiMessage
@@ -14,20 +12,12 @@ import io.github.wulkanowy.sdk.scrapper.messages.Message as ScrapperMessage
 import io.github.wulkanowy.sdk.scrapper.messages.MessageMeta as ScrapperMessageMeta
 
 @JvmName("mapApiMessages")
-fun List<ApiMessage>.mapMessages(dictionaries: Dictionaries, zoneId: ZoneId) = map {
+fun List<ApiMessage>.mapMessages(zoneId: ZoneId) = map {
     Message(
+        globalKey = it.messageId.toString(),
         id = it.messageId,
         unread = it.folder == "Odebrane" && it.readDateTime == null,
-        sender = Sender(
-            id = null,
-            loginId = it.senderId,
-            name = it.senderName ?: dictionaries.employees.singleOrNull { employee -> employee.id == it.senderId }?.let { e -> "${e.name} ${e.surname}" },
-            reportingUnitId = null,
-            hash = null,
-            role = 2
-        ),
         recipients = it.recipients?.map { recipient -> recipient.copy(name = recipient.name.normalizeRecipient()) }?.mapFromMobileToRecipients().orEmpty(),
-        messageId = it.messageId.toString(),
         correspondents = "",
         mailbox = "",
         folderId = when (it.folder) {
@@ -45,6 +35,7 @@ fun List<ApiMessage>.mapMessages(dictionaries: Dictionaries, zoneId: ZoneId) = m
 
 fun List<ScrapperMessageMeta>.mapMessages(zoneId: ZoneId, folderId: Folder) = map {
     Message(
+        globalKey = it.apiGlobalKey,
         id = it.id,
         mailbox = it.mailbox,
         subject = it.subject,
@@ -52,9 +43,7 @@ fun List<ScrapperMessageMeta>.mapMessages(zoneId: ZoneId, folderId: Folder) = ma
         dateZoned = it.date.atZone(zoneId),
         content = null,
         folderId = folderId.id,
-        messageId = it.apiGlobalKey,
         recipients = emptyList(),
-        sender = null,
         correspondents = it.correspondents,
         unread = !it.isRead,
         hasAttachments = it.isAttachments,

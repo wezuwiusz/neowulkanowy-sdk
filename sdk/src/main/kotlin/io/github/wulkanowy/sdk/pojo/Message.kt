@@ -4,10 +4,9 @@ import java.time.LocalDateTime
 import java.time.ZonedDateTime
 
 data class Message(
-    val id: Int?,
-    val messageId: String?,
+    val globalKey: String,
+    val id: Int,
     val mailbox: String,
-    val sender: Sender?,
     val recipients: List<Recipient>,
     val correspondents: String,
     val subject: String,

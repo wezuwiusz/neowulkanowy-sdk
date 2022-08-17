@@ -498,21 +498,21 @@ class Sdk {
     suspend fun getReceivedMessages(): List<Message> = withContext(Dispatchers.IO) {
         when (mode) {
             Mode.HYBRID, Mode.SCRAPPER -> scrapper.getReceivedMessages().mapMessages(registerTimeZone, Folder.RECEIVED)
-            Mode.API -> mobile.getMessages(LocalDateTime.now(), LocalDateTime.now()).mapMessages(mobile.getDictionaries(), registerTimeZone)
+            Mode.API -> mobile.getMessages(LocalDateTime.now(), LocalDateTime.now()).mapMessages(registerTimeZone)
         }
     }
 
     suspend fun getSentMessages(): List<Message> = withContext(Dispatchers.IO) {
         when (mode) {
             Mode.HYBRID, Mode.SCRAPPER -> scrapper.getSentMessages().mapMessages(registerTimeZone, Folder.SENT)
-            Mode.API -> mobile.getMessagesSent(LocalDateTime.now(), LocalDateTime.now()).mapMessages(mobile.getDictionaries(), registerTimeZone)
+            Mode.API -> mobile.getMessagesSent(LocalDateTime.now(), LocalDateTime.now()).mapMessages(registerTimeZone)
         }
     }
 
     suspend fun getDeletedMessages(): List<Message> = withContext(Dispatchers.IO) {
         when (mode) {
             Mode.HYBRID, Mode.SCRAPPER -> scrapper.getDeletedMessages().mapMessages(registerTimeZone, Folder.TRASHED)
-            Mode.API -> mobile.getMessagesDeleted(LocalDateTime.now(), LocalDateTime.now()).mapMessages(mobile.getDictionaries(), registerTimeZone)
+            Mode.API -> mobile.getMessagesDeleted(LocalDateTime.now(), LocalDateTime.now()).mapMessages(registerTimeZone)
         }
     }
 
