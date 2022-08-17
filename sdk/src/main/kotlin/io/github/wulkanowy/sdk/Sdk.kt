@@ -487,31 +487,31 @@ class Sdk {
         }
     }
 
-    suspend fun getMessages(folder: Folder): List<Message> = withContext(Dispatchers.IO) {
+    suspend fun getMessages(folder: Folder, mailboxKey: String? = null): List<Message> = withContext(Dispatchers.IO) {
         when (folder) {
-            Folder.RECEIVED -> getReceivedMessages()
-            Folder.SENT -> getSentMessages()
-            Folder.TRASHED -> getDeletedMessages()
+            Folder.RECEIVED -> getReceivedMessages(mailboxKey)
+            Folder.SENT -> getSentMessages(mailboxKey)
+            Folder.TRASHED -> getDeletedMessages(mailboxKey)
         }
     }
 
-    suspend fun getReceivedMessages(): List<Message> = withContext(Dispatchers.IO) {
+    suspend fun getReceivedMessages(mailboxKey: String? = null): List<Message> = withContext(Dispatchers.IO) {
         when (mode) {
-            Mode.HYBRID, Mode.SCRAPPER -> scrapper.getReceivedMessages().mapMessages(registerTimeZone, Folder.RECEIVED)
+            Mode.HYBRID, Mode.SCRAPPER -> scrapper.getReceivedMessages(mailboxKey).mapMessages(registerTimeZone, Folder.RECEIVED)
             Mode.API -> mobile.getMessages(LocalDateTime.now(), LocalDateTime.now()).mapMessages(registerTimeZone)
         }
     }
 
-    suspend fun getSentMessages(): List<Message> = withContext(Dispatchers.IO) {
+    suspend fun getSentMessages(mailboxKey: String? = null): List<Message> = withContext(Dispatchers.IO) {
         when (mode) {
-            Mode.HYBRID, Mode.SCRAPPER -> scrapper.getSentMessages().mapMessages(registerTimeZone, Folder.SENT)
+            Mode.HYBRID, Mode.SCRAPPER -> scrapper.getSentMessages(mailboxKey).mapMessages(registerTimeZone, Folder.SENT)
             Mode.API -> mobile.getMessagesSent(LocalDateTime.now(), LocalDateTime.now()).mapMessages(registerTimeZone)
         }
     }
 
-    suspend fun getDeletedMessages(): List<Message> = withContext(Dispatchers.IO) {
+    suspend fun getDeletedMessages(mailboxKey: String? = null): List<Message> = withContext(Dispatchers.IO) {
         when (mode) {
-            Mode.HYBRID, Mode.SCRAPPER -> scrapper.getDeletedMessages().mapMessages(registerTimeZone, Folder.TRASHED)
+            Mode.HYBRID, Mode.SCRAPPER -> scrapper.getDeletedMessages(mailboxKey).mapMessages(registerTimeZone, Folder.TRASHED)
             Mode.API -> mobile.getMessagesDeleted(LocalDateTime.now(), LocalDateTime.now()).mapMessages(registerTimeZone)
         }
     }

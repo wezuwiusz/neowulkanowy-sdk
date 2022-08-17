@@ -50,7 +50,7 @@ class MessagesTest : BaseLocalTest() {
             start(3000)
         }
 
-        val messages = api.getReceivedMessages(0, 50)
+        val messages = api.getReceivedMessages("", 0, 50)
 
         assertEquals(2, messages.size)
         with(messages[0]) {

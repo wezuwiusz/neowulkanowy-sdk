@@ -331,19 +331,20 @@ class Scrapper {
 
     suspend fun getMessages(
         folder: Folder,
+        mailboxKey: String? = null,
         lastMessageKey: Int = 0,
         pageSize: Int = 50
     ): List<MessageMeta> = when (folder) {
-        Folder.RECEIVED -> messages.getReceivedMessages(lastMessageKey, pageSize)
-        Folder.SENT -> messages.getSentMessages(lastMessageKey, pageSize)
-        Folder.TRASHED -> messages.getDeletedMessages(lastMessageKey, pageSize)
+        Folder.RECEIVED -> messages.getReceivedMessages(mailboxKey, lastMessageKey, pageSize)
+        Folder.SENT -> messages.getSentMessages(mailboxKey, lastMessageKey, pageSize)
+        Folder.TRASHED -> messages.getDeletedMessages(mailboxKey, lastMessageKey, pageSize)
     }
 
-    suspend fun getReceivedMessages(lastMessageKey: Int = 0, pageSize: Int = 50): List<MessageMeta> = messages.getReceivedMessages(lastMessageKey, pageSize)
+    suspend fun getReceivedMessages(mailboxKey: String? = null, lastMessageKey: Int = 0, pageSize: Int = 50): List<MessageMeta> = messages.getReceivedMessages(mailboxKey, lastMessageKey, pageSize)
 
-    suspend fun getSentMessages(lastMessageKey: Int = 0, pageSize: Int = 50): List<MessageMeta> = messages.getSentMessages(lastMessageKey, pageSize)
+    suspend fun getSentMessages(mailboxKey: String? = null, lastMessageKey: Int = 0, pageSize: Int = 50): List<MessageMeta> = messages.getSentMessages(mailboxKey, lastMessageKey, pageSize)
 
-    suspend fun getDeletedMessages(lastMessageKey: Int = 0, pageSize: Int = 50): List<MessageMeta> = messages.getDeletedMessages(lastMessageKey, pageSize)
+    suspend fun getDeletedMessages(mailboxKey: String? = null, lastMessageKey: Int = 0, pageSize: Int = 50): List<MessageMeta> = messages.getDeletedMessages(mailboxKey, lastMessageKey, pageSize)
 
     suspend fun getMessageRecipients(globalKey: String): List<Recipient> = messages.getMessageRecipients(globalKey)
 

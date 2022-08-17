@@ -24,14 +24,35 @@ interface MessagesService {
         @Query("pageSize") pageSize: Int = 50,
     ): List<MessageMeta>
 
+    @GET("api/OdebraneSkrzynka")
+    suspend fun getReceivedMailbox(
+        @Query("globalKeySkrzynka") mailboxKey: String,
+        @Query("idLastWiadomosc") lastMessageKey: Int = 0,
+        @Query("pageSize") pageSize: Int = 50,
+    ): List<MessageMeta>
+
     @GET("api/Wyslane")
     suspend fun getSent(
         @Query("idLastWiadomosc") lastMessageKey: Int = 0,
         @Query("pageSize") pageSize: Int = 50,
     ): List<MessageMeta>
 
+    @GET("api/WyslaneSkrzynka")
+    suspend fun getSentMailbox(
+        @Query("globalKeySkrzynka") mailboxKey: String,
+        @Query("idLastWiadomosc") lastMessageKey: Int = 0,
+        @Query("pageSize") pageSize: Int = 50,
+    ): List<MessageMeta>
+
     @GET("api/Usuniete")
     suspend fun getDeleted(
+        @Query("idLastWiadomosc") lastMessageKey: Int = 0,
+        @Query("pageSize") pageSize: Int = 50,
+    ): List<MessageMeta>
+
+    @GET("api/UsunieteSkrzynka")
+    suspend fun getDeletedMailbox(
+        @Query("globalKeySkrzynka") mailboxKey: String,
         @Query("idLastWiadomosc") lastMessageKey: Int = 0,
         @Query("pageSize") pageSize: Int = 50,
     ): List<MessageMeta>

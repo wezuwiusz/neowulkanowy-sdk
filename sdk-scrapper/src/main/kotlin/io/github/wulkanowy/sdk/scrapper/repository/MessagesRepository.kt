@@ -26,20 +26,33 @@ class MessagesRepository(private val api: MessagesService) {
         return api.getRecipients(mailboxKey).normalizeRecipients()
     }
 
-    suspend fun getReceivedMessages(lastMessageKey: Int = 0, pageSize: Int = 50): List<MessageMeta> {
-        return api.getReceived(lastMessageKey, pageSize)
+    suspend fun getReceivedMessages(mailboxKey: String?, lastMessageKey: Int = 0, pageSize: Int = 50): List<MessageMeta> {
+        val messages = when (mailboxKey) {
+            null -> api.getReceived(lastMessageKey, pageSize)
+            else -> api.getReceivedMailbox(mailboxKey, lastMessageKey, pageSize)
+        }
+
+        return messages
             .sortedBy { it.date }
             .toList()
     }
 
-    suspend fun getSentMessages(lastMessageKey: Int = 0, pageSize: Int = 50): List<MessageMeta> {
-        return api.getSent(lastMessageKey, pageSize)
+    suspend fun getSentMessages(mailboxKey: String?, lastMessageKey: Int = 0, pageSize: Int = 50): List<MessageMeta> {
+        val messages = when (mailboxKey) {
+            null -> api.getSent(lastMessageKey, pageSize)
+            else -> api.getSentMailbox(mailboxKey, lastMessageKey, pageSize)
+        }
+        return messages
             .sortedBy { it.date }
             .toList()
     }
 
-    suspend fun getDeletedMessages(lastMessageKey: Int = 0, pageSize: Int = 50): List<MessageMeta> {
-        return api.getDeleted(lastMessageKey, pageSize)
+    suspend fun getDeletedMessages(mailboxKey: String?, lastMessageKey: Int = 0, pageSize: Int = 50): List<MessageMeta> {
+        val messages = when (mailboxKey) {
+            null -> api.getDeleted(lastMessageKey, pageSize)
+            else -> api.getDeletedMailbox(mailboxKey, lastMessageKey, pageSize)
+        }
+        return messages
             .sortedBy { it.date }
             .toList()
     }
