@@ -92,13 +92,17 @@ fun Recipient.parseName(): Recipient {
 
 fun Mailbox.toRecipient() = Recipient(
     mailboxGlobalKey = globalKey,
+    studentName = studentName,
     name = name,
+    schoolNameShort = schoolNameShort,
 )
 
 fun Recipient.toMailbox() = Mailbox(
     globalKey = mailboxGlobalKey,
     name = name,
     userType = -1,
+    studentName = studentName,
+    schoolNameShort = schoolNameShort,
 )
 
 fun String.capitalise() = replaceFirstChar { if (it.isLowerCase()) it.titlecase() else it.toString() }
