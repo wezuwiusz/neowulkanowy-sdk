@@ -10,6 +10,7 @@ import io.github.wulkanowy.sdk.scrapper.parseName
 import io.github.wulkanowy.sdk.scrapper.service.MessagesService
 import io.github.wulkanowy.sdk.scrapper.toMailbox
 import io.github.wulkanowy.sdk.scrapper.toRecipient
+import java.util.UUID
 
 class MessagesRepository(private val api: MessagesService) {
 
@@ -55,8 +56,8 @@ class MessagesRepository(private val api: MessagesService) {
 
     suspend fun sendMessage(subject: String, content: String, recipients: List<String>, senderMailboxId: String) {
         val body = SendMessageRequest(
-            globalKey = "00000000-0000-0000-0000-000000000000",
-            threadGlobalKey = "00000000-0000-0000-0000-000000000000",
+            globalKey = UUID.randomUUID().toString(),
+            threadGlobalKey = UUID.randomUUID().toString(),
             senderMailboxGlobalKey = senderMailboxId,
             recipientsMailboxGlobalKeys = recipients,
             subject = subject,
