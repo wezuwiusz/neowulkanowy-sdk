@@ -9,9 +9,9 @@ import io.github.wulkanowy.sdk.pojo.MessageReplayDetails
 import io.github.wulkanowy.sdk.toLocalDateTime
 import java.time.ZoneId
 import io.github.wulkanowy.sdk.mobile.messages.Message as ApiMessage
-import io.github.wulkanowy.sdk.scrapper.messages.MessageReplayDetails as ScrapperReplayDetailsMessage
 import io.github.wulkanowy.sdk.scrapper.messages.MessageDetails as ScrapperDetailsMessage
 import io.github.wulkanowy.sdk.scrapper.messages.MessageMeta as ScrapperMessageMeta
+import io.github.wulkanowy.sdk.scrapper.messages.MessageReplayDetails as ScrapperReplayDetailsMessage
 
 @JvmName("mapApiMessages")
 fun List<ApiMessage>.mapMessages(zoneId: ZoneId) = map {
@@ -28,7 +28,6 @@ fun List<ApiMessage>.mapMessages(zoneId: ZoneId) = map {
             else -> 1
         },
         content = it.content,
-        date = it.sentDateTime.toLocalDateTime(),
         dateZoned = it.sentDateTime.toLocalDateTime().atZone(zoneId),
         subject = it.subject,
         hasAttachments = false
@@ -41,7 +40,6 @@ fun List<ScrapperMessageMeta>.mapMessages(zoneId: ZoneId, folderId: Folder) = ma
         id = it.id,
         mailbox = it.mailbox,
         subject = it.subject,
-        date = it.date,
         dateZoned = it.date.atZone(zoneId),
         content = null,
         folderId = folderId.id,

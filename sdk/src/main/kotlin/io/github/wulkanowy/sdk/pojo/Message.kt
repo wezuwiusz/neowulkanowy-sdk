@@ -1,6 +1,5 @@
 package io.github.wulkanowy.sdk.pojo
 
-import java.time.LocalDateTime
 import java.time.ZonedDateTime
 
 data class Message(
@@ -12,9 +11,8 @@ data class Message(
     val subject: String,
     val content: String?,
     @Deprecated("use dateZoned instead")
-    val date: LocalDateTime?,
-    val dateZoned: ZonedDateTime?,
+    val dateZoned: ZonedDateTime,
     val folderId: Int = 0,
-    val unread: Boolean?,
+    val unread: Boolean,
     val hasAttachments: Boolean
 )
