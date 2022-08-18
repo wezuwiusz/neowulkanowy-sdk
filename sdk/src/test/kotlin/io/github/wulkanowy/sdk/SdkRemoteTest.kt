@@ -318,6 +318,6 @@ class SdkRemoteTest {
             classId = 14
         }
 
-        val isDeleted = runBlocking { sdk.deleteMessages(listOf()) }
+        runBlocking { sdk.deleteMessages(listOf()) }
     }
 }

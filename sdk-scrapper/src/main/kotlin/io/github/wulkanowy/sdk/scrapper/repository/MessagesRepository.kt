@@ -1,5 +1,6 @@
 package io.github.wulkanowy.sdk.scrapper.repository
 
+import io.github.wulkanowy.sdk.scrapper.getScriptParam
 import io.github.wulkanowy.sdk.scrapper.messages.Mailbox
 import io.github.wulkanowy.sdk.scrapper.messages.MessageDetails
 import io.github.wulkanowy.sdk.scrapper.messages.MessageMeta
@@ -81,6 +82,12 @@ class MessagesRepository(private val api: MessagesService) {
     }
 
     suspend fun deleteMessages(globalKeys: List<String>) {
-        return api.deleteMessage(globalKeys)
+        val startPage = api.getStart()
+        return api.deleteMessage(
+            token = getScriptParam("antiForgeryToken", startPage),
+            appGuid = getScriptParam("appGuid", startPage),
+            appVersion = getScriptParam("version", startPage),
+            body = globalKeys,
+        )
     }
 }
