@@ -10,9 +10,8 @@ data class Message(
     val correspondents: String,
     val subject: String,
     val content: String?,
-    @Deprecated("use dateZoned instead")
     val dateZoned: ZonedDateTime,
-    val folderId: Int = 0,
+    val folderId: Int,
     val unread: Boolean,
     val hasAttachments: Boolean
 )

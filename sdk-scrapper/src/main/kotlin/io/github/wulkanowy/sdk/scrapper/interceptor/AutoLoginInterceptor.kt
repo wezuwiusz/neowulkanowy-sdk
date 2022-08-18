@@ -28,6 +28,7 @@ import org.slf4j.LoggerFactory
 import retrofit2.HttpException
 import java.io.IOException
 import java.net.CookieManager
+import java.net.HttpURLConnection
 import java.util.concurrent.locks.Lock
 import java.util.concurrent.locks.ReentrantLock
 
@@ -56,7 +57,7 @@ class AutoLoginInterceptor(
             if (response.body?.contentType()?.subtype != "json") {
                 val body = response.peekBody(Long.MAX_VALUE).byteStream()
                 val url = chain.request().url.toString()
-                checkResponse(Jsoup.parse(body, null, url), url)
+                checkResponse(response, Jsoup.parse(body, null, url), url)
             }
         } catch (e: NotLoggedInException) {
             if (lock.tryLock()) {
@@ -95,7 +96,7 @@ class AutoLoginInterceptor(
         }
     }
 
-    private fun checkResponse(doc: Document, url: String) {
+    private fun checkResponse(response: Response, doc: Document, url: String) {
         // if (chain.request().url().toString().contains("/Start.mvc/Get")) {
         if (url.contains("/Start.mvc/")) { // /Index return error too in 19.09.0000.34977
             doc.select(".errorBlock").let {
@@ -114,9 +115,16 @@ class AutoLoginInterceptor(
             throw NotLoggedInException("User not logged in")
         }
 
-        doc.body().text().let {
-            // /messages
-            if (it.contains("The custom error module")) throw NotLoggedInException("Zaloguj się")
+        val bodyContent = doc.body().text()
+        when {
+            // uonetplus-uczen
+            "The custom error module" in bodyContent -> {
+                throw NotLoggedInException(bodyContent)
+            }
+            // uonetplus-wiadomosciplus
+            HttpURLConnection.HTTP_CONFLICT == response.code && "uonetplus-wiadomosciplus" in url -> {
+                throw NotLoggedInException(bodyContent)
+            }
         }
     }
 
