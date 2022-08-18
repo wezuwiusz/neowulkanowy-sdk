@@ -2,10 +2,11 @@ package io.github.wulkanowy.sdk.scrapper.service
 
 import io.github.wulkanowy.sdk.scrapper.messages.Mailbox
 import io.github.wulkanowy.sdk.scrapper.messages.MessageDetails
-import io.github.wulkanowy.sdk.scrapper.messages.MessageReplayDetails
 import io.github.wulkanowy.sdk.scrapper.messages.MessageMeta
+import io.github.wulkanowy.sdk.scrapper.messages.MessageReplayDetails
 import io.github.wulkanowy.sdk.scrapper.messages.Recipient
 import io.github.wulkanowy.sdk.scrapper.messages.SendMessageRequest
+import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.Header
@@ -69,7 +70,7 @@ interface MessagesService {
     suspend fun getMessageReplayDetails(@Query("apiGlobalKey") globalKey: String): MessageReplayDetails
 
     @POST("api/WiadomoscNowa")
-    suspend fun sendMessage(@Body sendMessageRequest: SendMessageRequest)
+    suspend fun sendMessage(@Body sendMessageRequest: SendMessageRequest): Response<Unit>
 
     @POST("api/MoveTrash")
     suspend fun deleteMessage(
@@ -77,5 +78,5 @@ interface MessagesService {
         @Header("X-V-AppGuid") appGuid: String,
         @Header("X-V-AppVersion") appVersion: String,
         @Body body: List<String>,
-    )
+    ): Response<Unit>
 }

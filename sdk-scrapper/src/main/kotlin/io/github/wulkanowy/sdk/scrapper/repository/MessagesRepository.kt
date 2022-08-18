@@ -78,12 +78,12 @@ class MessagesRepository(private val api: MessagesService) {
             attachments = emptyList(),
         )
 
-        return api.sendMessage(body)
+        api.sendMessage(body)
     }
 
     suspend fun deleteMessages(globalKeys: List<String>) {
         val startPage = api.getStart()
-        return api.deleteMessage(
+        api.deleteMessage(
             token = getScriptParam("antiForgeryToken", startPage),
             appGuid = getScriptParam("appGuid", startPage),
             appVersion = getScriptParam("version", startPage),
