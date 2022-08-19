@@ -60,7 +60,14 @@ class MessagesRepository(private val api: MessagesService) {
     }
 
     suspend fun getMessageReplayDetails(globalKey: String): MessageReplayDetails {
-        return api.getMessageReplayDetails(globalKey)
+        return api.getMessageReplayDetails(globalKey).let {
+            it.apply {
+                sender = Recipient(
+                    mailboxGlobalKey = it.senderMailboxId,
+                    fullName = it.senderMailboxName,
+                ).parseName()
+            }
+        }
     }
 
     suspend fun getMessageDetails(globalKey: String): MessageDetails {

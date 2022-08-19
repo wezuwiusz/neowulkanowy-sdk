@@ -73,6 +73,7 @@ fun ScrapperReplayDetailsMessage.mapScrapperMessage() = MessageReplayDetails(
     mailboxId = mailboxId,
     senderMailboxId = senderMailboxId,
     senderMailboxName = senderMailboxName,
+    sender = sender.mapToRecipient(),
     recipients = recipients.mapRecipients(),
     subject = subject,
     id = id,

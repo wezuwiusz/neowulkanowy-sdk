@@ -3,6 +3,7 @@ package io.github.wulkanowy.sdk.scrapper.messages
 import io.github.wulkanowy.sdk.scrapper.adapter.CustomDateAdapter
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.Transient
 import java.time.LocalDateTime
 
 @Serializable
@@ -38,4 +39,8 @@ data class MessageReplayDetails(
 
     @SerialName("id")
     val id: Int,
-)
+) {
+
+    @Transient
+    lateinit var sender: Recipient
+}

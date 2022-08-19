@@ -11,10 +11,13 @@ data class Recipient(
     val mailboxGlobalKey: String,
 
     @SerialName("nazwa")
-    val name: String,
+    val fullName: String,
 
     @Transient
     val type: RecipientType = RecipientType.UNKNOWN,
+
+    @Transient
+    val userName: String = "",
 
     @Transient
     val studentName: String = "",

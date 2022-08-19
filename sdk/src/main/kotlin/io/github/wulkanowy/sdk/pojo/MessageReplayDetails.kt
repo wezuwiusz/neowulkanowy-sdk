@@ -10,6 +10,7 @@ data class MessageReplayDetails(
     val mailboxId: String,
     val senderMailboxId: String,
     val senderMailboxName: String,
+    val sender: Recipient,
     val recipients: List<Recipient>,
     val subject: String,
     val id: Int,

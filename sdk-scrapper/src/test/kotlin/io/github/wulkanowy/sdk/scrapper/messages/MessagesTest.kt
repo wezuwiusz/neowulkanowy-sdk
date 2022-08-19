@@ -30,14 +30,14 @@ class MessagesTest : BaseLocalTest() {
 
         recipients[0].run {
             assertEquals("d09e482b-692e-41ff-96e4-b0b4647d0c80", mailboxGlobalKey)
-            assertEquals("Tracz Janusz", name)
+            assertEquals("Tracz Janusz", userName)
             assertEquals("Fake123456", schoolNameShort)
             assertEquals(RecipientType.EMPLOYEE, type)
         }
 
         recipients[3].run {
             assertEquals("33eae6c8-4dc6-42dd-a4f3-c54d324aa38f", mailboxGlobalKey)
-            assertEquals("Kowalski Jan", name)
+            assertEquals("Kowalski Jan", userName)
             assertEquals("Fake123456", schoolNameShort)
             assertEquals(RecipientType.EMPLOYEE, type)
         }

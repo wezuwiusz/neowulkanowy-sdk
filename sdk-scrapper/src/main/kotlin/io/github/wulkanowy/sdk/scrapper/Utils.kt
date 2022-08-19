@@ -76,30 +76,30 @@ fun String.getNormalizedSymbol(): String {
 fun List<Recipient>.normalizeRecipients() = map { it.parseName() }
 
 fun Recipient.parseName(): Recipient {
-    val typeSeparatorPosition = name.indexOfAny(RecipientType.values().map { " - ${it.letter} - " })
+    val typeSeparatorPosition = fullName.indexOfAny(RecipientType.values().map { " - ${it.letter} - " })
 
-    val userName = name.substring(0..typeSeparatorPosition).trim()
-    val typeLetter = name.substring(typeSeparatorPosition..typeSeparatorPosition + 3 * 2 + 1).substringAfter(" - ").substringBefore(" - ")
-    val studentName = name.substringAfter(" - $typeLetter - ").substringBefore(" - (")
-    val schoolName = name.substringAfter("(").trimEnd(')')
+    val userName = fullName.substring(0..typeSeparatorPosition).trim()
+    val typeLetter = fullName.substring(typeSeparatorPosition..typeSeparatorPosition + 3 * 2 + 1).substringAfter(" - ").substringBefore(" - ")
+    val studentName = fullName.substringAfter(" - $typeLetter - ").substringBefore(" - (")
+    val schoolName = fullName.substringAfter("(").trimEnd(')')
     return copy(
-        name = userName,
+        userName = userName,
+        studentName = studentName.takeIf { it != "($schoolName)" } ?: userName,
         type = typeLetter.let { letter -> RecipientType.values().first { it.letter == letter } },
         schoolNameShort = schoolName,
-        studentName = studentName.takeIf { it != "($schoolName)" } ?: userName,
     )
 }
 
 fun Mailbox.toRecipient() = Recipient(
     mailboxGlobalKey = globalKey,
     studentName = studentName,
-    name = name,
+    fullName = name,
     schoolNameShort = schoolNameShort,
 )
 
 fun Recipient.toMailbox() = Mailbox(
     globalKey = mailboxGlobalKey,
-    name = name,
+    name = fullName,
     userType = -1,
     studentName = studentName,
     schoolNameShort = schoolNameShort,
