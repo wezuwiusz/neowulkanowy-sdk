@@ -1,6 +1,7 @@
 package io.github.wulkanowy.sdk.mapper
 
 import io.github.wulkanowy.sdk.mobile.dictionaries.Teacher
+import io.github.wulkanowy.sdk.pojo.MailboxType
 import io.github.wulkanowy.sdk.pojo.Recipient
 import io.github.wulkanowy.sdk.mobile.messages.Recipient as MobileRecipient
 import io.github.wulkanowy.sdk.scrapper.messages.Recipient as ScrapperRecipient
@@ -15,6 +16,7 @@ fun ScrapperRecipient.mapToRecipient() = Recipient(
     userName = userName,
     studentName = studentName,
     schoolNameShort = schoolNameShort,
+    type = MailboxType.fromLetter(type.letter),
 )
 
 fun List<Recipient>.mapFromRecipientsToMobile() = map {
@@ -31,6 +33,7 @@ fun List<MobileRecipient>.mapFromMobileToRecipients() = map {
         userName = it.name,
         studentName = "",
         schoolNameShort = "",
+        type = MailboxType.UNKNOWN,
     )
 }
 
@@ -41,5 +44,6 @@ fun List<Teacher>.mapRecipients(reportingUnitId: Int) = map {
         userName = "${it.name} ${it.surname}",
         studentName = "",
         schoolNameShort = "",
+        type = MailboxType.UNKNOWN,
     )
 }

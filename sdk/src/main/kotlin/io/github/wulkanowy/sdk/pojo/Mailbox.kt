@@ -6,4 +6,5 @@ data class Mailbox(
     val userName: String,
     val studentName: String,
     val schoolNameShort: String,
+    val type: MailboxType,
 )
