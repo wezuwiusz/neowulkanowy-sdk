@@ -2,7 +2,8 @@ package io.github.wulkanowy.sdk.pojo
 
 data class Mailbox(
     val globalKey: String,
-    val name: String,
+    val fullName: String,
+    val userName: String,
     val studentName: String,
     val schoolNameShort: String,
 )

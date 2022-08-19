@@ -8,7 +8,8 @@ fun List<ScrapperMailbox>.mapMailboxes(): List<Mailbox> {
     return map {
         SdkMailbox(
             globalKey = it.globalKey,
-            name = it.name,
+            fullName = it.fullName,
+            userName = it.userName,
             schoolNameShort = it.schoolNameShort,
             studentName = it.studentName,
         )
