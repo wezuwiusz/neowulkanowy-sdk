@@ -70,7 +70,12 @@ interface MessagesService {
     suspend fun getMessageReplayDetails(@Query("apiGlobalKey") globalKey: String): MessageReplayDetails
 
     @POST("api/WiadomoscNowa")
-    suspend fun sendMessage(@Body sendMessageRequest: SendMessageRequest): Response<Unit>
+    suspend fun sendMessage(
+        @Header("X-V-RequestVerificationToken") token: String,
+        @Header("X-V-AppGuid") appGuid: String,
+        @Header("X-V-AppVersion") appVersion: String,
+        @Body body: SendMessageRequest,
+    ): Response<Unit>
 
     @POST("api/MoveTrash")
     suspend fun deleteMessage(

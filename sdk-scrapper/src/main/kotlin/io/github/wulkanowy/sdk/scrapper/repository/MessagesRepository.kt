@@ -68,6 +68,7 @@ class MessagesRepository(private val api: MessagesService) {
     }
 
     suspend fun sendMessage(subject: String, content: String, recipients: List<String>, senderMailboxId: String) {
+        val startPage = api.getStart()
         val body = SendMessageRequest(
             globalKey = UUID.randomUUID().toString(),
             threadGlobalKey = UUID.randomUUID().toString(),
@@ -78,7 +79,12 @@ class MessagesRepository(private val api: MessagesService) {
             attachments = emptyList(),
         )
 
-        api.sendMessage(body)
+        api.sendMessage(
+            token = getScriptParam("antiForgeryToken", startPage),
+            appGuid = getScriptParam("appGuid", startPage),
+            appVersion = getScriptParam("version", startPage),
+            body = body,
+        )
     }
 
     suspend fun deleteMessages(globalKeys: List<String>) {
