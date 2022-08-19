@@ -92,6 +92,7 @@ fun Recipient.parseName(): Recipient {
 
 fun Mailbox.toRecipient() = Recipient(
     mailboxGlobalKey = globalKey,
+    type = type,
     fullName = fullName,
     userName = userName,
     studentName = studentName,
@@ -101,6 +102,7 @@ fun Mailbox.toRecipient() = Recipient(
 fun Recipient.toMailbox() = Mailbox(
     globalKey = mailboxGlobalKey,
     userType = -1,
+    type = type,
     fullName = fullName,
     userName = userName,
     studentName = studentName,
