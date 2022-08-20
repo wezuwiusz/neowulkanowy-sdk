@@ -4,7 +4,11 @@ import io.github.wulkanowy.sdk.scrapper.BaseLocalTest
 import io.github.wulkanowy.sdk.scrapper.repository.MessagesRepository
 import io.github.wulkanowy.sdk.scrapper.service.MessagesService
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.runTest
+import kotlinx.serialization.decodeFromString
+import kotlinx.serialization.json.Json
+import okhttp3.mockwebserver.MockResponse
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
@@ -216,43 +220,32 @@ class MessagesTest : BaseLocalTest() {
     //     assertEquals("19.02.0001.32324", request.getHeader("X-V-AppVersion"))
     // }
 
-    // @Test
-    // fun deleteMessageTest() {
-    //     with(server) {
-    //         enqueue("Start.html")
-    //         enqueue(MockResponse().setBody("{\"success\": true}"))
-    //         start(3000)
-    //     }
-    //
-    //     assertEquals(runBlocking { api.deleteMessages(listOf(74, 69), 2) }, true)
-    //
-    //     server.takeRequest()
-    //
-    //     val expected = Json.decodeFromString<DeleteMessageRequest>(MessagesTest::class.java.getResource("UsunWiadomosc.json")!!.readText())
-    //     val request = server.takeRequest()
-    //     val actual = Json.decodeFromString<DeleteMessageRequest>(request.body.readUtf8())
-    //
-    //     assertEquals(expected, actual)
-    //     assertEquals(
-    //         "lX9xvk-OBA0VmHrNIFcQp2xVBZhza9tJ1QbYVKXGM3lFUr0a-OTDo5xUSQ70ROYKf6ICZ1LSXCfDAURoCmDZ-OEedW8IKtyF1s63HyWKxbmHaP-vsVCsGlN6zRHwx1r4h",
-    //         request.getHeader("X-V-RequestVerificationToken")
-    //     )
-    //     assertEquals("877c4a726ad61667f4e2237f0cf6307a", request.getHeader("X-V-AppGuid"))
-    //     assertEquals("19.02.0001.32324", request.getHeader("X-V-AppVersion"))
-    // }
+    @Test
+    fun deleteMessageTest() = runBlocking {
+        with(server) {
+            enqueue("Start.html")
+            enqueue(MockResponse()) // 204
+            start(3000)
+        }
 
-    // @Test
-    // fun deleteMessage_emptyResponse() {
-    //     with(server) {
-    //         enqueue("Start.html")
-    //         enqueue(MockResponse().setBody(""))
-    //         start(3000)
-    //     }
-    //
-    //     val res = runCatching { runBlocking { api.deleteMessages(listOf(74, 69), 3) } }
-    //
-    //     val exception = res.exceptionOrNull()!!
-    //     assert(exception is SerializationException)
-    //     assertEquals("Expected start of the object '{', but had 'EOF' instead at path: \$\nJSON input: ", exception.message)
-    // }
+        val messagesIds = listOf(
+            "72b8ce21-3e4c-4f82-9a0e-aaf1783c2317",
+            "acc98ff1-d91a-4151-a863-2a97827f7849",
+        )
+        api.deleteMessages(messagesIds)
+
+        server.takeRequest()
+
+        val expected = Json.decodeFromString<List<String>>(MessagesTest::class.java.getResource("MoveTrash.json")!!.readText())
+        val request = server.takeRequest()
+        val actual = Json.decodeFromString<List<String>>(request.body.readUtf8())
+
+        assertEquals(expected, actual)
+        assertEquals(
+            "lX9xvk-OBA0VmHrNIFcQp2xVBZhza9tJ1QbYVKXGM3lFUr0a-OTDo5xUSQ70ROYKf6ICZ1LSXCfDAURoCmDZ-OEedW8IKtyF1s63HyWKxbmHaP-vsVCsGlN6zRHwx1r4h",
+            request.getHeader("X-V-RequestVerificationToken")
+        )
+        assertEquals("877c4a726ad61667f4e2237f0cf6307a", request.getHeader("X-V-AppGuid"))
+        assertEquals("19.02.0001.32324", request.getHeader("X-V-AppVersion"))
+    }
 }
