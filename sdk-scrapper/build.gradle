@@ -16,4 +16,6 @@ dependencies {
     implementation "com.brsanthu:migbase64:2.2"
 
     implementation "com.squareup.okhttp3:okhttp-urlconnection"
+
+    testImplementation "io.mockk:mockk:1.12.5"
 }

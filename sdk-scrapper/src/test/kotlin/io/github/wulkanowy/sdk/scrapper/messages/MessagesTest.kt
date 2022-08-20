@@ -3,6 +3,9 @@ package io.github.wulkanowy.sdk.scrapper.messages
 import io.github.wulkanowy.sdk.scrapper.BaseLocalTest
 import io.github.wulkanowy.sdk.scrapper.repository.MessagesRepository
 import io.github.wulkanowy.sdk.scrapper.service.MessagesService
+import io.mockk.every
+import io.mockk.mockk
+import io.mockk.mockkStatic
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.runTest
@@ -13,6 +16,7 @@ import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Test
+import java.util.UUID
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class MessagesTest : BaseLocalTest() {
@@ -190,35 +194,43 @@ class MessagesTest : BaseLocalTest() {
         assertEquals(125, res.content.length)
     }
 
-    // @Test
-    // fun sendMessageTest() {
-    //     with(server) {
-    //         enqueue("Start.html")
-    //         enqueue("WyslanaWiadomosc.json")
-    //         start(3000)
-    //     }
-    //
-    //     runBlocking {
-    //         api.sendMessage(
-    //             "Temat wiadomości", "Tak wygląda zawartość wiadomości.\nZazwyczaj ma wiele linijek.\n\nZ poważaniem,\nNazwisko Imię",
-    //             listOf(Recipient("0", "Kowalski Jan", 0, 0, 2, "hash"))
-    //         )
-    //     }
-    //
-    //     server.takeRequest()
-    //
-    //     val expected = Json.decodeFromString<SendMessageRequest>(MessagesTest::class.java.getResource("NowaWiadomosc.json")!!.readText())
-    //     val request = server.takeRequest()
-    //     val actual = Json.decodeFromString<SendMessageRequest>(request.body.readUtf8())
-    //
-    //     assertEquals(expected, actual)
-    //     assertEquals(
-    //         "lX9xvk-OBA0VmHrNIFcQp2xVBZhza9tJ1QbYVKXGM3lFUr0a-OTDo5xUSQ70ROYKf6ICZ1LSXCfDAURoCmDZ-OEedW8IKtyF1s63HyWKxbmHaP-vsVCsGlN6zRHwx1r4h",
-    //         request.getHeader("X-V-RequestVerificationToken")
-    //     )
-    //     assertEquals("877c4a726ad61667f4e2237f0cf6307a", request.getHeader("X-V-AppGuid"))
-    //     assertEquals("19.02.0001.32324", request.getHeader("X-V-AppVersion"))
-    // }
+    @Test
+    fun sendMessageTest() = runBlocking {
+        with(server) {
+            enqueue("Start.html")
+            enqueue("WiadomoscNowa.json")
+            start(3000)
+        }
+
+        mockkStatic(UUID::randomUUID)
+        every { UUID.randomUUID() } returns mockk {
+            every { this@mockk.toString() } returnsMany listOf(
+                "1dc8c7a9-983f-4ea7-a4f1-d918beeed389",
+                "bfa544fb-0588-4aa0-afd0-1b9db31ce3ea",
+            )
+        }
+
+        api.sendMessage(
+            subject = "Temat wiadomości",
+            content = "Tak wygląda zawartość wiadomości.\nZazwyczaj ma wiele linijek.\n\nZ poważaniem,\nNazwisko Imię",
+            senderMailboxId = "05e5be82-b894-4864-823b-e79e4f91ce2d",
+            recipients = listOf("41c81103-a648-42b1-8519-ae3b2db6ea9b")
+        )
+
+        server.takeRequest()
+
+        val expected = Json.decodeFromString<SendMessageRequest>(MessagesTest::class.java.getResource("WiadomoscNowa.json")!!.readText())
+        val request = server.takeRequest()
+        val actual = Json.decodeFromString<SendMessageRequest>(request.body.readUtf8())
+
+        assertEquals(expected, actual)
+        assertEquals(
+            "lX9xvk-OBA0VmHrNIFcQp2xVBZhza9tJ1QbYVKXGM3lFUr0a-OTDo5xUSQ70ROYKf6ICZ1LSXCfDAURoCmDZ-OEedW8IKtyF1s63HyWKxbmHaP-vsVCsGlN6zRHwx1r4h",
+            request.getHeader("X-V-RequestVerificationToken")
+        )
+        assertEquals("877c4a726ad61667f4e2237f0cf6307a", request.getHeader("X-V-AppGuid"))
+        assertEquals("19.02.0001.32324", request.getHeader("X-V-AppVersion"))
+    }
 
     @Test
     fun deleteMessageTest() = runBlocking {
