@@ -353,7 +353,7 @@ class Scrapper {
 
     suspend fun sendMessage(subject: String, content: String, recipients: List<String>, senderMailboxId: String) = messages.sendMessage(subject, content, recipients, senderMailboxId)
 
-    suspend fun deleteMessages(messagesToDelete: List<String>) = messages.deleteMessages(messagesToDelete)
+    suspend fun deleteMessages(messagesToDelete: List<String>, removeForever: Boolean) = messages.deleteMessages(messagesToDelete, removeForever)
 
     suspend fun getDirectorInformation(): List<DirectorInformation> = homepage.getDirectorInformation()
 

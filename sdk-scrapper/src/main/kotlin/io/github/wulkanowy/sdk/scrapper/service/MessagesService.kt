@@ -78,6 +78,14 @@ interface MessagesService {
     ): Response<Unit>
 
     @POST("api/MoveTrash")
+    suspend fun moveMessageToTrash(
+        @Header("X-V-RequestVerificationToken") token: String,
+        @Header("X-V-AppGuid") appGuid: String,
+        @Header("X-V-AppVersion") appVersion: String,
+        @Body body: List<String>,
+    ): Response<Unit>
+
+    @POST("api/Delete")
     suspend fun deleteMessage(
         @Header("X-V-RequestVerificationToken") token: String,
         @Header("X-V-AppGuid") appGuid: String,

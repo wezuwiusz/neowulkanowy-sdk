@@ -94,12 +94,23 @@ class MessagesRepository(private val api: MessagesService) {
         )
     }
 
-    suspend fun deleteMessages(globalKeys: List<String>) {
+    suspend fun deleteMessages(globalKeys: List<String>, removeForever: Boolean) {
         val startPage = api.getStart()
-        api.deleteMessage(
-            token = getScriptParam("antiForgeryToken", startPage),
-            appGuid = getScriptParam("appGuid", startPage),
-            appVersion = getScriptParam("version", startPage),
+        val token = getScriptParam("antiForgeryToken", startPage)
+        val appGuid = getScriptParam("appGuid", startPage)
+        val appVersion = getScriptParam("version", startPage)
+
+        if (!removeForever) {
+            api.moveMessageToTrash(
+                token = token,
+                appGuid = appGuid,
+                appVersion = appVersion,
+                body = globalKeys,
+            )
+        } else api.deleteMessage(
+            token = token,
+            appGuid = appGuid,
+            appVersion = appVersion,
             body = globalKeys,
         )
     }

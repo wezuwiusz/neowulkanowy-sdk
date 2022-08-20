@@ -244,7 +244,7 @@ class MessagesTest : BaseLocalTest() {
             "72b8ce21-3e4c-4f82-9a0e-aaf1783c2317",
             "acc98ff1-d91a-4151-a863-2a97827f7849",
         )
-        api.deleteMessages(messagesIds)
+        api.deleteMessages(messagesIds, false)
 
         server.takeRequest()
 

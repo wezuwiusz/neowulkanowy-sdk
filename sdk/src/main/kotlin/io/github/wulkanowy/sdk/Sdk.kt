@@ -541,12 +541,12 @@ class Sdk {
         }
     }
 
-    suspend fun deleteMessages(messages: List<String>) = withContext(Dispatchers.IO) {
+    suspend fun deleteMessages(messages: List<String>, removeForever: Boolean = false) = withContext(Dispatchers.IO) {
         when (mode) {
-            Mode.SCRAPPER -> scrapper.deleteMessages(messages)
+            Mode.SCRAPPER -> scrapper.deleteMessages(messages, removeForever)
             Mode.HYBRID, Mode.API -> messages.map { messageId ->
                 mobile.changeMessageStatus(messageId, "", "Usunieta")
-            }.let { Unit }
+            }
         }
     }
 
