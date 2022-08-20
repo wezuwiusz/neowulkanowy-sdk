@@ -152,46 +152,23 @@ class MessagesTest : BaseLocalTest() {
     //     }
     // }
 
-    // @Test
-    // fun getMessageRecipientsTest() {
-    //     with(server) {
-    //         enqueue("Adresaci.json")
-    //         start(3000)
-    //     }
-    //
-    //     runBlocking { api.getMessageRecipients(421, 0) }[0].run {
-    //         assertEquals("18rPracownik", id)
-    //         assertEquals("Tracz Janusz [TJ] - pracownik (Fake123456)", name)
-    //         assertEquals(18, loginId)
-    //         assertEquals(6, reportingUnitId)
-    //         assertEquals(2, role)
-    //         assertEquals("NTVhNTQwMDhhZDFiYTU4OWFhMjEwZDI2MjljMWRmNDE=", hash)
-    //         assertEquals("Tracz Janusz", shortName)
-    //     }
-    // }
-
-    // @Test
-    // fun getMessageSenderTest() {
-    //     with(server) {
-    //         enqueue("Adresaci.json")
-    //         start(3000)
-    //     }
-    //
-    //     runBlocking { api.getMessageRecipients(421, 94) }[1].run {
-    //         assertEquals("94rPracownik", id)
-    //         assertEquals(94, loginId)
-    //     }
-    // }
-
     @Test
-    fun getMessageContentTest() = runTest {
+    fun getMessageReplayDetailsTest() = runTest {
         with(server) {
             enqueue("WiadomoscOdpowiedzPrzekaz.json")
             start(3000)
         }
 
         val res = api.getMessageReplayDetails("uuidv4")
-        assertEquals(125, res.content.length)
+
+        res.run {
+            assertEquals(35232, id)
+            assertEquals("Jan Sierpień - P - (123456)", sender.fullName)
+            assertEquals("20bd8141-6ff0-474c-8aaf-284e6fbdf9c5", sender.mailboxGlobalKey)
+            assertEquals("4f947f6c-d001-48ae-ba7a-f150f9f2dcf4", mailboxId)
+            assertEquals("Jan Kowalski - U - (123456)", recipients[0].fullName)
+            assertEquals(125, res.content.length)
+        }
     }
 
     @Test
