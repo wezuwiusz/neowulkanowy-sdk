@@ -90,67 +90,23 @@ class MessagesTest : BaseLocalTest() {
         assertEquals("Kowalski Jan - U - (000012)", messages[0].mailbox)
     }
 
-    // @Test
-    // fun getMessagesSentTest() {
-    //     with(server) {
-    //         enqueue("WiadomosciWyslane.json")
-    //         start(3000)
-    //     }
-    //
-    //     val messages = runBlocking { api.getSentMessages(null, null) }
-    //
-    //     assertEquals(6, messages.size)
-    //
-    //     messages[0].run {
-    //         assertEquals(32798, id)
-    //         assertEquals(32798, messageId)
-    //         assertEquals("Usprawiedliwienie nieobecności", subject)
-    //         assertEquals(1, recipients?.size)
-    //         assertEquals("Tracz Janusz", recipients!![0].name)
-    //         assertEquals(1, unreadBy)
-    //         assertEquals(0, readBy)
-    //     }
-    // }
+    @Test
+    fun getMessagesSentTest() = runTest {
+        with(server) {
+            enqueue("Wyslane.json")
+            start(3000)
+        }
 
-    // @Test
-    // fun getMessagesSent_recipientWithDashInName() {
-    //     with(server) {
-    //         enqueue("WiadomosciWyslane.json")
-    //         start(3000)
-    //     }
-    //
-    //     runBlocking { api.getSentMessages(null, null) }[1].run {
-    //         assertEquals("Czerwieńska - Kowalska Joanna", recipients!![0].name)
-    //     }
-    // }
+        val messages = api.getSentMessages(null)
 
-    // @Test
-    // fun getMessagesSent_multiRecipients() {
-    //     with(server) {
-    //         enqueue("WiadomosciWyslane.json")
-    //         start(3000)
-    //     }
-    //
-    //     runBlocking { api.getSentMessages(null, null) }[3].run {
-    //         assertEquals(2, recipients?.size)
-    //         assertEquals("Czerwieńska - Kowalska Joanna", recipients!![0].name)
-    //         assertEquals("Tracz Janusz", recipients!![1].name)
-    //     }
-    // }
+        assertEquals(2, messages.size)
 
-    // @Test
-    // fun getMessagesSent_multiRecipientsWithBraces() {
-    //     with(server) {
-    //         enqueue("WiadomosciWyslane.json")
-    //         start(3000)
-    //     }
-    //
-    //     runBlocking { api.getSentMessages(null, null) }[5].run {
-    //         assertEquals(2, recipients?.size)
-    //         assertEquals("Tracz Antoni", recipients!![0].name)
-    //         assertEquals("Kowalska Joanna", recipients!![1].name)
-    //     }
-    // }
+        messages[0].run {
+            assertEquals(32798, id)
+            assertEquals("Usprawiedliwienie nieobecności", subject)
+            assertEquals("Jan Kowalski - P - (123456)", correspondents)
+        }
+    }
 
     @Test
     fun getMessageReplayDetailsTest() = runTest {
