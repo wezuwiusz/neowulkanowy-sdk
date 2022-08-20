@@ -68,18 +68,19 @@ class MessagesTest : BaseLocalTest() {
         assertEquals(true, messages[1].isAttachments)
     }
 
-    // @Test
-    // fun getDeletedMessagesTest() {
-    //     with(server) {
-    //         enqueue("WiadomosciUsuniete.json")
-    //         start(3000)
-    //     }
-    //
-    //     val messages = runBlocking { api.getDeletedMessages(null, null) }
-    //
-    //     assertEquals(1, messages.size)
-    //     assertEquals("Kowalski Jan", messages[0].recipients!![0].name)
-    // }
+    @Test
+    fun getDeletedMessagesTest() = runTest {
+        with(server) {
+            enqueue("Usuniete.json")
+            start(3000)
+        }
+
+        val messages = api.getDeletedMessages(null)
+
+        assertEquals(1, messages.size)
+        assertEquals("Nazwisko Imię - P - (000012)", messages[0].correspondents)
+        assertEquals("Kowalski Jan - U - (000012)", messages[0].mailbox)
+    }
 
     // @Test
     // fun getMessagesSentTest() {
