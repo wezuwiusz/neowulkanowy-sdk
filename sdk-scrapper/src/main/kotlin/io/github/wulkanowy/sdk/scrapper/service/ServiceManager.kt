@@ -134,7 +134,7 @@ class ServiceManager(
         return getRetrofit(
             client = prepareStudentService(withLogin, studentInterceptor),
             baseUrl = urlGenerator.generate(UrlGenerator.Site.STUDENT),
-            gson = true
+            json = true
         ).create()
     }
 
@@ -164,20 +164,24 @@ class ServiceManager(
     }
 
     fun getMessagesService(withLogin: Boolean = true): MessagesService {
-        return getRetrofit(getClientBuilder(loginIntercept = withLogin), urlGenerator.generate(UrlGenerator.Site.MESSAGES), gson = true).create()
+        return getRetrofit(
+            client = getClientBuilder(loginIntercept = withLogin),
+            baseUrl = urlGenerator.generate(UrlGenerator.Site.MESSAGES),
+            json = true,
+        ).create()
     }
 
     fun getHomepageService(): HomepageService {
-        return getRetrofit(getClientBuilder(), urlGenerator.generate(UrlGenerator.Site.HOME), gson = true).create()
+        return getRetrofit(getClientBuilder(), urlGenerator.generate(UrlGenerator.Site.HOME), json = true).create()
     }
 
     @OptIn(ExperimentalSerializationApi::class)
-    private fun getRetrofit(client: OkHttpClient.Builder, baseUrl: String, gson: Boolean = false) = Retrofit.Builder()
+    private fun getRetrofit(client: OkHttpClient.Builder, baseUrl: String, json: Boolean = false) = Retrofit.Builder()
         .baseUrl(baseUrl)
         .client(client.build())
         .addConverterFactory(ScalarsConverterFactory.create())
         .addConverterFactory(
-            if (gson) json.asConverterFactory("application/json".toMediaType())
+            if (json) this.json.asConverterFactory("application/json".toMediaType())
             else JspoonConverterFactory.create()
         )
         .build()
@@ -231,8 +235,8 @@ class ServiceManager(
                 Site.HOME -> "uonetplus"
                 Site.SNP -> "uonetplus-opiekun"
                 Site.STUDENT -> "uonetplus-uczen"
-                Site.MESSAGES -> "uonetplus-uzytkownik"
-                else -> "unknow"
+                Site.MESSAGES -> "uonetplus-wiadomosciplus"
+                else -> error("unknown")
             }
         }
     }

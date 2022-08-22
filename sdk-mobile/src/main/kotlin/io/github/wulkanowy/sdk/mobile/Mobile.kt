@@ -98,9 +98,9 @@ class Mobile {
         if (certRes.isError) when {
             certRes.message == "TokenDead" -> throw TokenDeadException(certRes.message)
             certRes.message == "TokenNotFound" -> throw TokenNotFoundException(certRes.message)
-            certRes.message?.startsWith("Podany numer PIN jest niepoprawny") == true -> throw InvalidPinException(certRes.message.orEmpty())
-            certRes.message?.startsWith("Trzykrotnie wpisano niepoprawny kod PIN") == true -> throw InvalidPinException(certRes.message.orEmpty())
-            certRes.message == "NoPupils" -> throw NoStudentsException(certRes.message.orEmpty())
+            certRes.message?.startsWith("Podany numer PIN jest niepoprawny") == true -> throw InvalidPinException(certRes.message)
+            certRes.message?.startsWith("Trzykrotnie wpisano niepoprawny kod PIN") == true -> throw InvalidPinException(certRes.message)
+            certRes.message == "NoPupils" -> throw NoStudentsException(certRes.message)
             certRes.message == "OnlyKindergarten" -> throw UnsupportedTokenException(certRes.message)
             else -> throw UnknownTokenException(certRes.message.orEmpty())
         }
@@ -172,7 +172,7 @@ class Mobile {
         return mobile.getMessagesDeleted(start, end, loginId, studentId)
     }
 
-    suspend fun changeMessageStatus(messageId: Int, folder: String, status: String): String {
+    suspend fun changeMessageStatus(messageId: String, folder: String, status: String): String {
         return mobile.changeMessageStatus(messageId, folder, status, loginId, studentId)
     }
 

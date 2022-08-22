@@ -83,8 +83,8 @@ class MobileRepository(private val api: MobileService) {
         return api.getMessagesSent(MessagesRequest(start.toFormat(), end.toFormat(), loginId, studentId)).data!!
     }
 
-    suspend fun changeMessageStatus(messageId: Int, folder: String, status: String, loginId: Int, studentId: Int): String {
-        return api.changeMessageStatus(MessageStatusChangeRequest(messageId, folder, status, loginId, studentId)).data!!
+    suspend fun changeMessageStatus(messageId: String, folder: String, status: String, loginId: Int, studentId: Int): String {
+        return api.changeMessageStatus(MessageStatusChangeRequest(messageId.toInt(), folder, status, loginId, studentId)).data!!
     }
 
     suspend fun sendMessage(sender: String, subject: String, content: String, recipients: List<Recipient>, loginId: Int, studentId: Int): Message {

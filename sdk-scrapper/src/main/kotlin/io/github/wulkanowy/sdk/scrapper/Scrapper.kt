@@ -19,10 +19,11 @@ import io.github.wulkanowy.sdk.scrapper.home.LuckyNumber
 import io.github.wulkanowy.sdk.scrapper.homework.Homework
 import io.github.wulkanowy.sdk.scrapper.login.LoginHelper
 import io.github.wulkanowy.sdk.scrapper.messages.Folder
-import io.github.wulkanowy.sdk.scrapper.messages.Message
+import io.github.wulkanowy.sdk.scrapper.messages.Mailbox
+import io.github.wulkanowy.sdk.scrapper.messages.MessageDetails
+import io.github.wulkanowy.sdk.scrapper.messages.MessageReplayDetails
+import io.github.wulkanowy.sdk.scrapper.messages.MessageMeta
 import io.github.wulkanowy.sdk.scrapper.messages.Recipient
-import io.github.wulkanowy.sdk.scrapper.messages.ReportingUnit
-import io.github.wulkanowy.sdk.scrapper.messages.SentMessage
 import io.github.wulkanowy.sdk.scrapper.mobile.Device
 import io.github.wulkanowy.sdk.scrapper.mobile.TokenResponse
 import io.github.wulkanowy.sdk.scrapper.notes.Note
@@ -48,7 +49,6 @@ import okhttp3.Interceptor
 import okhttp3.logging.HttpLoggingInterceptor
 import java.net.URL
 import java.time.LocalDate
-import java.time.LocalDateTime
 
 class Scrapper {
 
@@ -309,7 +309,8 @@ class Scrapper {
 
     suspend fun getTimetableAdditional(startDate: LocalDate): List<TimetableAdditional> = student.getTimetableAdditional(startDate)
 
-    suspend fun getCompletedLessons(startDate: LocalDate, endDate: LocalDate? = null, subjectId: Int = -1): List<CompletedLesson> = student.getCompletedLessons(startDate, endDate, subjectId)
+    suspend fun getCompletedLessons(startDate: LocalDate, endDate: LocalDate? = null, subjectId: Int = -1): List<CompletedLesson> =
+        student.getCompletedLessons(startDate, endDate, subjectId)
 
     suspend fun getRegisteredDevices(): List<Device> = student.getRegisteredDevices()
 
@@ -325,37 +326,34 @@ class Scrapper {
 
     suspend fun getStudentPhoto(): StudentPhoto = student.getStudentPhoto()
 
-    suspend fun getReportingUnits(): List<ReportingUnit> = messages.getReportingUnits()
+    suspend fun getMailboxes(): List<Mailbox> = messages.getMailboxes()
 
-    suspend fun getRecipients(unitId: Int, role: Int = 2): List<Recipient> = messages.getRecipients(unitId, role)
+    suspend fun getRecipients(mailboxKey: String): List<Recipient> = messages.getRecipients(mailboxKey)
 
     suspend fun getMessages(
         folder: Folder,
-        startDate: LocalDateTime? = null,
-        endDate: LocalDateTime? = null
-    ): List<Message> {
-        return when (folder) {
-            Folder.RECEIVED -> messages.getReceivedMessages(startDate, endDate)
-            Folder.SENT -> messages.getSentMessages(startDate, endDate)
-            Folder.TRASHED -> messages.getDeletedMessages(startDate, endDate)
-        }
+        mailboxKey: String? = null,
+        lastMessageKey: Int = 0,
+        pageSize: Int = 50
+    ): List<MessageMeta> = when (folder) {
+        Folder.RECEIVED -> messages.getReceivedMessages(mailboxKey, lastMessageKey, pageSize)
+        Folder.SENT -> messages.getSentMessages(mailboxKey, lastMessageKey, pageSize)
+        Folder.TRASHED -> messages.getDeletedMessages(mailboxKey, lastMessageKey, pageSize)
     }
 
-    suspend fun getReceivedMessages(startDate: LocalDateTime? = null, endDate: LocalDateTime? = null) = messages.getReceivedMessages(startDate, endDate)
+    suspend fun getReceivedMessages(mailboxKey: String? = null, lastMessageKey: Int = 0, pageSize: Int = 50): List<MessageMeta> = messages.getReceivedMessages(mailboxKey, lastMessageKey, pageSize)
 
-    suspend fun getSentMessages(startDate: LocalDateTime? = null, endDate: LocalDateTime? = null): List<Message> = messages.getSentMessages(startDate, endDate)
+    suspend fun getSentMessages(mailboxKey: String? = null, lastMessageKey: Int = 0, pageSize: Int = 50): List<MessageMeta> = messages.getSentMessages(mailboxKey, lastMessageKey, pageSize)
 
-    suspend fun getDeletedMessages(startDate: LocalDateTime? = null, endDate: LocalDateTime? = null): List<Message> = messages.getDeletedMessages(startDate, endDate)
+    suspend fun getDeletedMessages(mailboxKey: String? = null, lastMessageKey: Int = 0, pageSize: Int = 50): List<MessageMeta> = messages.getDeletedMessages(mailboxKey, lastMessageKey, pageSize)
 
-    suspend fun getMessageRecipients(messageId: Int, loginId: Int = 0): List<Recipient> = messages.getMessageRecipients(messageId, loginId)
+    suspend fun getMessageReplayDetails(globalKey: String): MessageReplayDetails = messages.getMessageReplayDetails(globalKey)
 
-    suspend fun getMessageDetails(messageId: Int, folderId: Int, read: Boolean = false, id: Int? = null): Message = messages.getMessageDetails(messageId, folderId, read, id)
+    suspend fun getMessageDetails(globalKey: String): MessageDetails = messages.getMessageDetails(globalKey)
 
-    suspend fun getMessageContent(messageId: Int, folderId: Int, read: Boolean = false, id: Int? = null): String = messages.getMessage(messageId, folderId, read, id)
+    suspend fun sendMessage(subject: String, content: String, recipients: List<String>, senderMailboxId: String) = messages.sendMessage(subject, content, recipients, senderMailboxId)
 
-    suspend fun sendMessage(subject: String, content: String, recipients: List<Recipient>): SentMessage = messages.sendMessage(subject, content, recipients)
-
-    suspend fun deleteMessages(messagesToDelete: List<Int>, folderId: Int): Boolean = messages.deleteMessages(messagesToDelete, folderId)
+    suspend fun deleteMessages(messagesToDelete: List<String>, removeForever: Boolean) = messages.deleteMessages(messagesToDelete, removeForever)
 
     suspend fun getDirectorInformation(): List<DirectorInformation> = homepage.getDirectorInformation()
 

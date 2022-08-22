@@ -1,5 +1,8 @@
 package io.github.wulkanowy.sdk.scrapper
 
+import io.github.wulkanowy.sdk.scrapper.messages.Mailbox
+import io.github.wulkanowy.sdk.scrapper.messages.Recipient
+import io.github.wulkanowy.sdk.scrapper.messages.RecipientType
 import org.jsoup.Jsoup.parse
 import java.text.Normalizer
 import java.text.SimpleDateFormat
@@ -69,5 +72,41 @@ fun String.getNormalizedSymbol(): String {
         }
     }.replace("[^a-z0-9]".toRegex(), "").ifBlank { "Default" }
 }
+
+fun List<Recipient>.normalizeRecipients() = map { it.parseName() }
+
+fun Recipient.parseName(): Recipient {
+    val typeSeparatorPosition = fullName.indexOfAny(RecipientType.values().map { " - ${it.letter} - " })
+
+    val userName = fullName.substring(0..typeSeparatorPosition).trim()
+    val typeLetter = fullName.substring(typeSeparatorPosition..typeSeparatorPosition + 3 * 2 + 1).substringAfter(" - ").substringBefore(" - ")
+    val studentName = fullName.substringAfter(" - $typeLetter - ").substringBefore(" - (")
+    val schoolName = fullName.substringAfter("(").trimEnd(')')
+    return copy(
+        userName = userName,
+        studentName = studentName.takeIf { it != "($schoolName)" } ?: userName,
+        type = typeLetter.let { letter -> RecipientType.values().first { it.letter == letter } },
+        schoolNameShort = schoolName,
+    )
+}
+
+fun Mailbox.toRecipient() = Recipient(
+    mailboxGlobalKey = globalKey,
+    type = type,
+    fullName = fullName,
+    userName = userName,
+    studentName = studentName,
+    schoolNameShort = schoolNameShort,
+)
+
+fun Recipient.toMailbox() = Mailbox(
+    globalKey = mailboxGlobalKey,
+    userType = -1,
+    type = type,
+    fullName = fullName,
+    userName = userName,
+    studentName = studentName,
+    schoolNameShort = schoolNameShort,
+)
 
 fun String.capitalise() = replaceFirstChar { if (it.isLowerCase()) it.titlecase() else it.toString() }

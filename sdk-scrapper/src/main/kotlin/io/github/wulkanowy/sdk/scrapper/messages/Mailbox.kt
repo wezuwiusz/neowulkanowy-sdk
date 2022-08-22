@@ -5,13 +5,16 @@ import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
 
 @Serializable
-data class Recipient(
+data class Mailbox(
 
-    @SerialName("skrzynkaGlobalKey")
-    val mailboxGlobalKey: String,
+    @SerialName("globalKey")
+    val globalKey: String,
 
     @SerialName("nazwa")
     val fullName: String,
+
+    @SerialName("typUzytkownika")
+    val userType: Int,
 
     @Transient
     val type: RecipientType = RecipientType.UNKNOWN,
@@ -25,12 +28,3 @@ data class Recipient(
     @Transient
     val schoolNameShort: String = "",
 )
-
-enum class RecipientType(val letter: String) {
-    STUDENT("U"),
-    PARENT("R"),
-    GUARDIAN("O"),
-    EMPLOYEE("P"),
-
-    UNKNOWN(""),
-}

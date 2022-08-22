@@ -3,14 +3,22 @@ package io.github.wulkanowy.sdk.scrapper.messages
 import io.github.wulkanowy.sdk.scrapper.BaseLocalTest
 import io.github.wulkanowy.sdk.scrapper.repository.MessagesRepository
 import io.github.wulkanowy.sdk.scrapper.service.MessagesService
+import io.mockk.every
+import io.mockk.mockk
+import io.mockk.mockkStatic
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.runBlocking
-import kotlinx.serialization.SerializationException
+import kotlinx.coroutines.test.runTest
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 import okhttp3.mockwebserver.MockResponse
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
+import org.junit.Assert.assertTrue
 import org.junit.Test
+import java.util.UUID
 
+@OptIn(ExperimentalCoroutinesApi::class)
 class MessagesTest : BaseLocalTest() {
 
     private val api by lazy {
@@ -18,216 +26,133 @@ class MessagesTest : BaseLocalTest() {
     }
 
     @Test
-    fun getRecipients() {
+    fun getRecipients() = runTest {
         with(server) {
             enqueue("Adresaci.json")
             start(3000)
         }
 
-        val recipients = runBlocking { api.getRecipients(6) }
+        val recipients = api.getRecipients("uuidv4")
 
         assertEquals(4, recipients.size)
 
         recipients[0].run {
-            assertEquals("18rPracownik", id)
-            assertEquals("Tracz Janusz [TJ] - pracownik (Fake123456)", name)
-            assertEquals("Tracz Janusz", shortName)
-            assertEquals(18, loginId)
-            assertEquals(6, reportingUnitId)
-            assertEquals(2, role)
-            assertEquals("NTVhNTQwMDhhZDFiYTU4OWFhMjEwZDI2MjljMWRmNDE=", hash)
+            assertEquals("d09e482b-692e-41ff-96e4-b0b4647d0c80", mailboxGlobalKey)
+            assertEquals("Tracz Janusz", userName)
+            assertEquals("Fake123456", schoolNameShort)
+            assertEquals(RecipientType.EMPLOYEE, type)
         }
 
         recipients[3].run {
-            assertEquals("96rPracownik", id)
-            assertEquals("Kowalski Jan (JK) - pracownik [Fake123456]", name)
-            assertEquals("Kowalski Jan", shortName)
-            assertEquals(96, loginId)
-            assertEquals(6, reportingUnitId)
-            assertEquals(2, role)
-            assertEquals("NTVhNTQwMDhhZDFiYTU4OWFhMjEwZDI2MjljMWRmNDE=", hash)
+            assertEquals("33eae6c8-4dc6-42dd-a4f3-c54d324aa38f", mailboxGlobalKey)
+            assertEquals("Kowalski Jan", userName)
+            assertEquals("Fake123456", schoolNameShort)
+            assertEquals(RecipientType.EMPLOYEE, type)
         }
     }
 
     @Test
-    fun getReceivedMessagesTest() {
+    fun getReceivedMessagesTest() = runTest {
         with(server) {
-            enqueue("WiadomosciOdebrane.json")
+            enqueue("Odebrane.json")
             start(3000)
         }
 
-        val messages = runBlocking { api.getReceivedMessages(null, null) }
+        val messages = api.getReceivedMessages("", 0, 50)
 
         assertEquals(2, messages.size)
         with(messages[0]) {
-            assertEquals(false, unread)
-            assertEquals(null, content)
+            assertTrue(isRead)
             assertEquals("Temat wiadomości", subject)
-            assertEquals("Nazwisko Imię", sender?.name)
-            assertEquals("Jan Kowalski", recipients!![0].name)
-            assertEquals(27214, messageId)
-            assertEquals(3617, sender?.loginId)
-            assertEquals(true, hasAttachments)
+            assertEquals("5be515a7-ded9-4e4d-bb29-15cc254e341f", apiGlobalKey)
+            assertEquals(getLocalDateTime(2022, 8, 15, 14, 17, 11), date)
+            assertEquals("Jan Sierpień - P - (123456)", correspondents)
+            assertEquals("Jan Kowalski - U - (123456)", mailbox)
+            assertEquals(2, userRole)
+            assertFalse(isMarked)
+            assertFalse(isAttachments)
             assertEquals(35232, id)
         }
-        assertEquals(false, messages[1].hasAttachments)
+        assertEquals(true, messages[1].isAttachments)
     }
 
     @Test
-    fun getDeletedMessagesTest() {
+    fun getDeletedMessagesTest() = runTest {
         with(server) {
-            enqueue("WiadomosciUsuniete.json")
+            enqueue("Usuniete.json")
             start(3000)
         }
 
-        val messages = runBlocking { api.getDeletedMessages(null, null) }
+        val messages = api.getDeletedMessages(null)
 
         assertEquals(1, messages.size)
-        assertEquals("Kowalski Jan", messages[0].recipients!![0].name)
+        assertEquals("Nazwisko Imię - P - (000012)", messages[0].correspondents)
+        assertEquals("Kowalski Jan - U - (000012)", messages[0].mailbox)
     }
 
     @Test
-    fun getMessagesSentTest() {
+    fun getMessagesSentTest() = runTest {
         with(server) {
-            enqueue("WiadomosciWyslane.json")
+            enqueue("Wyslane.json")
             start(3000)
         }
 
-        val messages = runBlocking { api.getSentMessages(null, null) }
+        val messages = api.getSentMessages(null)
 
-        assertEquals(6, messages.size)
+        assertEquals(2, messages.size)
 
         messages[0].run {
             assertEquals(32798, id)
-            assertEquals(32798, messageId)
             assertEquals("Usprawiedliwienie nieobecności", subject)
-            assertEquals(1, recipients?.size)
-            assertEquals("Tracz Janusz", recipients!![0].name)
-            assertEquals(1, unreadBy)
-            assertEquals(0, readBy)
+            assertEquals("Jan Kowalski - P - (123456)", correspondents)
         }
     }
 
     @Test
-    fun getMessagesSent_recipientWithDashInName() {
+    fun getMessageReplayDetailsTest() = runTest {
         with(server) {
-            enqueue("WiadomosciWyslane.json")
+            enqueue("WiadomoscOdpowiedzPrzekaz.json")
             start(3000)
         }
 
-        runBlocking { api.getSentMessages(null, null) }[1].run {
-            assertEquals("Czerwieńska - Kowalska Joanna", recipients!![0].name)
+        val res = api.getMessageReplayDetails("uuidv4")
+
+        res.run {
+            assertEquals(35232, id)
+            assertEquals("Jan Sierpień - P - (123456)", sender.fullName)
+            assertEquals("20bd8141-6ff0-474c-8aaf-284e6fbdf9c5", sender.mailboxGlobalKey)
+            assertEquals("4f947f6c-d001-48ae-ba7a-f150f9f2dcf4", mailboxId)
+            assertEquals("Jan Kowalski - U - (123456)", recipients[0].fullName)
+            assertEquals(125, res.content.length)
         }
     }
 
     @Test
-    fun getMessagesSent_multiRecipients() {
-        with(server) {
-            enqueue("WiadomosciWyslane.json")
-            start(3000)
-        }
-
-        runBlocking { api.getSentMessages(null, null) }[3].run {
-            assertEquals(2, recipients?.size)
-            assertEquals("Czerwieńska - Kowalska Joanna", recipients!![0].name)
-            assertEquals("Tracz Janusz", recipients!![1].name)
-        }
-    }
-
-    @Test
-    fun getMessagesSent_multiRecipientsWithBraces() {
-        with(server) {
-            enqueue("WiadomosciWyslane.json")
-            start(3000)
-        }
-
-        runBlocking { api.getSentMessages(null, null) }[5].run {
-            assertEquals(2, recipients?.size)
-            assertEquals("Tracz Antoni", recipients!![0].name)
-            assertEquals("Kowalska Joanna", recipients!![1].name)
-        }
-    }
-
-    @Test
-    fun getMessageRecipientsTest() {
-        with(server) {
-            enqueue("Adresaci.json")
-            start(3000)
-        }
-
-        runBlocking { api.getMessageRecipients(421, 0) }[0].run {
-            assertEquals("18rPracownik", id)
-            assertEquals("Tracz Janusz [TJ] - pracownik (Fake123456)", name)
-            assertEquals(18, loginId)
-            assertEquals(6, reportingUnitId)
-            assertEquals(2, role)
-            assertEquals("NTVhNTQwMDhhZDFiYTU4OWFhMjEwZDI2MjljMWRmNDE=", hash)
-            assertEquals("Tracz Janusz", shortName)
-        }
-    }
-
-    @Test
-    fun getMessageSenderTest() {
-        with(server) {
-            enqueue("Adresaci.json")
-            start(3000)
-        }
-
-        runBlocking { api.getMessageRecipients(421, 94) }[1].run {
-            assertEquals("94rPracownik", id)
-            assertEquals(94, loginId)
-        }
-    }
-
-    @Test
-    fun getMessageContentTest() {
+    fun sendMessageTest() = runBlocking {
         with(server) {
             enqueue("Start.html")
-            enqueue("Wiadomosc.json")
+            enqueue("WiadomoscNowa.json")
             start(3000)
         }
 
-        assertEquals(90, runBlocking { api.getMessage(1, 1, false, 0) }.length)
-    }
-
-    @Test
-    fun getMessageAttachmentsTest() {
-        with(server) {
-            enqueue("Start.html")
-            enqueue("Wiadomosc.json")
-            start(3000)
-        }
-
-        val attachments = runBlocking { api.getMessageAttachments(1, 1) }
-
-        assertEquals(1, attachments.size)
-        with(attachments[0]) {
-            assertEquals(131, id)
-            assertEquals("nazwa_pliku.pptx", filename)
-            assertEquals(35232, messageId)
-            assertEquals("0123456789ABCDEF!123", oneDriveId)
-            assertEquals("https://1drv.ms/u/s!AmvjLDq5anT2psJ4nujoBUyclWOUhw", url)
-        }
-    }
-
-    @Test
-    fun sendMessageTest() {
-        with(server) {
-            enqueue("Start.html")
-            enqueue("WyslanaWiadomosc.json")
-            start(3000)
-        }
-
-        runBlocking {
-            api.sendMessage(
-                "Temat wiadomości", "Tak wygląda zawartość wiadomości.\nZazwyczaj ma wiele linijek.\n\nZ poważaniem,\nNazwisko Imię",
-                listOf(Recipient("0", "Kowalski Jan", 0, 0, 2, "hash"))
+        mockkStatic(UUID::randomUUID)
+        every { UUID.randomUUID() } returns mockk {
+            every { this@mockk.toString() } returnsMany listOf(
+                "1dc8c7a9-983f-4ea7-a4f1-d918beeed389",
+                "bfa544fb-0588-4aa0-afd0-1b9db31ce3ea",
             )
         }
 
+        api.sendMessage(
+            subject = "Temat wiadomości",
+            content = "Tak wygląda zawartość wiadomości.\nZazwyczaj ma wiele linijek.\n\nZ poważaniem,\nNazwisko Imię",
+            senderMailboxId = "05e5be82-b894-4864-823b-e79e4f91ce2d",
+            recipients = listOf("41c81103-a648-42b1-8519-ae3b2db6ea9b")
+        )
+
         server.takeRequest()
 
-        val expected = Json.decodeFromString<SendMessageRequest>(MessagesTest::class.java.getResource("NowaWiadomosc.json")!!.readText())
+        val expected = Json.decodeFromString<SendMessageRequest>(MessagesTest::class.java.getResource("WiadomoscNowa.json")!!.readText())
         val request = server.takeRequest()
         val actual = Json.decodeFromString<SendMessageRequest>(request.body.readUtf8())
 
@@ -241,20 +166,24 @@ class MessagesTest : BaseLocalTest() {
     }
 
     @Test
-    fun deleteMessageTest() {
+    fun deleteMessageTest() = runBlocking {
         with(server) {
             enqueue("Start.html")
-            enqueue(MockResponse().setBody("{\"success\": true}"))
+            enqueue(MockResponse()) // 204
             start(3000)
         }
 
-        assertEquals(runBlocking { api.deleteMessages(listOf(74, 69), 2) }, true)
+        val messagesIds = listOf(
+            "72b8ce21-3e4c-4f82-9a0e-aaf1783c2317",
+            "acc98ff1-d91a-4151-a863-2a97827f7849",
+        )
+        api.deleteMessages(messagesIds, false)
 
         server.takeRequest()
 
-        val expected = Json.decodeFromString<DeleteMessageRequest>(MessagesTest::class.java.getResource("UsunWiadomosc.json")!!.readText())
+        val expected = Json.decodeFromString<List<String>>(MessagesTest::class.java.getResource("MoveTrash.json")!!.readText())
         val request = server.takeRequest()
-        val actual = Json.decodeFromString<DeleteMessageRequest>(request.body.readUtf8())
+        val actual = Json.decodeFromString<List<String>>(request.body.readUtf8())
 
         assertEquals(expected, actual)
         assertEquals(
@@ -263,20 +192,5 @@ class MessagesTest : BaseLocalTest() {
         )
         assertEquals("877c4a726ad61667f4e2237f0cf6307a", request.getHeader("X-V-AppGuid"))
         assertEquals("19.02.0001.32324", request.getHeader("X-V-AppVersion"))
-    }
-
-    @Test
-    fun deleteMessage_emptyResponse() {
-        with(server) {
-            enqueue("Start.html")
-            enqueue(MockResponse().setBody(""))
-            start(3000)
-        }
-
-        val res = runCatching { runBlocking { api.deleteMessages(listOf(74, 69), 3) } }
-
-        val exception = res.exceptionOrNull()!!
-        assert(exception is SerializationException)
-        assertEquals("Expected start of the object '{', but had 'EOF' instead at path: \$\nJSON input: ", exception.message)
     }
 }
