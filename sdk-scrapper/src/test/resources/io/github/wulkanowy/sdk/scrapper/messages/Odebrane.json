@@ -24,5 +24,18 @@
     "wazna": true,
     "uzytkownikRola": 2,
     "id": 321
+  },
+  {
+    "apiGlobalKey": "65d61b2b-93a6-4242-a5ab-e33723f653aa",
+    "korespondenci": "Katarzyna Wrzesień - P - (000088)",
+    "temat": "Temat wiadomości",
+    "data": "2022-08-23T14:54:15+02:00",
+    "skrzynka": "Jan Kowalski - U - (123456)",
+    "hasZalaczniki": true,
+    "przeczytana": false,
+    "nieprzeczytanePrzeczytanePrzez": null,
+    "wazna": true,
+    "uzytkownikRola": 2,
+    "id": 333
   }
 ]

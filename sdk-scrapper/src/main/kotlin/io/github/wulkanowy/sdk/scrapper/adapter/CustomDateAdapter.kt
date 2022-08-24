@@ -13,9 +13,10 @@ import java.time.format.DateTimeFormatter
 object CustomDateAdapter : KSerializer<LocalDateTime> {
 
     private const val FIRST_DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSXXX"
-    private const val SECOND_DATE_FORMAT = "yyyy-MM-dd HH:mm:ss"
+    private const val SECOND_DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ssXXX"
+    private const val THIRD_DATE_FORMAT = "yyyy-MM-dd HH:mm:ss"
 
-    private val formatter = DateTimeFormatter.ofPattern("[$SECOND_DATE_FORMAT][$FIRST_DATE_FORMAT]")
+    private val formatter = DateTimeFormatter.ofPattern("[$FIRST_DATE_FORMAT][$SECOND_DATE_FORMAT][$THIRD_DATE_FORMAT]")
 
     override fun deserialize(decoder: Decoder): LocalDateTime {
         val date = decoder.decodeString()

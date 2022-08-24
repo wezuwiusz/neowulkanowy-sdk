@@ -60,7 +60,7 @@ class MessagesTest : BaseLocalTest() {
 
         val messages = api.getReceivedMessages("", 0, 50)
 
-        assertEquals(2, messages.size)
+        assertEquals(3, messages.size)
         with(messages[0]) {
             assertTrue(isRead)
             assertEquals("Temat wiadomości", subject)
