@@ -7,6 +7,7 @@ import io.github.wulkanowy.sdk.scrapper.Scrapper.LoginType.ADFSLight
 import io.github.wulkanowy.sdk.scrapper.Scrapper.LoginType.ADFSLightCufs
 import io.github.wulkanowy.sdk.scrapper.Scrapper.LoginType.ADFSLightScoped
 import io.github.wulkanowy.sdk.scrapper.Scrapper.LoginType.STANDARD
+import io.github.wulkanowy.sdk.scrapper.exception.VulcanClientError
 import io.github.wulkanowy.sdk.scrapper.login.NotLoggedInException
 import io.github.wulkanowy.sdk.scrapper.repository.AccountRepository.Companion.SELECTOR_ADFS
 import io.github.wulkanowy.sdk.scrapper.repository.AccountRepository.Companion.SELECTOR_ADFS_CARDS
@@ -49,14 +50,21 @@ class AutoLoginInterceptor(
     override fun intercept(chain: Interceptor.Chain): Response {
         val request: Request
         val response: Response
+        val url = chain.request().url.toString()
 
         try {
             request = chain.request()
             checkRequest()
-            response = chain.proceed(request)
+            response = try {
+                chain.proceed(request)
+            } catch (e: Throwable) {
+                if (e is VulcanClientError) {
+                    checkHttpErrorResponse(e, url)
+                }
+                throw e
+            }
             if (response.body?.contentType()?.subtype != "json") {
                 val body = response.peekBody(Long.MAX_VALUE).byteStream()
-                val url = chain.request().url.toString()
                 checkResponse(response, Jsoup.parse(body, null, url), url)
             }
         } catch (e: NotLoggedInException) {
@@ -121,10 +129,12 @@ class AutoLoginInterceptor(
             "The custom error module" in bodyContent -> {
                 throw NotLoggedInException(bodyContent)
             }
-            // uonetplus-wiadomosciplus
-            HttpURLConnection.HTTP_CONFLICT == response.code && "uonetplus-wiadomosciplus" in url -> {
-                throw NotLoggedInException(bodyContent)
-            }
+        }
+    }
+
+    private fun checkHttpErrorResponse(error: VulcanClientError, url: String) {
+        if (error.httpCode == HttpURLConnection.HTTP_CONFLICT && "uonetplus-wiadomosciplus" in url) {
+            throw NotLoggedInException(error.message.orEmpty())
         }
     }
 
