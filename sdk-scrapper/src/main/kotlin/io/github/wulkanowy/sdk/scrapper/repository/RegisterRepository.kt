@@ -137,11 +137,11 @@ class RegisterRepository(
             Student(
                 email = email,
                 userLogin = email,
-                userName = userName ?: email,
-                userLoginId = authInfo?.loginId ?: 0,
+                userName = (userName ?: email).trim(),
+                userLoginId = authInfo?.loginId ?: diary.studentId,
                 symbol = symbol,
                 studentId = diary.studentId,
-                studentName = diary.studentName,
+                studentName = diary.studentName.trim(),
                 studentSecondName = diary.studentSecondName.orEmpty(),
                 studentSurname = diary.studentSurname,
                 schoolSymbol = schoolSymbol,
@@ -152,7 +152,7 @@ class RegisterRepository(
                 baseUrl = url.generate(ServiceManager.UrlGenerator.Site.BASE),
                 loginType = loginType,
                 isParent = cache?.isParent == true,
-                semesters = diaries.toSemesters(diary.studentId, classId, authInfo?.loginId ?: 0),
+                semesters = diaries.toSemesters(diary.studentId, classId, authInfo?.loginId ?: diary.studentId),
             )
         }.ifEmpty {
             logger.error("No supported student found in diaries: $diaries")
