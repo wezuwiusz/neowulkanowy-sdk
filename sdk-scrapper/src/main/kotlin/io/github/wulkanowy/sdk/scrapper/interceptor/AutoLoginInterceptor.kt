@@ -65,7 +65,7 @@ class AutoLoginInterceptor(
             }
             if (response.body?.contentType()?.subtype != "json") {
                 val body = response.peekBody(Long.MAX_VALUE).byteStream()
-                checkResponse(response, Jsoup.parse(body, null, url), url)
+                checkResponse(Jsoup.parse(body, null, url), url)
             }
         } catch (e: NotLoggedInException) {
             if (lock.tryLock()) {
@@ -104,7 +104,7 @@ class AutoLoginInterceptor(
         }
     }
 
-    private fun checkResponse(response: Response, doc: Document, url: String) {
+    private fun checkResponse(doc: Document, url: String) {
         // if (chain.request().url().toString().contains("/Start.mvc/Get")) {
         if (url.contains("/Start.mvc/")) { // /Index return error too in 19.09.0000.34977
             doc.select(".errorBlock").let {

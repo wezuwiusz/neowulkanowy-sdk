@@ -1,5 +1,18 @@
 [
   {
+    "apiGlobalKey": "af0b8a23-bdf1-449c-8c81-e505363faa0b",
+    "korespondenci": "Katarzyna Wrzesień - P - (000088)",
+    "temat": "Temat wiadomości",
+    "data": "2022-08-19T09:46:12.943+02:00",
+    "skrzynka": "Jan Kowalski - U - (123456)",
+    "hasZalaczniki": true,
+    "przeczytana": false,
+    "nieprzeczytanePrzeczytanePrzez": null,
+    "wazna": true,
+    "uzytkownikRola": 2,
+    "id": 1
+  },
+  {
     "apiGlobalKey": "5be515a7-ded9-4e4d-bb29-15cc254e341f",
     "korespondenci": "Jan Sierpień - P - (123456)",
     "temat": "Temat wiadomości",
