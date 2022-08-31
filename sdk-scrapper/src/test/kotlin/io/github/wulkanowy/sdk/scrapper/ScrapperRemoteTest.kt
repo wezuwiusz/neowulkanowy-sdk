@@ -321,7 +321,7 @@ class ScrapperRemoteTest : BaseTest() {
     @Test
     fun messagesTest() {
         val mailboxes = runBlocking { api.getMailboxes() }
-        assertEquals(1, mailboxes.size)
+        assertEquals(2, mailboxes.size)
 
         val recipients = runBlocking { api.getRecipients("asdf") }
         assertEquals(10, recipients.size)

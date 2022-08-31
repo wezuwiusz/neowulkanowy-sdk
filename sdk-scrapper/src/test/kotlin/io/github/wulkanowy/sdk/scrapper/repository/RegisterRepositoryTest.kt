@@ -11,12 +11,15 @@ import io.github.wulkanowy.sdk.scrapper.service.LoginService
 import io.github.wulkanowy.sdk.scrapper.service.RegisterService
 import io.github.wulkanowy.sdk.scrapper.service.ServiceManager
 import io.github.wulkanowy.sdk.scrapper.service.StudentService
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Test
 import java.net.CookieManager
 
+@OptIn(ExperimentalCoroutinesApi::class)
 class RegisterRepositoryTest : BaseLocalTest() {
 
     private val normal by lazy { getRegisterRepository("Default") }
@@ -63,7 +66,7 @@ class RegisterRepositoryTest : BaseLocalTest() {
         assertEquals(1, students.size)
         with(students[0]) {
             assertEquals("123456", schoolSymbol)
-            assertEquals("", schoolShortName)
+            assertEquals("Fake123456", schoolShortName)
             assertEquals(2, semesters.size)
         }
     }
@@ -91,7 +94,7 @@ class RegisterRepositoryTest : BaseLocalTest() {
         assertEquals(2, students.size)
         with(students[0]) {
             assertEquals("123456", schoolSymbol)
-            assertEquals("", schoolShortName)
+            assertEquals("Fake123456", schoolShortName)
             assertEquals(6, semesters.size)
         }
         assertEquals(6, students[1].semesters.size)
@@ -137,14 +140,13 @@ class RegisterRepositoryTest : BaseLocalTest() {
     }
 
     @Test
-    fun normalLogin_temporarilyOff() {
+    fun normalLogin_temporarilyOff() = runTest {
         with(server) {
             enqueue("LoginPage-standard.html", LoginTest::class.java)
             enqueue("Logowanie-uonet.html", LoginTest::class.java)
             enqueue("Login-success-triple.html", LoginTest::class.java)
 
             repeat(2) {
-                enqueue("LoginPage-standard.html", LoginTest::class.java)
                 enqueue("WitrynaUcznia.html", RegisterTest::class.java)
                 enqueue("UczenCache.json", RegisterTest::class.java)
                 enqueue("UczenDziennik-no-semester.json", RegisterTest::class.java)
@@ -159,19 +161,19 @@ class RegisterRepositoryTest : BaseLocalTest() {
             start(3000)
         }
 
-        val students = runBlocking { getRegisterRepository("Default").getStudents() }
+        val students = getRegisterRepository("Default").getStudents()
         assertEquals(2, students.size)
     }
 
     @Test
-    fun normalVulcanException() {
+    fun normalVulcanException() = runTest {
         server.enqueue("LoginPage-standard.html", LoginTest::class.java)
         server.enqueue("Logowanie-uonet.html", LoginTest::class.java)
         server.enqueue("Logowanie-brak-dostepu.html", LoginTest::class.java)
         server.enqueue("Offline.html", ErrorInterceptorTest::class.java)
         server.start(3000)
 
-        val res = runCatching { runBlocking { normal.getStudents() } }
+        val res = runCatching { normal.getStudents() }
         assertEquals(
             "Wystąpił nieoczekiwany błąd. Wystąpił błąd aplikacji. Prosimy zalogować się ponownie. Jeśli problem będzie się powtarzał, prosimy o kontakt z serwisem.",
             res.exceptionOrNull()?.message

@@ -12,7 +12,7 @@ class CacheResponse {
     var isParent: Boolean = false
 
     @SerialName("poryLekcji")
-    lateinit var times: List<Time>
+    var times: List<Time> = emptyList()
 
     @SerialName("isMenuOn")
     var isMenu: Boolean = false

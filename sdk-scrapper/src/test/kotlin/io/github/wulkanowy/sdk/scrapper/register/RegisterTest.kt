@@ -62,7 +62,6 @@ class RegisterTest : BaseLocalTest() {
             enqueue("LoginPage-standard.html", LoginTest::class.java)
             enqueue("Logowanie-uonet.html", LoginTest::class.java)
             enqueue("Login-success.html", LoginTest::class.java)
-            enqueue("LoginPage-standard.html", LoginTest::class.java)
             enqueue("WitrynaUcznia.html", RegisterTest::class.java)
             enqueue("UczenCache.json", RegisterTest::class.java)
             enqueue("UczenDziennik-multi.json", RegisterTest::class.java)
