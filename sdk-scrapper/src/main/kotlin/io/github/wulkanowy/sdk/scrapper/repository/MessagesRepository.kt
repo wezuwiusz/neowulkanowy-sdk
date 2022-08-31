@@ -70,8 +70,12 @@ class MessagesRepository(private val api: MessagesService) {
         }
     }
 
-    suspend fun getMessageDetails(globalKey: String): MessageDetails {
-        return api.getMessageDetails(globalKey)
+    suspend fun getMessageDetails(globalKey: String, markAsRead: Boolean): MessageDetails {
+        val details = api.getMessageDetails(globalKey)
+        if (markAsRead) {
+            api.markMessageAsRead(mapOf("apiGlobalKey" to globalKey))
+        }
+        return details
     }
 
     suspend fun sendMessage(subject: String, content: String, recipients: List<String>, senderMailboxId: String) {

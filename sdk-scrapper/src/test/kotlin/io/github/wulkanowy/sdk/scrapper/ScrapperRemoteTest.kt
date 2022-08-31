@@ -341,7 +341,7 @@ class ScrapperRemoteTest : BaseTest() {
         val replayDetails = runBlocking { api.getMessageReplayDetails("uuidv4") }
         assertEquals(1, replayDetails.recipients.size)
 
-        val details = runBlocking { api.getMessageDetails("asdf") }
+        val details = runBlocking { api.getMessageDetails("asdf", true) }
         assertEquals(27214, details.id)
     }
 

@@ -11,6 +11,7 @@ import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.Header
 import retrofit2.http.POST
+import retrofit2.http.PUT
 import retrofit2.http.Query
 
 interface MessagesService {
@@ -65,6 +66,9 @@ interface MessagesService {
 
     @GET("api/WiadomoscSzczegoly")
     suspend fun getMessageDetails(@Query("apiGlobalKey") globalKey: String): MessageDetails
+
+    @PUT("api/WiadomoscSzczegoly")
+    suspend fun markMessageAsRead(@Body body: Map<String, String>): MessageDetails
 
     @GET("api/WiadomoscOdpowiedzPrzekaz")
     suspend fun getMessageReplayDetails(@Query("apiGlobalKey") globalKey: String): MessageReplayDetails
