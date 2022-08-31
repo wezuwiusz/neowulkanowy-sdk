@@ -146,7 +146,7 @@ class RegisterRepository(
                 studentSurname = diary.studentSurname,
                 schoolSymbol = unit.symbol,
                 schoolShortName = unit.short,
-                schoolName = unit.name,
+                schoolName = getScriptParam("organizationName", studentStartPage, "${unit.name} ${unit.short}"),
                 className = diary.symbol.orEmpty(),
                 classId = classId,
                 baseUrl = url.generate(ServiceManager.UrlGenerator.Site.BASE),
