@@ -74,7 +74,13 @@ class MessagesRepository(private val api: MessagesService) {
         val details = api.getMessageDetails(globalKey)
         if (markAsRead && !details.isRead) {
             runCatching {
-                api.markMessageAsRead(mapOf("apiGlobalKey" to globalKey))
+                val startPage = api.getStart()
+                api.markMessageAsRead(
+                    token = getScriptParam("antiForgeryToken", startPage),
+                    appGuid = getScriptParam("appGuid", startPage),
+                    appVersion = getScriptParam("version", startPage),
+                    body = mapOf("apiGlobalKey" to globalKey),
+                )
             }.getOrNull()
         }
         return details

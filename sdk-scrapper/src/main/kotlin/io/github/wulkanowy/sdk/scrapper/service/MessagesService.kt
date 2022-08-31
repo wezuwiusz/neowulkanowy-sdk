@@ -68,7 +68,12 @@ interface MessagesService {
     suspend fun getMessageDetails(@Query("apiGlobalKey") globalKey: String): MessageDetails
 
     @PUT("api/WiadomoscSzczegoly")
-    suspend fun markMessageAsRead(@Body body: Map<String, String>): MessageDetails
+    suspend fun markMessageAsRead(
+        @Header("X-V-RequestVerificationToken") token: String,
+        @Header("X-V-AppGuid") appGuid: String,
+        @Header("X-V-AppVersion") appVersion: String,
+        @Body body: Map<String, String>,
+    ): MessageDetails
 
     @GET("api/WiadomoscOdpowiedzPrzekaz")
     suspend fun getMessageReplayDetails(@Query("apiGlobalKey") globalKey: String): MessageReplayDetails
