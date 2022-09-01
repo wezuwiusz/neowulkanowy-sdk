@@ -12,9 +12,15 @@ import io.github.wulkanowy.sdk.scrapper.parseName
 import io.github.wulkanowy.sdk.scrapper.service.MessagesService
 import io.github.wulkanowy.sdk.scrapper.toMailbox
 import io.github.wulkanowy.sdk.scrapper.toRecipient
+import org.slf4j.LoggerFactory
 import java.util.UUID
 
 class MessagesRepository(private val api: MessagesService) {
+
+    companion object {
+        @JvmStatic
+        private val logger = LoggerFactory.getLogger(this::class.java)
+    }
 
     suspend fun getMailboxes(): List<Mailbox> {
         return api.getMailboxes().map {
@@ -81,6 +87,8 @@ class MessagesRepository(private val api: MessagesService) {
                     appVersion = getScriptParam("version", startPage),
                     body = mapOf("apiGlobalKey" to globalKey),
                 )
+            }.onFailure {
+                logger.error("Error occur while marking message as read", it)
             }.getOrNull()
         }
         return details
