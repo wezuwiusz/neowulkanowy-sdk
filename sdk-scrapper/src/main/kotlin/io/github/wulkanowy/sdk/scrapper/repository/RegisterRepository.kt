@@ -65,6 +65,8 @@ class RegisterRepository(
                 permissions?.authInfos.orEmpty().find { it.unitId == unit.id }
             }
 
+            logger.debug("${cert.studentSchools.map { it.attr("href") }}")
+
             units.flatMap { (unit, authInfo) ->
                 getStudentsFromUnit(symbol, loginType, unit, authInfo, getUserNameFromUserData(cert.userData))
             }
