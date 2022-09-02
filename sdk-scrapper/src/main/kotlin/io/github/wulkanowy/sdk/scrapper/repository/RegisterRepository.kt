@@ -63,6 +63,8 @@ class RegisterRepository(
             val permissions = getPermissions(cert.document.toString())
             val units = permissions?.units.orEmpty().associateWith { unit ->
                 permissions?.authInfos.orEmpty().find { it.unitId == unit.id }
+            }.filterNot { (_, authInfo) ->
+                authInfo?.studentIds.isNullOrEmpty() && authInfo?.parentIds.isNullOrEmpty()
             }
 
             logger.debug("${cert.studentSchools.map { it.attr("href") }}")
