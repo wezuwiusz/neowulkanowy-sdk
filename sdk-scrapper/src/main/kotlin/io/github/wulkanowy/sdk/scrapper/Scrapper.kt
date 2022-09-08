@@ -21,8 +21,8 @@ import io.github.wulkanowy.sdk.scrapper.login.LoginHelper
 import io.github.wulkanowy.sdk.scrapper.messages.Folder
 import io.github.wulkanowy.sdk.scrapper.messages.Mailbox
 import io.github.wulkanowy.sdk.scrapper.messages.MessageDetails
-import io.github.wulkanowy.sdk.scrapper.messages.MessageReplayDetails
 import io.github.wulkanowy.sdk.scrapper.messages.MessageMeta
+import io.github.wulkanowy.sdk.scrapper.messages.MessageReplayDetails
 import io.github.wulkanowy.sdk.scrapper.messages.Recipient
 import io.github.wulkanowy.sdk.scrapper.mobile.Device
 import io.github.wulkanowy.sdk.scrapper.mobile.TokenResponse
@@ -269,48 +269,126 @@ class Scrapper {
 
     suspend fun getSemesters(): List<Semester> = studentStart.getSemesters()
 
-    suspend fun getAttendance(startDate: LocalDate, endDate: LocalDate? = null): List<Attendance> = student.getAttendance(startDate, endDate)
+    suspend fun getAttendance(startDate: LocalDate, endDate: LocalDate? = null): List<Attendance> {
+        if (diaryId == 0) return emptyList()
 
-    suspend fun getAttendanceSummary(subjectId: Int? = -1): List<AttendanceSummary> = student.getAttendanceSummary(subjectId)
+        return student.getAttendance(startDate, endDate)
+    }
+
+    suspend fun getAttendanceSummary(subjectId: Int? = -1): List<AttendanceSummary> {
+        if (diaryId == 0) return emptyList()
+
+        return student.getAttendanceSummary(subjectId)
+    }
 
     suspend fun excuseForAbsence(absents: List<Absent>, content: String? = null): Boolean = student.excuseForAbsence(absents, content)
 
     suspend fun getSubjects(): List<Subject> = student.getSubjects()
 
-    suspend fun getExams(startDate: LocalDate, endDate: LocalDate? = null): List<Exam> = student.getExams(startDate, endDate)
+    suspend fun getExams(startDate: LocalDate, endDate: LocalDate? = null): List<Exam> {
+        if (diaryId == 0) return emptyList()
 
-    suspend fun getGradesFull(semester: Int): GradesFull = student.getGradesFull(semester)
+        return student.getExams(startDate, endDate)
+    }
 
-    suspend fun getGrades(semesterId: Int): Pair<List<Grade>, List<GradeSummary>> = student.getGrades(semesterId)
+    suspend fun getGradesFull(semester: Int): GradesFull {
+        if (diaryId == 0) return GradesFull(
+            details = emptyList(),
+            summary = emptyList(),
+            isAverage = false,
+            isPoints = false,
+            isForAdults = false,
+            type = -1,
+        )
 
-    suspend fun getGradesDetails(semesterId: Int? = null): List<Grade> = student.getGradesDetails(semesterId)
+        return student.getGradesFull(semester)
+    }
 
-    suspend fun getGradesSummary(semesterId: Int? = null): List<GradeSummary> = student.getGradesSummary(semesterId)
+    suspend fun getGrades(semesterId: Int): Pair<List<Grade>, List<GradeSummary>> {
+        if (diaryId == 0) return emptyList<Grade>() to emptyList()
 
-    suspend fun getGradesPartialStatistics(semesterId: Int): List<GradesStatisticsPartial> = student.getGradesPartialStatistics(semesterId)
+        return student.getGrades(semesterId)
+    }
 
-    suspend fun getGradesPointsStatistics(semesterId: Int): List<GradePointsSummary> = student.getGradesPointsStatistics(semesterId)
+    suspend fun getGradesDetails(semesterId: Int? = null): List<Grade> {
+        if (diaryId == 0) return emptyList()
 
-    suspend fun getGradesSemesterStatistics(semesterId: Int): List<GradesStatisticsSemester> = student.getGradesAnnualStatistics(semesterId)
+        return student.getGradesDetails(semesterId)
+    }
 
-    suspend fun getHomework(startDate: LocalDate, endDate: LocalDate? = null): List<Homework> = student.getHomework(startDate, endDate)
+    suspend fun getGradesSummary(semesterId: Int? = null): List<GradeSummary> {
+        if (diaryId == 0) return emptyList()
+
+        return student.getGradesSummary(semesterId)
+    }
+
+    suspend fun getGradesPartialStatistics(semesterId: Int): List<GradesStatisticsPartial> {
+        if (diaryId == 0) return emptyList()
+
+        return student.getGradesPartialStatistics(semesterId)
+    }
+
+    suspend fun getGradesPointsStatistics(semesterId: Int): List<GradePointsSummary> {
+        if (diaryId == 0) return emptyList()
+
+        return student.getGradesPointsStatistics(semesterId)
+    }
+
+    suspend fun getGradesSemesterStatistics(semesterId: Int): List<GradesStatisticsSemester> {
+        if (diaryId == 0) return emptyList()
+
+        return student.getGradesAnnualStatistics(semesterId)
+    }
+
+    suspend fun getHomework(startDate: LocalDate, endDate: LocalDate? = null): List<Homework> {
+        if (diaryId == 0) return emptyList()
+
+        return student.getHomework(startDate, endDate)
+    }
 
     suspend fun getNotes(): List<Note> = student.getNotes()
 
     suspend fun getConferences(): List<Conference> = student.getConferences()
 
-    suspend fun getTimetableFull(startDate: LocalDate, endDate: LocalDate? = null): TimetableFull = student.getTimetableFull(startDate, endDate)
+    suspend fun getTimetableFull(startDate: LocalDate, endDate: LocalDate? = null): TimetableFull {
+        if (diaryId == 0) return TimetableFull(
+            headers = emptyList(),
+            lessons = emptyList(),
+            additional = emptyList(),
+        )
 
-    suspend fun getTimetable(startDate: LocalDate, endDate: LocalDate? = null): Pair<List<Timetable>, List<TimetableAdditional>> = student.getTimetable(startDate, endDate)
+        return student.getTimetableFull(startDate, endDate)
+    }
 
-    suspend fun getTimetableNormal(startDate: LocalDate, endDate: LocalDate? = null): List<Timetable> = student.getTimetableNormal(startDate, endDate)
+    suspend fun getTimetable(startDate: LocalDate, endDate: LocalDate? = null): Pair<List<Timetable>, List<TimetableAdditional>> {
+        if (diaryId == 0) return emptyList<Timetable>() to emptyList()
 
-    suspend fun getTimetableHeaders(startDate: LocalDate): List<TimetableDayHeader> = student.getTimetableHeaders(startDate)
+        return student.getTimetable(startDate, endDate)
+    }
 
-    suspend fun getTimetableAdditional(startDate: LocalDate): List<TimetableAdditional> = student.getTimetableAdditional(startDate)
+    suspend fun getTimetableNormal(startDate: LocalDate, endDate: LocalDate? = null): List<Timetable> {
+        if (diaryId == 0) return emptyList()
 
-    suspend fun getCompletedLessons(startDate: LocalDate, endDate: LocalDate? = null, subjectId: Int = -1): List<CompletedLesson> =
-        student.getCompletedLessons(startDate, endDate, subjectId)
+        return student.getTimetableNormal(startDate, endDate)
+    }
+
+    suspend fun getTimetableHeaders(startDate: LocalDate): List<TimetableDayHeader> {
+        if (diaryId == 0) return emptyList()
+
+        return student.getTimetableHeaders(startDate)
+    }
+
+    suspend fun getTimetableAdditional(startDate: LocalDate): List<TimetableAdditional> {
+        if (diaryId == 0) return emptyList()
+
+        return student.getTimetableAdditional(startDate)
+    }
+
+    suspend fun getCompletedLessons(startDate: LocalDate, endDate: LocalDate? = null, subjectId: Int = -1): List<CompletedLesson> {
+        if (diaryId == 0) return emptyList()
+
+        return student.getCompletedLessons(startDate, endDate, subjectId)
+    }
 
     suspend fun getRegisteredDevices(): List<Device> = student.getRegisteredDevices()
 
@@ -341,17 +419,21 @@ class Scrapper {
         Folder.TRASHED -> messages.getDeletedMessages(mailboxKey, lastMessageKey, pageSize)
     }
 
-    suspend fun getReceivedMessages(mailboxKey: String? = null, lastMessageKey: Int = 0, pageSize: Int = 50): List<MessageMeta> = messages.getReceivedMessages(mailboxKey, lastMessageKey, pageSize)
+    suspend fun getReceivedMessages(mailboxKey: String? = null, lastMessageKey: Int = 0, pageSize: Int = 50): List<MessageMeta> =
+        messages.getReceivedMessages(mailboxKey, lastMessageKey, pageSize)
 
-    suspend fun getSentMessages(mailboxKey: String? = null, lastMessageKey: Int = 0, pageSize: Int = 50): List<MessageMeta> = messages.getSentMessages(mailboxKey, lastMessageKey, pageSize)
+    suspend fun getSentMessages(mailboxKey: String? = null, lastMessageKey: Int = 0, pageSize: Int = 50): List<MessageMeta> =
+        messages.getSentMessages(mailboxKey, lastMessageKey, pageSize)
 
-    suspend fun getDeletedMessages(mailboxKey: String? = null, lastMessageKey: Int = 0, pageSize: Int = 50): List<MessageMeta> = messages.getDeletedMessages(mailboxKey, lastMessageKey, pageSize)
+    suspend fun getDeletedMessages(mailboxKey: String? = null, lastMessageKey: Int = 0, pageSize: Int = 50): List<MessageMeta> =
+        messages.getDeletedMessages(mailboxKey, lastMessageKey, pageSize)
 
     suspend fun getMessageReplayDetails(globalKey: String): MessageReplayDetails = messages.getMessageReplayDetails(globalKey)
 
     suspend fun getMessageDetails(globalKey: String, markAsRead: Boolean): MessageDetails = messages.getMessageDetails(globalKey, markAsRead)
 
-    suspend fun sendMessage(subject: String, content: String, recipients: List<String>, senderMailboxId: String) = messages.sendMessage(subject, content, recipients, senderMailboxId)
+    suspend fun sendMessage(subject: String, content: String, recipients: List<String>, senderMailboxId: String) =
+        messages.sendMessage(subject, content, recipients, senderMailboxId)
 
     suspend fun deleteMessages(messagesToDelete: List<String>, removeForever: Boolean) = messages.deleteMessages(messagesToDelete, removeForever)
 
