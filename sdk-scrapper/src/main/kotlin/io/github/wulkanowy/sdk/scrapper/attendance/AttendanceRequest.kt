@@ -15,3 +15,10 @@ data class AttendanceRequest(
     @SerialName("idTypWpisuFrekwencji")
     val typeId: Int = -1
 )
+
+@Serializable
+data class AttendanceRecordsRequest(
+
+    @SerialName("miesiac")
+    val month: Int,
+)

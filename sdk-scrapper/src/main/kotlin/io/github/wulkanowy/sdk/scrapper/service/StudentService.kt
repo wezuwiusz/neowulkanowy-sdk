@@ -2,6 +2,8 @@ package io.github.wulkanowy.sdk.scrapper.service
 
 import io.github.wulkanowy.sdk.scrapper.ApiResponse
 import io.github.wulkanowy.sdk.scrapper.attendance.AttendanceExcuseRequest
+import io.github.wulkanowy.sdk.scrapper.attendance.AttendanceRecordDay
+import io.github.wulkanowy.sdk.scrapper.attendance.AttendanceRecordsRequest
 import io.github.wulkanowy.sdk.scrapper.attendance.AttendanceRequest
 import io.github.wulkanowy.sdk.scrapper.attendance.AttendanceResponse
 import io.github.wulkanowy.sdk.scrapper.attendance.AttendanceSummaryRequest
@@ -85,6 +87,9 @@ interface StudentService {
 
     @POST("FrekwencjaStatystykiPrzedmioty.mvc/Get")
     suspend fun getAttendanceSubjects(@Body body: Any = Any()): ApiResponse<List<Subject>>
+
+    @POST("EwidencjaObecnosci.mvc/Get")
+    suspend fun getAttendanceRecords(@Body attendanceRecordsRequest: AttendanceRecordsRequest): ApiResponse<List<AttendanceRecordDay>>
 
     @POST("Usprawiedliwienia.mvc/Post")
     suspend fun excuseForAbsence(
