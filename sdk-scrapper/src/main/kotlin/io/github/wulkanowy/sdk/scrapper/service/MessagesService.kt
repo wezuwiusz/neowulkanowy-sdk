@@ -73,7 +73,7 @@ interface MessagesService {
         @Header("X-V-AppGuid") appGuid: String,
         @Header("X-V-AppVersion") appVersion: String,
         @Body body: Map<String, String>,
-    ): MessageDetails
+    )
 
     @GET("api/WiadomoscOdpowiedzPrzekaz")
     suspend fun getMessageReplayDetails(@Query("apiGlobalKey") globalKey: String): MessageReplayDetails

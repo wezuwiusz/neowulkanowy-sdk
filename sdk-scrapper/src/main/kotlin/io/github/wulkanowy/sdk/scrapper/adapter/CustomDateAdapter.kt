@@ -14,10 +14,11 @@ object CustomDateAdapter : KSerializer<LocalDateTime> {
 
     private const val DATE_FORMAT_1 = "yyyy-MM-dd'T'HH:mm:ss.SSSXXX"
     private const val DATE_FORMAT_2 = "yyyy-MM-dd'T'HH:mm:ss.SSXXX"
-    private const val DATE_FORMAT_3 = "yyyy-MM-dd'T'HH:mm:ssXXX"
-    private const val DATE_FORMAT_4 = "yyyy-MM-dd HH:mm:ss"
+    private const val DATE_FORMAT_3 = "yyyy-MM-dd'T'HH:mm:ss.SXXX"
+    private const val DATE_FORMAT_4 = "yyyy-MM-dd'T'HH:mm:ssXXX"
+    private const val DATE_FORMAT_5 = "yyyy-MM-dd HH:mm:ss"
 
-    private val formatter = DateTimeFormatter.ofPattern("[$DATE_FORMAT_1][$DATE_FORMAT_2][$DATE_FORMAT_3][$DATE_FORMAT_4]")
+    private val formatter = DateTimeFormatter.ofPattern("[$DATE_FORMAT_1][$DATE_FORMAT_2][$DATE_FORMAT_3][$DATE_FORMAT_4][$DATE_FORMAT_5]")
 
     override fun deserialize(decoder: Decoder): LocalDateTime {
         val date = decoder.decodeString()
