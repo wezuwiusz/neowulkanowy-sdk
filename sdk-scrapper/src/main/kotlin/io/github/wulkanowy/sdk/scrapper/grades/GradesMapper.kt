@@ -37,8 +37,8 @@ fun GradesResponse.mapGradesList() = gradesWithSubjects.map { gradesSubject ->
                 }
             }
             if (comment.removeSurrounding("(", ")") == entry) comment = "" // getGrade_onlyCommentEntry
-            value = gradeValue
-            modifier = gradeModifier
+            value = gradeValue ?: 0
+            modifier = gradeModifier ?: 0.0
             weight = String.format(Locale.FRANCE, "%.2f", grade.weightValue)
             date = grade.privateDate
         }
