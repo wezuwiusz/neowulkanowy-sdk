@@ -22,21 +22,21 @@ fun List<GradesStatisticsSemester>.mapGradesSemesterStatistics() = map {
     )
 }
 
-fun List<GradesStatisticsPartial>.mapGradeStatistics() = map {
+fun List<GradesStatisticsPartial>.mapGradeStatistics() = map { partial ->
     GradeStatisticsSubject(
-        subject = it.subject,
-        classAverage = it.classSeries.average.orEmpty(),
-        classItems = it.classSeries.items.orEmpty().map { grade ->
+        subject = partial.subject,
+        classAverage = partial.classSeries.average.takeIf { !partial.classSeries.isEmpty }.orEmpty(),
+        classItems = partial.classSeries.items.orEmpty().map { grade ->
             GradeStatisticsItem(
-                subject = it.subject,
+                subject = partial.subject,
                 grade = grade.grade,
                 amount = grade.amount ?: 0
             )
         },
-        studentAverage = it.studentSeries.average.orEmpty(),
-        studentItems = it.studentSeries.items.orEmpty().map { grade ->
+        studentAverage = partial.studentSeries.average.takeIf { !partial.studentSeries.isEmpty }.orEmpty(),
+        studentItems = partial.studentSeries.items.orEmpty().map { grade ->
             GradeStatisticsItem(
-                subject = it.subject,
+                subject = partial.subject,
                 grade = grade.grade,
                 amount = grade.amount ?: 0
             )
