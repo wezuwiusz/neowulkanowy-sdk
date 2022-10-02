@@ -105,6 +105,11 @@ class MessagesTest : BaseLocalTest() {
             assertEquals(32798, id)
             assertEquals("Usprawiedliwienie nieobecności", subject)
             assertEquals("Jan Kowalski - P - (123456)", correspondents)
+            assertEquals("0/1", readUnreadBy)
+        }
+
+        messages[1].run {
+            assertEquals("1/0", readUnreadBy)
         }
     }
 
@@ -117,7 +122,7 @@ class MessagesTest : BaseLocalTest() {
 
         val res = api.getMessageReplayDetails("uuidv4")
 
-        res.run {
+        with(res) {
             assertEquals(35232, id)
             assertEquals("Jan Sierpień - P - (123456)", sender.fullName)
             assertEquals("20bd8141-6ff0-474c-8aaf-284e6fbdf9c5", sender.mailboxGlobalKey)

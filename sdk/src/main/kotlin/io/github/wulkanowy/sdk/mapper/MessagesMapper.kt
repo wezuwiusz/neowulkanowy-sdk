@@ -18,6 +18,8 @@ fun List<ApiMessage>.mapMessages(zoneId: ZoneId) = map {
     Message(
         globalKey = it.messageId.toString(),
         id = it.messageId,
+        readBy = it.read?.toInt(),
+        unreadBy = it.unread?.toInt(),
         unread = it.folder == "Odebrane" && it.readDateTime == null,
         recipients = it.recipients?.map { recipient -> recipient.copy(name = recipient.name.normalizeRecipient()) }?.mapFromMobileToRecipients().orEmpty(),
         correspondents = "",
@@ -46,6 +48,8 @@ fun List<ScrapperMessageMeta>.mapMessages(zoneId: ZoneId, folderId: Folder) = ma
         recipients = emptyList(),
         correspondents = it.correspondents,
         unread = !it.isRead,
+        unreadBy = it.readUnreadBy?.substringBefore("/")?.toIntOrNull(),
+        readBy = it.readUnreadBy?.substringAfter("/")?.toIntOrNull(),
         hasAttachments = it.isAttachments,
     )
 }

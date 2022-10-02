@@ -30,7 +30,8 @@ data class MessageMeta(
     @SerialName("przeczytana")
     val isRead: Boolean,
 
-    // @SerialName("nieprzeczytanePrzeczytanePrzez") // todo
+    @SerialName("nieprzeczytanePrzeczytanePrzez")
+    val readUnreadBy: String?,
 
     @SerialName("wazna")
     val isMarked: Boolean,

@@ -6,10 +6,10 @@
     "data": "2018-06-11T09:38:35.00+02:00",
     "skrzynka": "Jan Kowalski - U - (123456)",
     "hasZalaczniki": true,
-    "przeczytana": false,
-    "nieprzeczytanePrzeczytanePrzez": null,
+    "przeczytana": true,
+    "nieprzeczytanePrzeczytanePrzez": "1/0",
     "wazna": true,
-    "uzytkownikRola": 2,
+    "uzytkownikRola": 1,
     "id": 32799
   },
   {
@@ -20,9 +20,9 @@
     "skrzynka": "Tracz Janusz [TJ] - Nauczyciel (0000FK)",
     "hasZalaczniki": false,
     "przeczytana": true,
-    "nieprzeczytanePrzeczytanePrzez": null,
+    "nieprzeczytanePrzeczytanePrzez": "0/1",
     "wazna": false,
-    "uzytkownikRola": 2,
+    "uzytkownikRola": 1,
     "id": 32798
   }
 ]

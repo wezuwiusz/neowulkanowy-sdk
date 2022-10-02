@@ -13,5 +13,7 @@ data class Message(
     val dateZoned: ZonedDateTime,
     val folderId: Int,
     val unread: Boolean,
+    val readBy: Int?,
+    val unreadBy: Int?,
     val hasAttachments: Boolean
 )
