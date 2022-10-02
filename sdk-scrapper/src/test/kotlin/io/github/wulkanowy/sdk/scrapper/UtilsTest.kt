@@ -69,4 +69,13 @@ class UtilsTest {
         assertEquals(RecipientType.PARENT, recipient.type)
         assertEquals("000011", recipient.schoolNameShort)
     }
+
+    @Test
+    fun `test parsing system sender name`() {
+        val recipient = Recipient("", "System").parseName()
+        assertEquals("System", recipient.userName)
+        assertEquals("", recipient.studentName)
+        assertEquals(RecipientType.UNKNOWN, recipient.type)
+        assertEquals("", recipient.schoolNameShort)
+    }
 }

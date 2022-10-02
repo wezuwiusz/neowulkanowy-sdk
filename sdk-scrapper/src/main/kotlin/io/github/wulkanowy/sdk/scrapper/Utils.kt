@@ -78,6 +78,8 @@ fun List<Recipient>.normalizeRecipients() = map { it.parseName() }
 fun Recipient.parseName(): Recipient {
     val typeSeparatorPosition = fullName.indexOfAny(RecipientType.values().map { " - ${it.letter} - " })
 
+    if (typeSeparatorPosition == -1) return copy(userName = fullName)
+
     val userName = fullName.substring(0..typeSeparatorPosition).trim()
     val typeLetter = fullName.substring(typeSeparatorPosition..typeSeparatorPosition + 3 * 2 + 1).substringAfter(" - ").substringBefore(" - ")
     val studentName = fullName.substringAfter(" - $typeLetter - ").substringBefore(" - (")
