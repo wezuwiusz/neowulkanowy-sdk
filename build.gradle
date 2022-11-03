@@ -136,7 +136,7 @@ subprojects {
         implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutines"
 
         implementation "com.squareup.okhttp3:logging-interceptor"
-        implementation "org.jetbrains.kotlinx:kotlinx-serialization-json:1.4.0"
+        implementation "org.jetbrains.kotlinx:kotlinx-serialization-json:1.4.1"
 
         testImplementation "junit:junit:4.13.2"
         testImplementation "com.squareup.okhttp3:mockwebserver"
