@@ -162,17 +162,13 @@ class Scrapper {
             field = value
         }
 
-    /**
-     * @see <a href="https://deviceatlas.com/blog/most-popular-android-smartphones#poland">The most popular Android phones - 2019</a>
-     * @see <a href="http://www.tera-wurfl.com/explore/?action=wurfl_id&id=samsung_sm_g950f_int_ver1">Tera-WURFL Explorer - Samsung SM-G950F (Galaxy S8)</a>
-     */
-    var androidVersion: String = "7.0"
+    var androidVersion: String = "11"
         set(value) {
             if (field != value) changeManager.reset()
             field = value
         }
 
-    var buildTag: String = "SM-G950F Build/NRD90M"
+    var buildTag: String = "Redmi Note 8T"
         set(value) {
             if (field != value) changeManager.reset()
             field = value
