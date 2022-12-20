@@ -159,7 +159,7 @@ class RegisterRepository(
                 semesters = diaries.toSemesters(diary.studentId, classId, authInfo?.loginId ?: diary.studentId),
             )
         }.ifEmpty {
-            logger.error("No supported student found in diaries: $diaries")
+            logger.debug("No supported student found in diaries: $diaries")
             emptyList()
         }
     }

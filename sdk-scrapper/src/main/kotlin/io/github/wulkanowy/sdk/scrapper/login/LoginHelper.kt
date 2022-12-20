@@ -210,7 +210,7 @@ class LoginHelper(
         val id = when (type) {
             ADFS -> if (host == "eduportal.koszalin.pl") "ADFS" else "adfs"
             ADFSCards -> "eSzkola"
-            ADFSLightScoped -> "ADFSLight"
+            ADFSLightScoped -> "AdfsLight"
             ADFSLightCufs -> "AdfsLight"
             else -> "ADFS"
         }
