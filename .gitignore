@@ -73,3 +73,4 @@ classes
 .DS_Store
 .idea/libraries-with-intellij-classes.xml
 .idea/kotlinc.xml
+.idea/jpa-buddy.xml

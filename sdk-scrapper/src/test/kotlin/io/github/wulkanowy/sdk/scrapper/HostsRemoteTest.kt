@@ -15,7 +15,6 @@ class HostsRemoteTest : BaseTest() {
         "edu.gdansk.pl" to "gdansk",
         "edu.lublin.eu" to "lublin",
         "umt.tarnow.pl" to "tarnow",
-        "resman.pl" to "rzeszow",
         "eduportal.koszalin.pl" to "koszalin",
         "vulcan.net.pl" to "rawamazowiecka",
         "vulcan.net.pl" to "zdunskawola",
@@ -24,9 +23,11 @@ class HostsRemoteTest : BaseTest() {
         "vulcan.net.pl" to "lask",
         "vulcan.net.pl" to "powiatlaski",
         "vulcan.net.pl" to "powiatkrasnostawski",
+        "vulcan.net.pl" to "rzeszowprojekt",
         "vulcan.net.pl" to "powiatketrzynski",
         "vulcan.net.pl" to "gminaulanmajorat",
         "vulcan.net.pl" to "gminaozorkow",
+        "vulcan.net.pl" to "tomaszowmazowieckiprojekt",
         "vulcan.net.pl" to "gminalopiennikgorny",
     )
 

@@ -76,7 +76,6 @@ class AccountRepository(private val account: AccountService) {
             "eszkola.opolskie.pl" -> ADFSCards to "https://konta.eszkola.opolskie.pl/maintenance/unlock.aspx"
             "edu.gdansk.pl" -> ADFS to "https://konta.edu.gdansk.pl/maintenance/unlock.aspx"
             "edu.lublin.eu" -> ADFSLightCufs to "https://logowanie.edu.lublin.eu/AccountManage/UnlockAccountRequest"
-            "resman.pl" -> ADFSLight to "https://adfslight.resman.pl/AccountManage/UnlockAccountRequest"
             "umt.tarnow.pl" -> ADFS to "https://konta.umt.tarnow.pl/maintenance/unlock.aspx"
             "eduportal.koszalin.pl" -> ADFS to "https://konta.eduportal.koszalin.pl/maintenance/unlock.aspx"
             "vulcan.net.pl" -> AUTO to "" // stream hack - bellow
