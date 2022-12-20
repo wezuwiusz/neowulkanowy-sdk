@@ -1,6 +1,6 @@
 # VULCAN UONET+ SDK
 
-[![GitHub Workflow status](https://img.shields.io/github/workflow/status/wulkanowy/sdk/Tests/master?style=flat-square)](https://github.com/wulkanowy/sdk/actions)
+[![GitHub Workflow status](https://img.shields.io/github/actions/workflow/status/wulkanowy/sdk/test.yml?branch=master&style=flat-square)](https://github.com/wulkanowy/sdk/actions)
 [![Codecov branch](https://img.shields.io/codecov/c/github/wulkanowy/sdk/master.svg?style=flat-square)](https://codecov.io/gh/wulkanowy/sdk)
 [![Maven Central](https://img.shields.io/maven-central/v/io.github.wulkanowy/sdk?style=flat-square)](https://search.maven.org/artifact/io.github.wulkanowy/sdk)
 ![Sonatype Nexus (Snapshots)](https://img.shields.io/nexus/s/io.github.wulkanowy/sdk?server=https%3A%2F%2Fs01.oss.sonatype.org&style=flat-square)
