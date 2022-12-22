@@ -13,6 +13,7 @@ import io.github.wulkanowy.sdk.scrapper.exception.InvalidCaptchaException
 import io.github.wulkanowy.sdk.scrapper.exception.InvalidEmailException
 import io.github.wulkanowy.sdk.scrapper.exception.NoAccountFoundException
 import io.github.wulkanowy.sdk.scrapper.exception.PasswordResetErrorException
+import io.github.wulkanowy.sdk.scrapper.login.UrlGenerator
 import io.github.wulkanowy.sdk.scrapper.service.AccountService
 import io.github.wulkanowy.sdk.scrapper.service.ServiceManager
 import java.net.URL
@@ -83,7 +84,7 @@ class AccountRepository(private val account: AccountService) {
         }
 
         return if (unlockUrl.first == AUTO) {
-            val loginType = getLoginType(ServiceManager.UrlGenerator(url, symbol, ""))
+            val loginType = getLoginType(UrlGenerator(url, symbol, ""))
             loginType to when (loginType) {
                 STANDARD -> "https://cufs.vulcan.net.pl/$symbol/AccountManage/UnlockAccount"
                 ADFSLightScoped -> "https://adfslight.vulcan.net.pl/$symbol/AccountManage/UnlockAccountRequest"
@@ -92,8 +93,8 @@ class AccountRepository(private val account: AccountService) {
         } else unlockUrl
     }
 
-    private suspend fun getLoginType(urlGenerator: ServiceManager.UrlGenerator): Scrapper.LoginType {
-        val page = account.getFormType(urlGenerator.generate(ServiceManager.UrlGenerator.Site.LOGIN) + "Account/LogOn").page
+    private suspend fun getLoginType(urlGenerator: UrlGenerator): Scrapper.LoginType {
+        val page = account.getFormType(urlGenerator.generate(UrlGenerator.Site.LOGIN) + "Account/LogOn").page
 
         return when {
             page.select(SELECTOR_STANDARD).isNotEmpty() -> STANDARD

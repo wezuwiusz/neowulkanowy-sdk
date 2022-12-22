@@ -4,6 +4,7 @@ import io.github.wulkanowy.sdk.scrapper.BaseLocalTest
 import io.github.wulkanowy.sdk.scrapper.Scrapper
 import io.github.wulkanowy.sdk.scrapper.login.LoginHelper
 import io.github.wulkanowy.sdk.scrapper.login.LoginTest
+import io.github.wulkanowy.sdk.scrapper.login.UrlGenerator
 import io.github.wulkanowy.sdk.scrapper.repository.RegisterRepository
 import io.github.wulkanowy.sdk.scrapper.service.LoginService
 import io.github.wulkanowy.sdk.scrapper.service.RegisterService
@@ -52,7 +53,7 @@ class RegisterTest : BaseLocalTest() {
                 )
             ),
             student = getService(StudentService::class.java, "http://fakelog.localhost:3000", false),
-            url = ServiceManager.UrlGenerator("http", "fakelog.localhost:3000", "default", "123")
+            url = UrlGenerator("http", "fakelog.localhost:3000", "default", "123")
         )
     }
 

@@ -6,6 +6,7 @@ import io.github.wulkanowy.sdk.scrapper.exception.VulcanException
 import io.github.wulkanowy.sdk.scrapper.interceptor.ErrorInterceptorTest
 import io.github.wulkanowy.sdk.scrapper.login.LoginHelper
 import io.github.wulkanowy.sdk.scrapper.login.LoginTest
+import io.github.wulkanowy.sdk.scrapper.login.UrlGenerator
 import io.github.wulkanowy.sdk.scrapper.register.RegisterTest
 import io.github.wulkanowy.sdk.scrapper.service.LoginService
 import io.github.wulkanowy.sdk.scrapper.service.RegisterService
@@ -39,7 +40,7 @@ class RegisterRepositoryTest : BaseLocalTest() {
                 okHttp = getOkHttp(errorInterceptor = false, autoLoginInterceptorOn = false)
             ),
             student = getService(service = StudentService::class.java, html = false),
-            url = ServiceManager.UrlGenerator("http", "fakelog.localhost:3000", symbol, "")
+            url = UrlGenerator("http", "fakelog.localhost:3000", symbol, "")
         )
     }
 

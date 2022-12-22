@@ -10,6 +10,7 @@ import io.github.wulkanowy.sdk.scrapper.interceptor.handleErrors
 import io.github.wulkanowy.sdk.scrapper.login.AccountPermissionException
 import io.github.wulkanowy.sdk.scrapper.login.CertificateResponse
 import io.github.wulkanowy.sdk.scrapper.login.LoginHelper
+import io.github.wulkanowy.sdk.scrapper.login.UrlGenerator
 import io.github.wulkanowy.sdk.scrapper.register.AuthInfo
 import io.github.wulkanowy.sdk.scrapper.register.Diary
 import io.github.wulkanowy.sdk.scrapper.register.Permission
@@ -37,7 +38,7 @@ class RegisterRepository(
     private val loginHelper: LoginHelper,
     private val register: RegisterService,
     private val student: StudentService,
-    private val url: ServiceManager.UrlGenerator
+    private val url: UrlGenerator
 ) {
 
     companion object {
@@ -94,8 +95,8 @@ class RegisterRepository(
         return getLoginType(url.also { it.symbol = symbol })
     }
 
-    private suspend fun getLoginType(urlGenerator: ServiceManager.UrlGenerator): Scrapper.LoginType {
-        val page = register.getFormType(urlGenerator.generate(ServiceManager.UrlGenerator.Site.LOGIN) + "Account/LogOn").page
+    private suspend fun getLoginType(urlGenerator: UrlGenerator): Scrapper.LoginType {
+        val page = register.getFormType(urlGenerator.generate(UrlGenerator.Site.LOGIN) + "Account/LogOn").page
         return when {
             page.select(SELECTOR_STANDARD).isNotEmpty() -> Scrapper.LoginType.STANDARD
             page.select(SELECTOR_ADFS).isNotEmpty() -> Scrapper.LoginType.ADFS
@@ -126,7 +127,7 @@ class RegisterRepository(
         url.schoolId = unit.symbol
 
         val studentStartPage = try {
-            student.getStart(url.generate(ServiceManager.UrlGenerator.Site.STUDENT) + "Start")
+            student.getStart(url.generate(UrlGenerator.Site.STUDENT) + "Start")
         } catch (e: TemporarilyDisabledException) {
             logger.debug("Start page is unavailable", e)
             return listOf()
@@ -153,7 +154,7 @@ class RegisterRepository(
                 schoolName = getScriptParam("organizationName", studentStartPage, "${unit.name} ${unit.short}"),
                 className = diary.symbol.orEmpty(),
                 classId = classId,
-                baseUrl = url.generate(ServiceManager.UrlGenerator.Site.BASE),
+                baseUrl = url.generate(UrlGenerator.Site.BASE),
                 loginType = loginType,
                 isParent = cache?.isParent == true,
                 semesters = diaries.toSemesters(diary.studentId, classId, authInfo?.loginId ?: diary.studentId),
@@ -165,14 +166,14 @@ class RegisterRepository(
     }
 
     private suspend fun getStudentCache(startPage: String) = student.getUserCache(
-        url.generate(ServiceManager.UrlGenerator.Site.STUDENT) + "UczenCache.mvc/Get",
+        url.generate(UrlGenerator.Site.STUDENT) + "UczenCache.mvc/Get",
         getScriptParam("antiForgeryToken", startPage),
         getScriptParam("appGuid", startPage),
         getScriptParam("version", startPage)
     ).data
 
     private suspend fun getStudentDiaries() = student
-        .getSchoolInfo(url.generate(ServiceManager.UrlGenerator.Site.STUDENT) + "UczenDziennik.mvc/Get")
+        .getSchoolInfo(url.generate(UrlGenerator.Site.STUDENT) + "UczenDziennik.mvc/Get")
         .handleErrors()
         .data.orEmpty()
 
