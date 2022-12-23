@@ -28,7 +28,6 @@ import retrofit2.converter.scalars.ScalarsConverterFactory
 import retrofit2.create
 import java.net.CookieManager
 import java.net.CookiePolicy
-import java.net.URL
 import java.security.KeyStore
 import java.time.LocalDate
 import java.util.concurrent.TimeUnit.SECONDS

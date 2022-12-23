@@ -13,21 +13,27 @@ import io.github.wulkanowy.sdk.scrapper.login.LoginHelper
 import io.github.wulkanowy.sdk.scrapper.login.UrlGenerator
 import io.github.wulkanowy.sdk.scrapper.register.AuthInfo
 import io.github.wulkanowy.sdk.scrapper.register.Diary
-import io.github.wulkanowy.sdk.scrapper.register.Permission
+import io.github.wulkanowy.sdk.scrapper.register.HomePageResponse
+import io.github.wulkanowy.sdk.scrapper.register.PermissionUnit
+import io.github.wulkanowy.sdk.scrapper.register.Permissions
+import io.github.wulkanowy.sdk.scrapper.register.RegisterStudent
+import io.github.wulkanowy.sdk.scrapper.register.RegisterSymbol
+import io.github.wulkanowy.sdk.scrapper.register.RegisterUnit
+import io.github.wulkanowy.sdk.scrapper.register.RegisterUser
 import io.github.wulkanowy.sdk.scrapper.register.Student
-import io.github.wulkanowy.sdk.scrapper.register.Unit
 import io.github.wulkanowy.sdk.scrapper.register.toSemesters
 import io.github.wulkanowy.sdk.scrapper.repository.AccountRepository.Companion.SELECTOR_ADFS
 import io.github.wulkanowy.sdk.scrapper.repository.AccountRepository.Companion.SELECTOR_ADFS_CARDS
 import io.github.wulkanowy.sdk.scrapper.repository.AccountRepository.Companion.SELECTOR_ADFS_LIGHT
 import io.github.wulkanowy.sdk.scrapper.repository.AccountRepository.Companion.SELECTOR_STANDARD
 import io.github.wulkanowy.sdk.scrapper.service.RegisterService
-import io.github.wulkanowy.sdk.scrapper.service.ServiceManager
 import io.github.wulkanowy.sdk.scrapper.service.StudentService
+import io.github.wulkanowy.sdk.scrapper.timetable.CacheResponse
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 import org.jsoup.Jsoup
 import org.jsoup.parser.Parser
+import org.jsoup.select.Elements
 import org.slf4j.LoggerFactory
 import java.nio.charset.StandardCharsets
 
@@ -51,51 +57,124 @@ class RegisterRepository(
     }
 
     suspend fun getStudents(): List<Student> {
-        return getSymbols().flatMap { (symbol, certificate, loginType) ->
-            val cert = try {
-                loginHelper.sendCertificate(certificate, email, certificate.action.replace(startSymbol.getNormalizedSymbol(), symbol))
-            } catch (e: AccountPermissionException) {
-                logger.debug("Certificate send failed", e)
-                return@flatMap emptyList<Student>()
+        val user = getUserSubjects()
+
+        return user.symbols.flatMap { symbol ->
+            symbol.error?.takeIf { it !is AccountPermissionException }?.let { throw it }
+
+            symbol.schools.flatMap { unit ->
+                unit.error?.takeIf { it !is TemporarilyDisabledException }?.let { throw it }
+
+                unit.subjects.filterIsInstance<RegisterStudent>().map { student ->
+                    Student(
+                        email = user.email,
+                        userLogin = user.login,
+                        userName = symbol.userName,
+                        userLoginId = unit.userLoginId,
+                        symbol = symbol.symbol,
+                        studentId = student.studentId,
+                        studentName = student.studentName,
+                        studentSecondName = student.studentSecondName,
+                        studentSurname = student.studentSurname,
+                        schoolSymbol = unit.schoolId,
+                        schoolShortName = unit.schoolShortName,
+                        schoolName = unit.schoolName,
+                        className = student.className,
+                        classId = student.classId,
+                        baseUrl = user.baseUrl,
+                        loginType = user.loginType,
+                        isParent = student.isParent,
+                        semesters = student.semesters,
+                    )
+                }
             }
-
-            url.symbol = symbol
-
-            val permissions = getPermissions(cert.document.toString())
-            val units = permissions?.units.orEmpty().associateWith { unit ->
-                permissions?.authInfos.orEmpty().find { it.unitId == unit.id }
-            }.filterNot { (_, authInfo) ->
-                authInfo?.studentIds.isNullOrEmpty() && authInfo?.parentIds.isNullOrEmpty()
-            }
-
-            logger.debug("${cert.studentSchools.map { it.attr("href") }}")
-
-            units.flatMap { (unit, authInfo) ->
-                getStudentsFromUnit(symbol, loginType, unit, authInfo, getUserNameFromUserData(cert.userData))
-            }
-        }.distinctBy { pupil -> listOf(pupil.studentId, pupil.classId, pupil.schoolSymbol) }
+        }
     }
 
-    private suspend fun getSymbols(): List<Triple<String, CertificateResponse, Scrapper.LoginType>> {
+    suspend fun getUserSubjects(): RegisterUser {
         val symbolLoginType = getLoginType(startSymbol.getNormalizedSymbol())
-        println("Register login type: $symbolLoginType")
-        val cert = loginHelper.apply { loginType = symbolLoginType }.sendCredentials(email, password)
+        val certificateResponse = getCert(symbolLoginType)
+        val (login, emailAddress, symbols) = certificateResponse.toCertificateValues()
 
-        return Jsoup.parse(cert.wresult.replace(":", ""), "", Parser.xmlParser())
-            .select("[AttributeName$=\"Instance\"] samlAttributeValue")
-            .map { it.text().trim() }
-            .apply { logger.debug("$this") }
-            .filter { it.matches("[a-zA-Z0-9]*".toRegex()) } // early filter invalid symbols
-            .filter { it != "Default" }
-            .apply { logger.debug("$this") }
-            .map { Triple(it, cert, symbolLoginType) }
+        return RegisterUser(
+            email = emailAddress.ifBlank { email },
+            login = getNormalizedLogin(login, emailAddress).ifBlank { email },
+            baseUrl = url.generate(UrlGenerator.Site.BASE),
+            loginType = symbolLoginType,
+            symbols = getRegisterSymbols(
+                symbols = symbols,
+                loginCert = certificateResponse,
+            ),
+        )
+    }
+
+    private suspend fun getRegisterSymbols(
+        symbols: List<String>,
+        loginCert: CertificateResponse,
+    ): List<RegisterSymbol> = symbols.map { symbol ->
+        val homeResponse = runCatching {
+            val res = loginHelper.sendCertificate(
+                cert = loginCert,
+                email = email,
+                url = loginCert.action.replace(
+                    oldValue = startSymbol.getNormalizedSymbol(), // improve this: for random inputs may generate random errors :)
+                    newValue = symbol
+                ),
+            )
+            url.symbol = symbol
+            res
+        }
+        RegisterSymbol(
+            symbol = symbol,
+            error = homeResponse.exceptionOrNull(),
+            userName = homeResponse.getOrNull()
+                .getUserNameFromUserData(),
+            schools = homeResponse.getOrNull()
+                .toPermissions()
+                .toUnitsMap()
+                .getRegisterUnits()
+        )
+    }
+
+    private suspend fun Map<PermissionUnit, AuthInfo?>.getRegisterUnits(): List<RegisterUnit> {
+        return map { (unit, authInfo) ->
+            url.schoolId = unit.symbol
+
+            val cacheAndDiaries = runCatching {
+                getStudentCache() to getStudentDiaries()
+            }
+
+            RegisterUnit(
+                userLoginId = requireNotNull(authInfo?.loginId),
+                schoolId = unit.symbol,
+                schoolName = unit.name,
+                schoolShortName = unit.short,
+                error = cacheAndDiaries.exceptionOrNull(),
+                subjects = cacheAndDiaries.getOrNull()?.let { (cache, diaries) ->
+                    diaries.filterDiaries().map { diary ->
+                        val classId = diary.semesters?.firstOrNull()?.classId ?: 0
+                        RegisterStudent(
+                            studentId = diary.studentId,
+                            studentName = diary.studentName.trim(),
+                            studentSecondName = diary.studentSecondName.orEmpty(),
+                            studentSurname = diary.studentSurname,
+                            className = diary.symbol.orEmpty(),
+                            classId = classId,
+                            isParent = cache?.isParent == true,
+                            semesters = diaries.toSemesters(
+                                studentId = diary.studentId,
+                                classId = classId,
+                                unitId = unit.id,
+                            ),
+                        )
+                    }
+                }.orEmpty()
+            )
+        }
     }
 
     private suspend fun getLoginType(symbol: String): Scrapper.LoginType {
-        return getLoginType(url.also { it.symbol = symbol })
-    }
-
-    private suspend fun getLoginType(urlGenerator: UrlGenerator): Scrapper.LoginType {
+        val urlGenerator = url.also { it.symbol = symbol }
         val page = register.getFormType(urlGenerator.generate(UrlGenerator.Site.LOGIN) + "Account/LogOn").page
         return when {
             page.select(SELECTOR_STANDARD).isNotEmpty() -> Scrapper.LoginType.STANDARD
@@ -117,60 +196,68 @@ class RegisterRepository(
         }
     }
 
-    private suspend fun getStudentsFromUnit(
-        symbol: String,
-        loginType: Scrapper.LoginType,
-        unit: Unit,
-        authInfo: AuthInfo?,
-        userName: String?,
-    ): List<Student> {
-        url.schoolId = unit.symbol
+    private fun getNormalizedLogin(login: String, email: String): String = when (email) {
+        login.lowercase() -> email // AttributeName="name" contains entered email in standard login
+        else -> login
+    }
 
-        val studentStartPage = try {
-            student.getStart(url.generate(UrlGenerator.Site.STUDENT) + "Start")
-        } catch (e: TemporarilyDisabledException) {
-            logger.debug("Start page is unavailable", e)
-            return listOf()
-        }
+    private suspend fun getCert(symbolLoginType: Scrapper.LoginType): CertificateResponse {
+        logger.debug("Register login type: $symbolLoginType")
+        return loginHelper
+            .apply { loginType = symbolLoginType }
+            .sendCredentials(email, password)
+    }
 
-        val cache = getStudentCache(studentStartPage)
-        val diaries = getStudentDiaries()
+    private fun CertificateResponse.toCertificateValues(): Triple<String, String, List<String>> {
+        val cert = Jsoup.parse(wresult.replace(":", ""), "", Parser.xmlParser())
 
-        return diaries.filterDiaries().map { diary ->
-            val classId = diary.semesters?.firstOrNull()?.classId ?: 0
+        val symbols = cert.select("[AttributeName$=\"Instance\"] samlAttributeValue")
+        val emailAddress = cert.select("[AttributeName=\"emailaddress\"] samlAttributeValue").text()
+        val login = cert.select("[AttributeName=\"name\"] samlAttributeValue").text()
 
-            Student(
-                email = email,
-                userLogin = email,
-                userName = (userName ?: email).trim(),
-                userLoginId = authInfo?.loginId ?: diary.studentId,
-                symbol = symbol,
-                studentId = diary.studentId,
-                studentName = diary.studentName.trim(),
-                studentSecondName = diary.studentSecondName.orEmpty(),
-                studentSurname = diary.studentSurname,
-                schoolSymbol = unit.symbol,
-                schoolShortName = unit.short,
-                schoolName = getScriptParam("organizationName", studentStartPage, "${unit.name} ${unit.short}"),
-                className = diary.symbol.orEmpty(),
-                classId = classId,
-                baseUrl = url.generate(UrlGenerator.Site.BASE),
-                loginType = loginType,
-                isParent = cache?.isParent == true,
-                semesters = diaries.toSemesters(diary.studentId, classId, authInfo?.loginId ?: diary.studentId),
-            )
-        }.ifEmpty {
-            logger.debug("No supported student found in diaries: $diaries")
-            emptyList()
+        return Triple(login, emailAddress, symbols.toNormalizedSymbols())
+    }
+
+    private fun Elements.toNormalizedSymbols(): List<String> = this
+        .map { it.text().trim() }
+        .apply { logger.debug("$this") }
+        .filter { it.matches("[a-zA-Z0-9]*".toRegex()) } // early filter invalid symbols
+        .filter { it != "Default" }
+
+    private fun HomePageResponse?.getUserNameFromUserData(): String {
+        val data = this?.userData ?: return ""
+
+        val adfsName = data.substringBefore(" (", "")
+        val standardName = data.substringBefore(" - ", adfsName)
+
+        return standardName.takeIf { it.isNotBlank() }.orEmpty()
+    }
+
+    private fun HomePageResponse?.toPermissions(): Permissions? {
+        val base64 = getScriptParam("permissions", this?.document.toString()).substringBefore("|")
+        return Base64.decode(base64).toString(StandardCharsets.UTF_8).takeIf { it.isNotBlank() }?.let {
+            json.decodeFromString<Permissions>(it)
         }
     }
 
-    private suspend fun getStudentCache(startPage: String) = student.getUserCache(
-        url.generate(UrlGenerator.Site.STUDENT) + "UczenCache.mvc/Get",
-        getScriptParam("antiForgeryToken", startPage),
-        getScriptParam("appGuid", startPage),
-        getScriptParam("version", startPage)
-    ).data
+    private fun Permissions?.toUnitsMap(): Map<PermissionUnit, AuthInfo?> {
+        return this?.units?.associateWith { unit ->
+            authInfos.find { it.unitId == unit.id }
+        }?.filterNot { (_, authInfo) ->
+            authInfo?.studentIds.isNullOrEmpty() && authInfo?.parentIds.isNullOrEmpty() // todo: change to support teachers
+        }.orEmpty()
+    }
+
+    private suspend fun getStudentCache(): CacheResponse? {
+        val startPage = student.getStart(url.generate(UrlGenerator.Site.STUDENT) + "Start")
+
+        return student.getUserCache(
+            url.generate(UrlGenerator.Site.STUDENT) + "UczenCache.mvc/Get",
+            getScriptParam("antiForgeryToken", startPage),
+            getScriptParam("appGuid", startPage),
+            getScriptParam("version", startPage)
+        ).data
+    }
 
     private suspend fun getStudentDiaries() = student
         .getSchoolInfo(url.generate(UrlGenerator.Site.STUDENT) + "UczenDziennik.mvc/Get")
@@ -181,17 +268,4 @@ class RegisterRepository(
         .filter { it.semesters.orEmpty().isNotEmpty() || it.kindergartenDiaryId != 0 }
         .sortedByDescending { it.level }
         .distinctBy { listOf(it.studentId, it.semesters?.firstOrNull()?.classId ?: 0) }
-
-    private fun getPermissions(homepage: String): Permission? {
-        val base64 = getScriptParam("permissions", homepage).substringBefore("|")
-        return Base64.decode(base64).toString(StandardCharsets.UTF_8).takeIf { it.isNotBlank() }?.let {
-            json.decodeFromString<Permission>(it)
-        }
-    }
-
-    private fun getUserNameFromUserData(userData: String): String? {
-        val adfsName = userData.substringBefore(" (", "")
-        val standardName = userData.substringBefore(" - ", adfsName)
-        return standardName.takeIf { it.isNotBlank() }
-    }
 }

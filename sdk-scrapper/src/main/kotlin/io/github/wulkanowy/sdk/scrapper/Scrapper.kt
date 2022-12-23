@@ -27,6 +27,7 @@ import io.github.wulkanowy.sdk.scrapper.messages.Recipient
 import io.github.wulkanowy.sdk.scrapper.mobile.Device
 import io.github.wulkanowy.sdk.scrapper.mobile.TokenResponse
 import io.github.wulkanowy.sdk.scrapper.notes.Note
+import io.github.wulkanowy.sdk.scrapper.register.RegisterUser
 import io.github.wulkanowy.sdk.scrapper.register.Semester
 import io.github.wulkanowy.sdk.scrapper.register.Student
 import io.github.wulkanowy.sdk.scrapper.repository.AccountRepository
@@ -262,6 +263,8 @@ class Scrapper {
     }
 
     suspend fun getStudents(): List<Student> = register.getStudents()
+
+    suspend fun getUserSubjects(): RegisterUser = register.getUserSubjects()
 
     suspend fun getSemesters(): List<Semester> = studentStart.getSemesters()
 

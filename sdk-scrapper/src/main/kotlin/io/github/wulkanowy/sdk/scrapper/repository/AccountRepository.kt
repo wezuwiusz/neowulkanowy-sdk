@@ -15,7 +15,6 @@ import io.github.wulkanowy.sdk.scrapper.exception.NoAccountFoundException
 import io.github.wulkanowy.sdk.scrapper.exception.PasswordResetErrorException
 import io.github.wulkanowy.sdk.scrapper.login.UrlGenerator
 import io.github.wulkanowy.sdk.scrapper.service.AccountService
-import io.github.wulkanowy.sdk.scrapper.service.ServiceManager
 import java.net.URL
 
 class AccountRepository(private val account: AccountService) {

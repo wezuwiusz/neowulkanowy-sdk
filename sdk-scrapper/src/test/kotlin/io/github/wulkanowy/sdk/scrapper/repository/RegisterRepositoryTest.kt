@@ -10,7 +10,6 @@ import io.github.wulkanowy.sdk.scrapper.login.UrlGenerator
 import io.github.wulkanowy.sdk.scrapper.register.RegisterTest
 import io.github.wulkanowy.sdk.scrapper.service.LoginService
 import io.github.wulkanowy.sdk.scrapper.service.RegisterService
-import io.github.wulkanowy.sdk.scrapper.service.ServiceManager
 import io.github.wulkanowy.sdk.scrapper.service.StudentService
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.runBlocking
@@ -168,11 +167,17 @@ class RegisterRepositoryTest : BaseLocalTest() {
 
     @Test
     fun normalVulcanException() = runTest {
-        server.enqueue("LoginPage-standard.html", LoginTest::class.java)
-        server.enqueue("Logowanie-uonet.html", LoginTest::class.java)
-        server.enqueue("Logowanie-brak-dostepu.html", LoginTest::class.java)
-        server.enqueue("Offline.html", ErrorInterceptorTest::class.java)
-        server.start(3000)
+        with(server) {
+            enqueue("LoginPage-standard.html", LoginTest::class.java)
+            enqueue("Logowanie-uonet.html", LoginTest::class.java)
+            enqueue("Logowanie-brak-dostepu.html", LoginTest::class.java)
+            enqueue("Offline.html", ErrorInterceptorTest::class.java)
+
+            enqueue("Logowanie-brak-dostepu.html", LoginTest::class.java)
+            enqueue("Logowanie-brak-dostepu.html", LoginTest::class.java)
+            enqueue("Logowanie-brak-dostepu.html", LoginTest::class.java)
+            start(3000)
+        }
 
         val res = runCatching { normal.getStudents() }
         assertEquals(
@@ -207,6 +212,10 @@ class RegisterRepositoryTest : BaseLocalTest() {
             enqueue("Logowanie-brak-dostepu.html", LoginTest::class.java)
             enqueue("Offline.html", ErrorInterceptorTest::class.java)
 
+            enqueue("Logowanie-brak-dostepu.html", LoginTest::class.java)
+            enqueue("Logowanie-brak-dostepu.html", LoginTest::class.java)
+            enqueue("Logowanie-brak-dostepu.html", LoginTest::class.java)
+
             start(3000)
         }
 
@@ -227,6 +236,10 @@ class RegisterRepositoryTest : BaseLocalTest() {
             enqueue("Logowanie-brak-dostepu.html", LoginTest::class.java)
             enqueue("Offline.html", ErrorInterceptorTest::class.java)
 
+            enqueue("Logowanie-brak-dostepu.html", LoginTest::class.java)
+            enqueue("Logowanie-brak-dostepu.html", LoginTest::class.java)
+            enqueue("Logowanie-brak-dostepu.html", LoginTest::class.java)
+
             start(3000)
         }
 
@@ -246,6 +259,10 @@ class RegisterRepositoryTest : BaseLocalTest() {
             enqueue("Logowanie-uonet.html", LoginTest::class.java)
             enqueue("Logowanie-brak-dostepu.html", LoginTest::class.java)
             enqueue("Offline.html", ErrorInterceptorTest::class.java)
+
+            enqueue("Logowanie-brak-dostepu.html", LoginTest::class.java)
+            enqueue("Logowanie-brak-dostepu.html", LoginTest::class.java)
+            enqueue("Logowanie-brak-dostepu.html", LoginTest::class.java)
 
             start(3000)
         }
@@ -268,6 +285,10 @@ class RegisterRepositoryTest : BaseLocalTest() {
             enqueue("Logowanie-brak-dostepu.html", LoginTest::class.java)
             enqueue("Offline.html", ErrorInterceptorTest::class.java)
 
+            enqueue("Logowanie-brak-dostepu.html", LoginTest::class.java)
+            enqueue("Logowanie-brak-dostepu.html", LoginTest::class.java)
+            enqueue("Logowanie-brak-dostepu.html", LoginTest::class.java)
+
             start(3000)
         }
 
@@ -287,6 +308,10 @@ class RegisterRepositoryTest : BaseLocalTest() {
             enqueue("Logowanie-uonet.html", LoginTest::class.java)
             enqueue("Logowanie-brak-dostepu.html", LoginTest::class.java)
             enqueue("Offline.html", ErrorInterceptorTest::class.java)
+
+            enqueue("Logowanie-brak-dostepu.html", LoginTest::class.java)
+            enqueue("Logowanie-brak-dostepu.html", LoginTest::class.java)
+            enqueue("Logowanie-brak-dostepu.html", LoginTest::class.java)
 
             start(3000)
         }
