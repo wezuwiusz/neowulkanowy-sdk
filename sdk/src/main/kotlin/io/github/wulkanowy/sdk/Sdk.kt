@@ -74,6 +74,7 @@ import io.github.wulkanowy.sdk.pojo.TimetableDayHeader
 import io.github.wulkanowy.sdk.pojo.TimetableFull
 import io.github.wulkanowy.sdk.pojo.Token
 import io.github.wulkanowy.sdk.scrapper.Scrapper
+import io.github.wulkanowy.sdk.scrapper.register.RegisterUser
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import okhttp3.Interceptor
@@ -280,6 +281,16 @@ class Sdk {
             it.password = password
             it.symbol = symbol
             it.getStudents().mapStudents()
+        }
+    }
+
+    suspend fun getUserSubjectsFromScrapper(email: String, password: String, scrapperBaseUrl: String, symbol: String = "Default"): RegisterUser = withContext(Dispatchers.IO) {
+        scrapper.let {
+            it.baseUrl = scrapperBaseUrl
+            it.email = email
+            it.password = password
+            it.symbol = symbol
+            it.getUserSubjects()
         }
     }
 

@@ -18,6 +18,7 @@ import io.github.wulkanowy.sdk.scrapper.register.PermissionUnit
 import io.github.wulkanowy.sdk.scrapper.register.Permissions
 import io.github.wulkanowy.sdk.scrapper.register.RegisterStudent
 import io.github.wulkanowy.sdk.scrapper.register.RegisterSymbol
+import io.github.wulkanowy.sdk.scrapper.register.RegisterTeacher
 import io.github.wulkanowy.sdk.scrapper.register.RegisterUnit
 import io.github.wulkanowy.sdk.scrapper.register.RegisterUser
 import io.github.wulkanowy.sdk.scrapper.register.Student
@@ -114,8 +115,8 @@ class RegisterRepository(
     ): List<RegisterSymbol> = symbols.map { symbol ->
         val homeResponse = runCatching {
             val res = loginHelper.sendCertificate(
-                cert = loginCert,
                 email = email,
+                cert = loginCert,
                 url = loginCert.action.replace(
                     oldValue = startSymbol.getNormalizedSymbol(), // improve this: for random inputs may generate random errors :)
                     newValue = symbol
@@ -124,24 +125,40 @@ class RegisterRepository(
             url.symbol = symbol
             res
         }
+        val userName = homeResponse.getOrNull().getUserNameFromUserData()
+        val schools = homeResponse.getOrNull()
+            .toPermissions()
+            .toUnitsMap()
+            .getRegisterUnits(userName)
+
         RegisterSymbol(
             symbol = symbol,
             error = homeResponse.exceptionOrNull(),
-            userName = homeResponse.getOrNull()
-                .getUserNameFromUserData(),
-            schools = homeResponse.getOrNull()
-                .toPermissions()
-                .toUnitsMap()
-                .getRegisterUnits()
+            userName = userName,
+            schools = schools,
         )
     }
 
-    private suspend fun Map<PermissionUnit, AuthInfo?>.getRegisterUnits(): List<RegisterUnit> {
+    private suspend fun Map<PermissionUnit, AuthInfo?>.getRegisterUnits(userName: String): List<RegisterUnit> {
         return map { (unit, authInfo) ->
             url.schoolId = unit.symbol
 
             val cacheAndDiaries = runCatching {
-                getStudentCache() to getStudentDiaries()
+                if (authInfo?.parentIds.isNullOrEmpty() && authInfo?.studentIds.isNullOrEmpty()) {
+                    null to emptyList()
+                } else {
+                    getStudentCache() to getStudentDiaries()
+                }
+            }
+
+            val teachers = authInfo?.employeeIds?.map { employeeId ->
+                RegisterTeacher(
+                    teacherId = employeeId,
+                    teacherName = userName,
+                )
+            }
+            val students = cacheAndDiaries.getOrNull()?.let { (cache, diaries) ->
+                getStudentsFromDiaries(diaries, cache, unit.id)
             }
 
             RegisterUnit(
@@ -150,28 +167,36 @@ class RegisterRepository(
                 schoolName = unit.name,
                 schoolShortName = unit.short,
                 error = cacheAndDiaries.exceptionOrNull(),
-                subjects = cacheAndDiaries.getOrNull()?.let { (cache, diaries) ->
-                    diaries.filterDiaries().map { diary ->
-                        val classId = diary.semesters?.firstOrNull()?.classId ?: 0
-                        RegisterStudent(
-                            studentId = diary.studentId,
-                            studentName = diary.studentName.trim(),
-                            studentSecondName = diary.studentSecondName.orEmpty(),
-                            studentSurname = diary.studentSurname,
-                            className = diary.symbol.orEmpty(),
-                            classId = classId,
-                            isParent = cache?.isParent == true,
-                            semesters = diaries.toSemesters(
-                                studentId = diary.studentId,
-                                classId = classId,
-                                unitId = unit.id,
-                            ),
-                        )
-                    }
-                }.orEmpty()
+                subjects = teachers.orEmpty() + students.orEmpty()
             )
         }
     }
+
+    private fun getStudentsFromDiaries(
+        diaries: List<Diary>,
+        cache: CacheResponse?,
+        unitId: Int,
+    ): List<RegisterStudent> = diaries
+        .filter { it.semesters.orEmpty().isNotEmpty() || it.kindergartenDiaryId != 0 }
+        .sortedByDescending { it.level }
+        .distinctBy { listOf(it.studentId, it.semesters?.firstOrNull()?.classId ?: 0) }
+        .map { diary ->
+            val classId = diary.semesters?.firstOrNull()?.classId ?: 0
+            RegisterStudent(
+                studentId = diary.studentId,
+                studentName = diary.studentName.trim(),
+                studentSecondName = diary.studentSecondName.orEmpty(),
+                studentSurname = diary.studentSurname,
+                className = diary.symbol.orEmpty(),
+                classId = classId,
+                isParent = cache?.isParent == true,
+                semesters = diaries.toSemesters(
+                    studentId = diary.studentId,
+                    classId = classId,
+                    unitId = unitId,
+                ),
+            )
+        }
 
     private suspend fun getLoginType(symbol: String): Scrapper.LoginType {
         val urlGenerator = url.also { it.symbol = symbol }
@@ -243,8 +268,6 @@ class RegisterRepository(
     private fun Permissions?.toUnitsMap(): Map<PermissionUnit, AuthInfo?> {
         return this?.units?.associateWith { unit ->
             authInfos.find { it.unitId == unit.id }
-        }?.filterNot { (_, authInfo) ->
-            authInfo?.studentIds.isNullOrEmpty() && authInfo?.parentIds.isNullOrEmpty() // todo: change to support teachers
         }.orEmpty()
     }
 
@@ -263,9 +286,4 @@ class RegisterRepository(
         .getSchoolInfo(url.generate(UrlGenerator.Site.STUDENT) + "UczenDziennik.mvc/Get")
         .handleErrors()
         .data.orEmpty()
-
-    private fun List<Diary>.filterDiaries() = this
-        .filter { it.semesters.orEmpty().isNotEmpty() || it.kindergartenDiaryId != 0 }
-        .sortedByDescending { it.level }
-        .distinctBy { listOf(it.studentId, it.semesters?.firstOrNull()?.classId ?: 0) }
 }

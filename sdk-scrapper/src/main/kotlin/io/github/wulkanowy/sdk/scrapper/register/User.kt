@@ -33,6 +33,7 @@ interface RegisterSubject
 
 data class RegisterTeacher(
     val teacherId: Int,
+    val teacherName: String,
 ) : RegisterSubject
 
 data class RegisterStudent(
