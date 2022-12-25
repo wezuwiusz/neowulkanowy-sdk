@@ -128,7 +128,7 @@ class RegisterRepository(
             url.symbol = symbol
             res
         }
-        val graduateMessage = homeResponse.getOrNull()?.document?.selectFirst(".splashScreen")?.text().orEmpty()
+        val graduateMessage = homeResponse.getOrNull()?.document?.selectFirst(".splashScreen")?.ownText().orEmpty()
         val graduateException = if (graduateMessage.contains("Twoje konto jest nieaktywne")) {
             StudentGraduateException(graduateMessage)
         } else null
