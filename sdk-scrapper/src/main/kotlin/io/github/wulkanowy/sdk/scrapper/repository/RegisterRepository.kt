@@ -177,7 +177,7 @@ class RegisterRepository(
                 error = cacheAndDiaries.exceptionOrNull(),
                 employeeIds = authInfo?.employeeIds.orEmpty(),
                 studentIds = authInfo?.studentIds.orEmpty(),
-                parentIds = authInfo?.studentIds.orEmpty(),
+                parentIds = authInfo?.parentIds.orEmpty(),
                 subjects = teachers.orEmpty() + students.orEmpty(),
             )
         }
