@@ -175,7 +175,10 @@ class RegisterRepository(
                 schoolName = unit.name,
                 schoolShortName = unit.short,
                 error = cacheAndDiaries.exceptionOrNull(),
-                subjects = teachers.orEmpty() + students.orEmpty()
+                employeeIds = authInfo?.employeeIds.orEmpty(),
+                studentIds = authInfo?.studentIds.orEmpty(),
+                parentIds = authInfo?.studentIds.orEmpty(),
+                subjects = teachers.orEmpty() + students.orEmpty(),
             )
         }
     }

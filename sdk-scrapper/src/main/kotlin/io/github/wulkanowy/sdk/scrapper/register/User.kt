@@ -25,6 +25,9 @@ data class RegisterUnit(
     val schoolId: String,
     val schoolName: String,
     val schoolShortName: String,
+    val parentIds: List<Int>,
+    val studentIds: List<Int>,
+    val employeeIds: List<Int>,
     val error: Throwable?,
     val subjects: List<RegisterSubject>,
 )
