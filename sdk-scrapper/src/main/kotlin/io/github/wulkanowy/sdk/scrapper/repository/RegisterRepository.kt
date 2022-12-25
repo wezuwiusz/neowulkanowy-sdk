@@ -3,6 +3,7 @@ package io.github.wulkanowy.sdk.scrapper.repository
 import com.migcomponents.migbase64.Base64
 import io.github.wulkanowy.sdk.scrapper.Scrapper
 import io.github.wulkanowy.sdk.scrapper.exception.ScrapperException
+import io.github.wulkanowy.sdk.scrapper.exception.StudentGraduateException
 import io.github.wulkanowy.sdk.scrapper.exception.TemporarilyDisabledException
 import io.github.wulkanowy.sdk.scrapper.getNormalizedSymbol
 import io.github.wulkanowy.sdk.scrapper.getScriptParam
@@ -61,14 +62,16 @@ class RegisterRepository(
         val user = getUserSubjects()
 
         return user.symbols.flatMap { symbol ->
-            symbol.error?.takeIf { it !is AccountPermissionException }?.let { throw it }
+            symbol.error?.takeIf {
+                it !is AccountPermissionException && it !is StudentGraduateException
+            }?.let { throw it }
 
             symbol.schools.flatMap { unit ->
                 unit.error?.takeIf { it !is TemporarilyDisabledException }?.let { throw it }
 
                 unit.subjects.filterIsInstance<RegisterStudent>().map { student ->
                     Student(
-                        email = user.email,
+                        email = user.login, // for compatibility
                         userLogin = user.login,
                         userName = symbol.userName,
                         userLoginId = unit.userLoginId,
@@ -125,6 +128,11 @@ class RegisterRepository(
             url.symbol = symbol
             res
         }
+        val graduateMessage = homeResponse.getOrNull()?.document?.selectFirst(".splashScreen")?.text().orEmpty()
+        val graduateException = if (graduateMessage.contains("Twoje konto jest nieaktywne")) {
+            StudentGraduateException(graduateMessage)
+        } else null
+
         val userName = homeResponse.getOrNull().getUserNameFromUserData()
         val schools = homeResponse.getOrNull()
             .toPermissions()
@@ -133,7 +141,7 @@ class RegisterRepository(
 
         RegisterSymbol(
             symbol = symbol,
-            error = homeResponse.exceptionOrNull(),
+            error = homeResponse.exceptionOrNull() ?: graduateException,
             userName = userName,
             schools = schools,
         )
