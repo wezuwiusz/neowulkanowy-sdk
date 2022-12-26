@@ -2,6 +2,7 @@ package io.github.wulkanowy.sdk.scrapper.login
 
 import io.github.wulkanowy.sdk.scrapper.BaseLocalTest
 import io.github.wulkanowy.sdk.scrapper.Scrapper
+import io.github.wulkanowy.sdk.scrapper.exception.AccountInactiveException
 import io.github.wulkanowy.sdk.scrapper.exception.VulcanException
 import io.github.wulkanowy.sdk.scrapper.interceptor.ErrorInterceptorTest
 import io.github.wulkanowy.sdk.scrapper.service.LoginService
@@ -111,6 +112,22 @@ class LoginTest : BaseLocalTest() {
 
         server.takeRequest()
         assertFalse(server.takeRequest().body.readUtf8().contains("ValueType%3D%26t%3Bhttp")) // ValueType=&t;http
+    }
+
+    @Test
+    fun accessAccountInactiveException() {
+        with(server) {
+            enqueue("Logowanie-uonet.html")
+            enqueue("Logowanie-nieaktywne.html")
+            start(3000)
+        }
+
+        try {
+            runBlocking { normal.login("jan@fakelog.cf", "jan1234") }
+        } catch (e: Throwable) {
+            assertEquals(AccountInactiveException::class, e::class)
+            assertEquals("Login i hasło użytkownika są poprawne, ale konto nie jest aktywne w żadnej jednostce sprawozdawczej", e.message)
+        }
     }
 
     @Test

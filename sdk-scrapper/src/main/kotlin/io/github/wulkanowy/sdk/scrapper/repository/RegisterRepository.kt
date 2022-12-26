@@ -2,6 +2,7 @@ package io.github.wulkanowy.sdk.scrapper.repository
 
 import com.migcomponents.migbase64.Base64
 import io.github.wulkanowy.sdk.scrapper.Scrapper
+import io.github.wulkanowy.sdk.scrapper.exception.AccountInactiveException
 import io.github.wulkanowy.sdk.scrapper.exception.ScrapperException
 import io.github.wulkanowy.sdk.scrapper.exception.StudentGraduateException
 import io.github.wulkanowy.sdk.scrapper.exception.TemporarilyDisabledException
@@ -63,7 +64,7 @@ class RegisterRepository(
 
         return user.symbols.flatMap { symbol ->
             symbol.error?.takeIf {
-                it !is AccountPermissionException && it !is StudentGraduateException
+                it !is AccountPermissionException && it !is StudentGraduateException && it !is AccountInactiveException
             }?.let { throw it }
 
             symbol.schools.flatMap { unit ->

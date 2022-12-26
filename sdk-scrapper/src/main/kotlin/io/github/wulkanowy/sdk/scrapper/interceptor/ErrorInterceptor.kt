@@ -1,5 +1,6 @@
 package io.github.wulkanowy.sdk.scrapper.interceptor
 
+import io.github.wulkanowy.sdk.scrapper.exception.AccountInactiveException
 import io.github.wulkanowy.sdk.scrapper.exception.ScrapperException
 import io.github.wulkanowy.sdk.scrapper.exception.ServiceUnavailableException
 import io.github.wulkanowy.sdk.scrapper.exception.TemporarilyDisabledException
@@ -55,6 +56,12 @@ class ErrorInterceptor : Interceptor {
 
         doc.select("h2.error").let {
             if (it.isNotEmpty()) throw AccountPermissionException(it.text())
+        }
+
+        doc.select(".panel.wychowawstwo.pracownik.klient").let {
+            if ("Brak uprawnień" in it.select(".name").text()) {
+                throw AccountInactiveException(it.select(".additionalText").text())
+            }
         }
 
         doc.selectFirst("form")?.attr("action")?.let {
