@@ -34,9 +34,9 @@ data class RegisterUnit(
 
 sealed interface RegisterSubject
 
-data class RegisterTeacher(
-    val teacherId: Int,
-    val teacherName: String,
+data class RegisterEmployee(
+    val employeeId: Int,
+    val employeeName: String,
 ) : RegisterSubject
 
 data class RegisterStudent(

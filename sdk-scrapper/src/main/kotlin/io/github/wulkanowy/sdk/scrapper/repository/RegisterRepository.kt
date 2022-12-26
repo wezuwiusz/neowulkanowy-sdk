@@ -20,7 +20,7 @@ import io.github.wulkanowy.sdk.scrapper.register.PermissionUnit
 import io.github.wulkanowy.sdk.scrapper.register.Permissions
 import io.github.wulkanowy.sdk.scrapper.register.RegisterStudent
 import io.github.wulkanowy.sdk.scrapper.register.RegisterSymbol
-import io.github.wulkanowy.sdk.scrapper.register.RegisterTeacher
+import io.github.wulkanowy.sdk.scrapper.register.RegisterEmployee
 import io.github.wulkanowy.sdk.scrapper.register.RegisterUnit
 import io.github.wulkanowy.sdk.scrapper.register.RegisterUser
 import io.github.wulkanowy.sdk.scrapper.register.Student
@@ -160,10 +160,10 @@ class RegisterRepository(
                 }
             }
 
-            val teachers = authInfo?.employeeIds?.map { employeeId ->
-                RegisterTeacher(
-                    teacherId = employeeId,
-                    teacherName = userName,
+            val employees = authInfo?.employeeIds?.map { employeeId ->
+                RegisterEmployee(
+                    employeeId = employeeId,
+                    employeeName = userName,
                 )
             }
             val students = cacheAndDiaries.getOrNull()?.let { (cache, diaries) ->
@@ -179,7 +179,7 @@ class RegisterRepository(
                 employeeIds = authInfo?.employeeIds.orEmpty(),
                 studentIds = authInfo?.studentIds.orEmpty(),
                 parentIds = authInfo?.parentIds.orEmpty(),
-                subjects = teachers.orEmpty() + students.orEmpty(),
+                subjects = employees.orEmpty() + students.orEmpty(),
             )
         }
     }
