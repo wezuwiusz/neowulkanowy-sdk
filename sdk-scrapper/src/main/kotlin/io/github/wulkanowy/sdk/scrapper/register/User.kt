@@ -32,7 +32,7 @@ data class RegisterUnit(
     val subjects: List<RegisterSubject>,
 )
 
-interface RegisterSubject
+sealed interface RegisterSubject
 
 data class RegisterTeacher(
     val teacherId: Int,
