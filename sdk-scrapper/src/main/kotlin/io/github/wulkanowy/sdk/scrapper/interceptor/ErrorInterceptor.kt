@@ -1,5 +1,6 @@
 package io.github.wulkanowy.sdk.scrapper.interceptor
 
+import io.github.wulkanowy.sdk.scrapper.exception.AccountInactiveException
 import io.github.wulkanowy.sdk.scrapper.exception.ScrapperException
 import io.github.wulkanowy.sdk.scrapper.exception.ServiceUnavailableException
 import io.github.wulkanowy.sdk.scrapper.exception.TemporarilyDisabledException
@@ -61,6 +62,12 @@ class ErrorInterceptor : Interceptor {
             if ("SetNewPassword" in it) {
                 logger.debug("Set new password action url: $redirectUrl")
                 throw PasswordChangeRequiredException("Wymagana zmiana hasła użytkownika", redirectUrl)
+            }
+        }
+
+        doc.select(".panel.wychowawstwo.pracownik.klient").let {
+            if ("Brak uprawnień" in it.select(".name").text()) {
+                throw AccountInactiveException(it.select(".additionalText").text())
             }
         }
 
