@@ -1,6 +1,5 @@
 package io.github.wulkanowy.sdk.scrapper.interceptor
 
-import io.github.wulkanowy.sdk.scrapper.exception.AccountInactiveException
 import io.github.wulkanowy.sdk.scrapper.exception.ScrapperException
 import io.github.wulkanowy.sdk.scrapper.exception.ServiceUnavailableException
 import io.github.wulkanowy.sdk.scrapper.exception.TemporarilyDisabledException
