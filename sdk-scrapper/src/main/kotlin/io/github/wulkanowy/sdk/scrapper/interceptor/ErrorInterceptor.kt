@@ -14,8 +14,11 @@ import okhttp3.Response
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import org.slf4j.LoggerFactory
+import java.net.CookieManager
 
-class ErrorInterceptor : Interceptor {
+class ErrorInterceptor(
+    private val cookies: CookieManager,
+) : Interceptor {
 
     companion object {
         @JvmStatic
@@ -75,7 +78,11 @@ class ErrorInterceptor : Interceptor {
             "Błąd" -> throw VulcanException(doc.body().text())
             "Błąd strony" -> throw VulcanException(doc.select(".errorMessage").text())
             "Logowanie" -> throw AccountPermissionException(doc.select("div").last()?.ownText().orEmpty().split(" Jeśli")[0])
-            "Login Service" -> throw ScrapperException(doc.select("#MainDiv > div").text())
+            "Login Service" -> {
+                cookies.cookieStore.removeAll() // workaround for very strange (random) errors
+                throw ScrapperException(doc.select("#MainDiv > div").text())
+            }
+
             "Przerwa techniczna" -> throw ServiceUnavailableException(doc.title())
             "Strona nie została odnaleziona" -> throw ScrapperException(doc.title())
             "Strona nie znaleziona" -> throw ScrapperException(doc.selectFirst("div div")?.text().orEmpty())

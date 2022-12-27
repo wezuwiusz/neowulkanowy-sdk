@@ -83,7 +83,7 @@ abstract class BaseLocalTest : BaseTest() {
         autoLoginInterceptor: AutoLoginInterceptor = getAutoLoginInterceptor(loginType, autoLogin)
     ): OkHttpClient = OkHttpClient.Builder()
         .apply {
-            if (errorInterceptor) addInterceptor(ErrorInterceptor())
+            if (errorInterceptor) addInterceptor(ErrorInterceptor(cookies))
             if (autoLoginInterceptorOn) addInterceptor(autoLoginInterceptor)
         }
         .addInterceptor(HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BASIC))
