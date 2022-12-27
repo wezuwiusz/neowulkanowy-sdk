@@ -58,12 +58,6 @@ class ErrorInterceptor : Interceptor {
             if (it.isNotEmpty()) throw AccountPermissionException(it.text())
         }
 
-        doc.select(".panel.wychowawstwo.pracownik.klient").let {
-            if ("Brak uprawnień" in it.select(".name").text()) {
-                throw AccountInactiveException(it.select(".additionalText").text())
-            }
-        }
-
         doc.selectFirst("form")?.attr("action")?.let {
             if ("SetNewPassword" in it) {
                 logger.debug("Set new password action url: $redirectUrl")

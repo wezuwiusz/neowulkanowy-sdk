@@ -7,6 +7,7 @@ import io.github.wulkanowy.sdk.scrapper.Scrapper.LoginType.ADFSLight
 import io.github.wulkanowy.sdk.scrapper.Scrapper.LoginType.ADFSLightCufs
 import io.github.wulkanowy.sdk.scrapper.Scrapper.LoginType.ADFSLightScoped
 import io.github.wulkanowy.sdk.scrapper.Scrapper.LoginType.STANDARD
+import io.github.wulkanowy.sdk.scrapper.exception.AccountInactiveException
 import io.github.wulkanowy.sdk.scrapper.exception.VulcanClientError
 import io.github.wulkanowy.sdk.scrapper.login.NotLoggedInException
 import io.github.wulkanowy.sdk.scrapper.repository.AccountRepository.Companion.SELECTOR_ADFS
@@ -121,6 +122,12 @@ class AutoLoginInterceptor(
         }
         if (loginSelectors.isNotEmpty()) {
             throw NotLoggedInException("User not logged in")
+        }
+
+        doc.select(".panel.wychowawstwo.pracownik.klient").let {
+            if ("Brak uprawnień" in it.select(".name").text()) {
+                throw AccountInactiveException(it.select(".additionalText").text())
+            }
         }
 
         val bodyContent = doc.body().text()

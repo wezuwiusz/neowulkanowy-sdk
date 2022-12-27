@@ -134,6 +134,11 @@ class RegisterRepository(
             StudentGraduateException(graduateMessage)
         } else null
 
+        val inactiveMessage = homeResponse.getOrNull()?.document?.select(".panel.wychowawstwo.pracownik.klient")
+        if ("Brak uprawnień" in inactiveMessage?.select(".name")?.text().orEmpty()) {
+            throw AccountInactiveException(inactiveMessage?.select(".additionalText")?.text().orEmpty())
+        }
+
         val userName = homeResponse.getOrNull().getUserNameFromUserData()
         val schools = homeResponse.getOrNull()
             .toPermissions()
