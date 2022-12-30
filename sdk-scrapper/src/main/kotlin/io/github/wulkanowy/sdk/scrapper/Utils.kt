@@ -65,13 +65,17 @@ fun getScriptParam(name: String, content: String, fallback: String = ""): String
     }
 }
 
-fun String.getNormalizedSymbol(): String {
-    return trim().lowercase().replace("default", "").run {
+fun String.getNormalizedSymbol(): String = this
+    .trim().lowercase()
+    .replace("default", "")
+    .run {
         Normalizer.normalize(this, Normalizer.Form.NFD).run {
             "\\p{InCombiningDiacriticalMarks}+".toRegex().replace(this, "")
         }
-    }.replace("[^a-z0-9]".toRegex(), "").ifBlank { "Default" }
-}
+    }
+    .replace("ł", "l")
+    .replace("[^a-z0-9]".toRegex(), "")
+    .ifBlank { "Default" }
 
 fun List<Recipient>.normalizeRecipients() = map { it.parseName() }
 
