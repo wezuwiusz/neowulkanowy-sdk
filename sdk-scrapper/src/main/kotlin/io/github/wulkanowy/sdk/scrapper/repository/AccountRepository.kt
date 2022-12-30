@@ -8,11 +8,11 @@ import io.github.wulkanowy.sdk.scrapper.Scrapper.LoginType.ADFSLightCufs
 import io.github.wulkanowy.sdk.scrapper.Scrapper.LoginType.ADFSLightScoped
 import io.github.wulkanowy.sdk.scrapper.Scrapper.LoginType.AUTO
 import io.github.wulkanowy.sdk.scrapper.Scrapper.LoginType.STANDARD
-import io.github.wulkanowy.sdk.scrapper.exception.ScrapperException
 import io.github.wulkanowy.sdk.scrapper.exception.InvalidCaptchaException
 import io.github.wulkanowy.sdk.scrapper.exception.InvalidEmailException
 import io.github.wulkanowy.sdk.scrapper.exception.NoAccountFoundException
 import io.github.wulkanowy.sdk.scrapper.exception.PasswordResetErrorException
+import io.github.wulkanowy.sdk.scrapper.exception.ScrapperException
 import io.github.wulkanowy.sdk.scrapper.login.UrlGenerator
 import io.github.wulkanowy.sdk.scrapper.service.AccountService
 import java.net.URL
@@ -63,9 +63,11 @@ class AccountRepository(private val account: AccountService) {
                 if (it.contains("żądanie nie zostało poprawnie autoryzowane")) throw InvalidCaptchaException(it)
             }
         }
-        if (!res.message.startsWith("Wysłano wiadomość")) throw PasswordResetErrorException("Unexpected message: ${res.message}")
+        if (res.message.isNotBlank() && !res.message.startsWith("Wysłano wiadomość")) {
+            throw PasswordResetErrorException("Unexpected message: ${res.message}")
+        }
 
-        return res.message
+        return res.message.ifBlank { "Wysłano wiadomość na zapisany w systemie adres e-mail" }
     }
 
     private suspend fun getPasswordResetUrl(registerBaseUrl: String, symbol: String): Pair<Scrapper.LoginType, String> {
