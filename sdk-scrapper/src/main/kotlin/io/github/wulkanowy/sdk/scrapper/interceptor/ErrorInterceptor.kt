@@ -1,6 +1,7 @@
 package io.github.wulkanowy.sdk.scrapper.interceptor
 
 import io.github.wulkanowy.sdk.scrapper.exception.AccountInactiveException
+import io.github.wulkanowy.sdk.scrapper.exception.ConnectionBlockedException
 import io.github.wulkanowy.sdk.scrapper.exception.ScrapperException
 import io.github.wulkanowy.sdk.scrapper.exception.ServiceUnavailableException
 import io.github.wulkanowy.sdk.scrapper.exception.TemporarilyDisabledException
@@ -82,7 +83,7 @@ class ErrorInterceptor(
                 cookies.cookieStore.removeAll() // workaround for very strange (random) errors
                 throw ScrapperException(doc.select("#MainDiv > div").text())
             }
-
+            "Połączenie zablokowane" -> throw ConnectionBlockedException(doc.body().text())
             "Przerwa techniczna" -> throw ServiceUnavailableException(doc.title())
             "Strona nie została odnaleziona" -> throw ScrapperException(doc.title())
             "Strona nie znaleziona" -> throw ScrapperException(doc.selectFirst("div div")?.text().orEmpty())
@@ -91,5 +92,19 @@ class ErrorInterceptor(
         doc.select("h2").text().let {
             if (it == "Strona nie znaleziona") throw ScrapperException(it)
         }
+
+        if (isBobCmn(doc, redirectUrl)) {
+            throw ConnectionBlockedException("Połączenie zablokowane przez system antybotowy. Spróbuj ponownie za chwilę")
+        }
+    }
+
+    private fun isBobCmn(doc: Document, redirectUrl: String): Boolean {
+        if ("edu.lublin.eu" !in redirectUrl) return false
+        if (doc.title().isNotBlank()) return false
+
+        val isEmptyFavicon = doc.selectFirst("link[rel]")?.attr("href") == "data:;base64,iVBORw0KGgo="
+        val isDoNotTouchTagPresent = doc.selectFirst("APM_DO_NOT_TOUCH") != null
+
+        return isEmptyFavicon && isDoNotTouchTagPresent
     }
 }
