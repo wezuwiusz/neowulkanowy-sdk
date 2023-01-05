@@ -13,7 +13,7 @@ class HostsRemoteTest : BaseTest() {
         "vulcan.net.pl" to "Default",
         "eszkola.opolskie.pl" to "opole",
         "edu.gdansk.pl" to "gdansk",
-        "edu.lublin.eu" to "lublin",
+        // "edu.lublin.eu" to "lublin", // they are blocking us :///
         "umt.tarnow.pl" to "tarnow",
         "eduportal.koszalin.pl" to "koszalin",
         "vulcan.net.pl" to "rawamazowiecka",
