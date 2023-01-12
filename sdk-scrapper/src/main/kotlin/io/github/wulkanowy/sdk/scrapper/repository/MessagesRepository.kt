@@ -78,7 +78,7 @@ class MessagesRepository(private val api: MessagesService) {
 
     suspend fun getMessageDetails(globalKey: String, markAsRead: Boolean): MessageDetails {
         val details = api.getMessageDetails(globalKey)
-        if (markAsRead && !details.isRead) {
+        if (markAsRead) {
             runCatching {
                 val startPage = api.getStart()
                 api.markMessageAsRead(
