@@ -32,7 +32,7 @@ jobs:
             ./gradlew jacocoTestReport --stacktrace
         - uses: codecov/codecov-action@v1
 
-  link:
+  lint:
       name: Lint check
       runs-on: ubuntu-latest
       timeout-minutes: 10

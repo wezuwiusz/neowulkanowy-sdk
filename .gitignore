@@ -74,3 +74,4 @@ classes
 .idea/libraries-with-intellij-classes.xml
 .idea/kotlinc.xml
 .idea/jpa-buddy.xml
+.idea/kotlinScripting.xml
