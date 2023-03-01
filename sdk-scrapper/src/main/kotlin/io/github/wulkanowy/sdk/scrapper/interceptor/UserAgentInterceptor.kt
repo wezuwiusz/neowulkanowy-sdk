@@ -12,7 +12,7 @@ class UserAgentInterceptor(
     private val buildTag: String,
     private val userAgentTemplate: String,
     private val webKitRev: String = "537.36",
-    private val chromeRev: String = "107.0.0.0",
+    private val chromeRev: String = "110.0.0.0",
 ) : Interceptor {
 
     private val defaultTemplate = buildString {
