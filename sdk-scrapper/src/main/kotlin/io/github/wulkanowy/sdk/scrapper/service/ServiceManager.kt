@@ -51,6 +51,7 @@ class ServiceManager(
     emptyCookieJarIntercept: Boolean,
     androidVersion: String,
     buildTag: String,
+    userAgentTemplate: String,
 ) {
 
     private val cookies by lazy {
@@ -84,7 +85,7 @@ class ServiceManager(
         HttpLoggingInterceptor().setLevel(logLevel) to true,
         ErrorInterceptor(cookies) to false,
         AutoLoginInterceptor(loginType, cookies, emptyCookieJarIntercept) { loginHelper.login(email, password) } to false,
-        UserAgentInterceptor(androidVersion, buildTag) to false,
+        UserAgentInterceptor(androidVersion, buildTag, userAgentTemplate) to false,
         HttpErrorInterceptor() to false,
     )
 

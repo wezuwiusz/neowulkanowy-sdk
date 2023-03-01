@@ -210,6 +210,12 @@ class Sdk {
             mobile.logLevel = value
         }
 
+    var userAgentTemplate = ""
+        set(value) {
+            field = value
+            scrapper.userAgentTemplate = value
+        }
+
     var androidVersion = "7.0"
         set(value) {
             field = value

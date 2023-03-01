@@ -37,6 +37,7 @@ class ServiceManagerTest : BaseLocalTest() {
             emptyCookieJarIntercept = false,
             androidVersion = "",
             buildTag = "",
+            userAgentTemplate = "",
         )
         manager.setInterceptor({ throw ScrapperException("Test") })
 
@@ -68,6 +69,7 @@ class ServiceManagerTest : BaseLocalTest() {
             emptyCookieJarIntercept = false,
             androidVersion = "",
             buildTag = "",
+            userAgentTemplate = "",
         )
         manager.setInterceptor(
             {
@@ -137,6 +139,7 @@ class ServiceManagerTest : BaseLocalTest() {
             emptyCookieJarIntercept = true,
             androidVersion = "",
             buildTag = "",
+            userAgentTemplate = "",
         )
 
         val res = runCatching {
