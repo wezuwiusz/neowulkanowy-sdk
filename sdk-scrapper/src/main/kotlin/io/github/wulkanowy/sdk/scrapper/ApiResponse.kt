@@ -8,7 +8,7 @@ data class ApiResponse<out T>(
     val success: Boolean,
     val data: T?,
     val feedback: Feedback? = null,
-    val errorMessage: String? = null
+    val errorMessage: String? = null,
 )
 
 @Serializable

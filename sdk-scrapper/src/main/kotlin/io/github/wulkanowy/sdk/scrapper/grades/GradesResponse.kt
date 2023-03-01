@@ -19,7 +19,7 @@ data class GradesResponse(
     val type: Int,
 
     @SerialName("Oceny")
-    val gradesWithSubjects: List<Subject>
+    val gradesWithSubjects: List<Subject>,
 ) {
 
     @Serializable
@@ -53,6 +53,6 @@ data class GradesResponse(
         val finalPoints: String? = "",
 
         @SerialName("OcenyCzastkowe")
-        val grades: List<Grade> = emptyList()
+        val grades: List<Grade> = emptyList(),
     )
 }

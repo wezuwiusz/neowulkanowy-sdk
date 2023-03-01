@@ -82,5 +82,5 @@ data class StudentInfo(
     val isPole: Boolean,
 
     @SerialName("ImieMatkiIOjca")
-    val motherAndFatherNames: String?
+    val motherAndFatherNames: String?,
 )

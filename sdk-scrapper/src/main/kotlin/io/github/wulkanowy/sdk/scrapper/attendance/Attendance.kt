@@ -20,7 +20,7 @@ data class Attendance(
     val subject: String?,
 
     @SerialName("IdKategoria")
-    val categoryId: Int = -1
+    val categoryId: Int = -1,
 ) {
 
     @Transient

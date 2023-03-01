@@ -22,5 +22,5 @@ data class CertificateResponse(
     val tokenStatus: String?,
 
     @Json(name = "TokenCert")
-    val tokenCert: TokenCert?
+    val tokenCert: TokenCert?,
 )

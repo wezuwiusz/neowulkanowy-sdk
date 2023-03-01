@@ -23,7 +23,7 @@ open class ApiRequest(
     val remoteMobileAppVersion: String = MOBILE_APP_VERSION,
 
     @Json(name = "RemoteMobileAppName")
-    val remoteMobileAppName: String = "VULCAN-Android-ModulUcznia"
+    val remoteMobileAppName: String = "VULCAN-Android-ModulUcznia",
 ) {
     companion object {
         const val MOBILE_APP_VERSION = "20.1.1.447"

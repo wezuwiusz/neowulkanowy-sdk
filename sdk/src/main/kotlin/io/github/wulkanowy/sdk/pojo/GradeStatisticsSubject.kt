@@ -5,5 +5,5 @@ data class GradeStatisticsSubject(
     val classAverage: String,
     val studentAverage: String,
     val classItems: List<GradeStatisticsItem>,
-    val studentItems: List<GradeStatisticsItem>
+    val studentItems: List<GradeStatisticsItem>,
 )

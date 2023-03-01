@@ -21,7 +21,8 @@ class SentExcuse {
     enum class Status(val id: Int) {
         WAITING(0),
         ACCEPTED(1),
-        DENIED(2);
+        DENIED(2),
+        ;
 
         companion object {
             fun getByValue(value: Int) = values().firstOrNull { it.id == value }

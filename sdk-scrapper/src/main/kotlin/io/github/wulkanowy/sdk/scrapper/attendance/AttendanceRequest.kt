@@ -13,7 +13,7 @@ data class AttendanceRequest(
     val date: LocalDateTime,
 
     @SerialName("idTypWpisuFrekwencji")
-    val typeId: Int = -1
+    val typeId: Int = -1,
 )
 
 @Serializable

@@ -8,13 +8,13 @@ import io.github.wulkanowy.sdk.scrapper.attendance.Subject as ScrapperSubject
 fun List<ApiSubject>.mapSubjects() = listOf(Subject(-1, "Wszystkie")) + filter { it.active }.map {
     Subject(
         id = it.id,
-        name = it.name
+        name = it.name,
     )
 }
 
 fun List<ScrapperSubject>.mapSubjects() = map {
     Subject(
         id = it.value,
-        name = it.name
+        name = it.name,
     )
 }

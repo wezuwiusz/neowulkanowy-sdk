@@ -63,13 +63,13 @@ abstract class BaseLocalTest : BaseTest() {
         service: Class<T>,
         url: String = this.server.url("/").toString(),
         html: Boolean = true,
-        okHttp: OkHttpClient = getOkHttp()
+        okHttp: OkHttpClient = getOkHttp(),
     ): T = Retrofit.Builder()
         .client(okHttp)
         .addConverterFactory(ScalarsConverterFactory.create())
         .addConverterFactory(
             if (!html) json.asConverterFactory("application/json".toMediaType())
-            else JspoonConverterFactory.create()
+            else JspoonConverterFactory.create(),
         )
         .baseUrl(url)
         .build()
@@ -80,7 +80,7 @@ abstract class BaseLocalTest : BaseTest() {
         autoLoginInterceptorOn: Boolean = true,
         loginType: Scrapper.LoginType = Scrapper.LoginType.STANDARD,
         autoLogin: Boolean = false,
-        autoLoginInterceptor: AutoLoginInterceptor = getAutoLoginInterceptor(loginType, autoLogin)
+        autoLoginInterceptor: AutoLoginInterceptor = getAutoLoginInterceptor(loginType, autoLogin),
     ): OkHttpClient = OkHttpClient.Builder()
         .apply {
             if (errorInterceptor) addInterceptor(ErrorInterceptor(CookieManager()))
@@ -92,8 +92,10 @@ abstract class BaseLocalTest : BaseTest() {
 
     private fun getAutoLoginInterceptor(loginType: Scrapper.LoginType, autoLogin: Boolean): AutoLoginInterceptor {
         return AutoLoginInterceptor(loginType, CookieManager(), false) {
-            if (autoLogin) LoginHelper(loginType, "http", "localhost", "powiatwulkanowy", CookieManager(), getService(LoginService::class.java))
-                .login("jan", "kowalski")
+            if (autoLogin) {
+                LoginHelper(loginType, "http", "localhost", "powiatwulkanowy", CookieManager(), getService(LoginService::class.java))
+                    .login("jan", "kowalski")
+            }
         }
     }
 }

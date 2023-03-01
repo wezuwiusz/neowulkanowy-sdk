@@ -25,7 +25,7 @@ fun GradesResponse.mapGradesList() = gradesWithSubjects.map { gradesSubject ->
             symbol = grade.symbol.orEmpty(),
             description = grade.description.orEmpty(),
             weightValue = if (isGradeValid(gradeEntryWithoutComment)) grade.weightValue else .0,
-            teacher = grade.teacher
+            teacher = grade.teacher,
         ).apply {
             colorHex = if (0 == grade.color) "000000" else grade.color.toString(16).uppercase()
             subject = gradesSubject.name
@@ -66,14 +66,14 @@ fun List<GradesStatisticsSemester>.mapGradesStatisticsSemester() = map {
                 grade = index + 1
                 isStudentHere = item.description.contains("Tu jesteś")
             }
-        }.reversed()
+        }.reversed(),
     )
 }
 
 fun List<GradesStatisticsPartial>.mapGradesStatisticsPartial() = map {
     it.copy(
         classSeries = it.classSeries.addGradeValue(),
-        studentSeries = it.studentSeries.addGradeValue()
+        studentSeries = it.studentSeries.addGradeValue(),
     )
 }
 
@@ -83,6 +83,6 @@ private fun GradeStatisticsPartialSeries.addGradeValue(): GradeStatisticsPartial
             item.copy().apply {
                 grade = i + 1
             }
-        }.reversed()
+        }.reversed(),
     )
 }

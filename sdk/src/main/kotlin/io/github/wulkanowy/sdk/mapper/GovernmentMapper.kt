@@ -8,7 +8,7 @@ import io.github.wulkanowy.sdk.scrapper.home.GovernmentUnit as ScrapperGovernmen
 fun List<ScrapperGovernmentUnit>.mapToUnits() = map {
     GovernmentUnit(
         unitName = it.unitName,
-        people = it.people.mapToMembers()
+        people = it.people.mapToMembers(),
     )
 }
 
@@ -17,6 +17,6 @@ fun List<ScrapperGovernmentMember>.mapToMembers() = map {
         name = it.name,
         division = it.division,
         position = it.position,
-        id = it.id
+        id = it.id,
     )
 }

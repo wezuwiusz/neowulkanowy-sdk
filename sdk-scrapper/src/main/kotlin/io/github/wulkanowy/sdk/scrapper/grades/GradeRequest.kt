@@ -7,5 +7,5 @@ import kotlinx.serialization.Serializable
 data class GradeRequest(
 
     @SerialName("okres")
-    val semesterId: Int?
+    val semesterId: Int?,
 )

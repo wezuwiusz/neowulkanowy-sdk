@@ -47,7 +47,7 @@ class AccountRepository(private val account: AccountService) {
                     url = url,
                     username = email,
                     captchaCode = captchaCode,
-                    viewStateParams = formFields.plus("btSend.x" to "5").plus("btSend.y" to "6")
+                    viewStateParams = formFields.plus("btSend.x" to "5").plus("btSend.y" to "6"),
                 )
             }
             else -> throw ScrapperException("Never happen")

@@ -7,7 +7,7 @@ import kotlinx.serialization.Serializable
 data class GradePointsSummaryResponse(
 
     @SerialName("Items")
-    val items: List<GradePointsSummary>
+    val items: List<GradePointsSummary>,
 )
 
 @Serializable
@@ -20,5 +20,5 @@ data class GradePointsSummary(
     val others: Double,
 
     @SerialName("Value2")
-    val student: Double
+    val student: Double,
 )

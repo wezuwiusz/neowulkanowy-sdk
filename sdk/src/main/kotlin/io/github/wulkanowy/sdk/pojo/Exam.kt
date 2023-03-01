@@ -11,5 +11,5 @@ data class Exam(
     val subject: String,
     val teacher: String,
     val teacherSymbol: String,
-    val type: String
+    val type: String,
 )

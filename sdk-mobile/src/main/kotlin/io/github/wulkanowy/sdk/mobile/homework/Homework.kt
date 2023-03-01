@@ -25,5 +25,5 @@ data class Homework(
     val subjectId: Int,
 
     @Json(name = "Opis")
-    val content: String
+    val content: String,
 )

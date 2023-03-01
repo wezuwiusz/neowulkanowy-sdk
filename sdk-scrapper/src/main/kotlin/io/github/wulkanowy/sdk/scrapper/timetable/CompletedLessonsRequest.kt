@@ -13,5 +13,5 @@ class CompletedLessonsRequest(
     val endDate: String,
 
     @SerialName("idPrzedmiot")
-    val subject: Int = -1
+    val subject: Int = -1,
 )

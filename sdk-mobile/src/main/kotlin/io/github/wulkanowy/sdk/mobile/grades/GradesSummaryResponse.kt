@@ -13,5 +13,5 @@ data class GradesSummaryResponse(
     val evaluative: List<GradeSummary>,
 
     @Json(name = "SrednieOcen")
-    val average: List<GradeSummary>
+    val average: List<GradeSummary>,
 )

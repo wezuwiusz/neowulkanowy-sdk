@@ -95,14 +95,16 @@ class Mobile {
     }
 
     suspend fun getStudents(certRes: CertificateResponse, apiKey: String = ""): List<Student> {
-        if (certRes.isError) when {
-            certRes.message == "TokenDead" -> throw TokenDeadException(certRes.message)
-            certRes.message == "TokenNotFound" -> throw TokenNotFoundException(certRes.message)
-            certRes.message?.startsWith("Podany numer PIN jest niepoprawny") == true -> throw InvalidPinException(certRes.message)
-            certRes.message?.startsWith("Trzykrotnie wpisano niepoprawny kod PIN") == true -> throw InvalidPinException(certRes.message)
-            certRes.message == "NoPupils" -> throw NoStudentsException(certRes.message)
-            certRes.message == "OnlyKindergarten" -> throw UnsupportedTokenException(certRes.message)
-            else -> throw UnknownTokenException(certRes.message.orEmpty())
+        if (certRes.isError) {
+            when {
+                certRes.message == "TokenDead" -> throw TokenDeadException(certRes.message)
+                certRes.message == "TokenNotFound" -> throw TokenNotFoundException(certRes.message)
+                certRes.message?.startsWith("Podany numer PIN jest niepoprawny") == true -> throw InvalidPinException(certRes.message)
+                certRes.message?.startsWith("Trzykrotnie wpisano niepoprawny kod PIN") == true -> throw InvalidPinException(certRes.message)
+                certRes.message == "NoPupils" -> throw NoStudentsException(certRes.message)
+                certRes.message == "OnlyKindergarten" -> throw UnsupportedTokenException(certRes.message)
+                else -> throw UnknownTokenException(certRes.message.orEmpty())
+            }
         }
 
         val cert = certRes.tokenCert!!

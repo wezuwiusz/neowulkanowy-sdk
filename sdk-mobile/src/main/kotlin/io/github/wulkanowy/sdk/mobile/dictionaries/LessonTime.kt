@@ -22,5 +22,5 @@ data class LessonTime(
     val end: Long,
 
     @Json(name = "KoniecTekst")
-    val endText: String
+    val endText: String,
 )

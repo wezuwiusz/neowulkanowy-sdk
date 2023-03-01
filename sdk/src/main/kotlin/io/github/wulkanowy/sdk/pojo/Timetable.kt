@@ -23,5 +23,5 @@ data class Timetable(
     val info: String,
     val studentPlan: Boolean,
     val changes: Boolean,
-    val canceled: Boolean
+    val canceled: Boolean,
 )

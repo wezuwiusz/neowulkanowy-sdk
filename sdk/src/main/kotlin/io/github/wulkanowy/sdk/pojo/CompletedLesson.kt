@@ -11,5 +11,5 @@ data class CompletedLesson(
     val teacherSymbol: String,
     val substitution: String,
     val absence: String,
-    val resources: String
+    val resources: String,
 )

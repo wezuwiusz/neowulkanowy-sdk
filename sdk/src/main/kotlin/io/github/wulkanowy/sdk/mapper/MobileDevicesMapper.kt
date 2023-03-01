@@ -11,7 +11,7 @@ fun TokenResponse.mapToken() = Token(
     token = token,
     symbol = symbol,
     pin = pin,
-    qrCodeImage = qrCodeImage
+    qrCodeImage = qrCodeImage,
 )
 
 fun List<ScrapperDevice>.mapDevices(zoneId: ZoneId) = map {
@@ -22,6 +22,6 @@ fun List<ScrapperDevice>.mapDevices(zoneId: ZoneId) = map {
         createDate = it.createDate ?: now(),
         modificationDate = it.modificationDate,
         createDateZoned = (it.createDate ?: now()).atZone(zoneId),
-        modificationDateZoned = it.modificationDate?.atZone(zoneId)
+        modificationDateZoned = it.modificationDate?.atZone(zoneId),
     )
 }

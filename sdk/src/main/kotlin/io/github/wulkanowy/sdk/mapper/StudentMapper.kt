@@ -28,10 +28,10 @@ fun ScrapperStudentInfo.mapStudent() = StudentInfo(
     surname = lastName,
     guardians = listOfNotNull(
         guardianFirst?.toFamilyMember(),
-        guardianSecond?.toFamilyMember()
+        guardianSecond?.toFamilyMember(),
     ),
     guardianFirst = guardianFirst?.toFamilyMember(),
-    guardianSecond = guardianSecond?.toFamilyMember()
+    guardianSecond = guardianSecond?.toFamilyMember(),
 )
 
 fun ScrapperStudentPhoto.mapPhoto() = StudentPhoto(photoBase64 = photoBase64.orEmpty())
@@ -41,5 +41,5 @@ private fun ScrapperStudentGuardian.toFamilyMember() = StudentGuardian(
     email = email.orEmpty(),
     address = address,
     kinship = kinship.orEmpty(),
-    phones = phone
+    phones = phone,
 )

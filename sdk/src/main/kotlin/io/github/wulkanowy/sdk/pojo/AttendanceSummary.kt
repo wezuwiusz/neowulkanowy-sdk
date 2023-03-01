@@ -10,5 +10,5 @@ data class AttendanceSummary(
     val absenceForSchoolReasons: Int,
     val lateness: Int,
     val latenessExcused: Int,
-    val exemption: Int
+    val exemption: Int,
 )

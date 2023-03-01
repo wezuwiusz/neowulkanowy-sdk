@@ -37,5 +37,5 @@ data class StudentGuardian(
     val fullName: String,
 
     @SerialName("Telefon")
-    val phone: String
+    val phone: String,
 )

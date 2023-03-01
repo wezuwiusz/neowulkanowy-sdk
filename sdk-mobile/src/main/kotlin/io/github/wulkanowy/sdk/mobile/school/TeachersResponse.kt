@@ -10,5 +10,5 @@ data class TeachersResponse(
     val schoolTeachers: List<Teacher>,
 
     @Json(name = "NauczycielePrzedmioty")
-    val teachersSubjects: List<Teacher>
+    val teachersSubjects: List<Teacher>,
 )

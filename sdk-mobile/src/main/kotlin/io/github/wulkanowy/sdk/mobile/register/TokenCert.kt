@@ -34,5 +34,5 @@ data class TokenCert(
     val userName: String,
 
     @Json(name = "TypKonta")
-    val accountType: String?
+    val accountType: String?,
 )

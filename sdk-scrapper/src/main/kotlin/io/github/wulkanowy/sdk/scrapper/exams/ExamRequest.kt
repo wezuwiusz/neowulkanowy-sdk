@@ -13,5 +13,5 @@ data class ExamRequest(
     val date: LocalDateTime,
 
     @SerialName("rokSzkolny")
-    val schoolYear: Int
+    val schoolYear: Int,
 )

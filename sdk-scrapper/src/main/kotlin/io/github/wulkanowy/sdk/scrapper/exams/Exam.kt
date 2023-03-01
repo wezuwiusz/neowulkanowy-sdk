@@ -23,7 +23,7 @@ data class Exam(
     val description: String,
 
     @SerialName("Pracownik")
-    val teacher: String
+    val teacher: String,
 ) {
 
     @Transient

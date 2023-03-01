@@ -11,7 +11,7 @@ fun List<ApiTeacher>.mapTeachers(dictionaries: Dictionaries) = mapNotNull { teac
     Teacher(
         name = "${item.name} ${item.surname}",
         short = item.code,
-        subject = dictionaries.subjects.singleOrNull { it.id == teacher.subjectId }?.name ?: teacher.role
+        subject = dictionaries.subjects.singleOrNull { it.id == teacher.subjectId }?.name ?: teacher.role,
     )
 }
 
@@ -19,6 +19,6 @@ fun List<ScrapperTeacher>.mapTeachers() = map {
     Teacher(
         name = it.name,
         short = it.short,
-        subject = it.subject
+        subject = it.subject,
     )
 }

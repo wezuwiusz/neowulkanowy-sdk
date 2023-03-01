@@ -89,7 +89,7 @@ class Sdk {
     enum class Mode {
         API,
         SCRAPPER,
-        HYBRID
+        HYBRID,
     }
 
     enum class ScrapperLoginType {
@@ -99,7 +99,7 @@ class Sdk {
         ADFSCards,
         ADFSLight,
         ADFSLightScoped,
-        ADFSLightCufs
+        ADFSLightCufs,
     }
 
     private val mobile = Mobile()
@@ -300,7 +300,7 @@ class Sdk {
         scrapperBaseUrl: String,
         firebaseToken: String,
         startSymbol: String = "Default",
-        apiKey: String = ""
+        apiKey: String = "",
     ) = withContext(Dispatchers.IO) {
         getStudentsFromScrapper(email, password, scrapperBaseUrl, startSymbol)
             .distinctBy { it.symbol }
@@ -318,7 +318,7 @@ class Sdk {
                     student.copy(
                         loginMode = Mode.HYBRID,
                         loginType = scrapperStudent.loginType,
-                        scrapperBaseUrl = scrapperStudent.scrapperBaseUrl
+                        scrapperBaseUrl = scrapperStudent.scrapperBaseUrl,
                     )
                 }
             }.toList().flatten()

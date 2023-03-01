@@ -10,7 +10,7 @@ class StudentStartRepository(
     private val studentId: Int,
     private val classId: Int,
     private val unitId: Int,
-    private val api: StudentService
+    private val api: StudentService,
 ) {
 
     companion object {

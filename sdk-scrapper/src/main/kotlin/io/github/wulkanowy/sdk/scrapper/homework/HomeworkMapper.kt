@@ -13,7 +13,7 @@ fun List<HomeworkDay>.mapHomework(startDate: LocalDate, endDate: LocalDate?): Li
             homework.copy(
                 teacher = teacher,
                 date = day.date,
-                content = Parser.unescapeEntities(homework.content, true)
+                content = Parser.unescapeEntities(homework.content, true),
             ).apply {
                 teacherSymbol = teacherCode
                 _attachments = homework.attachments.map { it.url to it.filename }

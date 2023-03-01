@@ -19,5 +19,5 @@ data class AttendanceResponse(
     val dateEndText: String,
 
     @Json(name = "Frekwencje")
-    val items: List<Attendance>
+    val items: List<Attendance>,
 )

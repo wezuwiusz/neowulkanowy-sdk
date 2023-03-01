@@ -10,7 +10,7 @@ data class Permissions(
     val authInfos: List<AuthInfo>,
 
     @SerialName("Units")
-    val units: List<PermissionUnit>
+    val units: List<PermissionUnit>,
 )
 
 @Serializable
@@ -37,7 +37,7 @@ data class AuthInfo(
     val roles: List<Int>,
 
     @SerialName("UczenIds")
-    val studentIds: List<Int>
+    val studentIds: List<Int>,
 )
 
 @Serializable
@@ -52,5 +52,5 @@ data class PermissionUnit(
     val short: String,
 
     @SerialName("Symbol")
-    val symbol: String
+    val symbol: String,
 )

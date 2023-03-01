@@ -25,7 +25,7 @@ fun List<ApiGrade>.mapGradesDetails(dict: Dictionaries) = map { grade ->
         modifier = grade.modificationWeight ?: .0,
         value = grade.value,
         weight = grade.weight,
-        color = "0"
+        color = "0",
     )
 }
 
@@ -42,7 +42,7 @@ fun List<ScrapperGrade>.mapGradesDetails() = map {
         weightValue = it.weightValue,
         color = it.colorHex,
         value = it.value.toDouble(),
-        modifier = it.modifier
+        modifier = it.modifier,
     )
 }
 
@@ -57,7 +57,7 @@ fun GradesSummaryResponse.mapGradesSummary(dict: Dictionaries) = average
             average = (average.singleOrNull { it.subjectId == subjectId }?.average ?: "0").replace(",", ".").takeIf { it.isNotBlank() }?.toDouble() ?: 0.0,
             pointsSum = average.singleOrNull { it.subjectId == subjectId }?.pointsSum.orEmpty(),
             proposedPoints = "",
-            finalPoints = ""
+            finalPoints = "",
         )
     }
 
@@ -69,7 +69,7 @@ fun List<ScrapperGradeSummary>.mapGradesSummary() = map {
         pointsSum = it.pointsSum,
         average = it.average,
         final = it.final,
-        predicted = it.predicted
+        predicted = it.predicted,
     )
 }
 

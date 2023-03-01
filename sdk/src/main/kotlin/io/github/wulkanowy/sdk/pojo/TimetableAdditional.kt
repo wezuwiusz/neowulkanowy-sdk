@@ -12,5 +12,5 @@ data class TimetableAdditional(
     val startZoned: ZonedDateTime,
     val endZoned: ZonedDateTime,
     val date: LocalDate,
-    val subject: String
+    val subject: String,
 )

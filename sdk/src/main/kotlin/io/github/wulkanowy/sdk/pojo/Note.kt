@@ -11,5 +11,5 @@ data class Note(
     var categoryType: NoteCategory,
     var showPoints: Boolean,
     var points: Int,
-    var content: String
+    var content: String,
 )

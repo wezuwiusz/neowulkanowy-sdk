@@ -16,5 +16,5 @@ data class HomeworkDay(
     val items: List<Homework>,
 
     @SerialName("Show")
-    val show: Boolean
+    val show: Boolean,
 )

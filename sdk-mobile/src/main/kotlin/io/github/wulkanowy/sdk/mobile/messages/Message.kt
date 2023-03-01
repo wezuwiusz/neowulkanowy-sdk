@@ -52,5 +52,5 @@ data class Message(
     val unread: String?,
 
     @Json(name = "Przeczytane")
-    val read: String?
+    val read: String?,
 )

@@ -10,5 +10,5 @@ data class Subject(
     var name: String = "Wszystkie",
 
     @SerialName("Id")
-    var value: Int = -1
+    var value: Int = -1,
 )

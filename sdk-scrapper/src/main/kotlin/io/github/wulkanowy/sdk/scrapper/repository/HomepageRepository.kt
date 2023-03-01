@@ -29,7 +29,7 @@ class HomepageRepository(private val api: HomepageService) {
                 DirectorInformation(
                     date = it.name.substringBefore(" ").toDate("dd.MM.yyyy").toLocalDate(),
                     subject = it.name.substringAfter(" "),
-                    content = it.data.orEmpty()
+                    content = it.data.orEmpty(),
                 )
             }
         }.sortedBy { it.date }
@@ -64,7 +64,7 @@ class HomepageRepository(private val api: HomepageService) {
                     LuckyNumber(
                         unitName = unit.name,
                         school = school.name,
-                        number = number.name.substringAfterLast(": ").toInt()
+                        number = number.name.substringAfterLast(": ").toInt(),
                     )
                 }
             }

@@ -7,7 +7,8 @@ enum class MailboxType(val letter: String) {
     GUARDIAN("O"),
     EMPLOYEE("P"),
 
-    UNKNOWN("");
+    UNKNOWN(""),
+    ;
 
     companion object {
         fun fromLetter(letter: String) = values().find { it.letter == letter } ?: UNKNOWN

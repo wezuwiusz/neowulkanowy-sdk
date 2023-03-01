@@ -20,7 +20,7 @@ fun List<ApiExam>.mapExams(dict: Dictionaries) = map { exam ->
             2 -> "Kartkówka"
             3 -> "Praca klasowa"
             else -> "Nieznany"
-        }
+        },
     )
 }
 
@@ -33,6 +33,6 @@ fun List<ScrapperExam>.mapExams() = map {
         teacherSymbol = it.teacherSymbol,
         teacher = it.teacher,
         subject = it.subject,
-        type = it.typeName
+        type = it.typeName,
     )
 }

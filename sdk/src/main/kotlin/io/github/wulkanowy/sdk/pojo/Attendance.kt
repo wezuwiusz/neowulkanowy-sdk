@@ -17,5 +17,5 @@ data class Attendance(
     val excused: Boolean,
     val deleted: Boolean,
     val excusable: Boolean,
-    val excuseStatus: SentExcuse.Status?
+    val excuseStatus: SentExcuse.Status?,
 )

@@ -61,7 +61,7 @@ class Scrapper {
         ADFSCards,
         ADFSLight,
         ADFSLightScoped,
-        ADFSLightCufs
+        ADFSLightCufs,
     }
 
     private val changeManager = resettableManager()
@@ -204,7 +204,7 @@ class Scrapper {
             schoolYear = schoolYear,
             androidVersion = androidVersion,
             buildTag = buildTag,
-            emptyCookieJarIntercept = emptyCookieJarInterceptor
+            emptyCookieJarIntercept = emptyCookieJarInterceptor,
         ).apply {
             appInterceptors.forEach { (interceptor, isNetwork) ->
                 setInterceptor(interceptor, isNetwork)
@@ -225,11 +225,11 @@ class Scrapper {
                 host = host,
                 symbol = normalizedSymbol,
                 cookies = serviceManager.getCookieManager(),
-                api = serviceManager.getLoginService()
+                api = serviceManager.getLoginService(),
             ),
             register = serviceManager.getRegisterService(),
             student = serviceManager.getStudentService(withLogin = false, studentInterceptor = false),
-            url = serviceManager.urlGenerator
+            url = serviceManager.urlGenerator,
         )
     }
 
@@ -240,7 +240,7 @@ class Scrapper {
             studentId = studentId,
             classId = classId,
             unitId = unitId,
-            api = serviceManager.getStudentService(withLogin = true, studentInterceptor = false)
+            api = serviceManager.getStudentService(withLogin = true, studentInterceptor = false),
         )
     }
 
@@ -411,7 +411,7 @@ class Scrapper {
         folder: Folder,
         mailboxKey: String? = null,
         lastMessageKey: Int = 0,
-        pageSize: Int = 50
+        pageSize: Int = 50,
     ): List<MessageMeta> = when (folder) {
         Folder.RECEIVED -> messages.getReceivedMessages(mailboxKey, lastMessageKey, pageSize)
         Folder.SENT -> messages.getSentMessages(mailboxKey, lastMessageKey, pageSize)

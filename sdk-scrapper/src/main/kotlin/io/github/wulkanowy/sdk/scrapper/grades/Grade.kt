@@ -29,7 +29,7 @@ data class Grade(
     internal val privateDate: LocalDate,
 
     @SerialName("Nauczyciel")
-    val teacher: String = ""
+    val teacher: String = "",
 ) {
 
     @Transient

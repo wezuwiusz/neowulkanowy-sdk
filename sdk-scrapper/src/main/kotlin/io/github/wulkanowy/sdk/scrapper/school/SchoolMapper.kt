@@ -7,14 +7,14 @@ fun SchoolAndTeachersResponse.mapToSchool() = school.copy(
     address = school.address.trim('-'),
     contact = school.contact.trim('-'),
     headmaster = school.headmaster.trim('-'),
-    pedagogue = school.pedagogue.trim('-')
+    pedagogue = school.pedagogue.trim('-'),
 )
 
 fun SchoolAndTeachersResponse.mapToTeachers() = teachers.map { item ->
     item.name.split(",").map { namePart ->
         item.copy(
             name = namePart.substringBefore(" [").getEmptyIfDash().trim(),
-            subject = item.subject.trim()
+            subject = item.subject.trim(),
         ).apply {
             short = namePart.substringAfter("[").substringBefore("]").getEmptyIfDash()
         }

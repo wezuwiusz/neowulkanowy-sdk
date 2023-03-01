@@ -6,5 +6,5 @@ data class SentMessage(
     val content: String,
     val sender: Sender,
     val isWelcomeMessage: Boolean,
-    val id: Int
+    val id: Int,
 )

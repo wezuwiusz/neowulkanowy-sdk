@@ -13,7 +13,7 @@ class StudentCookieInterceptor(
     private val diaryId: Int,
     private val kindergartenDiaryId: Int,
     private val studentId: Int,
-    private val schoolYear: Int
+    private val schoolYear: Int,
 ) : Interceptor {
 
     override fun intercept(chain: Interceptor.Chain): Response {
@@ -21,7 +21,7 @@ class StudentCookieInterceptor(
             "idBiezacyDziennik" to diaryId,
             "idBiezacyUczen" to studentId,
             "idBiezacyDziennikPrzedszkole" to kindergartenDiaryId,
-            "biezacyRokSzkolny" to schoolYear
+            "biezacyRokSzkolny" to schoolYear,
         ).forEach { (name, value) ->
             HttpCookie(name, value.toString()).let {
                 it.path = "/"

@@ -91,7 +91,7 @@ data class Student(
     val position: Int,
 
     @Json(name = "LoginId")
-    val loginId: Int?
+    val loginId: Int?,
 ) {
 
     var privateKey = ""

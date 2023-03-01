@@ -27,5 +27,5 @@ data class Conference(
     val id: Int,
 
     @Transient
-    val date: LocalDateTime = LocalDateTime.now()
+    val date: LocalDateTime = LocalDateTime.now(),
 )

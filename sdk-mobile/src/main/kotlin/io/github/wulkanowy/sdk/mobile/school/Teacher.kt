@@ -13,5 +13,5 @@ data class Teacher(
     val subjectId: Int,
 
     @Json(name = "Rola")
-    val role: String
+    val role: String,
 )

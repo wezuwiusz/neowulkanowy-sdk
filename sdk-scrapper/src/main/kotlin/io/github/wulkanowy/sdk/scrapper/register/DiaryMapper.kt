@@ -22,7 +22,7 @@ fun List<Diary>.toSemesters(studentId: Int, classId: Int, unitId: Int): List<Sem
                     end = diary.end.toLocalDate(),
                     classId = classId,
                     unitId = unitId,
-                )
+                ),
             )
             !diary.semesters.isNullOrEmpty() -> diary.semesters.map {
                 Semester(
@@ -35,7 +35,7 @@ fun List<Diary>.toSemesters(studentId: Int, classId: Int, unitId: Int): List<Sem
                     start = it.start.toLocalDate(),
                     end = it.end.toLocalDate(),
                     classId = it.classId,
-                    unitId = it.unitId
+                    unitId = it.unitId,
                 )
             }
             else -> {

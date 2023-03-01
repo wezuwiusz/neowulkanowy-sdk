@@ -46,5 +46,5 @@ data class Note(
     val noteKey: String,
 
     @Json(name = "TrescUwagi")
-    val content: String
+    val content: String,
 )

@@ -23,5 +23,5 @@ data class Student(
     val mobileBaseUrl: String,
     val certificateKey: String,
     val privateKey: String,
-    val semesters: List<Semester>
+    val semesters: List<Semester>,
 )

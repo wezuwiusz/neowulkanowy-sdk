@@ -37,6 +37,6 @@ open class BaseLocalTest {
             OkHttpClient().newBuilder()
                 .addInterceptor(ErrorInterceptor())
                 .addInterceptor(HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BASIC))
-                .build()
+                .build(),
         )
 }

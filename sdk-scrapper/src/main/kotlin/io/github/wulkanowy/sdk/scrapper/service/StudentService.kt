@@ -50,7 +50,7 @@ interface StudentService {
         @Header("X-V-RequestVerificationToken") token: String,
         @Header("X-V-AppGuid") appGuid: String,
         @Header("X-V-AppVersion") appVersion: String,
-        @Body body: Any = Any()
+        @Body body: Any = Any(),
     ): ApiResponse<CacheResponse>
 
     @POST("UczenCache.mvc/Get")
@@ -58,7 +58,7 @@ interface StudentService {
         @Header("X-V-RequestVerificationToken") token: String,
         @Header("X-V-AppGuid") appGuid: String,
         @Header("X-V-AppVersion") appVersion: String,
-        @Body body: Any = Any()
+        @Body body: Any = Any(),
     ): ApiResponse<CacheResponse>
 
     @POST
@@ -96,7 +96,7 @@ interface StudentService {
         @Header("X-V-RequestVerificationToken") token: String,
         @Header("X-V-AppGuid") appGuid: String,
         @Header("X-V-AppVersion") appVersion: String,
-        @Body attendanceExcuseRequest: AttendanceExcuseRequest
+        @Body attendanceExcuseRequest: AttendanceExcuseRequest,
     ): ApiResponse<ApiResponse<String?>>
 
     @POST("EgzaminyZewnetrzne.mvc/Get")
@@ -134,7 +134,7 @@ interface StudentService {
         @Header("X-V-RequestVerificationToken") token: String,
         @Header("X-V-AppGuid") appGuid: String,
         @Header("X-V-AppVersion") appVersion: String,
-        @Body unregisterDeviceRequest: UnregisterDeviceRequest
+        @Body unregisterDeviceRequest: UnregisterDeviceRequest,
     ): ApiResponse<Any>
 
     @POST("SzkolaINauczyciele.mvc/Get")

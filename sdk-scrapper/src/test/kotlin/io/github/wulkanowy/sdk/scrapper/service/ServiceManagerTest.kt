@@ -36,7 +36,7 @@ class ServiceManagerTest : BaseLocalTest() {
             schoolYear = 2019,
             emptyCookieJarIntercept = false,
             androidVersion = "",
-            buildTag = ""
+            buildTag = "",
         )
         manager.setInterceptor({ throw ScrapperException("Test") })
 
@@ -67,12 +67,14 @@ class ServiceManagerTest : BaseLocalTest() {
             schoolYear = 2019,
             emptyCookieJarIntercept = false,
             androidVersion = "",
-            buildTag = ""
+            buildTag = "",
         )
-        manager.setInterceptor({
-            // throw IOException("Test")
-            it.proceed(it.request())
-        })
+        manager.setInterceptor(
+            {
+                // throw IOException("Test")
+                it.proceed(it.request())
+            },
+        )
         manager.setInterceptor({ throw ScrapperException("Test") }, false)
 
         try {

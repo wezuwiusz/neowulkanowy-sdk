@@ -35,7 +35,7 @@ fun List<ApiAttendance>.mapAttendance(dictionaries: Dictionaries) = map {
         excused = category?.excused ?: false,
         excusable = false, //
         deleted = category?.deleted ?: false,
-        excuseStatus = null
+        excuseStatus = null,
     )
 }
 
@@ -54,7 +54,7 @@ fun List<ScrapperAttendance>.mapAttendance() = map {
         excused = it.category == ABSENCE_EXCUSED || it.category == EXCUSED_LATENESS,
         exemption = it.category == EXEMPTION,
         lateness = it.category == EXCUSED_LATENESS || it.category == UNEXCUSED_LATENESS,
-        presence = it.category == PRESENCE || it.category == ABSENCE_FOR_SCHOOL_REASONS
+        presence = it.category == PRESENCE || it.category == ABSENCE_FOR_SCHOOL_REASONS,
     )
 }
 
@@ -67,13 +67,13 @@ fun List<ScrapperAttendanceSummary>.mapAttendanceSummary() = map {
         absenceForSchoolReasons = it.absenceForSchoolReasons,
         lateness = it.lateness,
         latenessExcused = it.latenessExcused,
-        exemption = it.exemption
+        exemption = it.exemption,
     )
 }
 
 fun List<Absent>.mapToScrapperAbsent() = map {
     ScrapperAbsent(
         date = it.date,
-        timeId = it.timeId
+        timeId = it.timeId,
     )
 }

@@ -36,6 +36,6 @@ data class CertificateRequest(
     val deviceSystemVersion: String = "8.1.0",
 
     @Json(name = "FirebaseTokenKey")
-    val firebaseToken: String
+    val firebaseToken: String,
 
 ) : ApiRequest()

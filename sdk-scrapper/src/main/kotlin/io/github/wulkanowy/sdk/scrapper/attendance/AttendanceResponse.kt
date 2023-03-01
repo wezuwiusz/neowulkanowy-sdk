@@ -13,5 +13,5 @@ data class AttendanceResponse(
     val lessons: List<Attendance>,
 
     @SerialName("UsprawiedliwieniaWyslane")
-    val sentExcuses: List<SentExcuse>
+    val sentExcuses: List<SentExcuse>,
 )

@@ -14,7 +14,7 @@ class RegisterRepository(private val api: RegisterService) {
             pin = pin,
             deviceName = "$deviceName (Wulkanowy)",
             deviceSystemVersion = android,
-            firebaseToken = firebaseToken
+            firebaseToken = firebaseToken,
         )
         return api.getCertificate(request)
     }

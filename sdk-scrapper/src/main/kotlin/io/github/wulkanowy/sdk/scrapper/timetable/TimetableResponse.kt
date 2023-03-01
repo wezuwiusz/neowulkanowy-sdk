@@ -16,14 +16,14 @@ data class TimetableResponse(
     val rows: List<List<String>> = emptyList(),
 
     @SerialName("Additionals")
-    val additional: List<TimetableAdditionalDay>
+    val additional: List<TimetableAdditionalDay>,
 )
 
 @Serializable
 data class TimetableHeader(
 
     @SerialName("Text")
-    val date: String
+    val date: String,
 )
 
 @Serializable
@@ -33,14 +33,14 @@ data class TimetableAdditionalDay(
     val header: String,
 
     @SerialName("Descriptions")
-    val descriptions: List<TimetableAdditionalLesson>
+    val descriptions: List<TimetableAdditionalLesson>,
 )
 
 @Serializable
 data class TimetableAdditionalLesson(
 
     @SerialName("Description")
-    val description: String
+    val description: String,
 )
 
 data class TimetableCell(
@@ -48,5 +48,5 @@ data class TimetableCell(
     val start: LocalDateTime,
     val end: LocalDateTime,
     val date: LocalDate,
-    val td: Element
+    val td: Element,
 )

@@ -10,5 +10,5 @@ data class Recipient(
     val loginId: Int,
 
     @Json(name = "Nazwa")
-    val name: String
+    val name: String,
 )

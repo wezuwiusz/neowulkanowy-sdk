@@ -17,7 +17,7 @@ data class GradesStatisticsPartial(
     val classSeries: GradeStatisticsPartialSeries,
 
     @SerialName("StudentSeries")
-    val studentSeries: GradeStatisticsPartialSeries
+    val studentSeries: GradeStatisticsPartialSeries,
 )
 
 @Serializable
@@ -30,7 +30,7 @@ data class GradeStatisticsPartialSeries(
     val isEmpty: Boolean,
 
     @SerialName("Items")
-    val items: List<GradeStatisticsPartialItem>?
+    val items: List<GradeStatisticsPartialItem>?,
 )
 
 @Serializable
@@ -40,7 +40,7 @@ data class GradeStatisticsPartialItem(
     val label: String,
 
     @SerialName("Value")
-    val amount: Int? = 0
+    val amount: Int? = 0,
 ) {
 
     @Transient

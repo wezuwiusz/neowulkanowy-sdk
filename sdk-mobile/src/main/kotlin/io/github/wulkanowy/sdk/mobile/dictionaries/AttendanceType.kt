@@ -22,5 +22,5 @@ data class AttendanceType(
     val defaultEntry: Boolean,
 
     @Json(name = "IdKategoriaFrek")
-    val categoryId: Int
+    val categoryId: Int,
 )

@@ -37,7 +37,7 @@ class AutoLoginInterceptor(
     private val loginType: LoginType,
     private val jar: CookieManager,
     private val emptyCookieJarIntercept: Boolean,
-    private val notLoggedInCallback: suspend () -> Unit
+    private val notLoggedInCallback: suspend () -> Unit,
 ) : Interceptor {
 
     companion object {
@@ -151,7 +151,7 @@ class AutoLoginInterceptor(
                 override fun contentLength() = 0L
                 override fun contentType(): MediaType? = null
                 override fun source(): BufferedSource = Buffer()
-            }
+            },
         )
         .build()
 }

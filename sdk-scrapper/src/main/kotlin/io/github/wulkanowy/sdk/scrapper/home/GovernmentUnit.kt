@@ -10,5 +10,5 @@ data class GovernmentUnit(
     val unitName: String,
 
     @SerialName("People")
-    val people: List<GovernmentMember>
+    val people: List<GovernmentMember>,
 )

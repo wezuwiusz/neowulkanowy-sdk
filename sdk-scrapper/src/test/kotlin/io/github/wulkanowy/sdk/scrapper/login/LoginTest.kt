@@ -22,7 +22,7 @@ class LoginTest : BaseLocalTest() {
             host = "fakelog.localhost:3000",
             symbol = "default",
             cookies = CookieManager(),
-            api = getService(LoginService::class.java, "http://fakelog.localhost:3000/")
+            api = getService(LoginService::class.java, "http://fakelog.localhost:3000/"),
         )
     }
 

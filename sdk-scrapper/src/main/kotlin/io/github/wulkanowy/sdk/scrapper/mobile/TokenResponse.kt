@@ -16,5 +16,5 @@ data class TokenResponse(
     val pin: String,
 
     @SerialName("QrCodeImage")
-    val qrCodeImage: String
+    val qrCodeImage: String,
 )

@@ -6,7 +6,7 @@ import java.time.LocalDateTime
 data class TimetableFull(
     val headers: List<TimetableDayHeader>,
     val lessons: List<Timetable>,
-    val additional: List<TimetableAdditional>
+    val additional: List<TimetableAdditional>,
 )
 
 data class Timetable(
@@ -23,17 +23,17 @@ data class Timetable(
     val teacherOld: String = "",
     val info: String = "",
     val changes: Boolean = false,
-    val canceled: Boolean = false
+    val canceled: Boolean = false,
 )
 
 data class TimetableDayHeader(
     val date: LocalDate,
-    val content: String
+    val content: String,
 )
 
 data class TimetableAdditional(
     val start: LocalDateTime,
     val end: LocalDateTime,
     val date: LocalDate,
-    val subject: String
+    val subject: String,
 )

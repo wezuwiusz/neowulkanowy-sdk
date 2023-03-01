@@ -13,5 +13,5 @@ data class GradeCategory(
     val code: String,
 
     @Json(name = "Nazwa")
-    val name: String
+    val name: String,
 )

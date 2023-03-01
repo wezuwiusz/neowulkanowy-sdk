@@ -26,7 +26,7 @@ class LoginHelper(
     private val host: String,
     private val symbol: String,
     private val cookies: CookieManager,
-    private val api: LoginService
+    private val api: LoginService,
 ) {
 
     companion object {
@@ -97,8 +97,8 @@ class LoginHelper(
             certificate = mapOf(
                 "wa" to cert.wa,
                 "wresult" to cert.wresult,
-                "wctx" to cert.wctx
-            )
+                "wctx" to cert.wctx,
+            ),
         )
 
         if (email.contains("||")) {
@@ -114,9 +114,9 @@ class LoginHelper(
                 returnUrl = firstStepReturnUrl,
                 credentials = mapOf(
                     "LoginName" to email,
-                    "Password" to password
-                )
-            )
+                    "Password" to password,
+                ),
+            ),
         )
     }
 
@@ -128,9 +128,9 @@ class LoginHelper(
                     "Username" to email,
                     "Password" to password,
                     "x" to "0",
-                    "y" to "0"
-                )
-            )
+                    "y" to "0",
+                ),
+            ),
         )
 
         logger.debug("Page title after credentials sent: ${res.title}, action: ${res.action} wresult: ${res.wresult.length}, wctx: ${res.wctx}")
@@ -141,9 +141,9 @@ class LoginHelper(
                 values = mapOf(
                     "wa" to res.wa,
                     "wresult" to res.wresult,
-                    "wctx" to res.wctx
-                )
-            )
+                    "wctx" to res.wctx,
+                ),
+            ),
         )
     }
 
@@ -153,8 +153,8 @@ class LoginHelper(
             values = mapOf(
                 "UserName" to email,
                 "Password" to password,
-                "AuthMethod" to "FormsAuthentication"
-            )
+                "AuthMethod" to "FormsAuthentication",
+            ),
         )
 
         val form = certificateAdapter.fromHtml(res)
@@ -165,9 +165,9 @@ class LoginHelper(
                 values = mapOf(
                     "wa" to form.wa,
                     "wresult" to form.wresult,
-                    "wctx" to form.wctx
-                )
-            )
+                    "wctx" to form.wctx,
+                ),
+            ),
         )
     }
 
@@ -186,9 +186,9 @@ class LoginHelper(
                     "UsernameTextBox" to email,
                     "PasswordTextBox" to password,
                     "SubmitButton.x" to "0",
-                    "SubmitButton.y" to "0"
-                )
-            )
+                    "SubmitButton.y" to "0",
+                ),
+            ),
         )
 
         return certificateAdapter.fromHtml(
@@ -197,9 +197,9 @@ class LoginHelper(
                 values = mapOf(
                     "wa" to form.wa,
                     "wresult" to form.wresult,
-                    "wctx" to form.wctx
-                )
-            )
+                    "wctx" to form.wctx,
+                ),
+            ),
         )
     }
 

@@ -32,7 +32,7 @@ fun List<ApiMessage>.mapMessages(zoneId: ZoneId) = map {
         content = it.content,
         dateZoned = it.sentDateTime.toLocalDateTime().atZone(zoneId),
         subject = it.subject,
-        hasAttachments = false
+        hasAttachments = false,
     )
 }
 
@@ -65,7 +65,7 @@ fun ScrapperDetailsMessage.mapScrapperMessage() = MessageDetails(
     attachments = attachments.map {
         MessageAttachment(
             url = it.url,
-            filename = it.filename
+            filename = it.filename,
         )
     },
 )
@@ -84,7 +84,7 @@ fun ScrapperReplayDetailsMessage.mapScrapperMessage() = MessageReplayDetails(
     attachments = attachments.map {
         MessageAttachment(
             url = it.url,
-            filename = it.filename
+            filename = it.filename,
         )
     },
 )

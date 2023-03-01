@@ -22,5 +22,5 @@ data class HomeworkAttachment(
     val oneDriveId: String,
 
     @SerialName("Id")
-    val id: Int
+    val id: Int,
 )

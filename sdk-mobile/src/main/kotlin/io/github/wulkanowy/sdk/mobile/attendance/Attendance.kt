@@ -25,5 +25,5 @@ data class Attendance(
     val subjectId: Int,
 
     @Json(name = "PrzedmiotNazwa")
-    val subjectName: String
+    val subjectName: String,
 )

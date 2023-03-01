@@ -19,7 +19,7 @@ import io.github.wulkanowy.sdk.scrapper.timetable.TimetableFull as ScrapperTimet
 fun List<ApiTimetable>.mapTimetableFull(dictionaries: Dictionaries, zoneId: ZoneId) = TimetableFull(
     headers = emptyList(),
     lessons = mapTimetable(dictionaries, zoneId),
-    additional = emptyList()
+    additional = emptyList(),
 )
 
 fun List<ApiTimetable>.mapTimetable(dictionaries: Dictionaries, zoneId: ZoneId) = map {
@@ -45,7 +45,7 @@ fun List<ApiTimetable>.mapTimetable(dictionaries: Dictionaries, zoneId: ZoneId) 
         subjectOld = "",
         studentPlan = it.studentPlan,
         teacher = teacher?.run { "$name $surname" }.orEmpty(),
-        teacherOld = teacherOld?.run { "$name $surname" }.orEmpty()
+        teacherOld = teacherOld?.run { "$name $surname" }.orEmpty(),
     )
 }.groupBy { Triple(it.date, it.number, it.studentPlan) }.map { (_, lessons) ->
     if (lessons.size > 1 && lessons.any { !it.canceled } && lessons.any { it.canceled }) {
@@ -53,7 +53,7 @@ fun List<ApiTimetable>.mapTimetable(dictionaries: Dictionaries, zoneId: ZoneId) 
         val lesson = lessons.first { !it.canceled }.copy(
             subjectOld = canceled.subject,
             teacherOld = canceled.teacher,
-            roomOld = canceled.room
+            roomOld = canceled.room,
         )
         listOf(lesson)
     } else lessons
@@ -62,7 +62,7 @@ fun List<ApiTimetable>.mapTimetable(dictionaries: Dictionaries, zoneId: ZoneId) 
 fun ScrapperTimetableFull.mapTimetableFull(zoneId: ZoneId) = TimetableFull(
     headers = headers.mapTimetableDayHeaders(),
     lessons = lessons.mapTimetable(zoneId),
-    additional = additional.mapTimetableAdditional(zoneId)
+    additional = additional.mapTimetableAdditional(zoneId),
 )
 
 fun List<ScrapperTimetable>.mapTimetable(zoneId: ZoneId) = map {
@@ -83,14 +83,14 @@ fun List<ScrapperTimetable>.mapTimetable(zoneId: ZoneId) = map {
         subjectOld = it.subjectOld,
         studentPlan = true,
         teacher = it.teacher,
-        teacherOld = it.teacherOld
+        teacherOld = it.teacherOld,
     )
 }
 
 fun List<ScrapperTimetableDayHeader>.mapTimetableDayHeaders() = map {
     TimetableDayHeader(
         date = it.date,
-        content = it.content
+        content = it.content,
     )
 }
 

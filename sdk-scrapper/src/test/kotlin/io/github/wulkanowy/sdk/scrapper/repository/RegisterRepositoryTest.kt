@@ -30,16 +30,20 @@ class RegisterRepositoryTest : BaseLocalTest() {
             email = "jan@fakelog.cf",
             password = "jan123",
             loginHelper = LoginHelper(
-                Scrapper.LoginType.STANDARD, "http", "fakelog.localhost:3000", symbol, CookieManager(),
-                getService(LoginService::class.java, "http://fakelog.localhost:3000/")
+                loginType = Scrapper.LoginType.STANDARD,
+                schema = "http",
+                host = "fakelog.localhost:3000",
+                symbol = symbol,
+                cookies = CookieManager(),
+                api = getService(LoginService::class.java, "http://fakelog.localhost:3000/"),
             ),
             register = getService(
                 service = RegisterService::class.java,
                 url = "http://fakelog.localhost:3000/",
-                okHttp = getOkHttp(errorInterceptor = false, autoLoginInterceptorOn = false)
+                okHttp = getOkHttp(errorInterceptor = false, autoLoginInterceptorOn = false),
             ),
             student = getService(service = StudentService::class.java, html = false),
-            url = UrlGenerator("http", "fakelog.localhost:3000", symbol, "")
+            url = UrlGenerator("http", "fakelog.localhost:3000", symbol, ""),
         )
     }
 
@@ -182,7 +186,7 @@ class RegisterRepositoryTest : BaseLocalTest() {
         val res = runCatching { normal.getStudents() }
         assertEquals(
             "Wystąpił nieoczekiwany błąd. Wystąpił błąd aplikacji. Prosimy zalogować się ponownie. Jeśli problem będzie się powtarzał, prosimy o kontakt z serwisem.",
-            res.exceptionOrNull()?.message
+            res.exceptionOrNull()?.message,
         )
         assertEquals(VulcanException::class.java, res.exceptionOrNull()!!::class.java)
     }
@@ -222,7 +226,7 @@ class RegisterRepositoryTest : BaseLocalTest() {
         val res = runCatching { runBlocking { getRegisterRepository("Default").getStudents() } }
         assertEquals(
             "Wystąpił nieoczekiwany błąd. Wystąpił błąd aplikacji. Prosimy zalogować się ponownie. Jeśli problem będzie się powtarzał, prosimy o kontakt z serwisem.",
-            res.exceptionOrNull()?.message
+            res.exceptionOrNull()?.message,
         )
         assertTrue(res.exceptionOrNull() is VulcanException)
         assertEquals("/Default/Account/LogOn", server.takeRequest().path)
@@ -247,7 +251,7 @@ class RegisterRepositoryTest : BaseLocalTest() {
         assertTrue(res.exceptionOrNull() is VulcanException)
         assertEquals(
             "Wystąpił nieoczekiwany błąd. Wystąpił błąd aplikacji. Prosimy zalogować się ponownie. Jeśli problem będzie się powtarzał, prosimy o kontakt z serwisem.",
-            res.exceptionOrNull()?.message
+            res.exceptionOrNull()?.message,
         )
         assertEquals("/rzeszow/Account/LogOn", server.takeRequest().path)
     }
@@ -271,7 +275,7 @@ class RegisterRepositoryTest : BaseLocalTest() {
         assertTrue(res.exceptionOrNull() is VulcanException)
         assertEquals(
             "Wystąpił nieoczekiwany błąd. Wystąpił błąd aplikacji. Prosimy zalogować się ponownie. Jeśli problem będzie się powtarzał, prosimy o kontakt z serwisem.",
-            res.exceptionOrNull()?.message
+            res.exceptionOrNull()?.message,
         )
 
         assertEquals("/niepoprawnysymbolnoale/Account/LogOn", server.takeRequest().path)
@@ -296,7 +300,7 @@ class RegisterRepositoryTest : BaseLocalTest() {
         assertTrue(res.exceptionOrNull() is VulcanException)
         assertEquals(
             "Wystąpił nieoczekiwany błąd. Wystąpił błąd aplikacji. Prosimy zalogować się ponownie. Jeśli problem będzie się powtarzał, prosimy o kontakt z serwisem.",
-            res.exceptionOrNull()?.message
+            res.exceptionOrNull()?.message,
         )
         assertEquals("/Default/Account/LogOn", server.takeRequest().path)
     }
@@ -320,7 +324,7 @@ class RegisterRepositoryTest : BaseLocalTest() {
         assertTrue(res.exceptionOrNull() is VulcanException)
         assertEquals(
             "Wystąpił nieoczekiwany błąd. Wystąpił błąd aplikacji. Prosimy zalogować się ponownie. Jeśli problem będzie się powtarzał, prosimy o kontakt z serwisem.",
-            res.exceptionOrNull()?.message
+            res.exceptionOrNull()?.message,
         )
         assertEquals("/Default/Account/LogOn", server.takeRequest().path)
         assertEquals(true, server.takeRequest().path?.startsWith("/Account/LogOn?ReturnUrl=%2FDefault"))

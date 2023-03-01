@@ -7,6 +7,6 @@ fun List<ScrapperLuckyNumber>.mapLuckyNumbers() = map {
     LuckyNumber(
         unitName = it.unitName,
         school = it.school,
-        number = it.number
+        number = it.number,
     )
 }

@@ -126,7 +126,7 @@ class AutoLoginInterceptorTest : BaseLocalTest() {
             host = "${server.hostName}:${server.port}",
             symbol = "powiatwulkanowy",
             cookies = CookieManager(),
-            api = loginService
+            api = loginService,
         )
     }
 
@@ -135,7 +135,7 @@ class AutoLoginInterceptorTest : BaseLocalTest() {
             loginType = Scrapper.LoginType.STANDARD,
             jar = CookieManager(),
             emptyCookieJarIntercept = checkJar,
-            notLoggedInCallback = notLoggedInCallback
+            notLoggedInCallback = notLoggedInCallback,
         )
         val okHttp = getOkHttp(autoLogin = true, autoLoginInterceptorOn = true, autoLoginInterceptor = interceptor)
         return getService(StudentService::class.java, html = false, okHttp = okHttp)

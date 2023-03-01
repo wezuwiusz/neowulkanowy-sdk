@@ -14,7 +14,7 @@ data class Grade(
     val description: String,
     val color: String,
     val teacher: String,
-    val date: LocalDate
+    val date: LocalDate,
 
 //    val counter: Int?,
 //    val denominator: Int?,

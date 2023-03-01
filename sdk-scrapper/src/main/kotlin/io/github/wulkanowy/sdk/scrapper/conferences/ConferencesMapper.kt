@@ -9,6 +9,6 @@ fun List<Conference>.mapConferences() = map {
     val dateString = it.title.split(",")[1].trim().replace(" godzina", "")
     it.copy(
         title = it.title.substringAfter(", ").substringAfter(", "),
-        date = LocalDateTime.parse(dateString, dateFormatter)
+        date = LocalDateTime.parse(dateString, dateFormatter),
     )
 }.sortedBy { it.date }

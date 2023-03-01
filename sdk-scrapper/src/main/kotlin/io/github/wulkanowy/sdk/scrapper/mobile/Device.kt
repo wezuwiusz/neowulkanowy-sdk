@@ -23,5 +23,5 @@ data class Device(
 
     @SerialName("DataModyfikacji")
     @Serializable(with = CustomDateAdapter::class)
-    val modificationDate: LocalDateTime? = null
+    val modificationDate: LocalDateTime? = null,
 )

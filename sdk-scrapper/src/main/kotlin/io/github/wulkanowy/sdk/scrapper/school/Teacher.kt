@@ -11,7 +11,7 @@ data class Teacher(
     val name: String,
 
     @SerialName("Nazwa")
-    val subject: String
+    val subject: String,
 ) {
 
     @Transient

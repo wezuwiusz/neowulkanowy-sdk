@@ -47,7 +47,7 @@ class RegisterRepository(
     private val loginHelper: LoginHelper,
     private val register: RegisterService,
     private val student: StudentService,
-    private val url: UrlGenerator
+    private val url: UrlGenerator,
 ) {
 
     companion object {
@@ -123,7 +123,7 @@ class RegisterRepository(
                 cert = loginCert,
                 url = loginCert.action.replace(
                     oldValue = startSymbol.getNormalizedSymbol(), // improve this: for random inputs may generate random errors :)
-                    newValue = symbol
+                    newValue = symbol,
                 ),
             )
             url.symbol = symbol
@@ -290,7 +290,7 @@ class RegisterRepository(
             url.generate(UrlGenerator.Site.STUDENT) + "UczenCache.mvc/Get",
             getScriptParam("antiForgeryToken", startPage),
             getScriptParam("appGuid", startPage),
-            getScriptParam("version", startPage)
+            getScriptParam("version", startPage),
         ).data
     }
 

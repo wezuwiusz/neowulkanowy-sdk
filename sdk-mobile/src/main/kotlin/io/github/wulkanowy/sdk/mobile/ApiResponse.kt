@@ -25,5 +25,5 @@ data class ApiResponse<out T>(
     val appVersion: String,
 
     @Json(name = "Data")
-    val data: T?
+    val data: T?,
 )

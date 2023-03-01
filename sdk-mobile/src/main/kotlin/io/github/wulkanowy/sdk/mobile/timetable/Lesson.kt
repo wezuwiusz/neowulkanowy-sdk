@@ -55,5 +55,5 @@ data class Lesson(
     val boldName: Boolean,
 
     @Json(name = "PlanUcznia")
-    val studentPlan: Boolean
+    val studentPlan: Boolean,
 )

@@ -14,5 +14,5 @@ data class GradesRequest(
     val classificationPeriodId: Int,
 
     @Json(name = "IdUczen")
-    val studentId: Int
+    val studentId: Int,
 ) : ApiRequest()

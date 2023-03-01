@@ -17,7 +17,7 @@ fun List<ApiHomework>.mapHomework(dictionaries: Dictionaries) = map {
         content = it.content,
         teacherSymbol = employee?.code.orEmpty(),
         teacher = employee?.run { "$name $surname" }.orEmpty(),
-        attachments = emptyList()
+        attachments = emptyList(),
     )
 }
 
@@ -31,6 +31,6 @@ fun List<ScrapperHomework>.mapHomework() = map {
         entryDate = it.entryDate.toLocalDate(),
         attachments = it._attachments.map { (url, name) ->
             HomeworkAttachment(url, name)
-        }
+        },
     )
 }

@@ -8,7 +8,7 @@ import java.nio.charset.Charset
 
 class SignInterceptor(
     private val privateKey: String,
-    private val certKey: String
+    private val certKey: String,
 ) : Interceptor {
 
     override fun intercept(chain: Interceptor.Chain): Response {

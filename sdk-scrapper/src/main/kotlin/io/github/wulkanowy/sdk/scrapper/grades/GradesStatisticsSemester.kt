@@ -14,7 +14,7 @@ data class GradesStatisticsSemester(
     val isEmpty: Boolean,
 
     @SerialName("Items")
-    val items: List<GradesStatisticsSemesterSubItem>?
+    val items: List<GradesStatisticsSemesterSubItem>?,
 )
 
 @Serializable
@@ -27,7 +27,7 @@ data class GradesStatisticsSemesterSubItem(
     internal val description: String,
 
     @SerialName("Value")
-    val amount: Int
+    val amount: Int,
 ) {
 
     @Transient

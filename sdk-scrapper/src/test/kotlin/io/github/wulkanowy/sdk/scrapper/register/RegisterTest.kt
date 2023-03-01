@@ -30,9 +30,9 @@ class RegisterTest : BaseLocalTest() {
                 okHttp = getOkHttp(
                     errorInterceptor = true,
                     autoLoginInterceptorOn = false,
-                    loginType = Scrapper.LoginType.STANDARD
-                )
-            )
+                    loginType = Scrapper.LoginType.STANDARD,
+                ),
+            ),
         )
     }
 
@@ -48,11 +48,11 @@ class RegisterTest : BaseLocalTest() {
                 html = true,
                 okHttp = getOkHttp(
                     errorInterceptor = false,
-                    autoLoginInterceptorOn = false
-                )
+                    autoLoginInterceptorOn = false,
+                ),
             ),
             student = getService(StudentService::class.java, "http://fakelog.localhost:3000", false),
-            url = UrlGenerator("http", "fakelog.localhost:3000", "default", "123")
+            url = UrlGenerator("http", "fakelog.localhost:3000", "default", "123"),
         )
     }
 

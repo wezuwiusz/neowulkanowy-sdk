@@ -70,7 +70,7 @@ class StudentRepository(private val api: StudentService) {
         val res = api.getUserCache(
             token = getScriptParam("antiForgeryToken", startPage),
             appGuid = getScriptParam("appGuid", startPage),
-            appVersion = getScriptParam("version", startPage)
+            appVersion = getScriptParam("version", startPage),
         ).handleErrors()
 
         val data = requireNotNull(res.data) {
@@ -102,12 +102,12 @@ class StudentRepository(private val api: StudentService) {
                     absents = absents.map { absence ->
                         AttendanceExcuseRequest.Excuse.Absent(
                             date = absence.date.toFormat("yyyy-MM-dd'T'HH:mm:ss"),
-                            timeId = absence.timeId
+                            timeId = absence.timeId,
                         )
                     },
-                    content = content
-                )
-            )
+                    content = content,
+                ),
+            ),
         ).handleErrors().success
     }
 
@@ -181,7 +181,7 @@ class StudentRepository(private val api: StudentService) {
     suspend fun getNotes(): List<Note> {
         return api.getNotes().handleErrors().data?.notes.orEmpty().map {
             it.copy(
-                teacher = it.teacher.split(" [").first()
+                teacher = it.teacher.split(" [").first(),
             ).apply {
                 teacherSymbol = it.teacher.split(" [").last().removeSuffix("]")
             }
@@ -275,7 +275,7 @@ class StudentRepository(private val api: StudentService) {
             qrCodeImage = Jsoup.parse(res.data.qrCodeImage)
                 .select("img")
                 .attr("src")
-                .split("data:image/png;base64,")[1]
+                .split("data:image/png;base64,")[1],
         )
     }
 
@@ -285,7 +285,7 @@ class StudentRepository(private val api: StudentService) {
             getScriptParam("antiForgeryToken", it),
             getScriptParam("appGuid", it),
             getScriptParam("version", it),
-            UnregisterDeviceRequest(id)
+            UnregisterDeviceRequest(id),
         ).handleErrors().success
     }
 }

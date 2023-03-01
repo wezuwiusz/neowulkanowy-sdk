@@ -23,7 +23,7 @@ interface AccountService {
     suspend fun sendPasswordResetRequest(
         @Url url: String,
         @Field("Email") email: String,
-        @Field("g-recaptcha-response") captchaCode: String
+        @Field("g-recaptcha-response") captchaCode: String,
     ): SentUnlockAccountResponse
 
     @POST
@@ -31,7 +31,7 @@ interface AccountService {
     suspend fun sendPasswordResetRequestADFSLight(
         @Url url: String,
         @Field("UserId") username: String,
-        @Field("g-recaptcha-response") captchaCode: String
+        @Field("g-recaptcha-response") captchaCode: String,
     ): SentUnlockAccountResponse
 
     @GET
@@ -43,6 +43,6 @@ interface AccountService {
         @Url url: String,
         @Field("txtUserID") username: String,
         @Field("g-recaptcha-response") captchaCode: String,
-        @FieldMap viewStateParams: Map<String, String>
+        @FieldMap viewStateParams: Map<String, String>,
     ): SentUnlockAccountResponse
 }

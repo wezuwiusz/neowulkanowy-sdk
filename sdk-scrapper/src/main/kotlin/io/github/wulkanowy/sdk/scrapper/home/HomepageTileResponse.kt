@@ -28,5 +28,5 @@ data class HomepageTileResponse(
     val symbol: String?,
 
     @SerialName("Nieaktywny")
-    val inactive: Boolean
+    val inactive: Boolean,
 )

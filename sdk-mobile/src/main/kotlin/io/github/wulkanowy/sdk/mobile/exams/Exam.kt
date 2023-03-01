@@ -37,5 +37,5 @@ data class Exam(
     val date: Long,
 
     @Json(name = "DataTekst")
-    val dateText: String
+    val dateText: String,
 )

@@ -94,7 +94,7 @@ class MobileRepository(private val api: MobileService) {
             content = content,
             recipients = recipients,
             loginId = loginId,
-            studentId = studentId
+            studentId = studentId,
         )
         return api.sendMessage(request)
     }

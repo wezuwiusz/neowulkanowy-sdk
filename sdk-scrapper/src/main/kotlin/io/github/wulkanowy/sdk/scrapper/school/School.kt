@@ -19,5 +19,5 @@ data class School(
     val headmaster: String,
 
     @SerialName("Pedagog")
-    val pedagogue: String
+    val pedagogue: String,
 )

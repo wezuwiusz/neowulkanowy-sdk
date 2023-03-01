@@ -19,5 +19,5 @@ data class Subject(
     val active: Boolean,
 
     @Json(name = "Pozycja")
-    val position: Int
+    val position: Int,
 )

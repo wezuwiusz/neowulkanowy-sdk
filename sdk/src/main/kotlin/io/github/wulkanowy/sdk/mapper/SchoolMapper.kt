@@ -8,5 +8,5 @@ fun ScrapperSchool.mapSchool() = School(
     address = address,
     contact = contact,
     headmaster = headmaster,
-    pedagogue = pedagogue
+    pedagogue = pedagogue,
 )

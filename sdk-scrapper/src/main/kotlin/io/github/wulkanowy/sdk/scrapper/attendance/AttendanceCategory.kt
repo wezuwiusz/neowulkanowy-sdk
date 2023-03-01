@@ -10,7 +10,8 @@ enum class AttendanceCategory(val id: Int, val title: String) {
     EXCUSED_LATENESS(5, "Spóźnienie usprawiedliwione"),
     ABSENCE_FOR_SCHOOL_REASONS(6, "Nieobecność z przyczyn szkolnych"),
     EXEMPTION(7, "Zwolnienie"),
-    DELETED(8, "Usunięty wpis");
+    DELETED(8, "Usunięty wpis"),
+    ;
 
     companion object {
         @JvmStatic

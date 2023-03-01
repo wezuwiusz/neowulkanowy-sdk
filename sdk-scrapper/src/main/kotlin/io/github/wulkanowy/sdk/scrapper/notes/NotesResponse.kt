@@ -7,5 +7,5 @@ import kotlinx.serialization.Serializable
 data class NotesResponse(
 
     @SerialName("Uwagi")
-    val notes: List<Note> = emptyList()
+    val notes: List<Note> = emptyList(),
 )

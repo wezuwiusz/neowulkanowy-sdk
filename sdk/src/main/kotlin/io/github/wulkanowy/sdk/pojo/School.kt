@@ -5,5 +5,5 @@ data class School(
     val address: String,
     val contact: String,
     val headmaster: String,
-    val pedagogue: String
+    val pedagogue: String,
 )

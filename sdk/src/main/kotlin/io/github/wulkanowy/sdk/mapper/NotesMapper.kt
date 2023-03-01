@@ -17,7 +17,7 @@ fun List<ApiNote>.mapNotes(dictionaries: Dictionaries) = map {
         category = dictionaries.noteCategories.singleOrNull { cat -> cat.id == it.noteCategoryId }?.name.orEmpty(),
         categoryType = NoteCategory.UNKNOWN,
         showPoints = false,
-        points = 0
+        points = 0,
     )
 }
 
@@ -30,6 +30,6 @@ fun List<ScrapperNote>.mapNotes() = map {
         categoryType = NoteCategory.getByValue(it.categoryType),
         showPoints = it.showPoints,
         points = it.points.toIntOrNull() ?: 0,
-        content = it.content
+        content = it.content,
     )
 }

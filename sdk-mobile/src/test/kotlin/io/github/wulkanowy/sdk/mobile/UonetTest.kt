@@ -42,7 +42,7 @@ class UonetTest {
                     OkHttpClient().newBuilder()
                         .addInterceptor(HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BASIC))
                         .addInterceptor(SignInterceptor(privateKey, certKey))
-                        .build()
+                        .build(),
                 )
         }
 
@@ -53,7 +53,7 @@ class UonetTest {
             val register = RegisterRepository(
                 api = getRetrofitBuilder("", "")
                     .baseUrl("$HOST/$SYMBOL/mobile-api/Uczen.v3.UczenStart/")
-                    .build().create()
+                    .build().create(),
             )
 
             val certificate = runBlocking { register.getCertificate(TOKEN, PIN, DEVICE_NAME, "8.1.0", "") }
@@ -76,7 +76,7 @@ class UonetTest {
             mobile = MobileRepository(
                 api = getRetrofitBuilder(privateKey, certKey)
                     .baseUrl("$HOST/powiatwulkanowy/${student.reportingUnitSymbol}/mobile-api/Uczen.v3.Uczen/")
-                    .build().create()
+                    .build().create(),
             )
         }
     }

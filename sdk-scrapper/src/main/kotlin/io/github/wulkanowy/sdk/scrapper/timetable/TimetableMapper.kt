@@ -23,7 +23,7 @@ fun TimetableResponse.mapTimetableList(startDate: LocalDate, endDate: LocalDate?
             start = LocalDateTime.parse("${date.toFormat("yyyy-MM-dd")} ${times[1]}", formatter2),
             end = LocalDateTime.parse("${date.toFormat("yyyy-MM-dd")} ${times[2]}", formatter2),
             number = times[0].toInt(),
-            td = Jsoup.parse(it)
+            td = Jsoup.parse(it),
         )
     }.mapNotNull { parser.getTimetable(it) }
 }.asSequence().filter {
@@ -34,7 +34,7 @@ fun TimetableResponse.mapTimetableHeaders() = headers.drop(1).map {
     val header = it.date.split("<br />")
     TimetableDayHeader(
         date = header[1].toDate("dd.MM.yyyy").toLocalDate(),
-        content = header.drop(2).joinToString(separator = "<br />")
+        content = header.drop(2).joinToString(separator = "<br />"),
     )
 }
 
@@ -48,7 +48,7 @@ fun TimetableResponse.mapTimetableAdditional() = additional.flatMap { day ->
             date = date,
             start = LocalDateTime.parse("${date.toFormat("yyyy-MM-dd")} $startTime", formatter2),
             end = LocalDateTime.parse("${date.toFormat("yyyy-MM-dd")} $endTime", formatter2),
-            subject = description.substringAfter("$endTime ")
+            subject = description.substringAfter("$endTime "),
         )
     }
 }

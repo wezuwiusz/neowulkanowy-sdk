@@ -4,5 +4,5 @@ import java.time.LocalDate
 
 data class TimetableDayHeader(
     val date: LocalDate,
-    val content: String
+    val content: String,
 )

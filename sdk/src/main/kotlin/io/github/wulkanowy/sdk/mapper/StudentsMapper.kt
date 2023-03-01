@@ -27,7 +27,7 @@ fun List<ApiStudent>.mapStudents(symbol: String) = map {
         mobileBaseUrl = it.mobileBaseUrl,
         privateKey = it.privateKey,
         certificateKey = it.certificateKey,
-        semesters = mapSemesters(it.id)
+        semesters = mapSemesters(it.id),
     )
 }
 
@@ -53,6 +53,6 @@ fun List<ScrapperStudent>.mapStudents() = map {
         mobileBaseUrl = "",
         certificateKey = "",
         privateKey = "",
-        semesters = it.semesters.mapSemesters()
+        semesters = it.semesters.mapSemesters(),
     )
 }

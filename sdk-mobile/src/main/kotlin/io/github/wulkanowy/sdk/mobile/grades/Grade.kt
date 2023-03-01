@@ -64,5 +64,5 @@ data class Grade(
     val employeeIdD: Int,
 
     @Json(name = "IdPracownikM")
-    val employeeIdM: Int
+    val employeeIdM: Int,
 )

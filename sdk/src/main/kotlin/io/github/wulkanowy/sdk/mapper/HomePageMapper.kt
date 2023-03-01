@@ -7,6 +7,6 @@ fun List<ScrapperDirectorInformation>.mapDirectorInformation() = map {
     DirectorInformation(
         date = it.date,
         subject = it.subject,
-        content = it.content
+        content = it.content,
     )
 }

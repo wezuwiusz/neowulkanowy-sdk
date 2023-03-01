@@ -9,5 +9,5 @@ data class GradeSummary(
     val pointsSum: String = "",
     val proposedPoints: String = "",
     val finalPoints: String = "",
-    val visibleSubject: Boolean = false
+    val visibleSubject: Boolean = false,
 )

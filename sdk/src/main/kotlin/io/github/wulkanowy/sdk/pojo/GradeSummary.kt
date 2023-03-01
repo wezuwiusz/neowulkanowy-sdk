@@ -7,5 +7,5 @@ data class GradeSummary(
     var final: String,
     var pointsSum: String,
     var proposedPoints: String,
-    var finalPoints: String
+    var finalPoints: String,
 )

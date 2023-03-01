@@ -13,5 +13,5 @@ data class NoteCategory(
     val name: String,
 
     @Json(name = "Aktywny")
-    val isActive: Boolean
+    val isActive: Boolean,
 )

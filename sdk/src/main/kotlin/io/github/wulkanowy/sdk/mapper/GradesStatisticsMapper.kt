@@ -16,9 +16,9 @@ fun List<GradesStatisticsSemester>.mapGradesSemesterStatistics() = map {
             GradeStatisticsSemesterSubItem(
                 grade = item.grade,
                 amount = item.amount,
-                isStudentHere = item.isStudentHere
+                isStudentHere = item.isStudentHere,
             )
-        }
+        },
     )
 }
 
@@ -30,7 +30,7 @@ fun List<GradesStatisticsPartial>.mapGradeStatistics() = map { partial ->
             GradeStatisticsItem(
                 subject = partial.subject,
                 grade = grade.grade,
-                amount = grade.amount ?: 0
+                amount = grade.amount ?: 0,
             )
         },
         studentAverage = partial.studentSeries.average.takeIf { !partial.studentSeries.isEmpty }.orEmpty(),
@@ -38,9 +38,9 @@ fun List<GradesStatisticsPartial>.mapGradeStatistics() = map { partial ->
             GradeStatisticsItem(
                 subject = partial.subject,
                 grade = grade.grade,
-                amount = grade.amount ?: 0
+                amount = grade.amount ?: 0,
             )
-        }
+        },
     )
 }
 
@@ -48,6 +48,6 @@ fun List<GradePointsSummary>.mapGradePointsStatistics() = map {
     GradePointsStatistics(
         subject = it.subject,
         student = it.student,
-        others = it.others
+        others = it.others,
     )
 }

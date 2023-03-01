@@ -9,5 +9,5 @@ data class Homework(
     val content: String,
     val teacher: String,
     val teacherSymbol: String,
-    val attachments: List<HomeworkAttachment>
+    val attachments: List<HomeworkAttachment>,
 )

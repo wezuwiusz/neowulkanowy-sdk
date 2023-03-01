@@ -16,5 +16,5 @@ data class GradeSummary(
     val average: String = "0",
 
     @Json(name = "SumaPunktow")
-    val pointsSum: String = ""
+    val pointsSum: String = "",
 )

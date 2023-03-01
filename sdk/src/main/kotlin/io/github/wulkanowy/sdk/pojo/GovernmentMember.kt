@@ -4,5 +4,5 @@ data class GovernmentMember(
     val name: String,
     val position: String,
     val division: String,
-    val id: Int
+    val id: Int,
 )

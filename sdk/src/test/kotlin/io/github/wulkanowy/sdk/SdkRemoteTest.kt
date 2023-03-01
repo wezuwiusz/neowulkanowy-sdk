@@ -54,7 +54,7 @@ class SdkRemoteTest {
                 apiKey = API_KEY,
                 scrapperBaseUrl = "http://fakelog.cf",
                 startSymbol = "powiatwulkanowy",
-                firebaseToken = ""
+                firebaseToken = "",
             )
         }
         assertEquals(6, students.size)

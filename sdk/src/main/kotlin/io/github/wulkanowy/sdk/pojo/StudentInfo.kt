@@ -22,7 +22,7 @@ data class StudentInfo(
     @Deprecated("use guardianFirst and guardianSecond instead")
     val guardians: List<StudentGuardian>,
     val guardianFirst: StudentGuardian?,
-    val guardianSecond: StudentGuardian?
+    val guardianSecond: StudentGuardian?,
 )
 
 data class StudentGuardian(
@@ -30,10 +30,10 @@ data class StudentGuardian(
     val kinship: String,
     val address: String,
     val phones: String,
-    val email: String
+    val email: String,
 )
 
 enum class StudentGender {
     MALE,
-    FEMALE
+    FEMALE,
 }

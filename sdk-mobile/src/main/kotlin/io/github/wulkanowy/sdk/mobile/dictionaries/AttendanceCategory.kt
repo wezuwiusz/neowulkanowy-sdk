@@ -31,5 +31,5 @@ data class AttendanceCategory(
     val excused: Boolean,
 
     @Json(name = "Usuniete")
-    val deleted: Boolean
+    val deleted: Boolean,
 )

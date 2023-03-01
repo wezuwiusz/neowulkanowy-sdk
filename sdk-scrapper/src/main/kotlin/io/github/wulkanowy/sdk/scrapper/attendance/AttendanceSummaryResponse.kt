@@ -55,6 +55,6 @@ class AttendanceSummaryResponse {
         val august: Int?,
 
         @SerialName("Razem")
-        val total: Int?
+        val total: Int?,
     )
 }

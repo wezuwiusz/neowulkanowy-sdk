@@ -152,7 +152,7 @@ class MessagesTest : BaseLocalTest() {
             subject = "Temat wiadomości",
             content = "Tak wygląda zawartość wiadomości.\nZazwyczaj ma wiele linijek.\n\nZ poważaniem,\nNazwisko Imię",
             senderMailboxId = "05e5be82-b894-4864-823b-e79e4f91ce2d",
-            recipients = listOf("41c81103-a648-42b1-8519-ae3b2db6ea9b")
+            recipients = listOf("41c81103-a648-42b1-8519-ae3b2db6ea9b"),
         )
 
         server.takeRequest()
@@ -164,7 +164,7 @@ class MessagesTest : BaseLocalTest() {
         assertEquals(expected, actual)
         assertEquals(
             "lX9xvk-OBA0VmHrNIFcQp2xVBZhza9tJ1QbYVKXGM3lFUr0a-OTDo5xUSQ70ROYKf6ICZ1LSXCfDAURoCmDZ-OEedW8IKtyF1s63HyWKxbmHaP-vsVCsGlN6zRHwx1r4h",
-            request.getHeader("X-V-RequestVerificationToken")
+            request.getHeader("X-V-RequestVerificationToken"),
         )
         assertEquals("877c4a726ad61667f4e2237f0cf6307a", request.getHeader("X-V-AppGuid"))
         assertEquals("19.02.0001.32324", request.getHeader("X-V-AppVersion"))
@@ -193,7 +193,7 @@ class MessagesTest : BaseLocalTest() {
         assertEquals(expected, actual)
         assertEquals(
             "lX9xvk-OBA0VmHrNIFcQp2xVBZhza9tJ1QbYVKXGM3lFUr0a-OTDo5xUSQ70ROYKf6ICZ1LSXCfDAURoCmDZ-OEedW8IKtyF1s63HyWKxbmHaP-vsVCsGlN6zRHwx1r4h",
-            request.getHeader("X-V-RequestVerificationToken")
+            request.getHeader("X-V-RequestVerificationToken"),
         )
         assertEquals("877c4a726ad61667f4e2237f0cf6307a", request.getHeader("X-V-AppGuid"))
         assertEquals("19.02.0001.32324", request.getHeader("X-V-AppVersion"))

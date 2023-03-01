@@ -7,5 +7,5 @@ import kotlinx.serialization.Serializable
 data class UnregisterDeviceRequest(
 
     @SerialName("id")
-    val id: Int
+    val id: Int,
 )

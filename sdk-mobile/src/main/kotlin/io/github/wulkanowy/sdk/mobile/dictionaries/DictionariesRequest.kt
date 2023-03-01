@@ -14,6 +14,6 @@ data class DictionariesRequest(
     val classificationPeriodId: Int,
 
     @Json(name = "IdOddzial")
-    val classId: Int
+    val classId: Int,
 
 ) : ApiRequest()

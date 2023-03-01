@@ -178,26 +178,26 @@ class AttendanceTest : BaseLocalTest() {
         val absents = listOf(
             Absent(
                 date = LocalDateTime.of(2019, 2, 11, 15, 53, 9),
-                timeId = 1
+                timeId = 1,
             ),
             Absent(
                 date = LocalDateTime.of(2019, 2, 11, 15, 53, 9),
-                timeId = 2
+                timeId = 2,
             ),
             Absent(
                 date = LocalDateTime.of(2019, 2, 11, 15, 53, 9),
-                timeId = 3
+                timeId = 3,
             ),
             Absent(
                 date = LocalDateTime.of(2019, 2, 12, 15, 53, 9),
-                timeId = null
-            )
+                timeId = null,
+            ),
         )
 
         runBlocking {
             getStudentRepo(AttendanceTest::class.java, "Usprawiedliwione.json").excuseForAbsence(
                 absents = absents,
-                content = "Test"
+                content = "Test",
             )
         }
 
@@ -211,7 +211,7 @@ class AttendanceTest : BaseLocalTest() {
         assertEquals(expected, actual)
         assertEquals(
             "7SaCmj247xiKA4nQcTqLJ8J56UnZpxL3zLNENZjKAdFQN3xN26EwRdhAezyo5Wx3P2iWVPLTc3fpjPCNMbEPLmxF4RrLeaAGdQevu8pgbEB2TocqfBPjWzNLyHXBcqxKM",
-            request.getHeader("X-V-RequestVerificationToken")
+            request.getHeader("X-V-RequestVerificationToken"),
         )
         assertEquals("2w68d2SFGnvRtVhuXoLYdxL3ue4F9yqD", request.getHeader("X-V-AppGuid"))
         assertEquals("18.07.0003.31856", request.getHeader("X-V-AppVersion"))

@@ -22,7 +22,7 @@ fun ScrapperRecipient.mapToRecipient() = Recipient(
 fun List<Recipient>.mapFromRecipientsToMobile() = map {
     MobileRecipient(
         loginId = it.mailboxGlobalKey.toInt(),
-        name = it.userName
+        name = it.userName,
     )
 }
 

@@ -16,5 +16,5 @@ data class HomeworkRequest(
     val schoolYear: Int,
 
     @SerialName("statusFilter")
-    val statusFilter: Int
+    val statusFilter: Int,
 )

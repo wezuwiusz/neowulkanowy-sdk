@@ -17,5 +17,5 @@ data class MessagesRequest(
     val loginId: Int,
 
     @Json(name = "IdUczen")
-    val studentId: Int
+    val studentId: Int,
 ) : ApiRequest()

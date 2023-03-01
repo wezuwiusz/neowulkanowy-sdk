@@ -20,7 +20,7 @@ fun List<ScrapperSemester>.mapSemesters() = map {
         start = it.start,
         end = it.end,
         classId = it.classId,
-        unitId = it.unitId
+        unitId = it.unitId,
     )
 }
 
@@ -35,7 +35,7 @@ fun List<Student>.mapSemesters(studentId: Int) = filter { it.id == studentId }.m
         start = it.periodDateFrom.toLocalDate(),
         end = it.periodDateTo.toLocalDate(),
         classId = it.classId,
-        unitId = it.reportingUnitId
+        unitId = it.reportingUnitId,
     )
 }.mockSecondSemester()
 
@@ -46,7 +46,7 @@ private fun List<Semester>.mockSecondSemester(): List<Semester> {
         semesterNumber = if (semester.semesterNumber == 1) 2 else 1,
         semesterId = if (semester.semesterNumber == 1) semester.semesterId + 1 else semester.semesterId - 1,
         start = if (semester.semesterNumber == 1) semester.end.plusDays(1) else of(semester.schoolYear, 9, 1),
-        end = if (semester.semesterNumber == 1) of(semester.schoolYear + 1, 8, 31) else semester.start.minusDays(1)
+        end = if (semester.semesterNumber == 1) of(semester.schoolYear + 1, 8, 31) else semester.start.minusDays(1),
     )
     return (this + secondSemester)
 }

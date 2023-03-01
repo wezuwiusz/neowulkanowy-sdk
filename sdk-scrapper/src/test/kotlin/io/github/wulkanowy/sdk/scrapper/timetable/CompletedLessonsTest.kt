@@ -17,7 +17,7 @@ class CompletedLessonsTest : BaseLocalTest() {
             getStudentRepo(CompletedLessonsTest::class.java, "Zrealizowane.json").getCompletedLessons(
                 getLocalDate(2018, 9, 17),
                 getLocalDate(2018, 9, 18),
-                -1
+                -1,
             )
         }
     }
@@ -41,7 +41,7 @@ class CompletedLessonsTest : BaseLocalTest() {
                 getStudentRepo(CompletedLessonsTest::class.java, "Zrealizowane-disabled.json").getCompletedLessons(
                     getLocalDate(2018, 9, 17),
                     getLocalDate(2018, 9, 18),
-                    -1
+                    -1,
                 )
             }
         } catch (e: Throwable) {
@@ -57,7 +57,7 @@ class CompletedLessonsTest : BaseLocalTest() {
                 getStudentRepo(CompletedLessonsTest::class.java, "Zrealizowane-errored.json").getCompletedLessons(
                     getLocalDate(2018, 9, 17),
                     getLocalDate(2018, 9, 18),
-                    -1
+                    -1,
                 )
             }
         } catch (e: Throwable) {

@@ -25,5 +25,5 @@ data class Employee(
     val teacher: Boolean,
 
     @Json(name = "LoginId")
-    val loginId: Int
+    val loginId: Int,
 )

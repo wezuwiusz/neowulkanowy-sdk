@@ -16,7 +16,7 @@ class RepositoryManager(
     private val certKey: String,
     private val interceptors: MutableList<Pair<Interceptor, Boolean>>,
     private val baseUrl: String,
-    private val schoolSymbol: String
+    private val schoolSymbol: String,
 ) {
 
     fun getRoutesRepository(): RoutingRulesRepository {
@@ -44,11 +44,12 @@ class RepositoryManager(
                     .addInterceptor(SignInterceptor(privateKey, certKey))
                     .apply {
                         interceptors.forEach {
-                            if (it.second) addNetworkInterceptor(it.first)
-                            else addInterceptor(it.first)
+                            if (it.second) {
+                                addNetworkInterceptor(it.first)
+                            } else addInterceptor(it.first)
                         }
                     }
-                    .build()
+                    .build(),
             )
     }
 }

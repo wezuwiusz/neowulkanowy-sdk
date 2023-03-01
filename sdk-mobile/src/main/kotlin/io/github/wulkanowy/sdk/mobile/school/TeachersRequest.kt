@@ -11,5 +11,5 @@ class TeachersRequest(
     val studentId: Int,
 
     @Json(name = "IdOkresKlasyfikacyjny")
-    val semesterId: Int
+    val semesterId: Int,
 ) : ApiRequest()

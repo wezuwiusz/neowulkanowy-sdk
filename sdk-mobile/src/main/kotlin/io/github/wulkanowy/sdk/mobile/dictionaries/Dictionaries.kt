@@ -31,5 +31,5 @@ data class Dictionaries(
     val attendanceCategories: List<AttendanceCategory>,
 
     @Json(name = "TypyFrekwencji")
-    val attendanceTypes: List<AttendanceType>
+    val attendanceTypes: List<AttendanceType>,
 )

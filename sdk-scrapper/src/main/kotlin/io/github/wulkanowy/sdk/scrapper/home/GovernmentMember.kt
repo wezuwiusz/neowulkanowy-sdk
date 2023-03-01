@@ -16,5 +16,5 @@ data class GovernmentMember(
     val division: String,
 
     @SerialName("Id")
-    val id: Int
+    val id: Int,
 )

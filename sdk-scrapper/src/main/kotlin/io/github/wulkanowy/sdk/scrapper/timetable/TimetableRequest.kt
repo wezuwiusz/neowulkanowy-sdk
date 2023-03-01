@@ -7,5 +7,5 @@ import kotlinx.serialization.Serializable
 data class TimetableRequest(
 
     @SerialName("data")
-    val date: String
+    val date: String,
 )

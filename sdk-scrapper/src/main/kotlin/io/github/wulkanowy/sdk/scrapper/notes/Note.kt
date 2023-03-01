@@ -29,7 +29,7 @@ data class Note(
     val showPoints: Boolean = false,
 
     @SerialName("KategoriaTyp")
-    val categoryType: Int = 0
+    val categoryType: Int = 0,
 ) {
 
     @Transient

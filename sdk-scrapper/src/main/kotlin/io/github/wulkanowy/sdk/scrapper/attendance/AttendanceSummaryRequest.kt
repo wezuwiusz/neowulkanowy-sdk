@@ -6,5 +6,5 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class AttendanceSummaryRequest(
     @SerialName("idPrzedmiot")
-    val id: Int?
+    val id: Int?,
 )

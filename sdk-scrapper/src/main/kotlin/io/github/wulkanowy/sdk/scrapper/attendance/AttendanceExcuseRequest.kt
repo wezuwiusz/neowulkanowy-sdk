@@ -7,7 +7,7 @@ import kotlinx.serialization.Serializable
 data class AttendanceExcuseRequest(
 
     @SerialName("usprawiedliwienie")
-    val excuse: Excuse
+    val excuse: Excuse,
 ) {
 
     @Serializable
@@ -17,7 +17,7 @@ data class AttendanceExcuseRequest(
         val absents: List<Absent>,
 
         @SerialName("Tresc")
-        val content: String?
+        val content: String?,
     ) {
 
         @Serializable

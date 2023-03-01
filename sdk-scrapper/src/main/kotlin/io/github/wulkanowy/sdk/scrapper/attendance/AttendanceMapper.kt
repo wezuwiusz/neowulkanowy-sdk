@@ -40,8 +40,13 @@ fun AttendanceSummaryResponse.mapAttendanceSummaryList(): List<AttendanceSummary
     return (1..12).map {
         AttendanceSummary(
             month = Month.of(if (it < 5) 8 + it else it - 4),
-            presence = getMonthValue(0, it), absence = getMonthValue(1, it), absenceExcused = getMonthValue(2, it), absenceForSchoolReasons = getMonthValue(3, it),
-            lateness = getMonthValue(4, it), latenessExcused = getMonthValue(5, it), exemption = getMonthValue(6, it)
+            presence = getMonthValue(0, it),
+            absence = getMonthValue(1, it),
+            absenceExcused = getMonthValue(2, it),
+            absenceForSchoolReasons = getMonthValue(3, it),
+            lateness = getMonthValue(4, it),
+            latenessExcused = getMonthValue(5, it),
+            exemption = getMonthValue(6, it),
         )
     }.filterNot { summary ->
         summary.absence == 0 &&

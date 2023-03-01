@@ -50,7 +50,7 @@ class ServiceManager(
     private val schoolYear: Int,
     emptyCookieJarIntercept: Boolean,
     androidVersion: String,
-    buildTag: String
+    buildTag: String,
 ) {
 
     private val cookies by lazy {
@@ -85,7 +85,7 @@ class ServiceManager(
         ErrorInterceptor(cookies) to false,
         AutoLoginInterceptor(loginType, cookies, emptyCookieJarIntercept) { loginHelper.login(email, password) } to false,
         UserAgentInterceptor(androidVersion, buildTag) to false,
-        HttpErrorInterceptor() to false
+        HttpErrorInterceptor() to false,
     )
 
     private val trustManager: X509TrustManager by lazy {
@@ -117,16 +117,17 @@ class ServiceManager(
 
     fun getAccountService(): AccountService {
         return getRetrofit(
-            getClientBuilder(errIntercept = false, loginIntercept = false, separateJar = true),
-            urlGenerator.generate(UrlGenerator.Site.LOGIN), false
+            client = getClientBuilder(errIntercept = false, loginIntercept = false, separateJar = true),
+            baseUrl = urlGenerator.generate(UrlGenerator.Site.LOGIN),
+            json = false,
         ).create()
     }
 
     fun getRegisterService(): RegisterService {
         return getRetrofit(
-            getClientBuilder(errIntercept = false, loginIntercept = false, separateJar = true),
-            urlGenerator.generate(UrlGenerator.Site.LOGIN),
-            false
+            client = getClientBuilder(errIntercept = false, loginIntercept = false, separateJar = true),
+            baseUrl = urlGenerator.generate(UrlGenerator.Site.LOGIN),
+            json = false,
         ).create()
     }
 
@@ -134,7 +135,7 @@ class ServiceManager(
         return getRetrofit(
             client = prepareStudentService(withLogin, studentInterceptor),
             baseUrl = urlGenerator.generate(UrlGenerator.Site.STUDENT),
-            json = true
+            json = true,
         ).create()
     }
 
@@ -156,8 +157,8 @@ class ServiceManager(
                     schoolYear = when (schoolYear) {
                         0 -> if (LocalDate.now().monthValue < 9) LocalDate.now().year - 1 else LocalDate.now().year // fallback
                         else -> schoolYear
-                    }
-                )
+                    },
+                ),
             )
         }
         return client
@@ -182,14 +183,14 @@ class ServiceManager(
         .addConverterFactory(ScalarsConverterFactory.create())
         .addConverterFactory(
             if (json) this.json.asConverterFactory("application/json".toMediaType())
-            else JspoonConverterFactory.create()
+            else JspoonConverterFactory.create(),
         )
         .build()
 
     private fun getClientBuilder(
         errIntercept: Boolean = true,
         loginIntercept: Boolean = true,
-        separateJar: Boolean = false
+        separateJar: Boolean = false,
     ) = okHttpClientBuilderFactory.create()
         .connectTimeout(TIMEOUT_IN_SECONDS, SECONDS)
         .callTimeout(TIMEOUT_IN_SECONDS, SECONDS)
@@ -200,7 +201,8 @@ class ServiceManager(
                 "edu.gdansk.pl",
                 "edu.lublin.eu",
                 "eduportal.koszalin.pl",
-                "vulcan.net.pl" -> sslSocketFactory(TLSSocketFactory(), trustManager)
+                "vulcan.net.pl",
+                -> sslSocketFactory(TLSSocketFactory(), trustManager)
             }
         }
         .cookieJar(if (!separateJar) JavaNetCookieJar(cookies) else JavaNetCookieJar(CookieManager()))
