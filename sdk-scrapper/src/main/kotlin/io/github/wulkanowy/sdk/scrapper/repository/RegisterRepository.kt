@@ -11,6 +11,7 @@ import io.github.wulkanowy.sdk.scrapper.getScriptParam
 import io.github.wulkanowy.sdk.scrapper.interceptor.handleErrors
 import io.github.wulkanowy.sdk.scrapper.login.AccountPermissionException
 import io.github.wulkanowy.sdk.scrapper.login.CertificateResponse
+import io.github.wulkanowy.sdk.scrapper.login.InvalidSymbolException
 import io.github.wulkanowy.sdk.scrapper.login.LoginHelper
 import io.github.wulkanowy.sdk.scrapper.login.UrlGenerator
 import io.github.wulkanowy.sdk.scrapper.register.AuthInfo
@@ -18,9 +19,9 @@ import io.github.wulkanowy.sdk.scrapper.register.Diary
 import io.github.wulkanowy.sdk.scrapper.register.HomePageResponse
 import io.github.wulkanowy.sdk.scrapper.register.PermissionUnit
 import io.github.wulkanowy.sdk.scrapper.register.Permissions
+import io.github.wulkanowy.sdk.scrapper.register.RegisterEmployee
 import io.github.wulkanowy.sdk.scrapper.register.RegisterStudent
 import io.github.wulkanowy.sdk.scrapper.register.RegisterSymbol
-import io.github.wulkanowy.sdk.scrapper.register.RegisterEmployee
 import io.github.wulkanowy.sdk.scrapper.register.RegisterUnit
 import io.github.wulkanowy.sdk.scrapper.register.RegisterUser
 import io.github.wulkanowy.sdk.scrapper.register.Student
@@ -64,7 +65,12 @@ class RegisterRepository(
 
         return user.symbols.flatMap { symbol ->
             symbol.error?.takeIf {
-                it !is AccountPermissionException && it !is StudentGraduateException && it !is AccountInactiveException
+                val isAccountNotRegistered = it is AccountPermissionException
+                val isInvalidSymbol = it is InvalidSymbolException
+                val isGraduated = it is StudentGraduateException
+                val isInactive = it is AccountInactiveException
+
+                (!isAccountNotRegistered && !isInvalidSymbol && !isGraduated && !isInactive)
             }?.let { throw it }
 
             symbol.schools.flatMap { unit ->
@@ -134,6 +140,11 @@ class RegisterRepository(
             StudentGraduateException(graduateMessage)
         } else null
 
+        val invalidSymbolMessage = homeResponse.getOrNull()?.document?.selectFirst("#page-error .error__box")?.text().orEmpty()
+        val isInvalidSymbol = if (invalidSymbolMessage.contains("musi mieć następujący format")) {
+            InvalidSymbolException(invalidSymbolMessage)
+        } else null
+
         val userName = homeResponse.getOrNull().getUserNameFromUserData()
         val schools = homeResponse.getOrNull()
             .toPermissions()
@@ -142,7 +153,7 @@ class RegisterRepository(
 
         RegisterSymbol(
             symbol = symbol,
-            error = homeResponse.exceptionOrNull() ?: graduateException,
+            error = homeResponse.exceptionOrNull() ?: graduateException ?: isInvalidSymbol,
             userName = userName,
             schools = schools,
         )
