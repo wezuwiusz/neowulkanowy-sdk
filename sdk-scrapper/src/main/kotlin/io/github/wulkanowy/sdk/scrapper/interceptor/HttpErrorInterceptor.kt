@@ -17,7 +17,8 @@ class HttpErrorInterceptor : Interceptor {
         return when (response.code) {
             429 -> throw NotLoggedInException(response.body?.string() ?: response.message)
             404 -> throw ScrapperException(response.code.toString() + ": " + response.message)
-            in 400..499 -> throw VulcanClientError(response.code.toString() + ": " + response.body?.string(), response.code)
+            in 400..402 -> throw VulcanClientError(response.code.toString() + ": " + response.body?.string(), response.code)
+            in 404..499 -> throw VulcanClientError(response.code.toString() + ": " + response.body?.string(), response.code)
             in 500..599 -> throw ServiceUnavailableException(response.code.toString() + ": " + response.message)
             else -> response
         }

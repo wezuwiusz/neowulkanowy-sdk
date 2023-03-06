@@ -84,6 +84,9 @@ class ErrorInterceptor(
                 throw ScrapperException(doc.select("#MainDiv > div").text())
             }
             "Połączenie zablokowane" -> throw ConnectionBlockedException(doc.body().text())
+            "Just a moment..." -> if (doc.select(".footer").text().contains("Cloudflare")) {
+                throw ConnectionBlockedException(doc.select("#challenge-body-text").text())
+            }
             "Przerwa techniczna" -> throw ServiceUnavailableException(doc.title())
             "Strona nie została odnaleziona" -> throw ScrapperException(doc.title())
             "Strona nie znaleziona" -> throw ScrapperException(doc.selectFirst("div div")?.text().orEmpty())
