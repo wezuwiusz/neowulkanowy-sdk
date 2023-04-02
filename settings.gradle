@@ -1,3 +1,30 @@
 include 'sdk-mobile'
 include 'sdk-scrapper'
 include 'sdk'
+
+dependencyResolutionManagement {
+    versionCatalogs {
+        libs {
+            def kotlin = '1.8.10'
+
+            version('sdk', '1.9.3-SNAPSHOT')
+            version('kotlin', kotlin)
+            version('coroutines', '1.6.4')
+            version('retrofit', '2.9.0')
+            version('ksp', "${kotlin}-1.0.9")
+
+            plugin('kotlin', 'org.jetbrains.kotlin.jvm').versionRef('kotlin')
+            plugin('ksp', 'com.google.devtools.ksp').versionRef('ksp')
+
+            library('coroutines-core', 'org.jetbrains.kotlinx', 'kotlinx-coroutines-core').versionRef('coroutines')
+            library('coroutines-test', 'org.jetbrains.kotlinx', 'kotlinx-coroutines-test').versionRef('coroutines')
+
+            library('retrofit-core', 'com.squareup.retrofit2', 'retrofit').versionRef('retrofit')
+            library('retrofit-scalars', 'com.squareup.retrofit2', 'converter-scalars').versionRef('retrofit')
+            library('retrofit-moshi', 'com.squareup.retrofit2', 'converter-moshi').versionRef('retrofit')
+            library('retrofit-mock', 'com.squareup.retrofit2', 'retrofit-mock').versionRef('retrofit')
+
+            library('okhttp-bom', 'com.squareup.okhttp3:okhttp-bom:4.10.0')
+        }
+    }
+}

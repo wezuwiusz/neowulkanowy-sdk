@@ -9,9 +9,9 @@ dependencies {
 
     implementation "com.brsanthu:migbase64:2.2"
 
-    implementation "com.squareup.retrofit2:retrofit:$retrofit"
-    implementation "com.squareup.retrofit2:converter-moshi:$retrofit"
-    implementation "com.squareup.retrofit2:converter-scalars:$retrofit"
+    implementation libs.retrofit.core
+    implementation libs.retrofit.moshi
+    implementation libs.retrofit.scalars
 
     def moshi = "1.14.0"
     implementation "com.squareup.moshi:moshi:$moshi"

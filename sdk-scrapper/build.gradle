@@ -8,8 +8,8 @@ dependencies {
     implementation "org.jsoup:jsoup:$jsoup"
 
     testImplementation "com.squareup.okhttp3:mockwebserver"
-    implementation "com.squareup.retrofit2:retrofit:$retrofit"
-    implementation "com.squareup.retrofit2:converter-scalars:$retrofit"
+    implementation libs.retrofit.core
+    implementation libs.retrofit.scalars
     implementation "pl.droidsonroids.retrofit2:converter-jspoon:$jspoon"
     implementation "com.jakewharton.retrofit:retrofit2-kotlinx-serialization-converter:0.8.0"
 
