@@ -1,6 +1,5 @@
 package io.github.wulkanowy.sdk
 
-import io.github.wulkanowy.sdk.exception.FeatureNotAvailableException
 import io.github.wulkanowy.sdk.mapper.mapAttendance
 import io.github.wulkanowy.sdk.mapper.mapAttendanceSummary
 import io.github.wulkanowy.sdk.mapper.mapCompletedLessons
@@ -8,13 +7,10 @@ import io.github.wulkanowy.sdk.mapper.mapConferences
 import io.github.wulkanowy.sdk.mapper.mapDevices
 import io.github.wulkanowy.sdk.mapper.mapDirectorInformation
 import io.github.wulkanowy.sdk.mapper.mapExams
-import io.github.wulkanowy.sdk.mapper.mapFromRecipientsToMobile
 import io.github.wulkanowy.sdk.mapper.mapGradePointsStatistics
 import io.github.wulkanowy.sdk.mapper.mapGradeStatistics
 import io.github.wulkanowy.sdk.mapper.mapGrades
-import io.github.wulkanowy.sdk.mapper.mapGradesDetails
 import io.github.wulkanowy.sdk.mapper.mapGradesSemesterStatistics
-import io.github.wulkanowy.sdk.mapper.mapGradesSummary
 import io.github.wulkanowy.sdk.mapper.mapHomework
 import io.github.wulkanowy.sdk.mapper.mapLuckyNumbers
 import io.github.wulkanowy.sdk.mapper.mapMailboxes
@@ -33,7 +29,6 @@ import io.github.wulkanowy.sdk.mapper.mapTimetableFull
 import io.github.wulkanowy.sdk.mapper.mapToScrapperAbsent
 import io.github.wulkanowy.sdk.mapper.mapToUnits
 import io.github.wulkanowy.sdk.mapper.mapToken
-import io.github.wulkanowy.sdk.mobile.Mobile
 import io.github.wulkanowy.sdk.pojo.Absent
 import io.github.wulkanowy.sdk.pojo.Attendance
 import io.github.wulkanowy.sdk.pojo.AttendanceSummary
@@ -73,13 +68,11 @@ import okhttp3.Interceptor
 import okhttp3.logging.HttpLoggingInterceptor
 import org.slf4j.LoggerFactory
 import java.time.LocalDate
-import java.time.LocalDateTime
 import java.time.ZoneId
 
 class Sdk {
 
     enum class Mode {
-        API,
         SCRAPPER,
         HYBRID,
     }
@@ -94,31 +87,11 @@ class Sdk {
         ADFSLightCufs,
     }
 
-    private val mobile = Mobile()
-
     private val scrapper = Scrapper()
 
     private val registerTimeZone = ZoneId.of("Europe/Warsaw")
 
     var mode = Mode.HYBRID
-
-    var mobileBaseUrl = ""
-        set(value) {
-            field = value
-            mobile.baseUrl = value
-        }
-
-    var certKey = ""
-        set(value) {
-            field = value
-            mobile.certKey = value
-        }
-
-    var privateKey = ""
-        set(value) {
-            field = value
-            mobile.privateKey = privateKey
-        }
 
     var scrapperBaseUrl = ""
         set(value) {
@@ -142,27 +115,18 @@ class Sdk {
         set(value) {
             field = value
             scrapper.schoolSymbol = value
-            mobile.schoolSymbol = value
         }
 
     var classId = 0
         set(value) {
             field = value
             scrapper.classId = value
-            mobile.classId = value
         }
 
     var studentId = 0
         set(value) {
             field = value
             scrapper.studentId = value
-            mobile.studentId = value
-        }
-
-    var loginId = 0
-        set(value) {
-            field = value
-            mobile.loginId = value
         }
 
     var diaryId = 0
@@ -199,7 +163,6 @@ class Sdk {
         set(value) {
             field = value
             scrapper.logLevel = value
-            mobile.logLevel = value
         }
 
     var userAgentTemplate = ""
@@ -243,7 +206,6 @@ class Sdk {
 
     fun addInterceptor(interceptor: Interceptor, network: Boolean = false) {
         scrapper.addInterceptor(interceptor, network)
-        mobile.setInterceptor(interceptor, network)
         interceptors.add(interceptor to network)
     }
 
@@ -261,10 +223,6 @@ class Sdk {
 
     suspend fun sendPasswordResetRequest(registerBaseUrl: String, symbol: String, email: String, captchaCode: String) = withContext(Dispatchers.IO) {
         scrapper.sendPasswordResetRequest(registerBaseUrl, symbol, email, captchaCode)
-    }
-
-    suspend fun getStudentsFromMobileApi(token: String, pin: String, symbol: String, firebaseToken: String, apiKey: String = ""): List<Student> = withContext(Dispatchers.IO) {
-        mobile.getStudents(mobile.getCertificate(token, pin, symbol, buildTag, androidVersion, firebaseToken), apiKey).mapStudents(symbol)
     }
 
     suspend fun getStudentsFromScrapper(email: String, password: String, scrapperBaseUrl: String, symbol: String = "Default"): List<Student> = withContext(Dispatchers.IO) {
@@ -287,197 +245,135 @@ class Sdk {
         }
     }
 
-    suspend fun getStudentsHybrid(
-        email: String,
-        password: String,
-        scrapperBaseUrl: String,
-        firebaseToken: String,
-        startSymbol: String = "Default",
-        apiKey: String = "",
-    ) = withContext(Dispatchers.IO) {
-        getStudentsFromScrapper(email, password, scrapperBaseUrl, startSymbol)
-            .distinctBy { it.symbol }
-            .map { scrapperStudent ->
-                scrapper.let {
-                    it.symbol = scrapperStudent.symbol
-                    it.schoolSymbol = scrapperStudent.schoolSymbol
-                    it.studentId = scrapperStudent.studentId
-                    it.diaryId = -1
-                    it.classId = scrapperStudent.classId
-                    it.loginType = Scrapper.LoginType.valueOf(scrapperStudent.loginType.name)
-                }
-                val token = scrapper.getToken()
-                getStudentsFromMobileApi(token.token, token.pin, token.symbol, firebaseToken, apiKey).map { student ->
-                    student.copy(
-                        loginMode = Mode.HYBRID,
-                        loginType = scrapperStudent.loginType,
-                        scrapperBaseUrl = scrapperStudent.scrapperBaseUrl,
-                    )
-                }
-            }.toList().flatten()
-    }
-
     suspend fun getSemesters(): List<Semester> = withContext(Dispatchers.IO) {
         when (mode) {
             Mode.HYBRID, Mode.SCRAPPER -> scrapper.getSemesters().mapSemesters()
-            Mode.API -> mobile.getStudents().mapSemesters(studentId)
         }
     }
 
-    suspend fun getAttendance(startDate: LocalDate, endDate: LocalDate, semesterId: Int): List<Attendance> = withContext(Dispatchers.IO) {
+    suspend fun getAttendance(startDate: LocalDate, endDate: LocalDate): List<Attendance> = withContext(Dispatchers.IO) {
         when (mode) {
-            Mode.SCRAPPER -> scrapper.getAttendance(startDate, endDate).mapAttendance()
-            Mode.HYBRID, Mode.API -> mobile.getAttendance(startDate, endDate, semesterId).mapAttendance(mobile.getDictionaries())
+            Mode.HYBRID, Mode.SCRAPPER -> scrapper.getAttendance(startDate, endDate).mapAttendance()
         }
     }
 
     suspend fun getAttendanceSummary(subjectId: Int? = -1): List<AttendanceSummary> = withContext(Dispatchers.IO) {
         when (mode) {
             Mode.HYBRID, Mode.SCRAPPER -> scrapper.getAttendanceSummary(subjectId).mapAttendanceSummary()
-            Mode.API -> throw FeatureNotAvailableException("Attendance summary is not available in API mode")
         }
     }
 
     suspend fun excuseForAbsence(absents: List<Absent>, content: String? = null): Boolean = withContext(Dispatchers.IO) {
         when (mode) {
             Mode.HYBRID, Mode.SCRAPPER -> scrapper.excuseForAbsence(absents.mapToScrapperAbsent(), content)
-            Mode.API -> throw FeatureNotAvailableException("Absence excusing is not available in API mode")
         }
     }
 
     suspend fun getSubjects(): List<Subject> = withContext(Dispatchers.IO) {
         when (mode) {
             Mode.HYBRID, Mode.SCRAPPER -> scrapper.getSubjects().mapSubjects()
-            Mode.API -> mobile.getDictionaries().subjects.mapSubjects()
         }
     }
 
-    suspend fun getExams(start: LocalDate, end: LocalDate, semesterId: Int): List<Exam> = withContext(Dispatchers.IO) {
+    suspend fun getExams(start: LocalDate, end: LocalDate): List<Exam> = withContext(Dispatchers.IO) {
         when (mode) {
-            Mode.SCRAPPER -> scrapper.getExams(start, end).mapExams()
-            Mode.HYBRID, Mode.API -> mobile.getExams(start, end, semesterId).mapExams(mobile.getDictionaries())
+            Mode.HYBRID, Mode.SCRAPPER -> scrapper.getExams(start, end).mapExams()
         }
     }
 
     suspend fun getGrades(semesterId: Int): Grades = withContext(Dispatchers.IO) {
         when (mode) {
             Mode.HYBRID, Mode.SCRAPPER -> scrapper.getGrades(semesterId).mapGrades()
-            Mode.API -> mobile.getGrades(semesterId).let { (grades, summaries) ->
-                val dict = mobile.getDictionaries()
-                Grades(
-                    details = grades.mapGradesDetails(dict),
-                    summary = summaries.mapGradesSummary(dict),
-                    isAverage = false,
-                    isPoints = false,
-                    isForAdults = false,
-                    type = 0,
-                )
-            }
         }
     }
 
     suspend fun getGradesSemesterStatistics(semesterId: Int): List<GradeStatisticsSemester> = withContext(Dispatchers.IO) {
         when (mode) {
             Mode.HYBRID, Mode.SCRAPPER -> scrapper.getGradesSemesterStatistics(semesterId).mapGradesSemesterStatistics()
-            Mode.API -> throw FeatureNotAvailableException("Class grades annual statistics is not available in API mode")
         }
     }
 
     suspend fun getGradesPartialStatistics(semesterId: Int): List<GradeStatisticsSubject> = withContext(Dispatchers.IO) {
         when (mode) {
             Mode.HYBRID, Mode.SCRAPPER -> scrapper.getGradesPartialStatistics(semesterId).mapGradeStatistics()
-            Mode.API -> throw FeatureNotAvailableException("Class grades partial statistics is not available in API mode")
         }
     }
 
     suspend fun getGradesPointsStatistics(semesterId: Int): List<GradePointsStatistics> = withContext(Dispatchers.IO) {
         when (mode) {
             Mode.HYBRID, Mode.SCRAPPER -> scrapper.getGradesPointsStatistics(semesterId).mapGradePointsStatistics()
-            Mode.API -> throw FeatureNotAvailableException("Class grades points statistics is not available in API mode")
         }
     }
 
-    suspend fun getHomework(start: LocalDate, end: LocalDate, semesterId: Int = 0): List<Homework> = withContext(Dispatchers.IO) {
+    suspend fun getHomework(start: LocalDate, end: LocalDate): List<Homework> = withContext(Dispatchers.IO) {
         when (mode) {
-            Mode.SCRAPPER -> scrapper.getHomework(start, end).mapHomework()
-            Mode.HYBRID, Mode.API -> mobile.getHomework(start, end, semesterId).mapHomework(mobile.getDictionaries())
+            Mode.HYBRID, Mode.SCRAPPER -> scrapper.getHomework(start, end).mapHomework()
         }
     }
 
-    suspend fun getNotes(semesterId: Int): List<Note> = withContext(Dispatchers.IO) {
+    suspend fun getNotes(): List<Note> = withContext(Dispatchers.IO) {
         when (mode) {
-            Mode.SCRAPPER -> scrapper.getNotes().mapNotes()
-            Mode.HYBRID, Mode.API -> mobile.getNotes(semesterId).mapNotes(mobile.getDictionaries())
+            Mode.HYBRID, Mode.SCRAPPER -> scrapper.getNotes().mapNotes()
         }
     }
 
     suspend fun getConferences(): List<Conference> = withContext(Dispatchers.IO) {
         when (mode) {
             Mode.HYBRID, Mode.SCRAPPER -> scrapper.getConferences().mapConferences(registerTimeZone)
-            Mode.API -> throw FeatureNotAvailableException("Conferences is not available in API mode")
         }
     }
 
     suspend fun getRegisteredDevices(): List<Device> = withContext(Dispatchers.IO) {
         when (mode) {
             Mode.HYBRID, Mode.SCRAPPER -> scrapper.getRegisteredDevices().mapDevices(registerTimeZone)
-            Mode.API -> throw FeatureNotAvailableException("Devices management is not available in API mode")
         }
     }
 
     suspend fun getToken(): Token = withContext(Dispatchers.IO) {
         when (mode) {
             Mode.HYBRID, Mode.SCRAPPER -> scrapper.getToken().mapToken()
-            Mode.API -> throw FeatureNotAvailableException("Devices management is not available in API mode")
         }
     }
 
     suspend fun unregisterDevice(id: Int): Boolean = withContext(Dispatchers.IO) {
         when (mode) {
             Mode.HYBRID, Mode.SCRAPPER -> scrapper.unregisterDevice(id)
-            Mode.API -> throw FeatureNotAvailableException("Devices management is not available in API mode")
         }
     }
 
-    suspend fun getTeachers(semesterId: Int): List<Teacher> = withContext(Dispatchers.IO) {
+    suspend fun getTeachers(): List<Teacher> = withContext(Dispatchers.IO) {
         when (mode) {
-            Mode.SCRAPPER -> scrapper.getTeachers().mapTeachers()
-            Mode.HYBRID, Mode.API -> mobile.getTeachers(studentId, semesterId).mapTeachers(mobile.getDictionaries())
+            Mode.HYBRID, Mode.SCRAPPER -> scrapper.getTeachers().mapTeachers()
         }
     }
 
     suspend fun getSchool(): School = withContext(Dispatchers.IO) {
         when (mode) {
             Mode.HYBRID, Mode.SCRAPPER -> scrapper.getSchool().mapSchool()
-            Mode.API -> throw FeatureNotAvailableException("School info is not available in API mode")
         }
     }
 
     suspend fun getStudentInfo(): StudentInfo = withContext(Dispatchers.IO) {
         when (mode) {
             Mode.HYBRID, Mode.SCRAPPER -> scrapper.getStudentInfo().mapStudent()
-            Mode.API -> throw FeatureNotAvailableException("Student info is not available in API mode")
         }
     }
 
     suspend fun getStudentPhoto(): StudentPhoto = withContext(Dispatchers.IO) {
         when (mode) {
             Mode.HYBRID, Mode.SCRAPPER -> scrapper.getStudentPhoto().mapPhoto()
-            Mode.API -> throw FeatureNotAvailableException("Student photo is not available in API mode")
         }
     }
 
     suspend fun getMailboxes(): List<Mailbox> = withContext(Dispatchers.IO) {
         when (mode) {
             Mode.HYBRID, Mode.SCRAPPER -> scrapper.getMailboxes().mapMailboxes()
-            Mode.API -> TODO()
         }
     }
 
     suspend fun getRecipients(mailboxKey: String): List<Recipient> = withContext(Dispatchers.IO) {
         when (mode) {
             Mode.HYBRID, Mode.SCRAPPER -> scrapper.getRecipients(mailboxKey).mapRecipients()
-            Mode.API -> mobile.getDictionaries().teachers.mapRecipients(-1)
         }
     }
 
@@ -492,68 +388,54 @@ class Sdk {
     suspend fun getReceivedMessages(mailboxKey: String? = null): List<Message> = withContext(Dispatchers.IO) {
         when (mode) {
             Mode.HYBRID, Mode.SCRAPPER -> scrapper.getReceivedMessages(mailboxKey).mapMessages(registerTimeZone, Folder.RECEIVED)
-            Mode.API -> mobile.getMessages(LocalDateTime.now(), LocalDateTime.now()).mapMessages(registerTimeZone)
         }
     }
 
     suspend fun getSentMessages(mailboxKey: String? = null): List<Message> = withContext(Dispatchers.IO) {
         when (mode) {
             Mode.HYBRID, Mode.SCRAPPER -> scrapper.getSentMessages(mailboxKey).mapMessages(registerTimeZone, Folder.SENT)
-            Mode.API -> mobile.getMessagesSent(LocalDateTime.now(), LocalDateTime.now()).mapMessages(registerTimeZone)
         }
     }
 
     suspend fun getDeletedMessages(mailboxKey: String? = null): List<Message> = withContext(Dispatchers.IO) {
         when (mode) {
             Mode.HYBRID, Mode.SCRAPPER -> scrapper.getDeletedMessages(mailboxKey).mapMessages(registerTimeZone, Folder.TRASHED)
-            Mode.API -> mobile.getMessagesDeleted(LocalDateTime.now(), LocalDateTime.now()).mapMessages(registerTimeZone)
         }
     }
 
     suspend fun getMessageReplayDetails(messageKey: String): MessageReplayDetails = withContext(Dispatchers.IO) {
         when (mode) {
             Mode.HYBRID, Mode.SCRAPPER -> scrapper.getMessageReplayDetails(messageKey).mapScrapperMessage()
-            Mode.API -> TODO()
         }
     }
 
     suspend fun getMessageDetails(messageKey: String, markAsRead: Boolean = true): MessageDetails = withContext(Dispatchers.IO) {
         when (mode) {
             Mode.HYBRID, Mode.SCRAPPER -> scrapper.getMessageDetails(messageKey, markAsRead).mapScrapperMessage()
-            Mode.API -> {
-                mobile.changeMessageStatus(messageKey, "", "Widoczna")
-                TODO()
-            }
         }
     }
 
     suspend fun sendMessage(subject: String, content: String, recipients: List<Recipient>, mailboxId: String) = withContext(Dispatchers.IO) {
         when (mode) {
             Mode.HYBRID, Mode.SCRAPPER -> scrapper.sendMessage(subject, content, recipients.map { it.mailboxGlobalKey }, mailboxId)
-            Mode.API -> mobile.sendMessage(subject, content, recipients.mapFromRecipientsToMobile())
         }
     }
 
     suspend fun deleteMessages(messages: List<String>, removeForever: Boolean = false) = withContext(Dispatchers.IO) {
         when (mode) {
-            Mode.SCRAPPER -> scrapper.deleteMessages(messages, removeForever)
-            Mode.HYBRID, Mode.API -> messages.map { messageId ->
-                mobile.changeMessageStatus(messageId, "", "Usunieta")
-            }
+            Mode.HYBRID, Mode.SCRAPPER -> scrapper.deleteMessages(messages, removeForever)
         }
     }
 
     suspend fun getTimetable(start: LocalDate, end: LocalDate): Timetable = withContext(Dispatchers.IO) {
         when (mode) {
-            Mode.SCRAPPER -> scrapper.getTimetable(start, end).mapTimetableFull(registerTimeZone)
-            Mode.HYBRID, Mode.API -> mobile.getTimetable(start, end, 0).mapTimetableFull(mobile.getDictionaries(), registerTimeZone)
+            Mode.HYBRID, Mode.SCRAPPER -> scrapper.getTimetable(start, end).mapTimetableFull(registerTimeZone)
         }
     }
 
     suspend fun getCompletedLessons(start: LocalDate, end: LocalDate? = null, subjectId: Int = -1): List<CompletedLesson> = withContext(Dispatchers.IO) {
         when (mode) {
             Mode.HYBRID, Mode.SCRAPPER -> scrapper.getCompletedLessons(start, end, subjectId).mapCompletedLessons()
-            Mode.API -> throw FeatureNotAvailableException("Completed lessons are not available in API mode")
         }
     }
 
@@ -582,77 +464,66 @@ class Sdk {
     suspend fun getDirectorInformation(): List<DirectorInformation> = withContext(Dispatchers.IO) {
         when (mode) {
             Mode.HYBRID, Mode.SCRAPPER -> scrapper.getDirectorInformation().mapDirectorInformation()
-            Mode.API -> throw FeatureNotAvailableException("Director information is not available in API mode")
         }
     }
 
     suspend fun getSelfGovernments(): List<GovernmentUnit> = withContext(Dispatchers.IO) {
         when (mode) {
             Mode.HYBRID, Mode.SCRAPPER -> scrapper.getSelfGovernments().mapToUnits()
-            Mode.API -> throw FeatureNotAvailableException("Self governments is not available in API mode")
         }
     }
 
     suspend fun getStudentThreats(): List<String> = withContext(Dispatchers.IO) {
         when (mode) {
             Mode.HYBRID, Mode.SCRAPPER -> scrapper.getStudentThreats()
-            Mode.API -> throw FeatureNotAvailableException("Student threats are not available in API mode")
         }
     }
 
     suspend fun getStudentsTrips(): List<String> = withContext(Dispatchers.IO) {
         when (mode) {
             Mode.HYBRID, Mode.SCRAPPER -> scrapper.getStudentsTrips()
-            Mode.API -> throw FeatureNotAvailableException("Students trips is not available in API mode")
         }
     }
 
     suspend fun getLastGrades(): List<String> = withContext(Dispatchers.IO) {
         when (mode) {
             Mode.HYBRID, Mode.SCRAPPER -> scrapper.getLastGrades()
-            Mode.API -> throw FeatureNotAvailableException("Last grades is not available in API mode")
         }
     }
 
     suspend fun getFreeDays(): List<String> = withContext(Dispatchers.IO) {
         when (mode) {
             Mode.HYBRID, Mode.SCRAPPER -> scrapper.getFreeDays()
-            Mode.API -> throw FeatureNotAvailableException("Free days is not available in API mode")
         }
     }
 
     suspend fun getKidsLuckyNumbers(): List<LuckyNumber> = withContext(Dispatchers.IO) {
         when (mode) {
             Mode.HYBRID, Mode.SCRAPPER -> scrapper.getKidsLuckyNumbers().mapLuckyNumbers()
-            Mode.API -> throw FeatureNotAvailableException("Kids Lucky number is not available in API mode")
         }
     }
 
     suspend fun getKidsTimetable(): List<String> = withContext(Dispatchers.IO) {
         when (mode) {
             Mode.HYBRID, Mode.SCRAPPER -> scrapper.getKidsLessonPlan()
-            Mode.API -> throw FeatureNotAvailableException("Kids timetable is not available in API mode")
         }
     }
 
     suspend fun getLastHomework(): List<String> = withContext(Dispatchers.IO) {
         when (mode) {
             Mode.HYBRID, Mode.SCRAPPER -> scrapper.getLastHomework()
-            Mode.API -> throw FeatureNotAvailableException("Last homework is not available in API mode")
         }
     }
 
     suspend fun getLastExams(): List<String> = withContext(Dispatchers.IO) {
         when (mode) {
             Mode.HYBRID, Mode.SCRAPPER -> scrapper.getLastTests()
-            Mode.API -> throw FeatureNotAvailableException("Last exams is not available in API mode")
         }
     }
 
     suspend fun getLastStudentLessons(): List<String> = withContext(Dispatchers.IO) {
         when (mode) {
             Mode.HYBRID, Mode.SCRAPPER -> scrapper.getLastStudentLessons()
-            Mode.API -> throw FeatureNotAvailableException("Last student lesson is not available in API mode")
         }
     }
 }

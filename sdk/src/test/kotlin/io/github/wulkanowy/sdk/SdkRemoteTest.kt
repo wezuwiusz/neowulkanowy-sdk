@@ -1,13 +1,11 @@
 package io.github.wulkanowy.sdk
 
-import io.github.wulkanowy.sdk.pojo.Folder
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
 import org.junit.Ignore
 import org.junit.Test
-import java.time.LocalDate.of
 
 @Ignore
 @OptIn(ExperimentalCoroutinesApi::class)
@@ -23,14 +21,6 @@ class SdkRemoteTest {
     }
 
     @Test
-    fun getStudents_api() {
-        val sdk = Sdk()
-        sdk.setSimpleHttpLogger { println(it) }
-        val students = runBlocking { sdk.getStudentsFromMobileApi(token = "FK100000", pin = "999999", symbol = "powiatwulkanowy", apiKey = API_KEY, firebaseToken = "") }
-        assertEquals(2, students.size)
-    }
-
-    @Test
     fun getStudents_scrapper() {
         val sdk = Sdk().apply {
             // mode = Sdk.Mode.SCRAPPER
@@ -42,67 +32,8 @@ class SdkRemoteTest {
     }
 
     @Test
-    fun getStudents_hybrid() {
-        val sdk = Sdk().apply {
-            // mode = Sdk.Mode.HYBRID
-        }
-
-        val students = runBlocking {
-            sdk.getStudentsHybrid(
-                email = "jan@fakelog.cf",
-                password = "jan123",
-                apiKey = API_KEY,
-                scrapperBaseUrl = "http://fakelog.cf",
-                startSymbol = "powiatwulkanowy",
-                firebaseToken = "",
-            )
-        }
-        assertEquals(6, students.size)
-    }
-
-    @Test
-    fun getSemesters_api() {
-        val sdk = Sdk().apply {
-            privateKey = PRIVATE_KEY
-            certKey = CERT_KEY
-
-            mobileBaseUrl = "https://api.fakelog.cf/powiatwulkanowy"
-            mode = Sdk.Mode.API
-            symbol = "powiatwulkanowy"
-
-            schoolSymbol = "123456"
-            studentId = 1
-            classId = 14
-        }
-
-        val semesters = runBlocking { sdk.getSemesters() }
-        assertEquals(2, semesters.size)
-    }
-
-    @Test
-    fun getGrades_api() {
-        val sdk = Sdk().apply {
-            privateKey = PRIVATE_KEY
-            certKey = CERT_KEY
-
-            mobileBaseUrl = "https://api.fakelog.cf/powiatwulkanowy"
-            mode = Sdk.Mode.API
-            symbol = "powiatwulkanowy"
-
-            schoolSymbol = "123456"
-            studentId = 15
-            classId = 14
-        }
-
-        val grades = runBlocking { sdk.getGrades(1).details }
-        assertEquals(22, grades.size)
-    }
-
-    @Test
     fun getGrades_scrapper() = runTest {
         val sdk = Sdk().apply {
-            privateKey = PRIVATE_KEY
-
             userAgentTemplate = "custom UA %1\$s%2\$s%3\$s%4\$s"
             mode = Sdk.Mode.SCRAPPER
             symbol = "powiatwulkanowy"
@@ -123,202 +54,5 @@ class SdkRemoteTest {
         val grades2 = sdk.getGrades(1)
         assertEquals(22, grades.size)
         assertEquals(22, grades2.details.size)
-    }
-
-    @Test
-    fun getGradesSummary_api() {
-        val sdk = Sdk().apply {
-            privateKey = PRIVATE_KEY
-            certKey = CERT_KEY
-
-            mobileBaseUrl = "https://api.fakelog.cf/powiatwulkanowy"
-            mode = Sdk.Mode.API
-            symbol = "powiatwulkanowy"
-
-            schoolSymbol = "123456"
-            studentId = 15
-            classId = 14
-        }
-
-        val grades = runBlocking { sdk.getGrades(1).summary }
-        assertEquals(4, grades.size)
-    }
-
-    @Test
-    fun getAttendance_api() {
-        val sdk = Sdk().apply {
-            privateKey = PRIVATE_KEY
-            certKey = CERT_KEY
-
-            mobileBaseUrl = "https://api.fakelog.cf/powiatwulkanowy"
-            mode = Sdk.Mode.API
-            symbol = "powiatwulkanowy"
-
-            schoolSymbol = "123456"
-            studentId = 15
-            classId = 14
-        }
-
-        val attendance = runBlocking { sdk.getAttendance(of(2018, 1, 1), of(2018, 1, 2), 1) }
-        assertEquals(24, attendance.size)
-    }
-
-    @Test
-    fun getSubjects_api() {
-        val sdk = Sdk().apply {
-            privateKey = PRIVATE_KEY
-            certKey = CERT_KEY
-
-            mobileBaseUrl = "https://api.fakelog.cf/powiatwulkanowy"
-            mode = Sdk.Mode.API
-            symbol = "powiatwulkanowy"
-
-            schoolSymbol = "123456"
-            studentId = 15
-            classId = 14
-        }
-
-        val subjects = runBlocking { sdk.getSubjects() }
-        assertEquals(14, subjects.size)
-    }
-
-    @Test
-    fun getNotes_api() {
-        val sdk = Sdk().apply {
-            privateKey = PRIVATE_KEY
-            certKey = CERT_KEY
-
-            mobileBaseUrl = "https://api.fakelog.cf/powiatwulkanowy"
-            mode = Sdk.Mode.API
-            symbol = "powiatwulkanowy"
-
-            schoolSymbol = "123456"
-            studentId = 15
-            classId = 14
-        }
-
-        val notes = runBlocking { sdk.getNotes(1) }
-        assertEquals(5, notes.size)
-    }
-
-    @Test
-    fun getTeachers_api() {
-        val sdk = Sdk().apply {
-            privateKey = PRIVATE_KEY
-            certKey = CERT_KEY
-
-            mobileBaseUrl = "https://api.fakelog.cf/powiatwulkanowy"
-            mode = Sdk.Mode.API
-            symbol = "powiatwulkanowy"
-
-            schoolSymbol = "123456"
-            studentId = 15
-            classId = 14
-        }
-
-        val teachers = runBlocking { sdk.getTeachers(1) }
-        assertEquals(9, teachers.size)
-    }
-
-    @Test
-    fun getHomework_api() {
-        val sdk = Sdk().apply {
-            privateKey = PRIVATE_KEY
-            certKey = CERT_KEY
-
-            mobileBaseUrl = "https://api.fakelog.cf/powiatwulkanowy"
-            mode = Sdk.Mode.API
-            symbol = "powiatwulkanowy"
-
-            schoolSymbol = "123456"
-            studentId = 15
-            classId = 14
-        }
-
-        val homework = runBlocking { sdk.getHomework(of(2018, 1, 1), of(2018, 1, 2)) }
-        assertEquals(4, homework.size)
-    }
-
-    @Test
-    fun getTimetable_api() {
-        val sdk = Sdk().apply {
-            privateKey = PRIVATE_KEY
-            certKey = CERT_KEY
-
-            mobileBaseUrl = "https://api.fakelog.cf/powiatwulkanowy"
-            mode = Sdk.Mode.API
-            symbol = "powiatwulkanowy"
-
-            schoolSymbol = "123456"
-            studentId = 15
-            classId = 14
-        }
-
-        val (timetable) = runBlocking { sdk.getTimetable(of(2018, 1, 1), of(2018, 1, 2)) }
-        assertEquals(24, timetable.size)
-    }
-
-    @Test
-    fun getMessages_api() {
-        val sdk = Sdk().apply {
-            privateKey = PRIVATE_KEY
-            certKey = CERT_KEY
-
-            mobileBaseUrl = "https://api.fakelog.cf/powiatwulkanowy"
-            mode = Sdk.Mode.API
-            symbol = "powiatwulkanowy"
-
-            schoolSymbol = "123456"
-            studentId = 15
-            classId = 14
-        }
-
-        val messages = runBlocking { sdk.getMessages(Folder.RECEIVED) }
-        assertEquals(2, messages.size)
-
-        val messagesSent = runBlocking { sdk.getMessages(Folder.SENT) }
-        assertEquals(1, messagesSent.size)
-
-        val messagesTrashed = runBlocking { sdk.getMessages(Folder.TRASHED) }
-        assertEquals(1, messagesTrashed.size)
-    }
-
-    @Test
-    fun readMessage_api() {
-        val sdk = Sdk().apply {
-            privateKey = PRIVATE_KEY
-            certKey = CERT_KEY
-
-            mobileBaseUrl = "https://api.fakelog.cf/powiatwulkanowy"
-            mode = Sdk.Mode.API
-            symbol = "powiatwulkanowy"
-
-            schoolSymbol = "123456"
-            loginId = 16
-            studentId = 15
-            classId = 14
-        }
-
-        val message = runBlocking { sdk.getMessageDetails("asdf") }
-        assertEquals("Zmiana statusu wiadomości.", message.content)
-    }
-
-    @Test
-    fun deleteMessage_api() {
-        val sdk = Sdk().apply {
-            privateKey = PRIVATE_KEY
-            certKey = CERT_KEY
-
-            mobileBaseUrl = "https://api.fakelog.cf/powiatwulkanowy"
-            mode = Sdk.Mode.API
-            symbol = "powiatwulkanowy"
-
-            schoolSymbol = "123456"
-            loginId = 16
-            studentId = 15
-            classId = 14
-        }
-
-        runBlocking { sdk.deleteMessages(listOf()) }
     }
 }

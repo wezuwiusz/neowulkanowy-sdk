@@ -1,40 +1,14 @@
 package io.github.wulkanowy.sdk.mapper
 
-import io.github.wulkanowy.sdk.normalizeRecipient
 import io.github.wulkanowy.sdk.pojo.Folder
 import io.github.wulkanowy.sdk.pojo.Message
 import io.github.wulkanowy.sdk.pojo.MessageAttachment
 import io.github.wulkanowy.sdk.pojo.MessageDetails
 import io.github.wulkanowy.sdk.pojo.MessageReplayDetails
-import io.github.wulkanowy.sdk.toLocalDateTime
 import java.time.ZoneId
-import io.github.wulkanowy.sdk.mobile.messages.Message as ApiMessage
 import io.github.wulkanowy.sdk.scrapper.messages.MessageDetails as ScrapperDetailsMessage
 import io.github.wulkanowy.sdk.scrapper.messages.MessageMeta as ScrapperMessageMeta
 import io.github.wulkanowy.sdk.scrapper.messages.MessageReplayDetails as ScrapperReplayDetailsMessage
-
-@JvmName("mapApiMessages")
-fun List<ApiMessage>.mapMessages(zoneId: ZoneId) = map {
-    Message(
-        globalKey = it.messageId.toString(),
-        id = it.messageId,
-        readBy = it.read?.toInt(),
-        unreadBy = it.unread?.toInt(),
-        unread = it.folder == "Odebrane" && it.readDateTime == null,
-        recipients = it.recipients?.map { recipient -> recipient.copy(name = recipient.name.normalizeRecipient()) }?.mapFromMobileToRecipients().orEmpty(),
-        correspondents = "",
-        mailbox = "",
-        folderId = when (it.folder) {
-            "Odebrane" -> 1
-            "Wyslane" -> 2
-            else -> 1
-        },
-        content = it.content,
-        date = it.sentDateTime.toLocalDateTime().atZone(zoneId),
-        subject = it.subject,
-        hasAttachments = false,
-    )
-}
 
 fun List<ScrapperMessageMeta>.mapMessages(zoneId: ZoneId, folderId: Folder) = map {
     Message(

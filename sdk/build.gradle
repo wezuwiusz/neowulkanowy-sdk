@@ -4,17 +4,5 @@ plugins {
 }
 
 dependencies {
-    implementation project(":sdk-mobile")
     implementation project(":sdk-scrapper")
-
-    testImplementation files(this.project(':sdk-mobile').sourceSets.test.output)
-    testImplementation files(this.project(':sdk-mobile').sourceSets.test.runtimeClasspath)
-}
-
-sourceSets {
-    test {
-        resources {
-            srcDir '../sdk-mobile/src/test/resources'
-        }
-    }
 }

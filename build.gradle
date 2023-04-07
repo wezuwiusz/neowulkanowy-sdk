@@ -158,7 +158,6 @@ subprojects {
 
 dependencies {
     api project(":sdk")
-    api project(":sdk-mobile")
     api project(":sdk-scrapper")
 
     api "com.squareup.okhttp3:okhttp"

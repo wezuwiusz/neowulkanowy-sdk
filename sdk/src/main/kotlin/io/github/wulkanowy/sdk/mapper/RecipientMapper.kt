@@ -1,9 +1,7 @@
 package io.github.wulkanowy.sdk.mapper
 
-import io.github.wulkanowy.sdk.mobile.dictionaries.Teacher
 import io.github.wulkanowy.sdk.pojo.MailboxType
 import io.github.wulkanowy.sdk.pojo.Recipient
-import io.github.wulkanowy.sdk.mobile.messages.Recipient as MobileRecipient
 import io.github.wulkanowy.sdk.scrapper.messages.Recipient as ScrapperRecipient
 
 fun List<ScrapperRecipient>.mapRecipients() = map {
@@ -18,32 +16,3 @@ fun ScrapperRecipient.mapToRecipient() = Recipient(
     schoolNameShort = schoolNameShort,
     type = MailboxType.fromLetter(type.letter),
 )
-
-fun List<Recipient>.mapFromRecipientsToMobile() = map {
-    MobileRecipient(
-        loginId = it.mailboxGlobalKey.toInt(),
-        name = it.userName,
-    )
-}
-
-fun List<MobileRecipient>.mapFromMobileToRecipients() = map {
-    Recipient(
-        mailboxGlobalKey = it.loginId.toString(),
-        fullName = it.name,
-        userName = it.name,
-        studentName = "",
-        schoolNameShort = "",
-        type = MailboxType.UNKNOWN,
-    )
-}
-
-fun List<Teacher>.mapRecipients(reportingUnitId: Int) = map {
-    Recipient(
-        mailboxGlobalKey = reportingUnitId.toString(),
-        fullName = "${it.name} ${it.surname}",
-        userName = "${it.name} ${it.surname}",
-        studentName = "",
-        schoolNameShort = "",
-        type = MailboxType.UNKNOWN,
-    )
-}

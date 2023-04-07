@@ -13,7 +13,7 @@ open class BaseTest {
         return LocalDateTime.of(year, month, day, hour, minute, second)
     }
 
-    fun getDate(year: Int, month: Int, day: Int, hour: Int = 0, minute: Int = 0, second: Int = 0, mili: Int = 0): LocalDateTime {
+    fun getDate(year: Int, month: Int, day: Int, hour: Int = 0, minute: Int = 0, second: Int = 0): LocalDateTime {
         return LocalDateTime.of(year, month, day, hour, minute, second)
     }
 }
