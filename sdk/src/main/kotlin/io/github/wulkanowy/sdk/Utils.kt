@@ -21,9 +21,7 @@ fun Long.toLocalDateTime(): LocalDateTime = Instant
     .atZone(registerTimeZone)
     .toLocalDateTime()
 
-fun Date.toLocalDateTime(): LocalDateTime = Instant
-    .ofEpochMilli(time)
-    .atZone(registerTimeZone)
-    .toLocalDateTime()
-
-fun String.normalizeRecipient() = substringBeforeLast("-").substringBefore(" [").substringBeforeLast(" (").trim()
+fun String.normalizeRecipient() = substringBeforeLast("-")
+    .substringBefore(" [")
+    .substringBeforeLast(" (")
+    .trim()

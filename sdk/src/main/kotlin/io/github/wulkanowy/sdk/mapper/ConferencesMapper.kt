@@ -11,8 +11,7 @@ fun List<ScrapperConference>.mapConferences(zoneId: ZoneId) = map {
         agenda = it.agenda,
         presentOnConference = it.presentOnConference,
         online = it.online,
-        date = it.date,
-        dateZoned = it.date.atZone(zoneId),
+        date = it.date.atZone(zoneId),
         id = it.id,
     )
 }

@@ -32,10 +32,8 @@ fun List<ApiTimetable>.mapTimetable(dictionaries: Dictionaries, zoneId: ZoneId) 
         canceled = it.overriddenName,
         changes = it.boldName || (!it.annotationAboutChange.isNullOrBlank() && !it.overriddenName),
         date = it.day.toLocalDate(),
-        start = startDateTime,
-        end = endDateTime,
-        startZoned = startDateTime.atZone(zoneId),
-        endZoned = endDateTime.atZone(zoneId),
+        start = startDateTime.atZone(zoneId),
+        end = endDateTime.atZone(zoneId),
         group = it.divisionShort.orEmpty(),
         info = it.annotationAboutChange?.substringAfter("(")?.substringBefore(")").orEmpty(),
         number = it.lessonNumber,
@@ -70,10 +68,8 @@ fun List<ScrapperTimetable>.mapTimetable(zoneId: ZoneId) = map {
         canceled = it.canceled,
         changes = it.changes,
         date = it.date,
-        start = it.start,
-        end = it.end,
-        startZoned = it.start.atZone(zoneId),
-        endZoned = it.end.atZone(zoneId),
+        start = it.start.atZone(zoneId),
+        end = it.end.atZone(zoneId),
         group = it.group,
         info = it.info,
         number = it.number,
@@ -98,10 +94,8 @@ fun List<ScrapperTimetableAdditional>.mapTimetableAdditional(zoneId: ZoneId) = m
     TimetableAdditional(
         subject = it.subject,
         date = it.date,
-        start = it.start,
-        end = it.end,
-        startZoned = it.start.atZone(zoneId),
-        endZoned = it.end.atZone(zoneId),
+        start = it.start.atZone(zoneId),
+        end = it.end.atZone(zoneId),
     )
 }
 

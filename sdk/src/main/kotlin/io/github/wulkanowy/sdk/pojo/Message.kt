@@ -10,7 +10,7 @@ data class Message(
     val correspondents: String,
     val subject: String,
     val content: String?,
-    val dateZoned: ZonedDateTime,
+    val date: ZonedDateTime,
     val folderId: Int,
     val unread: Boolean,
     val readBy: Int?,

@@ -30,7 +30,7 @@ fun List<ApiMessage>.mapMessages(zoneId: ZoneId) = map {
             else -> 1
         },
         content = it.content,
-        dateZoned = it.sentDateTime.toLocalDateTime().atZone(zoneId),
+        date = it.sentDateTime.toLocalDateTime().atZone(zoneId),
         subject = it.subject,
         hasAttachments = false,
     )
@@ -42,7 +42,7 @@ fun List<ScrapperMessageMeta>.mapMessages(zoneId: ZoneId, folderId: Folder) = ma
         id = it.id,
         mailbox = it.mailbox,
         subject = it.subject,
-        dateZoned = it.date.atZone(zoneId),
+        date = it.date.atZone(zoneId),
         content = null,
         folderId = folderId.id,
         recipients = emptyList(),

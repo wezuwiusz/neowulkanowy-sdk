@@ -30,10 +30,8 @@ class TimetableMapperTest : BaseLocalTest() {
 
         with(lessons[1]) {
             assertEquals(2, number)
-            assertEquals(LocalDateTime.of(2020, 2, 3, 8, 55, 0), start)
-            assertEquals(LocalDateTime.of(2020, 2, 3, 9, 40, 0), end)
-            assertEquals(ZonedDateTime.of(LocalDateTime.of(2020, 2, 3, 8, 55, 0), ZoneId.of("Europe/Warsaw")), startZoned)
-            assertEquals(ZonedDateTime.of(LocalDateTime.of(2020, 2, 3, 9, 40, 0), ZoneId.of("Europe/Warsaw")), endZoned)
+            assertEquals(ZonedDateTime.of(LocalDateTime.of(2020, 2, 3, 8, 55, 0), ZoneId.of("Europe/Warsaw")), start)
+            assertEquals(ZonedDateTime.of(LocalDateTime.of(2020, 2, 3, 9, 40, 0), ZoneId.of("Europe/Warsaw")), end)
 
             assertEquals("Sieci komputerowe", subject)
             assertEquals("t.infor", group)
