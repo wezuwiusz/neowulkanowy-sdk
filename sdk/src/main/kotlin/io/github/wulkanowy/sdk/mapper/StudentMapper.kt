@@ -26,10 +26,6 @@ fun ScrapperStudentInfo.mapStudent() = StudentInfo(
     registeredAddress = registeredAddress,
     secondName = middleName.orEmpty(),
     surname = lastName,
-    guardians = listOfNotNull(
-        guardianFirst?.toFamilyMember(),
-        guardianSecond?.toFamilyMember(),
-    ),
     guardianFirst = guardianFirst?.toFamilyMember(),
     guardianSecond = guardianSecond?.toFamilyMember(),
 )
