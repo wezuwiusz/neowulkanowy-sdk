@@ -19,8 +19,6 @@ data class StudentInfo(
     val phoneNumber: String,
     val cellPhoneNumber: String,
     val email: String,
-    @Deprecated("use guardianFirst and guardianSecond instead")
-    val guardians: List<StudentGuardian>,
     val guardianFirst: StudentGuardian?,
     val guardianSecond: StudentGuardian?,
 )
