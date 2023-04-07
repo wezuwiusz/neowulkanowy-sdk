@@ -3,13 +3,13 @@ package io.github.wulkanowy.sdk.scrapper.timetable
 import java.time.LocalDate
 import java.time.LocalDateTime
 
-data class TimetableFull(
+data class Timetable(
     val headers: List<TimetableDayHeader>,
-    val lessons: List<Timetable>,
-    val additional: List<TimetableAdditional>,
+    val lessons: List<Lesson>,
+    val additional: List<LessonAdditional>,
 )
 
-data class Timetable(
+data class Lesson(
     val number: Int = 0,
     val start: LocalDateTime,
     val end: LocalDateTime,
@@ -31,7 +31,7 @@ data class TimetableDayHeader(
     val content: String,
 )
 
-data class TimetableAdditional(
+data class LessonAdditional(
     val start: LocalDateTime,
     val end: LocalDateTime,
     val date: LocalDate,

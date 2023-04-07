@@ -9,15 +9,15 @@ import org.junit.Test
 class TimetableTest : BaseLocalTest() {
 
     private val timetable by lazy {
-        runBlocking { getStudentRepo(TimetableTest::class.java, "PlanLekcji.json").getTimetableNormal(getLocalDate(2018, 9, 24)) }
+        runBlocking { getStudentRepo(TimetableTest::class.java, "PlanLekcji.json").getTimetable(getLocalDate(2018, 9, 24)).lessons }
     }
 
     private val headers by lazy {
-        runBlocking { getStudentRepo(TimetableTest::class.java, "PlanLekcji.json").getTimetableHeaders(getLocalDate(2018, 9, 24)) }
+        runBlocking { getStudentRepo(TimetableTest::class.java, "PlanLekcji.json").getTimetable(getLocalDate(2018, 9, 24)).headers }
     }
 
     private val additional by lazy {
-        runBlocking { getStudentRepo(TimetableTest::class.java, "PlanLekcji.json").getTimetableAdditional(getLocalDate(2020, 10, 9)) }
+        runBlocking { getStudentRepo(TimetableTest::class.java, "PlanLekcji.json").getTimetable(getLocalDate(2020, 10, 9)).additional }
     }
 
     companion object {

@@ -29,9 +29,6 @@ import io.github.wulkanowy.sdk.mapper.mapStudent
 import io.github.wulkanowy.sdk.mapper.mapStudents
 import io.github.wulkanowy.sdk.mapper.mapSubjects
 import io.github.wulkanowy.sdk.mapper.mapTeachers
-import io.github.wulkanowy.sdk.mapper.mapTimetable
-import io.github.wulkanowy.sdk.mapper.mapTimetableAdditional
-import io.github.wulkanowy.sdk.mapper.mapTimetableDayHeaders
 import io.github.wulkanowy.sdk.mapper.mapTimetableFull
 import io.github.wulkanowy.sdk.mapper.mapToScrapperAbsent
 import io.github.wulkanowy.sdk.mapper.mapToUnits
@@ -69,9 +66,6 @@ import io.github.wulkanowy.sdk.pojo.StudentPhoto
 import io.github.wulkanowy.sdk.pojo.Subject
 import io.github.wulkanowy.sdk.pojo.Teacher
 import io.github.wulkanowy.sdk.pojo.Timetable
-import io.github.wulkanowy.sdk.pojo.TimetableAdditional
-import io.github.wulkanowy.sdk.pojo.TimetableDayHeader
-import io.github.wulkanowy.sdk.pojo.TimetableFull
 import io.github.wulkanowy.sdk.pojo.Token
 import io.github.wulkanowy.sdk.scrapper.Scrapper
 import io.github.wulkanowy.sdk.scrapper.register.RegisterUser
@@ -562,40 +556,10 @@ class Sdk {
         }
     }
 
-    suspend fun getTimetableFull(start: LocalDate, end: LocalDate): TimetableFull = withContext(Dispatchers.IO) {
+    suspend fun getTimetable(start: LocalDate, end: LocalDate): Timetable = withContext(Dispatchers.IO) {
         when (mode) {
-            Mode.SCRAPPER -> scrapper.getTimetableFull(start, end).mapTimetableFull(registerTimeZone)
+            Mode.SCRAPPER -> scrapper.getTimetable(start, end).mapTimetableFull(registerTimeZone)
             Mode.HYBRID, Mode.API -> mobile.getTimetable(start, end, 0).mapTimetableFull(mobile.getDictionaries(), registerTimeZone)
-        }
-    }
-
-    suspend fun getTimetable(start: LocalDate, end: LocalDate): Pair<List<Timetable>, List<TimetableAdditional>> = withContext(Dispatchers.IO) {
-        when (mode) {
-            Mode.SCRAPPER -> scrapper.getTimetable(start, end)
-                .let { (normal, additional) -> normal.mapTimetable(registerTimeZone) to additional.mapTimetableAdditional(registerTimeZone) }
-
-            Mode.HYBRID, Mode.API -> mobile.getTimetable(start, end, 0).mapTimetable(mobile.getDictionaries(), registerTimeZone) to emptyList()
-        }
-    }
-
-    suspend fun getTimetableHeaders(start: LocalDate, end: LocalDate): List<TimetableDayHeader> = withContext(Dispatchers.IO) {
-        when (mode) {
-            Mode.SCRAPPER -> scrapper.getTimetableHeaders(start).mapTimetableDayHeaders()
-            Mode.HYBRID, Mode.API -> throw FeatureNotAvailableException("Timetable headers are not available in API mode")
-        }
-    }
-
-    suspend fun getTimetableNormal(start: LocalDate, end: LocalDate): List<Timetable> = withContext(Dispatchers.IO) {
-        when (mode) {
-            Mode.SCRAPPER -> scrapper.getTimetableNormal(start, end).mapTimetable(registerTimeZone)
-            Mode.HYBRID, Mode.API -> mobile.getTimetable(start, end, 0).mapTimetable(mobile.getDictionaries(), registerTimeZone)
-        }
-    }
-
-    suspend fun getTimetableAdditional(start: LocalDate): List<TimetableAdditional> = withContext(Dispatchers.IO) {
-        when (mode) {
-            Mode.SCRAPPER -> scrapper.getTimetableAdditional(start).mapTimetableAdditional(registerTimeZone)
-            Mode.HYBRID, Mode.API -> throw FeatureNotAvailableException("Additional timetable lessons are not available in API mode")
         }
     }
 

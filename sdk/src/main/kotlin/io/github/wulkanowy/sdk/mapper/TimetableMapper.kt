@@ -2,21 +2,21 @@ package io.github.wulkanowy.sdk.mapper
 
 import io.github.wulkanowy.sdk.mobile.dictionaries.Dictionaries
 import io.github.wulkanowy.sdk.pojo.CompletedLesson
-import io.github.wulkanowy.sdk.pojo.Timetable
-import io.github.wulkanowy.sdk.pojo.TimetableAdditional
+import io.github.wulkanowy.sdk.pojo.Lesson
+import io.github.wulkanowy.sdk.pojo.LessonAdditional
 import io.github.wulkanowy.sdk.pojo.TimetableDayHeader
-import io.github.wulkanowy.sdk.pojo.TimetableFull
+import io.github.wulkanowy.sdk.pojo.Timetable
 import io.github.wulkanowy.sdk.toLocalDate
 import io.github.wulkanowy.sdk.toLocalDateTime
 import java.time.ZoneId
 import io.github.wulkanowy.sdk.mobile.timetable.Lesson as ApiTimetable
 import io.github.wulkanowy.sdk.scrapper.timetable.CompletedLesson as ScrapperCompletedLesson
-import io.github.wulkanowy.sdk.scrapper.timetable.Timetable as ScrapperTimetable
-import io.github.wulkanowy.sdk.scrapper.timetable.TimetableAdditional as ScrapperTimetableAdditional
+import io.github.wulkanowy.sdk.scrapper.timetable.Lesson as ScrapperTimetable
+import io.github.wulkanowy.sdk.scrapper.timetable.LessonAdditional as ScrapperTimetableAdditional
 import io.github.wulkanowy.sdk.scrapper.timetable.TimetableDayHeader as ScrapperTimetableDayHeader
-import io.github.wulkanowy.sdk.scrapper.timetable.TimetableFull as ScrapperTimetableFull
+import io.github.wulkanowy.sdk.scrapper.timetable.Timetable as ScrapperTimetableFull
 
-fun List<ApiTimetable>.mapTimetableFull(dictionaries: Dictionaries, zoneId: ZoneId) = TimetableFull(
+fun List<ApiTimetable>.mapTimetableFull(dictionaries: Dictionaries, zoneId: ZoneId) = Timetable(
     headers = emptyList(),
     lessons = mapTimetable(dictionaries, zoneId),
     additional = emptyList(),
@@ -28,7 +28,7 @@ fun List<ApiTimetable>.mapTimetable(dictionaries: Dictionaries, zoneId: ZoneId) 
     val time = dictionaries.lessonTimes.single { time -> time.id == it.lessonTimeId }
     val startDateTime = "${it.dayText} ${time.startText}".toLocalDateTime("yyyy-MM-dd HH:mm")
     val endDateTime = "${it.dayText} ${time.endText}".toLocalDateTime("yyyy-MM-dd HH:mm")
-    Timetable(
+    Lesson(
         canceled = it.overriddenName,
         changes = it.boldName || (!it.annotationAboutChange.isNullOrBlank() && !it.overriddenName),
         date = it.day.toLocalDate(),
@@ -57,14 +57,14 @@ fun List<ApiTimetable>.mapTimetable(dictionaries: Dictionaries, zoneId: ZoneId) 
     } else lessons
 }.flatten()
 
-fun ScrapperTimetableFull.mapTimetableFull(zoneId: ZoneId) = TimetableFull(
+fun ScrapperTimetableFull.mapTimetableFull(zoneId: ZoneId) = Timetable(
     headers = headers.mapTimetableDayHeaders(),
     lessons = lessons.mapTimetable(zoneId),
     additional = additional.mapTimetableAdditional(zoneId),
 )
 
 fun List<ScrapperTimetable>.mapTimetable(zoneId: ZoneId) = map {
-    Timetable(
+    Lesson(
         canceled = it.canceled,
         changes = it.changes,
         date = it.date,
@@ -91,7 +91,7 @@ fun List<ScrapperTimetableDayHeader>.mapTimetableDayHeaders() = map {
 }
 
 fun List<ScrapperTimetableAdditional>.mapTimetableAdditional(zoneId: ZoneId) = map {
-    TimetableAdditional(
+    LessonAdditional(
         subject = it.subject,
         date = it.date,
         start = it.start.atZone(zoneId),

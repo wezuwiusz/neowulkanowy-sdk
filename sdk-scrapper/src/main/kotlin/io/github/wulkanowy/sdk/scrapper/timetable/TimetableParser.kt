@@ -16,11 +16,11 @@ class TimetableParser {
         const val INFO_REPLACEMENT_ROOM = "zmieniono salę"
     }
 
-    fun getTimetable(c: TimetableCell): Timetable? {
-        return addLessonDetails(Timetable(c.number, c.start, c.end, c.date), c.td)
+    fun getTimetable(c: TimetableCell): Lesson? {
+        return addLessonDetails(Lesson(c.number, c.start, c.end, c.date), c.td)
     }
 
-    private fun addLessonDetails(lesson: Timetable, td: Element): Timetable? {
+    private fun addLessonDetails(lesson: Lesson, td: Element): Lesson? {
         val divs = td.select("div:not([class])")
         val warnElement = td.select(".uwaga-panel").getOrNull(0)
 
@@ -107,7 +107,7 @@ class TimetableParser {
         }
     }
 
-    private fun getLessonInfo(lesson: Timetable, div: Element) = div.select("span").run {
+    private fun getLessonInfo(lesson: Lesson, div: Element) = div.select("span").run {
         when {
             size == 2 -> getLessonLight(lesson, this, div.ownText())
             size == 3 && div.ownText().contains(INFO_REPLACEMENT_TEACHER, true) -> getSimpleLessonWithNewReplacementTeacher(
@@ -154,31 +154,31 @@ class TimetableParser {
         }
     }
 
-    private fun getSimpleLesson(lesson: Timetable, spans: Elements, infoExtraOffset: Int = 0, changes: String): Timetable {
+    private fun getSimpleLesson(lesson: Lesson, spans: Elements, infoExtraOffset: Int = 0, changes: String): Lesson {
         return getLesson(lesson, spans, 0, infoExtraOffset, changes)
     }
 
-    private fun getSimpleLessonWithNewReplacementRoom(lesson: Timetable, spans: Elements, offset: Int, changes: String): Timetable {
+    private fun getSimpleLessonWithNewReplacementRoom(lesson: Lesson, spans: Elements, offset: Int, changes: String): Lesson {
         return getLessonWithReplacementRoom(lesson, spans, offset, changes = changes)
     }
 
-    private fun getSimpleLessonWithNewReplacementTeacher(lesson: Timetable, spans: Elements, offset: Int, changes: String): Timetable {
+    private fun getSimpleLessonWithNewReplacementTeacher(lesson: Lesson, spans: Elements, offset: Int, changes: String): Lesson {
         return getLessonWithReplacementTeacher(lesson, spans, offset, changes = changes)
     }
 
-    private fun getSimpleLessonWithReplacement(lesson: Timetable, spans: Elements): Timetable {
+    private fun getSimpleLessonWithReplacement(lesson: Lesson, spans: Elements): Lesson {
         return getLessonWithReplacement(lesson, spans)
     }
 
-    private fun getGroupLesson(lesson: Timetable, spans: Elements, changes: String): Timetable {
+    private fun getGroupLesson(lesson: Lesson, spans: Elements, changes: String): Lesson {
         return getLesson(lesson, spans, offset = 1, changes = changes)
     }
 
-    private fun getGroupLessonWithReplacement(lesson: Timetable, spans: Elements): Timetable {
+    private fun getGroupLessonWithReplacement(lesson: Lesson, spans: Elements): Lesson {
         return getLessonWithReplacement(lesson, spans, 1)
     }
 
-    private fun getLessonLight(lesson: Timetable, spans: Elements, info: String): Timetable {
+    private fun getLessonLight(lesson: Lesson, spans: Elements, info: String): Lesson {
         val firstElementClasses = spans.first()?.classNames().orEmpty()
         val isCanceled = CLASS_MOVED_OR_CANCELED in firstElementClasses
         val isChanged = CLASS_CHANGES in firstElementClasses
@@ -192,7 +192,7 @@ class TimetableParser {
         )
     }
 
-    private fun getLesson(lesson: Timetable, spans: Elements, offset: Int = 0, infoExtraOffset: Int = 0, changes: String): Timetable {
+    private fun getLesson(lesson: Lesson, spans: Elements, offset: Int = 0, infoExtraOffset: Int = 0, changes: String): Lesson {
         val firstElementClasses = spans.first()?.classNames().orEmpty()
         val isCanceled = CLASS_MOVED_OR_CANCELED in firstElementClasses
         val isChanged = CLASS_CHANGES in firstElementClasses
@@ -207,7 +207,7 @@ class TimetableParser {
         )
     }
 
-    private fun getLessonWithReplacementRoom(lesson: Timetable, spans: Elements, offset: Int, changes: String): Timetable {
+    private fun getLessonWithReplacementRoom(lesson: Lesson, spans: Elements, offset: Int, changes: String): Lesson {
         return lesson.copy(
             subject = getLessonAndGroupInfoFromSpan(spans[0])[0],
             group = getLessonAndGroupInfoFromSpan(spans[0])[1],
@@ -219,7 +219,7 @@ class TimetableParser {
         )
     }
 
-    private fun getLessonWithReplacementTeacher(lesson: Timetable, spans: Elements, offset: Int, changes: String): Timetable {
+    private fun getLessonWithReplacementTeacher(lesson: Lesson, spans: Elements, offset: Int, changes: String): Lesson {
         return lesson.copy(
             subject = getLessonAndGroupInfoFromSpan(spans[0])[0],
             group = getLessonAndGroupInfoFromSpan(spans[0])[1],
@@ -231,7 +231,7 @@ class TimetableParser {
         )
     }
 
-    private fun getLessonWithReplacement(lesson: Timetable, spans: Elements, offset: Int = 0) = lesson.copy(
+    private fun getLessonWithReplacement(lesson: Lesson, spans: Elements, offset: Int = 0) = lesson.copy(
         subject = getLessonAndGroupInfoFromSpan(spans[3 + offset])[0],
         subjectOld = getLessonAndGroupInfoFromSpan(spans[0])[0],
         group = getLessonAndGroupInfoFromSpan(spans[3 + offset])[1],

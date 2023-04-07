@@ -13,7 +13,7 @@ private val parser = TimetableParser()
 private val formatter1 = DateTimeFormatter.ofPattern("dd.MM.yyyy")
 private val formatter2 = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")
 
-fun TimetableResponse.mapTimetableList(startDate: LocalDate, endDate: LocalDate?) = rows.flatMap { lessons ->
+fun TimetableResponse.mapTimetableList(startDate: LocalDate, endDate: LocalDate?): List<Lesson> = rows.flatMap { lessons ->
     lessons.drop(1).mapIndexed { i, it ->
         val times = lessons[0].split("<br />")
         val header = headers.drop(1)[i].date.split("<br />")
@@ -44,7 +44,7 @@ fun TimetableResponse.mapTimetableAdditional() = additional.flatMap { day ->
         val description = Jsoup.parse(lesson.description).text()
         val startTime = description.substringBefore(" - ")
         val endTime = description.split(" ")[2]
-        TimetableAdditional(
+        LessonAdditional(
             date = date,
             start = LocalDateTime.parse("${date.toFormat("yyyy-MM-dd")} $startTime", formatter2),
             end = LocalDateTime.parse("${date.toFormat("yyyy-MM-dd")} $endTime", formatter2),

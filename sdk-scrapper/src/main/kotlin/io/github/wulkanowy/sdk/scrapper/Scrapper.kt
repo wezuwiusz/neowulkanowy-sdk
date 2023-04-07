@@ -43,9 +43,6 @@ import io.github.wulkanowy.sdk.scrapper.student.StudentInfo
 import io.github.wulkanowy.sdk.scrapper.student.StudentPhoto
 import io.github.wulkanowy.sdk.scrapper.timetable.CompletedLesson
 import io.github.wulkanowy.sdk.scrapper.timetable.Timetable
-import io.github.wulkanowy.sdk.scrapper.timetable.TimetableAdditional
-import io.github.wulkanowy.sdk.scrapper.timetable.TimetableDayHeader
-import io.github.wulkanowy.sdk.scrapper.timetable.TimetableFull
 import okhttp3.Interceptor
 import okhttp3.logging.HttpLoggingInterceptor
 import java.net.URL
@@ -356,38 +353,14 @@ class Scrapper {
 
     suspend fun getConferences(): List<Conference> = student.getConferences()
 
-    suspend fun getTimetableFull(startDate: LocalDate, endDate: LocalDate? = null): TimetableFull {
-        if (diaryId == 0) return TimetableFull(
+    suspend fun getTimetable(startDate: LocalDate, endDate: LocalDate? = null): Timetable {
+        if (diaryId == 0) return Timetable(
             headers = emptyList(),
             lessons = emptyList(),
             additional = emptyList(),
         )
 
-        return student.getTimetableFull(startDate, endDate)
-    }
-
-    suspend fun getTimetable(startDate: LocalDate, endDate: LocalDate? = null): Pair<List<Timetable>, List<TimetableAdditional>> {
-        if (diaryId == 0) return emptyList<Timetable>() to emptyList()
-
         return student.getTimetable(startDate, endDate)
-    }
-
-    suspend fun getTimetableNormal(startDate: LocalDate, endDate: LocalDate? = null): List<Timetable> {
-        if (diaryId == 0) return emptyList()
-
-        return student.getTimetableNormal(startDate, endDate)
-    }
-
-    suspend fun getTimetableHeaders(startDate: LocalDate): List<TimetableDayHeader> {
-        if (diaryId == 0) return emptyList()
-
-        return student.getTimetableHeaders(startDate)
-    }
-
-    suspend fun getTimetableAdditional(startDate: LocalDate): List<TimetableAdditional> {
-        if (diaryId == 0) return emptyList()
-
-        return student.getTimetableAdditional(startDate)
     }
 
     suspend fun getCompletedLessons(startDate: LocalDate, endDate: LocalDate? = null, subjectId: Int = -1): List<CompletedLesson> {

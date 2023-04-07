@@ -48,9 +48,6 @@ import io.github.wulkanowy.sdk.scrapper.timetable.CacheResponse
 import io.github.wulkanowy.sdk.scrapper.timetable.CompletedLesson
 import io.github.wulkanowy.sdk.scrapper.timetable.CompletedLessonsRequest
 import io.github.wulkanowy.sdk.scrapper.timetable.Timetable
-import io.github.wulkanowy.sdk.scrapper.timetable.TimetableAdditional
-import io.github.wulkanowy.sdk.scrapper.timetable.TimetableDayHeader
-import io.github.wulkanowy.sdk.scrapper.timetable.TimetableFull
 import io.github.wulkanowy.sdk.scrapper.timetable.TimetableRequest
 import io.github.wulkanowy.sdk.scrapper.timetable.mapCompletedLessonsList
 import io.github.wulkanowy.sdk.scrapper.timetable.mapTimetableAdditional
@@ -194,38 +191,14 @@ class StudentRepository(private val api: StudentService) {
             .mapConferences()
     }
 
-    suspend fun getTimetableFull(startDate: LocalDate, endDate: LocalDate? = null): TimetableFull {
+    suspend fun getTimetable(startDate: LocalDate, endDate: LocalDate? = null): Timetable {
         val data = api.getTimetable(TimetableRequest(startDate.toISOFormat())).handleErrors().data
 
-        return TimetableFull(
+        return Timetable(
             headers = data?.mapTimetableHeaders().orEmpty(),
             lessons = data?.mapTimetableList(startDate, endDate).orEmpty(),
             additional = data?.mapTimetableAdditional().orEmpty(),
         )
-    }
-
-    suspend fun getTimetable(startDate: LocalDate, endDate: LocalDate? = null): Pair<List<Timetable>, List<TimetableAdditional>> {
-        val res = api.getTimetable(TimetableRequest(startDate.toISOFormat())).handleErrors()
-
-        val data = requireNotNull(res.data) { "Required value was null. $res" }
-
-        return data.mapTimetableList(startDate, endDate) to data.mapTimetableAdditional()
-    }
-
-    suspend fun getTimetableNormal(startDate: LocalDate, endDate: LocalDate? = null): List<Timetable> {
-        val res = api.getTimetable(TimetableRequest(startDate.toISOFormat())).handleErrors()
-        return res.data?.mapTimetableList(startDate, endDate).orEmpty()
-    }
-
-    suspend fun getTimetableHeaders(startDate: LocalDate): List<TimetableDayHeader> {
-        val res = api.getTimetable(TimetableRequest(startDate.toISOFormat())).handleErrors()
-
-        return res.data?.mapTimetableHeaders().orEmpty()
-    }
-
-    suspend fun getTimetableAdditional(startDate: LocalDate): List<TimetableAdditional> {
-        return api.getTimetable(TimetableRequest(startDate.toISOFormat())).handleErrors().data
-            ?.mapTimetableAdditional().orEmpty()
     }
 
     suspend fun getCompletedLessons(start: LocalDate, endDate: LocalDate?, subjectId: Int): List<CompletedLesson> {
