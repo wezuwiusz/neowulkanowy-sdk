@@ -44,12 +44,10 @@ import io.github.wulkanowy.sdk.pojo.DirectorInformation
 import io.github.wulkanowy.sdk.pojo.Exam
 import io.github.wulkanowy.sdk.pojo.Folder
 import io.github.wulkanowy.sdk.pojo.GovernmentUnit
-import io.github.wulkanowy.sdk.pojo.Grade
 import io.github.wulkanowy.sdk.pojo.GradePointsStatistics
 import io.github.wulkanowy.sdk.pojo.GradeStatisticsSemester
 import io.github.wulkanowy.sdk.pojo.GradeStatisticsSubject
-import io.github.wulkanowy.sdk.pojo.GradeSummary
-import io.github.wulkanowy.sdk.pojo.GradesFull
+import io.github.wulkanowy.sdk.pojo.Grades
 import io.github.wulkanowy.sdk.pojo.Homework
 import io.github.wulkanowy.sdk.pojo.LuckyNumber
 import io.github.wulkanowy.sdk.pojo.Mailbox
@@ -361,31 +359,20 @@ class Sdk {
         }
     }
 
-    suspend fun getGradesFull(semesterId: Int): GradesFull = withContext(Dispatchers.IO) {
+    suspend fun getGrades(semesterId: Int): Grades = withContext(Dispatchers.IO) {
         when (mode) {
-            Mode.SCRAPPER -> scrapper.getGradesFull(semesterId).mapGrades()
-            else -> TODO()
-        }
-    }
-
-    suspend fun getGrades(semesterId: Int): Pair<List<Grade>, List<GradeSummary>> = withContext(Dispatchers.IO) {
-        when (mode) {
-            Mode.SCRAPPER -> scrapper.getGrades(semesterId).mapGrades()
-            Mode.HYBRID, Mode.API -> mobile.getGrades(semesterId).mapGrades(mobile.getDictionaries())
-        }
-    }
-
-    suspend fun getGradesDetails(semesterId: Int): List<Grade> = withContext(Dispatchers.IO) {
-        when (mode) {
-            Mode.SCRAPPER -> scrapper.getGradesDetails(semesterId).mapGradesDetails()
-            Mode.HYBRID, Mode.API -> mobile.getGradesDetails(semesterId).mapGradesDetails(mobile.getDictionaries())
-        }
-    }
-
-    suspend fun getGradesSummary(semesterId: Int): List<GradeSummary> = withContext(Dispatchers.IO) {
-        when (mode) {
-            Mode.SCRAPPER -> scrapper.getGradesSummary(semesterId).mapGradesSummary()
-            Mode.HYBRID, Mode.API -> mobile.getGradesSummary(semesterId).mapGradesSummary(mobile.getDictionaries())
+            Mode.HYBRID, Mode.SCRAPPER -> scrapper.getGrades(semesterId).mapGrades()
+            Mode.API -> mobile.getGrades(semesterId).let { (grades, summaries) ->
+                val dict = mobile.getDictionaries()
+                Grades(
+                    details = grades.mapGradesDetails(dict),
+                    summary = summaries.mapGradesSummary(dict),
+                    isAverage = false,
+                    isPoints = false,
+                    isForAdults = false,
+                    type = 0,
+                )
+            }
         }
     }
 
@@ -572,6 +559,7 @@ class Sdk {
 
     suspend fun getLuckyNumber(unitName: String = ""): LuckyNumber? = withContext(Dispatchers.IO) {
         val numbers = getKidsLuckyNumbers()
+
         // if lucky number unitName match unit name from student tile
         numbers.singleOrNull { number -> number.unitName == unitName }?.let {
             return@withContext it

@@ -2,6 +2,15 @@ package io.github.wulkanowy.sdk.pojo
 
 import java.time.LocalDate
 
+data class Grades(
+    val details: List<Grade>,
+    val summary: List<GradeSummary>,
+    val isAverage: Boolean,
+    val isPoints: Boolean,
+    val isForAdults: Boolean,
+    val type: Int,
+)
+
 data class Grade(
     val subject: String,
     val entry: String,
@@ -15,9 +24,18 @@ data class Grade(
     val color: String,
     val teacher: String,
     val date: LocalDate,
-
 //    val counter: Int?,
 //    val denominator: Int?,
 //    val creationDate: Int,
 //    val modificationDate: Int
+)
+
+data class GradeSummary(
+    val name: String,
+    val average: Double = .0,
+    val predicted: String,
+    val final: String,
+    val pointsSum: String,
+    val proposedPoints: String,
+    val finalPoints: String,
 )

@@ -17,11 +17,9 @@ import io.github.wulkanowy.sdk.scrapper.exams.mapExamsList
 import io.github.wulkanowy.sdk.scrapper.exception.FeatureDisabledException
 import io.github.wulkanowy.sdk.scrapper.getSchoolYear
 import io.github.wulkanowy.sdk.scrapper.getScriptParam
-import io.github.wulkanowy.sdk.scrapper.grades.Grade
 import io.github.wulkanowy.sdk.scrapper.grades.GradePointsSummary
 import io.github.wulkanowy.sdk.scrapper.grades.GradeRequest
-import io.github.wulkanowy.sdk.scrapper.grades.GradeSummary
-import io.github.wulkanowy.sdk.scrapper.grades.GradesFull
+import io.github.wulkanowy.sdk.scrapper.grades.Grades
 import io.github.wulkanowy.sdk.scrapper.grades.GradesStatisticsPartial
 import io.github.wulkanowy.sdk.scrapper.grades.GradesStatisticsRequest
 import io.github.wulkanowy.sdk.scrapper.grades.GradesStatisticsSemester
@@ -118,10 +116,10 @@ class StudentRepository(private val api: StudentService) {
             .data.orEmpty().mapExamsList(startDate, endDate)
     }
 
-    suspend fun getGradesFull(semesterId: Int): GradesFull {
+    suspend fun getGrades(semesterId: Int): Grades {
         val data = api.getGrades(GradeRequest(semesterId)).handleErrors().data
 
-        return GradesFull(
+        return Grades(
             details = data?.mapGradesList().orEmpty(),
             summary = data?.mapGradesSummary().orEmpty(),
             isAverage = data?.isAverage ?: false,
@@ -129,26 +127,6 @@ class StudentRepository(private val api: StudentService) {
             isForAdults = data?.isForAdults ?: false,
             type = data?.type ?: -1,
         )
-    }
-
-    suspend fun getGrades(semesterId: Int?): Pair<List<Grade>, List<GradeSummary>> {
-        val data = api.getGrades(GradeRequest(semesterId)).handleErrors().data
-        return Pair(
-            first = data?.mapGradesList().orEmpty(),
-            second = data?.mapGradesSummary().orEmpty(),
-        )
-    }
-
-    suspend fun getGradesDetails(semesterId: Int?): List<Grade> {
-        return api.getGrades(GradeRequest(semesterId))
-            .handleErrors()
-            .data?.mapGradesList().orEmpty()
-    }
-
-    suspend fun getGradesSummary(semesterId: Int?): List<GradeSummary> {
-        return api.getGrades(GradeRequest(semesterId))
-            .handleErrors()
-            .data?.mapGradesSummary().orEmpty()
     }
 
     suspend fun getGradesPartialStatistics(semesterId: Int): List<GradesStatisticsPartial> {

@@ -4,13 +4,13 @@ import io.github.wulkanowy.sdk.mobile.dictionaries.Dictionaries
 import io.github.wulkanowy.sdk.mobile.grades.GradesSummaryResponse
 import io.github.wulkanowy.sdk.pojo.Grade
 import io.github.wulkanowy.sdk.pojo.GradeSummary
-import io.github.wulkanowy.sdk.pojo.GradesFull
+import io.github.wulkanowy.sdk.pojo.Grades
 import io.github.wulkanowy.sdk.scrapper.grades.isGradeValid
 import io.github.wulkanowy.sdk.toLocalDate
 import io.github.wulkanowy.sdk.mobile.grades.Grade as ApiGrade
 import io.github.wulkanowy.sdk.scrapper.grades.Grade as ScrapperGrade
 import io.github.wulkanowy.sdk.scrapper.grades.GradeSummary as ScrapperGradeSummary
-import io.github.wulkanowy.sdk.scrapper.grades.GradesFull as ScrapperGradesFull
+import io.github.wulkanowy.sdk.scrapper.grades.Grades as ScrapperGrades
 
 fun List<ApiGrade>.mapGradesDetails(dict: Dictionaries) = map { grade ->
     Grade(
@@ -20,7 +20,7 @@ fun List<ApiGrade>.mapGradesDetails(dict: Dictionaries) = map { grade ->
         comment = grade.comment.orEmpty(),
         date = grade.creationDate.toLocalDate(),
         teacher = dict.teachers.singleOrNull { it.id == grade.employeeIdD }?.let { "${it.name} ${it.surname}" }.orEmpty(),
-        entry = if (grade.entry.isNotBlank()) grade.entry else "...",
+        entry = grade.entry.ifBlank { "..." },
         weightValue = if (isGradeValid(grade.entry)) grade.gradeWeight else .0,
         modifier = grade.modificationWeight ?: .0,
         value = grade.value,
@@ -73,7 +73,7 @@ fun List<ScrapperGradeSummary>.mapGradesSummary() = map {
     )
 }
 
-fun ScrapperGradesFull.mapGrades() = GradesFull(
+fun ScrapperGrades.mapGrades() = Grades(
     details = details.mapGradesDetails(),
     summary = summary.mapGradesSummary(),
     isAverage = isAverage,

@@ -7,10 +7,8 @@ import io.github.wulkanowy.sdk.scrapper.attendance.Subject
 import io.github.wulkanowy.sdk.scrapper.conferences.Conference
 import io.github.wulkanowy.sdk.scrapper.exams.Exam
 import io.github.wulkanowy.sdk.scrapper.exception.ScrapperException
-import io.github.wulkanowy.sdk.scrapper.grades.Grade
 import io.github.wulkanowy.sdk.scrapper.grades.GradePointsSummary
-import io.github.wulkanowy.sdk.scrapper.grades.GradeSummary
-import io.github.wulkanowy.sdk.scrapper.grades.GradesFull
+import io.github.wulkanowy.sdk.scrapper.grades.Grades
 import io.github.wulkanowy.sdk.scrapper.grades.GradesStatisticsPartial
 import io.github.wulkanowy.sdk.scrapper.grades.GradesStatisticsSemester
 import io.github.wulkanowy.sdk.scrapper.home.DirectorInformation
@@ -294,8 +292,8 @@ class Scrapper {
         return student.getExams(startDate, endDate)
     }
 
-    suspend fun getGradesFull(semester: Int): GradesFull {
-        if (diaryId == 0) return GradesFull(
+    suspend fun getGrades(semester: Int): Grades {
+        if (diaryId == 0) return Grades(
             details = emptyList(),
             summary = emptyList(),
             isAverage = false,
@@ -304,25 +302,7 @@ class Scrapper {
             type = -1,
         )
 
-        return student.getGradesFull(semester)
-    }
-
-    suspend fun getGrades(semesterId: Int): Pair<List<Grade>, List<GradeSummary>> {
-        if (diaryId == 0) return emptyList<Grade>() to emptyList()
-
-        return student.getGrades(semesterId)
-    }
-
-    suspend fun getGradesDetails(semesterId: Int? = null): List<Grade> {
-        if (diaryId == 0) return emptyList()
-
-        return student.getGradesDetails(semesterId)
-    }
-
-    suspend fun getGradesSummary(semesterId: Int? = null): List<GradeSummary> {
-        if (diaryId == 0) return emptyList()
-
-        return student.getGradesSummary(semesterId)
+        return student.getGrades(semester)
     }
 
     suspend fun getGradesPartialStatistics(semesterId: Int): List<GradesStatisticsPartial> {

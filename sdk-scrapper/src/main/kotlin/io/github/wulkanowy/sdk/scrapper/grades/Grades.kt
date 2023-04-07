@@ -1,6 +1,6 @@
-package io.github.wulkanowy.sdk.pojo
+package io.github.wulkanowy.sdk.scrapper.grades
 
-data class GradesFull(
+data class Grades(
     val details: List<Grade>,
     val summary: List<GradeSummary>,
     val isAverage: Boolean,

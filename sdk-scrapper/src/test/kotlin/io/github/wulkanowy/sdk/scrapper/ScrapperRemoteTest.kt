@@ -212,7 +212,7 @@ class ScrapperRemoteTest : BaseTest() {
 
     @Test
     fun gradesTest() {
-        val grades = runBlocking { api.getGradesDetails(865) }
+        val grades = runBlocking { api.getGrades(865).details }
 
         // dynamic grade
         grades[7].run {
@@ -235,7 +235,7 @@ class ScrapperRemoteTest : BaseTest() {
 
     @Test
     fun gradesSummaryTest() {
-        val summary = runBlocking { api.getGradesSummary(865) }
+        val summary = runBlocking { api.getGrades(865).summary }
 
         summary[2].run {
             assertEquals("Etyka", name)

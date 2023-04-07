@@ -94,7 +94,7 @@ class SdkRemoteTest {
             classId = 14
         }
 
-        val grades = runBlocking { sdk.getGradesDetails(1) }
+        val grades = runBlocking { sdk.getGrades(1).details }
         assertEquals(22, grades.size)
     }
 
@@ -119,8 +119,8 @@ class SdkRemoteTest {
             password = "jan123"
         }
 
-        val grades = sdk.getGradesDetails(1)
-        val grades2 = sdk.getGradesFull(1)
+        val grades = sdk.getGrades(1).details
+        val grades2 = sdk.getGrades(1)
         assertEquals(22, grades.size)
         assertEquals(22, grades2.details.size)
     }
@@ -140,7 +140,7 @@ class SdkRemoteTest {
             classId = 14
         }
 
-        val grades = runBlocking { sdk.getGradesSummary(1) }
+        val grades = runBlocking { sdk.getGrades(1).summary }
         assertEquals(4, grades.size)
     }
 

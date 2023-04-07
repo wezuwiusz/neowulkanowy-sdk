@@ -8,11 +8,11 @@ import org.junit.Test
 class GradesGradeSummaryTest : BaseLocalTest() {
 
     private val grades by lazy {
-        runBlocking { getStudentRepo(GradesTest::class.java, "Oceny.json").getGradesSummary(0) }
+        runBlocking { getStudentRepo(GradesTest::class.java, "Oceny.json").getGrades(0).summary }
     }
 
     private val points by lazy {
-        runBlocking { getStudentRepo(GradesTest::class.java, "Oceny-points.json").getGradesSummary(0) }
+        runBlocking { getStudentRepo(GradesTest::class.java, "Oceny-points.json").getGrades(0).summary }
     }
 
     @Test
