@@ -1,31 +1,31 @@
 package io.github.wulkanowy.sdk.hebe.register
 
-import com.google.gson.annotations.SerializedName
+import kotlinx.serialization.SerialName
 import java.util.UUID
 
 data class RegisterRequest(
 
-    @SerializedName("Certificate")
+    @SerialName("Certificate")
     val certificate: String,
 
-    @SerializedName("CertificateThumbprint")
+    @SerialName("CertificateThumbprint")
     val certificateThumbprint: String,
 
-    @SerializedName("CertificateType")
+    @SerialName("CertificateType")
     val certificateType: String = "X509",
 
-    @SerializedName("DeviceModel")
+    @SerialName("DeviceModel")
     val deviceModel: String,
 
-    @SerializedName("OS")
+    @SerialName("OS")
     val os: String = "Android",
 
-    @SerializedName("PIN")
+    @SerialName("PIN")
     val pin: String,
 
-    @SerializedName("SecurityToken")
+    @SerialName("SecurityToken")
     val securityToken: String,
 
-    @SerializedName("SelfIdentifier")
+    @SerialName("SelfIdentifier")
     val selfIdentifier: String = UUID.randomUUID().toString()
 )

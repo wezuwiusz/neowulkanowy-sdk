@@ -1,18 +1,18 @@
 package io.github.wulkanowy.sdk.hebe.register
 
-import com.google.gson.annotations.SerializedName
+import kotlinx.serialization.SerialName
 
 data class RegisterResponse(
 
-    @SerializedName("LoginId")
+    @SerialName("LoginId")
     val loginId: Int,
 
-    @SerializedName("RestURL")
+    @SerialName("RestURL")
     val restUrl: String,
 
-    @SerializedName("UserLogin")
+    @SerialName("UserLogin")
     val userLogin: String,
 
-    @SerializedName("UserName")
-    val userName: String
+    @SerialName("UserName")
+    val userName: String,
 )

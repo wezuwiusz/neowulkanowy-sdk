@@ -1,37 +1,37 @@
 package io.github.wulkanowy.sdk.hebe
 
-import com.google.gson.annotations.SerializedName
-import org.threeten.bp.LocalDateTime.now
-import org.threeten.bp.ZoneOffset.UTC
-import org.threeten.bp.format.DateTimeFormatter.ofPattern
+import kotlinx.serialization.SerialName
+import java.time.LocalDateTime
+import java.time.ZoneOffset.UTC
+import java.time.format.DateTimeFormatter.ofPattern
 import java.util.UUID
 
 data class ApiRequest<T>(
 
-    @SerializedName("API")
+    @SerialName("API")
     val apiVersion: Int = 1,
 
-    @SerializedName("AppName")
+    @SerialName("AppName")
     val appName: String = "DzienniczekPlus 2.0",
 
-    @SerializedName("AppVersion")
+    @SerialName("AppVersion")
     val appVersion: String = "1.0",
 
-    @SerializedName("CertificateId")
+    @SerialName("CertificateId")
     val certificateId: String,
 
-    @SerializedName("Envelope")
+    @SerialName("Envelope")
     val envelope: T,
 
-    @SerializedName("FirebaseToken")
+    @SerialName("FirebaseToken")
     val firebaseToken: String,
 
-    @SerializedName("RequestId")
+    @SerialName("RequestId")
     val requestId: String = UUID.randomUUID().toString(),
 
-    @SerializedName("Timestamp")
-    val timestamp: Long = now().toEpochSecond(UTC),
+    @SerialName("Timestamp")
+    val timestamp: Long = LocalDateTime.now().toEpochSecond(UTC),
 
-    @SerializedName("TimestampFormatted")
-    val timestampFormatted: String = now().format(ofPattern("yyyy-MM-dd hh:mm:ss"))
+    @SerialName("TimestampFormatted")
+    val timestampFormatted: String = LocalDateTime.now().format(ofPattern("yyyy-MM-dd hh:mm:ss")),
 )

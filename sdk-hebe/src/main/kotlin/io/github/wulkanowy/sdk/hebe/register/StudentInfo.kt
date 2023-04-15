@@ -1,265 +1,265 @@
 package io.github.wulkanowy.sdk.hebe.register
 
-import com.google.gson.annotations.SerializedName
+import kotlinx.serialization.SerialName
 
 class StudentInfo(
 
-    @SerializedName("Capabilities")
+    @SerialName("Capabilities")
     val capabilities: List<String>,
 
-    @SerializedName("ClassDisplay")
+    @SerialName("ClassDisplay")
     val classDisplay: String,
 
-    @SerializedName("ConstituentUnit")
+    @SerialName("ConstituentUnit")
     val constituentUnit: ConstituentUnit,
 
-    @SerializedName("Educators")
+    @SerialName("Educators")
     val educators: List<Educator>,
 
-    @SerializedName("FullSync")
+    @SerialName("FullSync")
     val fullSync: Boolean,
 
-    @SerializedName("InfoDisplay")
+    @SerialName("InfoDisplay")
     val infoDisplay: String,
 
-    @SerializedName("Journal")
+    @SerialName("Journal")
     val journal: Journal,
 
-    @SerializedName("Login")
+    @SerialName("Login")
     val login: Login,
 
-    @SerializedName("Partition")
+    @SerialName("Partition")
     val partition: String,
 
-    @SerializedName("Periods")
+    @SerialName("Periods")
     val periods: List<Period>,
 
-    @SerializedName("Pupil")
+    @SerialName("Pupil")
     val pupil: Pupil,
 
-    @SerializedName("SenderEntry")
+    @SerialName("SenderEntry")
     val senderEntry: SenderEntry,
 
-    @SerializedName("TopLevelPartition")
+    @SerialName("TopLevelPartition")
     val topLevelPartition: String,
 
-    @SerializedName("Unit")
-    val unit: Unit
+    @SerialName("Unit")
+    val unit: Unit,
 ) {
 
     data class ConstituentUnit(
 
-        @SerializedName("Address")
+        @SerialName("Address")
         val address: String,
 
-        @SerializedName("Id")
+        @SerialName("Id")
         val id: Int,
 
-        @SerializedName("Name")
+        @SerialName("Name")
         val name: String,
 
-        @SerializedName("Patron")
+        @SerialName("Patron")
         val patron: String,
 
-        @SerializedName("SchoolTopic")
+        @SerialName("SchoolTopic")
         val schoolTopic: String,
 
-        @SerializedName("Short")
-        val short: String
+        @SerialName("Short")
+        val short: String,
     )
 
     data class Educator(
 
-        @SerializedName("Id")
+        @SerialName("Id")
         val id: Int,
 
-        @SerializedName("Initials")
+        @SerialName("Initials")
         val initials: String,
 
-        @SerializedName("LoginId")
+        @SerialName("LoginId")
         val loginId: Int,
 
-        @SerializedName("Name")
+        @SerialName("Name")
         val name: String,
 
-        @SerializedName("Surname")
+        @SerialName("Surname")
         val surname: String,
 
-        @SerializedName("Roles")
-        val roles: List<Role>
+        @SerialName("Roles")
+        val roles: List<Role>,
     ) {
         data class Role(
 
-            @SerializedName("Address")
+            @SerialName("Address")
             val address: String,
 
-            @SerializedName("AddressHash")
+            @SerialName("AddressHash")
             val addressHash: String,
 
-            @SerializedName("ClassSymbol")
+            @SerialName("ClassSymbol")
             val classSymbol: String,
 
-            @SerializedName("ConstituentUnitSymbol")
+            @SerialName("ConstituentUnitSymbol")
             val constituentUnitSymbol: String,
 
-            @SerializedName("Initials")
+            @SerialName("Initials")
             val initials: String,
 
-            @SerializedName("Name")
+            @SerialName("Name")
             val name: String,
 
-            @SerializedName("RoleName")
+            @SerialName("RoleName")
             val roleName: String,
 
-            @SerializedName("RoleOrder")
+            @SerialName("RoleOrder")
             val roleOrder: Int,
 
-            @SerializedName("Surname")
+            @SerialName("Surname")
             val surname: String,
 
-            @SerializedName("UnitSymbol")
-            val unitSymbol: String?
+            @SerialName("UnitSymbol")
+            val unitSymbol: String?,
         )
     }
 
     data class Journal(
 
-        @SerializedName("Id")
+        @SerialName("Id")
         val id: Int,
 
-        @SerializedName("YearStart")
+        @SerialName("YearStart")
         val yearStart: PeriodDate,
 
-        @SerializedName("YearEnd")
-        val yearEnd: PeriodDate
+        @SerialName("YearEnd")
+        val yearEnd: PeriodDate,
     )
 
     data class PeriodDate(
 
-        @SerializedName("Date")
+        @SerialName("Date")
         val date: String,
 
-        @SerializedName("DateDisplay")
+        @SerialName("DateDisplay")
         val dateDisplay: String,
 
-        @SerializedName("Time")
+        @SerialName("Time")
         val time: String,
 
-        @SerializedName("Timestamp")
-        val timestamp: Long
+        @SerialName("Timestamp")
+        val timestamp: Long,
     )
 
     data class Login(
 
-        @SerializedName("DisplayName")
+        @SerialName("DisplayName")
         val displayName: String,
 
-        @SerializedName("FirstName")
+        @SerialName("FirstName")
         val firstName: String,
 
-        @SerializedName("Id")
+        @SerialName("Id")
         val id: Int,
 
-        @SerializedName("LoginRole")
+        @SerialName("LoginRole")
         val loginRole: String,
 
-        @SerializedName("SecondName")
+        @SerialName("SecondName")
         val secondName: String,
 
-        @SerializedName("Surname")
+        @SerialName("Surname")
         val surname: String,
 
-        @SerializedName("Value")
-        val value: String
+        @SerialName("Value")
+        val value: String,
     )
 
     data class Period(
 
-        @SerializedName("Current")
+        @SerialName("Current")
         val current: Boolean,
 
-        @SerializedName("End")
+        @SerialName("End")
         val end: PeriodDate,
 
-        @SerializedName("Id")
+        @SerialName("Id")
         val id: Int,
 
-        @SerializedName("Last")
+        @SerialName("Last")
         val last: Boolean,
 
-        @SerializedName("Level")
+        @SerialName("Level")
         val level: Int,
 
-        @SerializedName("Number")
+        @SerialName("Number")
         val number: Int,
 
-        @SerializedName("Start")
-        val start: PeriodDate
+        @SerialName("Start")
+        val start: PeriodDate,
     )
 
     data class Pupil(
 
-        @SerializedName("FirstName")
+        @SerialName("FirstName")
         val firstName: String,
 
-        @SerializedName("Id")
+        @SerialName("Id")
         val id: Int,
 
-        @SerializedName("LoginId")
+        @SerialName("LoginId")
         val loginId: Int,
 
-        @SerializedName("LoginValue")
+        @SerialName("LoginValue")
         val loginValue: String,
 
-        @SerializedName("SecondName")
+        @SerialName("SecondName")
         val secondName: String,
 
-        @SerializedName("Sex")
+        @SerialName("Sex")
         val sex: Boolean,
 
-        @SerializedName("Surname")
-        val surname: String
+        @SerialName("Surname")
+        val surname: String,
     )
 
     data class SenderEntry(
 
-        @SerializedName("Address")
+        @SerialName("Address")
         val address: String,
 
-        @SerializedName("AddressHash")
+        @SerialName("AddressHash")
         val addressHash: String,
 
-        @SerializedName("Initials")
+        @SerialName("Initials")
         val initials: String,
 
-        @SerializedName("LoginId")
-        val loginId: Int
+        @SerialName("LoginId")
+        val loginId: Int,
     )
 
     data class Unit(
 
-        @SerializedName("Address")
+        @SerialName("Address")
         val address: String,
 
-        @SerializedName("DisplayName")
+        @SerialName("DisplayName")
         val displayName: String,
 
-        @SerializedName("Id")
+        @SerialName("Id")
         val id: Int,
 
-        @SerializedName("Name")
+        @SerialName("Name")
         val name: String,
 
-        @SerializedName("Patron")
+        @SerialName("Patron")
         val patron: String,
 
-        @SerializedName("RestURL")
+        @SerialName("RestURL")
         val restUrl: String,
 
-        @SerializedName("Short")
+        @SerialName("Short")
         val short: String,
 
-        @SerializedName("Symbol")
-        val symbol: String
+        @SerialName("Symbol")
+        val symbol: String,
     )
 }

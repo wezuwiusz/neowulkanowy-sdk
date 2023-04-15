@@ -50,7 +50,12 @@ fun List<StudentInfo>.mapHebeStudents(certificateKey: String, privateKey: String
             scrapperBaseUrl = "",
             mobileBaseUrl = it.unit.restUrl,
             certificateKey = certificateKey,
-            privateKey = privateKey
+            privateKey = privateKey,
+            // todo
+            userName = "",
+            userLogin = "",
+            studentSurname = "",
+            semesters = listOf(),
         )
     }
 }

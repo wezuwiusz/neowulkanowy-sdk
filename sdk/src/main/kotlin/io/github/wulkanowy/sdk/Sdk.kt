@@ -239,6 +239,7 @@ class Sdk {
     fun switchDiary(diaryId: Int, kindergartenDiaryId: Int, schoolYear: Int): Sdk {
         return also {
             it.diaryId = diaryId
+            it.kindergartenDiaryId = kindergartenDiaryId
             it.schoolYear = schoolYear
         }
     }
