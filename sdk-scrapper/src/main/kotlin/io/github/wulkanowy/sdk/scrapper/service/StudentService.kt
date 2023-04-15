@@ -39,7 +39,7 @@ import retrofit2.http.Header
 import retrofit2.http.POST
 import retrofit2.http.Url
 
-interface StudentService {
+internal interface StudentService {
 
     @GET
     suspend fun getStart(@Url url: String): String

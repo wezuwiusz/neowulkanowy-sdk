@@ -4,7 +4,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class GradeRequest(
+internal data class GradeRequest(
 
     @SerialName("okres")
     val semesterId: Int?,

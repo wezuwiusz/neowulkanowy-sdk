@@ -6,7 +6,7 @@ import io.github.wulkanowy.sdk.scrapper.register.toSemesters
 import io.github.wulkanowy.sdk.scrapper.service.StudentService
 import org.slf4j.LoggerFactory
 
-class StudentStartRepository(
+internal class StudentStartRepository(
     private val studentId: Int,
     private val classId: Int,
     private val unitId: Int,

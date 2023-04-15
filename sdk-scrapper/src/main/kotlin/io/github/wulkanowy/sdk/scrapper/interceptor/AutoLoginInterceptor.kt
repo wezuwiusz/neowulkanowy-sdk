@@ -33,7 +33,7 @@ import java.net.HttpURLConnection
 import java.util.concurrent.locks.Lock
 import java.util.concurrent.locks.ReentrantLock
 
-class AutoLoginInterceptor(
+internal class AutoLoginInterceptor(
     private val loginType: LoginType,
     private val jar: CookieManager,
     private val emptyCookieJarIntercept: Boolean,

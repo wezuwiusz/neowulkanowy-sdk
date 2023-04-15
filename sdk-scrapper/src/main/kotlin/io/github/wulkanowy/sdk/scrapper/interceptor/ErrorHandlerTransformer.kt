@@ -7,7 +7,7 @@ import io.github.wulkanowy.sdk.scrapper.exception.InvalidPathException
 import io.github.wulkanowy.sdk.scrapper.exception.VulcanException
 import io.github.wulkanowy.sdk.scrapper.login.AccountPermissionException
 
-fun <T> ApiResponse<T>.handleErrors(): ApiResponse<T> {
+internal fun <T> ApiResponse<T>.handleErrors(): ApiResponse<T> {
     return if (!success && feedback != null) throw feedback.run {
         when {
             message.contains("niespójność danych") -> ScrapperException(message)

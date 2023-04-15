@@ -30,6 +30,10 @@ jobs:
           run: |
             ./gradlew test --stacktrace
             ./gradlew jacocoTestReport --stacktrace
+        - name: API changes check
+          run: |
+              ./gradlew :sdk:apiCheck --stacktrace
+              ./gradlew :sdk-scrapper:apiCheck --stacktrace
         - uses: codecov/codecov-action@v1
 
   lint:

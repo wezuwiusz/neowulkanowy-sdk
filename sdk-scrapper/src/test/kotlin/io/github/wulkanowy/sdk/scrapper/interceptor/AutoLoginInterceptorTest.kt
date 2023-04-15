@@ -19,9 +19,9 @@ import java.net.CookieManager
 
 class AutoLoginInterceptorTest : BaseLocalTest() {
 
-    lateinit var loginService: LoginService
+    private lateinit var loginService: LoginService
 
-    lateinit var loginHelper: LoginHelper
+    private lateinit var loginHelper: LoginHelper
 
     @Test
     fun oneLoginAtTime() = runBlocking {

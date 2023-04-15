@@ -4,7 +4,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class AttendanceResponse(
+internal data class AttendanceResponse(
 
     @SerialName("UsprawiedliwieniaAktywne")
     val excuseActive: Boolean,

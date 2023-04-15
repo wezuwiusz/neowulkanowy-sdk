@@ -5,7 +5,7 @@ import org.slf4j.LoggerFactory
 
 private val logger = LoggerFactory.getLogger(RegisterRepository::class.java)
 
-fun List<Diary>.toSemesters(studentId: Int, classId: Int, unitId: Int): List<Semester> = this
+internal fun List<Diary>.toSemesters(studentId: Int, classId: Int, unitId: Int): List<Semester> = this
     .filter { it.studentId == studentId }
     .filter { (it.semesters?.firstOrNull()?.classId ?: 0) == classId }
     .flatMap { diary ->

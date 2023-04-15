@@ -1,0 +1,1850 @@
+public final class io/github/wulkanowy/sdk/scrapper/Scrapper {
+	public fun <init> ()V
+	public final fun addInterceptor (Lokhttp3/Interceptor;Z)V
+	public static synthetic fun addInterceptor$default (Lio/github/wulkanowy/sdk/scrapper/Scrapper;Lokhttp3/Interceptor;ZILjava/lang/Object;)V
+	public final fun deleteMessages (Ljava/util/List;ZLkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public final fun excuseForAbsence (Ljava/util/List;Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public static synthetic fun excuseForAbsence$default (Lio/github/wulkanowy/sdk/scrapper/Scrapper;Ljava/util/List;Ljava/lang/String;Lkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
+	public final fun getAndroidVersion ()Ljava/lang/String;
+	public final fun getAttendance (Ljava/time/LocalDate;Ljava/time/LocalDate;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public static synthetic fun getAttendance$default (Lio/github/wulkanowy/sdk/scrapper/Scrapper;Ljava/time/LocalDate;Ljava/time/LocalDate;Lkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
+	public final fun getAttendanceSummary (Ljava/lang/Integer;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public static synthetic fun getAttendanceSummary$default (Lio/github/wulkanowy/sdk/scrapper/Scrapper;Ljava/lang/Integer;Lkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
+	public final fun getBaseUrl ()Ljava/lang/String;
+	public final fun getBuildTag ()Ljava/lang/String;
+	public final fun getClassId ()I
+	public final fun getCompletedLessons (Ljava/time/LocalDate;Ljava/time/LocalDate;ILkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public static synthetic fun getCompletedLessons$default (Lio/github/wulkanowy/sdk/scrapper/Scrapper;Ljava/time/LocalDate;Ljava/time/LocalDate;ILkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
+	public final fun getConferences (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public final fun getDeletedMessages (Ljava/lang/String;IILkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public static synthetic fun getDeletedMessages$default (Lio/github/wulkanowy/sdk/scrapper/Scrapper;Ljava/lang/String;IILkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
+	public final fun getDiaryId ()I
+	public final fun getDirectorInformation (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public final fun getEmail ()Ljava/lang/String;
+	public final fun getEmptyCookieJarInterceptor ()Z
+	public final fun getExams (Ljava/time/LocalDate;Ljava/time/LocalDate;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public static synthetic fun getExams$default (Lio/github/wulkanowy/sdk/scrapper/Scrapper;Ljava/time/LocalDate;Ljava/time/LocalDate;Lkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
+	public final fun getFreeDays (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public final fun getGrades (ILkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public final fun getGradesPartialStatistics (ILkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public final fun getGradesPointsStatistics (ILkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public final fun getGradesSemesterStatistics (ILkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public final fun getHomework (Ljava/time/LocalDate;Ljava/time/LocalDate;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public static synthetic fun getHomework$default (Lio/github/wulkanowy/sdk/scrapper/Scrapper;Ljava/time/LocalDate;Ljava/time/LocalDate;Lkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
+	public final fun getHost ()Ljava/lang/String;
+	public final fun getKidsLessonPlan (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public final fun getKidsLuckyNumbers (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public final fun getKindergartenDiaryId ()I
+	public final fun getLastGrades (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public final fun getLastHomework (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public final fun getLastStudentLessons (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public final fun getLastTests (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public final fun getLogLevel ()Lokhttp3/logging/HttpLoggingInterceptor$Level;
+	public final fun getLoginType ()Lio/github/wulkanowy/sdk/scrapper/Scrapper$LoginType;
+	public final fun getMailboxes (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public final fun getMessageDetails (Ljava/lang/String;ZLkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public final fun getMessageReplayDetails (Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public final fun getMessages (Lio/github/wulkanowy/sdk/scrapper/messages/Folder;Ljava/lang/String;IILkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public static synthetic fun getMessages$default (Lio/github/wulkanowy/sdk/scrapper/Scrapper;Lio/github/wulkanowy/sdk/scrapper/messages/Folder;Ljava/lang/String;IILkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
+	public final fun getNotes (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public final fun getPassword ()Ljava/lang/String;
+	public final fun getPasswordResetCaptcha (Ljava/lang/String;Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public final fun getReceivedMessages (Ljava/lang/String;IILkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public static synthetic fun getReceivedMessages$default (Lio/github/wulkanowy/sdk/scrapper/Scrapper;Ljava/lang/String;IILkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
+	public final fun getRecipients (Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public final fun getRegisteredDevices (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public final fun getSchool (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public final fun getSchoolSymbol ()Ljava/lang/String;
+	public final fun getSchoolYear ()I
+	public final fun getSelfGovernments (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public final fun getSemesters (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public final fun getSentMessages (Ljava/lang/String;IILkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public static synthetic fun getSentMessages$default (Lio/github/wulkanowy/sdk/scrapper/Scrapper;Ljava/lang/String;IILkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
+	public final fun getSsl ()Z
+	public final fun getStudentId ()I
+	public final fun getStudentInfo (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public final fun getStudentPhoto (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public final fun getStudentThreats (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public final fun getStudentsTrips (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public final fun getSubjects (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public final fun getSymbol ()Ljava/lang/String;
+	public final fun getTeachers (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public final fun getTimetable (Ljava/time/LocalDate;Ljava/time/LocalDate;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public static synthetic fun getTimetable$default (Lio/github/wulkanowy/sdk/scrapper/Scrapper;Ljava/time/LocalDate;Ljava/time/LocalDate;Lkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
+	public final fun getToken (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public final fun getUnitId ()I
+	public final fun getUserAgentTemplate ()Ljava/lang/String;
+	public final fun getUserSubjects (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public final fun sendMessage (Ljava/lang/String;Ljava/lang/String;Ljava/util/List;Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public final fun sendPasswordResetRequest (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public final fun setAndroidVersion (Ljava/lang/String;)V
+	public final fun setBaseUrl (Ljava/lang/String;)V
+	public final fun setBuildTag (Ljava/lang/String;)V
+	public final fun setClassId (I)V
+	public final fun setDiaryId (I)V
+	public final fun setEmail (Ljava/lang/String;)V
+	public final fun setEmptyCookieJarInterceptor (Z)V
+	public final fun setHost (Ljava/lang/String;)V
+	public final fun setKindergartenDiaryId (I)V
+	public final fun setLogLevel (Lokhttp3/logging/HttpLoggingInterceptor$Level;)V
+	public final fun setLoginType (Lio/github/wulkanowy/sdk/scrapper/Scrapper$LoginType;)V
+	public final fun setPassword (Ljava/lang/String;)V
+	public final fun setSchoolSymbol (Ljava/lang/String;)V
+	public final fun setSchoolYear (I)V
+	public final fun setSsl (Z)V
+	public final fun setStudentId (I)V
+	public final fun setSymbol (Ljava/lang/String;)V
+	public final fun setUnitId (I)V
+	public final fun setUserAgentTemplate (Ljava/lang/String;)V
+	public final fun unregisterDevice (ILkotlin/coroutines/Continuation;)Ljava/lang/Object;
+}
+
+public final class io/github/wulkanowy/sdk/scrapper/Scrapper$LoginType : java/lang/Enum {
+	public static final field ADFS Lio/github/wulkanowy/sdk/scrapper/Scrapper$LoginType;
+	public static final field ADFSCards Lio/github/wulkanowy/sdk/scrapper/Scrapper$LoginType;
+	public static final field ADFSLight Lio/github/wulkanowy/sdk/scrapper/Scrapper$LoginType;
+	public static final field ADFSLightCufs Lio/github/wulkanowy/sdk/scrapper/Scrapper$LoginType;
+	public static final field ADFSLightScoped Lio/github/wulkanowy/sdk/scrapper/Scrapper$LoginType;
+	public static final field AUTO Lio/github/wulkanowy/sdk/scrapper/Scrapper$LoginType;
+	public static final field STANDARD Lio/github/wulkanowy/sdk/scrapper/Scrapper$LoginType;
+	public static fun valueOf (Ljava/lang/String;)Lio/github/wulkanowy/sdk/scrapper/Scrapper$LoginType;
+	public static fun values ()[Lio/github/wulkanowy/sdk/scrapper/Scrapper$LoginType;
+}
+
+public final class io/github/wulkanowy/sdk/scrapper/attendance/Absent {
+	public fun <init> (Ljava/time/LocalDateTime;Ljava/lang/Integer;)V
+	public final fun component1 ()Ljava/time/LocalDateTime;
+	public final fun component2 ()Ljava/lang/Integer;
+	public final fun copy (Ljava/time/LocalDateTime;Ljava/lang/Integer;)Lio/github/wulkanowy/sdk/scrapper/attendance/Absent;
+	public static synthetic fun copy$default (Lio/github/wulkanowy/sdk/scrapper/attendance/Absent;Ljava/time/LocalDateTime;Ljava/lang/Integer;ILjava/lang/Object;)Lio/github/wulkanowy/sdk/scrapper/attendance/Absent;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getDate ()Ljava/time/LocalDateTime;
+	public final fun getTimeId ()Ljava/lang/Integer;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class io/github/wulkanowy/sdk/scrapper/attendance/Attendance {
+	public static final field Companion Lio/github/wulkanowy/sdk/scrapper/attendance/Attendance$Companion;
+	public field category Lio/github/wulkanowy/sdk/scrapper/attendance/AttendanceCategory;
+	public synthetic fun <init> (IILjava/time/LocalDateTime;Ljava/lang/String;ILkotlinx/serialization/internal/SerializationConstructorMarker;)V
+	public fun <init> (ILjava/time/LocalDateTime;Ljava/lang/String;I)V
+	public synthetic fun <init> (ILjava/time/LocalDateTime;Ljava/lang/String;IILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()I
+	public final fun component2 ()Ljava/time/LocalDateTime;
+	public final fun component3 ()Ljava/lang/String;
+	public final fun component4 ()I
+	public final fun copy (ILjava/time/LocalDateTime;Ljava/lang/String;I)Lio/github/wulkanowy/sdk/scrapper/attendance/Attendance;
+	public static synthetic fun copy$default (Lio/github/wulkanowy/sdk/scrapper/attendance/Attendance;ILjava/time/LocalDateTime;Ljava/lang/String;IILjava/lang/Object;)Lio/github/wulkanowy/sdk/scrapper/attendance/Attendance;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getCategory ()Lio/github/wulkanowy/sdk/scrapper/attendance/AttendanceCategory;
+	public final fun getCategoryId ()I
+	public final fun getDate ()Ljava/time/LocalDateTime;
+	public final fun getExcusable ()Z
+	public final fun getExcuseStatus ()Lio/github/wulkanowy/sdk/scrapper/attendance/SentExcuseStatus;
+	public final fun getNumber ()I
+	public final fun getSubject ()Ljava/lang/String;
+	public final fun getTimeId ()I
+	public fun hashCode ()I
+	public final fun setCategory (Lio/github/wulkanowy/sdk/scrapper/attendance/AttendanceCategory;)V
+	public final fun setExcusable (Z)V
+	public final fun setExcuseStatus (Lio/github/wulkanowy/sdk/scrapper/attendance/SentExcuseStatus;)V
+	public final fun setNumber (I)V
+	public fun toString ()Ljava/lang/String;
+	public static final synthetic fun write$Self (Lio/github/wulkanowy/sdk/scrapper/attendance/Attendance;Lkotlinx/serialization/encoding/CompositeEncoder;Lkotlinx/serialization/descriptors/SerialDescriptor;)V
+}
+
+public final class io/github/wulkanowy/sdk/scrapper/attendance/Attendance$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+	public static final field INSTANCE Lio/github/wulkanowy/sdk/scrapper/attendance/Attendance$$serializer;
+	public fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lio/github/wulkanowy/sdk/scrapper/attendance/Attendance;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public fun serialize (Lkotlinx/serialization/encoding/Encoder;Lio/github/wulkanowy/sdk/scrapper/attendance/Attendance;)V
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+	public fun typeParametersSerializers ()[Lkotlinx/serialization/KSerializer;
+}
+
+public final class io/github/wulkanowy/sdk/scrapper/attendance/Attendance$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public final class io/github/wulkanowy/sdk/scrapper/attendance/AttendanceCategory : java/lang/Enum {
+	public static final field ABSENCE_EXCUSED Lio/github/wulkanowy/sdk/scrapper/attendance/AttendanceCategory;
+	public static final field ABSENCE_FOR_SCHOOL_REASONS Lio/github/wulkanowy/sdk/scrapper/attendance/AttendanceCategory;
+	public static final field ABSENCE_UNEXCUSED Lio/github/wulkanowy/sdk/scrapper/attendance/AttendanceCategory;
+	public static final field ALL Lio/github/wulkanowy/sdk/scrapper/attendance/AttendanceCategory;
+	public static final field Companion Lio/github/wulkanowy/sdk/scrapper/attendance/AttendanceCategory$Companion;
+	public static final field DELETED Lio/github/wulkanowy/sdk/scrapper/attendance/AttendanceCategory;
+	public static final field EXCUSED_LATENESS Lio/github/wulkanowy/sdk/scrapper/attendance/AttendanceCategory;
+	public static final field EXEMPTION Lio/github/wulkanowy/sdk/scrapper/attendance/AttendanceCategory;
+	public static final field PRESENCE Lio/github/wulkanowy/sdk/scrapper/attendance/AttendanceCategory;
+	public static final field UNEXCUSED_LATENESS Lio/github/wulkanowy/sdk/scrapper/attendance/AttendanceCategory;
+	public static final field UNKNOWN Lio/github/wulkanowy/sdk/scrapper/attendance/AttendanceCategory;
+	public static final fun getCategoryById (I)Lio/github/wulkanowy/sdk/scrapper/attendance/AttendanceCategory;
+	public static final fun getCategoryByName (Ljava/lang/String;)Lio/github/wulkanowy/sdk/scrapper/attendance/AttendanceCategory;
+	public final fun getId ()I
+	public final fun getTitle ()Ljava/lang/String;
+	public static fun valueOf (Ljava/lang/String;)Lio/github/wulkanowy/sdk/scrapper/attendance/AttendanceCategory;
+	public static fun values ()[Lio/github/wulkanowy/sdk/scrapper/attendance/AttendanceCategory;
+}
+
+public final class io/github/wulkanowy/sdk/scrapper/attendance/AttendanceCategory$Companion {
+	public final fun getCategoryById (I)Lio/github/wulkanowy/sdk/scrapper/attendance/AttendanceCategory;
+	public final fun getCategoryByName (Ljava/lang/String;)Lio/github/wulkanowy/sdk/scrapper/attendance/AttendanceCategory;
+}
+
+public final class io/github/wulkanowy/sdk/scrapper/attendance/AttendanceSummary {
+	public fun <init> (Ljava/time/Month;IIIIIII)V
+	public final fun component1 ()Ljava/time/Month;
+	public final fun component2 ()I
+	public final fun component3 ()I
+	public final fun component4 ()I
+	public final fun component5 ()I
+	public final fun component6 ()I
+	public final fun component7 ()I
+	public final fun component8 ()I
+	public final fun copy (Ljava/time/Month;IIIIIII)Lio/github/wulkanowy/sdk/scrapper/attendance/AttendanceSummary;
+	public static synthetic fun copy$default (Lio/github/wulkanowy/sdk/scrapper/attendance/AttendanceSummary;Ljava/time/Month;IIIIIIIILjava/lang/Object;)Lio/github/wulkanowy/sdk/scrapper/attendance/AttendanceSummary;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getAbsence ()I
+	public final fun getAbsenceExcused ()I
+	public final fun getAbsenceForSchoolReasons ()I
+	public final fun getExemption ()I
+	public final fun getLateness ()I
+	public final fun getLatenessExcused ()I
+	public final fun getMonth ()Ljava/time/Month;
+	public final fun getPresence ()I
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class io/github/wulkanowy/sdk/scrapper/attendance/SentExcuseStatus : java/lang/Enum {
+	public static final field ACCEPTED Lio/github/wulkanowy/sdk/scrapper/attendance/SentExcuseStatus;
+	public static final field Companion Lio/github/wulkanowy/sdk/scrapper/attendance/SentExcuseStatus$Companion;
+	public static final field DENIED Lio/github/wulkanowy/sdk/scrapper/attendance/SentExcuseStatus;
+	public static final field WAITING Lio/github/wulkanowy/sdk/scrapper/attendance/SentExcuseStatus;
+	public final fun getId ()I
+	public static fun valueOf (Ljava/lang/String;)Lio/github/wulkanowy/sdk/scrapper/attendance/SentExcuseStatus;
+	public static fun values ()[Lio/github/wulkanowy/sdk/scrapper/attendance/SentExcuseStatus;
+}
+
+public final class io/github/wulkanowy/sdk/scrapper/attendance/SentExcuseStatus$Companion {
+	public final fun getByValue (I)Lio/github/wulkanowy/sdk/scrapper/attendance/SentExcuseStatus;
+}
+
+public final class io/github/wulkanowy/sdk/scrapper/attendance/Subject {
+	public static final field Companion Lio/github/wulkanowy/sdk/scrapper/attendance/Subject$Companion;
+	public fun <init> ()V
+	public synthetic fun <init> (ILjava/lang/String;ILkotlinx/serialization/internal/SerializationConstructorMarker;)V
+	public fun <init> (Ljava/lang/String;I)V
+	public synthetic fun <init> (Ljava/lang/String;IILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()I
+	public final fun copy (Ljava/lang/String;I)Lio/github/wulkanowy/sdk/scrapper/attendance/Subject;
+	public static synthetic fun copy$default (Lio/github/wulkanowy/sdk/scrapper/attendance/Subject;Ljava/lang/String;IILjava/lang/Object;)Lio/github/wulkanowy/sdk/scrapper/attendance/Subject;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getName ()Ljava/lang/String;
+	public final fun getValue ()I
+	public fun hashCode ()I
+	public final fun setName (Ljava/lang/String;)V
+	public final fun setValue (I)V
+	public fun toString ()Ljava/lang/String;
+	public static final synthetic fun write$Self (Lio/github/wulkanowy/sdk/scrapper/attendance/Subject;Lkotlinx/serialization/encoding/CompositeEncoder;Lkotlinx/serialization/descriptors/SerialDescriptor;)V
+}
+
+public final class io/github/wulkanowy/sdk/scrapper/attendance/Subject$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+	public static final field INSTANCE Lio/github/wulkanowy/sdk/scrapper/attendance/Subject$$serializer;
+	public fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lio/github/wulkanowy/sdk/scrapper/attendance/Subject;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public fun serialize (Lkotlinx/serialization/encoding/Encoder;Lio/github/wulkanowy/sdk/scrapper/attendance/Subject;)V
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+	public fun typeParametersSerializers ()[Lkotlinx/serialization/KSerializer;
+}
+
+public final class io/github/wulkanowy/sdk/scrapper/attendance/Subject$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public final class io/github/wulkanowy/sdk/scrapper/conferences/Conference {
+	public static final field Companion Lio/github/wulkanowy/sdk/scrapper/conferences/Conference$Companion;
+	public synthetic fun <init> (ILjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ILkotlinx/serialization/internal/SerializationConstructorMarker;)V
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ILjava/time/LocalDateTime;)V
+	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ILjava/time/LocalDateTime;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Ljava/lang/String;
+	public final fun component3 ()Ljava/lang/String;
+	public final fun component4 ()Ljava/lang/String;
+	public final fun component5 ()Ljava/lang/String;
+	public final fun component6 ()I
+	public final fun component7 ()Ljava/time/LocalDateTime;
+	public final fun copy (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ILjava/time/LocalDateTime;)Lio/github/wulkanowy/sdk/scrapper/conferences/Conference;
+	public static synthetic fun copy$default (Lio/github/wulkanowy/sdk/scrapper/conferences/Conference;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ILjava/time/LocalDateTime;ILjava/lang/Object;)Lio/github/wulkanowy/sdk/scrapper/conferences/Conference;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getAgenda ()Ljava/lang/String;
+	public final fun getDate ()Ljava/time/LocalDateTime;
+	public final fun getId ()I
+	public final fun getOnline ()Ljava/lang/String;
+	public final fun getPresentOnConference ()Ljava/lang/String;
+	public final fun getSubject ()Ljava/lang/String;
+	public final fun getTitle ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+	public static final synthetic fun write$Self (Lio/github/wulkanowy/sdk/scrapper/conferences/Conference;Lkotlinx/serialization/encoding/CompositeEncoder;Lkotlinx/serialization/descriptors/SerialDescriptor;)V
+}
+
+public final class io/github/wulkanowy/sdk/scrapper/conferences/Conference$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+	public static final field INSTANCE Lio/github/wulkanowy/sdk/scrapper/conferences/Conference$$serializer;
+	public fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lio/github/wulkanowy/sdk/scrapper/conferences/Conference;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public fun serialize (Lkotlinx/serialization/encoding/Encoder;Lio/github/wulkanowy/sdk/scrapper/conferences/Conference;)V
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+	public fun typeParametersSerializers ()[Lkotlinx/serialization/KSerializer;
+}
+
+public final class io/github/wulkanowy/sdk/scrapper/conferences/Conference$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public final class io/github/wulkanowy/sdk/scrapper/exams/Exam {
+	public static final field Companion Lio/github/wulkanowy/sdk/scrapper/exams/Exam$Companion;
+	public field date Ljava/time/LocalDateTime;
+	public field teacherSymbol Ljava/lang/String;
+	public field typeName Ljava/lang/String;
+	public synthetic fun <init> (ILjava/time/LocalDateTime;Ljava/lang/String;ILjava/lang/String;Ljava/lang/String;Lkotlinx/serialization/internal/SerializationConstructorMarker;)V
+	public fun <init> (Ljava/time/LocalDateTime;Ljava/lang/String;ILjava/lang/String;Ljava/lang/String;)V
+	public final fun component1 ()Ljava/time/LocalDateTime;
+	public final fun component2 ()Ljava/lang/String;
+	public final fun component3 ()I
+	public final fun component4 ()Ljava/lang/String;
+	public final fun component5 ()Ljava/lang/String;
+	public final fun copy (Ljava/time/LocalDateTime;Ljava/lang/String;ILjava/lang/String;Ljava/lang/String;)Lio/github/wulkanowy/sdk/scrapper/exams/Exam;
+	public static synthetic fun copy$default (Lio/github/wulkanowy/sdk/scrapper/exams/Exam;Ljava/time/LocalDateTime;Ljava/lang/String;ILjava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Lio/github/wulkanowy/sdk/scrapper/exams/Exam;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getDate ()Ljava/time/LocalDateTime;
+	public final fun getDescription ()Ljava/lang/String;
+	public final fun getEntryDate ()Ljava/time/LocalDateTime;
+	public final fun getSubject ()Ljava/lang/String;
+	public final fun getTeacher ()Ljava/lang/String;
+	public final fun getTeacherSymbol ()Ljava/lang/String;
+	public final fun getType ()I
+	public final fun getTypeName ()Ljava/lang/String;
+	public fun hashCode ()I
+	public final fun setDate (Ljava/time/LocalDateTime;)V
+	public final fun setTeacherSymbol (Ljava/lang/String;)V
+	public final fun setTypeName (Ljava/lang/String;)V
+	public fun toString ()Ljava/lang/String;
+	public static final synthetic fun write$Self (Lio/github/wulkanowy/sdk/scrapper/exams/Exam;Lkotlinx/serialization/encoding/CompositeEncoder;Lkotlinx/serialization/descriptors/SerialDescriptor;)V
+}
+
+public final class io/github/wulkanowy/sdk/scrapper/exams/Exam$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+	public static final field INSTANCE Lio/github/wulkanowy/sdk/scrapper/exams/Exam$$serializer;
+	public fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lio/github/wulkanowy/sdk/scrapper/exams/Exam;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public fun serialize (Lkotlinx/serialization/encoding/Encoder;Lio/github/wulkanowy/sdk/scrapper/exams/Exam;)V
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+	public fun typeParametersSerializers ()[Lkotlinx/serialization/KSerializer;
+}
+
+public final class io/github/wulkanowy/sdk/scrapper/exams/Exam$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public final class io/github/wulkanowy/sdk/scrapper/exception/AccountInactiveException : io/github/wulkanowy/sdk/scrapper/exception/VulcanException {
+	public fun <init> (Ljava/lang/String;)V
+}
+
+public final class io/github/wulkanowy/sdk/scrapper/exception/ConnectionBlockedException : io/github/wulkanowy/sdk/scrapper/exception/VulcanException {
+}
+
+public final class io/github/wulkanowy/sdk/scrapper/exception/FeatureDisabledException : io/github/wulkanowy/sdk/scrapper/exception/VulcanException {
+}
+
+public final class io/github/wulkanowy/sdk/scrapper/exception/InvalidCaptchaException : io/github/wulkanowy/sdk/scrapper/exception/PasswordResetErrorException {
+	public fun <init> (Ljava/lang/String;)V
+}
+
+public final class io/github/wulkanowy/sdk/scrapper/exception/InvalidEmailException : io/github/wulkanowy/sdk/scrapper/exception/ScrapperException {
+	public fun <init> (Ljava/lang/String;)V
+}
+
+public class io/github/wulkanowy/sdk/scrapper/exception/InvalidPathException : io/github/wulkanowy/sdk/scrapper/exception/ScrapperException {
+}
+
+public final class io/github/wulkanowy/sdk/scrapper/exception/NoAccountFoundException : io/github/wulkanowy/sdk/scrapper/exception/PasswordResetErrorException {
+	public fun <init> (Ljava/lang/String;)V
+}
+
+public class io/github/wulkanowy/sdk/scrapper/exception/PasswordResetErrorException : io/github/wulkanowy/sdk/scrapper/exception/ScrapperException {
+	public fun <init> (Ljava/lang/String;)V
+}
+
+public class io/github/wulkanowy/sdk/scrapper/exception/ScrapperException : java/io/IOException {
+}
+
+public final class io/github/wulkanowy/sdk/scrapper/exception/ServiceUnavailableException : io/github/wulkanowy/sdk/scrapper/exception/VulcanException {
+}
+
+public final class io/github/wulkanowy/sdk/scrapper/exception/StudentGraduateException : io/github/wulkanowy/sdk/scrapper/exception/VulcanException {
+	public fun <init> (Ljava/lang/String;)V
+}
+
+public final class io/github/wulkanowy/sdk/scrapper/exception/TemporarilyDisabledException : io/github/wulkanowy/sdk/scrapper/exception/VulcanException {
+	public fun <init> (Ljava/lang/String;)V
+}
+
+public final class io/github/wulkanowy/sdk/scrapper/exception/VulcanClientError : io/github/wulkanowy/sdk/scrapper/exception/VulcanException {
+	public final fun getHttpCode ()I
+}
+
+public class io/github/wulkanowy/sdk/scrapper/exception/VulcanException : io/github/wulkanowy/sdk/scrapper/exception/ScrapperException {
+}
+
+public final class io/github/wulkanowy/sdk/scrapper/grades/Grade {
+	public static final field Companion Lio/github/wulkanowy/sdk/scrapper/grades/Grade$Companion;
+	public field date Ljava/time/LocalDate;
+	public synthetic fun <init> (ILjava/lang/String;ILjava/lang/String;Ljava/lang/String;DLjava/time/LocalDate;Ljava/lang/String;Lkotlinx/serialization/internal/SerializationConstructorMarker;)V
+	public fun <init> (Ljava/lang/String;ILjava/lang/String;Ljava/lang/String;DLjava/time/LocalDate;Ljava/lang/String;)V
+	public synthetic fun <init> (Ljava/lang/String;ILjava/lang/String;Ljava/lang/String;DLjava/time/LocalDate;Ljava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()I
+	public final fun component3 ()Ljava/lang/String;
+	public final fun component4 ()Ljava/lang/String;
+	public final fun component5 ()D
+	public final fun component7 ()Ljava/lang/String;
+	public final fun copy (Ljava/lang/String;ILjava/lang/String;Ljava/lang/String;DLjava/time/LocalDate;Ljava/lang/String;)Lio/github/wulkanowy/sdk/scrapper/grades/Grade;
+	public static synthetic fun copy$default (Lio/github/wulkanowy/sdk/scrapper/grades/Grade;Ljava/lang/String;ILjava/lang/String;Ljava/lang/String;DLjava/time/LocalDate;Ljava/lang/String;ILjava/lang/Object;)Lio/github/wulkanowy/sdk/scrapper/grades/Grade;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getColor ()I
+	public final fun getColorHex ()Ljava/lang/String;
+	public final fun getComment ()Ljava/lang/String;
+	public final fun getDate ()Ljava/time/LocalDate;
+	public final fun getDescription ()Ljava/lang/String;
+	public final fun getEntry ()Ljava/lang/String;
+	public final fun getModifier ()D
+	public final fun getSubject ()Ljava/lang/String;
+	public final fun getSymbol ()Ljava/lang/String;
+	public final fun getTeacher ()Ljava/lang/String;
+	public final fun getValue ()I
+	public final fun getWeight ()Ljava/lang/String;
+	public final fun getWeightValue ()D
+	public fun hashCode ()I
+	public final fun setColorHex (Ljava/lang/String;)V
+	public final fun setComment (Ljava/lang/String;)V
+	public final fun setDate (Ljava/time/LocalDate;)V
+	public final fun setModifier (D)V
+	public final fun setSubject (Ljava/lang/String;)V
+	public final fun setValue (I)V
+	public final fun setWeight (Ljava/lang/String;)V
+	public fun toString ()Ljava/lang/String;
+	public static final synthetic fun write$Self (Lio/github/wulkanowy/sdk/scrapper/grades/Grade;Lkotlinx/serialization/encoding/CompositeEncoder;Lkotlinx/serialization/descriptors/SerialDescriptor;)V
+}
+
+public final class io/github/wulkanowy/sdk/scrapper/grades/Grade$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+	public static final field INSTANCE Lio/github/wulkanowy/sdk/scrapper/grades/Grade$$serializer;
+	public fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lio/github/wulkanowy/sdk/scrapper/grades/Grade;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public fun serialize (Lkotlinx/serialization/encoding/Encoder;Lio/github/wulkanowy/sdk/scrapper/grades/Grade;)V
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+	public fun typeParametersSerializers ()[Lkotlinx/serialization/KSerializer;
+}
+
+public final class io/github/wulkanowy/sdk/scrapper/grades/Grade$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public final class io/github/wulkanowy/sdk/scrapper/grades/GradeCustomConvertersKt {
+	public static final fun getGradeValueWithModifier (Ljava/lang/String;)Lkotlin/Pair;
+	public static final fun isGradeValid (Ljava/lang/String;)Z
+}
+
+public final class io/github/wulkanowy/sdk/scrapper/grades/GradePointsSummary {
+	public static final field Companion Lio/github/wulkanowy/sdk/scrapper/grades/GradePointsSummary$Companion;
+	public synthetic fun <init> (ILjava/lang/String;DDLkotlinx/serialization/internal/SerializationConstructorMarker;)V
+	public fun <init> (Ljava/lang/String;DD)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()D
+	public final fun component3 ()D
+	public final fun copy (Ljava/lang/String;DD)Lio/github/wulkanowy/sdk/scrapper/grades/GradePointsSummary;
+	public static synthetic fun copy$default (Lio/github/wulkanowy/sdk/scrapper/grades/GradePointsSummary;Ljava/lang/String;DDILjava/lang/Object;)Lio/github/wulkanowy/sdk/scrapper/grades/GradePointsSummary;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getOthers ()D
+	public final fun getStudent ()D
+	public final fun getSubject ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+	public static final synthetic fun write$Self (Lio/github/wulkanowy/sdk/scrapper/grades/GradePointsSummary;Lkotlinx/serialization/encoding/CompositeEncoder;Lkotlinx/serialization/descriptors/SerialDescriptor;)V
+}
+
+public final class io/github/wulkanowy/sdk/scrapper/grades/GradePointsSummary$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+	public static final field INSTANCE Lio/github/wulkanowy/sdk/scrapper/grades/GradePointsSummary$$serializer;
+	public fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lio/github/wulkanowy/sdk/scrapper/grades/GradePointsSummary;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public fun serialize (Lkotlinx/serialization/encoding/Encoder;Lio/github/wulkanowy/sdk/scrapper/grades/GradePointsSummary;)V
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+	public fun typeParametersSerializers ()[Lkotlinx/serialization/KSerializer;
+}
+
+public final class io/github/wulkanowy/sdk/scrapper/grades/GradePointsSummary$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public final class io/github/wulkanowy/sdk/scrapper/grades/GradeStatisticsPartialItem {
+	public static final field Companion Lio/github/wulkanowy/sdk/scrapper/grades/GradeStatisticsPartialItem$Companion;
+	public synthetic fun <init> (ILjava/lang/String;Ljava/lang/Integer;Lkotlinx/serialization/internal/SerializationConstructorMarker;)V
+	public fun <init> (Ljava/lang/String;Ljava/lang/Integer;)V
+	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/Integer;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Ljava/lang/Integer;
+	public final fun copy (Ljava/lang/String;Ljava/lang/Integer;)Lio/github/wulkanowy/sdk/scrapper/grades/GradeStatisticsPartialItem;
+	public static synthetic fun copy$default (Lio/github/wulkanowy/sdk/scrapper/grades/GradeStatisticsPartialItem;Ljava/lang/String;Ljava/lang/Integer;ILjava/lang/Object;)Lio/github/wulkanowy/sdk/scrapper/grades/GradeStatisticsPartialItem;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getAmount ()Ljava/lang/Integer;
+	public final fun getGrade ()I
+	public final fun getLabel ()Ljava/lang/String;
+	public fun hashCode ()I
+	public final fun setGrade (I)V
+	public fun toString ()Ljava/lang/String;
+	public static final synthetic fun write$Self (Lio/github/wulkanowy/sdk/scrapper/grades/GradeStatisticsPartialItem;Lkotlinx/serialization/encoding/CompositeEncoder;Lkotlinx/serialization/descriptors/SerialDescriptor;)V
+}
+
+public final class io/github/wulkanowy/sdk/scrapper/grades/GradeStatisticsPartialItem$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+	public static final field INSTANCE Lio/github/wulkanowy/sdk/scrapper/grades/GradeStatisticsPartialItem$$serializer;
+	public fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lio/github/wulkanowy/sdk/scrapper/grades/GradeStatisticsPartialItem;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public fun serialize (Lkotlinx/serialization/encoding/Encoder;Lio/github/wulkanowy/sdk/scrapper/grades/GradeStatisticsPartialItem;)V
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+	public fun typeParametersSerializers ()[Lkotlinx/serialization/KSerializer;
+}
+
+public final class io/github/wulkanowy/sdk/scrapper/grades/GradeStatisticsPartialItem$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public final class io/github/wulkanowy/sdk/scrapper/grades/GradeStatisticsPartialSeries {
+	public static final field Companion Lio/github/wulkanowy/sdk/scrapper/grades/GradeStatisticsPartialSeries$Companion;
+	public synthetic fun <init> (ILjava/lang/String;ZLjava/util/List;Lkotlinx/serialization/internal/SerializationConstructorMarker;)V
+	public fun <init> (Ljava/lang/String;ZLjava/util/List;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Z
+	public final fun component3 ()Ljava/util/List;
+	public final fun copy (Ljava/lang/String;ZLjava/util/List;)Lio/github/wulkanowy/sdk/scrapper/grades/GradeStatisticsPartialSeries;
+	public static synthetic fun copy$default (Lio/github/wulkanowy/sdk/scrapper/grades/GradeStatisticsPartialSeries;Ljava/lang/String;ZLjava/util/List;ILjava/lang/Object;)Lio/github/wulkanowy/sdk/scrapper/grades/GradeStatisticsPartialSeries;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getAverage ()Ljava/lang/String;
+	public final fun getItems ()Ljava/util/List;
+	public fun hashCode ()I
+	public final fun isEmpty ()Z
+	public fun toString ()Ljava/lang/String;
+	public static final synthetic fun write$Self (Lio/github/wulkanowy/sdk/scrapper/grades/GradeStatisticsPartialSeries;Lkotlinx/serialization/encoding/CompositeEncoder;Lkotlinx/serialization/descriptors/SerialDescriptor;)V
+}
+
+public final class io/github/wulkanowy/sdk/scrapper/grades/GradeStatisticsPartialSeries$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+	public static final field INSTANCE Lio/github/wulkanowy/sdk/scrapper/grades/GradeStatisticsPartialSeries$$serializer;
+	public fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lio/github/wulkanowy/sdk/scrapper/grades/GradeStatisticsPartialSeries;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public fun serialize (Lkotlinx/serialization/encoding/Encoder;Lio/github/wulkanowy/sdk/scrapper/grades/GradeStatisticsPartialSeries;)V
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+	public fun typeParametersSerializers ()[Lkotlinx/serialization/KSerializer;
+}
+
+public final class io/github/wulkanowy/sdk/scrapper/grades/GradeStatisticsPartialSeries$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public final class io/github/wulkanowy/sdk/scrapper/grades/GradeSummary {
+	public fun <init> ()V
+	public fun <init> (ILjava/lang/String;DLjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Z)V
+	public synthetic fun <init> (ILjava/lang/String;DLjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ZILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()I
+	public final fun component2 ()Ljava/lang/String;
+	public final fun component3 ()D
+	public final fun component4 ()Ljava/lang/String;
+	public final fun component5 ()Ljava/lang/String;
+	public final fun component6 ()Ljava/lang/String;
+	public final fun component7 ()Ljava/lang/String;
+	public final fun component8 ()Ljava/lang/String;
+	public final fun component9 ()Z
+	public final fun copy (ILjava/lang/String;DLjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Z)Lio/github/wulkanowy/sdk/scrapper/grades/GradeSummary;
+	public static synthetic fun copy$default (Lio/github/wulkanowy/sdk/scrapper/grades/GradeSummary;ILjava/lang/String;DLjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ZILjava/lang/Object;)Lio/github/wulkanowy/sdk/scrapper/grades/GradeSummary;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getAverage ()D
+	public final fun getFinal ()Ljava/lang/String;
+	public final fun getFinalPoints ()Ljava/lang/String;
+	public final fun getName ()Ljava/lang/String;
+	public final fun getOrder ()I
+	public final fun getPointsSum ()Ljava/lang/String;
+	public final fun getPredicted ()Ljava/lang/String;
+	public final fun getProposedPoints ()Ljava/lang/String;
+	public final fun getVisibleSubject ()Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class io/github/wulkanowy/sdk/scrapper/grades/Grades {
+	public fun <init> (Ljava/util/List;Ljava/util/List;ZZZI)V
+	public final fun component1 ()Ljava/util/List;
+	public final fun component2 ()Ljava/util/List;
+	public final fun component3 ()Z
+	public final fun component4 ()Z
+	public final fun component5 ()Z
+	public final fun component6 ()I
+	public final fun copy (Ljava/util/List;Ljava/util/List;ZZZI)Lio/github/wulkanowy/sdk/scrapper/grades/Grades;
+	public static synthetic fun copy$default (Lio/github/wulkanowy/sdk/scrapper/grades/Grades;Ljava/util/List;Ljava/util/List;ZZZIILjava/lang/Object;)Lio/github/wulkanowy/sdk/scrapper/grades/Grades;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getDetails ()Ljava/util/List;
+	public final fun getSummary ()Ljava/util/List;
+	public final fun getType ()I
+	public fun hashCode ()I
+	public final fun isAverage ()Z
+	public final fun isForAdults ()Z
+	public final fun isPoints ()Z
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class io/github/wulkanowy/sdk/scrapper/grades/GradesStatisticsPartial {
+	public static final field Companion Lio/github/wulkanowy/sdk/scrapper/grades/GradesStatisticsPartial$Companion;
+	public synthetic fun <init> (ILjava/lang/String;ZLio/github/wulkanowy/sdk/scrapper/grades/GradeStatisticsPartialSeries;Lio/github/wulkanowy/sdk/scrapper/grades/GradeStatisticsPartialSeries;Lkotlinx/serialization/internal/SerializationConstructorMarker;)V
+	public fun <init> (Ljava/lang/String;ZLio/github/wulkanowy/sdk/scrapper/grades/GradeStatisticsPartialSeries;Lio/github/wulkanowy/sdk/scrapper/grades/GradeStatisticsPartialSeries;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Z
+	public final fun component3 ()Lio/github/wulkanowy/sdk/scrapper/grades/GradeStatisticsPartialSeries;
+	public final fun component4 ()Lio/github/wulkanowy/sdk/scrapper/grades/GradeStatisticsPartialSeries;
+	public final fun copy (Ljava/lang/String;ZLio/github/wulkanowy/sdk/scrapper/grades/GradeStatisticsPartialSeries;Lio/github/wulkanowy/sdk/scrapper/grades/GradeStatisticsPartialSeries;)Lio/github/wulkanowy/sdk/scrapper/grades/GradesStatisticsPartial;
+	public static synthetic fun copy$default (Lio/github/wulkanowy/sdk/scrapper/grades/GradesStatisticsPartial;Ljava/lang/String;ZLio/github/wulkanowy/sdk/scrapper/grades/GradeStatisticsPartialSeries;Lio/github/wulkanowy/sdk/scrapper/grades/GradeStatisticsPartialSeries;ILjava/lang/Object;)Lio/github/wulkanowy/sdk/scrapper/grades/GradesStatisticsPartial;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getClassSeries ()Lio/github/wulkanowy/sdk/scrapper/grades/GradeStatisticsPartialSeries;
+	public final fun getStudentSeries ()Lio/github/wulkanowy/sdk/scrapper/grades/GradeStatisticsPartialSeries;
+	public final fun getSubject ()Ljava/lang/String;
+	public fun hashCode ()I
+	public final fun isAverage ()Z
+	public fun toString ()Ljava/lang/String;
+	public static final synthetic fun write$Self (Lio/github/wulkanowy/sdk/scrapper/grades/GradesStatisticsPartial;Lkotlinx/serialization/encoding/CompositeEncoder;Lkotlinx/serialization/descriptors/SerialDescriptor;)V
+}
+
+public final class io/github/wulkanowy/sdk/scrapper/grades/GradesStatisticsPartial$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+	public static final field INSTANCE Lio/github/wulkanowy/sdk/scrapper/grades/GradesStatisticsPartial$$serializer;
+	public fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lio/github/wulkanowy/sdk/scrapper/grades/GradesStatisticsPartial;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public fun serialize (Lkotlinx/serialization/encoding/Encoder;Lio/github/wulkanowy/sdk/scrapper/grades/GradesStatisticsPartial;)V
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+	public fun typeParametersSerializers ()[Lkotlinx/serialization/KSerializer;
+}
+
+public final class io/github/wulkanowy/sdk/scrapper/grades/GradesStatisticsPartial$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public final class io/github/wulkanowy/sdk/scrapper/grades/GradesStatisticsSemester {
+	public static final field Companion Lio/github/wulkanowy/sdk/scrapper/grades/GradesStatisticsSemester$Companion;
+	public synthetic fun <init> (ILjava/lang/String;ZLjava/util/List;Lkotlinx/serialization/internal/SerializationConstructorMarker;)V
+	public fun <init> (Ljava/lang/String;ZLjava/util/List;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Z
+	public final fun component3 ()Ljava/util/List;
+	public final fun copy (Ljava/lang/String;ZLjava/util/List;)Lio/github/wulkanowy/sdk/scrapper/grades/GradesStatisticsSemester;
+	public static synthetic fun copy$default (Lio/github/wulkanowy/sdk/scrapper/grades/GradesStatisticsSemester;Ljava/lang/String;ZLjava/util/List;ILjava/lang/Object;)Lio/github/wulkanowy/sdk/scrapper/grades/GradesStatisticsSemester;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getItems ()Ljava/util/List;
+	public final fun getSubject ()Ljava/lang/String;
+	public fun hashCode ()I
+	public final fun isEmpty ()Z
+	public fun toString ()Ljava/lang/String;
+	public static final synthetic fun write$Self (Lio/github/wulkanowy/sdk/scrapper/grades/GradesStatisticsSemester;Lkotlinx/serialization/encoding/CompositeEncoder;Lkotlinx/serialization/descriptors/SerialDescriptor;)V
+}
+
+public final class io/github/wulkanowy/sdk/scrapper/grades/GradesStatisticsSemester$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+	public static final field INSTANCE Lio/github/wulkanowy/sdk/scrapper/grades/GradesStatisticsSemester$$serializer;
+	public fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lio/github/wulkanowy/sdk/scrapper/grades/GradesStatisticsSemester;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public fun serialize (Lkotlinx/serialization/encoding/Encoder;Lio/github/wulkanowy/sdk/scrapper/grades/GradesStatisticsSemester;)V
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+	public fun typeParametersSerializers ()[Lkotlinx/serialization/KSerializer;
+}
+
+public final class io/github/wulkanowy/sdk/scrapper/grades/GradesStatisticsSemester$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public final class io/github/wulkanowy/sdk/scrapper/grades/GradesStatisticsSemesterSubItem {
+	public static final field Companion Lio/github/wulkanowy/sdk/scrapper/grades/GradesStatisticsSemesterSubItem$Companion;
+	public synthetic fun <init> (ILjava/lang/String;Ljava/lang/String;ILkotlinx/serialization/internal/SerializationConstructorMarker;)V
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;I)V
+	public final fun component3 ()I
+	public final fun copy (Ljava/lang/String;Ljava/lang/String;I)Lio/github/wulkanowy/sdk/scrapper/grades/GradesStatisticsSemesterSubItem;
+	public static synthetic fun copy$default (Lio/github/wulkanowy/sdk/scrapper/grades/GradesStatisticsSemesterSubItem;Ljava/lang/String;Ljava/lang/String;IILjava/lang/Object;)Lio/github/wulkanowy/sdk/scrapper/grades/GradesStatisticsSemesterSubItem;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getAmount ()I
+	public final fun getGrade ()I
+	public fun hashCode ()I
+	public final fun isStudentHere ()Z
+	public final fun setGrade (I)V
+	public final fun setStudentHere (Z)V
+	public fun toString ()Ljava/lang/String;
+	public static final synthetic fun write$Self (Lio/github/wulkanowy/sdk/scrapper/grades/GradesStatisticsSemesterSubItem;Lkotlinx/serialization/encoding/CompositeEncoder;Lkotlinx/serialization/descriptors/SerialDescriptor;)V
+}
+
+public final class io/github/wulkanowy/sdk/scrapper/grades/GradesStatisticsSemesterSubItem$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+	public static final field INSTANCE Lio/github/wulkanowy/sdk/scrapper/grades/GradesStatisticsSemesterSubItem$$serializer;
+	public fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lio/github/wulkanowy/sdk/scrapper/grades/GradesStatisticsSemesterSubItem;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public fun serialize (Lkotlinx/serialization/encoding/Encoder;Lio/github/wulkanowy/sdk/scrapper/grades/GradesStatisticsSemesterSubItem;)V
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+	public fun typeParametersSerializers ()[Lkotlinx/serialization/KSerializer;
+}
+
+public final class io/github/wulkanowy/sdk/scrapper/grades/GradesStatisticsSemesterSubItem$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public final class io/github/wulkanowy/sdk/scrapper/home/DirectorInformation {
+	public fun <init> (Ljava/time/LocalDate;Ljava/lang/String;Ljava/lang/String;)V
+	public final fun component1 ()Ljava/time/LocalDate;
+	public final fun component2 ()Ljava/lang/String;
+	public final fun component3 ()Ljava/lang/String;
+	public final fun copy (Ljava/time/LocalDate;Ljava/lang/String;Ljava/lang/String;)Lio/github/wulkanowy/sdk/scrapper/home/DirectorInformation;
+	public static synthetic fun copy$default (Lio/github/wulkanowy/sdk/scrapper/home/DirectorInformation;Ljava/time/LocalDate;Ljava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Lio/github/wulkanowy/sdk/scrapper/home/DirectorInformation;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getContent ()Ljava/lang/String;
+	public final fun getDate ()Ljava/time/LocalDate;
+	public final fun getSubject ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class io/github/wulkanowy/sdk/scrapper/home/GovernmentMember {
+	public static final field Companion Lio/github/wulkanowy/sdk/scrapper/home/GovernmentMember$Companion;
+	public synthetic fun <init> (ILjava/lang/String;Ljava/lang/String;Ljava/lang/String;ILkotlinx/serialization/internal/SerializationConstructorMarker;)V
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;I)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Ljava/lang/String;
+	public final fun component3 ()Ljava/lang/String;
+	public final fun component4 ()I
+	public final fun copy (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;I)Lio/github/wulkanowy/sdk/scrapper/home/GovernmentMember;
+	public static synthetic fun copy$default (Lio/github/wulkanowy/sdk/scrapper/home/GovernmentMember;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;IILjava/lang/Object;)Lio/github/wulkanowy/sdk/scrapper/home/GovernmentMember;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getDivision ()Ljava/lang/String;
+	public final fun getId ()I
+	public final fun getName ()Ljava/lang/String;
+	public final fun getPosition ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+	public static final synthetic fun write$Self (Lio/github/wulkanowy/sdk/scrapper/home/GovernmentMember;Lkotlinx/serialization/encoding/CompositeEncoder;Lkotlinx/serialization/descriptors/SerialDescriptor;)V
+}
+
+public final class io/github/wulkanowy/sdk/scrapper/home/GovernmentMember$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+	public static final field INSTANCE Lio/github/wulkanowy/sdk/scrapper/home/GovernmentMember$$serializer;
+	public fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lio/github/wulkanowy/sdk/scrapper/home/GovernmentMember;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public fun serialize (Lkotlinx/serialization/encoding/Encoder;Lio/github/wulkanowy/sdk/scrapper/home/GovernmentMember;)V
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+	public fun typeParametersSerializers ()[Lkotlinx/serialization/KSerializer;
+}
+
+public final class io/github/wulkanowy/sdk/scrapper/home/GovernmentMember$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public final class io/github/wulkanowy/sdk/scrapper/home/GovernmentUnit {
+	public static final field Companion Lio/github/wulkanowy/sdk/scrapper/home/GovernmentUnit$Companion;
+	public synthetic fun <init> (ILjava/lang/String;Ljava/util/List;Lkotlinx/serialization/internal/SerializationConstructorMarker;)V
+	public fun <init> (Ljava/lang/String;Ljava/util/List;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Ljava/util/List;
+	public final fun copy (Ljava/lang/String;Ljava/util/List;)Lio/github/wulkanowy/sdk/scrapper/home/GovernmentUnit;
+	public static synthetic fun copy$default (Lio/github/wulkanowy/sdk/scrapper/home/GovernmentUnit;Ljava/lang/String;Ljava/util/List;ILjava/lang/Object;)Lio/github/wulkanowy/sdk/scrapper/home/GovernmentUnit;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getPeople ()Ljava/util/List;
+	public final fun getUnitName ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+	public static final synthetic fun write$Self (Lio/github/wulkanowy/sdk/scrapper/home/GovernmentUnit;Lkotlinx/serialization/encoding/CompositeEncoder;Lkotlinx/serialization/descriptors/SerialDescriptor;)V
+}
+
+public final class io/github/wulkanowy/sdk/scrapper/home/GovernmentUnit$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+	public static final field INSTANCE Lio/github/wulkanowy/sdk/scrapper/home/GovernmentUnit$$serializer;
+	public fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lio/github/wulkanowy/sdk/scrapper/home/GovernmentUnit;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public fun serialize (Lkotlinx/serialization/encoding/Encoder;Lio/github/wulkanowy/sdk/scrapper/home/GovernmentUnit;)V
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+	public fun typeParametersSerializers ()[Lkotlinx/serialization/KSerializer;
+}
+
+public final class io/github/wulkanowy/sdk/scrapper/home/GovernmentUnit$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public final class io/github/wulkanowy/sdk/scrapper/home/LuckyNumber {
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;I)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Ljava/lang/String;
+	public final fun component3 ()I
+	public final fun copy (Ljava/lang/String;Ljava/lang/String;I)Lio/github/wulkanowy/sdk/scrapper/home/LuckyNumber;
+	public static synthetic fun copy$default (Lio/github/wulkanowy/sdk/scrapper/home/LuckyNumber;Ljava/lang/String;Ljava/lang/String;IILjava/lang/Object;)Lio/github/wulkanowy/sdk/scrapper/home/LuckyNumber;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getNumber ()I
+	public final fun getSchool ()Ljava/lang/String;
+	public final fun getUnitName ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class io/github/wulkanowy/sdk/scrapper/homework/Homework {
+	public static final field Companion Lio/github/wulkanowy/sdk/scrapper/homework/Homework$Companion;
+	public field teacherSymbol Ljava/lang/String;
+	public synthetic fun <init> (IILjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/time/LocalDateTime;Ljava/time/LocalDateTime;IZLjava/util/List;Lkotlinx/serialization/internal/SerializationConstructorMarker;)V
+	public fun <init> (ILjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/time/LocalDateTime;Ljava/time/LocalDateTime;IZLjava/util/List;)V
+	public final fun component1 ()I
+	public final fun component2 ()Ljava/lang/String;
+	public final fun component3 ()Ljava/lang/String;
+	public final fun component4 ()Ljava/lang/String;
+	public final fun component5 ()Ljava/time/LocalDateTime;
+	public final fun component6 ()Ljava/time/LocalDateTime;
+	public final fun component7 ()I
+	public final fun component8 ()Z
+	public final fun component9 ()Ljava/util/List;
+	public final fun copy (ILjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/time/LocalDateTime;Ljava/time/LocalDateTime;IZLjava/util/List;)Lio/github/wulkanowy/sdk/scrapper/homework/Homework;
+	public static synthetic fun copy$default (Lio/github/wulkanowy/sdk/scrapper/homework/Homework;ILjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/time/LocalDateTime;Ljava/time/LocalDateTime;IZLjava/util/List;ILjava/lang/Object;)Lio/github/wulkanowy/sdk/scrapper/homework/Homework;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getAttachments ()Ljava/util/List;
+	public final fun getContent ()Ljava/lang/String;
+	public final fun getDate ()Ljava/time/LocalDateTime;
+	public final fun getEntryDate ()Ljava/time/LocalDateTime;
+	public final fun getHomeworkId ()I
+	public final fun getStatus ()I
+	public final fun getSubject ()Ljava/lang/String;
+	public final fun getTeacher ()Ljava/lang/String;
+	public final fun getTeacherSymbol ()Ljava/lang/String;
+	public final fun get_attachments ()Ljava/util/List;
+	public fun hashCode ()I
+	public final fun isAnswerRequired ()Z
+	public final fun setTeacherSymbol (Ljava/lang/String;)V
+	public final fun set_attachments (Ljava/util/List;)V
+	public fun toString ()Ljava/lang/String;
+	public static final synthetic fun write$Self (Lio/github/wulkanowy/sdk/scrapper/homework/Homework;Lkotlinx/serialization/encoding/CompositeEncoder;Lkotlinx/serialization/descriptors/SerialDescriptor;)V
+}
+
+public final class io/github/wulkanowy/sdk/scrapper/homework/Homework$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+	public static final field INSTANCE Lio/github/wulkanowy/sdk/scrapper/homework/Homework$$serializer;
+	public fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lio/github/wulkanowy/sdk/scrapper/homework/Homework;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public fun serialize (Lkotlinx/serialization/encoding/Encoder;Lio/github/wulkanowy/sdk/scrapper/homework/Homework;)V
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+	public fun typeParametersSerializers ()[Lkotlinx/serialization/KSerializer;
+}
+
+public final class io/github/wulkanowy/sdk/scrapper/homework/Homework$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public final class io/github/wulkanowy/sdk/scrapper/homework/HomeworkAttachment {
+	public static final field Companion Lio/github/wulkanowy/sdk/scrapper/homework/HomeworkAttachment$Companion;
+	public synthetic fun <init> (IILjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ILkotlinx/serialization/internal/SerializationConstructorMarker;)V
+	public fun <init> (ILjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;I)V
+	public final fun component1 ()I
+	public final fun component2 ()Ljava/lang/String;
+	public final fun component3 ()Ljava/lang/String;
+	public final fun component4 ()Ljava/lang/String;
+	public final fun component5 ()Ljava/lang/String;
+	public final fun component6 ()I
+	public final fun copy (ILjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;I)Lio/github/wulkanowy/sdk/scrapper/homework/HomeworkAttachment;
+	public static synthetic fun copy$default (Lio/github/wulkanowy/sdk/scrapper/homework/HomeworkAttachment;ILjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;IILjava/lang/Object;)Lio/github/wulkanowy/sdk/scrapper/homework/HomeworkAttachment;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getFilename ()Ljava/lang/String;
+	public final fun getHomeworkId ()I
+	public final fun getHtml ()Ljava/lang/String;
+	public final fun getId ()I
+	public final fun getOneDriveId ()Ljava/lang/String;
+	public final fun getUrl ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+	public static final synthetic fun write$Self (Lio/github/wulkanowy/sdk/scrapper/homework/HomeworkAttachment;Lkotlinx/serialization/encoding/CompositeEncoder;Lkotlinx/serialization/descriptors/SerialDescriptor;)V
+}
+
+public final class io/github/wulkanowy/sdk/scrapper/homework/HomeworkAttachment$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+	public static final field INSTANCE Lio/github/wulkanowy/sdk/scrapper/homework/HomeworkAttachment$$serializer;
+	public fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lio/github/wulkanowy/sdk/scrapper/homework/HomeworkAttachment;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public fun serialize (Lkotlinx/serialization/encoding/Encoder;Lio/github/wulkanowy/sdk/scrapper/homework/HomeworkAttachment;)V
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+	public fun typeParametersSerializers ()[Lkotlinx/serialization/KSerializer;
+}
+
+public final class io/github/wulkanowy/sdk/scrapper/homework/HomeworkAttachment$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public final class io/github/wulkanowy/sdk/scrapper/login/ADFSFormResponse {
+	public fun <init> ()V
+	public final fun getDb ()Ljava/lang/String;
+	public final fun getEventValidation ()Ljava/lang/String;
+	public final fun getFormAction ()Ljava/lang/String;
+	public final fun getTitle ()Ljava/lang/String;
+	public final fun getViewStateGenerator ()Ljava/lang/String;
+	public final fun getViewstate ()Ljava/lang/String;
+	public final fun setDb (Ljava/lang/String;)V
+	public final fun setEventValidation (Ljava/lang/String;)V
+	public final fun setFormAction (Ljava/lang/String;)V
+	public final fun setTitle (Ljava/lang/String;)V
+	public final fun setViewStateGenerator (Ljava/lang/String;)V
+	public final fun setViewstate (Ljava/lang/String;)V
+}
+
+public final class io/github/wulkanowy/sdk/scrapper/login/AccountPermissionException : io/github/wulkanowy/sdk/scrapper/exception/ScrapperException {
+}
+
+public final class io/github/wulkanowy/sdk/scrapper/login/BadCredentialsException : io/github/wulkanowy/sdk/scrapper/exception/ScrapperException {
+}
+
+public final class io/github/wulkanowy/sdk/scrapper/login/CertificateResponse {
+	public fun <init> ()V
+	public final fun getAction ()Ljava/lang/String;
+	public final fun getTitle ()Ljava/lang/String;
+	public final fun getWa ()Ljava/lang/String;
+	public final fun getWctx ()Ljava/lang/String;
+	public final fun getWresult ()Ljava/lang/String;
+	public final fun setAction (Ljava/lang/String;)V
+	public final fun setTitle (Ljava/lang/String;)V
+	public final fun setWa (Ljava/lang/String;)V
+	public final fun setWctx (Ljava/lang/String;)V
+	public final fun setWresult (Ljava/lang/String;)V
+}
+
+public final class io/github/wulkanowy/sdk/scrapper/login/InvalidSymbolException : io/github/wulkanowy/sdk/scrapper/exception/ScrapperException {
+}
+
+public final class io/github/wulkanowy/sdk/scrapper/login/NotLoggedInException : io/github/wulkanowy/sdk/scrapper/exception/ScrapperException {
+}
+
+public final class io/github/wulkanowy/sdk/scrapper/login/PasswordChangeRequiredException : io/github/wulkanowy/sdk/scrapper/exception/ScrapperException {
+	public final fun getRedirectUrl ()Ljava/lang/String;
+}
+
+public final class io/github/wulkanowy/sdk/scrapper/messages/Folder : java/lang/Enum {
+	public static final field RECEIVED Lio/github/wulkanowy/sdk/scrapper/messages/Folder;
+	public static final field SENT Lio/github/wulkanowy/sdk/scrapper/messages/Folder;
+	public static final field TRASHED Lio/github/wulkanowy/sdk/scrapper/messages/Folder;
+	public static fun valueOf (Ljava/lang/String;)Lio/github/wulkanowy/sdk/scrapper/messages/Folder;
+	public static fun values ()[Lio/github/wulkanowy/sdk/scrapper/messages/Folder;
+}
+
+public final class io/github/wulkanowy/sdk/scrapper/messages/Mailbox {
+	public static final field Companion Lio/github/wulkanowy/sdk/scrapper/messages/Mailbox$Companion;
+	public synthetic fun <init> (ILjava/lang/String;Ljava/lang/String;ILkotlinx/serialization/internal/SerializationConstructorMarker;)V
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;ILio/github/wulkanowy/sdk/scrapper/messages/RecipientType;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;ILio/github/wulkanowy/sdk/scrapper/messages/RecipientType;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Ljava/lang/String;
+	public final fun component3 ()I
+	public final fun component4 ()Lio/github/wulkanowy/sdk/scrapper/messages/RecipientType;
+	public final fun component5 ()Ljava/lang/String;
+	public final fun component6 ()Ljava/lang/String;
+	public final fun component7 ()Ljava/lang/String;
+	public final fun copy (Ljava/lang/String;Ljava/lang/String;ILio/github/wulkanowy/sdk/scrapper/messages/RecipientType;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Lio/github/wulkanowy/sdk/scrapper/messages/Mailbox;
+	public static synthetic fun copy$default (Lio/github/wulkanowy/sdk/scrapper/messages/Mailbox;Ljava/lang/String;Ljava/lang/String;ILio/github/wulkanowy/sdk/scrapper/messages/RecipientType;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Lio/github/wulkanowy/sdk/scrapper/messages/Mailbox;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getFullName ()Ljava/lang/String;
+	public final fun getGlobalKey ()Ljava/lang/String;
+	public final fun getSchoolNameShort ()Ljava/lang/String;
+	public final fun getStudentName ()Ljava/lang/String;
+	public final fun getType ()Lio/github/wulkanowy/sdk/scrapper/messages/RecipientType;
+	public final fun getUserName ()Ljava/lang/String;
+	public final fun getUserType ()I
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+	public static final synthetic fun write$Self (Lio/github/wulkanowy/sdk/scrapper/messages/Mailbox;Lkotlinx/serialization/encoding/CompositeEncoder;Lkotlinx/serialization/descriptors/SerialDescriptor;)V
+}
+
+public final class io/github/wulkanowy/sdk/scrapper/messages/Mailbox$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+	public static final field INSTANCE Lio/github/wulkanowy/sdk/scrapper/messages/Mailbox$$serializer;
+	public fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lio/github/wulkanowy/sdk/scrapper/messages/Mailbox;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public fun serialize (Lkotlinx/serialization/encoding/Encoder;Lio/github/wulkanowy/sdk/scrapper/messages/Mailbox;)V
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+	public fun typeParametersSerializers ()[Lkotlinx/serialization/KSerializer;
+}
+
+public final class io/github/wulkanowy/sdk/scrapper/messages/Mailbox$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public final class io/github/wulkanowy/sdk/scrapper/messages/MessageAttachment {
+	public static final field Companion Lio/github/wulkanowy/sdk/scrapper/messages/MessageAttachment$Companion;
+	public synthetic fun <init> (ILjava/lang/String;Ljava/lang/String;Lkotlinx/serialization/internal/SerializationConstructorMarker;)V
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Ljava/lang/String;
+	public final fun copy (Ljava/lang/String;Ljava/lang/String;)Lio/github/wulkanowy/sdk/scrapper/messages/MessageAttachment;
+	public static synthetic fun copy$default (Lio/github/wulkanowy/sdk/scrapper/messages/MessageAttachment;Ljava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Lio/github/wulkanowy/sdk/scrapper/messages/MessageAttachment;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getFilename ()Ljava/lang/String;
+	public final fun getUrl ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+	public static final synthetic fun write$Self (Lio/github/wulkanowy/sdk/scrapper/messages/MessageAttachment;Lkotlinx/serialization/encoding/CompositeEncoder;Lkotlinx/serialization/descriptors/SerialDescriptor;)V
+}
+
+public final class io/github/wulkanowy/sdk/scrapper/messages/MessageAttachment$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+	public static final field INSTANCE Lio/github/wulkanowy/sdk/scrapper/messages/MessageAttachment$$serializer;
+	public fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lio/github/wulkanowy/sdk/scrapper/messages/MessageAttachment;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public fun serialize (Lkotlinx/serialization/encoding/Encoder;Lio/github/wulkanowy/sdk/scrapper/messages/MessageAttachment;)V
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+	public fun typeParametersSerializers ()[Lkotlinx/serialization/KSerializer;
+}
+
+public final class io/github/wulkanowy/sdk/scrapper/messages/MessageAttachment$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public final class io/github/wulkanowy/sdk/scrapper/messages/MessageDetails {
+	public static final field Companion Lio/github/wulkanowy/sdk/scrapper/messages/MessageDetails$Companion;
+	public synthetic fun <init> (ILjava/lang/String;Ljava/time/LocalDateTime;Ljava/lang/String;Ljava/util/List;Ljava/lang/String;Ljava/lang/String;ZLjava/util/List;ILkotlinx/serialization/internal/SerializationConstructorMarker;)V
+	public fun <init> (Ljava/lang/String;Ljava/time/LocalDateTime;Ljava/lang/String;Ljava/util/List;Ljava/lang/String;Ljava/lang/String;ZLjava/util/List;I)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Ljava/time/LocalDateTime;
+	public final fun component3 ()Ljava/lang/String;
+	public final fun component4 ()Ljava/util/List;
+	public final fun component5 ()Ljava/lang/String;
+	public final fun component6 ()Ljava/lang/String;
+	public final fun component7 ()Z
+	public final fun component8 ()Ljava/util/List;
+	public final fun component9 ()I
+	public final fun copy (Ljava/lang/String;Ljava/time/LocalDateTime;Ljava/lang/String;Ljava/util/List;Ljava/lang/String;Ljava/lang/String;ZLjava/util/List;I)Lio/github/wulkanowy/sdk/scrapper/messages/MessageDetails;
+	public static synthetic fun copy$default (Lio/github/wulkanowy/sdk/scrapper/messages/MessageDetails;Ljava/lang/String;Ljava/time/LocalDateTime;Ljava/lang/String;Ljava/util/List;Ljava/lang/String;Ljava/lang/String;ZLjava/util/List;IILjava/lang/Object;)Lio/github/wulkanowy/sdk/scrapper/messages/MessageDetails;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getApiGlobalKey ()Ljava/lang/String;
+	public final fun getAttachments ()Ljava/util/List;
+	public final fun getContent ()Ljava/lang/String;
+	public final fun getDate ()Ljava/time/LocalDateTime;
+	public final fun getId ()I
+	public final fun getRecipients ()Ljava/util/List;
+	public final fun getSender ()Ljava/lang/String;
+	public final fun getSubject ()Ljava/lang/String;
+	public fun hashCode ()I
+	public final fun isRead ()Z
+	public fun toString ()Ljava/lang/String;
+	public static final synthetic fun write$Self (Lio/github/wulkanowy/sdk/scrapper/messages/MessageDetails;Lkotlinx/serialization/encoding/CompositeEncoder;Lkotlinx/serialization/descriptors/SerialDescriptor;)V
+}
+
+public final class io/github/wulkanowy/sdk/scrapper/messages/MessageDetails$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+	public static final field INSTANCE Lio/github/wulkanowy/sdk/scrapper/messages/MessageDetails$$serializer;
+	public fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lio/github/wulkanowy/sdk/scrapper/messages/MessageDetails;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public fun serialize (Lkotlinx/serialization/encoding/Encoder;Lio/github/wulkanowy/sdk/scrapper/messages/MessageDetails;)V
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+	public fun typeParametersSerializers ()[Lkotlinx/serialization/KSerializer;
+}
+
+public final class io/github/wulkanowy/sdk/scrapper/messages/MessageDetails$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public final class io/github/wulkanowy/sdk/scrapper/messages/MessageMeta {
+	public static final field Companion Lio/github/wulkanowy/sdk/scrapper/messages/MessageMeta$Companion;
+	public synthetic fun <init> (ILjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/time/LocalDateTime;Ljava/lang/String;ZZLjava/lang/String;ZIILkotlinx/serialization/internal/SerializationConstructorMarker;)V
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/time/LocalDateTime;Ljava/lang/String;ZZLjava/lang/String;ZII)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component10 ()I
+	public final fun component11 ()I
+	public final fun component2 ()Ljava/lang/String;
+	public final fun component3 ()Ljava/lang/String;
+	public final fun component4 ()Ljava/time/LocalDateTime;
+	public final fun component5 ()Ljava/lang/String;
+	public final fun component6 ()Z
+	public final fun component7 ()Z
+	public final fun component8 ()Ljava/lang/String;
+	public final fun component9 ()Z
+	public final fun copy (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/time/LocalDateTime;Ljava/lang/String;ZZLjava/lang/String;ZII)Lio/github/wulkanowy/sdk/scrapper/messages/MessageMeta;
+	public static synthetic fun copy$default (Lio/github/wulkanowy/sdk/scrapper/messages/MessageMeta;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/time/LocalDateTime;Ljava/lang/String;ZZLjava/lang/String;ZIIILjava/lang/Object;)Lio/github/wulkanowy/sdk/scrapper/messages/MessageMeta;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getApiGlobalKey ()Ljava/lang/String;
+	public final fun getCorrespondents ()Ljava/lang/String;
+	public final fun getDate ()Ljava/time/LocalDateTime;
+	public final fun getId ()I
+	public final fun getMailbox ()Ljava/lang/String;
+	public final fun getReadUnreadBy ()Ljava/lang/String;
+	public final fun getSubject ()Ljava/lang/String;
+	public final fun getUserRole ()I
+	public fun hashCode ()I
+	public final fun isAttachments ()Z
+	public final fun isMarked ()Z
+	public final fun isRead ()Z
+	public fun toString ()Ljava/lang/String;
+	public static final synthetic fun write$Self (Lio/github/wulkanowy/sdk/scrapper/messages/MessageMeta;Lkotlinx/serialization/encoding/CompositeEncoder;Lkotlinx/serialization/descriptors/SerialDescriptor;)V
+}
+
+public final class io/github/wulkanowy/sdk/scrapper/messages/MessageMeta$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+	public static final field INSTANCE Lio/github/wulkanowy/sdk/scrapper/messages/MessageMeta$$serializer;
+	public fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lio/github/wulkanowy/sdk/scrapper/messages/MessageMeta;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public fun serialize (Lkotlinx/serialization/encoding/Encoder;Lio/github/wulkanowy/sdk/scrapper/messages/MessageMeta;)V
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+	public fun typeParametersSerializers ()[Lkotlinx/serialization/KSerializer;
+}
+
+public final class io/github/wulkanowy/sdk/scrapper/messages/MessageMeta$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public final class io/github/wulkanowy/sdk/scrapper/messages/MessageReplayDetails {
+	public static final field Companion Lio/github/wulkanowy/sdk/scrapper/messages/MessageReplayDetails$Companion;
+	public field sender Lio/github/wulkanowy/sdk/scrapper/messages/Recipient;
+	public synthetic fun <init> (ILjava/lang/String;Ljava/time/LocalDateTime;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/util/List;Ljava/lang/String;Ljava/lang/String;Ljava/util/List;ILkotlinx/serialization/internal/SerializationConstructorMarker;)V
+	public fun <init> (Ljava/lang/String;Ljava/time/LocalDateTime;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/util/List;Ljava/lang/String;Ljava/lang/String;Ljava/util/List;I)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component10 ()I
+	public final fun component2 ()Ljava/time/LocalDateTime;
+	public final fun component3 ()Ljava/lang/String;
+	public final fun component4 ()Ljava/lang/String;
+	public final fun component5 ()Ljava/lang/String;
+	public final fun component6 ()Ljava/util/List;
+	public final fun component7 ()Ljava/lang/String;
+	public final fun component8 ()Ljava/lang/String;
+	public final fun component9 ()Ljava/util/List;
+	public final fun copy (Ljava/lang/String;Ljava/time/LocalDateTime;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/util/List;Ljava/lang/String;Ljava/lang/String;Ljava/util/List;I)Lio/github/wulkanowy/sdk/scrapper/messages/MessageReplayDetails;
+	public static synthetic fun copy$default (Lio/github/wulkanowy/sdk/scrapper/messages/MessageReplayDetails;Ljava/lang/String;Ljava/time/LocalDateTime;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/util/List;Ljava/lang/String;Ljava/lang/String;Ljava/util/List;IILjava/lang/Object;)Lio/github/wulkanowy/sdk/scrapper/messages/MessageReplayDetails;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getApiGlobalKey ()Ljava/lang/String;
+	public final fun getAttachments ()Ljava/util/List;
+	public final fun getContent ()Ljava/lang/String;
+	public final fun getDate ()Ljava/time/LocalDateTime;
+	public final fun getId ()I
+	public final fun getMailboxId ()Ljava/lang/String;
+	public final fun getRecipients ()Ljava/util/List;
+	public final fun getSender ()Lio/github/wulkanowy/sdk/scrapper/messages/Recipient;
+	public final fun getSenderMailboxId ()Ljava/lang/String;
+	public final fun getSenderMailboxName ()Ljava/lang/String;
+	public final fun getSubject ()Ljava/lang/String;
+	public fun hashCode ()I
+	public final fun setSender (Lio/github/wulkanowy/sdk/scrapper/messages/Recipient;)V
+	public fun toString ()Ljava/lang/String;
+	public static final synthetic fun write$Self (Lio/github/wulkanowy/sdk/scrapper/messages/MessageReplayDetails;Lkotlinx/serialization/encoding/CompositeEncoder;Lkotlinx/serialization/descriptors/SerialDescriptor;)V
+}
+
+public final class io/github/wulkanowy/sdk/scrapper/messages/MessageReplayDetails$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+	public static final field INSTANCE Lio/github/wulkanowy/sdk/scrapper/messages/MessageReplayDetails$$serializer;
+	public fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lio/github/wulkanowy/sdk/scrapper/messages/MessageReplayDetails;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public fun serialize (Lkotlinx/serialization/encoding/Encoder;Lio/github/wulkanowy/sdk/scrapper/messages/MessageReplayDetails;)V
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+	public fun typeParametersSerializers ()[Lkotlinx/serialization/KSerializer;
+}
+
+public final class io/github/wulkanowy/sdk/scrapper/messages/MessageReplayDetails$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public final class io/github/wulkanowy/sdk/scrapper/messages/Recipient {
+	public static final field Companion Lio/github/wulkanowy/sdk/scrapper/messages/Recipient$Companion;
+	public synthetic fun <init> (ILjava/lang/String;Ljava/lang/String;Lkotlinx/serialization/internal/SerializationConstructorMarker;)V
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;Lio/github/wulkanowy/sdk/scrapper/messages/RecipientType;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;Lio/github/wulkanowy/sdk/scrapper/messages/RecipientType;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Ljava/lang/String;
+	public final fun component3 ()Lio/github/wulkanowy/sdk/scrapper/messages/RecipientType;
+	public final fun component4 ()Ljava/lang/String;
+	public final fun component5 ()Ljava/lang/String;
+	public final fun component6 ()Ljava/lang/String;
+	public final fun copy (Ljava/lang/String;Ljava/lang/String;Lio/github/wulkanowy/sdk/scrapper/messages/RecipientType;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Lio/github/wulkanowy/sdk/scrapper/messages/Recipient;
+	public static synthetic fun copy$default (Lio/github/wulkanowy/sdk/scrapper/messages/Recipient;Ljava/lang/String;Ljava/lang/String;Lio/github/wulkanowy/sdk/scrapper/messages/RecipientType;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Lio/github/wulkanowy/sdk/scrapper/messages/Recipient;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getFullName ()Ljava/lang/String;
+	public final fun getMailboxGlobalKey ()Ljava/lang/String;
+	public final fun getSchoolNameShort ()Ljava/lang/String;
+	public final fun getStudentName ()Ljava/lang/String;
+	public final fun getType ()Lio/github/wulkanowy/sdk/scrapper/messages/RecipientType;
+	public final fun getUserName ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+	public static final synthetic fun write$Self (Lio/github/wulkanowy/sdk/scrapper/messages/Recipient;Lkotlinx/serialization/encoding/CompositeEncoder;Lkotlinx/serialization/descriptors/SerialDescriptor;)V
+}
+
+public final class io/github/wulkanowy/sdk/scrapper/messages/Recipient$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+	public static final field INSTANCE Lio/github/wulkanowy/sdk/scrapper/messages/Recipient$$serializer;
+	public fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lio/github/wulkanowy/sdk/scrapper/messages/Recipient;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public fun serialize (Lkotlinx/serialization/encoding/Encoder;Lio/github/wulkanowy/sdk/scrapper/messages/Recipient;)V
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+	public fun typeParametersSerializers ()[Lkotlinx/serialization/KSerializer;
+}
+
+public final class io/github/wulkanowy/sdk/scrapper/messages/Recipient$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public final class io/github/wulkanowy/sdk/scrapper/messages/RecipientType : java/lang/Enum {
+	public static final field EMPLOYEE Lio/github/wulkanowy/sdk/scrapper/messages/RecipientType;
+	public static final field GUARDIAN Lio/github/wulkanowy/sdk/scrapper/messages/RecipientType;
+	public static final field PARENT Lio/github/wulkanowy/sdk/scrapper/messages/RecipientType;
+	public static final field STUDENT Lio/github/wulkanowy/sdk/scrapper/messages/RecipientType;
+	public static final field UNKNOWN Lio/github/wulkanowy/sdk/scrapper/messages/RecipientType;
+	public final fun getLetter ()Ljava/lang/String;
+	public static fun valueOf (Ljava/lang/String;)Lio/github/wulkanowy/sdk/scrapper/messages/RecipientType;
+	public static fun values ()[Lio/github/wulkanowy/sdk/scrapper/messages/RecipientType;
+}
+
+public final class io/github/wulkanowy/sdk/scrapper/mobile/Device {
+	public static final field Companion Lio/github/wulkanowy/sdk/scrapper/mobile/Device$Companion;
+	public fun <init> ()V
+	public synthetic fun <init> (IILjava/lang/String;Ljava/lang/String;Ljava/time/LocalDateTime;Ljava/time/LocalDateTime;Lkotlinx/serialization/internal/SerializationConstructorMarker;)V
+	public fun <init> (ILjava/lang/String;Ljava/lang/String;Ljava/time/LocalDateTime;Ljava/time/LocalDateTime;)V
+	public synthetic fun <init> (ILjava/lang/String;Ljava/lang/String;Ljava/time/LocalDateTime;Ljava/time/LocalDateTime;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()I
+	public final fun component2 ()Ljava/lang/String;
+	public final fun component3 ()Ljava/lang/String;
+	public final fun component4 ()Ljava/time/LocalDateTime;
+	public final fun component5 ()Ljava/time/LocalDateTime;
+	public final fun copy (ILjava/lang/String;Ljava/lang/String;Ljava/time/LocalDateTime;Ljava/time/LocalDateTime;)Lio/github/wulkanowy/sdk/scrapper/mobile/Device;
+	public static synthetic fun copy$default (Lio/github/wulkanowy/sdk/scrapper/mobile/Device;ILjava/lang/String;Ljava/lang/String;Ljava/time/LocalDateTime;Ljava/time/LocalDateTime;ILjava/lang/Object;)Lio/github/wulkanowy/sdk/scrapper/mobile/Device;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getCreateDate ()Ljava/time/LocalDateTime;
+	public final fun getDeviceId ()Ljava/lang/String;
+	public final fun getId ()I
+	public final fun getModificationDate ()Ljava/time/LocalDateTime;
+	public final fun getName ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+	public static final synthetic fun write$Self (Lio/github/wulkanowy/sdk/scrapper/mobile/Device;Lkotlinx/serialization/encoding/CompositeEncoder;Lkotlinx/serialization/descriptors/SerialDescriptor;)V
+}
+
+public final class io/github/wulkanowy/sdk/scrapper/mobile/Device$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+	public static final field INSTANCE Lio/github/wulkanowy/sdk/scrapper/mobile/Device$$serializer;
+	public fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lio/github/wulkanowy/sdk/scrapper/mobile/Device;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public fun serialize (Lkotlinx/serialization/encoding/Encoder;Lio/github/wulkanowy/sdk/scrapper/mobile/Device;)V
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+	public fun typeParametersSerializers ()[Lkotlinx/serialization/KSerializer;
+}
+
+public final class io/github/wulkanowy/sdk/scrapper/mobile/Device$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public final class io/github/wulkanowy/sdk/scrapper/mobile/TokenResponse {
+	public static final field Companion Lio/github/wulkanowy/sdk/scrapper/mobile/TokenResponse$Companion;
+	public synthetic fun <init> (ILjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lkotlinx/serialization/internal/SerializationConstructorMarker;)V
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Ljava/lang/String;
+	public final fun component3 ()Ljava/lang/String;
+	public final fun component4 ()Ljava/lang/String;
+	public final fun copy (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Lio/github/wulkanowy/sdk/scrapper/mobile/TokenResponse;
+	public static synthetic fun copy$default (Lio/github/wulkanowy/sdk/scrapper/mobile/TokenResponse;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Lio/github/wulkanowy/sdk/scrapper/mobile/TokenResponse;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getPin ()Ljava/lang/String;
+	public final fun getQrCodeImage ()Ljava/lang/String;
+	public final fun getSymbol ()Ljava/lang/String;
+	public final fun getToken ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+	public static final synthetic fun write$Self (Lio/github/wulkanowy/sdk/scrapper/mobile/TokenResponse;Lkotlinx/serialization/encoding/CompositeEncoder;Lkotlinx/serialization/descriptors/SerialDescriptor;)V
+}
+
+public final class io/github/wulkanowy/sdk/scrapper/mobile/TokenResponse$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+	public static final field INSTANCE Lio/github/wulkanowy/sdk/scrapper/mobile/TokenResponse$$serializer;
+	public fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lio/github/wulkanowy/sdk/scrapper/mobile/TokenResponse;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public fun serialize (Lkotlinx/serialization/encoding/Encoder;Lio/github/wulkanowy/sdk/scrapper/mobile/TokenResponse;)V
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+	public fun typeParametersSerializers ()[Lkotlinx/serialization/KSerializer;
+}
+
+public final class io/github/wulkanowy/sdk/scrapper/mobile/TokenResponse$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public final class io/github/wulkanowy/sdk/scrapper/notes/Note {
+	public static final field Companion Lio/github/wulkanowy/sdk/scrapper/notes/Note$Companion;
+	public field teacherSymbol Ljava/lang/String;
+	public synthetic fun <init> (ILjava/time/LocalDateTime;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ZILkotlinx/serialization/internal/SerializationConstructorMarker;)V
+	public fun <init> (Ljava/time/LocalDateTime;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ZI)V
+	public synthetic fun <init> (Ljava/time/LocalDateTime;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ZIILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ljava/time/LocalDateTime;
+	public final fun component2 ()Ljava/lang/String;
+	public final fun component3 ()Ljava/lang/String;
+	public final fun component4 ()Ljava/lang/String;
+	public final fun component5 ()Ljava/lang/String;
+	public final fun component6 ()Z
+	public final fun component7 ()I
+	public final fun copy (Ljava/time/LocalDateTime;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ZI)Lio/github/wulkanowy/sdk/scrapper/notes/Note;
+	public static synthetic fun copy$default (Lio/github/wulkanowy/sdk/scrapper/notes/Note;Ljava/time/LocalDateTime;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ZIILjava/lang/Object;)Lio/github/wulkanowy/sdk/scrapper/notes/Note;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getCategory ()Ljava/lang/String;
+	public final fun getCategoryType ()I
+	public final fun getContent ()Ljava/lang/String;
+	public final fun getDate ()Ljava/time/LocalDateTime;
+	public final fun getPoints ()Ljava/lang/String;
+	public final fun getShowPoints ()Z
+	public final fun getTeacher ()Ljava/lang/String;
+	public final fun getTeacherSymbol ()Ljava/lang/String;
+	public fun hashCode ()I
+	public final fun setTeacherSymbol (Ljava/lang/String;)V
+	public fun toString ()Ljava/lang/String;
+	public static final synthetic fun write$Self (Lio/github/wulkanowy/sdk/scrapper/notes/Note;Lkotlinx/serialization/encoding/CompositeEncoder;Lkotlinx/serialization/descriptors/SerialDescriptor;)V
+}
+
+public final class io/github/wulkanowy/sdk/scrapper/notes/Note$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+	public static final field INSTANCE Lio/github/wulkanowy/sdk/scrapper/notes/Note$$serializer;
+	public fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lio/github/wulkanowy/sdk/scrapper/notes/Note;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public fun serialize (Lkotlinx/serialization/encoding/Encoder;Lio/github/wulkanowy/sdk/scrapper/notes/Note;)V
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+	public fun typeParametersSerializers ()[Lkotlinx/serialization/KSerializer;
+}
+
+public final class io/github/wulkanowy/sdk/scrapper/notes/Note$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public final class io/github/wulkanowy/sdk/scrapper/notes/NoteCategory : java/lang/Enum {
+	public static final field Companion Lio/github/wulkanowy/sdk/scrapper/notes/NoteCategory$Companion;
+	public static final field NEGATIVE Lio/github/wulkanowy/sdk/scrapper/notes/NoteCategory;
+	public static final field NEUTRAL Lio/github/wulkanowy/sdk/scrapper/notes/NoteCategory;
+	public static final field POSITIVE Lio/github/wulkanowy/sdk/scrapper/notes/NoteCategory;
+	public static final field UNKNOWN Lio/github/wulkanowy/sdk/scrapper/notes/NoteCategory;
+	public final fun getId ()I
+	public static fun valueOf (Ljava/lang/String;)Lio/github/wulkanowy/sdk/scrapper/notes/NoteCategory;
+	public static fun values ()[Lio/github/wulkanowy/sdk/scrapper/notes/NoteCategory;
+}
+
+public final class io/github/wulkanowy/sdk/scrapper/notes/NoteCategory$Companion {
+	public final fun getByValue (I)Lio/github/wulkanowy/sdk/scrapper/notes/NoteCategory;
+}
+
+public final class io/github/wulkanowy/sdk/scrapper/register/RegisterEmployee : io/github/wulkanowy/sdk/scrapper/register/RegisterSubject {
+	public fun <init> (ILjava/lang/String;)V
+	public final fun component1 ()I
+	public final fun component2 ()Ljava/lang/String;
+	public final fun copy (ILjava/lang/String;)Lio/github/wulkanowy/sdk/scrapper/register/RegisterEmployee;
+	public static synthetic fun copy$default (Lio/github/wulkanowy/sdk/scrapper/register/RegisterEmployee;ILjava/lang/String;ILjava/lang/Object;)Lio/github/wulkanowy/sdk/scrapper/register/RegisterEmployee;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getEmployeeId ()I
+	public final fun getEmployeeName ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class io/github/wulkanowy/sdk/scrapper/register/RegisterStudent : io/github/wulkanowy/sdk/scrapper/register/RegisterSubject {
+	public fun <init> (ILjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;IZLjava/util/List;)V
+	public final fun component1 ()I
+	public final fun component2 ()Ljava/lang/String;
+	public final fun component3 ()Ljava/lang/String;
+	public final fun component4 ()Ljava/lang/String;
+	public final fun component5 ()Ljava/lang/String;
+	public final fun component6 ()I
+	public final fun component7 ()Z
+	public final fun component8 ()Ljava/util/List;
+	public final fun copy (ILjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;IZLjava/util/List;)Lio/github/wulkanowy/sdk/scrapper/register/RegisterStudent;
+	public static synthetic fun copy$default (Lio/github/wulkanowy/sdk/scrapper/register/RegisterStudent;ILjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;IZLjava/util/List;ILjava/lang/Object;)Lio/github/wulkanowy/sdk/scrapper/register/RegisterStudent;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getClassId ()I
+	public final fun getClassName ()Ljava/lang/String;
+	public final fun getSemesters ()Ljava/util/List;
+	public final fun getStudentId ()I
+	public final fun getStudentName ()Ljava/lang/String;
+	public final fun getStudentSecondName ()Ljava/lang/String;
+	public final fun getStudentSurname ()Ljava/lang/String;
+	public fun hashCode ()I
+	public final fun isParent ()Z
+	public fun toString ()Ljava/lang/String;
+}
+
+public abstract interface class io/github/wulkanowy/sdk/scrapper/register/RegisterSubject {
+}
+
+public final class io/github/wulkanowy/sdk/scrapper/register/RegisterSymbol {
+	public fun <init> (Ljava/lang/String;Ljava/lang/Throwable;Ljava/lang/String;Ljava/util/List;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Ljava/lang/Throwable;
+	public final fun component3 ()Ljava/lang/String;
+	public final fun component4 ()Ljava/util/List;
+	public final fun copy (Ljava/lang/String;Ljava/lang/Throwable;Ljava/lang/String;Ljava/util/List;)Lio/github/wulkanowy/sdk/scrapper/register/RegisterSymbol;
+	public static synthetic fun copy$default (Lio/github/wulkanowy/sdk/scrapper/register/RegisterSymbol;Ljava/lang/String;Ljava/lang/Throwable;Ljava/lang/String;Ljava/util/List;ILjava/lang/Object;)Lio/github/wulkanowy/sdk/scrapper/register/RegisterSymbol;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getError ()Ljava/lang/Throwable;
+	public final fun getSchools ()Ljava/util/List;
+	public final fun getSymbol ()Ljava/lang/String;
+	public final fun getUserName ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class io/github/wulkanowy/sdk/scrapper/register/RegisterUnit {
+	public fun <init> (ILjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/util/List;Ljava/util/List;Ljava/util/List;Ljava/lang/Throwable;Ljava/util/List;)V
+	public final fun component1 ()I
+	public final fun component2 ()Ljava/lang/String;
+	public final fun component3 ()Ljava/lang/String;
+	public final fun component4 ()Ljava/lang/String;
+	public final fun component5 ()Ljava/util/List;
+	public final fun component6 ()Ljava/util/List;
+	public final fun component7 ()Ljava/util/List;
+	public final fun component8 ()Ljava/lang/Throwable;
+	public final fun component9 ()Ljava/util/List;
+	public final fun copy (ILjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/util/List;Ljava/util/List;Ljava/util/List;Ljava/lang/Throwable;Ljava/util/List;)Lio/github/wulkanowy/sdk/scrapper/register/RegisterUnit;
+	public static synthetic fun copy$default (Lio/github/wulkanowy/sdk/scrapper/register/RegisterUnit;ILjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/util/List;Ljava/util/List;Ljava/util/List;Ljava/lang/Throwable;Ljava/util/List;ILjava/lang/Object;)Lio/github/wulkanowy/sdk/scrapper/register/RegisterUnit;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getEmployeeIds ()Ljava/util/List;
+	public final fun getError ()Ljava/lang/Throwable;
+	public final fun getParentIds ()Ljava/util/List;
+	public final fun getSchoolId ()Ljava/lang/String;
+	public final fun getSchoolName ()Ljava/lang/String;
+	public final fun getSchoolShortName ()Ljava/lang/String;
+	public final fun getStudentIds ()Ljava/util/List;
+	public final fun getSubjects ()Ljava/util/List;
+	public final fun getUserLoginId ()I
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class io/github/wulkanowy/sdk/scrapper/register/RegisterUser {
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lio/github/wulkanowy/sdk/scrapper/Scrapper$LoginType;Ljava/util/List;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Ljava/lang/String;
+	public final fun component3 ()Ljava/lang/String;
+	public final fun component4 ()Lio/github/wulkanowy/sdk/scrapper/Scrapper$LoginType;
+	public final fun component5 ()Ljava/util/List;
+	public final fun copy (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lio/github/wulkanowy/sdk/scrapper/Scrapper$LoginType;Ljava/util/List;)Lio/github/wulkanowy/sdk/scrapper/register/RegisterUser;
+	public static synthetic fun copy$default (Lio/github/wulkanowy/sdk/scrapper/register/RegisterUser;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lio/github/wulkanowy/sdk/scrapper/Scrapper$LoginType;Ljava/util/List;ILjava/lang/Object;)Lio/github/wulkanowy/sdk/scrapper/register/RegisterUser;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getBaseUrl ()Ljava/lang/String;
+	public final fun getEmail ()Ljava/lang/String;
+	public final fun getLogin ()Ljava/lang/String;
+	public final fun getLoginType ()Lio/github/wulkanowy/sdk/scrapper/Scrapper$LoginType;
+	public final fun getSymbols ()Ljava/util/List;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class io/github/wulkanowy/sdk/scrapper/register/Semester {
+	public fun <init> (IILjava/lang/String;IIILjava/time/LocalDate;Ljava/time/LocalDate;II)V
+	public synthetic fun <init> (IILjava/lang/String;IIILjava/time/LocalDate;Ljava/time/LocalDate;IIILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()I
+	public final fun component10 ()I
+	public final fun component2 ()I
+	public final fun component3 ()Ljava/lang/String;
+	public final fun component4 ()I
+	public final fun component5 ()I
+	public final fun component6 ()I
+	public final fun component7 ()Ljava/time/LocalDate;
+	public final fun component8 ()Ljava/time/LocalDate;
+	public final fun component9 ()I
+	public final fun copy (IILjava/lang/String;IIILjava/time/LocalDate;Ljava/time/LocalDate;II)Lio/github/wulkanowy/sdk/scrapper/register/Semester;
+	public static synthetic fun copy$default (Lio/github/wulkanowy/sdk/scrapper/register/Semester;IILjava/lang/String;IIILjava/time/LocalDate;Ljava/time/LocalDate;IIILjava/lang/Object;)Lio/github/wulkanowy/sdk/scrapper/register/Semester;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getClassId ()I
+	public final fun getDiaryId ()I
+	public final fun getDiaryName ()Ljava/lang/String;
+	public final fun getEnd ()Ljava/time/LocalDate;
+	public final fun getKindergartenDiaryId ()I
+	public final fun getSchoolYear ()I
+	public final fun getSemesterId ()I
+	public final fun getSemesterNumber ()I
+	public final fun getStart ()Ljava/time/LocalDate;
+	public final fun getUnitId ()I
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class io/github/wulkanowy/sdk/scrapper/school/School {
+	public static final field Companion Lio/github/wulkanowy/sdk/scrapper/school/School$Companion;
+	public synthetic fun <init> (ILjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lkotlinx/serialization/internal/SerializationConstructorMarker;)V
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Ljava/lang/String;
+	public final fun component3 ()Ljava/lang/String;
+	public final fun component4 ()Ljava/lang/String;
+	public final fun component5 ()Ljava/lang/String;
+	public final fun copy (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Lio/github/wulkanowy/sdk/scrapper/school/School;
+	public static synthetic fun copy$default (Lio/github/wulkanowy/sdk/scrapper/school/School;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Lio/github/wulkanowy/sdk/scrapper/school/School;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getAddress ()Ljava/lang/String;
+	public final fun getContact ()Ljava/lang/String;
+	public final fun getHeadmaster ()Ljava/lang/String;
+	public final fun getName ()Ljava/lang/String;
+	public final fun getPedagogue ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+	public static final synthetic fun write$Self (Lio/github/wulkanowy/sdk/scrapper/school/School;Lkotlinx/serialization/encoding/CompositeEncoder;Lkotlinx/serialization/descriptors/SerialDescriptor;)V
+}
+
+public final class io/github/wulkanowy/sdk/scrapper/school/School$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+	public static final field INSTANCE Lio/github/wulkanowy/sdk/scrapper/school/School$$serializer;
+	public fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lio/github/wulkanowy/sdk/scrapper/school/School;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public fun serialize (Lkotlinx/serialization/encoding/Encoder;Lio/github/wulkanowy/sdk/scrapper/school/School;)V
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+	public fun typeParametersSerializers ()[Lkotlinx/serialization/KSerializer;
+}
+
+public final class io/github/wulkanowy/sdk/scrapper/school/School$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public final class io/github/wulkanowy/sdk/scrapper/school/Teacher {
+	public static final field Companion Lio/github/wulkanowy/sdk/scrapper/school/Teacher$Companion;
+	public synthetic fun <init> (ILjava/lang/String;Ljava/lang/String;Lkotlinx/serialization/internal/SerializationConstructorMarker;)V
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Ljava/lang/String;
+	public final fun copy (Ljava/lang/String;Ljava/lang/String;)Lio/github/wulkanowy/sdk/scrapper/school/Teacher;
+	public static synthetic fun copy$default (Lio/github/wulkanowy/sdk/scrapper/school/Teacher;Ljava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Lio/github/wulkanowy/sdk/scrapper/school/Teacher;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getName ()Ljava/lang/String;
+	public final fun getShort ()Ljava/lang/String;
+	public final fun getSubject ()Ljava/lang/String;
+	public fun hashCode ()I
+	public final fun setShort (Ljava/lang/String;)V
+	public fun toString ()Ljava/lang/String;
+	public static final synthetic fun write$Self (Lio/github/wulkanowy/sdk/scrapper/school/Teacher;Lkotlinx/serialization/encoding/CompositeEncoder;Lkotlinx/serialization/descriptors/SerialDescriptor;)V
+}
+
+public final class io/github/wulkanowy/sdk/scrapper/school/Teacher$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+	public static final field INSTANCE Lio/github/wulkanowy/sdk/scrapper/school/Teacher$$serializer;
+	public fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lio/github/wulkanowy/sdk/scrapper/school/Teacher;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public fun serialize (Lkotlinx/serialization/encoding/Encoder;Lio/github/wulkanowy/sdk/scrapper/school/Teacher;)V
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+	public fun typeParametersSerializers ()[Lkotlinx/serialization/KSerializer;
+}
+
+public final class io/github/wulkanowy/sdk/scrapper/school/Teacher$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public final class io/github/wulkanowy/sdk/scrapper/student/StudentGuardian {
+	public static final field Companion Lio/github/wulkanowy/sdk/scrapper/student/StudentGuardian$Companion;
+	public synthetic fun <init> (IILjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lkotlinx/serialization/internal/SerializationConstructorMarker;)V
+	public fun <init> (ILjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+	public final fun component1 ()I
+	public final fun component10 ()Ljava/lang/String;
+	public final fun component11 ()Ljava/lang/String;
+	public final fun component2 ()Ljava/lang/String;
+	public final fun component3 ()Ljava/lang/String;
+	public final fun component4 ()Ljava/lang/String;
+	public final fun component5 ()Ljava/lang/String;
+	public final fun component6 ()Ljava/lang/String;
+	public final fun component7 ()Ljava/lang/String;
+	public final fun component8 ()Ljava/lang/String;
+	public final fun component9 ()Ljava/lang/String;
+	public final fun copy (ILjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Lio/github/wulkanowy/sdk/scrapper/student/StudentGuardian;
+	public static synthetic fun copy$default (Lio/github/wulkanowy/sdk/scrapper/student/StudentGuardian;ILjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Lio/github/wulkanowy/sdk/scrapper/student/StudentGuardian;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getAddress ()Ljava/lang/String;
+	public final fun getCellPhone ()Ljava/lang/String;
+	public final fun getEmail ()Ljava/lang/String;
+	public final fun getFullName ()Ljava/lang/String;
+	public final fun getHomePhone ()Ljava/lang/String;
+	public final fun getId ()I
+	public final fun getKinship ()Ljava/lang/String;
+	public final fun getLastName ()Ljava/lang/String;
+	public final fun getName ()Ljava/lang/String;
+	public final fun getPhone ()Ljava/lang/String;
+	public final fun getWorkPhone ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+	public static final synthetic fun write$Self (Lio/github/wulkanowy/sdk/scrapper/student/StudentGuardian;Lkotlinx/serialization/encoding/CompositeEncoder;Lkotlinx/serialization/descriptors/SerialDescriptor;)V
+}
+
+public final class io/github/wulkanowy/sdk/scrapper/student/StudentGuardian$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+	public static final field INSTANCE Lio/github/wulkanowy/sdk/scrapper/student/StudentGuardian$$serializer;
+	public fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lio/github/wulkanowy/sdk/scrapper/student/StudentGuardian;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public fun serialize (Lkotlinx/serialization/encoding/Encoder;Lio/github/wulkanowy/sdk/scrapper/student/StudentGuardian;)V
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+	public fun typeParametersSerializers ()[Lkotlinx/serialization/KSerializer;
+}
+
+public final class io/github/wulkanowy/sdk/scrapper/student/StudentGuardian$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public final class io/github/wulkanowy/sdk/scrapper/student/StudentInfo {
+	public static final field Companion Lio/github/wulkanowy/sdk/scrapper/student/StudentInfo$Companion;
+	public synthetic fun <init> (ILjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/time/LocalDateTime;Ljava/lang/String;Ljava/lang/String;ILjava/lang/String;Ljava/lang/String;ZLjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ZLio/github/wulkanowy/sdk/scrapper/student/StudentGuardian;Lio/github/wulkanowy/sdk/scrapper/student/StudentGuardian;ZLjava/lang/String;ZZLjava/lang/String;Lkotlinx/serialization/internal/SerializationConstructorMarker;)V
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/time/LocalDateTime;Ljava/lang/String;Ljava/lang/String;ILjava/lang/String;Ljava/lang/String;ZLjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ZLio/github/wulkanowy/sdk/scrapper/student/StudentGuardian;Lio/github/wulkanowy/sdk/scrapper/student/StudentGuardian;ZLjava/lang/String;ZZLjava/lang/String;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component10 ()Z
+	public final fun component11 ()Ljava/lang/String;
+	public final fun component12 ()Ljava/lang/String;
+	public final fun component13 ()Ljava/lang/String;
+	public final fun component14 ()Ljava/lang/String;
+	public final fun component15 ()Ljava/lang/String;
+	public final fun component16 ()Ljava/lang/String;
+	public final fun component17 ()Z
+	public final fun component18 ()Lio/github/wulkanowy/sdk/scrapper/student/StudentGuardian;
+	public final fun component19 ()Lio/github/wulkanowy/sdk/scrapper/student/StudentGuardian;
+	public final fun component2 ()Ljava/lang/String;
+	public final fun component20 ()Z
+	public final fun component21 ()Ljava/lang/String;
+	public final fun component22 ()Z
+	public final fun component23 ()Z
+	public final fun component24 ()Ljava/lang/String;
+	public final fun component3 ()Ljava/lang/String;
+	public final fun component4 ()Ljava/time/LocalDateTime;
+	public final fun component5 ()Ljava/lang/String;
+	public final fun component6 ()Ljava/lang/String;
+	public final fun component7 ()I
+	public final fun component8 ()Ljava/lang/String;
+	public final fun component9 ()Ljava/lang/String;
+	public final fun copy (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/time/LocalDateTime;Ljava/lang/String;Ljava/lang/String;ILjava/lang/String;Ljava/lang/String;ZLjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ZLio/github/wulkanowy/sdk/scrapper/student/StudentGuardian;Lio/github/wulkanowy/sdk/scrapper/student/StudentGuardian;ZLjava/lang/String;ZZLjava/lang/String;)Lio/github/wulkanowy/sdk/scrapper/student/StudentInfo;
+	public static synthetic fun copy$default (Lio/github/wulkanowy/sdk/scrapper/student/StudentInfo;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/time/LocalDateTime;Ljava/lang/String;Ljava/lang/String;ILjava/lang/String;Ljava/lang/String;ZLjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ZLio/github/wulkanowy/sdk/scrapper/student/StudentGuardian;Lio/github/wulkanowy/sdk/scrapper/student/StudentGuardian;ZLjava/lang/String;ZZLjava/lang/String;ILjava/lang/Object;)Lio/github/wulkanowy/sdk/scrapper/student/StudentInfo;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getAddress ()Ljava/lang/String;
+	public final fun getBirthDate ()Ljava/time/LocalDateTime;
+	public final fun getBirthPlace ()Ljava/lang/String;
+	public final fun getCellPhone ()Ljava/lang/String;
+	public final fun getCorrespondenceAddress ()Ljava/lang/String;
+	public final fun getEmail ()Ljava/lang/String;
+	public final fun getFamilyName ()Ljava/lang/String;
+	public final fun getFatherName ()Ljava/lang/String;
+	public final fun getFullName ()Ljava/lang/String;
+	public final fun getGender ()Z
+	public final fun getGuardianFirst ()Lio/github/wulkanowy/sdk/scrapper/student/StudentGuardian;
+	public final fun getGuardianSecond ()Lio/github/wulkanowy/sdk/scrapper/student/StudentGuardian;
+	public final fun getHasPesel ()Z
+	public final fun getHideAddress ()Z
+	public final fun getHomePhone ()Ljava/lang/String;
+	public final fun getLastName ()Ljava/lang/String;
+	public final fun getMiddleName ()Ljava/lang/String;
+	public final fun getMotherAndFatherNames ()Ljava/lang/String;
+	public final fun getMotherName ()Ljava/lang/String;
+	public final fun getName ()Ljava/lang/String;
+	public final fun getPolishCitizenship ()I
+	public final fun getRegisteredAddress ()Ljava/lang/String;
+	public fun hashCode ()I
+	public final fun isPole ()Z
+	public final fun isVisiblePesel ()Z
+	public fun toString ()Ljava/lang/String;
+	public static final synthetic fun write$Self (Lio/github/wulkanowy/sdk/scrapper/student/StudentInfo;Lkotlinx/serialization/encoding/CompositeEncoder;Lkotlinx/serialization/descriptors/SerialDescriptor;)V
+}
+
+public final class io/github/wulkanowy/sdk/scrapper/student/StudentInfo$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+	public static final field INSTANCE Lio/github/wulkanowy/sdk/scrapper/student/StudentInfo$$serializer;
+	public fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lio/github/wulkanowy/sdk/scrapper/student/StudentInfo;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public fun serialize (Lkotlinx/serialization/encoding/Encoder;Lio/github/wulkanowy/sdk/scrapper/student/StudentInfo;)V
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+	public fun typeParametersSerializers ()[Lkotlinx/serialization/KSerializer;
+}
+
+public final class io/github/wulkanowy/sdk/scrapper/student/StudentInfo$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public final class io/github/wulkanowy/sdk/scrapper/student/StudentPhoto {
+	public static final field Companion Lio/github/wulkanowy/sdk/scrapper/student/StudentPhoto$Companion;
+	public synthetic fun <init> (ILjava/lang/Long;Ljava/lang/String;Ljava/lang/Long;Lkotlinx/serialization/internal/SerializationConstructorMarker;)V
+	public fun <init> (Ljava/lang/Long;Ljava/lang/String;Ljava/lang/Long;)V
+	public final fun component1 ()Ljava/lang/Long;
+	public final fun component2 ()Ljava/lang/String;
+	public final fun component3 ()Ljava/lang/Long;
+	public final fun copy (Ljava/lang/Long;Ljava/lang/String;Ljava/lang/Long;)Lio/github/wulkanowy/sdk/scrapper/student/StudentPhoto;
+	public static synthetic fun copy$default (Lio/github/wulkanowy/sdk/scrapper/student/StudentPhoto;Ljava/lang/Long;Ljava/lang/String;Ljava/lang/Long;ILjava/lang/Object;)Lio/github/wulkanowy/sdk/scrapper/student/StudentPhoto;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getId ()Ljava/lang/Long;
+	public final fun getPhotoBase64 ()Ljava/lang/String;
+	public final fun getStatus ()Ljava/lang/Long;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+	public static final synthetic fun write$Self (Lio/github/wulkanowy/sdk/scrapper/student/StudentPhoto;Lkotlinx/serialization/encoding/CompositeEncoder;Lkotlinx/serialization/descriptors/SerialDescriptor;)V
+}
+
+public final class io/github/wulkanowy/sdk/scrapper/student/StudentPhoto$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+	public static final field INSTANCE Lio/github/wulkanowy/sdk/scrapper/student/StudentPhoto$$serializer;
+	public fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lio/github/wulkanowy/sdk/scrapper/student/StudentPhoto;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public fun serialize (Lkotlinx/serialization/encoding/Encoder;Lio/github/wulkanowy/sdk/scrapper/student/StudentPhoto;)V
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+	public fun typeParametersSerializers ()[Lkotlinx/serialization/KSerializer;
+}
+
+public final class io/github/wulkanowy/sdk/scrapper/student/StudentPhoto$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public final class io/github/wulkanowy/sdk/scrapper/timetable/CompletedLesson {
+	public static final field Companion Lio/github/wulkanowy/sdk/scrapper/timetable/CompletedLesson$Companion;
+	public synthetic fun <init> (ILjava/time/LocalDateTime;ILjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lkotlinx/serialization/internal/SerializationConstructorMarker;)V
+	public fun <init> (Ljava/time/LocalDateTime;ILjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+	public synthetic fun <init> (Ljava/time/LocalDateTime;ILjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ljava/time/LocalDateTime;
+	public final fun component2 ()I
+	public final fun component3 ()Ljava/lang/String;
+	public final fun component4 ()Ljava/lang/String;
+	public final fun component5 ()Ljava/lang/String;
+	public final fun component6 ()Ljava/lang/String;
+	public final fun component7 ()Ljava/lang/String;
+	public final fun component8 ()Ljava/lang/String;
+	public final fun component9 ()Ljava/lang/String;
+	public final fun copy (Ljava/time/LocalDateTime;ILjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Lio/github/wulkanowy/sdk/scrapper/timetable/CompletedLesson;
+	public static synthetic fun copy$default (Lio/github/wulkanowy/sdk/scrapper/timetable/CompletedLesson;Ljava/time/LocalDateTime;ILjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Lio/github/wulkanowy/sdk/scrapper/timetable/CompletedLesson;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getAbsence ()Ljava/lang/String;
+	public final fun getDate ()Ljava/time/LocalDateTime;
+	public final fun getNumber ()I
+	public final fun getResources ()Ljava/lang/String;
+	public final fun getSubject ()Ljava/lang/String;
+	public final fun getSubstitution ()Ljava/lang/String;
+	public final fun getTeacher ()Ljava/lang/String;
+	public final fun getTeacherSymbol ()Ljava/lang/String;
+	public final fun getTopic ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+	public static final synthetic fun write$Self (Lio/github/wulkanowy/sdk/scrapper/timetable/CompletedLesson;Lkotlinx/serialization/encoding/CompositeEncoder;Lkotlinx/serialization/descriptors/SerialDescriptor;)V
+}
+
+public final class io/github/wulkanowy/sdk/scrapper/timetable/CompletedLesson$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+	public static final field INSTANCE Lio/github/wulkanowy/sdk/scrapper/timetable/CompletedLesson$$serializer;
+	public fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lio/github/wulkanowy/sdk/scrapper/timetable/CompletedLesson;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public fun serialize (Lkotlinx/serialization/encoding/Encoder;Lio/github/wulkanowy/sdk/scrapper/timetable/CompletedLesson;)V
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+	public fun typeParametersSerializers ()[Lkotlinx/serialization/KSerializer;
+}
+
+public final class io/github/wulkanowy/sdk/scrapper/timetable/CompletedLesson$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public final class io/github/wulkanowy/sdk/scrapper/timetable/Lesson {
+	public fun <init> (ILjava/time/LocalDateTime;Ljava/time/LocalDateTime;Ljava/time/LocalDate;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ZZ)V
+	public synthetic fun <init> (ILjava/time/LocalDateTime;Ljava/time/LocalDateTime;Ljava/time/LocalDate;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ZZILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()I
+	public final fun component10 ()Ljava/lang/String;
+	public final fun component11 ()Ljava/lang/String;
+	public final fun component12 ()Ljava/lang/String;
+	public final fun component13 ()Z
+	public final fun component14 ()Z
+	public final fun component2 ()Ljava/time/LocalDateTime;
+	public final fun component3 ()Ljava/time/LocalDateTime;
+	public final fun component4 ()Ljava/time/LocalDate;
+	public final fun component5 ()Ljava/lang/String;
+	public final fun component6 ()Ljava/lang/String;
+	public final fun component7 ()Ljava/lang/String;
+	public final fun component8 ()Ljava/lang/String;
+	public final fun component9 ()Ljava/lang/String;
+	public final fun copy (ILjava/time/LocalDateTime;Ljava/time/LocalDateTime;Ljava/time/LocalDate;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ZZ)Lio/github/wulkanowy/sdk/scrapper/timetable/Lesson;
+	public static synthetic fun copy$default (Lio/github/wulkanowy/sdk/scrapper/timetable/Lesson;ILjava/time/LocalDateTime;Ljava/time/LocalDateTime;Ljava/time/LocalDate;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ZZILjava/lang/Object;)Lio/github/wulkanowy/sdk/scrapper/timetable/Lesson;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getCanceled ()Z
+	public final fun getChanges ()Z
+	public final fun getDate ()Ljava/time/LocalDate;
+	public final fun getEnd ()Ljava/time/LocalDateTime;
+	public final fun getGroup ()Ljava/lang/String;
+	public final fun getInfo ()Ljava/lang/String;
+	public final fun getNumber ()I
+	public final fun getRoom ()Ljava/lang/String;
+	public final fun getRoomOld ()Ljava/lang/String;
+	public final fun getStart ()Ljava/time/LocalDateTime;
+	public final fun getSubject ()Ljava/lang/String;
+	public final fun getSubjectOld ()Ljava/lang/String;
+	public final fun getTeacher ()Ljava/lang/String;
+	public final fun getTeacherOld ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class io/github/wulkanowy/sdk/scrapper/timetable/LessonAdditional {
+	public fun <init> (Ljava/time/LocalDateTime;Ljava/time/LocalDateTime;Ljava/time/LocalDate;Ljava/lang/String;)V
+	public final fun component1 ()Ljava/time/LocalDateTime;
+	public final fun component2 ()Ljava/time/LocalDateTime;
+	public final fun component3 ()Ljava/time/LocalDate;
+	public final fun component4 ()Ljava/lang/String;
+	public final fun copy (Ljava/time/LocalDateTime;Ljava/time/LocalDateTime;Ljava/time/LocalDate;Ljava/lang/String;)Lio/github/wulkanowy/sdk/scrapper/timetable/LessonAdditional;
+	public static synthetic fun copy$default (Lio/github/wulkanowy/sdk/scrapper/timetable/LessonAdditional;Ljava/time/LocalDateTime;Ljava/time/LocalDateTime;Ljava/time/LocalDate;Ljava/lang/String;ILjava/lang/Object;)Lio/github/wulkanowy/sdk/scrapper/timetable/LessonAdditional;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getDate ()Ljava/time/LocalDate;
+	public final fun getEnd ()Ljava/time/LocalDateTime;
+	public final fun getStart ()Ljava/time/LocalDateTime;
+	public final fun getSubject ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class io/github/wulkanowy/sdk/scrapper/timetable/Timetable {
+	public fun <init> (Ljava/util/List;Ljava/util/List;Ljava/util/List;)V
+	public final fun component1 ()Ljava/util/List;
+	public final fun component2 ()Ljava/util/List;
+	public final fun component3 ()Ljava/util/List;
+	public final fun copy (Ljava/util/List;Ljava/util/List;Ljava/util/List;)Lio/github/wulkanowy/sdk/scrapper/timetable/Timetable;
+	public static synthetic fun copy$default (Lio/github/wulkanowy/sdk/scrapper/timetable/Timetable;Ljava/util/List;Ljava/util/List;Ljava/util/List;ILjava/lang/Object;)Lio/github/wulkanowy/sdk/scrapper/timetable/Timetable;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getAdditional ()Ljava/util/List;
+	public final fun getHeaders ()Ljava/util/List;
+	public final fun getLessons ()Ljava/util/List;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class io/github/wulkanowy/sdk/scrapper/timetable/TimetableDayHeader {
+	public fun <init> (Ljava/time/LocalDate;Ljava/lang/String;)V
+	public final fun component1 ()Ljava/time/LocalDate;
+	public final fun component2 ()Ljava/lang/String;
+	public final fun copy (Ljava/time/LocalDate;Ljava/lang/String;)Lio/github/wulkanowy/sdk/scrapper/timetable/TimetableDayHeader;
+	public static synthetic fun copy$default (Lio/github/wulkanowy/sdk/scrapper/timetable/TimetableDayHeader;Ljava/time/LocalDate;Ljava/lang/String;ILjava/lang/Object;)Lio/github/wulkanowy/sdk/scrapper/timetable/TimetableDayHeader;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getContent ()Ljava/lang/String;
+	public final fun getDate ()Ljava/time/LocalDate;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+

@@ -9,7 +9,7 @@ import io.github.wulkanowy.sdk.scrapper.grades.GradePointsSummary
 import io.github.wulkanowy.sdk.scrapper.grades.GradesStatisticsPartial
 import io.github.wulkanowy.sdk.scrapper.grades.GradesStatisticsSemester
 
-fun List<GradesStatisticsSemester>.mapGradesSemesterStatistics() = map {
+internal fun List<GradesStatisticsSemester>.mapGradesSemesterStatistics() = map {
     GradeStatisticsSemester(
         subject = it.subject,
         items = it.items.orEmpty().map { item ->
@@ -22,7 +22,7 @@ fun List<GradesStatisticsSemester>.mapGradesSemesterStatistics() = map {
     )
 }
 
-fun List<GradesStatisticsPartial>.mapGradeStatistics() = map { partial ->
+internal fun List<GradesStatisticsPartial>.mapGradeStatistics() = map { partial ->
     GradeStatisticsSubject(
         subject = partial.subject,
         classAverage = partial.classSeries.average.takeIf { !partial.classSeries.isEmpty }.orEmpty(),
@@ -44,7 +44,7 @@ fun List<GradesStatisticsPartial>.mapGradeStatistics() = map { partial ->
     )
 }
 
-fun List<GradePointsSummary>.mapGradePointsStatistics() = map {
+internal fun List<GradePointsSummary>.mapGradePointsStatistics() = map {
     GradePointsStatistics(
         subject = it.subject,
         student = it.student,

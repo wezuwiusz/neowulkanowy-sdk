@@ -55,7 +55,7 @@ import io.github.wulkanowy.sdk.scrapper.toFormat
 import org.jsoup.Jsoup
 import java.time.LocalDate
 
-class StudentRepository(private val api: StudentService) {
+internal class StudentRepository(private val api: StudentService) {
 
     private fun LocalDate.toISOFormat(): String = toFormat("yyyy-MM-dd'T00:00:00'")
 

@@ -7,7 +7,7 @@ import java.time.LocalDate
 import java.time.LocalDateTime
 
 @Serializable
-data class TimetableResponse(
+internal data class TimetableResponse(
 
     @SerialName("Headers")
     val headers: List<TimetableHeader> = emptyList(),
@@ -20,14 +20,14 @@ data class TimetableResponse(
 )
 
 @Serializable
-data class TimetableHeader(
+internal data class TimetableHeader(
 
     @SerialName("Text")
     val date: String,
 )
 
 @Serializable
-data class TimetableAdditionalDay(
+internal data class TimetableAdditionalDay(
 
     @SerialName("Header")
     val header: String,
@@ -37,13 +37,13 @@ data class TimetableAdditionalDay(
 )
 
 @Serializable
-data class TimetableAdditionalLesson(
+internal data class TimetableAdditionalLesson(
 
     @SerialName("Description")
     val description: String,
 )
 
-data class TimetableCell(
+internal data class TimetableCell(
     val number: Int = 0,
     val start: LocalDateTime,
     val end: LocalDateTime,

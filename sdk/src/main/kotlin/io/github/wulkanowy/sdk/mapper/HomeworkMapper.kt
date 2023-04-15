@@ -4,7 +4,7 @@ import io.github.wulkanowy.sdk.pojo.Homework
 import io.github.wulkanowy.sdk.pojo.HomeworkAttachment
 import io.github.wulkanowy.sdk.scrapper.homework.Homework as ScrapperHomework
 
-fun List<ScrapperHomework>.mapHomework() = map {
+internal fun List<ScrapperHomework>.mapHomework() = map {
     Homework(
         date = it.date.toLocalDate(),
         teacher = it.teacher,

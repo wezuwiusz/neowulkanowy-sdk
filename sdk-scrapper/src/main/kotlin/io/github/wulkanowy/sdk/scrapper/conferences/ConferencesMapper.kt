@@ -5,7 +5,7 @@ import java.time.format.DateTimeFormatter
 
 private val dateFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm")
 
-fun List<Conference>.mapConferences() = map {
+internal fun List<Conference>.mapConferences(): List<Conference> = map {
     val dateString = it.title.split(",")[1].trim().replace(" godzina", "")
     it.copy(
         title = it.title.substringAfter(", ").substringAfter(", "),

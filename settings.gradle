@@ -15,6 +15,7 @@ dependencyResolutionManagement {
             plugin('kotlin', 'org.jetbrains.kotlin.jvm').versionRef('kotlin')
             plugin('ksp', 'com.google.devtools.ksp').versionRef('ksp')
             plugin('serialization', 'org.jetbrains.kotlin.plugin.serialization').versionRef('kotlin')
+            plugin('validator', 'org.jetbrains.kotlinx.binary-compatibility-validator').version('0.13.0')
 
             library('coroutines-core', 'org.jetbrains.kotlinx', 'kotlinx-coroutines-core').versionRef('coroutines')
             library('coroutines-test', 'org.jetbrains.kotlinx', 'kotlinx-coroutines-test').versionRef('coroutines')

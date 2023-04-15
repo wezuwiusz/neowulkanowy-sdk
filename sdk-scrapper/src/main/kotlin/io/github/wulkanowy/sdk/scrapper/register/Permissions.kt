@@ -4,7 +4,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class Permissions(
+internal data class Permissions(
 
     @SerialName("AuthInfos")
     val authInfos: List<AuthInfo>,
@@ -14,7 +14,7 @@ data class Permissions(
 )
 
 @Serializable
-data class AuthInfo(
+internal data class AuthInfo(
     @SerialName("JednostkaSprawozdawczaId")
     val unitId: Int,
 
@@ -41,7 +41,7 @@ data class AuthInfo(
 )
 
 @Serializable
-data class PermissionUnit(
+internal data class PermissionUnit(
     @SerialName("Id")
     val id: Int,
 

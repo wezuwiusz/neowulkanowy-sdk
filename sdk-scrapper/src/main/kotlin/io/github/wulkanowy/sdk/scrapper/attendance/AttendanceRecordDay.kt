@@ -4,7 +4,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class AttendanceRecordDay(
+internal data class AttendanceRecordDay(
 
     @SerialName("Data")
     val date: String,

@@ -6,7 +6,7 @@ import kotlinx.serialization.Serializable
 import java.time.LocalDateTime
 
 @Serializable
-data class ExamRequest(
+internal data class ExamRequest(
 
     @SerialName("data")
     @Serializable(with = CustomDateAdapter::class)

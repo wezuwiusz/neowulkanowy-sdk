@@ -33,5 +33,5 @@ data class Attendance(
     var excusable: Boolean = false
 
     @Transient
-    var excuseStatus: SentExcuse.Status? = null
+    var excuseStatus: SentExcuseStatus? = null
 }

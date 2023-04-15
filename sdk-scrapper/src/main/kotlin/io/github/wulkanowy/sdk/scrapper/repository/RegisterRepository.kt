@@ -37,7 +37,7 @@ import org.jsoup.select.Elements
 import org.slf4j.LoggerFactory
 import java.nio.charset.StandardCharsets
 
-class RegisterRepository(
+internal class RegisterRepository(
     private val startSymbol: String,
     private val email: String,
     private val password: String,
@@ -204,7 +204,7 @@ class RegisterRepository(
     }
 
     private suspend fun getCert(symbolLoginType: Scrapper.LoginType): CertificateResponse {
-        logger.debug("Register login type: $symbolLoginType")
+        logger.debug("Register login type: {}", symbolLoginType)
         return loginHelper
             .apply { loginType = symbolLoginType }
             .sendCredentials(email, password)
@@ -222,7 +222,7 @@ class RegisterRepository(
 
     private fun Elements.toNormalizedSymbols(): List<String> = this
         .map { it.text().trim() }
-        .apply { logger.debug("$this") }
+        .apply { logger.debug("{}", this) }
         .filter { it.matches("[a-zA-Z0-9]*".toRegex()) } // early filter invalid symbols
         .filter { it != "Default" }
 

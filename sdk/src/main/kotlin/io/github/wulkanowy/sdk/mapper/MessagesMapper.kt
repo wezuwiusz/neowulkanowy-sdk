@@ -10,7 +10,7 @@ import io.github.wulkanowy.sdk.scrapper.messages.MessageDetails as ScrapperDetai
 import io.github.wulkanowy.sdk.scrapper.messages.MessageMeta as ScrapperMessageMeta
 import io.github.wulkanowy.sdk.scrapper.messages.MessageReplayDetails as ScrapperReplayDetailsMessage
 
-fun List<ScrapperMessageMeta>.mapMessages(zoneId: ZoneId, folderId: Folder) = map {
+internal fun List<ScrapperMessageMeta>.mapMessages(zoneId: ZoneId, folderId: Folder) = map {
     Message(
         globalKey = it.apiGlobalKey,
         id = it.id,
@@ -28,7 +28,7 @@ fun List<ScrapperMessageMeta>.mapMessages(zoneId: ZoneId, folderId: Folder) = ma
     )
 }
 
-fun ScrapperDetailsMessage.mapScrapperMessage() = MessageDetails(
+internal fun ScrapperDetailsMessage.mapScrapperMessage() = MessageDetails(
     content = content,
     apiGlobalKey = apiGlobalKey,
     date = date,
@@ -44,7 +44,7 @@ fun ScrapperDetailsMessage.mapScrapperMessage() = MessageDetails(
     },
 )
 
-fun ScrapperReplayDetailsMessage.mapScrapperMessage() = MessageReplayDetails(
+internal fun ScrapperReplayDetailsMessage.mapScrapperMessage() = MessageReplayDetails(
     content = content,
     apiGlobalKey = apiGlobalKey,
     date = date,

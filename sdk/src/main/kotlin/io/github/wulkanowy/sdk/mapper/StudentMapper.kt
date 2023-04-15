@@ -8,7 +8,7 @@ import io.github.wulkanowy.sdk.scrapper.student.StudentGuardian as ScrapperStude
 import io.github.wulkanowy.sdk.scrapper.student.StudentInfo as ScrapperStudentInfo
 import io.github.wulkanowy.sdk.scrapper.student.StudentPhoto as ScrapperStudentPhoto
 
-fun ScrapperStudentInfo.mapStudent() = StudentInfo(
+internal fun ScrapperStudentInfo.mapStudent() = StudentInfo(
     fullName = fullName,
     address = address,
     birthDate = birthDate.toLocalDate(),
@@ -29,7 +29,7 @@ fun ScrapperStudentInfo.mapStudent() = StudentInfo(
     guardianSecond = guardianSecond?.toFamilyMember(),
 )
 
-fun ScrapperStudentPhoto.mapPhoto() = StudentPhoto(photoBase64 = photoBase64.orEmpty())
+internal fun ScrapperStudentPhoto.mapPhoto() = StudentPhoto(photoBase64 = photoBase64.orEmpty())
 
 private fun ScrapperStudentGuardian.toFamilyMember() = StudentGuardian(
     fullName = fullName,

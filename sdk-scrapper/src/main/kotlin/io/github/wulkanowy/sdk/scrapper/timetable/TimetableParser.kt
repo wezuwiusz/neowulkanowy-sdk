@@ -4,7 +4,7 @@ import io.github.wulkanowy.sdk.scrapper.capitalise
 import org.jsoup.nodes.Element
 import org.jsoup.select.Elements
 
-class TimetableParser {
+internal class TimetableParser {
 
     private companion object {
         const val CLASS_PLANNED = "x-treelabel-ppl"

@@ -13,7 +13,7 @@ import io.github.wulkanowy.sdk.scrapper.register.RegisterSymbol as SdkRegisterSy
 import io.github.wulkanowy.sdk.scrapper.register.RegisterUnit as ScrapperRegisterUnit
 import io.github.wulkanowy.sdk.scrapper.register.RegisterUser as ScrapperRegisterUser
 
-fun ScrapperRegisterUser.mapUser(): RegisterUser = RegisterUser(
+internal fun ScrapperRegisterUser.mapUser(): RegisterUser = RegisterUser(
     email = email,
     login = login,
     baseUrl = baseUrl,
@@ -21,14 +21,14 @@ fun ScrapperRegisterUser.mapUser(): RegisterUser = RegisterUser(
     symbols = symbols.map { it.mapSymbol() },
 )
 
-fun SdkRegisterSymbol.mapSymbol(): RegisterSymbol = RegisterSymbol(
+internal fun SdkRegisterSymbol.mapSymbol(): RegisterSymbol = RegisterSymbol(
     symbol = symbol,
     userName = userName,
     error = error,
     schools = schools.map { it.mapUnit() },
 )
 
-fun ScrapperRegisterUnit.mapUnit(): RegisterUnit = RegisterUnit(
+internal fun ScrapperRegisterUnit.mapUnit(): RegisterUnit = RegisterUnit(
     userLoginId = userLoginId,
     schoolId = schoolId,
     schoolName = schoolName,
@@ -40,19 +40,19 @@ fun ScrapperRegisterUnit.mapUnit(): RegisterUnit = RegisterUnit(
     subjects = subjects.map { it.mapSubject() },
 )
 
-fun ScrapperRegisterSubject.mapSubject(): RegisterSubject {
+internal fun ScrapperRegisterSubject.mapSubject(): RegisterSubject {
     return when (this) {
         is ScrapperRegisterStudent -> mapStudent()
         is ScrapperRegisterEmploye -> mapEmployee()
     }
 }
 
-fun ScrapperRegisterEmploye.mapEmployee(): RegisterEmployee = RegisterEmployee(
+internal fun ScrapperRegisterEmploye.mapEmployee(): RegisterEmployee = RegisterEmployee(
     employeeId = employeeId,
     employeeName = employeeName,
 )
 
-fun ScrapperRegisterStudent.mapStudent(): RegisterStudent = RegisterStudent(
+internal fun ScrapperRegisterStudent.mapStudent(): RegisterStudent = RegisterStudent(
     studentId = studentId,
     studentName = studentName,
     studentSecondName = studentSecondName,

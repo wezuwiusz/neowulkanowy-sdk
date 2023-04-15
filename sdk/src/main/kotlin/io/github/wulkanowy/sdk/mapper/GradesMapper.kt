@@ -7,7 +7,7 @@ import io.github.wulkanowy.sdk.scrapper.grades.Grade as ScrapperGrade
 import io.github.wulkanowy.sdk.scrapper.grades.GradeSummary as ScrapperGradeSummary
 import io.github.wulkanowy.sdk.scrapper.grades.Grades as ScrapperGrades
 
-fun List<ScrapperGrade>.mapGradesDetails() = map {
+internal fun List<ScrapperGrade>.mapGradesDetails() = map {
     Grade(
         subject = it.subject,
         description = it.description.orEmpty(),
@@ -24,7 +24,7 @@ fun List<ScrapperGrade>.mapGradesDetails() = map {
     )
 }
 
-fun List<ScrapperGradeSummary>.mapGradesSummary() = map {
+internal fun List<ScrapperGradeSummary>.mapGradesSummary() = map {
     GradeSummary(
         name = it.name,
         finalPoints = it.finalPoints,
@@ -36,7 +36,7 @@ fun List<ScrapperGradeSummary>.mapGradesSummary() = map {
     )
 }
 
-fun ScrapperGrades.mapGrades() = Grades(
+internal fun ScrapperGrades.mapGrades() = Grades(
     details = details.mapGradesDetails(),
     summary = summary.mapGradesSummary(),
     isAverage = isAverage,

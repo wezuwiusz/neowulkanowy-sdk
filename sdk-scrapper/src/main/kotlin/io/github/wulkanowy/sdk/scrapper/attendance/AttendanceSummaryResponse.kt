@@ -4,7 +4,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-class AttendanceSummaryResponse {
+internal class AttendanceSummaryResponse {
 
     @SerialName("Statystyki")
     var items: List<Summary> = emptyList()

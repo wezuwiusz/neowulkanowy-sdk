@@ -1,6 +1,6 @@
 package io.github.wulkanowy.sdk.pojo
 
-import io.github.wulkanowy.sdk.scrapper.attendance.SentExcuse
+import io.github.wulkanowy.sdk.scrapper.attendance.SentExcuseStatus
 import java.time.LocalDate
 
 data class Attendance(
@@ -17,5 +17,5 @@ data class Attendance(
     val excused: Boolean,
     val deleted: Boolean,
     val excusable: Boolean,
-    val excuseStatus: SentExcuse.Status?,
+    val excuseStatus: SentExcuseStatus?,
 )

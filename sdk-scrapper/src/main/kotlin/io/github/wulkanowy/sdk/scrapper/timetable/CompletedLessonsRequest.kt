@@ -4,7 +4,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-class CompletedLessonsRequest(
+internal class CompletedLessonsRequest(
 
     @SerialName("poczatek")
     val startDate: String,

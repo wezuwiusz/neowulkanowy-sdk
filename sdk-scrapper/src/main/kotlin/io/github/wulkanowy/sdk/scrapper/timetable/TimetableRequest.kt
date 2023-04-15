@@ -4,7 +4,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class TimetableRequest(
+internal data class TimetableRequest(
 
     @SerialName("data")
     val date: String,

@@ -37,7 +37,7 @@ class AttendanceTest : BaseLocalTest() {
             assertEquals(getDate(2018, 10, 2), date)
             assertEquals("Zajęcia artystyczne", subject)
             assertEquals(AttendanceCategory.PRESENCE, category)
-            assertEquals(SentExcuse.Status.WAITING, excuseStatus)
+            assertEquals(SentExcuseStatus.WAITING, excuseStatus)
             assertFalse(excusable)
         }
     }
@@ -51,7 +51,7 @@ class AttendanceTest : BaseLocalTest() {
             assertEquals(getDate(2018, 10, 2), date)
             assertEquals("Informatyka", subject)
             assertEquals(AttendanceCategory.ABSENCE_UNEXCUSED, category)
-            assertEquals(SentExcuse.Status.ACCEPTED, excuseStatus)
+            assertEquals(SentExcuseStatus.ACCEPTED, excuseStatus)
             assertFalse(excusable)
         }
     }
@@ -65,7 +65,7 @@ class AttendanceTest : BaseLocalTest() {
             assertEquals(getDate(2018, 10, 3), date)
             assertEquals("Matematyka", subject)
             assertEquals(AttendanceCategory.ABSENCE_EXCUSED, category)
-            assertEquals(SentExcuse.Status.DENIED, excuseStatus)
+            assertEquals(SentExcuseStatus.DENIED, excuseStatus)
             assertFalse(excusable)
         }
     }

@@ -9,7 +9,7 @@ import io.github.wulkanowy.sdk.scrapper.service.HomepageService
 import io.github.wulkanowy.sdk.scrapper.toDate
 import io.github.wulkanowy.sdk.scrapper.toLocalDate
 
-class HomepageRepository(private val api: HomepageService) {
+internal class HomepageRepository(private val api: HomepageService) {
 
     private lateinit var token: String
 

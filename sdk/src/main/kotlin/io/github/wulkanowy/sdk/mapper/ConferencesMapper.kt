@@ -4,7 +4,7 @@ import io.github.wulkanowy.sdk.pojo.Conference
 import java.time.ZoneId
 import io.github.wulkanowy.sdk.scrapper.conferences.Conference as ScrapperConference
 
-fun List<ScrapperConference>.mapConferences(zoneId: ZoneId) = map {
+internal fun List<ScrapperConference>.mapConferences(zoneId: ZoneId) = map {
     Conference(
         title = it.title,
         subject = it.subject,

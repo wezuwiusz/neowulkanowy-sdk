@@ -6,7 +6,7 @@ import java.net.CookieManager
 import java.net.HttpCookie
 import java.net.URI
 
-class StudentCookieInterceptor(
+internal class StudentCookieInterceptor(
     private val cookies: CookieManager,
     private val schema: String,
     private val host: String,
