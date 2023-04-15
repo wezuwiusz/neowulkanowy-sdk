@@ -4,13 +4,13 @@ include 'sdk'
 dependencyResolutionManagement {
     versionCatalogs {
         libs {
-            def kotlin = '1.8.10'
+            def kotlin = '1.8.20'
 
             version('sdk', '1.9.3-SNAPSHOT')
             version('kotlin', kotlin)
             version('coroutines', '1.6.4')
             version('retrofit', '2.9.0')
-            version('ksp', "${kotlin}-1.0.9")
+            version('ksp', "${kotlin}-1.0.10")
 
             plugin('kotlin', 'org.jetbrains.kotlin.jvm').versionRef('kotlin')
             plugin('ksp', 'com.google.devtools.ksp').versionRef('ksp')
