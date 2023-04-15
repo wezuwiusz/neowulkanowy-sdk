@@ -1,14 +1,15 @@
 package io.github.wulkanowy.sdk.pojo
 
-import org.threeten.bp.LocalDate
+import io.github.wulkanowy.sdk.scrapper.notes.NoteCategory
+import java.time.LocalDate
 
 data class Note(
     var date: LocalDate,
     var teacher: String,
     var teacherSymbol: String,
     var category: String,
-    var categoryType: Int,
+    var categoryType: NoteCategory,
     var showPoints: Boolean,
-    var points: String,
-    var content: String
+    var points: Int,
+    var content: String,
 )

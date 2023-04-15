@@ -1,15 +1,17 @@
 package io.github.wulkanowy.sdk.scrapper.timetable
 
-import com.google.gson.annotations.SerializedName
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
+@Serializable
 class CompletedLessonsRequest(
 
-    @SerializedName("poczatek")
+    @SerialName("poczatek")
     val startDate: String,
 
-    @SerializedName("koniec")
+    @SerialName("koniec")
     val endDate: String,
 
-    @SerializedName("idPrzedmiot")
-    val subject: Int = -1
+    @SerialName("idPrzedmiot")
+    val subject: Int = -1,
 )

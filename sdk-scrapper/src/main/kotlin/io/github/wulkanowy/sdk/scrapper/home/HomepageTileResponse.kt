@@ -1,27 +1,32 @@
 package io.github.wulkanowy.sdk.scrapper.home
 
-import com.google.gson.annotations.SerializedName
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class HomepageTileResponse(
 
-    @SerializedName("IkonkaNazwa")
+    @SerialName("IkonkaNazwa")
     val iconName: String?,
 
-    @SerializedName("Num")
+    @SerialName("Num")
     val number: Int?,
 
-    @SerializedName("Zawartosc")
+    @SerialName("Zawartosc")
     val content: List<HomepageTileResponse>,
 
-    @SerializedName("Nazwa")
+    @SerialName("Nazwa")
     val name: String,
 
-    @SerializedName("Url")
-    val url: String,
+    @SerialName("Url")
+    val url: String?,
 
-    @SerializedName("Symbol")
-    val symbol: String,
+    @SerialName("Dane")
+    val data: String?,
 
-    @SerializedName("Nieaktywny")
-    val inactive: Boolean
+    @SerialName("Symbol")
+    val symbol: String?,
+
+    @SerialName("Nieaktywny")
+    val inactive: Boolean,
 )

@@ -1,29 +1,33 @@
 package io.github.wulkanowy.sdk.scrapper.attendance
 
-import com.google.gson.annotations.SerializedName
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class AttendanceExcuseRequest(
 
-    @SerializedName("usprawiedliwienie")
-    val excuse: Excuse
+    @SerialName("usprawiedliwienie")
+    val excuse: Excuse,
 ) {
 
+    @Serializable
     data class Excuse(
 
-        @SerializedName("Nieobecnosci")
+        @SerialName("Nieobecnosci")
         val absents: List<Absent>,
 
-        @SerializedName("Tresc")
-        val content: String?
+        @SerialName("Tresc")
+        val content: String?,
     ) {
 
+        @Serializable
         data class Absent(
 
-            @SerializedName("Data")
+            @SerialName("Data")
             val date: String,
 
-            @SerializedName("IdPoraLekcji")
-            val timeId: Int?
+            @SerialName("IdPoraLekcji")
+            val timeId: Int? = null,
         )
     }
 }

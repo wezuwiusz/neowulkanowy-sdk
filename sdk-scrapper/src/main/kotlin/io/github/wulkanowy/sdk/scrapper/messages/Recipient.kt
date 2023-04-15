@@ -1,27 +1,36 @@
 package io.github.wulkanowy.sdk.scrapper.messages
 
-import com.google.gson.annotations.SerializedName
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.Transient
 
+@Serializable
 data class Recipient(
 
-    @SerializedName("Id")
-    val id: String,
+    @SerialName("skrzynkaGlobalKey")
+    val mailboxGlobalKey: String,
 
-    @SerializedName("Nazwa")
-    val name: String,
-
-    @SerializedName("IdLogin")
-    val loginId: Int,
-
-    @SerializedName("IdJednostkaSprawozdawcza")
-    val reportingUnitId: Int?,
-
-    @SerializedName("Rola")
-    val role: Int,
-
-    @SerializedName("Hash")
-    val hash: String,
+    @SerialName("nazwa")
+    val fullName: String,
 
     @Transient
-    val shortName: String? = ""
+    val type: RecipientType = RecipientType.UNKNOWN,
+
+    @Transient
+    val userName: String = "",
+
+    @Transient
+    val studentName: String = "",
+
+    @Transient
+    val schoolNameShort: String = "",
 )
+
+enum class RecipientType(val letter: String) {
+    STUDENT("U"),
+    PARENT("R"),
+    GUARDIAN("O"),
+    EMPLOYEE("P"),
+
+    UNKNOWN(""),
+}

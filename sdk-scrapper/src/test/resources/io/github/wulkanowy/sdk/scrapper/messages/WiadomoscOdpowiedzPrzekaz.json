@@ -1,0 +1,22 @@
+{
+  "data": "2022-08-15T14:17:11.00+02:00",
+  "apiGlobalKey": "5be515a7-ded9-4e4d-bb29-15cc254e341f",
+  "uzytkownikSkrzynkaGlobalKey": "4f947f6c-d001-48ae-ba7a-f150f9f2dcf4",
+  "nadawcaSkrzynkaGlobalKey": "20bd8141-6ff0-474c-8aaf-284e6fbdf9c5",
+  "nadawcaSkrzynkaNazwa": "Jan Sierpień - P - (123456)",
+  "adresaci": [
+    {
+      "skrzynkaGlobalKey": "677b381f-4e45-47dd-87ee-7ecf41147066",
+      "nazwa": "Jan Kowalski - U - (123456)"
+    }
+  ],
+  "temat": "Temat wiadomości",
+  "tresc": "<p>Tak wygląda zawartość wiadomości.</p><p>Zazwyczaj ma wiele linijek.</p><p><br></p><p>Z poważaniem,</p><p>Nazwisko Imię</p>",
+  "zalaczniki": [
+    {
+      "url": "https://1drv.ms/u/s!AmvjLDq5anT2psJ4nujoBUyclWOUhw",
+      "nazwaPliku": "nazwa_pliku.pptx"
+    }
+  ],
+  "id": 35232
+}

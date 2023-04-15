@@ -1,46 +1,50 @@
 package io.github.wulkanowy.sdk.scrapper.timetable
 
-import com.google.gson.annotations.SerializedName
-import java.util.Date
+import io.github.wulkanowy.sdk.scrapper.adapter.CustomDateAdapter
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
+import java.time.LocalDateTime
 
+@Serializable
 class CacheResponse {
 
-    @SerializedName("czyOpiekun")
+    @SerialName("isParentUser")
     var isParent: Boolean = false
 
-    @SerializedName("poryLekcji")
-    lateinit var times: List<Time>
+    @SerialName("poryLekcji")
+    var times: List<Time> = emptyList()
 
-    @SerializedName("czyJadlospis")
+    @SerialName("isMenuOn")
     var isMenu: Boolean = false
 
-    @SerializedName("czyOplaty")
-    var isFees: Boolean = false
-
-    @SerializedName("pokazLekcjeZrealizowane")
+    @SerialName("pokazLekcjeZrealizowane")
     var showCompletedLessons: Boolean = false
 
+    @Serializable
     class Time {
 
-        @SerializedName("Id")
+        @SerialName("Id")
         var id: Int = 0
 
-        @SerializedName("Numer")
+        @SerialName("Numer")
         var number: Int = 0
 
-        @SerializedName("Poczatek")
-        lateinit var start: Date
+        @SerialName("Poczatek")
+        @Serializable(with = CustomDateAdapter::class)
+        lateinit var start: LocalDateTime
 
-        @SerializedName("Koniec")
-        lateinit var end: Date
+        @SerialName("Koniec")
+        @Serializable(with = CustomDateAdapter::class)
+        lateinit var end: LocalDateTime
 
-        @SerializedName("DataModyfikacji")
-        lateinit var modified: Date
+        @SerialName("DataModyfikacji")
+        @Serializable(with = CustomDateAdapter::class)
+        lateinit var modified: LocalDateTime
 
-        @SerializedName("IdJednostkaSprawozdawcza")
+        @SerialName("IdJednostkaSprawozdawcza")
         var organizationUnitId: Int = 0
 
-        @SerializedName("Nazwa")
+        @SerialName("Nazwa")
         lateinit var name: String
     }
 }

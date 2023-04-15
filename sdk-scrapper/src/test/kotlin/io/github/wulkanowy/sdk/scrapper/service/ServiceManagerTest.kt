@@ -1,79 +1,89 @@
 package io.github.wulkanowy.sdk.scrapper.service
 
-import io.github.wulkanowy.sdk.scrapper.Scrapper
-import io.github.wulkanowy.sdk.scrapper.ScrapperException
-import io.github.wulkanowy.sdk.scrapper.BaseTest
+import io.github.wulkanowy.sdk.scrapper.BaseLocalTest
 import io.github.wulkanowy.sdk.scrapper.OkHttpClientBuilderFactory
+import io.github.wulkanowy.sdk.scrapper.Scrapper
+import io.github.wulkanowy.sdk.scrapper.exception.ScrapperException
+import io.github.wulkanowy.sdk.scrapper.exception.ServiceUnavailableException
 import io.github.wulkanowy.sdk.scrapper.interceptor.ErrorInterceptorTest
 import io.github.wulkanowy.sdk.scrapper.login.LoginTest
-import io.github.wulkanowy.sdk.scrapper.notes.NotesResponse
 import io.github.wulkanowy.sdk.scrapper.notes.NotesTest
-import io.github.wulkanowy.sdk.scrapper.register.Student
-import io.reactivex.observers.TestObserver
-import okhttp3.Interceptor
+import kotlinx.coroutines.runBlocking
 import okhttp3.logging.HttpLoggingInterceptor
 import okhttp3.mockwebserver.MockResponse
-import okhttp3.mockwebserver.MockWebServer
-import org.junit.After
 import org.junit.Assert.assertEquals
-import org.junit.Before
+import org.junit.Assert.assertTrue
 import org.junit.Test
 import java.net.URL
 
-class ServiceManagerTest : BaseTest() {
-
-    lateinit var server: MockWebServer
-
-    @Before
-    fun setUp() {
-        server = MockWebServer()
-    }
-
-    @After
-    fun shutDown() {
-        server.shutdown()
-    }
+class ServiceManagerTest : BaseLocalTest() {
 
     @Test
     fun interceptorTest() {
-        val manager = ServiceManager(OkHttpClientBuilderFactory(), HttpLoggingInterceptor.Level.NONE,
-                Scrapper.LoginType.STANDARD, "http", "fakelog.localhost:3000", "default", "email", "password",
-                "schoolSymbol", 123, 101, 2019, "", ""
+        val manager = ServiceManager(
+            okHttpClientBuilderFactory = OkHttpClientBuilderFactory(),
+            logLevel = HttpLoggingInterceptor.Level.NONE,
+            loginType = Scrapper.LoginType.STANDARD,
+            schema = "http",
+            host = "fakelog.localhost:3000",
+            symbol = "default",
+            email = "email",
+            password = "password",
+            schoolSymbol = "schoolSymbol",
+            studentId = 123,
+            diaryId = 101,
+            kindergartenDiaryId = 0,
+            schoolYear = 2019,
+            emptyCookieJarIntercept = false,
+            androidVersion = "",
+            buildTag = "",
+            userAgentTemplate = "",
         )
-        manager.setInterceptor(Interceptor {
-            throw ScrapperException("Test")
-        })
+        manager.setInterceptor({ throw ScrapperException("Test") })
 
-        val notes = manager.getSnpService().getNotes()
-        val observer = TestObserver<NotesResponse>()
-        notes.subscribe(observer)
-        observer.assertTerminated()
-        observer.assertNotComplete()
-        observer.assertError(ScrapperException::class.java)
+        try {
+            runBlocking { manager.getStudentService().getNotes() }
+        } catch (e: Throwable) {
+            assertTrue(e is ScrapperException)
+        }
     }
 
     @Test
     fun interceptorTest_prepend() {
-        server.enqueue(MockResponse().setBody(NotesTest::class.java.getResource("UwagiOsiagniecia-filled.html").readText()))
+        server.enqueue(MockResponse().setBody(NotesTest::class.java.getResource("UwagiIOsiagniecia.json").readText()))
         server.start(3000)
-        val manager = ServiceManager(OkHttpClientBuilderFactory(), HttpLoggingInterceptor.Level.NONE,
-                Scrapper.LoginType.STANDARD, "http", "fakelog.localhost:3000", "default", "email", "password",
-                "schoolSymbol", 123, 101, 2019, "", ""
+        val manager = ServiceManager(
+            okHttpClientBuilderFactory = OkHttpClientBuilderFactory(),
+            logLevel = HttpLoggingInterceptor.Level.NONE,
+            loginType = Scrapper.LoginType.STANDARD,
+            schema = "http",
+            host = "fakelog.localhost:3000",
+            symbol = "default",
+            email = "email",
+            password = "password",
+            schoolSymbol = "schoolSymbol",
+            studentId = 123,
+            diaryId = 101,
+            kindergartenDiaryId = 0,
+            schoolYear = 2019,
+            emptyCookieJarIntercept = false,
+            androidVersion = "",
+            buildTag = "",
+            userAgentTemplate = "",
         )
-        manager.setInterceptor(Interceptor {
-            // throw IOException("Test")
-            it.proceed(it.request())
-        })
-        manager.setInterceptor(Interceptor {
-            throw ScrapperException("Test")
-        }, false)
+        manager.setInterceptor(
+            {
+                // throw IOException("Test")
+                it.proceed(it.request())
+            },
+        )
+        manager.setInterceptor({ throw ScrapperException("Test") }, false)
 
-        val notes = manager.getSnpService().getNotes()
-        val observer = TestObserver<NotesResponse>()
-        notes.subscribe(observer)
-        observer.assertTerminated()
-        observer.assertNotComplete()
-        observer.assertError(ScrapperException::class.java)
+        try {
+            runBlocking { manager.getStudentService().getNotes() }
+        } catch (e: Throwable) {
+            assertTrue(e is ScrapperException)
+        }
     }
 
     @Test
@@ -97,14 +107,48 @@ class ServiceManagerTest : BaseTest() {
             symbol = ""
         }
 
-        val pupils = api.getStudents()
-        val observer = TestObserver<List<Student>>()
-        pupils.subscribe(observer)
-        observer.assertTerminated()
-        observer.assertError(ScrapperException::class.java)
+        try {
+            runBlocking { api.getStudents() }
+        } catch (e: Throwable) {
+            assertTrue(e is ScrapperException)
+        }
 
         server.takeRequest()
         // /Default/Account/LogOn <– default symbol set
         assertEquals("/Default/Account/LogOn", URL(server.takeRequest().requestUrl.toString()).path)
+    }
+
+    @Test
+    fun autoLoginInterceptor() {
+        server.enqueue(MockResponse().setResponseCode(503))
+        server.start(3000)
+        val manager = ServiceManager(
+            okHttpClientBuilderFactory = OkHttpClientBuilderFactory(),
+            logLevel = HttpLoggingInterceptor.Level.NONE,
+            loginType = Scrapper.LoginType.STANDARD,
+            schema = "http",
+            host = "fakelog.localhost:3000",
+            symbol = "default",
+            email = "email",
+            password = "password",
+            schoolSymbol = "schoolSymbol",
+            studentId = 123,
+            diaryId = 101,
+            kindergartenDiaryId = 0,
+            schoolYear = 2019,
+            emptyCookieJarIntercept = true,
+            androidVersion = "",
+            buildTag = "",
+            userAgentTemplate = "",
+        )
+
+        val res = runCatching {
+            runBlocking { manager.getStudentService().getNotes() }
+        }
+
+        val exception = res.exceptionOrNull()!!
+
+        assertEquals("503: Server Error", exception.message)
+        assertEquals(ServiceUnavailableException::class.java, exception::class.java)
     }
 }

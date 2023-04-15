@@ -1,9 +1,11 @@
 package io.github.wulkanowy.sdk.scrapper.timetable
 
-import com.google.gson.annotations.SerializedName
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class TimetableRequest(
 
-    @SerializedName("data")
-    val date: String
+    @SerialName("data")
+    val date: String,
 )

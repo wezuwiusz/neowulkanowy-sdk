@@ -1,31 +1,47 @@
 package io.github.wulkanowy.sdk.scrapper.homework
 
-import com.google.gson.annotations.SerializedName
-import pl.droidsonroids.jspoon.annotation.Format
-import pl.droidsonroids.jspoon.annotation.Selector
-import java.util.Date
+import io.github.wulkanowy.sdk.scrapper.adapter.CustomDateAdapter
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.Transient
+import java.time.LocalDateTime
 
-class Homework {
+@Serializable
+data class Homework(
 
-    lateinit var date: Date
+    @SerialName("HomeworkId")
+    val homeworkId: Int,
 
-    @SerializedName("DataModyfikacji")
-    @Format("dd.MM.yyyy")
-    @Selector(".wartosc", index = 2, regex = ".+, (.+)", defValue = "01.01.1970")
-    lateinit var entryDate: Date
+    @SerialName("Subject")
+    val subject: String,
 
-    @SerializedName("Przedmiot")
-    @Selector(".wartosc", index = 0)
-    lateinit var subject: String
+    @SerialName("Teacher")
+    val teacher: String,
 
-    @SerializedName("Opis")
-    @Selector(".wartosc", index = 1)
-    lateinit var content: String
+    @SerialName("Description")
+    val content: String,
 
-    @SerializedName("Pracownik")
-    @Selector(".wartosc", index = 2, regex = "(.+)\\s\\[.+")
-    lateinit var teacher: String
+    @SerialName("Date")
+    @Serializable(with = CustomDateAdapter::class)
+    val date: LocalDateTime,
 
-    @Selector(".wartosc", index = 2, regex = "\\[(.+)\\]")
+    @SerialName("ModificationDate")
+    @Serializable(with = CustomDateAdapter::class)
+    val entryDate: LocalDateTime,
+
+    @SerialName("Status")
+    val status: Int,
+
+    @SerialName("AnswerRequired")
+    val isAnswerRequired: Boolean,
+
+    @SerialName("Attachments")
+    val attachments: List<HomeworkAttachment>,
+) {
+
+    @Transient
     lateinit var teacherSymbol: String
+
+    @Transient
+    var _attachments: List<Pair<String, String>> = emptyList()
 }

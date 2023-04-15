@@ -1,13 +1,17 @@
 package io.github.wulkanowy.sdk.scrapper.exams
 
-import com.google.gson.annotations.SerializedName
-import java.util.Date
+import io.github.wulkanowy.sdk.scrapper.adapter.CustomDateAdapter
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
+import java.time.LocalDateTime
 
+@Serializable
 data class ExamRequest(
 
-    @SerializedName("data")
-    val date: Date,
+    @SerialName("data")
+    @Serializable(with = CustomDateAdapter::class)
+    val date: LocalDateTime,
 
-    @SerializedName("rokSzkolny")
-    val schoolYear: Int
+    @SerialName("rokSzkolny")
+    val schoolYear: Int,
 )

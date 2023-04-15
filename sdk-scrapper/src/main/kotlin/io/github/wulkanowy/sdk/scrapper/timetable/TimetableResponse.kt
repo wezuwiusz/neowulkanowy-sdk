@@ -1,61 +1,52 @@
 package io.github.wulkanowy.sdk.scrapper.timetable
 
-import com.google.gson.annotations.SerializedName
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 import org.jsoup.nodes.Element
-import pl.droidsonroids.jspoon.annotation.Format
-import pl.droidsonroids.jspoon.annotation.Selector
-import java.util.Date
+import java.time.LocalDate
+import java.time.LocalDateTime
 
-class TimetableResponse {
+@Serializable
+data class TimetableResponse(
 
-    @Selector(".presentData thead th:not(:nth-of-type(1)):not(:nth-of-type(2))", regex = "\\s(.*)", defValue = "01.01.1970")
-    @Format("dd.MM.yyyy")
-    var days: List<Date> = emptyList()
+    @SerialName("Headers")
+    val headers: List<TimetableHeader> = emptyList(),
 
-    @SerializedName("Header")
-    var _headersOld: List<Header> = emptyList()
+    @SerialName("Rows")
+    val rows: List<List<String>> = emptyList(),
 
-    @SerializedName("Headers")
-    var headers: List<Header> = emptyList()
+    @SerialName("Additionals")
+    val additional: List<TimetableAdditionalDay>,
+)
 
-    @SerializedName("Rows")
-    var rows2api: List<List<String>> = emptyList()
+@Serializable
+data class TimetableHeader(
 
-    class Header {
+    @SerialName("Text")
+    val date: String,
+)
 
-        @SerializedName("Text")
-        lateinit var date: String
-    }
+@Serializable
+data class TimetableAdditionalDay(
 
-    @Selector(".presentData tbody tr")
-    var rows: List<TimetableRow> = emptyList()
+    @SerialName("Header")
+    val header: String,
 
-    class TimetableRow {
+    @SerialName("Descriptions")
+    val descriptions: List<TimetableAdditionalLesson>,
+)
 
-        @Selector("td", index = 0)
-        var number: Int = 0
+@Serializable
+data class TimetableAdditionalLesson(
 
-        @Selector("td", index = 1, regex = "(^\\S*)")
-        lateinit var startTime: String
+    @SerialName("Description")
+    val description: String,
+)
 
-        @Selector("td", index = 1, regex = "(\\S*\$)")
-        lateinit var endTime: String
-
-        @Selector("td:not(:nth-of-type(1)):not(:nth-of-type(2))")
-        var lessons: List<TimetableCell> = emptyList()
-
-        class TimetableCell {
-
-            var number: Int = 0
-
-            lateinit var start: Date
-
-            lateinit var end: Date
-
-            lateinit var date: Date
-
-            @Selector("td")
-            lateinit var td: Element
-        }
-    }
-}
+data class TimetableCell(
+    val number: Int = 0,
+    val start: LocalDateTime,
+    val end: LocalDateTime,
+    val date: LocalDate,
+    val td: Element,
+)

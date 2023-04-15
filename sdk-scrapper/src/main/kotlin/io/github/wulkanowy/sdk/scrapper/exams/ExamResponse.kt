@@ -1,27 +1,24 @@
 package io.github.wulkanowy.sdk.scrapper.exams
 
-import com.google.gson.annotations.SerializedName
-import pl.droidsonroids.jspoon.annotation.Format
-import pl.droidsonroids.jspoon.annotation.Selector
-import java.util.Date
+import io.github.wulkanowy.sdk.scrapper.adapter.CustomDateAdapter
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
+import java.time.LocalDateTime
 
+@Serializable
 class ExamResponse {
 
-    @SerializedName("SprawdzianyGroupedByDayList")
+    @SerialName("SprawdzianyGroupedByDayList")
     var weeks: List<ExamDay> = emptyList()
 
-    @Selector(".mainContainer > div:has(h2)")
-    var days: List<ExamDay> = emptyList()
-
+    @Serializable
     class ExamDay {
 
-        @SerializedName("Data")
-        @Format("dd.MM.yyyy")
-        @Selector("h2", regex = ".+, (.+)", defValue = "01.01.1970")
-        lateinit var date: Date
+        @SerialName("Data")
+        @Serializable(with = CustomDateAdapter::class)
+        lateinit var date: LocalDateTime
 
-        @SerializedName("Sprawdziany")
-        @Selector("article")
+        @SerialName("Sprawdziany")
         lateinit var exams: List<Exam>
     }
 }

@@ -1,5 +1,6 @@
 package io.github.wulkanowy.sdk.scrapper.timetable
 
+import io.github.wulkanowy.sdk.scrapper.capitalise
 import org.jsoup.nodes.Element
 import org.jsoup.select.Elements
 
@@ -10,13 +11,16 @@ class TimetableParser {
         const val CLASS_REALIZED = "x-treelabel-rlz"
         const val CLASS_CHANGES = "x-treelabel-zas"
         const val CLASS_MOVED_OR_CANCELED = "x-treelabel-inv"
+
+        const val INFO_REPLACEMENT_TEACHER = "zastępstwo"
+        const val INFO_REPLACEMENT_ROOM = "zmieniono salę"
     }
 
-    fun getTimetable(c: TimetableResponse.TimetableRow.TimetableCell): Timetable? {
-        return addLessonDetails(Timetable(c.number, c.start, c.end, c.date), c.td)
+    fun getTimetable(c: TimetableCell): Lesson? {
+        return addLessonDetails(Lesson(c.number, c.start, c.end, c.date), c.td)
     }
 
-    private fun addLessonDetails(lesson: Timetable, td: Element): Timetable? {
+    private fun addLessonDetails(lesson: Lesson, td: Element): Lesson? {
         val divs = td.select("div:not([class])")
         val warnElement = td.select(".uwaga-panel").getOrNull(0)
 
@@ -31,7 +35,7 @@ class TimetableParser {
                             subjectOld = old.subject,
                             teacherOld = old.teacher,
                             roomOld = old.room,
-                            info = stripLessonInfo("${getFormattedLessonInfo(info)}, ${old.info}").replace("$subject ", "").capitalize()
+                            info = stripLessonInfo("${getFormattedLessonInfo(info)}, ${old.info}").replace("$subject ", "").capitalise(),
                         )
                     }
                     else -> getLessonInfo(lesson, divs[1])
@@ -44,7 +48,7 @@ class TimetableParser {
                     canceled = false,
                     subjectOld = old.subject,
                     teacherOld = old.teacher,
-                    roomOld = old.room
+                    roomOld = old.room,
                 )
             }
             divs.size == 2 && divs[0]?.selectFirst("span")?.hasClass(CLASS_MOVED_OR_CANCELED) == true &&
@@ -58,45 +62,41 @@ class TimetableParser {
                         subjectOld = old.subject,
                         teacherOld = old.teacher,
                         roomOld = old.room,
-                        info = "Poprzednio: ${old.subject} (${old.info})"
+                        info = getFormattedLessonInfo(info).ifEmpty { "Poprzednio: ${old.subject} (${old.info})" },
                     )
                 }
             }
             divs.size == 2 -> getLessonInfo(lesson, divs[0])
-            divs.size == 3 -> { // TODO: refactor this
-                when {
-                    divs[0]?.selectFirst("span")?.hasClass(CLASS_CHANGES) == true &&
-                        divs[1]?.selectFirst("span")?.hasClass(CLASS_MOVED_OR_CANCELED) == true &&
-                        divs[2]?.selectFirst("span")?.hasClass(CLASS_MOVED_OR_CANCELED) == true -> {
-                        getLessonInfo(lesson, divs[0]).run {
-                            val old = getLessonInfo(lesson, divs[1])
-                            copy(
-                                changes = true,
-                                canceled = false,
-                                subjectOld = old.subject,
-                                teacherOld = old.teacher,
-                                roomOld = old.room
-                            )
-                        }
-                    }
-                    divs[0]?.selectFirst("span")?.hasClass(CLASS_MOVED_OR_CANCELED) == true &&
-                        divs[1]?.selectFirst("span")?.hasClass(CLASS_MOVED_OR_CANCELED) == true &&
-                        divs[2]?.selectFirst("span")?.hasClass(CLASS_CHANGES) == true -> {
-                        getLessonInfo(lesson, divs[2]).run {
-                            val old = getLessonInfo(lesson, divs[0])
-                            copy(
-                                changes = true,
-                                canceled = false,
-                                subjectOld = old.subject,
-                                teacherOld = old.teacher,
-                                roomOld = old.room
-                            )
-                        }
-                    }
-                    else -> {
-                        getLessonInfo(lesson, divs[1])
+            divs.size == 3 -> when { // TODO: refactor this
+                divs[0]?.selectFirst("span")?.hasClass(CLASS_CHANGES) == true &&
+                    divs[1]?.selectFirst("span")?.hasClass(CLASS_MOVED_OR_CANCELED) == true &&
+                    divs[2]?.selectFirst("span")?.hasClass(CLASS_MOVED_OR_CANCELED) == true -> {
+                    getLessonInfo(lesson, divs[0]).run {
+                        val old = getLessonInfo(lesson, divs[1])
+                        copy(
+                            changes = true,
+                            canceled = false,
+                            subjectOld = old.subject,
+                            teacherOld = old.teacher,
+                            roomOld = old.room,
+                        )
                     }
                 }
+                divs[0]?.selectFirst("span")?.hasClass(CLASS_MOVED_OR_CANCELED) == true &&
+                    divs[1]?.selectFirst("span")?.hasClass(CLASS_MOVED_OR_CANCELED) == true &&
+                    divs[2]?.selectFirst("span")?.hasClass(CLASS_CHANGES) == true -> {
+                    getLessonInfo(lesson, divs[2]).run {
+                        val old = getLessonInfo(lesson, divs[0])
+                        copy(
+                            changes = true,
+                            canceled = false,
+                            subjectOld = old.subject,
+                            teacherOld = old.teacher,
+                            roomOld = old.room,
+                        )
+                    }
+                }
+                else -> getLessonInfo(lesson, divs[1])
             }
             else -> null
         }?.let {
@@ -107,80 +107,161 @@ class TimetableParser {
         }
     }
 
-    private fun getLessonInfo(lesson: Timetable, div: Element): Timetable {
-        div.select("span").run {
-            return when {
-                size == 3 -> getSimpleLesson(lesson, this)
-                size == 4 && last().hasClass(CLASS_REALIZED) -> getSimpleLesson(lesson, this)
-                size == 4 -> getGroupLesson(lesson, this)
-                size == 5 && last().hasClass(CLASS_REALIZED) -> getGroupLesson(lesson, this)
-                size == 7 -> getSimpleLessonWithReplacement(lesson, this)
-                size == 9 -> getGroupLessonWithReplacement(lesson, this)
-                else -> lesson
-            }
+    private fun getLessonInfo(lesson: Lesson, div: Element) = div.select("span").run {
+        when {
+            size == 2 -> getLessonLight(lesson, this, div.ownText())
+            size == 3 && div.ownText().contains(INFO_REPLACEMENT_TEACHER, true) -> getSimpleLessonWithNewReplacementTeacher(
+                lesson = lesson,
+                spans = this,
+                offset = 0,
+                changes = div.ownText(),
+            )
+            size == 3 && div.ownText().contains(INFO_REPLACEMENT_ROOM, true) -> getSimpleLessonWithNewReplacementRoom(
+                lesson = lesson,
+                spans = this,
+                offset = 0,
+                changes = div.ownText(),
+            )
+            size == 3 -> getSimpleLesson(lesson, this, changes = div.ownText())
+            size == 4 && div.ownText().contains(INFO_REPLACEMENT_TEACHER, true) -> getSimpleLessonWithNewReplacementTeacher(
+                lesson = lesson,
+                spans = this,
+                offset = 1,
+                changes = div.ownText(),
+            )
+            size == 4 && div.ownText().contains(INFO_REPLACEMENT_ROOM, true) -> getSimpleLessonWithNewReplacementRoom(
+                lesson = lesson,
+                spans = this,
+                offset = 1,
+                changes = div.ownText(),
+            )
+            size == 4 && last()?.hasClass(CLASS_REALIZED) == true -> getSimpleLesson(lesson, this, changes = div.ownText())
+            size == 4 -> getGroupLesson(lesson, this, changes = div.ownText())
+            size == 5 && first()?.hasClass(CLASS_CHANGES) == true && select(".$CLASS_REALIZED").size == 2 -> getSimpleLesson(
+                lesson = lesson,
+                spans = this,
+                infoExtraOffset = 1,
+                changes = div.ownText(),
+            )
+            size == 5 && last()?.hasClass(CLASS_REALIZED) == true -> getGroupLesson(
+                lesson = lesson,
+                spans = this,
+                changes = div.ownText(),
+            )
+            size == 7 -> getSimpleLessonWithReplacement(lesson, spans = this)
+            size == 9 -> getGroupLessonWithReplacement(lesson, spans = this)
+            else -> lesson
         }
     }
 
-    private fun getSimpleLesson(lesson: Timetable, spans: Elements): Timetable {
-        return getLesson(lesson, spans)
+    private fun getSimpleLesson(lesson: Lesson, spans: Elements, infoExtraOffset: Int = 0, changes: String): Lesson {
+        return getLesson(lesson, spans, 0, infoExtraOffset, changes)
     }
 
-    private fun getSimpleLessonWithReplacement(lesson: Timetable, spans: Elements): Timetable {
+    private fun getSimpleLessonWithNewReplacementRoom(lesson: Lesson, spans: Elements, offset: Int, changes: String): Lesson {
+        return getLessonWithReplacementRoom(lesson, spans, offset, changes = changes)
+    }
+
+    private fun getSimpleLessonWithNewReplacementTeacher(lesson: Lesson, spans: Elements, offset: Int, changes: String): Lesson {
+        return getLessonWithReplacementTeacher(lesson, spans, offset, changes = changes)
+    }
+
+    private fun getSimpleLessonWithReplacement(lesson: Lesson, spans: Elements): Lesson {
         return getLessonWithReplacement(lesson, spans)
     }
 
-    private fun getGroupLesson(lesson: Timetable, spans: Elements): Timetable {
-        return getLesson(lesson, spans, 1)
+    private fun getGroupLesson(lesson: Lesson, spans: Elements, changes: String): Lesson {
+        return getLesson(lesson, spans, offset = 1, changes = changes)
     }
 
-    private fun getGroupLessonWithReplacement(lesson: Timetable, spans: Elements): Timetable {
+    private fun getGroupLessonWithReplacement(lesson: Lesson, spans: Elements): Lesson {
         return getLessonWithReplacement(lesson, spans, 1)
     }
 
-    private fun getLesson(lesson: Timetable, spans: Elements, offset: Int = 0): Timetable {
+    private fun getLessonLight(lesson: Lesson, spans: Elements, info: String): Lesson {
+        val firstElementClasses = spans.first()?.classNames().orEmpty()
+        val isCanceled = CLASS_MOVED_OR_CANCELED in firstElementClasses
+        val isChanged = CLASS_CHANGES in firstElementClasses
         return lesson.copy(
             subject = getLessonAndGroupInfoFromSpan(spans[0])[0],
             group = getLessonAndGroupInfoFromSpan(spans[0])[1],
-            teacher = spans[1 + offset].text(),
-            room = spans[2 + offset].text(),
-            info = getFormattedLessonInfo(spans.getOrNull(3 + offset)?.text()),
-            canceled = spans.first().hasClass(CLASS_MOVED_OR_CANCELED),
-            changes = spans.first().hasClass(CLASS_CHANGES)
+            room = spans[1].text(),
+            info = getFormattedLessonInfo(info),
+            canceled = isCanceled,
+            changes = (info.isNotBlank() && !isCanceled) || isChanged,
         )
     }
 
-    private fun getLessonWithReplacement(lesson: Timetable, spans: Elements, o: Int = 0): Timetable {
+    private fun getLesson(lesson: Lesson, spans: Elements, offset: Int = 0, infoExtraOffset: Int = 0, changes: String): Lesson {
+        val firstElementClasses = spans.first()?.classNames().orEmpty()
+        val isCanceled = CLASS_MOVED_OR_CANCELED in firstElementClasses
+        val isChanged = CLASS_CHANGES in firstElementClasses
         return lesson.copy(
-            subject = getLessonAndGroupInfoFromSpan(spans[3 + o])[0],
-            subjectOld = getLessonAndGroupInfoFromSpan(spans[0])[0],
-            group = getLessonAndGroupInfoFromSpan(spans[3 + o])[1],
-            teacher = spans[4 + o * 2].text(),
-            teacherOld = spans[1 + o].text(),
-            room = spans[5 + o * 2].text(),
-            roomOld = spans[2 + o].text(),
-            info = "${getFormattedLessonInfo(spans.last().text())}, poprzednio: ${getLessonAndGroupInfoFromSpan(spans[0])[0]}",
-            changes = true
+            subject = getLessonAndGroupInfoFromSpan(spans[0])[0],
+            group = getLessonAndGroupInfoFromSpan(spans[0])[1],
+            room = spans[1 + offset].text(),
+            teacher = spans[2 + offset].text(),
+            info = getFormattedLessonInfo(spans.getOrNull(3 + offset + infoExtraOffset)?.text() ?: changes),
+            canceled = isCanceled,
+            changes = (changes.isNotBlank() && !isCanceled) || isChanged,
         )
     }
 
-    private fun getFormattedLessonInfo(info: String?): String {
-        return info?.removeSurrounding("(", ")") ?: ""
+    private fun getLessonWithReplacementRoom(lesson: Lesson, spans: Elements, offset: Int, changes: String): Lesson {
+        return lesson.copy(
+            subject = getLessonAndGroupInfoFromSpan(spans[0])[0],
+            group = getLessonAndGroupInfoFromSpan(spans[0])[1],
+            room = spans[1 + offset].text(),
+            roomOld = getRoomFromInfo(changes),
+            teacher = spans[2 + offset].text(),
+            info = getRoomChangesWithoutSubstitution(changes),
+            changes = true,
+        )
     }
 
-    private fun stripLessonInfo(info: String): String {
-        return info
-            .replace("okienko dla uczniów", "")
-            .replace("zmiana organizacji zajęć", "")
-            .replace(" ,", "")
-            .removePrefix(", ")
+    private fun getLessonWithReplacementTeacher(lesson: Lesson, spans: Elements, offset: Int, changes: String): Lesson {
+        return lesson.copy(
+            subject = getLessonAndGroupInfoFromSpan(spans[0])[0],
+            group = getLessonAndGroupInfoFromSpan(spans[0])[1],
+            room = spans[1 + offset].text(),
+            teacher = getTeacherFromInfo(changes).getTeacherNameInReverse(),
+            teacherOld = spans[2 + offset].text(),
+            info = getTeacherChangesWithoutSubstitution(changes),
+            changes = true,
+        )
     }
 
-    private fun getLessonAndGroupInfoFromSpan(span: Element): Array<String> {
-        return span.text().run {
-            arrayOf(
-                span.text().substringBefore(" ["),
-                if (this.contains("[")) span.text().split(" [").last().removeSuffix("]") else ""
-            )
-        }
-    }
+    private fun getLessonWithReplacement(lesson: Lesson, spans: Elements, offset: Int = 0) = lesson.copy(
+        subject = getLessonAndGroupInfoFromSpan(spans[3 + offset])[0],
+        subjectOld = getLessonAndGroupInfoFromSpan(spans[0])[0],
+        group = getLessonAndGroupInfoFromSpan(spans[3 + offset])[1],
+        teacher = spans[4 + offset * 2].text(),
+        teacherOld = spans[1 + offset].text(),
+        room = spans[5 + offset * 2].text(),
+        roomOld = spans[2 + offset].text(),
+        info = "${getFormattedLessonInfo(spans.last()?.text())}, poprzednio: ${getLessonAndGroupInfoFromSpan(spans[0])[0]}",
+        changes = true,
+    )
+
+    private fun getFormattedLessonInfo(info: String?) = info?.trim()?.removeSurrounding("(", ")").orEmpty()
+
+    private fun getTeacherFromInfo(info: String?) = info?.substringAfter("(zastępstwo: ")?.substringBefore(")").orEmpty()
+
+    private fun getRoomFromInfo(info: String?) = info?.substringAfter("(zmieniono salę z ")?.substringBefore(" na").orEmpty()
+
+    private fun getTeacherChangesWithoutSubstitution(changes: String?) = changes?.substringBefore("(zastępstwo: ").orEmpty()
+    private fun getRoomChangesWithoutSubstitution(changes: String?) = changes?.substringBefore("(zmieniono salę z ").orEmpty()
+
+    private fun String?.getTeacherNameInReverse() = orEmpty().split(" ").asReversed().joinToString(" ")
+
+    private fun stripLessonInfo(info: String) = info
+        .replace("okienko dla uczniów", "")
+        .replace("zmiana organizacji zajęć", "")
+        .replace(" ,", "")
+        .removePrefix(", ")
+
+    private fun getLessonAndGroupInfoFromSpan(span: Element) = arrayOf(
+        span.text().substringBefore(" ["),
+        if (span.text().contains("[")) span.text().split(" [").last().removeSuffix("]") else "",
+    )
 }

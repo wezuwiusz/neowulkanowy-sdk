@@ -1,0 +1,30 @@
+{
+  "data": [
+    {
+      "UnitName": "ZST-I",
+      "People": [
+        {
+          "Name": "Jan Michał Kowalski",
+          "Position": "Przewodniczący",
+          "Division": "3tm (T 17)",
+          "Id": 0
+        },
+        {
+          "Name": "Paweł Jan Czerwiński",
+          "Position": "Zastępca",
+          "Division": "3tmm (T 17)",
+          "Id": 0
+        },
+        {
+          "Name": "Magdalena Trzecia Wielka",
+          "Position": "Skarbnik",
+          "Division": "3tmm (T 17)",
+          "Id": 0
+        }
+      ]
+    }
+  ],
+  "success": true,
+  "errorMessage": null,
+  "feedback": null
+}

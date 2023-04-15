@@ -1,14 +1,19 @@
 package io.github.wulkanowy.sdk.scrapper.school
 
-import com.google.gson.annotations.SerializedName
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.Transient
 
+@Serializable
 data class Teacher(
 
-    @SerializedName("Nauczyciel")
+    @SerialName("Nauczyciel")
     val name: String,
 
-    val short: String,
+    @SerialName("Nazwa")
+    val subject: String,
+) {
 
-    @SerializedName("Nazwa")
-    val subject: String
-)
+    @Transient
+    var short: String = ""
+}

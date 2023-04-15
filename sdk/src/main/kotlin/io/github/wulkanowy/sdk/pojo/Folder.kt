@@ -6,5 +6,5 @@ enum class Folder(val id: Int = 1) {
 
     SENT(2),
 
-    TRASHED(3)
+    TRASHED(3),
 }

@@ -1,13 +1,11 @@
 package io.github.wulkanowy.sdk.scrapper.repository
 
-import io.github.wulkanowy.sdk.scrapper.Scrapper
 import io.github.wulkanowy.sdk.scrapper.BaseLocalTest
+import io.github.wulkanowy.sdk.scrapper.Scrapper
+import io.github.wulkanowy.sdk.scrapper.login.LoginTest
 import io.github.wulkanowy.sdk.scrapper.register.RegisterTest
-import io.github.wulkanowy.sdk.scrapper.register.Semester
-import io.reactivex.observers.TestObserver
-import okhttp3.mockwebserver.MockResponse
+import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertEquals
-import org.junit.Assert.assertTrue
 import org.junit.Test
 
 class StudentStartRepositoryTest : BaseLocalTest() {
@@ -22,99 +20,191 @@ class StudentStartRepositoryTest : BaseLocalTest() {
             password = "jan123"
             schoolSymbol = "123456"
             diaryId = 101
-            useNewStudent = true
         }
     }
 
     @Test
     fun getSemesters() {
-        server.enqueue(MockResponse().setBody(RegisterTest::class.java.getResource("UczenDziennik.json").readText()))
-        server.start(3000) //
+        with(server) {
+            enqueue("UczenDziennik.json", RegisterTest::class.java)
+            start(3000) //
+        }
 
         api.studentId = 1
         api.classId = 1
 
-        val semesters = api.getSemesters()
-        val semestersObserver = TestObserver<List<Semester>>()
-        semesters.subscribe(semestersObserver)
-        semestersObserver.assertComplete()
+        val semesters = runBlocking { api.getSemesters() }
 
-        val items = semestersObserver.values()[0]
+        assertEquals(6, semesters.size)
 
-        assertEquals(6, items.size)
+        assertEquals(1234568, semesters[0].semesterId)
+        assertEquals(1234567, semesters[1].semesterId)
+        assertEquals(2018, semesters[0].schoolYear)
+        assertEquals(2018, semesters[1].schoolYear)
 
-        assertEquals(1234568, items[0].semesterId)
-        assertEquals(1234567, items[1].semesterId)
-        assertEquals(2018, items[0].schoolYear)
-        assertEquals(2018, items[1].schoolYear)
-
-        assertEquals(1234566, items[2].semesterId)
-        assertEquals(2017, items[2].schoolYear)
-        assertEquals(2017, items[3].schoolYear)
-        assertTrue(items.single { it.current }.current)
+        assertEquals(1234566, semesters[2].semesterId)
+        assertEquals(2017, semesters[2].schoolYear)
+        assertEquals(2017, semesters[3].schoolYear)
     }
 
     @Test
     fun getSemesters_empty() {
-        server.enqueue(MockResponse().setBody(RegisterTest::class.java.getResource("UczenDziennik.json").readText()))
-        server.start(3000) //
+        with(server) {
+            enqueue("UczenDziennik.json", RegisterTest::class.java)
+            start(3000) //
+        }
 
         api.studentId = 1
         api.classId = 2 //
 
-        val semesters = api.getSemesters()
-        val semestersObserver = TestObserver<List<Semester>>()
-        semesters.subscribe(semestersObserver)
-        semestersObserver.assertComplete()
+        val semesters = runBlocking { api.getSemesters() }
 
-        val items = semestersObserver.values()[0]
-
-        assertEquals(0, items.size)
+        assertEquals(0, semesters.size)
     }
 
     @Test
     fun getSemesters_studentWithMultiClasses() {
-        server.enqueue(MockResponse().setBody(RegisterTest::class.java.getResource("UczenDziennik-multi.json").readText()))
-        server.start(3000) //
+        with(server) {
+            enqueue("UczenDziennik-multi.json", RegisterTest::class.java)
+            start(3000)
+        }
 
         api.studentId = 3881
         api.classId = 121
 
-        val semesters = api.getSemesters()
-        val semestersObserver = TestObserver<List<Semester>>()
-        semesters.subscribe(semestersObserver)
-        semestersObserver.assertComplete()
+        val semesters = runBlocking { api.getSemesters() }
 
-        val items = semestersObserver.values()[0]
+        assertEquals(2, semesters.size)
 
-        assertEquals(2, items.size)
-
-        assertEquals(714, items[0].semesterId)
-        assertEquals(713, items[1].semesterId)
-        assertTrue(items.single { it.current }.current)
+        assertEquals(714, semesters[0].semesterId)
+        assertEquals(713, semesters[1].semesterId)
     }
 
     @Test
     fun getSemesters_graduate() {
-        server.enqueue(MockResponse().setBody(RegisterTest::class.java.getResource("UczenDziennik.json").readText()))
-        server.start(3000) //
+        with(server) {
+            enqueue("UczenDziennik.json", RegisterTest::class.java)
+            start(3000) //
+        }
 
         api.studentId = 2
         api.classId = 2
 
-        val semesters = api.getSemesters()
-        val semestersObserver = TestObserver<List<Semester>>()
-        semesters.subscribe(semestersObserver)
-        semestersObserver.assertComplete()
+        val semesters = runBlocking { api.getSemesters() }
 
-        val items = semestersObserver.values()[0]
+        assertEquals(6, semesters.size)
 
-        assertEquals(6, items.size)
+        assertEquals(1234568, semesters[0].semesterId)
+        assertEquals(1234567, semesters[1].semesterId)
+    }
 
-        assertEquals(1234568, items[0].semesterId)
-        assertEquals(1234568, items.single { it.current }.semesterId)
-        assertEquals(1234567, items[1].semesterId)
-        assertTrue(items.single { it.current }.current)
-        assertTrue(items[0].current)
+    @Test
+    fun getSemesters_normal() {
+        with(server) {
+            enqueue("Logowanie-standard.html", LoginTest::class.java)
+
+            enqueue("Logowanie-uonet.html", LoginTest::class.java)
+            enqueue("Login-success.html", LoginTest::class.java)
+
+            enqueue("UczenDziennik.json", RegisterTest::class.java)
+            start(3000) //
+        }
+
+        with(api) {
+            studentId = 1
+            classId = 1
+            loginType = Scrapper.LoginType.STANDARD
+        }
+
+        val semesters = runBlocking { api.getSemesters() }
+
+        assertEquals(6, semesters.size)
+
+        assertEquals(1234568, semesters[0].semesterId)
+        assertEquals(1234567, semesters[1].semesterId)
+    }
+
+    @Test
+    fun getSemesters_ADFS() {
+        with(server) {
+            enqueue("ADFS.html", LoginTest::class.java) //
+
+            enqueue("Logowanie-cufs.html", LoginTest::class.java)
+            enqueue("Logowanie-uonet.html", LoginTest::class.java)
+            enqueue("Login-success.html", LoginTest::class.java)
+
+            enqueue("UczenDziennik.json", RegisterTest::class.java)
+            start(3000) //
+        }
+
+        with(api) {
+            studentId = 1
+            classId = 1
+            loginType = Scrapper.LoginType.ADFS
+        }
+
+        val semesters = runBlocking { api.getSemesters() }
+
+        assertEquals(6, semesters.size)
+
+        assertEquals(1234568, semesters[0].semesterId)
+        assertEquals(1234567, semesters[1].semesterId)
+    }
+
+    @Test
+    fun getSemesters_ADFSLight() {
+        with(server) {
+            enqueue("ADFSLight-form-1.html", LoginTest::class.java)
+
+            enqueue("Logowanie-cufs.html", LoginTest::class.java)
+            enqueue("Logowanie-uonet.html", LoginTest::class.java)
+            enqueue("Login-success.html", LoginTest::class.java)
+
+            enqueue("UczenDziennik.json", RegisterTest::class.java)
+            start(3000) //
+        }
+
+        with(api) {
+            studentId = 1
+            classId = 1
+            loginType = Scrapper.LoginType.ADFSLight
+        }
+
+        val semesters = runBlocking { api.getSemesters() }
+
+        assertEquals(6, semesters.size)
+
+        assertEquals(1234568, semesters[0].semesterId)
+        assertEquals(1234567, semesters[1].semesterId)
+    }
+
+    @Test
+    fun getSemesters_ADFSCards() {
+        with(server) {
+            enqueue("ADFSCards.html", LoginTest::class.java)
+
+            enqueue("ADFSCards.html", LoginTest::class.java)
+            enqueue("Logowanie-cufs.html", LoginTest::class.java)
+            enqueue("Logowanie-uonet.html", LoginTest::class.java)
+            enqueue("Login-success.html", LoginTest::class.java)
+
+            enqueue("UczenDziennik.json", RegisterTest::class.java)
+            start(3000) //
+        }
+
+        with(api) {
+            studentId = 1
+            classId = 1
+            loginType = Scrapper.LoginType.ADFSCards
+        }
+
+        val semesters = runBlocking { api.getSemesters() }
+
+        assertEquals(6, semesters.size)
+
+        assertEquals(1234568, semesters[0].semesterId)
+        assertEquals(1234567, semesters[1].semesterId)
+        assertEquals(2018, semesters[0].schoolYear)
+        assertEquals(2018, semesters[1].schoolYear)
     }
 }

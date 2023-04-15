@@ -1,17 +1,24 @@
 package io.github.wulkanowy.sdk.scrapper.grades
 
-import com.google.gson.annotations.SerializedName
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
+@Serializable
+data class GradePointsSummaryResponse(
+
+    @SerialName("Items")
+    val items: List<GradePointsSummary>,
+)
+
+@Serializable
 data class GradePointsSummary(
 
-    val semesterId: Int = 0,
-
-    @SerializedName("Subject")
+    @SerialName("Subject")
     val subject: String,
 
-    @SerializedName("Value1")
+    @SerialName("Value1")
     val others: Double,
 
-    @SerializedName("Value2")
-    val student: Double
+    @SerialName("Value2")
+    val student: Double,
 )

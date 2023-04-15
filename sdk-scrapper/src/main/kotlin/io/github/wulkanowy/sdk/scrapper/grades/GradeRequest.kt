@@ -1,9 +1,11 @@
 package io.github.wulkanowy.sdk.scrapper.grades
 
-import com.google.gson.annotations.SerializedName
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class GradeRequest(
 
-    @SerializedName("okres")
-    val semesterId: Int?
+    @SerialName("okres")
+    val semesterId: Int?,
 )

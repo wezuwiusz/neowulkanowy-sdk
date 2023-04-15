@@ -1,0 +1,15 @@
+[
+  {
+    "apiGlobalKey": "30b4600d-1cc7-4715-9753-9f7433c038b3",
+    "korespondenci": "Nazwisko Imię - P - (000012)",
+    "temat": "Lorem ipsum",
+    "data": "2018-02-06T19:42:58.00+02:00",
+    "skrzynka": "Kowalski Jan - U - (000012)",
+    "hasZalaczniki": false,
+    "przeczytana": true,
+    "nieprzeczytanePrzeczytanePrzez": null,
+    "wazna": false,
+    "uzytkownikRola": 2,
+    "id": 89626
+  }
+]

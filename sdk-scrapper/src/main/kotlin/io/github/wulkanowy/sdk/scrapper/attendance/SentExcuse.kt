@@ -1,27 +1,31 @@
 package io.github.wulkanowy.sdk.scrapper.attendance
 
-import com.google.gson.annotations.SerializedName
-import java.util.Date
+import io.github.wulkanowy.sdk.scrapper.adapter.CustomDateAdapter
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
+import java.time.LocalDateTime
 
+@Serializable
 class SentExcuse {
 
-    @SerializedName("Status")
+    @SerialName("Status")
     var status: Int = 0
 
-    @SerializedName("Dzien")
-    lateinit var date: Date
+    @SerialName("Dzien")
+    @Serializable(with = CustomDateAdapter::class)
+    lateinit var date: LocalDateTime
 
-    @SerializedName("IdPoraLekcji")
-    var timeId: Int = 0
+    @SerialName("IdPoraLekcji")
+    var timeId: Int? = null
 
     enum class Status(val id: Int) {
         WAITING(0),
         ACCEPTED(1),
-        DENIED(2);
+        DENIED(2),
+        ;
 
         companion object {
-            private val values = values()
-            fun getByValue(value: Int) = values.firstOrNull { it.id == value }
+            fun getByValue(value: Int) = values().firstOrNull { it.id == value }
         }
     }
 }

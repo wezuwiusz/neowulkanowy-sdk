@@ -10,18 +10,36 @@ import okhttp3.Response
 class UserAgentInterceptor(
     private val androidVersion: String,
     private val buildTag: String,
+    private val userAgentTemplate: String,
     private val webKitRev: String = "537.36",
-    private val chromeRev: String = "78.0.3904.62"
+    private val chromeRev: String = "110.0.0.0",
 ) : Interceptor {
 
+    private val defaultTemplate = buildString {
+        append("Mozilla/5.0 (Linux; Android %1\$s; %2\$s) ")
+        append("AppleWebKit/%3\$s (KHTML, like Gecko) ")
+        append("Chrome/%4\$s Mobile ")
+        append("Safari/%5\$s")
+    }
+
+    private val userAgent by lazy {
+        try {
+            getFormattedString(userAgentTemplate.ifBlank { defaultTemplate })
+        } catch (e: Throwable) {
+            getFormattedString(defaultTemplate)
+        }
+    }
+
     override fun intercept(chain: Interceptor.Chain): Response {
-        return chain.proceed(chain.request().newBuilder()
-            .addHeader("User-Agent",
-                "Mozilla/5.0 (Linux; $androidVersion; $buildTag) " +
-                    "AppleWebKit/$webKitRev (KHTML, like Gecko) " +
-                    "Chrome/$chromeRev Mobile " +
-                    "Safari/$webKitRev")
-            .build()
+        val formatted = userAgent
+        return chain.proceed(
+            chain.request().newBuilder()
+                .addHeader("User-Agent", formatted)
+                .build(),
         )
+    }
+
+    private fun getFormattedString(template: String): String {
+        return String.format(template, androidVersion, buildTag, webKitRev, chromeRev, webKitRev)
     }
 }

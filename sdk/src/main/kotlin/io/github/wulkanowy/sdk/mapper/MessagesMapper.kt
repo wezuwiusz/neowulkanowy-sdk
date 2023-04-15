@@ -1,52 +1,64 @@
 package io.github.wulkanowy.sdk.mapper
 
-import io.github.wulkanowy.sdk.normalizeRecipient
+import io.github.wulkanowy.sdk.pojo.Folder
 import io.github.wulkanowy.sdk.pojo.Message
-import io.github.wulkanowy.sdk.toLocalDateTime
-import io.github.wulkanowy.sdk.scrapper.messages.Message as ScrapperMessage
-import io.github.wulkanowy.sdk.mobile.messages.Message as ApiMessage
+import io.github.wulkanowy.sdk.pojo.MessageAttachment
+import io.github.wulkanowy.sdk.pojo.MessageDetails
+import io.github.wulkanowy.sdk.pojo.MessageReplayDetails
+import java.time.ZoneId
+import io.github.wulkanowy.sdk.scrapper.messages.MessageDetails as ScrapperDetailsMessage
+import io.github.wulkanowy.sdk.scrapper.messages.MessageMeta as ScrapperMessageMeta
+import io.github.wulkanowy.sdk.scrapper.messages.MessageReplayDetails as ScrapperReplayDetailsMessage
 
-@JvmName("mapApiMessages")
-fun List<ApiMessage>.mapMessages(): List<Message> {
-    return map {
-        Message(
-            id = it.messageId,
-            sender = it.senderName,
-            unreadBy = it.unread?.toInt(),
-            unread = it.folder == "Odebrane" && it.readDateTime == null,
-            senderId = it.senderId,
-            removed = it.status == "Usunieta",
-            recipient = it.recipients?.joinToString(", ") { recipient -> recipient.name.normalizeRecipient() },
-            readBy = it.read?.toInt(),
-            messageId = it.messageId,
-            folderId = when (it.folder) {
-                "Odebrane" -> 1
-                "Wyslane" -> 2
-                else -> 1
-            },
-            content = it.content,
-            date = it.sentDateTime.toLocalDateTime(),
-            subject = it.subject
-        )
-    }
+fun List<ScrapperMessageMeta>.mapMessages(zoneId: ZoneId, folderId: Folder) = map {
+    Message(
+        globalKey = it.apiGlobalKey,
+        id = it.id,
+        mailbox = it.mailbox,
+        subject = it.subject,
+        date = it.date.atZone(zoneId),
+        content = null,
+        folderId = folderId.id,
+        recipients = emptyList(),
+        correspondents = it.correspondents,
+        unread = !it.isRead,
+        unreadBy = it.readUnreadBy?.substringBefore("/")?.toIntOrNull(),
+        readBy = it.readUnreadBy?.substringAfter("/")?.toIntOrNull(),
+        hasAttachments = it.isAttachments,
+    )
 }
 
-fun List<ScrapperMessage>.mapMessages(): List<Message> {
-    return map {
-        Message(
-            id = it.id,
-            subject = it.subject,
-            date = it.date?.toLocalDateTime(),
-            content = it.content,
-            folderId = it.folderId,
-            messageId = it.messageId,
-            readBy = it.readBy,
-            recipient = it.recipient,
-            removed = it.removed,
-            sender = it.sender,
-            senderId = it.senderId,
-            unread = it.unread,
-            unreadBy = it.unreadBy
+fun ScrapperDetailsMessage.mapScrapperMessage() = MessageDetails(
+    content = content,
+    apiGlobalKey = apiGlobalKey,
+    date = date,
+    sender = sender,
+    recipients = recipients,
+    subject = subject,
+    id = id,
+    attachments = attachments.map {
+        MessageAttachment(
+            url = it.url,
+            filename = it.filename,
         )
-    }
-}
+    },
+)
+
+fun ScrapperReplayDetailsMessage.mapScrapperMessage() = MessageReplayDetails(
+    content = content,
+    apiGlobalKey = apiGlobalKey,
+    date = date,
+    mailboxId = mailboxId,
+    senderMailboxId = senderMailboxId,
+    senderMailboxName = senderMailboxName,
+    sender = sender.mapToRecipient(),
+    recipients = recipients.mapRecipients(),
+    subject = subject,
+    id = id,
+    attachments = attachments.map {
+        MessageAttachment(
+            url = it.url,
+            filename = it.filename,
+        )
+    },
+)

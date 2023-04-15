@@ -1,35 +1,37 @@
 package io.github.wulkanowy.sdk.scrapper.notes
 
-import com.google.gson.annotations.SerializedName
-import pl.droidsonroids.jspoon.annotation.Selector
-import java.util.Date
+import io.github.wulkanowy.sdk.scrapper.adapter.CustomDateAdapter
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.Transient
+import java.time.LocalDateTime
 
-class Note {
+@Serializable
+data class Note(
 
-    @SerializedName("DataWpisu")
-    lateinit var date: Date
+    @SerialName("DataWpisu")
+    @Serializable(with = CustomDateAdapter::class)
+    val date: LocalDateTime,
 
-    @SerializedName("Nauczyciel")
-    @Selector(".wartosc", index = 0, regex = "(.+)\\s\\[.+")
-    lateinit var teacher: String
+    @SerialName("Nauczyciel")
+    val teacher: String,
 
-    @Selector(".wartosc", index = 0, regex = "\\[(.+)\\]")
+    @SerialName("Kategoria")
+    val category: String,
+
+    @SerialName("TrescUwagi")
+    val content: String,
+
+    @SerialName("Punkty")
+    val points: String = "",
+
+    @SerialName("PokazPunkty")
+    val showPoints: Boolean = false,
+
+    @SerialName("KategoriaTyp")
+    val categoryType: Int = 0,
+) {
+
+    @Transient
     lateinit var teacherSymbol: String
-
-    @SerializedName("Kategoria")
-    @Selector(".wartosc", index = 1)
-    lateinit var category: String
-
-    @SerializedName("TrescUwagi")
-    @Selector(".wartosc", index = 2)
-    lateinit var content: String
-
-    @SerializedName("Punkty")
-    lateinit var points: String
-
-    @SerializedName("PokazPunkty")
-    var showPoints = false
-
-    @SerializedName("KategoriaTyp")
-    var categoryType: Int = 0
 }

@@ -1,47 +1,38 @@
 package io.github.wulkanowy.sdk.scrapper.grades
 
 import io.github.wulkanowy.sdk.scrapper.BaseLocalTest
+import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertEquals
 import org.junit.Test
 
 class GradesStatisticsTest : BaseLocalTest() {
 
-    private val snpPartial by lazy {
-        getSnpRepo(GradesStatisticsTest::class.java, "Statystyki-czastkowe.html").getGradesStatistics(123, false).blockingGet()
+    private val partial by lazy {
+        runBlocking { getStudentRepo(GradesStatisticsTest::class.java, "Statystyki-czastkowe.json").getGradesPartialStatistics(123) }
     }
 
-    private val snpAnnual by lazy {
-        getSnpRepo(GradesStatisticsTest::class.java, "Statystyki-roczne.html").getGradesStatistics(321, true).blockingGet()
-    }
-
-    private val studentPartial by lazy {
-        getStudentRepo(GradesStatisticsTest::class.java, "Statystyki-czastkowe.json").getGradesPartialStatistics(123).blockingGet()
-    }
-
-    private val studentAnnual by lazy {
-        getStudentRepo(GradesStatisticsTest::class.java, "Statystyki-roczne.json").getGradesAnnualStatistics(321).blockingGet()
+    private val annual by lazy {
+        runBlocking { getStudentRepo(GradesStatisticsTest::class.java, "Statystyki-roczne.json").getGradesAnnualStatistics(321) }
     }
 
     private val points by lazy {
-        getStudentRepo(GradesStatisticsTest::class.java, "Statystyki-punkty.json").getGradesPointsStatistics(420).blockingGet()
+        runBlocking { getStudentRepo(GradesStatisticsTest::class.java, "Statystyki-punkty.json").getGradesPointsStatistics(420) }
     }
 
     @Test
     fun getGradesStatistics() {
-        assertEquals(12, snpPartial.size)
-        assertEquals(12, studentPartial.size)
-        assertEquals(6, snpAnnual.size)
-        assertEquals(6, studentAnnual.size)
+        assertEquals(3, partial.size)
+        assertEquals(1, annual.size)
+        assertEquals(6, annual[0].items?.size)
         assertEquals(3, points.size)
     }
 
     @Test
     fun getGradesStatistics_empty() {
-        listOf(snpPartial[0], studentPartial[0]).map {
-            it.run {
-                assertEquals("Język polski", subject)
-                assertEquals("6", grade)
-                assertEquals(6, gradeValue)
+        with(partial[0]) {
+            assertEquals("Język polski", subject)
+            with(classSeries.items!![0]) {
+                assertEquals(6, grade)
                 assertEquals(0, amount)
             }
         }
@@ -49,11 +40,10 @@ class GradesStatisticsTest : BaseLocalTest() {
 
     @Test
     fun getGradesStatistics_filled() {
-        listOf(snpPartial[3], studentPartial[3]).map {
-            it.run {
-                assertEquals("Język polski", subject)
-                assertEquals("3", grade)
-                assertEquals(3, gradeValue)
+        with(partial[0]) {
+            assertEquals("Język polski", subject)
+            with(classSeries.items!![3]) {
+                assertEquals(3, grade)
                 assertEquals(63, amount)
             }
         }
@@ -61,13 +51,10 @@ class GradesStatisticsTest : BaseLocalTest() {
 
     @Test
     fun getGradeStatistics_shortValue() {
-        listOf(snpAnnual[1], studentAnnual[1]).map {
-            it.run {
-                assertEquals("Język angielski", subject)
-                assertEquals("5", grade)
-                assertEquals(5, gradeValue)
-                assertEquals(4, amount)
-            }
+        with(annual[0]) {
+            assertEquals("Język angielski", subject)
+            assertEquals(5, items!![1].grade)
+            assertEquals(4, items!![1].amount)
         }
     }
 

@@ -1,8 +1,10 @@
 package io.github.wulkanowy.sdk.scrapper.attendance
 
-import com.google.gson.annotations.SerializedName
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class AttendanceSummaryRequest(
-    @SerializedName("idPrzedmiot")
-    val id: Int?
+    @SerialName("idPrzedmiot")
+    val id: Int?,
 )

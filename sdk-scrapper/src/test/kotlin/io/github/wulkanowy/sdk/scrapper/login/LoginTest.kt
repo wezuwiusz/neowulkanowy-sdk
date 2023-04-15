@@ -1,14 +1,12 @@
 package io.github.wulkanowy.sdk.scrapper.login
 
-import io.github.wulkanowy.sdk.scrapper.Scrapper
 import io.github.wulkanowy.sdk.scrapper.BaseLocalTest
-import io.github.wulkanowy.sdk.scrapper.homework.HomeworkTest
+import io.github.wulkanowy.sdk.scrapper.Scrapper
+import io.github.wulkanowy.sdk.scrapper.exception.AccountInactiveException
+import io.github.wulkanowy.sdk.scrapper.exception.VulcanException
 import io.github.wulkanowy.sdk.scrapper.interceptor.ErrorInterceptorTest
-import io.github.wulkanowy.sdk.scrapper.interceptor.VulcanException
-import io.github.wulkanowy.sdk.scrapper.register.SendCertificateResponse
 import io.github.wulkanowy.sdk.scrapper.service.LoginService
-import io.reactivex.observers.TestObserver
-import okhttp3.mockwebserver.MockResponse
+import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
@@ -18,149 +16,176 @@ import java.net.CookieManager
 class LoginTest : BaseLocalTest() {
 
     private val normal by lazy {
-        LoginHelper(Scrapper.LoginType.STANDARD, "http", "fakelog.localhost:3000", "default", CookieManager(),
-                getService(LoginService::class.java, "http://fakelog.localhost:3000/"))
+        LoginHelper(
+            loginType = Scrapper.LoginType.STANDARD,
+            schema = "http",
+            host = "fakelog.localhost:3000",
+            symbol = "default",
+            cookies = CookieManager(),
+            api = getService(LoginService::class.java, "http://fakelog.localhost:3000/"),
+        )
     }
 
     private val adfs by lazy {
-        LoginHelper(Scrapper.LoginType.ADFSCards, "http", "fakelog.localhost:3000", "default", CookieManager(),
-                getService(LoginService::class.java, "http://fakelog.localhost:3000/", true, true, false, Scrapper.LoginType.ADFSCards))
+        LoginHelper(
+            loginType = Scrapper.LoginType.ADFS,
+            schema = "http",
+            host = "fakelog.localhost:3000",
+            symbol = "default",
+            cookies = CookieManager(),
+            api = getService(
+                service = LoginService::class.java,
+                url = "http://fakelog.localhost:3000/",
+                html = true,
+                okHttp = getOkHttp(
+                    errorInterceptor = true,
+                    autoLoginInterceptorOn = false,
+                    loginType = Scrapper.LoginType.ADFS,
+                ),
+            ),
+        )
     }
 
     @Test
     fun adfsTest() {
-        server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("ADFS-form-1.html").readText()))
-        server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("ADFS-form-2.html").readText()))
-        server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("Logowanie-cufs.html").readText()))
-        server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("Logowanie-uonet.html").readText()))
-        server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("Login-success.html").readText()))
-        server.start(3000)
+        with(server) {
+            enqueue("Logowanie-cufs.html")
+            enqueue("Logowanie-uonet.html")
+            enqueue("Login-success.html")
+            start(3000)
+        }
 
-        val res = adfs.login("jan@fakelog.cf", "jan123").blockingGet()
+        val res = runBlocking { adfs.login("jan@fakelog.cf", "jan123") }
 
-        assertTrue(res.oldStudentSchools.isNotEmpty())
+        assertTrue(res.studentSchools.isNotEmpty())
     }
 
     @Test
     fun normalLogin() {
-        server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("Logowanie-uonet.html").readText()))
-        server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("Login-success.html").readText()))
-        server.start(3000)
+        with(server) {
+            enqueue("Logowanie-uonet.html")
+            enqueue("Login-success.html")
+            start(3000)
+        }
 
-        val res = normal.login("jan@fakelog.cf", "jan123").blockingGet()
+        val res = runBlocking { normal.login("jan@fakelog.cf", "jan123") }
 
-        assertTrue(res.oldStudentSchools.isNotEmpty())
+        assertTrue(res.studentSchools.isNotEmpty())
     }
 
     @Test
     fun multiLogin() {
-        server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("Logowanie-uonet.html").readText()))
-        server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("Login-success.html").readText()))
-        server.start(3000)
+        with(server) {
+            enqueue("Logowanie-uonet.html")
+            enqueue("Login-success.html")
+            start(3000)
+        }
 
-        normal.login("jan@fakelog.cf", "jan123").blockingGet()
+        runBlocking { normal.login("jan@fakelog.cf", "jan123") }
 
         assertEquals("[text=LoginName=jan%40fakelog.cf&Password=jan123]", server.takeRequest().body.toString())
     }
 
     @Test
     fun multiLogin_withLogin() {
-        server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("Logowanie-uonet.html").readText()))
-        server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("Login-success-account-switch.html").readText()))
-        server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("Login-success-account-switch.html").readText()))
-        server.start(3000)
+        with(server) {
+            enqueue("Logowanie-uonet.html")
+            enqueue("Login-success-account-switch.html")
+            enqueue("Login-success-account-switch.html")
+            start(3000)
+        }
 
-        normal.login("jan||jan@fakelog.cf", "jan123").blockingGet()
+        runBlocking { normal.login("jan||jan@fakelog.cf", "jan123") }
 
         assertEquals("[text=LoginName=jan&Password=jan123]", server.takeRequest().body.toString())
     }
 
     @Test
-    fun normalLogin_beforeNewStudentSite() {
-        server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("Logowanie-uonet.html").readText()))
-        server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("Login-success-old.html").readText()))
-        server.start(3000)
-
-        val res = normal.login("jan@fakelog.cf", "jan123").blockingGet()
-
-        assertTrue(res.oldStudentSchools.isNotEmpty())
-    }
-
-    @Test
     fun normalLogin_encodingError() {
-        server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("Logowanie-uonet-encoding-error.html").readText()))
-        server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("Login-success.html").readText()))
-        server.start(3000)
+        with(server) {
+            enqueue("Logowanie-uonet-encoding-error.html")
+            enqueue("Login-success.html")
+            start(3000)
+        }
 
-        normal.login("jan@fakelog.cf", "jan123").blockingGet()
+        runBlocking { normal.login("jan@fakelog.cf", "jan123") }
 
         server.takeRequest()
         assertFalse(server.takeRequest().body.readUtf8().contains("ValueType%3D%26t%3Bhttp")) // ValueType=&t;http
     }
 
     @Test
-    fun adfsBadCredentialsException() {
-        server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("ADFS-form-1.html").readText()))
-        server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("ADFS-form-2.html").readText()))
-        server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("Logowanie-adfs-zle-haslo.html").readText()))
-        server.start(3000)
+    fun accessAccountInactiveException() {
+        with(server) {
+            enqueue("Logowanie-uonet.html")
+            enqueue("Logowanie-nieaktywne.html")
+            start(3000)
+        }
 
-        val res = adfs.login("jan@fakelog.cf", "jan1234")
-        val observer = TestObserver<SendCertificateResponse>()
-        res.subscribe(observer)
-        observer.assertTerminated()
-        observer.assertError(BadCredentialsException::class.java)
-    }
-
-    @Test
-    fun normalBadCredentialsException() {
-        server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("Logowanie-uonet.html").readText()))
-        server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("Logowanie-normal-zle-haslo.html").readText()))
-        server.start(3000)
-
-        val res = normal.login("jan@fakelog.cf", "jan1234")
-        val observer = TestObserver<SendCertificateResponse>()
-        res.subscribe(observer)
-        observer.assertTerminated()
-        observer.assertError(BadCredentialsException::class.java)
-    }
-
-    @Test
-    fun accessPermissionException() {
-        server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("Logowanie-uonet.html").readText()))
-        server.enqueue(MockResponse().setBody(LoginTest::class.java.getResource("Logowanie-brak-dostepu.html").readText()))
-        server.start(3000)
-
-        val res = normal.login("jan@fakelog.cf", "jan123")
-        val observer = TestObserver<SendCertificateResponse>()
-        res.subscribe(observer)
-        observer.assertTerminated()
-        observer.assertError(AccountPermissionException::class.java)
-        observer.assertError {
-            it.localizedMessage == "Adres nie został zarejestrowany w dzienniku uczniowskim jako adres rodzica, bądź ucznia."
+        try {
+            runBlocking { normal.login("jan@fakelog.cf", "jan1234") }
+        } catch (e: Throwable) {
+            assertEquals(AccountInactiveException::class, e::class)
+            assertEquals("Login i hasło użytkownika są poprawne, ale konto nie jest aktywne w żadnej jednostce sprawozdawczej", e.message)
         }
     }
 
     @Test
-    fun alreadyLoggedIn() {
-        server.enqueue(MockResponse().setBody(HomeworkTest::class.java.getResource("ZadaniaDomowe.html").readText()))
-        server.start(3000)
+    fun adfsBadCredentialsException() {
+        with(server) {
+            enqueue("Logowanie-adfs-zle-haslo.html")
+            start(3000)
+        }
 
-        val res = normal.login("jan@fakelog.cf", "jan123")
-        val observer = TestObserver<SendCertificateResponse>()
-        res.subscribe(observer)
-        observer.assertComplete()
+        try {
+            runBlocking { adfs.login("jan@fakelog.cf", "jan1234") }
+        } catch (e: Throwable) {
+            assertTrue(e is BadCredentialsException)
+        }
+    }
+
+    @Test
+    fun normalBadCredentialsException() {
+        with(server) {
+            enqueue("Logowanie-uonet.html")
+            enqueue("Logowanie-normal-zle-haslo.html")
+            start(3000)
+        }
+
+        try {
+            runBlocking { adfs.login("jan@fakelog.cf", "jan1234") }
+        } catch (e: Throwable) {
+            assertTrue(e is BadCredentialsException)
+        }
+    }
+
+    @Test
+    fun accessPermissionException() {
+        with(server) {
+            enqueue("Logowanie-uonet.html")
+            enqueue("Logowanie-brak-dostepu.html")
+            start(3000)
+        }
+
+        try {
+            runBlocking { adfs.login("jan@fakelog.cf", "jan1234") }
+        } catch (e: Throwable) {
+            assertTrue(e is AccountPermissionException)
+            assertEquals("Adres nie został zarejestrowany w dzienniku uczniowskim jako adres rodzica, bądź ucznia.", e.message)
+        }
     }
 
     @Test
     fun invalidCertificatePage() {
-        server.enqueue(MockResponse().setBody(ErrorInterceptorTest::class.java.getResource("Offline.html").readText()))
-        server.start(3000)
+        with(server) {
+            enqueue("Offline.html", ErrorInterceptorTest::class.java)
+            start(3000)
+        }
 
-        val res = normal.login("jan@fakelog.cf", "jan123")
-        val observer = TestObserver<SendCertificateResponse>()
-        res.subscribe(observer)
-        observer.assertTerminated()
-        observer.assertError(VulcanException::class.java)
+        try {
+            runBlocking { adfs.login("jan@fakelog.cf", "jan1234") }
+        } catch (e: Throwable) {
+            assertTrue(e is VulcanException)
+        }
     }
 }

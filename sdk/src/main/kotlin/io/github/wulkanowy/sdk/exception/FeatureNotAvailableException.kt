@@ -1,3 +1,5 @@
 package io.github.wulkanowy.sdk.exception
 
-class FeatureNotAvailableException(message: String) : ApiException(message)
+import java.io.IOException
+
+class FeatureNotAvailableException internal constructor(message: String) : IOException(message)

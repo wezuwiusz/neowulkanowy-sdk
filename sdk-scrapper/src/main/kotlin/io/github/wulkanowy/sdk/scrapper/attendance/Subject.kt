@@ -1,15 +1,14 @@
 package io.github.wulkanowy.sdk.scrapper.attendance
 
-import com.google.gson.annotations.SerializedName
-import pl.droidsonroids.jspoon.annotation.Selector
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class Subject(
 
-    @SerializedName("Nazwa")
-    @Selector("option")
+    @SerialName("Nazwa")
     var name: String = "Wszystkie",
 
-    @SerializedName("Id")
-    @Selector("option", attr = "value")
-    var value: Int = -1
+    @SerialName("Id")
+    var value: Int = -1,
 )

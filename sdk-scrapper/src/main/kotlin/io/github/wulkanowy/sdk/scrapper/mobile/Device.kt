@@ -1,22 +1,27 @@
 package io.github.wulkanowy.sdk.scrapper.mobile
 
-import com.google.gson.annotations.SerializedName
-import pl.droidsonroids.jspoon.annotation.Format
-import pl.droidsonroids.jspoon.annotation.Selector
-import java.util.Date
+import io.github.wulkanowy.sdk.scrapper.adapter.CustomDateAdapter
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
+import java.time.LocalDateTime
 
-class Device {
+@Serializable
+data class Device(
 
-    @SerializedName("Id")
-    @Selector("td.cellWithButton a", attr = "href", regex = "([^\\/]+\$)")
-    var id: Int = 0
+    @SerialName("Id")
+    val id: Int = 0,
 
-    @SerializedName("NazwaUrzadzenia")
-    @Selector("td", index = 0)
-    lateinit var name: String
+    @SerialName("IdentyfikatorUrzadzenia")
+    val deviceId: String? = null,
 
-    @SerializedName("DataUtworzenia")
-    @Format(value = "dd.MM.yyyy 'godz:' HH:mm:ss")
-    @Selector("td", index = 1, defValue = "01.01.1970")
-    lateinit var date: Date
-}
+    @SerialName("NazwaUrzadzenia")
+    val name: String? = null,
+
+    @SerialName("DataUtworzenia")
+    @Serializable(with = CustomDateAdapter::class)
+    val createDate: LocalDateTime? = null,
+
+    @SerialName("DataModyfikacji")
+    @Serializable(with = CustomDateAdapter::class)
+    val modificationDate: LocalDateTime? = null,
+)

@@ -1,11 +1,10 @@
 package io.github.wulkanowy.sdk.pojo
 
 data class Recipient(
-    val id: String,
-    val name: String,
-    val loginId: Int,
-    val reportingUnitId: Int?,
-    val role: Int,
-    val hash: String,
-    val shortName: String
+    val mailboxGlobalKey: String,
+    val fullName: String,
+    val userName: String,
+    val studentName: String,
+    val schoolNameShort: String,
+    val type: MailboxType,
 )

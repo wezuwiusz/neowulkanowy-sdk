@@ -2,30 +2,37 @@ package io.github.wulkanowy.sdk.scrapper.service
 
 import io.github.wulkanowy.sdk.scrapper.ApiResponse
 import io.github.wulkanowy.sdk.scrapper.attendance.AttendanceExcuseRequest
+import io.github.wulkanowy.sdk.scrapper.attendance.AttendanceRecordDay
+import io.github.wulkanowy.sdk.scrapper.attendance.AttendanceRecordsRequest
 import io.github.wulkanowy.sdk.scrapper.attendance.AttendanceRequest
 import io.github.wulkanowy.sdk.scrapper.attendance.AttendanceResponse
 import io.github.wulkanowy.sdk.scrapper.attendance.AttendanceSummaryRequest
 import io.github.wulkanowy.sdk.scrapper.attendance.AttendanceSummaryResponse
 import io.github.wulkanowy.sdk.scrapper.attendance.Subject
+import io.github.wulkanowy.sdk.scrapper.conferences.Conference
 import io.github.wulkanowy.sdk.scrapper.exams.ExamRequest
 import io.github.wulkanowy.sdk.scrapper.exams.ExamResponse
-import io.github.wulkanowy.sdk.scrapper.grades.GradePointsSummary
+import io.github.wulkanowy.sdk.scrapper.grades.GradePointsSummaryResponse
 import io.github.wulkanowy.sdk.scrapper.grades.GradeRequest
 import io.github.wulkanowy.sdk.scrapper.grades.GradesResponse
+import io.github.wulkanowy.sdk.scrapper.grades.GradesStatisticsPartial
 import io.github.wulkanowy.sdk.scrapper.grades.GradesStatisticsRequest
-import io.github.wulkanowy.sdk.scrapper.grades.GradesStatisticsResponse
-import io.github.wulkanowy.sdk.scrapper.homework.HomeworkResponse
+import io.github.wulkanowy.sdk.scrapper.grades.GradesStatisticsSemester
+import io.github.wulkanowy.sdk.scrapper.homework.HomeworkDay
+import io.github.wulkanowy.sdk.scrapper.homework.HomeworkRequest
 import io.github.wulkanowy.sdk.scrapper.mobile.Device
 import io.github.wulkanowy.sdk.scrapper.mobile.TokenResponse
 import io.github.wulkanowy.sdk.scrapper.mobile.UnregisterDeviceRequest
 import io.github.wulkanowy.sdk.scrapper.notes.NotesResponse
 import io.github.wulkanowy.sdk.scrapper.register.Diary
 import io.github.wulkanowy.sdk.scrapper.school.SchoolAndTeachersResponse
+import io.github.wulkanowy.sdk.scrapper.student.StudentInfo
+import io.github.wulkanowy.sdk.scrapper.student.StudentPhoto
 import io.github.wulkanowy.sdk.scrapper.timetable.CacheResponse
+import io.github.wulkanowy.sdk.scrapper.timetable.CompletedLesson
 import io.github.wulkanowy.sdk.scrapper.timetable.CompletedLessonsRequest
 import io.github.wulkanowy.sdk.scrapper.timetable.TimetableRequest
 import io.github.wulkanowy.sdk.scrapper.timetable.TimetableResponse
-import io.reactivex.Single
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.Header
@@ -35,96 +42,107 @@ import retrofit2.http.Url
 interface StudentService {
 
     @GET
-    fun getStart(@Url url: String): Single<String>
+    suspend fun getStart(@Url url: String): String
 
     @POST
-    fun getUserCache(
+    suspend fun getUserCache(
         @Url url: String,
         @Header("X-V-RequestVerificationToken") token: String,
         @Header("X-V-AppGuid") appGuid: String,
-        @Header("X-V-AppVersion") appVersion: String
-    ): Single<ApiResponse<CacheResponse>>
+        @Header("X-V-AppVersion") appVersion: String,
+        @Body body: Any = Any(),
+    ): ApiResponse<CacheResponse>
 
     @POST("UczenCache.mvc/Get")
-    fun getUserCache(
+    suspend fun getUserCache(
         @Header("X-V-RequestVerificationToken") token: String,
         @Header("X-V-AppGuid") appGuid: String,
-        @Header("X-V-AppVersion") appVersion: String
-    ): Single<ApiResponse<CacheResponse>>
+        @Header("X-V-AppVersion") appVersion: String,
+        @Body body: Any = Any(),
+    ): ApiResponse<CacheResponse>
 
     @POST
-    fun getSchoolInfo(@Url url: String): Single<ApiResponse<List<Diary>>>
+    suspend fun getSchoolInfo(@Url url: String, @Body body: Any = Any()): ApiResponse<List<Diary>>
 
     @POST("UczenDziennik.mvc/Get")
-    fun getDiaries(): Single<ApiResponse<List<Diary>>>
+    suspend fun getDiaries(@Body body: Any = Any()): ApiResponse<List<Diary>>
 
     @POST("Oceny.mvc/Get")
-    fun getGrades(@Body gradeRequest: GradeRequest): Single<ApiResponse<GradesResponse>>
+    suspend fun getGrades(@Body gradeRequest: GradeRequest): ApiResponse<GradesResponse>
 
     @POST("Statystyki.mvc/GetOcenyCzastkowe")
-    fun getGradesPartialStatistics(@Body gradesStatisticsRequest: GradesStatisticsRequest): Single<ApiResponse<List<GradesStatisticsResponse.Partial>>>
+    suspend fun getGradesPartialStatistics(@Body gradesStatisticsRequest: GradesStatisticsRequest): ApiResponse<List<GradesStatisticsPartial>>
 
     @POST("Statystyki.mvc/GetPunkty")
-    fun getGradesPointsStatistics(@Body gradesStatisticsRequest: GradesStatisticsRequest): Single<ApiResponse<List<GradePointsSummary>>>
+    suspend fun getGradesPointsStatistics(@Body gradesStatisticsRequest: GradesStatisticsRequest): ApiResponse<GradePointsSummaryResponse>
 
     @POST("Statystyki.mvc/GetOcenyRoczne")
-    fun getGradesAnnualStatistics(@Body gradesStatisticsRequest: GradesStatisticsRequest): Single<ApiResponse<List<GradesStatisticsResponse.Annual>>>
+    suspend fun getGradesAnnualStatistics(@Body gradesStatisticsRequest: GradesStatisticsRequest): ApiResponse<List<GradesStatisticsSemester>>
 
     @POST("Frekwencja.mvc/Get")
-    fun getAttendance(@Body attendanceRequest: AttendanceRequest): Single<ApiResponse<AttendanceResponse>>
+    suspend fun getAttendance(@Body attendanceRequest: AttendanceRequest): ApiResponse<AttendanceResponse>
 
     @POST("FrekwencjaStatystyki.mvc/Get")
-    fun getAttendanceStatistics(@Body attendanceSummaryRequest: AttendanceSummaryRequest): Single<ApiResponse<AttendanceSummaryResponse>>
+    suspend fun getAttendanceStatistics(@Body attendanceSummaryRequest: AttendanceSummaryRequest): ApiResponse<AttendanceSummaryResponse>
 
     @POST("FrekwencjaStatystykiPrzedmioty.mvc/Get")
-    fun getAttendanceSubjects(): Single<ApiResponse<List<Subject>>>
+    suspend fun getAttendanceSubjects(@Body body: Any = Any()): ApiResponse<List<Subject>>
+
+    @POST("EwidencjaObecnosci.mvc/Get")
+    suspend fun getAttendanceRecords(@Body attendanceRecordsRequest: AttendanceRecordsRequest): ApiResponse<List<AttendanceRecordDay>>
 
     @POST("Usprawiedliwienia.mvc/Post")
-    fun excuseForAbsence(
+    suspend fun excuseForAbsence(
         @Header("X-V-RequestVerificationToken") token: String,
         @Header("X-V-AppGuid") appGuid: String,
         @Header("X-V-AppVersion") appVersion: String,
-        @Body attendanceExcuseRequest: AttendanceExcuseRequest
-    ): Single<ApiResponse<Nothing>>
+        @Body attendanceExcuseRequest: AttendanceExcuseRequest,
+    ): ApiResponse<ApiResponse<String?>>
 
     @POST("EgzaminyZewnetrzne.mvc/Get")
-    fun getExternalExaminations()
+    suspend fun getExternalExaminations()
 
     @POST("Sprawdziany.mvc/Get")
-    fun getExams(@Body examRequest: ExamRequest): Single<ApiResponse<List<ExamResponse>>>
+    suspend fun getExams(@Body examRequest: ExamRequest): ApiResponse<List<ExamResponse>>
 
-    @POST("ZadaniaDomowe.mvc/Get")
-    fun getHomework(@Body homeworkRequest: ExamRequest): Single<ApiResponse<List<HomeworkResponse>>>
+    @POST("Homework.mvc/Get")
+    suspend fun getHomework(@Body homeworkRequest: HomeworkRequest): ApiResponse<List<HomeworkDay>>
 
     @POST("PlanZajec.mvc/Get")
-    fun getTimetable(@Body timetableRequest: TimetableRequest): Single<ApiResponse<TimetableResponse>>
+    suspend fun getTimetable(@Body timetableRequest: TimetableRequest): ApiResponse<TimetableResponse>
 
     @POST("LekcjeZrealizowane.mvc/GetPrzedmioty")
-    fun getRealizedSubjects()
+    suspend fun getRealizedSubjects(@Body body: Any = Any())
 
     @POST("LekcjeZrealizowane.mvc/GetZrealizowane")
-    fun getCompletedLessons(@Body completedLessonsRequest: CompletedLessonsRequest): Single<String>
+    suspend fun getCompletedLessons(@Body completedLessonsRequest: CompletedLessonsRequest): ApiResponse<Map<String, List<CompletedLesson>>>
 
     @POST("UwagiIOsiagniecia.mvc/Get")
-    fun getNotes(): Single<ApiResponse<NotesResponse>>
+    suspend fun getNotes(@Body body: Any = Any()): ApiResponse<NotesResponse>
+
+    @POST("Zebrania.mvc/Get")
+    suspend fun getConferences(): ApiResponse<List<Conference>>
 
     @POST("ZarejestrowaneUrzadzenia.mvc/Get")
-    fun getRegisteredDevices(): Single<ApiResponse<List<Device>>>
+    suspend fun getRegisteredDevices(@Body body: Any = Any()): ApiResponse<List<Device>>
 
     @POST("RejestracjaUrzadzeniaToken.mvc/Get")
-    fun getToken(): Single<ApiResponse<TokenResponse>>
+    suspend fun getToken(@Body body: Any = Any()): ApiResponse<TokenResponse>
 
     @POST("ZarejestrowaneUrzadzenia.mvc/Delete")
-    fun unregisterDevice(
+    suspend fun unregisterDevice(
         @Header("X-V-RequestVerificationToken") token: String,
         @Header("X-V-AppGuid") appGuid: String,
         @Header("X-V-AppVersion") appVersion: String,
-        @Body unregisterDeviceRequest: UnregisterDeviceRequest
-    ): Single<ApiResponse<Nothing>>
+        @Body unregisterDeviceRequest: UnregisterDeviceRequest,
+    ): ApiResponse<Any>
 
     @POST("SzkolaINauczyciele.mvc/Get")
-    fun getSchoolAndTeachers(): Single<ApiResponse<SchoolAndTeachersResponse>>
+    suspend fun getSchoolAndTeachers(@Body body: Any = Any()): ApiResponse<SchoolAndTeachersResponse>
 
     @POST("Uczen.mvc/Get")
-    fun getStudentInfo()
+    suspend fun getStudentInfo(): ApiResponse<StudentInfo>
+
+    @POST("UczenZdjecie.mvc/Get")
+    suspend fun getStudentPhoto(): ApiResponse<StudentPhoto>
 }

@@ -1,69 +1,104 @@
 package io.github.wulkanowy.sdk.scrapper.service
 
-import io.github.wulkanowy.sdk.scrapper.ApiResponse
-import io.github.wulkanowy.sdk.scrapper.messages.DeleteMessageRequest
-import io.github.wulkanowy.sdk.scrapper.messages.Message
+import io.github.wulkanowy.sdk.scrapper.messages.Mailbox
+import io.github.wulkanowy.sdk.scrapper.messages.MessageDetails
+import io.github.wulkanowy.sdk.scrapper.messages.MessageMeta
+import io.github.wulkanowy.sdk.scrapper.messages.MessageReplayDetails
 import io.github.wulkanowy.sdk.scrapper.messages.Recipient
-import io.github.wulkanowy.sdk.scrapper.messages.ReportingUnit
 import io.github.wulkanowy.sdk.scrapper.messages.SendMessageRequest
-import io.github.wulkanowy.sdk.scrapper.messages.SentMessage
-import io.reactivex.Single
+import retrofit2.Response
 import retrofit2.http.Body
-import retrofit2.http.Field
-import retrofit2.http.FormUrlEncoded
 import retrofit2.http.GET
 import retrofit2.http.Header
 import retrofit2.http.POST
+import retrofit2.http.PUT
 import retrofit2.http.Query
 
 interface MessagesService {
 
     @GET(".")
-    fun getStart(): Single<String>
+    suspend fun getStart(): String
 
-    @GET("NowaWiadomosc.mvc/GetJednostkiUzytkownika")
-    fun getUserReportingUnits(): Single<ApiResponse<List<ReportingUnit>>>
+    @GET("api/Skrzynki")
+    suspend fun getMailboxes(): List<Mailbox>
 
-    @GET("Adresaci.mvc/GetAdresaci")
-    fun getRecipients(@Query("IdJednostkaSprawozdawcza") reportingUnitId: Int, @Query("Rola") role: Int): Single<ApiResponse<List<Recipient>>>
+    @GET("api/Pracownicy")
+    suspend fun getRecipients(@Query("globalKeySkrzynka") mailboxKey: String): List<Recipient>
 
-    @GET("Wiadomosc.mvc/GetWiadomosciOdebrane")
-    fun getReceived(@Query("dataOd") dateStart: String, @Query("dataDo") dateEnd: String): Single<ApiResponse<List<Message>>>
+    @GET("api/Odebrane")
+    suspend fun getReceived(
+        @Query("idLastWiadomosc") lastMessageKey: Int = 0,
+        @Query("pageSize") pageSize: Int = 50,
+    ): List<MessageMeta>
 
-    @GET("Wiadomosc.mvc/GetWiadomosciWyslane")
-    fun getSent(@Query("dataOd") dateStart: String, @Query("dataDo") dateEnd: String): Single<ApiResponse<List<Message>>>
+    @GET("api/OdebraneSkrzynka")
+    suspend fun getReceivedMailbox(
+        @Query("globalKeySkrzynka") mailboxKey: String,
+        @Query("idLastWiadomosc") lastMessageKey: Int = 0,
+        @Query("pageSize") pageSize: Int = 50,
+    ): List<MessageMeta>
 
-    @GET("Wiadomosc.mvc/GetWiadomosciUsuniete")
-    fun getDeleted(@Query("dataOd") dateStart: String, @Query("dataDo") dateEnd: String): Single<ApiResponse<List<Message>>>
+    @GET("api/Wyslane")
+    suspend fun getSent(
+        @Query("idLastWiadomosc") lastMessageKey: Int = 0,
+        @Query("pageSize") pageSize: Int = 50,
+    ): List<MessageMeta>
 
-    @GET("Wiadomosc.mvc/GetAdresaciWiadomosci")
-    fun getMessageRecipients(@Query("idWiadomosci") messageId: Int): Single<ApiResponse<List<Recipient>>>
+    @GET("api/WyslaneSkrzynka")
+    suspend fun getSentMailbox(
+        @Query("globalKeySkrzynka") mailboxKey: String,
+        @Query("idLastWiadomosc") lastMessageKey: Int = 0,
+        @Query("pageSize") pageSize: Int = 50,
+    ): List<MessageMeta>
 
-    @GET("Wiadomosc.mvc/GetRoleUzytkownika")
-    fun getMessageSender(@Query("idLogin") loginId: Int, @Query("idWiadomosci") messageId: Int): Single<ApiResponse<List<Recipient>>>
+    @GET("api/Usuniete")
+    suspend fun getDeleted(
+        @Query("idLastWiadomosc") lastMessageKey: Int = 0,
+        @Query("pageSize") pageSize: Int = 50,
+    ): List<MessageMeta>
 
-    @POST("Wiadomosc.mvc/GetTrescWiadomosci")
-    @FormUrlEncoded
-    fun getMessage(
-        @Field("idWiadomosc") messageId: Int,
-        @Field("Folder") folderId: Int,
-        @Field("Nieprzeczytana") read: Boolean,
-        @Field("idWiadomoscAdresat") id: Int?
-    ): Single<ApiResponse<Message>>
+    @GET("api/UsunieteSkrzynka")
+    suspend fun getDeletedMailbox(
+        @Query("globalKeySkrzynka") mailboxKey: String,
+        @Query("idLastWiadomosc") lastMessageKey: Int = 0,
+        @Query("pageSize") pageSize: Int = 50,
+    ): List<MessageMeta>
 
-    @POST("NowaWiadomosc.mvc/InsertWiadomosc")
-    fun sendMessage(
-        @Body sendMessageRequest: SendMessageRequest,
+    @GET("api/WiadomoscSzczegoly")
+    suspend fun getMessageDetails(@Query("apiGlobalKey") globalKey: String): MessageDetails
+
+    @PUT("api/WiadomoscSzczegoly")
+    suspend fun markMessageAsRead(
         @Header("X-V-RequestVerificationToken") token: String,
         @Header("X-V-AppGuid") appGuid: String,
-        @Header("X-V-AppVersion") appVersion: String
-    ): Single<ApiResponse<SentMessage>>
+        @Header("X-V-AppVersion") appVersion: String,
+        @Body body: Map<String, String>,
+    )
 
-    @POST("Wiadomosc.mvc/UsunWiadomosc")
-    fun deleteMessage(
-        @Body deleteMessageRequests: List<DeleteMessageRequest>,
+    @GET("api/WiadomoscOdpowiedzPrzekaz")
+    suspend fun getMessageReplayDetails(@Query("apiGlobalKey") globalKey: String): MessageReplayDetails
+
+    @POST("api/WiadomoscNowa")
+    suspend fun sendMessage(
         @Header("X-V-RequestVerificationToken") token: String,
         @Header("X-V-AppGuid") appGuid: String,
-        @Header("X-V-AppVersion") appVersion: String
-    ): Single<ApiResponse<Nothing>>
+        @Header("X-V-AppVersion") appVersion: String,
+        @Body body: SendMessageRequest,
+    ): Response<Unit>
+
+    @POST("api/MoveTrash")
+    suspend fun moveMessageToTrash(
+        @Header("X-V-RequestVerificationToken") token: String,
+        @Header("X-V-AppGuid") appGuid: String,
+        @Header("X-V-AppVersion") appVersion: String,
+        @Body body: List<String>,
+    ): Response<Unit>
+
+    @POST("api/Delete")
+    suspend fun deleteMessage(
+        @Header("X-V-RequestVerificationToken") token: String,
+        @Header("X-V-AppGuid") appGuid: String,
+        @Header("X-V-AppVersion") appVersion: String,
+        @Body body: List<String>,
+    ): Response<Unit>
 }

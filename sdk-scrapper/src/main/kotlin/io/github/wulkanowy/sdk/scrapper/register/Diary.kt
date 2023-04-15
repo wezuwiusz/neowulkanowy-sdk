@@ -1,76 +1,156 @@
 package io.github.wulkanowy.sdk.scrapper.register
 
-import com.google.gson.annotations.SerializedName
-import java.util.Date
+import io.github.wulkanowy.sdk.scrapper.adapter.CustomDateAdapter
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
+import java.time.LocalDateTime
 
+@Serializable
 data class Diary(
 
-    @SerializedName("Id")
+    @SerialName("Id")
     val id: Int,
 
-    @SerializedName("IdUczen")
+    @SerialName("IdUczen")
     val studentId: Int,
 
-    @SerializedName("UczenImie")
+    @SerialName("UczenImie")
     val studentName: String,
 
-    @SerializedName("UczenImie2")
-    val studentSecondName: String,
+    @SerialName("UczenImie2")
+    val studentSecondName: String?,
 
-    @SerializedName("UczenNazwisko")
+    @SerialName("UczenNazwisko")
     val studentSurname: String,
 
-    @SerializedName("IsDziennik")
+    @SerialName("UczenPseudonim")
+    val studentNick: String?,
+
+    @SerialName("IsDziennik")
     val isDiary: Boolean,
 
-    @SerializedName("IdDziennik")
+    @SerialName("IdDziennik")
     val diaryId: Int,
 
-    @SerializedName("IdPrzedszkoleDziennik")
+    @SerialName("IdPrzedszkoleDziennik")
     val kindergartenDiaryId: Int,
 
-    @SerializedName("Poziom")
+    @SerialName("IdWychowankowieDziennik")
+    val fosterDiaryId: Int?,
+
+    @SerialName("Poziom")
     val level: Int,
 
-    @SerializedName("Symbol")
-    val symbol: String,
+    @SerialName("Symbol")
+    val symbol: String?,
 
-    @SerializedName("Nazwa")
+    @SerialName("Nazwa")
     val name: String?,
 
-    @SerializedName("DziennikRokSzkolny")
+    @SerialName("DziennikRokSzkolny")
     val year: Int,
 
-    @SerializedName("Okresy")
+    @SerialName("Okresy")
     val semesters: List<Semester>? = emptyList(),
 
-    @SerializedName("UczenPelnaNazwa")
-    val fullName: String
+    // @SerialName("UczenOddzialOkresy")
+    // val classSemesters: List<Any>? = emptyList(),
+
+    @Serializable(with = CustomDateAdapter::class)
+    @SerialName("DziennikDataOd")
+    val start: LocalDateTime,
+
+    @Serializable(with = CustomDateAdapter::class)
+    @SerialName("DziennikDataDo")
+    val end: LocalDateTime,
+
+    @SerialName("IdJednostkaSkladowa")
+    val componentUnitId: Int?,
+
+    @SerialName("IdSioTyp")
+    val sioTypeId: Int?,
+
+    @SerialName("IsDorosli")
+    val isAdults: Boolean?,
+
+    @SerialName("IsPolicealna")
+    val isPostSecondary: Boolean?,
+
+    @SerialName("Is13")
+    val is13: Boolean?,
+
+    @SerialName("IsArtystyczna")
+    val isArtistic: Boolean?,
+
+    @SerialName("IsArtystyczna13")
+    val isArtistic13: Boolean?,
+
+    @SerialName("IsSpecjalny")
+    val isSpecial: Boolean?,
+
+    @SerialName("IsPrzedszkola")
+    val isKindergarten: Boolean?,
+
+    @SerialName("IsWychowankowie")
+    val isFoster: Boolean?,
+
+    @SerialName("IsArchiwalny")
+    val isArchived: Boolean?,
+
+    @SerialName("IsOplaty")
+    val isCharges: Boolean?,
+
+    @SerialName("IsPlatnosci")
+    val isPayments: Boolean?,
+
+    @SerialName("IsPayButtonOn")
+    val isPayButtonOn: Boolean?,
+
+    @SerialName("CanMergeAccounts")
+    val canMergeAccounts: Boolean?,
+
+    @SerialName("UczenPelnaNazwa")
+    val fullName: String,
+
+    @SerialName("O365PassType")
+    val o365PassType: Int?,
+
+    @SerialName("IsAdult")
+    val isAdult: Boolean?,
+
+    @SerialName("IsAuthorized")
+    val isAuthorized: Boolean?,
+
+    @SerialName("Obywatelstwo")
+    val citizenship: Int?,
 ) {
+    @Serializable
     data class Semester(
 
-        @SerializedName("NumerOkresu")
+        @SerialName("NumerOkresu")
         val number: Int,
 
-        @SerializedName("Poziom")
+        @SerialName("Poziom")
         val level: Int,
 
-        @SerializedName("DataOd")
-        val start: Date,
+        @SerialName("DataOd")
+        @Serializable(with = CustomDateAdapter::class)
+        val start: LocalDateTime,
 
-        @SerializedName("DataDo")
-        val end: Date,
+        @SerialName("DataDo")
+        @Serializable(with = CustomDateAdapter::class)
+        val end: LocalDateTime,
 
-        @SerializedName("IdOddzial")
+        @SerialName("IdOddzial")
         val classId: Int,
 
-        @SerializedName("IdJednostkaSprawozdawcza")
+        @SerialName("IdJednostkaSprawozdawcza")
         val unitId: Int,
 
-        @SerializedName("IsLastOkres")
+        @SerialName("IsLastOkres")
         val isLast: Boolean,
 
-        @SerializedName("Id")
-        val id: Int
+        @SerialName("Id")
+        val id: Int,
     )
 }

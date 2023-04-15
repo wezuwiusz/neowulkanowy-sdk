@@ -1,29 +1,83 @@
 package io.github.wulkanowy.sdk
 
-import io.github.wulkanowy.sdk.exception.FeatureNotAvailableException
-import io.github.wulkanowy.sdk.exception.ScrapperExceptionTransformer
-import io.github.wulkanowy.sdk.exception.VulcanException
 import io.github.wulkanowy.sdk.hebe.Hebe
-import io.github.wulkanowy.sdk.mapper.*
-import io.github.wulkanowy.sdk.mobile.Mobile
-import io.github.wulkanowy.sdk.pojo.*
+import io.github.wulkanowy.sdk.mapper.mapAttendance
+import io.github.wulkanowy.sdk.mapper.mapAttendanceSummary
+import io.github.wulkanowy.sdk.mapper.mapCompletedLessons
+import io.github.wulkanowy.sdk.mapper.mapConferences
+import io.github.wulkanowy.sdk.mapper.mapDevices
+import io.github.wulkanowy.sdk.mapper.mapDirectorInformation
+import io.github.wulkanowy.sdk.mapper.mapExams
+import io.github.wulkanowy.sdk.mapper.mapGradePointsStatistics
+import io.github.wulkanowy.sdk.mapper.mapGradeStatistics
+import io.github.wulkanowy.sdk.mapper.mapGrades
+import io.github.wulkanowy.sdk.mapper.mapGradesSemesterStatistics
+import io.github.wulkanowy.sdk.mapper.mapHebeStudents
+import io.github.wulkanowy.sdk.mapper.mapHomework
+import io.github.wulkanowy.sdk.mapper.mapLuckyNumbers
+import io.github.wulkanowy.sdk.mapper.mapMailboxes
+import io.github.wulkanowy.sdk.mapper.mapMessages
+import io.github.wulkanowy.sdk.mapper.mapNotes
+import io.github.wulkanowy.sdk.mapper.mapPhoto
+import io.github.wulkanowy.sdk.mapper.mapRecipients
+import io.github.wulkanowy.sdk.mapper.mapSchool
+import io.github.wulkanowy.sdk.mapper.mapScrapperMessage
+import io.github.wulkanowy.sdk.mapper.mapSemesters
+import io.github.wulkanowy.sdk.mapper.mapStudent
+import io.github.wulkanowy.sdk.mapper.mapStudents
+import io.github.wulkanowy.sdk.mapper.mapSubjects
+import io.github.wulkanowy.sdk.mapper.mapTeachers
+import io.github.wulkanowy.sdk.mapper.mapTimetableFull
+import io.github.wulkanowy.sdk.mapper.mapToScrapperAbsent
+import io.github.wulkanowy.sdk.mapper.mapToUnits
+import io.github.wulkanowy.sdk.mapper.mapToken
+import io.github.wulkanowy.sdk.pojo.Absent
+import io.github.wulkanowy.sdk.pojo.Attendance
+import io.github.wulkanowy.sdk.pojo.AttendanceSummary
+import io.github.wulkanowy.sdk.pojo.CompletedLesson
+import io.github.wulkanowy.sdk.pojo.Conference
+import io.github.wulkanowy.sdk.pojo.Device
+import io.github.wulkanowy.sdk.pojo.DirectorInformation
+import io.github.wulkanowy.sdk.pojo.Exam
+import io.github.wulkanowy.sdk.pojo.Folder
+import io.github.wulkanowy.sdk.pojo.GovernmentUnit
+import io.github.wulkanowy.sdk.pojo.GradePointsStatistics
+import io.github.wulkanowy.sdk.pojo.GradeStatisticsSemester
+import io.github.wulkanowy.sdk.pojo.GradeStatisticsSubject
+import io.github.wulkanowy.sdk.pojo.Grades
+import io.github.wulkanowy.sdk.pojo.Homework
+import io.github.wulkanowy.sdk.pojo.LuckyNumber
+import io.github.wulkanowy.sdk.pojo.Mailbox
+import io.github.wulkanowy.sdk.pojo.Message
+import io.github.wulkanowy.sdk.pojo.MessageDetails
+import io.github.wulkanowy.sdk.pojo.MessageReplayDetails
+import io.github.wulkanowy.sdk.pojo.Note
+import io.github.wulkanowy.sdk.pojo.Recipient
+import io.github.wulkanowy.sdk.pojo.School
+import io.github.wulkanowy.sdk.pojo.Semester
+import io.github.wulkanowy.sdk.pojo.Student
+import io.github.wulkanowy.sdk.pojo.StudentInfo
+import io.github.wulkanowy.sdk.pojo.StudentPhoto
+import io.github.wulkanowy.sdk.pojo.Subject
+import io.github.wulkanowy.sdk.pojo.Teacher
+import io.github.wulkanowy.sdk.pojo.Timetable
+import io.github.wulkanowy.sdk.pojo.Token
 import io.github.wulkanowy.sdk.scrapper.Scrapper
-import io.reactivex.Completable
-import io.reactivex.Maybe
-import io.reactivex.Observable
-import io.reactivex.Single
+import io.github.wulkanowy.sdk.scrapper.register.RegisterUser
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import okhttp3.Interceptor
 import okhttp3.logging.HttpLoggingInterceptor
-import org.threeten.bp.LocalDate
-import org.threeten.bp.LocalDateTime
+import org.slf4j.LoggerFactory
+import java.time.LocalDate
+import java.time.ZoneId
 
 class Sdk {
 
     enum class Mode {
-        API,
         HEBE,
         SCRAPPER,
-        HYBRID
+        HYBRID,
     }
 
     enum class ScrapperLoginType {
@@ -33,33 +87,33 @@ class Sdk {
         ADFSCards,
         ADFSLight,
         ADFSLightScoped,
-        ADFSLightCufs
+        ADFSLightCufs,
     }
-
-    private val mobile = Mobile()
 
     private val scrapper = Scrapper()
 
     private val hebe = Hebe()
+
+    private val registerTimeZone = ZoneId.of("Europe/Warsaw")
 
     var mode = Mode.HYBRID
 
     var mobileBaseUrl = ""
         set(value) {
             field = value
-            mobile.baseUrl = value
+            hebe.baseUrl = value
         }
 
     var certKey = ""
         set(value) {
             field = value
-            mobile.certKey = value
+            // hebe.certKey = value
         }
 
     var privateKey = ""
         set(value) {
             field = value
-            mobile.privateKey = privateKey
+            hebe.privateKey = privateKey
         }
 
     var scrapperBaseUrl = ""
@@ -84,33 +138,33 @@ class Sdk {
         set(value) {
             field = value
             scrapper.schoolSymbol = value
-            mobile.schoolSymbol = value
+            hebe.schoolSymbol = value
         }
 
     var classId = 0
         set(value) {
             field = value
             scrapper.classId = value
-            mobile.classId = value
+            // hebe.classId = value
         }
 
     var studentId = 0
         set(value) {
             field = value
             scrapper.studentId = value
-            mobile.studentId = value
-        }
-
-    var loginId = 0
-        set(value) {
-            field = value
-            mobile.loginId = value
+            // hebe.studentId = value
         }
 
     var diaryId = 0
         set(value) {
             field = value
             scrapper.diaryId = value
+        }
+
+    var kindergartenDiaryId = 0
+        set(value) {
+            field = value
+            scrapper.kindergartenDiaryId = value
         }
 
     var schoolYear = 0
@@ -135,469 +189,418 @@ class Sdk {
         set(value) {
             field = value
             scrapper.logLevel = value
-            mobile.logLevel = value
         }
 
-    var androidVersion = "8.1.0"
+    var userAgentTemplate = ""
+        set(value) {
+            field = value
+            scrapper.userAgentTemplate = value
+        }
+
+    var androidVersion = "7.0"
         set(value) {
             field = value
             scrapper.androidVersion = value
         }
 
-    var buildTag = "SM-J500H Build/LMY48B"
+    var buildTag = "SM-G950F Build/NRD90M"
         set(value) {
             field = value
             scrapper.buildTag = value
         }
 
+    var emptyCookieJarInterceptor: Boolean = false
+        set(value) {
+            field = value
+            scrapper.emptyCookieJarInterceptor = value
+        }
+
+    companion object {
+        @JvmStatic
+        private val logger = LoggerFactory.getLogger(this::class.java)
+    }
+
     private val interceptors: MutableList<Pair<Interceptor, Boolean>> = mutableListOf()
 
     fun setSimpleHttpLogger(logger: (String) -> Unit) {
         logLevel = HttpLoggingInterceptor.Level.NONE
-        addInterceptor(HttpLoggingInterceptor(HttpLoggingInterceptor.Logger {
+        val interceptor = HttpLoggingInterceptor {
             logger(it)
-        }).setLevel(HttpLoggingInterceptor.Level.BASIC))
+        }.setLevel(HttpLoggingInterceptor.Level.BASIC)
+        addInterceptor(interceptor)
     }
 
     fun addInterceptor(interceptor: Interceptor, network: Boolean = false) {
         scrapper.addInterceptor(interceptor, network)
-        mobile.setInterceptor(interceptor, network)
+        // hebe.setInterceptor(interceptor, network)
         interceptors.add(interceptor to network)
     }
 
-    fun switchDiary(diaryId: Int, schoolYear: Int): Sdk {
+    fun switchDiary(diaryId: Int, kindergartenDiaryId: Int, schoolYear: Int): Sdk {
         return also {
             it.diaryId = diaryId
             it.schoolYear = schoolYear
         }
     }
 
-    fun getPasswordResetCaptchaCode(registerBaseUrl: String, symbol: String) = scrapper.getPasswordResetCaptcha(registerBaseUrl, symbol)
-
-    fun sendPasswordResetRequest(registerBaseUrl: String, symbol: String, email: String, captchaCode: String): Single<String> {
-        return scrapper.sendPasswordResetRequest(registerBaseUrl, symbol, email, captchaCode)
+    suspend fun getPasswordResetCaptchaCode(registerBaseUrl: String, symbol: String) = withContext(Dispatchers.IO) {
+        scrapper.getPasswordResetCaptcha(registerBaseUrl, symbol)
     }
 
-    fun getStudentsFromMobileApi(token: String, pin: String, symbol: String, apiKey: String = ""): Single<List<Student>> {
-        return mobile.getCertificate(token, pin, symbol, buildTag, androidVersion)
-            .flatMap { mobile.getStudents(it, apiKey) }
-            .map { it.mapStudents(symbol) }
+    suspend fun sendPasswordResetRequest(registerBaseUrl: String, symbol: String, email: String, captchaCode: String) = withContext(Dispatchers.IO) {
+        scrapper.sendPasswordResetRequest(registerBaseUrl, symbol, email, captchaCode)
     }
 
-    fun getStudentsFromHebe(token: String, pin: String, symbol: String): Single<List<Student>> {
-        val privateKey = "" // TODO
-        val certificateId = "" // TODO
-
-        return hebe.register(privateKey, certificateId, token, pin, symbol)
-            .flatMap { hebe.getStudents(it.envelope!!.restUrl, symbol) }
-            .map { it.mapHebeStudents(certificateId, privateKey) }
-    }
-
-    fun getStudentsFromScrapper(email: String, password: String, scrapperBaseUrl: String, symbol: String = "Default"): Single<List<Student>> {
-        return scrapper.let {
+    suspend fun getStudentsFromScrapper(email: String, password: String, scrapperBaseUrl: String, symbol: String = "Default"): List<Student> = withContext(Dispatchers.IO) {
+        scrapper.let {
             it.baseUrl = scrapperBaseUrl
             it.email = email
             it.password = password
             it.symbol = symbol
-            it.getStudents().compose(ScrapperExceptionTransformer()).map { students -> students.mapStudents() }
+            it.getStudents().mapStudents()
         }
     }
 
-    fun getStudentsHybrid(email: String, password: String, scrapperBaseUrl: String, startSymbol: String = "Default", apiKey: String = ""): Single<List<Student>> {
-        return getStudentsFromScrapper(email, password, scrapperBaseUrl, startSymbol)
-            .compose(ScrapperExceptionTransformer())
-            .map { students -> students.distinctBy { it.symbol } }
-            .flatMapObservable { Observable.fromIterable(it) }
-            .flatMapSingle { scrapperStudent ->
-                scrapper.let {
-                    it.symbol = scrapperStudent.symbol
-                    it.schoolSymbol = scrapperStudent.schoolSymbol
-                    it.studentId = scrapperStudent.studentId
-                    it.diaryId = -1
-                    it.classId = scrapperStudent.classId
-                    it.loginType = Scrapper.LoginType.valueOf(scrapperStudent.loginType.name)
-                }
-                scrapper.getToken().compose(ScrapperExceptionTransformer())
-                    .flatMap { getStudentsFromMobileApi(it.token, it.pin, it.symbol, apiKey) }
-                    .map { apiStudents ->
-                        apiStudents.map { student ->
-                            student.copy(
-                                loginMode = Mode.HYBRID,
-                                loginType = scrapperStudent.loginType,
-                                scrapperBaseUrl = scrapperStudent.scrapperBaseUrl
-                            )
-                        }
-                    }
-            }.toList().map { it.flatten() }
+    suspend fun getStudentsFromHebe(token: String, pin: String, symbol: String): List<Student> {
+        val privateKey = "" // TODO
+        val certificateId = "" // TODO
+
+        val students = hebe.register(privateKey, certificateId, token, pin, symbol)
+        return hebe.getStudents(students.envelope!!.restUrl, symbol)
+            .mapHebeStudents(certificateId, privateKey)
     }
 
-    fun getSemesters(now: LocalDate = LocalDate.now()): Single<List<Semester>> {
-        return when (mode) {
-            Mode.HYBRID, Mode.SCRAPPER -> scrapper.getSemesters().compose(ScrapperExceptionTransformer()).map { it.mapSemesters() }
-            Mode.API -> mobile.getStudents().map { it.mapSemesters(studentId, now) }
-            Mode.HEBE -> TODO()
+    suspend fun getUserSubjectsFromScrapper(email: String, password: String, scrapperBaseUrl: String, symbol: String = "Default"): RegisterUser = withContext(Dispatchers.IO) {
+        scrapper.let {
+            it.baseUrl = scrapperBaseUrl
+            it.email = email
+            it.password = password
+            it.symbol = symbol
+            it.getUserSubjects()
         }
     }
 
-    fun getAttendance(startDate: LocalDate, endDate: LocalDate, semesterId: Int): Single<List<Attendance>> {
-        return when (mode) {
-            Mode.SCRAPPER -> scrapper.getAttendance(startDate, endDate).compose(ScrapperExceptionTransformer()).map { it.mapAttendance() }
-            Mode.HYBRID, Mode.API -> mobile.getDictionaries().flatMap { dict ->
-                mobile.getAttendance(startDate, endDate, semesterId).map { it.mapAttendance(dict) }
-            }
-            Mode.HEBE -> TODO()
+    suspend fun getSemesters(): List<Semester> = withContext(Dispatchers.IO) {
+        when (mode) {
+            Mode.HYBRID, Mode.SCRAPPER -> scrapper.getSemesters().mapSemesters()
+            Mode.HEBE -> throw NotImplementedError("Not available in HEBE mode")
         }
     }
 
-    fun getAttendanceSummary(subjectId: Int? = -1): Single<List<AttendanceSummary>> {
-        return when (mode) {
-            Mode.HYBRID, Mode.SCRAPPER -> scrapper.getAttendanceSummary(subjectId).compose(ScrapperExceptionTransformer()).map { it.mapAttendanceSummary() }
-            Mode.API -> throw FeatureNotAvailableException("Attendance summary is not available in API mode")
-            Mode.HEBE -> TODO()
+    suspend fun getAttendance(startDate: LocalDate, endDate: LocalDate): List<Attendance> = withContext(Dispatchers.IO) {
+        when (mode) {
+            Mode.HYBRID, Mode.SCRAPPER -> scrapper.getAttendance(startDate, endDate).mapAttendance()
+            Mode.HEBE -> throw NotImplementedError("Not available in HEBE mode")
         }
     }
 
-    fun excuseForAbsence(absents: List<Absent>, content: String? = null): Single<Boolean> {
-        return when (mode) {
-            Mode.HYBRID, Mode.SCRAPPER -> scrapper.excuseForAbsence(absents.mapToScrapperAbsent(), content).compose(ScrapperExceptionTransformer())
-            Mode.API -> throw FeatureNotAvailableException("Absence excusing is not available in API mode")
-            Mode.HEBE -> TODO()
+    suspend fun getAttendanceSummary(subjectId: Int? = -1): List<AttendanceSummary> = withContext(Dispatchers.IO) {
+        when (mode) {
+            Mode.HYBRID, Mode.SCRAPPER -> scrapper.getAttendanceSummary(subjectId).mapAttendanceSummary()
+            Mode.HEBE -> throw NotImplementedError("Not available in HEBE mode")
         }
     }
 
-    fun getSubjects(): Single<List<Subject>> {
-        return when (mode) {
-            Mode.SCRAPPER -> scrapper.getSubjects().compose(ScrapperExceptionTransformer()).map { it.mapSubjects() }
-            Mode.HYBRID, Mode.API -> mobile.getDictionaries().map { it.subjects }.map { it.mapSubjects() }
-            Mode.HEBE -> TODO()
+    suspend fun excuseForAbsence(absents: List<Absent>, content: String? = null): Boolean = withContext(Dispatchers.IO) {
+        when (mode) {
+            Mode.HYBRID, Mode.SCRAPPER -> scrapper.excuseForAbsence(absents.mapToScrapperAbsent(), content)
+            Mode.HEBE -> throw NotImplementedError("Not available in HEBE mode")
         }
     }
 
-    fun getExams(start: LocalDate, end: LocalDate, semesterId: Int): Single<List<Exam>> {
-        return when (mode) {
-            Mode.SCRAPPER -> scrapper.getExams(start, end).compose(ScrapperExceptionTransformer()).map { it.mapExams() }
-            Mode.HYBRID, Mode.API -> mobile.getDictionaries().flatMap { dict ->
-                mobile.getExams(start, end, semesterId).map { it.mapExams(dict) }
-            }
-            Mode.HEBE -> TODO()
+    suspend fun getSubjects(): List<Subject> = withContext(Dispatchers.IO) {
+        when (mode) {
+            Mode.HYBRID, Mode.SCRAPPER -> scrapper.getSubjects().mapSubjects()
+            Mode.HEBE -> throw NotImplementedError("Not available in HEBE mode")
         }
     }
 
-    fun getGrades(semesterId: Int): Single<List<Grade>> {
-        return when (mode) {
-            Mode.SCRAPPER -> scrapper.getGrades(semesterId).compose(ScrapperExceptionTransformer()).map { grades -> grades.mapGrades() }
-            Mode.HYBRID, Mode.API -> mobile.getDictionaries().flatMap { dict ->
-                mobile.getGrades(semesterId).map { it.mapGrades(dict) }
-            }
-            Mode.HEBE -> TODO()
+    suspend fun getExams(start: LocalDate, end: LocalDate): List<Exam> = withContext(Dispatchers.IO) {
+        when (mode) {
+            Mode.HYBRID, Mode.SCRAPPER -> scrapper.getExams(start, end).mapExams()
+            Mode.HEBE -> throw NotImplementedError("Not available in HEBE mode")
         }
     }
 
-    fun getGradesSummary(semesterId: Int): Single<List<GradeSummary>> {
-        return when (mode) {
-            Mode.SCRAPPER -> scrapper.getGradesSummary(semesterId).compose(ScrapperExceptionTransformer()).map { it.mapGradesSummary() }
-            Mode.HYBRID, Mode.API -> mobile.getDictionaries().flatMap { dict ->
-                mobile.getGradesSummary(semesterId).map { it.mapGradesSummary(dict) }
-            }
-            Mode.HEBE -> TODO()
+    suspend fun getGrades(semesterId: Int): Grades = withContext(Dispatchers.IO) {
+        when (mode) {
+            Mode.HYBRID, Mode.SCRAPPER -> scrapper.getGrades(semesterId).mapGrades()
+            Mode.HEBE -> throw NotImplementedError("Not available in HEBE mode")
         }
     }
 
-    fun getGradesAnnualStatistics(semesterId: Int): Single<List<GradeStatistics>> {
-        return when (mode) {
-            Mode.HYBRID, Mode.SCRAPPER -> scrapper.getGradesAnnualStatistics(semesterId).compose(ScrapperExceptionTransformer()).map { it.mapGradeStatistics() }
-            Mode.API -> throw FeatureNotAvailableException("Class grades annual statistics is not available in API mode")
-            Mode.HEBE -> TODO()
+    suspend fun getGradesSemesterStatistics(semesterId: Int): List<GradeStatisticsSemester> = withContext(Dispatchers.IO) {
+        when (mode) {
+            Mode.HYBRID, Mode.SCRAPPER -> scrapper.getGradesSemesterStatistics(semesterId).mapGradesSemesterStatistics()
+            Mode.HEBE -> throw NotImplementedError("Not available in HEBE mode")
         }
     }
 
-    fun getGradesPartialStatistics(semesterId: Int): Single<List<GradeStatistics>> {
-        return when (mode) {
-            Mode.HYBRID, Mode.SCRAPPER -> scrapper.getGradesPartialStatistics(semesterId).compose(ScrapperExceptionTransformer()).map { it.mapGradeStatistics() }
-            Mode.API -> throw FeatureNotAvailableException("Class grades partial statistics is not available in API mode")
-            Mode.HEBE -> TODO()
+    suspend fun getGradesPartialStatistics(semesterId: Int): List<GradeStatisticsSubject> = withContext(Dispatchers.IO) {
+        when (mode) {
+            Mode.HYBRID, Mode.SCRAPPER -> scrapper.getGradesPartialStatistics(semesterId).mapGradeStatistics()
+            Mode.HEBE -> throw NotImplementedError("Not available in HEBE mode")
         }
     }
 
-    fun getGradesPointsStatistics(semesterId: Int): Single<List<GradePointsStatistics>> {
-        return when (mode) {
-            Mode.HYBRID, Mode.SCRAPPER -> scrapper.getGradesPointsStatistics(semesterId).compose(ScrapperExceptionTransformer()).map { it.mapGradePointsStatistics() }
-            Mode.API -> throw FeatureNotAvailableException("Class grades points statistics is not available in API mode")
-            Mode.HEBE -> TODO()
+    suspend fun getGradesPointsStatistics(semesterId: Int): List<GradePointsStatistics> = withContext(Dispatchers.IO) {
+        when (mode) {
+            Mode.HYBRID, Mode.SCRAPPER -> scrapper.getGradesPointsStatistics(semesterId).mapGradePointsStatistics()
+            Mode.HEBE -> throw NotImplementedError("Not available in HEBE mode")
         }
     }
 
-    fun getHomework(start: LocalDate, end: LocalDate, semesterId: Int = 0): Single<List<Homework>> {
-        return when (mode) {
-            Mode.SCRAPPER -> scrapper.getHomework(start, end).compose(ScrapperExceptionTransformer()).map { it.mapHomework() }
-            Mode.HYBRID, Mode.API -> mobile.getDictionaries().flatMap { dict ->
-                mobile.getHomework(start, end, semesterId).map { it.mapHomework(dict) }
-            }
-            Mode.HEBE -> TODO()
+    suspend fun getHomework(start: LocalDate, end: LocalDate): List<Homework> = withContext(Dispatchers.IO) {
+        when (mode) {
+            Mode.HYBRID, Mode.SCRAPPER -> scrapper.getHomework(start, end).mapHomework()
+            Mode.HEBE -> throw NotImplementedError("Not available in HEBE mode")
         }
     }
 
-    fun getNotes(semesterId: Int): Single<List<Note>> {
-        return when (mode) {
-            Mode.SCRAPPER -> scrapper.getNotes().compose(ScrapperExceptionTransformer()).map { it.mapNotes() }
-            Mode.HYBRID, Mode.API -> mobile.getDictionaries().flatMap { dict ->
-                mobile.getNotes(semesterId).map { it.mapNotes(dict) }
-            }
-            Mode.HEBE -> TODO()
+    suspend fun getNotes(): List<Note> = withContext(Dispatchers.IO) {
+        when (mode) {
+            Mode.HYBRID, Mode.SCRAPPER -> scrapper.getNotes().mapNotes()
+            Mode.HEBE -> throw NotImplementedError("Not available in HEBE mode")
         }
     }
 
-    fun getRegisteredDevices(): Single<List<Device>> {
-        return when (mode) {
-            Mode.HYBRID, Mode.SCRAPPER -> scrapper.getRegisteredDevices().compose(ScrapperExceptionTransformer()).map { it.mapDevices() }
-            Mode.API -> throw FeatureNotAvailableException("Devices management is not available in API mode")
-            Mode.HEBE -> TODO()
+    suspend fun getConferences(): List<Conference> = withContext(Dispatchers.IO) {
+        when (mode) {
+            Mode.HYBRID, Mode.SCRAPPER -> scrapper.getConferences().mapConferences(registerTimeZone)
+            Mode.HEBE -> throw NotImplementedError("Not available in HEBE mode")
         }
     }
 
-    fun getToken(): Single<Token> {
-        return when (mode) {
-            Mode.HYBRID, Mode.SCRAPPER -> scrapper.getToken().compose(ScrapperExceptionTransformer()).map { it.mapToken() }
-            Mode.API -> throw FeatureNotAvailableException("Devices management is not available in API mode")
-            Mode.HEBE -> TODO()
+    suspend fun getRegisteredDevices(): List<Device> = withContext(Dispatchers.IO) {
+        when (mode) {
+            Mode.HYBRID, Mode.SCRAPPER -> scrapper.getRegisteredDevices().mapDevices(registerTimeZone)
+            Mode.HEBE -> throw NotImplementedError("Not available in HEBE mode")
         }
     }
 
-    fun unregisterDevice(id: Int): Single<Boolean> {
-        return when (mode) {
-            Mode.HYBRID, Mode.SCRAPPER -> scrapper.unregisterDevice(id).compose(ScrapperExceptionTransformer())
-            Mode.API -> throw FeatureNotAvailableException("Devices management is not available in API mode")
-            Mode.HEBE -> TODO()
+    suspend fun getToken(): Token = withContext(Dispatchers.IO) {
+        when (mode) {
+            Mode.HYBRID, Mode.SCRAPPER -> scrapper.getToken().mapToken()
+            Mode.HEBE -> throw NotImplementedError("Not available in HEBE mode")
         }
     }
 
-    fun getTeachers(semesterId: Int): Single<List<Teacher>> {
-        return when (mode) {
-            Mode.SCRAPPER -> scrapper.getTeachers().compose(ScrapperExceptionTransformer()).map { it.mapTeachers() }
-            Mode.HYBRID, Mode.API -> mobile.getDictionaries().flatMap { dict ->
-                mobile.getTeachers(studentId, semesterId).map { it.mapTeachers(dict) }
-            }
-            Mode.HEBE -> TODO()
+    suspend fun unregisterDevice(id: Int): Boolean = withContext(Dispatchers.IO) {
+        when (mode) {
+            Mode.HYBRID, Mode.SCRAPPER -> scrapper.unregisterDevice(id)
+            Mode.HEBE -> throw NotImplementedError("Not available in HEBE mode")
         }
     }
 
-    fun getSchool(): Single<School> {
-        return when (mode) {
-            Mode.HYBRID, Mode.SCRAPPER -> scrapper.getSchool().compose(ScrapperExceptionTransformer()).map { it.mapSchool() }
-            Mode.API -> throw FeatureNotAvailableException("School info is not available in API mode")
-            Mode.HEBE -> TODO()
+    suspend fun getTeachers(): List<Teacher> = withContext(Dispatchers.IO) {
+        when (mode) {
+            Mode.HYBRID, Mode.SCRAPPER -> scrapper.getTeachers().mapTeachers()
+            Mode.HEBE -> throw NotImplementedError("Not available in HEBE mode")
         }
     }
 
-    fun getStudentInfo(): Single<StudentInfo> {
-        return when (mode) {
-            Mode.HYBRID, Mode.SCRAPPER -> scrapper.getStudentInfo().compose(ScrapperExceptionTransformer()).map { it.mapStudent() }
-            Mode.API -> throw FeatureNotAvailableException("Student info is not available in API mode")
-            Mode.HEBE -> TODO()
+    suspend fun getSchool(): School = withContext(Dispatchers.IO) {
+        when (mode) {
+            Mode.HYBRID, Mode.SCRAPPER -> scrapper.getSchool().mapSchool()
+            Mode.HEBE -> throw NotImplementedError("Not available in HEBE mode")
         }
     }
 
-    fun getReportingUnits(): Single<List<ReportingUnit>> {
-        return when (mode) {
-            Mode.HYBRID, Mode.SCRAPPER -> scrapper.getReportingUnits().compose(ScrapperExceptionTransformer()).map { it.mapReportingUnits() }
-            Mode.API -> mobile.getStudents().map { it.mapReportingUnits(studentId) }
-            Mode.HEBE -> TODO()
+    suspend fun getStudentInfo(): StudentInfo = withContext(Dispatchers.IO) {
+        when (mode) {
+            Mode.HYBRID, Mode.SCRAPPER -> scrapper.getStudentInfo().mapStudent()
+            Mode.HEBE -> throw NotImplementedError("Not available in HEBE mode")
         }
     }
 
-    fun getRecipients(unitId: Int, role: Int = 2): Single<List<Recipient>> {
-        return when (mode) {
-            Mode.HYBRID, Mode.SCRAPPER -> scrapper.getRecipients(unitId, role).compose(ScrapperExceptionTransformer()).map { it.mapRecipients() }
-            Mode.API -> mobile.getDictionaries().map { it.teachers }.map { it.mapRecipients(unitId) }
-            Mode.HEBE -> TODO()
+    suspend fun getStudentPhoto(): StudentPhoto = withContext(Dispatchers.IO) {
+        when (mode) {
+            Mode.HYBRID, Mode.SCRAPPER -> scrapper.getStudentPhoto().mapPhoto()
+            Mode.HEBE -> throw NotImplementedError("Not available in HEBE mode")
         }
     }
 
-    fun getMessages(folder: Folder, start: LocalDateTime, end: LocalDateTime): Single<List<Message>> {
-        return when (folder) {
-            Folder.RECEIVED -> getReceivedMessages(start, end)
-            Folder.SENT -> getSentMessages(start, end)
-            Folder.TRASHED -> getDeletedMessages(start, end)
+    suspend fun getMailboxes(): List<Mailbox> = withContext(Dispatchers.IO) {
+        when (mode) {
+            Mode.HYBRID, Mode.SCRAPPER -> scrapper.getMailboxes().mapMailboxes()
+            Mode.HEBE -> throw NotImplementedError("Not available in HEBE mode")
         }
     }
 
-    fun getReceivedMessages(start: LocalDateTime, end: LocalDateTime): Single<List<Message>> {
-        return when (mode) {
-            Mode.SCRAPPER -> scrapper.getReceivedMessages().compose(ScrapperExceptionTransformer()).map { it.mapMessages() } // TODO
-            Mode.HYBRID, Mode.API -> mobile.getMessages(start, end).map { it.mapMessages() }
-            Mode.HEBE -> TODO()
+    suspend fun getRecipients(mailboxKey: String): List<Recipient> = withContext(Dispatchers.IO) {
+        when (mode) {
+            Mode.HYBRID, Mode.SCRAPPER -> scrapper.getRecipients(mailboxKey).mapRecipients()
+            Mode.HEBE -> throw NotImplementedError("Not available in HEBE mode")
         }
     }
 
-    fun getSentMessages(start: LocalDateTime, end: LocalDateTime): Single<List<Message>> {
-        return when (mode) {
-            Mode.SCRAPPER -> scrapper.getSentMessages().compose(ScrapperExceptionTransformer()).map { it.mapMessages() }
-            Mode.HYBRID, Mode.API -> mobile.getMessagesSent(start, end).map { it.mapMessages() }
-            Mode.HEBE -> TODO()
+    suspend fun getMessages(folder: Folder, mailboxKey: String? = null): List<Message> = withContext(Dispatchers.IO) {
+        when (folder) {
+            Folder.RECEIVED -> getReceivedMessages(mailboxKey)
+            Folder.SENT -> getSentMessages(mailboxKey)
+            Folder.TRASHED -> getDeletedMessages(mailboxKey)
         }
     }
 
-    fun getDeletedMessages(start: LocalDateTime, end: LocalDateTime): Single<List<Message>> {
-        return when (mode) {
-            Mode.SCRAPPER -> scrapper.getDeletedMessages().compose(ScrapperExceptionTransformer()).map { it.mapMessages() }
-            Mode.HYBRID, Mode.API -> mobile.getMessagesDeleted(start, end).map { it.mapMessages() }
-            Mode.HEBE -> TODO()
+    suspend fun getReceivedMessages(mailboxKey: String? = null): List<Message> = withContext(Dispatchers.IO) {
+        when (mode) {
+            Mode.HYBRID, Mode.SCRAPPER -> scrapper.getReceivedMessages(mailboxKey).mapMessages(registerTimeZone, Folder.RECEIVED)
+            Mode.HEBE -> throw NotImplementedError("Not available in HEBE mode")
         }
     }
 
-    fun getMessageRecipients(messageId: Int, senderId: Int): Single<List<Recipient>> {
-        return when (mode) {
-            Mode.HYBRID, Mode.SCRAPPER -> scrapper.getMessageRecipients(messageId, senderId).compose(ScrapperExceptionTransformer()).map { it.mapRecipients() }
-            Mode.API -> TODO()
-            Mode.HEBE -> TODO()
+    suspend fun getSentMessages(mailboxKey: String? = null): List<Message> = withContext(Dispatchers.IO) {
+        when (mode) {
+            Mode.HYBRID, Mode.SCRAPPER -> scrapper.getSentMessages(mailboxKey).mapMessages(registerTimeZone, Folder.SENT)
+            Mode.HEBE -> throw NotImplementedError("Not available in HEBE mode")
         }
     }
 
-    fun getMessageContent(messageId: Int, folderId: Int, read: Boolean = false, id: Int? = null): Single<String> {
-        return when (mode) {
-            Mode.SCRAPPER -> scrapper.getMessageContent(messageId, folderId, read, id).compose(ScrapperExceptionTransformer())
-            Mode.HYBRID, Mode.API -> mobile.changeMessageStatus(messageId, when (folderId) {
-                1 -> "Odebrane"
-                2 -> "Wysłane"
-                else -> "Usunięte"
-            }, "Widoczna")
-            Mode.HEBE -> TODO()
+    suspend fun getDeletedMessages(mailboxKey: String? = null): List<Message> = withContext(Dispatchers.IO) {
+        when (mode) {
+            Mode.HYBRID, Mode.SCRAPPER -> scrapper.getDeletedMessages(mailboxKey).mapMessages(registerTimeZone, Folder.TRASHED)
+            Mode.HEBE -> throw NotImplementedError("Not available in HEBE mode")
         }
     }
 
-    fun sendMessage(subject: String, content: String, recipients: List<Recipient>): Single<SentMessage> {
-        return when (mode) {
-            Mode.HYBRID, Mode.SCRAPPER -> scrapper.sendMessage(subject, content, recipients.mapFromRecipientsToScraper())
-                .compose(ScrapperExceptionTransformer())
-                .map { it.mapSentMessage() }
-            Mode.API -> mobile.sendMessage(subject, content, recipients.mapFromRecipientsToMobile()).map { it.mapSentMessage(loginId) }
-            Mode.HEBE -> TODO()
+    suspend fun getMessageReplayDetails(messageKey: String): MessageReplayDetails = withContext(Dispatchers.IO) {
+        when (mode) {
+            Mode.HYBRID, Mode.SCRAPPER -> scrapper.getMessageReplayDetails(messageKey).mapScrapperMessage()
+            Mode.HEBE -> throw NotImplementedError("Not available in HEBE mode")
         }
     }
 
-    fun deleteMessages(messages: List<Pair<Int, Int>>): Single<Boolean> {
-        return when (mode) {
-            Mode.SCRAPPER -> scrapper.deleteMessages(messages).compose(ScrapperExceptionTransformer())
-            Mode.HYBRID, Mode.API -> Completable.mergeDelayError(messages.map { (messageId, folderId) ->
-                mobile.changeMessageStatus(messageId, when (folderId) {
-                    1 -> "Odebrane"
-                    2 -> "Wysłane"
-                    else -> "Usunięte"
-                }, "Usunieta").ignoreElement()
-            }).toSingleDefault(true)
-            Mode.HEBE -> TODO()
+    suspend fun getMessageDetails(messageKey: String, markAsRead: Boolean = true): MessageDetails = withContext(Dispatchers.IO) {
+        when (mode) {
+            Mode.HYBRID, Mode.SCRAPPER -> scrapper.getMessageDetails(messageKey, markAsRead).mapScrapperMessage()
+            Mode.HEBE -> throw NotImplementedError("Not available in HEBE mode")
         }
     }
 
-    fun getTimetable(start: LocalDate, end: LocalDate): Single<List<Timetable>> {
-        return when (mode) {
-            Mode.SCRAPPER -> scrapper.getTimetable(start, end).compose(ScrapperExceptionTransformer()).map { it.mapTimetable() }
-            Mode.HYBRID, Mode.API -> mobile.getDictionaries().flatMap { dict ->
-                mobile.getTimetable(start, end, 0).map { it.mapTimetable(dict) }
-            }
-            Mode.HEBE -> TODO()
+    suspend fun sendMessage(subject: String, content: String, recipients: List<Recipient>, mailboxId: String) = withContext(Dispatchers.IO) {
+        when (mode) {
+            Mode.HYBRID, Mode.SCRAPPER -> scrapper.sendMessage(subject, content, recipients.map { it.mailboxGlobalKey }, mailboxId)
+            Mode.HEBE -> throw NotImplementedError("Not available in HEBE mode")
         }
     }
 
-    fun getCompletedLessons(start: LocalDate, end: LocalDate? = null, subjectId: Int = -1): Single<List<CompletedLesson>> {
-        return when (mode) {
-            Mode.HYBRID, Mode.SCRAPPER -> scrapper.getCompletedLessons(start, end, subjectId).compose(ScrapperExceptionTransformer()).map { it.mapCompletedLessons() }
-            Mode.API -> throw FeatureNotAvailableException("Completed lessons are not available in API mode")
-            Mode.HEBE -> TODO()
+    suspend fun deleteMessages(messages: List<String>, removeForever: Boolean = false) = withContext(Dispatchers.IO) {
+        when (mode) {
+            Mode.HYBRID, Mode.SCRAPPER -> scrapper.deleteMessages(messages, removeForever)
+            Mode.HEBE -> throw NotImplementedError("Not available in HEBE mode")
         }
     }
 
-    fun getLuckyNumber(unitName: String = ""): Maybe<Int> {
-        return getKidsLuckyNumbers().filter { it.isNotEmpty() }.flatMap { numbers ->
-            // if lucky number unitName match unit name from student tile
-            numbers.singleOrNull { number -> number.unitName == unitName }?.let {
-                return@flatMap Maybe.just(it)
-            }
-
-            // if there there is only one lucky number and its doesn't match to any student
-            if (numbers.size == 1) {
-                return@flatMap Maybe.just(numbers.single())
-            }
-
-            // if there is more than one lucky number
-            if (numbers.size > 1) {
-                return@flatMap Maybe.error<LuckyNumber>(VulcanException("More than one mismatched lucky number: $numbers"))
-            }
-
-            // else
-            Maybe.empty<LuckyNumber>()
-        }.map { it.number }
-    }
-
-    fun getSelfGovernments(): Single<List<String>> {
-        return when (mode) {
-            Mode.HYBRID, Mode.SCRAPPER -> scrapper.getSelfGovernments().compose(ScrapperExceptionTransformer())
-            Mode.API -> throw FeatureNotAvailableException("Self governments is not available in API mode")
-            Mode.HEBE -> TODO()
+    suspend fun getTimetable(start: LocalDate, end: LocalDate): Timetable = withContext(Dispatchers.IO) {
+        when (mode) {
+            Mode.HYBRID, Mode.SCRAPPER -> scrapper.getTimetable(start, end).mapTimetableFull(registerTimeZone)
+            Mode.HEBE -> throw NotImplementedError("Not available in HEBE mode")
         }
     }
 
-    fun getStudentsTrips(): Single<List<String>> {
-        return when (mode) {
-            Mode.HYBRID, Mode.SCRAPPER -> scrapper.getStudentsTrips().compose(ScrapperExceptionTransformer())
-            Mode.API -> throw FeatureNotAvailableException("Students trips is not available in API mode")
-            Mode.HEBE -> TODO()
+    suspend fun getCompletedLessons(start: LocalDate, end: LocalDate? = null, subjectId: Int = -1): List<CompletedLesson> = withContext(Dispatchers.IO) {
+        when (mode) {
+            Mode.HYBRID, Mode.SCRAPPER -> scrapper.getCompletedLessons(start, end, subjectId).mapCompletedLessons()
+            Mode.HEBE -> throw NotImplementedError("Not available in HEBE mode")
         }
     }
 
-    fun getLastGrades(): Single<List<String>> {
-        return when (mode) {
-            Mode.HYBRID, Mode.SCRAPPER -> scrapper.getLastGrades().compose(ScrapperExceptionTransformer())
-            Mode.API -> throw FeatureNotAvailableException("Last grades is not available in API mode")
-            Mode.HEBE -> TODO()
+    suspend fun getLuckyNumber(unitName: String = ""): LuckyNumber? = withContext(Dispatchers.IO) {
+        val numbers = getKidsLuckyNumbers()
+
+        // if lucky number unitName match unit name from student tile
+        numbers.singleOrNull { number -> number.unitName == unitName }?.let {
+            return@withContext it
+        }
+
+        // if there is only one lucky number and its doesn't match to any student
+        if (numbers.size == 1) {
+            return@withContext numbers.single()
+        }
+
+        // if there is more than one lucky number, return first (just like this was working before 0.16.0)
+        if (numbers.size > 1) {
+            return@withContext numbers.first()
+        }
+
+        // else
+        null
+    }
+
+    suspend fun getDirectorInformation(): List<DirectorInformation> = withContext(Dispatchers.IO) {
+        when (mode) {
+            Mode.HYBRID, Mode.SCRAPPER -> scrapper.getDirectorInformation().mapDirectorInformation()
+            Mode.HEBE -> throw NotImplementedError("Not available in HEBE mode")
         }
     }
 
-    fun getFreeDays(): Single<List<String>> {
-        return when (mode) {
-            Mode.HYBRID, Mode.SCRAPPER -> scrapper.getFreeDays().compose(ScrapperExceptionTransformer())
-            Mode.API -> throw FeatureNotAvailableException("Free days is not available in API mode")
-            Mode.HEBE -> TODO()
+    suspend fun getSelfGovernments(): List<GovernmentUnit> = withContext(Dispatchers.IO) {
+        when (mode) {
+            Mode.HYBRID, Mode.SCRAPPER -> scrapper.getSelfGovernments().mapToUnits()
+            Mode.HEBE -> throw NotImplementedError("Not available in HEBE mode")
         }
     }
 
-    fun getKidsLuckyNumbers(): Single<List<LuckyNumber>> {
-        return when (mode) {
-            Mode.HYBRID, Mode.SCRAPPER -> scrapper.getKidsLuckyNumbers().compose(ScrapperExceptionTransformer()).map { it.mapLuckyNumbers() }
-            Mode.API -> throw FeatureNotAvailableException("Kids Lucky number is not available in API mode")
-            Mode.HEBE -> TODO()
+    suspend fun getStudentThreats(): List<String> = withContext(Dispatchers.IO) {
+        when (mode) {
+            Mode.HYBRID, Mode.SCRAPPER -> scrapper.getStudentThreats()
+            Mode.HEBE -> throw NotImplementedError("Not available in HEBE mode")
         }
     }
 
-    fun getKidsTimetable(): Single<List<String>> {
-        return when (mode) {
-            Mode.HYBRID, Mode.SCRAPPER -> scrapper.getKidsLessonPlan().compose(ScrapperExceptionTransformer())
-            Mode.API -> throw FeatureNotAvailableException("Kids timetable is not available in API mode")
-            Mode.HEBE -> TODO()
+    suspend fun getStudentsTrips(): List<String> = withContext(Dispatchers.IO) {
+        when (mode) {
+            Mode.HYBRID, Mode.SCRAPPER -> scrapper.getStudentsTrips()
+            Mode.HEBE -> throw NotImplementedError("Not available in HEBE mode")
         }
     }
 
-    fun getLastHomework(): Single<List<String>> {
-        return when (mode) {
-            Mode.HYBRID, Mode.SCRAPPER -> scrapper.getLastHomework().compose(ScrapperExceptionTransformer())
-            Mode.API -> throw FeatureNotAvailableException("Last homework is not available in API mode")
-            Mode.HEBE -> TODO()
+    suspend fun getLastGrades(): List<String> = withContext(Dispatchers.IO) {
+        when (mode) {
+            Mode.HYBRID, Mode.SCRAPPER -> scrapper.getLastGrades()
+            Mode.HEBE -> throw NotImplementedError("Not available in HEBE mode")
         }
     }
 
-    fun getLastExams(): Single<List<String>> {
-        return when (mode) {
-            Mode.HYBRID, Mode.SCRAPPER -> scrapper.getLastTests().compose(ScrapperExceptionTransformer())
-            Mode.API -> throw FeatureNotAvailableException("Last exams is not available in API mode")
-            Mode.HEBE -> TODO()
+    suspend fun getFreeDays(): List<String> = withContext(Dispatchers.IO) {
+        when (mode) {
+            Mode.HYBRID, Mode.SCRAPPER -> scrapper.getFreeDays()
+            Mode.HEBE -> throw NotImplementedError("Not available in HEBE mode")
         }
     }
 
-    fun getLastStudentLessons(): Single<List<String>> {
-        return when (mode) {
-            Mode.HYBRID, Mode.SCRAPPER -> scrapper.getLastStudentLessons().compose(ScrapperExceptionTransformer())
-            Mode.API -> throw FeatureNotAvailableException("Last student lesson is not available in API mode")
-            Mode.HEBE -> TODO()
+    suspend fun getKidsLuckyNumbers(): List<LuckyNumber> = withContext(Dispatchers.IO) {
+        when (mode) {
+            Mode.HYBRID, Mode.SCRAPPER -> scrapper.getKidsLuckyNumbers().mapLuckyNumbers()
+            Mode.HEBE -> throw NotImplementedError("Not available in HEBE mode")
+        }
+    }
+
+    suspend fun getKidsTimetable(): List<String> = withContext(Dispatchers.IO) {
+        when (mode) {
+            Mode.HYBRID, Mode.SCRAPPER -> scrapper.getKidsLessonPlan()
+            Mode.HEBE -> throw NotImplementedError("Not available in HEBE mode")
+        }
+    }
+
+    suspend fun getLastHomework(): List<String> = withContext(Dispatchers.IO) {
+        when (mode) {
+            Mode.HYBRID, Mode.SCRAPPER -> scrapper.getLastHomework()
+            Mode.HEBE -> throw NotImplementedError("Not available in HEBE mode")
+        }
+    }
+
+    suspend fun getLastExams(): List<String> = withContext(Dispatchers.IO) {
+        when (mode) {
+            Mode.HYBRID, Mode.SCRAPPER -> scrapper.getLastTests()
+            Mode.HEBE -> throw NotImplementedError("Not available in HEBE mode")
+        }
+    }
+
+    suspend fun getLastStudentLessons(): List<String> = withContext(Dispatchers.IO) {
+        when (mode) {
+            Mode.HYBRID, Mode.SCRAPPER -> scrapper.getLastStudentLessons()
+            Mode.HEBE -> throw NotImplementedError("Not available in HEBE mode")
         }
     }
 }

@@ -15,10 +15,19 @@
             "KodKolumny": "S1",
             "DataOceny": "12.12.2018",
             "KolorOceny": 15748172
+          },
+          {
+            "Nauczyciel": "Weronika Ratajczak",
+            "Wpis": "4",
+            "Waga": 5,
+            "NazwaKolumny": "Rodzaje broni chemicznych",
+            "KodKolumny": "S1",
+            "DataOceny": null,
+            "KolorOceny": 15748172
           }
         ],
-        "ProponowanaOcenaRoczna": "",
-        "OcenaRoczna": "",
+        "ProponowanaOcenaRoczna": " ",
+        "OcenaRoczna": " ",
         "ProponowanaOcenaRocznaPunkty": null,
         "OcenaRocznaPunkty": null,
         "Srednia": 0,
@@ -58,7 +67,7 @@
           }
         ],
         "ProponowanaOcenaRoczna": "3",
-        "OcenaRoczna": "dobry",
+        "OcenaRoczna": " dobry ",
         "ProponowanaOcenaRocznaPunkty": null,
         "OcenaRocznaPunkty": null,
         "Srednia": 0,
@@ -138,7 +147,7 @@
           }
         ],
         "ProponowanaOcenaRoczna": "4/5",
-        "OcenaRoczna": "bardzo dobry",
+        "OcenaRoczna": " bardzo dobry",
         "ProponowanaOcenaRocznaPunkty": null,
         "OcenaRocznaPunkty": null,
         "Srednia": 0,
@@ -168,7 +177,7 @@
             "KolorOceny": 0
           }
         ],
-        "ProponowanaOcenaRoczna": "4-",
+        "ProponowanaOcenaRoczna": "4- ",
         "OcenaRoczna": "5-",
         "ProponowanaOcenaRocznaPunkty": null,
         "OcenaRocznaPunkty": null,
@@ -190,8 +199,8 @@
             "KolorOceny": 0
           }
         ],
-        "ProponowanaOcenaRoczna": "",
-        "OcenaRoczna": "",
+        "ProponowanaOcenaRoczna": " ",
+        "OcenaRoczna": " ",
         "ProponowanaOcenaRocznaPunkty": null,
         "OcenaRocznaPunkty": null,
         "Srednia": 0,

@@ -8,33 +8,14 @@
       "UczenNazwisko": "Kowalski",
       "IsDziennik": true,
       "IdDziennik": 11,
-      "IdPrzedszkoleDziennik": 0,
-      "Poziom": 1,
+      "IdPrzedszkoleDziennik": 14,
+      "Poziom": 4,
       "Symbol": "A",
       "Nazwa": null,
       "DziennikRokSzkolny": 2016,
-      "Okresy": [
-        {
-          "NumerOkresu": 1,
-          "Poziom": 1,
-          "DataOd": "2016-08-31 22:00:00",
-          "DataDo": "2017-01-30 23:00:00",
-          "IdOddzial": 1,
-          "IdJednostkaSprawozdawcza": 6,
-          "IsLastOkres": false,
-          "Id": 1234563
-        },
-        {
-          "NumerOkresu": 2,
-          "Poziom": 1,
-          "DataOd": "2017-01-31 22:00:00",
-          "DataDo": "2017-08-30 23:00:00",
-          "IdOddzial": 1,
-          "IdJednostkaSprawozdawcza": 6,
-          "IsLastOkres": true,
-          "Id": 1234564
-        }
-      ],
+      "Okresy": [],
+      "DziennikDataOd": "2016-09-01 00:00:00",
+      "DziennikDataDo": "2017-08-31 00:00:00",
       "IdSioTyp": 11,
       "IsDorosli": false,
       "IsPolicealna": false,
@@ -43,7 +24,7 @@
       "IsArtystyczna13": false,
       "IsSpecjalny": false,
       "IsPrzedszkola": false,
-      "UczenPelnaNazwa": "1A 2016 - Jan Kowalski"
+      "UczenPelnaNazwa": "Poziomki 2016 - Jan Kowalski"
     },
     {
       "Id": 2,
@@ -53,12 +34,14 @@
       "UczenNazwisko": "Kowalski",
       "IsDziennik": true,
       "IdDziennik": 13,
-      "IdPrzedszkoleDziennik": 0,
-      "Poziom": 2,
+      "IdPrzedszkoleDziennik": 14,
+      "Poziom": 14,
       "Symbol": "A",
       "Nazwa": null,
       "DziennikRokSzkolny": 2017,
-      "Okresy": null,
+      "Okresy": [],
+      "DziennikDataOd": "2017-09-01 00:00:00",
+      "DziennikDataDo": "2018-08-31 00:00:00",
       "IdSioTyp": 11,
       "IsDorosli": false,
       "IsPolicealna": false,
@@ -67,7 +50,7 @@
       "IsArtystyczna13": false,
       "IsSpecjalny": false,
       "IsPrzedszkola": false,
-      "UczenPelnaNazwa": "2A 2017 - Jan Kowalski"
+      "UczenPelnaNazwa": "Poziomki 2017 - Jan Kowalski"
     }
   ],
   "success": true

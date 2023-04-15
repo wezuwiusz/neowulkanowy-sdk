@@ -35,6 +35,8 @@
           "Id": 714
         }
       ],
+      "DziennikDataOd": "2015-09-01 00:00:00",
+      "DziennikDataDo": "2016-08-31 00:00:00",
       "IdSioTyp": 16,
       "IsDorosli": false,
       "IsPolicealna": false,
@@ -80,6 +82,8 @@
           "Id": 698
         }
       ],
+      "DziennikDataOd": "2015-09-01 00:00:00",
+      "DziennikDataDo": "2016-08-31 00:00:00",
       "IdSioTyp": 16,
       "IsDorosli": false,
       "IsPolicealna": false,

@@ -1,38 +1,37 @@
 package io.github.wulkanowy.sdk.scrapper.exams
 
-import com.google.gson.annotations.SerializedName
-import pl.droidsonroids.jspoon.annotation.Format
-import pl.droidsonroids.jspoon.annotation.Selector
-import java.util.Date
+import io.github.wulkanowy.sdk.scrapper.adapter.CustomDateAdapter
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.Transient
+import java.time.LocalDateTime
 
-class Exam {
+@Serializable
+data class Exam(
 
-    lateinit var date: Date
+    @SerialName("DataModyfikacji")
+    @Serializable(with = CustomDateAdapter::class)
+    val entryDate: LocalDateTime,
 
-    @SerializedName("DataModyfikacji")
-    @Format("dd.MM.yyyy")
-    @Selector(".wartosc", index = 3, regex = ".+, (.+)", defValue = "01.01.1970")
-    lateinit var entryDate: Date
+    @SerialName("Nazwa")
+    val subject: String,
 
-    @SerializedName("DisplayValue")
-    @Selector(".wartosc", index = 0, regex = "^(.+)\\s.+")
-    lateinit var subject: String
+    @SerialName("Rodzaj")
+    val type: Int,
 
-    @Selector(".wartosc", index = 0, regex = "\\|(.+)", defValue = "")
-    lateinit var group: String
+    @SerialName("Opis")
+    val description: String,
 
-    @SerializedName("Rodzaj")
-    @Selector(".wartosc", index = 1)
-    lateinit var type: String
+    @SerialName("Pracownik")
+    val teacher: String,
+) {
 
-    @SerializedName("Opis")
-    @Selector(".wartosc", index = 2)
-    lateinit var description: String
+    @Transient
+    lateinit var typeName: String
 
-    @SerializedName("PracownikModyfikujacyDisplay")
-    @Selector(".wartosc", index = 3, regex = "(.+)\\s\\[.+")
-    lateinit var teacher: String
+    @Transient
+    lateinit var date: LocalDateTime
 
-    @Selector(".wartosc", index = 3, regex = "\\[(.+)\\]")
+    @Transient
     lateinit var teacherSymbol: String
 }

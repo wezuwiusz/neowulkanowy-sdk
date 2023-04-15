@@ -6,9 +6,13 @@
           "Data": "2018-10-01 00:00:00",
           "Sprawdziany": [
             {
-              "DisplayValue": "Język polski 3Ti",
-              "PracownikModyfikujacyDisplay": "Czerwieńska Agata [CA]",
+              "Nazwa": "Język polski",
+              "Pracownik": "Czerwieńska Agata [CA]",
               "DataModyfikacji": "2018-09-16 00:00:00",
+              "GodzinaOd": null,
+              "CzasTrwania": null,
+              "SprawdzianUrls": [],
+              "Id": 123456,
               "Opis": "Dwudziestolecie",
               "Rodzaj": 1
             }
@@ -19,9 +23,13 @@
           "Data": "2018-10-02 00:00:00",
           "Sprawdziany": [
             {
-              "DisplayValue": "Język angielski 3Ti|J1",
-              "PracownikModyfikujacyDisplay": "Natalia Nowak [NN]",
+              "Nazwa": "Język angielski",
+              "Pracownik": "Natalia Nowak [NN]",
               "DataModyfikacji": "2018-09-17 00:00:00",
+              "GodzinaOd": null,
+              "CzasTrwania": null,
+              "SprawdzianUrls": [],
+              "Id": 123457,
               "Opis": "Czasy teraźniejsze",
               "Rodzaj": 1
             }
@@ -32,16 +40,24 @@
           "Data": "2018-10-03 00:00:00",
           "Sprawdziany": [
             {
-              "DisplayValue": "Metodologia programowania 3Ti|zaw1",
-              "PracownikModyfikujacyDisplay": "Małgorzata Nowacka [MN]",
+              "Nazwa": "Metodologia programowania",
+              "Pracownik": "Małgorzata Nowacka [MN]",
               "DataModyfikacji": "2018-09-16 00:00:00",
+              "GodzinaOd": null,
+              "CzasTrwania": null,
+              "SprawdzianUrls": [],
+              "Id": 123458,
               "Opis": "programowanie obiektowe",
               "Rodzaj": 2
             },
             {
-              "DisplayValue": "Metodologia programowania 3Ti|zaw2",
-              "PracownikModyfikujacyDisplay": "Małgorzata Nowacka [MN]",
+              "Nazwa": "Metodologia programowania",
+              "Pracownik": "Małgorzata Nowacka [MN]",
               "DataModyfikacji": "2018-09-16 00:00:00",
+              "GodzinaOd": null,
+              "CzasTrwania": null,
+              "SprawdzianUrls": [],
+              "Id": 123459,
               "Opis": "",
               "Rodzaj": 3
             }
@@ -52,9 +68,13 @@
           "Data": "2018-10-04 00:00:00",
           "Sprawdziany": [
             {
-              "DisplayValue": "Sieci komputerowe 3Ti|zaw2",
-              "PracownikModyfikujacyDisplay": "Adam Wiśniewski [AW]",
+              "Nazwa": "Sieci komputerowe",
+              "Pracownik": "Adam Wiśniewski [AW]",
               "DataModyfikacji": "2018-09-15 00:00:00",
+              "GodzinaOd": null,
+              "CzasTrwania": null,
+              "SprawdzianUrls": [],
+              "Id": 123460,
               "Opis": "Łącza danych.",
               "Rodzaj": 1
             }
@@ -65,9 +85,13 @@
           "Data": "2018-10-05 00:00:00",
           "Sprawdziany": [
             {
-              "DisplayValue": "Język angielski 3Ti|J2",
-              "PracownikModyfikujacyDisplay": "Natalia Nowak [NN]",
+              "Nazwa": "Język angielski",
+              "Pracownik": "Natalia Nowak [NN]",
               "DataModyfikacji": "2018-09-17 00:00:00",
+              "GodzinaOd": null,
+              "CzasTrwania": null,
+              "SprawdzianUrls": [],
+              "Id": 123461,
               "Opis": "słownictwo (zdrowie)",
               "Rodzaj": 1
             }

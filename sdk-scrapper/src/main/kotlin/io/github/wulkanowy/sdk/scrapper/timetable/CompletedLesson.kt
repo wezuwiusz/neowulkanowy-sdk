@@ -1,43 +1,37 @@
 package io.github.wulkanowy.sdk.scrapper.timetable
 
-import com.google.gson.annotations.SerializedName
-import pl.droidsonroids.jspoon.annotation.Format
-import pl.droidsonroids.jspoon.annotation.Selector
-import java.util.Date
+import io.github.wulkanowy.sdk.scrapper.adapter.CustomDateAdapter
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
+import java.time.LocalDateTime
 
-class CompletedLesson {
+@Serializable
+data class CompletedLesson(
 
-    @SerializedName("Data")
-    @Selector("h2", defValue = "01.01.1970")
-    @Format("dd.MM.yyyy")
-    lateinit var date: Date
+    @SerialName("Data")
+    @Serializable(with = CustomDateAdapter::class)
+    val date: LocalDateTime,
 
-    @SerializedName("NrLekcji")
-    @Selector(".wartosc", index = 0, defValue = "0")
-    var number: Int = 0
+    @SerialName("NrLekcji")
+    val number: Int = 0,
 
-    @SerializedName("Przedmiot")
-    @Selector(".wartosc", index = 1, regex = "^(.+?),", defValue = "")
-    var subject: String = ""
+    @SerialName("Przedmiot")
+    val subject: String? = "",
 
-    @SerializedName("Temat")
-    @Selector(".wartosc", index = 1, regex = "[^,]*, (.*)", defValue = "")
-    var topic: String = ""
+    @SerialName("Temat")
+    val topic: String? = "",
 
-    @SerializedName("Nauczyciel")
-    @Selector(".wartosc", index = 2, regex = "(.+)\\s\\[.+")
-    var teacher: String = ""
+    @SerialName("Nauczyciel")
+    val teacher: String? = "",
 
-    @Selector(".wartosc", index = 2, regex = "\\[(.+)\\]")
-    var teacherSymbol: String = ""
+    val teacherSymbol: String? = "",
 
-    @SerializedName("Zastepstwo")
-    var substitution: String = ""
+    @SerialName("Zastepstwo")
+    val substitution: String? = "",
 
-    @SerializedName("Nieobecnosc")
-    @Selector(".wartosc", index = 3)
-    var absence: String = ""
+    @SerialName("Nieobecnosc")
+    val absence: String? = "",
 
-    @SerializedName("ZasobyPubliczne")
-    var resources: String = ""
-}
+    @SerialName("ZasobyPubliczne")
+    val resources: String? = "",
+)

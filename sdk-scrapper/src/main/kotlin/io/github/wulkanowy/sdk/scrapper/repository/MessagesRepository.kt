@@ -1,128 +1,137 @@
 package io.github.wulkanowy.sdk.scrapper.repository
 
-import io.github.wulkanowy.sdk.scrapper.ScrapperException
 import io.github.wulkanowy.sdk.scrapper.getScriptParam
-import io.github.wulkanowy.sdk.scrapper.interceptor.ErrorHandlerTransformer
-import io.github.wulkanowy.sdk.scrapper.messages.DeleteMessageRequest
-import io.github.wulkanowy.sdk.scrapper.messages.Message
+import io.github.wulkanowy.sdk.scrapper.messages.Mailbox
+import io.github.wulkanowy.sdk.scrapper.messages.MessageDetails
+import io.github.wulkanowy.sdk.scrapper.messages.MessageMeta
+import io.github.wulkanowy.sdk.scrapper.messages.MessageReplayDetails
 import io.github.wulkanowy.sdk.scrapper.messages.Recipient
-import io.github.wulkanowy.sdk.scrapper.messages.ReportingUnit
 import io.github.wulkanowy.sdk.scrapper.messages.SendMessageRequest
-import io.github.wulkanowy.sdk.scrapper.messages.SentMessage
+import io.github.wulkanowy.sdk.scrapper.normalizeRecipients
+import io.github.wulkanowy.sdk.scrapper.parseName
 import io.github.wulkanowy.sdk.scrapper.service.MessagesService
-import io.reactivex.Single
-import org.threeten.bp.LocalDateTime
-import org.threeten.bp.format.DateTimeFormatter
+import io.github.wulkanowy.sdk.scrapper.toMailbox
+import io.github.wulkanowy.sdk.scrapper.toRecipient
+import org.slf4j.LoggerFactory
+import java.util.UUID
 
 class MessagesRepository(private val api: MessagesService) {
 
-    fun getReportingUnits(): Single<List<ReportingUnit>> {
-        return api.getUserReportingUnits().map { it.data.orEmpty() }
+    companion object {
+        @JvmStatic
+        private val logger = LoggerFactory.getLogger(this::class.java)
     }
 
-    fun getRecipients(unitId: Int, role: Int = 2): Single<List<Recipient>> {
-        return api.getRecipients(unitId, role)
-            .compose(ErrorHandlerTransformer()).map { it.data.orEmpty() }
-            .map { res ->
-                res.map { it.copy(shortName = it.name.normalizeRecipient()) }
+    suspend fun getMailboxes(): List<Mailbox> {
+        return api.getMailboxes().map {
+            it.toRecipient()
+                .parseName()
+                .toMailbox()
+        }
+    }
+
+    suspend fun getRecipients(mailboxKey: String): List<Recipient> {
+        return api.getRecipients(mailboxKey).normalizeRecipients()
+    }
+
+    suspend fun getReceivedMessages(mailboxKey: String?, lastMessageKey: Int = 0, pageSize: Int = 50): List<MessageMeta> {
+        val messages = when (mailboxKey) {
+            null -> api.getReceived(lastMessageKey, pageSize)
+            else -> api.getReceivedMailbox(mailboxKey, lastMessageKey, pageSize)
+        }
+
+        return messages
+            .sortedBy { it.date }
+            .toList()
+    }
+
+    suspend fun getSentMessages(mailboxKey: String?, lastMessageKey: Int = 0, pageSize: Int = 50): List<MessageMeta> {
+        val messages = when (mailboxKey) {
+            null -> api.getSent(lastMessageKey, pageSize)
+            else -> api.getSentMailbox(mailboxKey, lastMessageKey, pageSize)
+        }
+        return messages
+            .sortedBy { it.date }
+            .toList()
+    }
+
+    suspend fun getDeletedMessages(mailboxKey: String?, lastMessageKey: Int = 0, pageSize: Int = 50): List<MessageMeta> {
+        val messages = when (mailboxKey) {
+            null -> api.getDeleted(lastMessageKey, pageSize)
+            else -> api.getDeletedMailbox(mailboxKey, lastMessageKey, pageSize)
+        }
+        return messages
+            .sortedBy { it.date }
+            .toList()
+    }
+
+    suspend fun getMessageReplayDetails(globalKey: String): MessageReplayDetails {
+        return api.getMessageReplayDetails(globalKey).let {
+            it.apply {
+                sender = Recipient(
+                    mailboxGlobalKey = it.senderMailboxId,
+                    fullName = it.senderMailboxName,
+                ).parseName()
             }
+        }
     }
 
-    fun getReceivedMessages(startDate: LocalDateTime?, endDate: LocalDateTime?): Single<List<Message>> {
-        return api.getReceived(getDate(startDate), getDate(endDate))
-            .compose(ErrorHandlerTransformer()).map { it.data.orEmpty() }
-            .map { res ->
-                res.asSequence()
-                    .map { it.copy(folderId = 1) }
-                    .sortedBy { it.date }
-                    .toList()
-            }
+    suspend fun getMessageDetails(globalKey: String, markAsRead: Boolean): MessageDetails {
+        val details = api.getMessageDetails(globalKey)
+        if (markAsRead) {
+            runCatching {
+                val startPage = api.getStart()
+                api.markMessageAsRead(
+                    token = getScriptParam("antiForgeryToken", startPage),
+                    appGuid = getScriptParam("appGuid", startPage),
+                    appVersion = getScriptParam("version", startPage),
+                    body = mapOf("apiGlobalKey" to globalKey),
+                )
+            }.onFailure {
+                logger.error("Error occur while marking message as read", it)
+            }.getOrNull()
+        }
+        return details
     }
 
-    fun getSentMessages(startDate: LocalDateTime?, endDate: LocalDateTime?): Single<List<Message>> {
-        return api.getSent(getDate(startDate), getDate(endDate))
-            .compose(ErrorHandlerTransformer()).map { it.data.orEmpty() }
-            .map { res ->
-                res.asSequence()
-                    .map { message ->
-                        message.copy(
-                            messageId = message.id,
-                            folderId = 2,
-                            recipient = message.recipient?.split(";")?.joinToString("; ") { it.normalizeRecipient() }
-                        )
-                    }
-                    .sortedBy { it.date }
-                    .toList()
-            }
+    suspend fun sendMessage(subject: String, content: String, recipients: List<String>, senderMailboxId: String) {
+        val startPage = api.getStart()
+        val body = SendMessageRequest(
+            globalKey = UUID.randomUUID().toString(),
+            threadGlobalKey = UUID.randomUUID().toString(),
+            senderMailboxGlobalKey = senderMailboxId,
+            recipientsMailboxGlobalKeys = recipients,
+            subject = subject,
+            content = content,
+            attachments = emptyList(),
+        )
+
+        api.sendMessage(
+            token = getScriptParam("antiForgeryToken", startPage),
+            appGuid = getScriptParam("appGuid", startPage),
+            appVersion = getScriptParam("version", startPage),
+            body = body,
+        )
     }
 
-    fun getDeletedMessages(startDate: LocalDateTime?, endDate: LocalDateTime?): Single<List<Message>> {
-        return api.getDeleted(getDate(startDate), getDate(endDate))
-            .compose(ErrorHandlerTransformer()).map { it.data.orEmpty() }
-            .map { res ->
-                res.asSequence()
-                    .map { it.apply { removed = true } }
-                    .sortedBy { it.date }
-                    .toList()
-            }
-    }
+    suspend fun deleteMessages(globalKeys: List<String>, removeForever: Boolean) {
+        val startPage = api.getStart()
+        val token = getScriptParam("antiForgeryToken", startPage)
+        val appGuid = getScriptParam("appGuid", startPage)
+        val appVersion = getScriptParam("version", startPage)
 
-    fun getMessageRecipients(messageId: Int, loginId: Int): Single<List<Recipient>> {
-        return (if (0 == loginId) api.getMessageRecipients(messageId)
-        else api.getMessageSender(loginId, messageId))
-            .compose(ErrorHandlerTransformer()).map { it.data.orEmpty() }
-            .map {
-                it.map { recipient ->
-                    recipient.copy(shortName = recipient.name.normalizeRecipient())
-                }
-            }
-    }
-
-    fun getMessage(messageId: Int, folderId: Int, read: Boolean, id: Int?): Single<String> {
-        return api.getMessage(messageId, folderId, read, id)
-            .compose(ErrorHandlerTransformer()).map { requireNotNull(it.data) }
-            .map { it.content.orEmpty() }
-    }
-
-    fun sendMessage(subject: String, content: String, recipients: List<Recipient>): Single<SentMessage> {
-        return api.getStart().flatMap { res ->
-            api.sendMessage(
-                SendMessageRequest(
-                    SendMessageRequest.Incoming(
-                        recipients = recipients,
-                        subject = subject,
-                        content = content
-                    )
-                ),
-                getScriptParam("antiForgeryToken", res).ifBlank { throw ScrapperException("antiForgeryToken is empty") },
-                getScriptParam("appGuid", res),
-                getScriptParam("version", res)
+        if (!removeForever) {
+            api.moveMessageToTrash(
+                token = token,
+                appGuid = appGuid,
+                appVersion = appVersion,
+                body = globalKeys,
             )
-        }.compose(ErrorHandlerTransformer()).map { requireNotNull(it.data) }
-    }
-
-    fun deleteMessages(messages: List<Pair<Int, Int>>): Single<Boolean> {
-        return api.getStart().flatMap { res ->
-            api.deleteMessage(
-                messages.map { (messageId, folderId) ->
-                    DeleteMessageRequest(
-                        messageId = messageId,
-                        folderId = folderId
-                    )
-                },
-                getScriptParam("antiForgeryToken", res),
-                getScriptParam("appGuid", res),
-                getScriptParam("version", res)
-            )
-        }.compose(ErrorHandlerTransformer()).map { it.success }
-    }
-
-    private fun String.normalizeRecipient(): String {
-        return this.substringBeforeLast("-").substringBefore(" [").substringBeforeLast(" (").trim()
-    }
-
-    private fun getDate(date: LocalDateTime?): String {
-        if (date == null) return ""
-        return date.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))
+        } else api.deleteMessage(
+            token = token,
+            appGuid = appGuid,
+            appVersion = appVersion,
+            body = globalKeys,
+        )
     }
 }

@@ -1,61 +1,55 @@
 package io.github.wulkanowy.sdk.scrapper.grades
 
-import com.google.gson.annotations.SerializedName
-import pl.droidsonroids.jspoon.annotation.Format
-import pl.droidsonroids.jspoon.annotation.Selector
-import java.util.Date
+import io.github.wulkanowy.sdk.scrapper.adapter.GradeDateDeserializer
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.Transient
+import java.time.LocalDate
 
-class Grade {
+@Serializable
+data class Grade(
 
-    @Selector("td", index = 0)
+    @SerialName("Wpis")
+    val entry: String = "",
+
+    @SerialName("KolorOceny") // dec
+    val color: Int = -1,
+
+    @SerialName("KodKolumny")
+    val symbol: String? = "",
+
+    @SerialName("NazwaKolumny")
+    val description: String? = "",
+
+    @SerialName("Waga")
+    val weightValue: Double = .0,
+
+    @SerialName("DataOceny")
+    @Serializable(with = GradeDateDeserializer::class)
+    internal val privateDate: LocalDate,
+
+    @SerialName("Nauczyciel")
+    val teacher: String = "",
+) {
+
+    @Transient
     var subject: String = ""
 
-    @SerializedName("Wpis")
-    @Selector("td", index = 1, regex = "([^\\s]*)")
-    var entry: String = ""
-
-    @Selector("td", index = 1, converter = GradeValueConverter::class)
+    @Transient
     var value: Int = 0
 
-    @Selector("td", index = 1, converter = GradeModifierValueConverter::class)
+    @Transient
     var modifier: Double = .0
 
-    @Selector("td", index = 1, regex = "\\((.+)\\)")
+    @Transient
     var comment: String = ""
 
-    @SerializedName("KolorOceny") // dec
-    @Selector("td .ocenaCzastkowa", attr = "style", regex = "#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})") // hex
-    var color: String = ""
-
-    @SerializedName("KodKolumny")
-    @Selector("td", index = 2, regex = "^(.+?),")
-    var symbol: String? = ""
-
-    @SerializedName("NazwaKolumny")
-    @Selector("td", index = 2, regex = "[^,]+, (.+)", defValue = "")
-    var description: String? = ""
-
-    @Selector("td", index = 3)
+    @Transient
     var weight: String = ""
 
-    @SerializedName("Waga")
-    @Selector("td", index = 3, converter = GradeWeightValueConverter::class)
-    var weightValue: Double = .0
+    @Transient
+    var colorHex: String = ""
 
-    @SerializedName("DataOceny")
-    internal var privateDate: GradeDate = GradeDate()
-
-    @Selector("td:not(:empty)", index = 4, defValue = "01.01.1970")
-    @Format(GradeDate.FORMAT)
-    var date: Date = Date()
-
-    @SerializedName("Nauczyciel")
-    @Selector("td", index = 5)
-    var teacher: String = ""
-}
-
-class GradeDate : Date() {
-    companion object {
-        const val FORMAT = "dd.MM.yyyy"
-    }
+    @Transient
+    lateinit var date: LocalDate
 }

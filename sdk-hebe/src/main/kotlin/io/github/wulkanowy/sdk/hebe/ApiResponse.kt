@@ -1,36 +1,39 @@
 package io.github.wulkanowy.sdk.hebe
 
-import com.google.gson.annotations.SerializedName
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
+@Serializable
 class ApiResponse<T> {
 
-    @SerializedName("Envelope")
+    @SerialName("Envelope")
     var envelope: T? = null
 
-    @SerializedName("EnvelopeType")
+    @SerialName("EnvelopeType")
     lateinit var envelopeType: String
 
-    @SerializedName("InResponseTo")
+    @SerialName("InResponseTo")
     var inResponseTo: String? = null
 
-    @SerializedName("RequestId")
+    @SerialName("RequestId")
     lateinit var requestId: String
 
-    @SerializedName("Status")
+    @SerialName("Status")
     lateinit var status: Status
 
-    @SerializedName("Timestamp")
+    @SerialName("Timestamp")
     var timestamp: Long = 0
 
-    @SerializedName("TimestampFormatted")
+    @SerialName("TimestampFormatted")
     lateinit var timestampFormatted: String
 
+    @Serializable
     data class Status(
 
-        @SerializedName("Code")
+        @SerialName("Code")
         val code: Int,
 
-        @SerializedName("Message")
-        val message: String
+        @SerialName("Message")
+        val message: String,
     )
 }

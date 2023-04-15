@@ -1,42 +1,67 @@
 package io.github.wulkanowy.sdk.scrapper.timetable
 
-import com.google.gson.Gson
-import com.google.gson.GsonBuilder
-import com.google.gson.internal.LinkedTreeMap
-import com.google.gson.reflect.TypeToken
 import io.github.wulkanowy.sdk.scrapper.ApiResponse
 import io.github.wulkanowy.sdk.scrapper.toDate
 import io.github.wulkanowy.sdk.scrapper.toFormat
 import io.github.wulkanowy.sdk.scrapper.toLocalDate
 import org.jsoup.Jsoup
-import org.threeten.bp.LocalDate
+import java.time.LocalDate
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 
-fun TimetableResponse.mapTimetableList(startDate: LocalDate, endDate: LocalDate?): List<Timetable> {
-    return rows2api.flatMap { lessons ->
-        lessons.drop(1).mapIndexed { i, it ->
-            val times = lessons[0].split("<br />")
-            TimetableResponse.TimetableRow.TimetableCell().apply {
-                date = headers.union(_headersOld).drop(1)[i].date.split("<br />")[1].toDate("dd.MM.yyyy")
-                start = "${date.toLocalDate().toFormat("yyyy-MM-dd")} ${times[1]}".toDate("yyyy-MM-dd HH:mm")
-                end = "${date.toLocalDate().toFormat("yyyy-MM-dd")} ${times[2]}".toDate("yyyy-MM-dd HH:mm")
-                number = times[0].toInt()
-                td = Jsoup.parse(it)
-            }
-        }.mapNotNull { TimetableParser().getTimetable(it) }
-    }.asSequence().filter {
-        it.date.toLocalDate() >= startDate && it.date.toLocalDate() <= endDate ?: startDate.plusDays(4)
-    }.sortedWith(compareBy({ it.date }, { it.number })).toList()
+private val parser = TimetableParser()
+private val formatter1 = DateTimeFormatter.ofPattern("dd.MM.yyyy")
+private val formatter2 = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")
+
+fun TimetableResponse.mapTimetableList(startDate: LocalDate, endDate: LocalDate?): List<Lesson> = rows.flatMap { lessons ->
+    lessons.drop(1).mapIndexed { i, it ->
+        val times = lessons[0].split("<br />")
+        val header = headers.drop(1)[i].date.split("<br />")
+        val date = LocalDate.parse(header[1], formatter1)
+        TimetableCell(
+            date = date,
+            start = LocalDateTime.parse("${date.toFormat("yyyy-MM-dd")} ${times[1]}", formatter2),
+            end = LocalDateTime.parse("${date.toFormat("yyyy-MM-dd")} ${times[2]}", formatter2),
+            number = times[0].toInt(),
+            td = Jsoup.parse(it),
+        )
+    }.mapNotNull { parser.getTimetable(it) }
+}.asSequence().filter {
+    it.date >= startDate && it.date <= (endDate ?: startDate.plusDays(4))
+}.sortedWith(compareBy({ it.date }, { it.number })).toList()
+
+fun TimetableResponse.mapTimetableHeaders() = headers.drop(1).map {
+    val header = it.date.split("<br />")
+    TimetableDayHeader(
+        date = header[1].toDate("dd.MM.yyyy").toLocalDate(),
+        content = header.drop(2).joinToString(separator = "<br />"),
+    )
 }
 
-fun ApiResponse<*>.mapCompletedLessonsList(start: LocalDate, endDate: LocalDate?, gson: GsonBuilder): List<CompletedLesson> {
-    return (data as LinkedTreeMap<*, *>).map { list ->
-        gson.create().fromJson<List<CompletedLesson>>(Gson().toJson(list.value), object : TypeToken<ArrayList<CompletedLesson>>() {}.type)
-    }.flatten().map {
-        it.apply {
-            teacherSymbol = teacher.substringAfter(" [").substringBefore("]")
-            teacher = teacher.substringBefore(" [")
-        }
-    }.sortedWith(compareBy({ it.date }, { it.number })).toList().filter {
-        it.date.toLocalDate() >= start && it.date.toLocalDate() <= endDate ?: start.plusDays(4)
+fun TimetableResponse.mapTimetableAdditional() = additional.flatMap { day ->
+    val date = LocalDate.parse(day.header.substringAfter(", "), formatter1)
+    day.descriptions.map { lesson ->
+        val description = Jsoup.parse(lesson.description).text()
+        val startTime = description.substringBefore(" - ")
+        val endTime = description.split(" ")[2]
+        LessonAdditional(
+            date = date,
+            start = LocalDateTime.parse("${date.toFormat("yyyy-MM-dd")} $startTime", formatter2),
+            end = LocalDateTime.parse("${date.toFormat("yyyy-MM-dd")} $endTime", formatter2),
+            subject = description.substringAfter("$endTime "),
+        )
     }
+}
+
+fun ApiResponse<Map<String, List<CompletedLesson>>>.mapCompletedLessonsList(start: LocalDate, endDate: LocalDate?): List<CompletedLesson> {
+    return data.orEmpty()
+        .flatMap { it.value }
+        .map {
+            it.copy(
+                teacherSymbol = it.teacher?.substringAfter(" [")?.substringBefore("]"),
+                teacher = it.teacher?.substringBefore(" ["),
+            )
+        }.sortedWith(compareBy({ it.date }, { it.number })).toList().filter {
+            it.date.toLocalDate() >= start && it.date.toLocalDate() <= (endDate ?: start.plusDays(4))
+        }
 }

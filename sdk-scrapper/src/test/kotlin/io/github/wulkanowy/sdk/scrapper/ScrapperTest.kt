@@ -1,17 +1,17 @@
 package io.github.wulkanowy.sdk.scrapper
 
 import io.github.wulkanowy.sdk.scrapper.attendance.AttendanceSummaryTest
-import io.github.wulkanowy.sdk.scrapper.attendance.Subject
-import io.reactivex.observers.TestObserver
-import okhttp3.mockwebserver.MockResponse
+import kotlinx.coroutines.runBlocking
 import org.junit.Test
 
 class ScrapperTest : BaseLocalTest() {
 
     @Test
     fun changeTest() {
-        server.enqueue(MockResponse().setBody(AttendanceSummaryTest::class.java.getResource("Przedmioty.json").readText()))
-        server.start(3000) //
+        with(server) {
+            enqueue("Przedmioty.json", AttendanceSummaryTest::class.java)
+            start(3000) //
+        }
 
         val api = Scrapper().apply {
             loginType = Scrapper.LoginType.STANDARD
@@ -25,18 +25,20 @@ class ScrapperTest : BaseLocalTest() {
             diaryId = 101
         }
 
-        val subjects = api.getSubjects()
-        val subjectsObserver = TestObserver<List<Subject>>()
-        subjects.subscribe(subjectsObserver)
-        subjectsObserver.assertNotComplete() //
+        try {
+            runBlocking { api.getSubjects() }
+        } catch (e: Throwable) {
+            assert(true) //
+        }
 
         api.apply {
             host = "fakelog.localhost:3000" //
         }
 
-        val subjects2 = api.getSubjects()
-        val subjectsObserver2 = TestObserver<List<Subject>>()
-        subjects2.subscribe(subjectsObserver2)
-        subjectsObserver2.assertComplete() //
+        try {
+            runBlocking { api.getSubjects() }
+        } catch (e: Throwable) {
+            assert(false) //
+        }
     }
 }

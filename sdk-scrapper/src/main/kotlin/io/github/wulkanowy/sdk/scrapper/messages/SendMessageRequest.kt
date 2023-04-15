@@ -1,30 +1,29 @@
 package io.github.wulkanowy.sdk.scrapper.messages
 
-import com.google.gson.annotations.SerializedName
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class SendMessageRequest(
 
-    @SerializedName("incomming")
-    val incoming: Incoming
+    @SerialName("globalKey")
+    val globalKey: String,
 
-) {
+    @SerialName("watekGlobalKey")
+    val threadGlobalKey: String,
 
-    data class Incoming(
+    @SerialName("nadawcaSkrzynkaGlobalKey")
+    val senderMailboxGlobalKey: String,
 
-        @SerializedName("Adresaci")
-        val recipients: List<Recipient>,
+    @SerialName("adresaciSkrzynkiGlobalKeys")
+    val recipientsMailboxGlobalKeys: List<String>,
 
-        @SerializedName("Id")
-        val id: Int = 0,
+    @SerialName("tytul")
+    val subject: String,
 
-        @SerializedName("Nadawca")
-        val sender: Sender = Sender(),
+    @SerialName("tresc")
+    val content: String,
 
-        @SerializedName("Temat")
-        val subject: String,
-
-        @SerializedName("Tresc")
-        val content: String
-
-    )
-}
+    @SerialName("zalaczniki")
+    val attachments: List<MessageAttachment>,
+)

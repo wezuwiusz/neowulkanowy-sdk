@@ -1,6 +1,6 @@
 package io.github.wulkanowy.sdk.pojo
 
-import org.threeten.bp.LocalDate
+import java.time.LocalDate
 
 data class CompletedLesson(
     val date: LocalDate,
@@ -11,5 +11,5 @@ data class CompletedLesson(
     val teacherSymbol: String,
     val substitution: String,
     val absence: String,
-    val resources: String
+    val resources: String,
 )

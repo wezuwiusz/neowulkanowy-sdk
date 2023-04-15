@@ -1,68 +1,37 @@
 package io.github.wulkanowy.sdk.scrapper.attendance
 
-import com.google.gson.annotations.SerializedName
-import pl.droidsonroids.jspoon.annotation.Selector
-import java.util.Date
+import io.github.wulkanowy.sdk.scrapper.adapter.CustomDateAdapter
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.Transient
+import java.time.LocalDateTime
 
-class Attendance {
+@Serializable
+data class Attendance(
 
+    @SerialName("IdPoraLekcji")
+    val timeId: Int = 0,
+
+    @SerialName("Data")
+    @Serializable(with = CustomDateAdapter::class)
+    val date: LocalDateTime,
+
+    @SerialName("PrzedmiotNazwa")
+    val subject: String?,
+
+    @SerialName("IdKategoria")
+    val categoryId: Int = -1,
+) {
+
+    @Transient
     var number: Int = 0
 
-    @SerializedName("IdPoraLekcji")
-    var timeId: Int = 0
+    @Transient
+    lateinit var category: AttendanceCategory
 
-    @SerializedName("Data")
-    lateinit var date: Date
-
-    @SerializedName("PrzedmiotNazwa")
-    @Selector("span", defValue = "null")
-    lateinit var subject: String
-
-    @Selector("img", attr = "title", defValue = "Nieznany wpis")
-    lateinit var name: String
-
-    @Selector("div", attr = "class")
-    internal lateinit var type: String // do not use
-
-    @SerializedName("IdKategoria")
-    var categoryId: Int = -1
-
-    var presence: Boolean = false
-
-    var absence: Boolean = false
-
-    var exemption: Boolean = false
-
-    var lateness: Boolean = false
-
-    var excused: Boolean = false
-
-    var deleted: Boolean = false
-
+    @Transient
     var excusable: Boolean = false
 
+    @Transient
     var excuseStatus: SentExcuse.Status? = null
-
-    object Types {
-        const val PRESENCE = "x-obecnosc"
-        const val ABSENCE_UNEXCUSED = "x-nieobecnosc-nieuspr"
-        const val ABSENCE_EXCUSED = "x-nieobecnosc-uspr"
-        const val ABSENCE_FOR_SCHOOL_REASONS = "x-nieobecnosc-przycz-szkol"
-        const val UNEXCUSED_LATENESS = "x-sp-nieusprawiedliwione"
-        const val EXCUSED_LATENESS = "x-sp-spr"
-        const val EXEMPTION = "x-sp-zwolnienie"
-    }
-
-    enum class Category(val id: Int, val title: String) {
-        ALL(-1, "Wszystkie"),
-        UNKNOWN(0, "Nieznany"),
-        PRESENCE(1, "Obecność"),
-        ABSENCE_UNEXCUSED(2, "Nieobecność nieusprawiedliwiona"),
-        ABSENCE_EXCUSED(3, "Nieobecność usprawiedliwiona"),
-        UNEXCUSED_LATENESS(4, "Spóźnienie nieusprawiedliwione"),
-        EXCUSED_LATENESS(5, "Spóźnienie usprawiedliwione"),
-        ABSENCE_FOR_SCHOOL_REASONS(6, "Nieobecność z przyczyn szkolnych"),
-        EXEMPTION(7, "Zwolnienie"),
-        DELETED(8, "Usunięty wpis")
-    }
 }

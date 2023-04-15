@@ -11,6 +11,6 @@ class SentUnlockAccountResponse {
     @Selector("title")
     lateinit var title: String
 
-    @Selector(".ErrorMessage, #ErrorTextLabel, .UnlockAccountSummary p, #box .box-p, #lblStatus")
+    @Selector(".ErrorMessage, #ErrorTextLabel, .UnlockAccountSummary p, #box .box-p, #lblStatus, #lblMessage")
     lateinit var message: String
 }

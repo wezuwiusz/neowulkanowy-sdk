@@ -4,11 +4,14 @@ import io.github.wulkanowy.sdk.Sdk
 
 data class Student(
     val email: String,
+    val userName: String,
+    val userLogin: String,
+    val userLoginId: Int,
     val symbol: String,
     val isParent: Boolean,
     val studentId: Int,
-    val userLoginId: Int,
     val studentName: String,
+    val studentSurname: String,
     val schoolSymbol: String,
     val schoolShortName: String,
     val schoolName: String,
@@ -19,5 +22,6 @@ data class Student(
     val scrapperBaseUrl: String,
     val mobileBaseUrl: String,
     val certificateKey: String,
-    val privateKey: String
+    val privateKey: String,
+    val semesters: List<Semester>,
 )

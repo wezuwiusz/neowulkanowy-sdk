@@ -1,60 +1,60 @@
 package io.github.wulkanowy.sdk.scrapper.attendance
 
-import com.google.gson.annotations.SerializedName
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
+@Serializable
 class AttendanceSummaryResponse {
 
-    @SerializedName("Podsumowanie")
-    var percentage: Double = .0
-
-    @SerializedName("Statystyki")
+    @SerialName("Statystyki")
     var items: List<Summary> = emptyList()
 
+    @Serializable
     data class Summary(
 
-        @SerializedName("Id")
+        @SerialName("Id")
         val id: Int,
 
-        @SerializedName("NazwaTypuFrekwencji")
+        @SerialName("NazwaTypuFrekwencji")
         val type: String,
 
-        @SerializedName("Wrzesien")
-        val september: Int,
+        @SerialName("Wrzesien")
+        val september: Int?,
 
-        @SerializedName("Pazdziernik")
-        val october: Int,
+        @SerialName("Pazdziernik")
+        val october: Int?,
 
-        @SerializedName("Listopad")
-        val november: Int,
+        @SerialName("Listopad")
+        val november: Int?,
 
-        @SerializedName("Grudzien")
-        val december: Int,
+        @SerialName("Grudzien")
+        val december: Int?,
 
-        @SerializedName("Styczen")
-        val january: Int,
+        @SerialName("Styczen")
+        val january: Int?,
 
-        @SerializedName("Luty")
-        val february: Int,
+        @SerialName("Luty")
+        val february: Int?,
 
-        @SerializedName("Marzec")
-        val march: Int,
+        @SerialName("Marzec")
+        val march: Int?,
 
-        @SerializedName("Kwiecien")
-        val april: Int,
+        @SerialName("Kwiecien")
+        val april: Int?,
 
-        @SerializedName("Maj")
-        val may: Int,
+        @SerialName("Maj")
+        val may: Int?,
 
-        @SerializedName("Czerwiec")
-        val june: Int,
+        @SerialName("Czerwiec")
+        val june: Int?,
 
-        @SerializedName("Lipiec")
-        val july: Int,
+        @SerialName("Lipiec")
+        val july: Int?,
 
-        @SerializedName("Sierpien")
-        val august: Int,
+        @SerialName("Sierpien")
+        val august: Int?,
 
-        @SerializedName("Razem")
-        val total: Int
+        @SerialName("Razem")
+        val total: Int?,
     )
 }

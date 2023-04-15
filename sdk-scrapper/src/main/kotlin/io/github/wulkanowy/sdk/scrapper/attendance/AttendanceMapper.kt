@@ -1,65 +1,36 @@
 package io.github.wulkanowy.sdk.scrapper.attendance
 
-import com.google.gson.GsonBuilder
-import com.google.gson.internal.LinkedTreeMap
-import com.google.gson.reflect.TypeToken
-import io.github.wulkanowy.sdk.scrapper.attendance.Attendance.Category.ABSENCE_EXCUSED
-import io.github.wulkanowy.sdk.scrapper.attendance.Attendance.Category.ABSENCE_FOR_SCHOOL_REASONS
-import io.github.wulkanowy.sdk.scrapper.attendance.Attendance.Category.ABSENCE_UNEXCUSED
-import io.github.wulkanowy.sdk.scrapper.attendance.Attendance.Category.EXCUSED_LATENESS
-import io.github.wulkanowy.sdk.scrapper.attendance.Attendance.Category.EXEMPTION
-import io.github.wulkanowy.sdk.scrapper.attendance.Attendance.Category.PRESENCE
-import io.github.wulkanowy.sdk.scrapper.attendance.Attendance.Category.UNEXCUSED_LATENESS
-import io.github.wulkanowy.sdk.scrapper.attendance.Attendance.Category.UNKNOWN
-import io.github.wulkanowy.sdk.scrapper.attendance.Attendance.Category.values
+import io.github.wulkanowy.sdk.scrapper.attendance.AttendanceCategory.ABSENCE_UNEXCUSED
+import io.github.wulkanowy.sdk.scrapper.attendance.AttendanceCategory.UNEXCUSED_LATENESS
 import io.github.wulkanowy.sdk.scrapper.timetable.CacheResponse.Time
-import io.github.wulkanowy.sdk.scrapper.toLocalDate
-import io.reactivex.Observable
-import io.reactivex.Single
-import org.threeten.bp.LocalDate
-import org.threeten.bp.Month
+import kotlinx.serialization.decodeFromString
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
+import java.time.LocalDate
+import java.time.Month
 
-fun Single<AttendanceResponse?>.mapAttendanceList(start: LocalDate, end: LocalDate?, getTimes: () -> Single<List<Time>>): Single<List<Attendance>> {
+fun AttendanceResponse.mapAttendanceList(start: LocalDate, end: LocalDate?, times: List<Time>): List<Attendance> {
     val endDate = end ?: start.plusDays(4)
-    var excuseActive = false
-    var sentExcuses = emptyList<SentExcuse>()
-    return map {
-        it.run {
-            excuseActive = this.excuseActive
-            sentExcuses = this.sentExcuses
-            lessons
-        }
-    }.flatMapObservable { Observable.fromIterable(it) }.flatMap { a ->
-        getTimes().flatMapObservable { times ->
-            Observable.fromIterable(times.filter { time -> time.id == a.timeId })
-        }.map {
-            val sentExcuse = sentExcuses.firstOrNull { excuse -> excuse.date == a.date && excuse.timeId == a.timeId }
-            a.apply {
-                presence = a.categoryId == PRESENCE.id || a.categoryId == ABSENCE_FOR_SCHOOL_REASONS.id
-                absence = a.categoryId == ABSENCE_UNEXCUSED.id || a.categoryId == ABSENCE_EXCUSED.id
-                lateness = a.categoryId == EXCUSED_LATENESS.id || a.categoryId == UNEXCUSED_LATENESS.id
-                excused = a.categoryId == ABSENCE_EXCUSED.id || a.categoryId == EXCUSED_LATENESS.id
-                exemption = a.categoryId == EXEMPTION.id
-                excusable = excuseActive && (absence || lateness) && !excused && sentExcuse == null
-                name = (values().singleOrNull { category -> category.id == categoryId } ?: UNKNOWN).title
-                number = it.number
-                if (sentExcuse != null)
-                    excuseStatus = SentExcuse.Status.getByValue(sentExcuse.status)
-            }
+    return lessons.map {
+        val sentExcuse = sentExcuses.firstOrNull { excuse -> excuse.date == it.date && excuse.timeId == it.timeId }
+        it.apply {
+            number = times.single { time -> time.id == it.timeId }.number
+            category = AttendanceCategory.getCategoryById(categoryId)
+            excusable = excuseActive && (category == ABSENCE_UNEXCUSED || category == UNEXCUSED_LATENESS) && sentExcuse == null
+            if (sentExcuse != null) excuseStatus = SentExcuse.Status.getByValue(sentExcuse.status)
         }
     }.filter {
         it.date.toLocalDate() >= start && it.date.toLocalDate() <= endDate
-    }.toList().map { list -> list.sortedWith(compareBy({ it.date }, { it.number })) }
+    }.sortedWith(compareBy({ it.date }, { it.number }))
 }
 
-fun AttendanceSummaryResponse.mapAttendanceSummaryList(gson: GsonBuilder): List<AttendanceSummary> {
+fun AttendanceSummaryResponse.mapAttendanceSummaryList(): List<AttendanceSummary> {
+    val jsonObject = Json {
+        isLenient = true
+    }
     val stats = items.map {
-        (gson.create().fromJson<LinkedTreeMap<String, String?>>(
-            gson.registerTypeAdapter(
-                AttendanceSummaryResponse.Summary::class.java,
-                AttendanceSummaryItemSerializer()
-            ).create().toJson(it), object : TypeToken<LinkedTreeMap<String, String?>>() {}.type
-        ))
+        val json = jsonObject.encodeToString(it)
+        jsonObject.decodeFromString<Map<String, String?>>(json)
     }
 
     val getMonthValue = fun(type: Int, month: Int): Int {
@@ -68,9 +39,14 @@ fun AttendanceSummaryResponse.mapAttendanceSummaryList(gson: GsonBuilder): List<
 
     return (1..12).map {
         AttendanceSummary(
-            Month.of(if (it < 5) 8 + it else it - 4),
-            getMonthValue(0, it), getMonthValue(1, it), getMonthValue(2, it), getMonthValue(3, it),
-            getMonthValue(4, it), getMonthValue(5, it), getMonthValue(6, it)
+            month = Month.of(if (it < 5) 8 + it else it - 4),
+            presence = getMonthValue(0, it),
+            absence = getMonthValue(1, it),
+            absenceExcused = getMonthValue(2, it),
+            absenceForSchoolReasons = getMonthValue(3, it),
+            lateness = getMonthValue(4, it),
+            latenessExcused = getMonthValue(5, it),
+            exemption = getMonthValue(6, it),
         )
     }.filterNot { summary ->
         summary.absence == 0 &&

@@ -1,13 +1,24 @@
 package io.github.wulkanowy.sdk.scrapper.attendance
 
-import com.google.gson.annotations.SerializedName
-import java.util.Date
+import io.github.wulkanowy.sdk.scrapper.adapter.CustomDateAdapter
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
+import java.time.LocalDateTime
 
+@Serializable
 data class AttendanceRequest(
 
-    @SerializedName("data")
-    val date: Date,
+    @SerialName("data")
+    @Serializable(with = CustomDateAdapter::class)
+    val date: LocalDateTime,
 
-    @SerializedName("idTypWpisuFrekwencji")
-    val typeId: Int = -1
+    @SerialName("idTypWpisuFrekwencji")
+    val typeId: Int = -1,
+)
+
+@Serializable
+data class AttendanceRecordsRequest(
+
+    @SerialName("miesiac")
+    val month: Int,
 )

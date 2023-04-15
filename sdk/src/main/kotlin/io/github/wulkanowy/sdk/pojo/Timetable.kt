@@ -1,12 +1,23 @@
 package io.github.wulkanowy.sdk.pojo
 
-import org.threeten.bp.LocalDate
-import org.threeten.bp.LocalDateTime
+import java.time.LocalDate
+import java.time.ZonedDateTime
 
 data class Timetable(
+    val headers: List<TimetableDayHeader>,
+    val lessons: List<Lesson>,
+    val additional: List<LessonAdditional>,
+)
+
+data class TimetableDayHeader(
+    val date: LocalDate,
+    val content: String,
+)
+
+data class Lesson(
     val number: Int,
-    val start: LocalDateTime,
-    val end: LocalDateTime,
+    val start: ZonedDateTime,
+    val end: ZonedDateTime,
     val date: LocalDate,
     val subject: String,
     val subjectOld: String,
@@ -18,5 +29,12 @@ data class Timetable(
     val info: String,
     val studentPlan: Boolean,
     val changes: Boolean,
-    val canceled: Boolean
+    val canceled: Boolean,
+)
+
+data class LessonAdditional(
+    val start: ZonedDateTime,
+    val end: ZonedDateTime,
+    val date: LocalDate,
+    val subject: String,
 )

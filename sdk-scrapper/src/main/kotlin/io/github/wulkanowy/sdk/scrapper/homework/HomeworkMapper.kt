@@ -1,19 +1,22 @@
 package io.github.wulkanowy.sdk.scrapper.homework
 
-import io.github.wulkanowy.sdk.scrapper.toDate
-import io.github.wulkanowy.sdk.scrapper.toLocalDate
-import org.threeten.bp.LocalDate
+import org.jsoup.parser.Parser
+import java.time.LocalDate
 
-fun List<HomeworkResponse>.mapHomeworkList(startDate: LocalDate, endDate: LocalDate?): List<Homework> {
+fun List<HomeworkDay>.mapHomework(startDate: LocalDate, endDate: LocalDate?): List<Homework> {
     val end = endDate ?: startDate
     return asSequence().map { day ->
-        day.items.map {
-            val teacherAndDate = it.teacher.split(", ")
-            it.apply {
-                date = day.date
-                entryDate = teacherAndDate.last().toDate("dd.MM.yyyy")
-                teacher = teacherAndDate.first().split(" [").first()
-                teacherSymbol = teacherAndDate.first().split(" [").last().removeSuffix("]")
+        day.items.map { homework ->
+            val teacherAndCode = homework.teacher.split(", ").first().split(" [")
+            val teacher = teacherAndCode.first()
+            val teacherCode = teacherAndCode.last().removeSuffix("]")
+            homework.copy(
+                teacher = teacher,
+                date = day.date,
+                content = Parser.unescapeEntities(homework.content, true),
+            ).apply {
+                teacherSymbol = teacherCode
+                _attachments = homework.attachments.map { it.url to it.filename }
             }
         }
     }.flatten().filter {

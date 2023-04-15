@@ -1,35 +1,34 @@
 package io.github.wulkanowy.sdk.scrapper
 
-import com.google.gson.annotations.SerializedName
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class ApiResponse<out T>(
-
     val success: Boolean,
-
     val data: T?,
+    val feedback: Feedback? = null,
+    val errorMessage: String? = null,
+)
 
-    val feedback: Feedback,
+@Serializable
+data class Feedback(
 
-    val errorMessage: String = ""
-) {
+    @SerialName("Handled")
+    val handled: Boolean?,
 
-    data class Feedback(
+    @SerialName("FType")
+    val type: String,
 
-        @SerializedName("Handled")
-        val handled: Boolean,
+    @SerialName("Message")
+    val message: String,
 
-        @SerializedName("FType")
-        val type: String,
+    @SerialName("ExceptionMessage")
+    val exceptionMessage: String?,
 
-        @SerializedName("Message")
-        val message: String,
+    @SerialName("InnerExceptionMessage")
+    val innerExceptionMessage: String?,
 
-        @SerializedName("ExceptionMessage")
-        val exceptionMessage: String,
-
-        @SerializedName("InnerExceptionMessage")
-        val innerExceptionMessage: String,
-
-        val success: Boolean
-    )
-}
+    @SerialName("success")
+    val success: Boolean? = null,
+)

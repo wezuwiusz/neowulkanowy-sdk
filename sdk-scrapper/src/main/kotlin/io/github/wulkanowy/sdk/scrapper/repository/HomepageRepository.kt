@@ -1,93 +1,89 @@
 package io.github.wulkanowy.sdk.scrapper.repository
 
 import io.github.wulkanowy.sdk.scrapper.getScriptParam
+import io.github.wulkanowy.sdk.scrapper.home.DirectorInformation
+import io.github.wulkanowy.sdk.scrapper.home.GovernmentUnit
 import io.github.wulkanowy.sdk.scrapper.home.LuckyNumber
-import io.github.wulkanowy.sdk.scrapper.interceptor.ErrorHandlerTransformer
+import io.github.wulkanowy.sdk.scrapper.interceptor.handleErrors
 import io.github.wulkanowy.sdk.scrapper.service.HomepageService
-import io.reactivex.Single
+import io.github.wulkanowy.sdk.scrapper.toDate
+import io.github.wulkanowy.sdk.scrapper.toLocalDate
 
 class HomepageRepository(private val api: HomepageService) {
 
     private lateinit var token: String
 
-    private fun getToken(): Single<String> {
-        if (::token.isInitialized) return Single.just(token)
+    private suspend fun getToken(): String {
+        if (::token.isInitialized) return token
 
-        return api.getStart().map {
-            getScriptParam("permissions", it)
-        }.map { it.apply { token = this } }
+        val page = api.getStart()
+        val permissions = getScriptParam("permissions", page)
+        token = permissions
+        return permissions
     }
 
-    fun getSelfGovernments(): Single<List<String>> {
-        return getToken().flatMap { api.getSelfGovernments(it) }
-            .compose(ErrorHandlerTransformer()).map { it.data.orEmpty() }.map { it[0].content }.map { res ->
-                res.map { it.name }
+    suspend fun getDirectorInformation(): List<DirectorInformation> {
+        val res = api.getDirectorInformation(getToken()).handleErrors().data
+        return requireNotNull(res).flatMap { wrapper ->
+            wrapper.content.map {
+                DirectorInformation(
+                    date = it.name.substringBefore(" ").toDate("dd.MM.yyyy").toLocalDate(),
+                    subject = it.name.substringAfter(" "),
+                    content = it.data.orEmpty(),
+                )
             }
+        }.sortedBy { it.date }
     }
 
-    fun getStudentsTrips(): Single<List<String>> {
-        return getToken().flatMap { api.getStudentsTrips(it) }
-            .compose(ErrorHandlerTransformer()).map { it.data.orEmpty() }.map { it[0].content }.map { res ->
-                res.map { it.name }
+    suspend fun getSelfGovernments(): List<GovernmentUnit> {
+        val res = api.getSelfGovernments(getToken()).handleErrors().data
+        return requireNotNull(res)
+    }
+
+    suspend fun getStudentThreats(): List<String> {
+        return api.getStudentThreats(getToken()).handleErrors().data.orEmpty()[0].content.map { it.name }
+    }
+
+    suspend fun getStudentsTrips(): List<String> {
+        return api.getStudentsTrips(getToken()).handleErrors().data.orEmpty()[0].content.map { it.name }
+    }
+
+    suspend fun getLastGrades(): List<String> {
+        return api.getLastGrades(getToken()).handleErrors().data.orEmpty()[0].content.map { it.name }
+    }
+
+    suspend fun getFreeDays(): List<String> {
+        return api.getFreeDays(getToken()).handleErrors().data.orEmpty()[0].content.map { it.name }
+    }
+
+    suspend fun getKidsLuckyNumbers(): List<LuckyNumber> {
+        val res = api.getKidsLuckyNumbers(getToken()).handleErrors().data
+        return requireNotNull(res).flatMap { unit ->
+            unit.content.flatMap { school ->
+                school.content.map { number ->
+                    LuckyNumber(
+                        unitName = unit.name,
+                        school = school.name,
+                        number = number.name.substringAfterLast(": ").toInt(),
+                    )
+                }
             }
+        }
     }
 
-    fun getLastGrades(): Single<List<String>> {
-        return getToken().flatMap { api.getLastGrades(it) }
-            .compose(ErrorHandlerTransformer()).map { it.data.orEmpty() }.map { it[0].content }.map { res ->
-                res.map { it.name }
-            }
+    suspend fun getKidsLessonPlan(): List<String> {
+        return api.getKidsLessonPlan(getToken()).handleErrors().data.orEmpty()[0].content.map { it.name }
     }
 
-    fun getFreeDays(): Single<List<String>> {
-        return getToken().flatMap { api.getFreeDays(it) }
-            .compose(ErrorHandlerTransformer()).map { it.data.orEmpty() }.map { it[0].content }.map { res ->
-                res.map { it.name }
-            }
+    suspend fun getLastHomework(): List<String> {
+        return api.getLastHomework(getToken()).handleErrors().data.orEmpty()[0].content.map { it.name }
     }
 
-    fun getKidsLuckyNumbers(): Single<List<LuckyNumber>> {
-        return getToken().flatMap { api.getKidsLuckyNumbers(it) }
-            .compose(ErrorHandlerTransformer()).map { it.data.orEmpty() }
-            .map { res ->
-                res.map { unit ->
-                    unit.content.map { school ->
-                        school.content.map { number ->
-                            LuckyNumber(
-                                unitName = unit.name,
-                                school = school.name,
-                                number = number.name.substringAfterLast(": ").toInt()
-                            )
-                        }
-                    }.flatten()
-                }.flatten()
-            }
+    suspend fun getLastTests(): List<String> {
+        return api.getLastTests(getToken()).handleErrors().data.orEmpty()[0].content.map { it.name }
     }
 
-    fun getKidsLessonPlan(): Single<List<String>> {
-        return getToken().flatMap { api.getKidsLessonPlan(it) }
-            .compose(ErrorHandlerTransformer()).map { it.data.orEmpty() }.map { it[0].content }
-            .map { res -> res.map { it.name } }
-    }
-
-    fun getLastHomework(): Single<List<String>> {
-        return getToken().flatMap { api.getLastHomework(it) }
-            .compose(ErrorHandlerTransformer()).map { it.data.orEmpty() }.map { it[0].content }.map { res ->
-                res.map { it.name }
-            }
-    }
-
-    fun getLastTests(): Single<List<String>> {
-        return getToken().flatMap { api.getLastTests(it) }
-            .compose(ErrorHandlerTransformer()).map { it.data.orEmpty() }.map { it[0].content }.map { res ->
-                res.map { it.name }
-            }
-    }
-
-    fun getLastStudentLessons(): Single<List<String>> {
-        return getToken().flatMap { api.getLastStudentLessons(it) }
-            .compose(ErrorHandlerTransformer()).map { it.data.orEmpty() }.map { it[0].content }.map { res ->
-                res.map { it.name }
-            }
+    suspend fun getLastStudentLessons(): List<String> {
+        return api.getLastStudentLessons(getToken()).handleErrors().data.orEmpty()[0].content.map { it.name }
     }
 }

@@ -1,52 +1,58 @@
 package io.github.wulkanowy.sdk.scrapper.grades
 
-import com.google.gson.annotations.SerializedName
-import pl.droidsonroids.jspoon.annotation.Selector
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
-class GradesResponse {
+@Serializable
+data class GradesResponse(
 
-    @Selector(".ocenySzczegoly-table tbody tr:has(td:nth-of-type(2):not(:contains(Brak ocen)))")
-    var grades: List<Grade> = emptyList()
+    @SerialName("IsSrednia")
+    val isAverage: Boolean,
 
-    @SerializedName("IsSrednia")
-    var isAverage: Boolean = false
+    @SerialName("IsPunkty")
+    val isPoints: Boolean,
 
-    @SerializedName("IsPunkty")
-    var isPoints: Boolean = false
+    @SerialName("IsDlaDoroslych")
+    val isForAdults: Boolean,
 
-    @SerializedName("Oceny")
-    var gradesWithSubjects: List<Subject> = emptyList()
+    @SerialName("TypOcen")
+    val type: Int,
 
-    class Subject {
+    @SerialName("Oceny")
+    val gradesWithSubjects: List<Subject>,
+) {
 
-        @SerializedName("WidocznyPrzedmiot")
-        val visibleSubject: Boolean = false
+    @Serializable
+    data class Subject(
 
-        @SerializedName("Pozycja")
-        val order: Int = 0
+        @SerialName("WidocznyPrzedmiot")
+        val visibleSubject: Boolean = false,
 
-        @SerializedName("Przedmiot")
-        val name: String = ""
+        @SerialName("Pozycja")
+        val order: Int = 0,
 
-        @SerializedName("Srednia")
-        val average: Double = .0
+        @SerialName("Przedmiot")
+        val name: String = "",
 
-        @SerializedName("ProponowanaOcenaRoczna")
-        var proposed: String? = ""
+        @SerialName("Srednia")
+        val average: Double = .0,
 
-        @SerializedName("OcenaRoczna")
-        var annual: String? = ""
+        @SerialName("ProponowanaOcenaRoczna")
+        val proposed: String? = "",
 
-        @SerializedName("SumaPunktow")
-        val pointsSum: String? = ""
+        @SerialName("OcenaRoczna")
+        val annual: String? = "",
 
-        @SerializedName("ProponowanaOcenaRocznaPunkty")
-        val proposedPoints: String? = ""
+        @SerialName("SumaPunktow")
+        val pointsSum: String? = "",
 
-        @SerializedName("OcenaRocznaPunkty")
-        val finalPoints: String? = ""
+        @SerialName("ProponowanaOcenaRocznaPunkty")
+        val proposedPoints: String? = "",
 
-        @SerializedName("OcenyCzastkowe")
-        val grades: List<Grade> = emptyList()
-    }
+        @SerialName("OcenaRocznaPunkty")
+        val finalPoints: String? = "",
+
+        @SerialName("OcenyCzastkowe")
+        val grades: List<Grade> = emptyList(),
+    )
 }

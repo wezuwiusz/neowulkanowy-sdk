@@ -5,17 +5,5 @@ plugins {
 
 dependencies {
     implementation project(":sdk-hebe")
-    implementation project(":sdk-mobile")
     implementation project(":sdk-scrapper")
-
-    testCompile files(this.project(':sdk-mobile').sourceSets.test.output)
-    testCompile files(this.project(':sdk-mobile').sourceSets.test.runtimeClasspath)
-}
-
-sourceSets {
-    test {
-        resources {
-            srcDir '../sdk-mobile/src/test/resources'
-        }
-    }
 }

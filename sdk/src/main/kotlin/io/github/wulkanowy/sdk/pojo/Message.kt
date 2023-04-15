@@ -1,19 +1,19 @@
 package io.github.wulkanowy.sdk.pojo
 
-import org.threeten.bp.LocalDateTime
+import java.time.ZonedDateTime
 
 data class Message(
-    val id: Int?,
-    val messageId: Int?,
-    val sender: String?,
-    val senderId: Int?,
-    val recipient: String?,
+    val globalKey: String,
+    val id: Int,
+    val mailbox: String,
+    val recipients: List<Recipient>,
+    val correspondents: String,
     val subject: String,
     val content: String?,
-    val date: LocalDateTime?,
-    val folderId: Int = 0,
-    val unread: Boolean?,
-    val unreadBy: Int?,
+    val date: ZonedDateTime,
+    val folderId: Int,
+    val unread: Boolean,
     val readBy: Int?,
-    var removed: Boolean = false
+    val unreadBy: Int?,
+    val hasAttachments: Boolean,
 )

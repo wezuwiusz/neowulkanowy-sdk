@@ -1,25 +1,50 @@
 package io.github.wulkanowy.sdk.scrapper
 
 import io.github.wulkanowy.sdk.scrapper.attendance.Absent
+import io.github.wulkanowy.sdk.scrapper.attendance.Attendance
+import io.github.wulkanowy.sdk.scrapper.attendance.AttendanceSummary
+import io.github.wulkanowy.sdk.scrapper.attendance.Subject
+import io.github.wulkanowy.sdk.scrapper.conferences.Conference
+import io.github.wulkanowy.sdk.scrapper.exams.Exam
+import io.github.wulkanowy.sdk.scrapper.exception.ScrapperException
+import io.github.wulkanowy.sdk.scrapper.grades.GradePointsSummary
+import io.github.wulkanowy.sdk.scrapper.grades.Grades
+import io.github.wulkanowy.sdk.scrapper.grades.GradesStatisticsPartial
+import io.github.wulkanowy.sdk.scrapper.grades.GradesStatisticsSemester
+import io.github.wulkanowy.sdk.scrapper.home.DirectorInformation
+import io.github.wulkanowy.sdk.scrapper.home.GovernmentUnit
+import io.github.wulkanowy.sdk.scrapper.home.LuckyNumber
+import io.github.wulkanowy.sdk.scrapper.homework.Homework
 import io.github.wulkanowy.sdk.scrapper.login.LoginHelper
 import io.github.wulkanowy.sdk.scrapper.messages.Folder
-import io.github.wulkanowy.sdk.scrapper.messages.Message
+import io.github.wulkanowy.sdk.scrapper.messages.Mailbox
+import io.github.wulkanowy.sdk.scrapper.messages.MessageDetails
+import io.github.wulkanowy.sdk.scrapper.messages.MessageMeta
+import io.github.wulkanowy.sdk.scrapper.messages.MessageReplayDetails
 import io.github.wulkanowy.sdk.scrapper.messages.Recipient
+import io.github.wulkanowy.sdk.scrapper.mobile.Device
+import io.github.wulkanowy.sdk.scrapper.mobile.TokenResponse
+import io.github.wulkanowy.sdk.scrapper.notes.Note
+import io.github.wulkanowy.sdk.scrapper.register.RegisterUser
+import io.github.wulkanowy.sdk.scrapper.register.Semester
+import io.github.wulkanowy.sdk.scrapper.register.Student
 import io.github.wulkanowy.sdk.scrapper.repository.AccountRepository
 import io.github.wulkanowy.sdk.scrapper.repository.HomepageRepository
 import io.github.wulkanowy.sdk.scrapper.repository.MessagesRepository
 import io.github.wulkanowy.sdk.scrapper.repository.RegisterRepository
-import io.github.wulkanowy.sdk.scrapper.repository.StudentAndParentRepository
-import io.github.wulkanowy.sdk.scrapper.repository.StudentAndParentStartRepository
 import io.github.wulkanowy.sdk.scrapper.repository.StudentRepository
 import io.github.wulkanowy.sdk.scrapper.repository.StudentStartRepository
+import io.github.wulkanowy.sdk.scrapper.school.School
+import io.github.wulkanowy.sdk.scrapper.school.Teacher
 import io.github.wulkanowy.sdk.scrapper.service.ServiceManager
-import io.reactivex.Single
+import io.github.wulkanowy.sdk.scrapper.student.StudentInfo
+import io.github.wulkanowy.sdk.scrapper.student.StudentPhoto
+import io.github.wulkanowy.sdk.scrapper.timetable.CompletedLesson
+import io.github.wulkanowy.sdk.scrapper.timetable.Timetable
 import okhttp3.Interceptor
 import okhttp3.logging.HttpLoggingInterceptor
-import org.threeten.bp.LocalDate
-import org.threeten.bp.LocalDateTime
 import java.net.URL
+import java.time.LocalDate
 
 class Scrapper {
 
@@ -31,7 +56,7 @@ class Scrapper {
         ADFSCards,
         ADFSLight,
         ADFSLightScoped,
-        ADFSLightCufs
+        ADFSLightCufs,
     }
 
     private val changeManager = resettableManager()
@@ -109,25 +134,43 @@ class Scrapper {
             field = value
         }
 
+    var unitId: Int = 0
+        set(value) {
+            if (field != value) changeManager.reset()
+            field = value
+        }
+
+    var kindergartenDiaryId: Int = 0
+        set(value) {
+            if (field != value) changeManager.reset()
+            field = value
+        }
+
     var schoolYear: Int = 0
         set(value) {
             if (field != value) changeManager.reset()
             field = value
         }
 
-    var useNewStudent: Boolean = true
-
-    /**
-     * @see <a href="https://deviceatlas.com/blog/most-popular-android-smartphones#poland">The most popular Android phones - 2018</a>
-     * @see <a href="http://www.tera-wurfl.com/explore/?action=wurfl_id&id=samsung_sm_j500h_ver1">Tera-WURFL Explorer - Samsung SM-J500H (Galaxy J5)</a>
-     */
-    var androidVersion: String = "5.1"
+    var emptyCookieJarInterceptor: Boolean = false
         set(value) {
             if (field != value) changeManager.reset()
             field = value
         }
 
-    var buildTag: String = "SM-J500H Build/LMY48B"
+    var userAgentTemplate: String = ""
+        set(value) {
+            if (field != value) changeManager.reset()
+            field = value
+        }
+
+    var androidVersion: String = "11"
+        set(value) {
+            if (field != value) changeManager.reset()
+            field = value
+        }
+
+    var buildTag: String = "Redmi Note 8T"
         set(value) {
             if (field != value) changeManager.reset()
             field = value
@@ -146,40 +189,61 @@ class Scrapper {
     private val okHttpFactory by lazy { OkHttpClientBuilderFactory() }
 
     private val serviceManager by resettableLazy(changeManager) {
-        ServiceManager(okHttpFactory, logLevel, loginType, schema, host, normalizedSymbol, email, password, schoolSymbol, studentId, diaryId, schoolYear, androidVersion, buildTag)
-            .apply {
-                appInterceptors.forEach { (interceptor, isNetwork) ->
-                    setInterceptor(interceptor, isNetwork)
-                }
+        ServiceManager(
+            okHttpClientBuilderFactory = okHttpFactory,
+            logLevel = logLevel,
+            loginType = loginType,
+            schema = schema,
+            host = host,
+            symbol = normalizedSymbol,
+            email = email,
+            password = password,
+            schoolSymbol = schoolSymbol,
+            studentId = studentId,
+            diaryId = diaryId,
+            kindergartenDiaryId = kindergartenDiaryId,
+            schoolYear = schoolYear,
+            androidVersion = androidVersion,
+            buildTag = buildTag,
+            emptyCookieJarIntercept = emptyCookieJarInterceptor,
+            userAgentTemplate = userAgentTemplate,
+        ).apply {
+            appInterceptors.forEach { (interceptor, isNetwork) ->
+                setInterceptor(interceptor, isNetwork)
             }
+        }
     }
 
     private val account by lazy { AccountRepository(serviceManager.getAccountService()) }
 
     private val register by resettableLazy(changeManager) {
         RegisterRepository(
-            normalizedSymbol, email, password, useNewStudent,
-            LoginHelper(loginType, schema, host, normalizedSymbol, serviceManager.getCookieManager(), serviceManager.getLoginService()),
-            serviceManager.getRegisterService(),
-            serviceManager.getSnpService(withLogin = false, interceptor = false),
-            serviceManager.getStudentService(withLogin = false, interceptor = false),
-            serviceManager.urlGenerator
+            startSymbol = normalizedSymbol,
+            email = email,
+            password = password,
+            loginHelper = LoginHelper(
+                loginType = loginType,
+                schema = schema,
+                host = host,
+                symbol = normalizedSymbol,
+                cookies = serviceManager.getCookieManager(),
+                api = serviceManager.getLoginService(),
+            ),
+            register = serviceManager.getRegisterService(),
+            student = serviceManager.getStudentService(withLogin = false, studentInterceptor = false),
+            url = serviceManager.urlGenerator,
         )
-    }
-
-    private val snpStart by resettableLazy(changeManager) {
-        if (0 == studentId) throw ScrapperException("Student id is not set")
-        StudentAndParentStartRepository(normalizedSymbol, schoolSymbol, studentId, serviceManager.getSnpService(withLogin = true, interceptor = false))
     }
 
     private val studentStart by resettableLazy(changeManager) {
         if (0 == studentId) throw ScrapperException("Student id is not set")
-        if (0 == classId) throw ScrapperException("Class id is not set")
-        StudentStartRepository(studentId, classId, serviceManager.getStudentService(withLogin = true, interceptor = false))
-    }
-
-    private val snp by resettableLazy(changeManager) {
-        StudentAndParentRepository(serviceManager.getSnpService())
+        if (0 == classId && 0 == kindergartenDiaryId) throw ScrapperException("Class id is not set")
+        StudentStartRepository(
+            studentId = studentId,
+            classId = classId,
+            unitId = unitId,
+            api = serviceManager.getStudentService(withLogin = true, studentInterceptor = false),
+        )
     }
 
     private val student by resettableLazy(changeManager) {
@@ -194,108 +258,163 @@ class Scrapper {
         HomepageRepository(serviceManager.getHomepageService())
     }
 
-    fun getPasswordResetCaptcha(registerBaseUrl: String, symbol: String) = account.getPasswordResetCaptcha(registerBaseUrl, symbol)
+    suspend fun getPasswordResetCaptcha(registerBaseUrl: String, symbol: String): Pair<String, String> = account.getPasswordResetCaptcha(registerBaseUrl, symbol)
 
-    fun sendPasswordResetRequest(registerBaseUrl: String, symbol: String, email: String, captchaCode: String): Single<String> {
+    suspend fun sendPasswordResetRequest(registerBaseUrl: String, symbol: String, email: String, captchaCode: String): String {
         return account.sendPasswordResetRequest(registerBaseUrl, symbol, email.trim(), captchaCode)
     }
 
-    fun getStudents() = register.getStudents()
+    suspend fun getStudents(): List<Student> = register.getStudents()
 
-    fun getSemesters() = if (useNewStudent) studentStart.getSemesters() else snpStart.getSemesters()
+    suspend fun getUserSubjects(): RegisterUser = register.getUserSubjects()
 
-    fun getAttendance(startDate: LocalDate, endDate: LocalDate? = null) =
-        if (useNewStudent) student.getAttendance(startDate, endDate) else snp.getAttendance(startDate, endDate)
+    suspend fun getSemesters(): List<Semester> = studentStart.getSemesters()
 
-    fun getAttendanceSummary(subjectId: Int? = -1) = if (useNewStudent) student.getAttendanceSummary(subjectId) else snp.getAttendanceSummary(subjectId)
+    suspend fun getAttendance(startDate: LocalDate, endDate: LocalDate? = null): List<Attendance> {
+        if (diaryId == 0) return emptyList()
 
-    fun excuseForAbsence(absents: List<Absent>, content: String? = null) = student.excuseForAbsence(absents, content)
-
-    fun getSubjects() = if (useNewStudent) student.getSubjects() else snp.getSubjects()
-
-    fun getExams(startDate: LocalDate, endDate: LocalDate? = null) =
-        if (useNewStudent) student.getExams(startDate, endDate) else snp.getExams(startDate, endDate)
-
-    fun getGrades(semesterId: Int? = null) = if (useNewStudent) student.getGrades(semesterId) else snp.getGrades(semesterId)
-
-    fun getGradesSummary(semesterId: Int? = null) = if (useNewStudent) student.getGradesSummary(semesterId) else snp.getGradesSummary(semesterId)
-
-    fun getGradesPartialStatistics(semesterId: Int) =
-        if (useNewStudent) student.getGradesPartialStatistics(semesterId) else snp.getGradesStatistics(semesterId, false)
-
-    fun getGradesPointsStatistics(semesterId: Int) = student.getGradesPointsStatistics(semesterId)
-
-    fun getGradesAnnualStatistics(semesterId: Int) =
-        if (useNewStudent) student.getGradesAnnualStatistics(semesterId) else snp.getGradesStatistics(semesterId, true)
-
-    fun getHomework(startDate: LocalDate, endDate: LocalDate? = null) =
-        if (useNewStudent) student.getHomework(startDate, endDate) else snp.getHomework(startDate, endDate)
-
-    fun getNotes() = if (useNewStudent) student.getNotes() else snp.getNotes()
-
-    fun getTimetable(startDate: LocalDate, endDate: LocalDate? = null) =
-        if (useNewStudent) student.getTimetable(startDate, endDate) else snp.getTimetable(startDate, endDate)
-
-    fun getCompletedLessons(startDate: LocalDate, endDate: LocalDate? = null, subjectId: Int = -1) =
-        if (useNewStudent) student.getCompletedLessons(startDate, endDate, subjectId) else snp.getCompletedLessons(startDate, endDate, subjectId)
-
-    fun getRegisteredDevices() = if (useNewStudent) student.getRegisteredDevices() else snp.getRegisteredDevices()
-
-    fun getToken() = if (useNewStudent) student.getToken() else snp.getToken()
-
-    fun unregisterDevice(id: Int) = if (useNewStudent) student.unregisterDevice(id) else snp.unregisterDevice(id)
-
-    fun getTeachers() = if (useNewStudent) student.getTeachers() else snp.getTeachers()
-
-    fun getSchool() = if (useNewStudent) student.getSchool() else snp.getSchool()
-
-    fun getStudentInfo() = snp.getStudentInfo()
-
-    fun getReportingUnits() = messages.getReportingUnits()
-
-    fun getRecipients(unitId: Int, role: Int = 2) = messages.getRecipients(unitId, role)
-
-    fun getMessages(
-        folder: Folder,
-        startDate: LocalDateTime? = null,
-        endDate: LocalDateTime? = null
-    ): Single<List<Message>> {
-        return when (folder) {
-            Folder.RECEIVED -> messages.getReceivedMessages(startDate, endDate)
-            Folder.SENT -> messages.getSentMessages(startDate, endDate)
-            Folder.TRASHED -> messages.getDeletedMessages(startDate, endDate)
-        }
+        return student.getAttendance(startDate, endDate)
     }
 
-    fun getReceivedMessages(startDate: LocalDateTime? = null, endDate: LocalDateTime? = null) = messages.getReceivedMessages(startDate, endDate)
+    suspend fun getAttendanceSummary(subjectId: Int? = -1): List<AttendanceSummary> {
+        if (diaryId == 0) return emptyList()
 
-    fun getSentMessages(startDate: LocalDateTime? = null, endDate: LocalDateTime? = null) = messages.getSentMessages(startDate, endDate)
+        return student.getAttendanceSummary(subjectId)
+    }
 
-    fun getDeletedMessages(startDate: LocalDateTime? = null, endDate: LocalDateTime? = null) = messages.getDeletedMessages(startDate, endDate)
+    suspend fun excuseForAbsence(absents: List<Absent>, content: String? = null): Boolean = student.excuseForAbsence(absents, content)
 
-    fun getMessageRecipients(messageId: Int, loginId: Int = 0) = messages.getMessageRecipients(messageId, loginId)
+    suspend fun getSubjects(): List<Subject> = student.getSubjects()
 
-    fun getMessageContent(messageId: Int, folderId: Int, read: Boolean = false, id: Int? = null) = messages.getMessage(messageId, folderId, read, id)
+    suspend fun getExams(startDate: LocalDate, endDate: LocalDate? = null): List<Exam> {
+        if (diaryId == 0) return emptyList()
 
-    fun sendMessage(subject: String, content: String, recipients: List<Recipient>) = messages.sendMessage(subject, content, recipients)
+        return student.getExams(startDate, endDate)
+    }
 
-    fun deleteMessages(messages: List<Pair<Int, Int>>) = this.messages.deleteMessages(messages)
+    suspend fun getGrades(semester: Int): Grades {
+        if (diaryId == 0) return Grades(
+            details = emptyList(),
+            summary = emptyList(),
+            isAverage = false,
+            isPoints = false,
+            isForAdults = false,
+            type = -1,
+        )
 
-    fun getSelfGovernments() = homepage.getSelfGovernments()
+        return student.getGrades(semester)
+    }
 
-    fun getStudentsTrips() = homepage.getStudentsTrips()
+    suspend fun getGradesPartialStatistics(semesterId: Int): List<GradesStatisticsPartial> {
+        if (diaryId == 0) return emptyList()
 
-    fun getLastGrades() = homepage.getLastGrades()
+        return student.getGradesPartialStatistics(semesterId)
+    }
 
-    fun getFreeDays() = homepage.getFreeDays()
+    suspend fun getGradesPointsStatistics(semesterId: Int): List<GradePointsSummary> {
+        if (diaryId == 0) return emptyList()
 
-    fun getKidsLuckyNumbers() = homepage.getKidsLuckyNumbers()
+        return student.getGradesPointsStatistics(semesterId)
+    }
 
-    fun getKidsLessonPlan() = homepage.getKidsLessonPlan()
+    suspend fun getGradesSemesterStatistics(semesterId: Int): List<GradesStatisticsSemester> {
+        if (diaryId == 0) return emptyList()
 
-    fun getLastHomework() = homepage.getLastHomework()
+        return student.getGradesAnnualStatistics(semesterId)
+    }
 
-    fun getLastTests() = homepage.getLastTests()
+    suspend fun getHomework(startDate: LocalDate, endDate: LocalDate? = null): List<Homework> {
+        if (diaryId == 0) return emptyList()
 
-    fun getLastStudentLessons() = homepage.getLastStudentLessons()
+        return student.getHomework(startDate, endDate)
+    }
+
+    suspend fun getNotes(): List<Note> = student.getNotes()
+
+    suspend fun getConferences(): List<Conference> = student.getConferences()
+
+    suspend fun getTimetable(startDate: LocalDate, endDate: LocalDate? = null): Timetable {
+        if (diaryId == 0) return Timetable(
+            headers = emptyList(),
+            lessons = emptyList(),
+            additional = emptyList(),
+        )
+
+        return student.getTimetable(startDate, endDate)
+    }
+
+    suspend fun getCompletedLessons(startDate: LocalDate, endDate: LocalDate? = null, subjectId: Int = -1): List<CompletedLesson> {
+        if (diaryId == 0) return emptyList()
+
+        return student.getCompletedLessons(startDate, endDate, subjectId)
+    }
+
+    suspend fun getRegisteredDevices(): List<Device> = student.getRegisteredDevices()
+
+    suspend fun getToken(): TokenResponse = student.getToken()
+
+    suspend fun unregisterDevice(id: Int): Boolean = student.unregisterDevice(id)
+
+    suspend fun getTeachers(): List<Teacher> = student.getTeachers()
+
+    suspend fun getSchool(): School = student.getSchool()
+
+    suspend fun getStudentInfo(): StudentInfo = student.getStudentInfo()
+
+    suspend fun getStudentPhoto(): StudentPhoto = student.getStudentPhoto()
+
+    suspend fun getMailboxes(): List<Mailbox> = messages.getMailboxes()
+
+    suspend fun getRecipients(mailboxKey: String): List<Recipient> = messages.getRecipients(mailboxKey)
+
+    suspend fun getMessages(
+        folder: Folder,
+        mailboxKey: String? = null,
+        lastMessageKey: Int = 0,
+        pageSize: Int = 50,
+    ): List<MessageMeta> = when (folder) {
+        Folder.RECEIVED -> messages.getReceivedMessages(mailboxKey, lastMessageKey, pageSize)
+        Folder.SENT -> messages.getSentMessages(mailboxKey, lastMessageKey, pageSize)
+        Folder.TRASHED -> messages.getDeletedMessages(mailboxKey, lastMessageKey, pageSize)
+    }
+
+    suspend fun getReceivedMessages(mailboxKey: String? = null, lastMessageKey: Int = 0, pageSize: Int = 50): List<MessageMeta> =
+        messages.getReceivedMessages(mailboxKey, lastMessageKey, pageSize)
+
+    suspend fun getSentMessages(mailboxKey: String? = null, lastMessageKey: Int = 0, pageSize: Int = 50): List<MessageMeta> =
+        messages.getSentMessages(mailboxKey, lastMessageKey, pageSize)
+
+    suspend fun getDeletedMessages(mailboxKey: String? = null, lastMessageKey: Int = 0, pageSize: Int = 50): List<MessageMeta> =
+        messages.getDeletedMessages(mailboxKey, lastMessageKey, pageSize)
+
+    suspend fun getMessageReplayDetails(globalKey: String): MessageReplayDetails = messages.getMessageReplayDetails(globalKey)
+
+    suspend fun getMessageDetails(globalKey: String, markAsRead: Boolean): MessageDetails = messages.getMessageDetails(globalKey, markAsRead)
+
+    suspend fun sendMessage(subject: String, content: String, recipients: List<String>, senderMailboxId: String) =
+        messages.sendMessage(subject, content, recipients, senderMailboxId)
+
+    suspend fun deleteMessages(messagesToDelete: List<String>, removeForever: Boolean) = messages.deleteMessages(messagesToDelete, removeForever)
+
+    suspend fun getDirectorInformation(): List<DirectorInformation> = homepage.getDirectorInformation()
+
+    suspend fun getSelfGovernments(): List<GovernmentUnit> = homepage.getSelfGovernments()
+
+    suspend fun getStudentThreats(): List<String> = homepage.getStudentThreats()
+
+    suspend fun getStudentsTrips(): List<String> = homepage.getStudentsTrips()
+
+    suspend fun getLastGrades(): List<String> = homepage.getLastGrades()
+
+    suspend fun getFreeDays(): List<String> = homepage.getFreeDays()
+
+    suspend fun getKidsLuckyNumbers(): List<LuckyNumber> = homepage.getKidsLuckyNumbers()
+
+    suspend fun getKidsLessonPlan(): List<String> = homepage.getKidsLessonPlan()
+
+    suspend fun getLastHomework(): List<String> = homepage.getLastHomework()
+
+    suspend fun getLastTests(): List<String> = homepage.getLastTests()
+
+    suspend fun getLastStudentLessons(): List<String> = homepage.getLastStudentLessons()
 }

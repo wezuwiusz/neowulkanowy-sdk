@@ -1,23 +1,20 @@
 package io.github.wulkanowy.sdk.scrapper.mobile
 
-import com.google.gson.annotations.SerializedName
-import pl.droidsonroids.jspoon.annotation.Selector
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
-class TokenResponse {
+@Serializable
+data class TokenResponse(
 
-    @SerializedName("TokenKey")
-    @Selector("#rejestracja-formularz .blockElement:nth-last-child(3)", regex = ": (.*)")
-    lateinit var token: String
+    @SerialName("TokenKey")
+    val token: String,
 
-    @SerializedName("CustomerGroup")
-    @Selector("#rejestracja-formularz .blockElement:nth-last-child(2)", regex = ": (.*)")
-    lateinit var symbol: String
+    @SerialName("CustomerGroup")
+    val symbol: String,
 
-    @SerializedName("PIN")
-    @Selector("#rejestracja-formularz .blockElement:nth-last-child(1)", regex = ": (.*)")
-    lateinit var pin: String
+    @SerialName("PIN")
+    val pin: String,
 
-    @SerializedName("QrCodeImage")
-    @Selector("#rejestracja-formularz img", attr = "src", regex = "data:image\\/png;base64,(.+)")
-    lateinit var qrCodeImage: String
-}
+    @SerialName("QrCodeImage")
+    val qrCodeImage: String,
+)

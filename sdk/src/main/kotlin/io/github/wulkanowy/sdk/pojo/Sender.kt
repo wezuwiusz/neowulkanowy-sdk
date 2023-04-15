@@ -6,5 +6,5 @@ data class Sender(
     val loginId: Int?,
     val reportingUnitId: Int?,
     val role: Int?,
-    val hash: String?
+    val hash: String?,
 )

@@ -1,9 +1,11 @@
 package io.github.wulkanowy.sdk.pojo
 
-import org.threeten.bp.LocalDateTime
+import java.time.ZonedDateTime
 
 data class Device(
     val id: Int,
+    val deviceId: String,
     val name: String,
-    val date: LocalDateTime
+    val createDate: ZonedDateTime,
+    val modificationDate: ZonedDateTime?,
 )
