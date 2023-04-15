@@ -27,7 +27,6 @@ import io.github.wulkanowy.sdk.scrapper.mobile.TokenResponse
 import io.github.wulkanowy.sdk.scrapper.notes.Note
 import io.github.wulkanowy.sdk.scrapper.register.RegisterUser
 import io.github.wulkanowy.sdk.scrapper.register.Semester
-import io.github.wulkanowy.sdk.scrapper.register.Student
 import io.github.wulkanowy.sdk.scrapper.repository.AccountRepository
 import io.github.wulkanowy.sdk.scrapper.repository.HomepageRepository
 import io.github.wulkanowy.sdk.scrapper.repository.MessagesRepository
@@ -263,8 +262,6 @@ class Scrapper {
     suspend fun sendPasswordResetRequest(registerBaseUrl: String, symbol: String, email: String, captchaCode: String): String {
         return account.sendPasswordResetRequest(registerBaseUrl, symbol, email.trim(), captchaCode)
     }
-
-    suspend fun getStudents(): List<Student> = register.getStudents()
 
     suspend fun getUserSubjects(): RegisterUser = register.getUserSubjects()
 

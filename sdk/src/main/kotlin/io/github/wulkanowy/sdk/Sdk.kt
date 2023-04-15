@@ -22,13 +22,13 @@ import io.github.wulkanowy.sdk.mapper.mapSchool
 import io.github.wulkanowy.sdk.mapper.mapScrapperMessage
 import io.github.wulkanowy.sdk.mapper.mapSemesters
 import io.github.wulkanowy.sdk.mapper.mapStudent
-import io.github.wulkanowy.sdk.mapper.mapStudents
 import io.github.wulkanowy.sdk.mapper.mapSubjects
 import io.github.wulkanowy.sdk.mapper.mapTeachers
 import io.github.wulkanowy.sdk.mapper.mapTimetableFull
 import io.github.wulkanowy.sdk.mapper.mapToScrapperAbsent
 import io.github.wulkanowy.sdk.mapper.mapToUnits
 import io.github.wulkanowy.sdk.mapper.mapToken
+import io.github.wulkanowy.sdk.mapper.mapUser
 import io.github.wulkanowy.sdk.pojo.Absent
 import io.github.wulkanowy.sdk.pojo.Attendance
 import io.github.wulkanowy.sdk.pojo.AttendanceSummary
@@ -51,9 +51,9 @@ import io.github.wulkanowy.sdk.pojo.MessageDetails
 import io.github.wulkanowy.sdk.pojo.MessageReplayDetails
 import io.github.wulkanowy.sdk.pojo.Note
 import io.github.wulkanowy.sdk.pojo.Recipient
+import io.github.wulkanowy.sdk.pojo.RegisterUser
 import io.github.wulkanowy.sdk.pojo.School
 import io.github.wulkanowy.sdk.pojo.Semester
-import io.github.wulkanowy.sdk.pojo.Student
 import io.github.wulkanowy.sdk.pojo.StudentInfo
 import io.github.wulkanowy.sdk.pojo.StudentPhoto
 import io.github.wulkanowy.sdk.pojo.Subject
@@ -61,7 +61,6 @@ import io.github.wulkanowy.sdk.pojo.Teacher
 import io.github.wulkanowy.sdk.pojo.Timetable
 import io.github.wulkanowy.sdk.pojo.Token
 import io.github.wulkanowy.sdk.scrapper.Scrapper
-import io.github.wulkanowy.sdk.scrapper.register.RegisterUser
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import okhttp3.Interceptor
@@ -225,23 +224,18 @@ class Sdk {
         scrapper.sendPasswordResetRequest(registerBaseUrl, symbol, email, captchaCode)
     }
 
-    suspend fun getStudentsFromScrapper(email: String, password: String, scrapperBaseUrl: String, symbol: String = "Default"): List<Student> = withContext(Dispatchers.IO) {
+    suspend fun getUserSubjectsFromScrapper(
+        email: String,
+        password: String,
+        scrapperBaseUrl: String,
+        symbol: String = "Default",
+    ): RegisterUser = withContext(Dispatchers.IO) {
         scrapper.let {
             it.baseUrl = scrapperBaseUrl
             it.email = email
             it.password = password
             it.symbol = symbol
-            it.getStudents().mapStudents()
-        }
-    }
-
-    suspend fun getUserSubjectsFromScrapper(email: String, password: String, scrapperBaseUrl: String, symbol: String = "Default"): RegisterUser = withContext(Dispatchers.IO) {
-        scrapper.let {
-            it.baseUrl = scrapperBaseUrl
-            it.email = email
-            it.password = password
-            it.symbol = symbol
-            it.getUserSubjects()
+            it.getUserSubjects().mapUser()
         }
     }
 

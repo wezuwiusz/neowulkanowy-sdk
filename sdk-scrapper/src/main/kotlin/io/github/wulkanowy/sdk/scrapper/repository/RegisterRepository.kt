@@ -2,14 +2,11 @@ package io.github.wulkanowy.sdk.scrapper.repository
 
 import com.migcomponents.migbase64.Base64
 import io.github.wulkanowy.sdk.scrapper.Scrapper
-import io.github.wulkanowy.sdk.scrapper.exception.AccountInactiveException
 import io.github.wulkanowy.sdk.scrapper.exception.ScrapperException
 import io.github.wulkanowy.sdk.scrapper.exception.StudentGraduateException
-import io.github.wulkanowy.sdk.scrapper.exception.TemporarilyDisabledException
 import io.github.wulkanowy.sdk.scrapper.getNormalizedSymbol
 import io.github.wulkanowy.sdk.scrapper.getScriptParam
 import io.github.wulkanowy.sdk.scrapper.interceptor.handleErrors
-import io.github.wulkanowy.sdk.scrapper.login.AccountPermissionException
 import io.github.wulkanowy.sdk.scrapper.login.CertificateResponse
 import io.github.wulkanowy.sdk.scrapper.login.InvalidSymbolException
 import io.github.wulkanowy.sdk.scrapper.login.LoginHelper
@@ -24,7 +21,6 @@ import io.github.wulkanowy.sdk.scrapper.register.RegisterStudent
 import io.github.wulkanowy.sdk.scrapper.register.RegisterSymbol
 import io.github.wulkanowy.sdk.scrapper.register.RegisterUnit
 import io.github.wulkanowy.sdk.scrapper.register.RegisterUser
-import io.github.wulkanowy.sdk.scrapper.register.Student
 import io.github.wulkanowy.sdk.scrapper.register.toSemesters
 import io.github.wulkanowy.sdk.scrapper.repository.AccountRepository.Companion.SELECTOR_ADFS
 import io.github.wulkanowy.sdk.scrapper.repository.AccountRepository.Companion.SELECTOR_ADFS_CARDS
@@ -51,55 +47,13 @@ class RegisterRepository(
     private val url: UrlGenerator,
 ) {
 
-    companion object {
+    private companion object {
         @JvmStatic
         private val logger = LoggerFactory.getLogger(this::class.java)
     }
 
     private val json = Json {
         ignoreUnknownKeys = true
-    }
-
-    suspend fun getStudents(): List<Student> {
-        val user = getUserSubjects()
-
-        return user.symbols.flatMap { symbol ->
-            symbol.error?.takeIf {
-                val isAccountNotRegistered = it is AccountPermissionException
-                val isInvalidSymbol = it is InvalidSymbolException
-                val isGraduated = it is StudentGraduateException
-                val isInactive = it is AccountInactiveException
-
-                (!isAccountNotRegistered && !isInvalidSymbol && !isGraduated && !isInactive)
-            }?.let { throw it }
-
-            symbol.schools.flatMap { unit ->
-                unit.error?.takeIf { it !is TemporarilyDisabledException }?.let { throw it }
-
-                unit.subjects.filterIsInstance<RegisterStudent>().map { student ->
-                    Student(
-                        email = user.login, // for compatibility
-                        userLogin = user.login,
-                        userName = symbol.userName,
-                        userLoginId = unit.userLoginId,
-                        symbol = symbol.symbol,
-                        studentId = student.studentId,
-                        studentName = student.studentName,
-                        studentSecondName = student.studentSecondName,
-                        studentSurname = student.studentSurname,
-                        schoolSymbol = unit.schoolId,
-                        schoolShortName = unit.schoolShortName,
-                        schoolName = unit.schoolName,
-                        className = student.className,
-                        classId = student.classId,
-                        baseUrl = user.baseUrl,
-                        loginType = user.loginType,
-                        isParent = student.isParent,
-                        semesters = student.semesters,
-                    )
-                }
-            }
-        }
     }
 
     suspend fun getUserSubjects(): RegisterUser {

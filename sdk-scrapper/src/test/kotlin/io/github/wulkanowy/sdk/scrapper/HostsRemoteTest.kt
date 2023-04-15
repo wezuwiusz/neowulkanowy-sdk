@@ -35,7 +35,7 @@ class HostsRemoteTest : BaseTest() {
     fun loginTest() = runBlocking {
         knownHosts.forEach { (host, symbol) ->
             println("$host/$symbol")
-            val res = runCatching { getScrapper(host, symbol).getStudents() }
+            val res = runCatching { getScrapper(host, symbol).getUserSubjects() }
             requireNotNull(res.exceptionOrNull()).cause!!.printStackTrace()
             assert(res.exceptionOrNull() is BadCredentialsException)
             println()

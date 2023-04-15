@@ -26,8 +26,9 @@ class SdkRemoteTest {
             // mode = Sdk.Mode.SCRAPPER
         }
 
-        val students =
-            runBlocking { sdk.getStudentsFromScrapper(email = "jan@fakelog.cf", password = "jan123", scrapperBaseUrl = "http://fakelog.cf", symbol = "powiatwulkanowy") }
+        val students = runBlocking {
+            sdk.getUserSubjectsFromScrapper(email = "jan@fakelog.cf", password = "jan123", scrapperBaseUrl = "http://fakelog.cf", symbol = "powiatwulkanowy")
+        }.symbols.flatMap { it.schools }.flatMap { it.subjects }
         assertEquals(6, students.size)
     }
 

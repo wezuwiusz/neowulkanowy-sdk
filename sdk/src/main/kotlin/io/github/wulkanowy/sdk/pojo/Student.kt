@@ -1,27 +1,48 @@
 package io.github.wulkanowy.sdk.pojo
 
-import io.github.wulkanowy.sdk.Sdk
+import io.github.wulkanowy.sdk.scrapper.Scrapper
 
-data class Student(
+data class RegisterUser(
     val email: String,
-    val userName: String,
-    val userLogin: String,
-    val userLoginId: Int,
+    val login: String, // may be the same as email
+    val baseUrl: String,
+    val loginType: Scrapper.LoginType?,
+    val symbols: List<RegisterSymbol>,
+)
+
+data class RegisterSymbol(
     val symbol: String,
-    val isParent: Boolean,
+    val error: Throwable?,
+    val userName: String,
+    val schools: List<RegisterUnit>,
+)
+
+data class RegisterUnit(
+    val userLoginId: Int,
+    val schoolId: String,
+    val schoolName: String,
+    val schoolShortName: String,
+    val parentIds: List<Int>,
+    val studentIds: List<Int>,
+    val employeeIds: List<Int>,
+    val error: Throwable?,
+    val subjects: List<RegisterSubject>,
+)
+
+sealed interface RegisterSubject
+
+data class RegisterEmployee(
+    val employeeId: Int,
+    val employeeName: String,
+) : RegisterSubject
+
+data class RegisterStudent(
     val studentId: Int,
     val studentName: String,
+    val studentSecondName: String,
     val studentSurname: String,
-    val schoolSymbol: String,
-    val schoolShortName: String,
-    val schoolName: String,
     val className: String,
     val classId: Int,
-    val loginType: Sdk.ScrapperLoginType,
-    val loginMode: Sdk.Mode,
-    val scrapperBaseUrl: String,
-    val mobileBaseUrl: String,
-    val certificateKey: String,
-    val privateKey: String,
+    val isParent: Boolean,
     val semesters: List<Semester>,
-)
+) : RegisterSubject

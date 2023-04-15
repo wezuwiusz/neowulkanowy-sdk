@@ -7,12 +7,12 @@ import io.github.wulkanowy.sdk.scrapper.interceptor.ErrorInterceptorTest
 import io.github.wulkanowy.sdk.scrapper.login.LoginHelper
 import io.github.wulkanowy.sdk.scrapper.login.LoginTest
 import io.github.wulkanowy.sdk.scrapper.login.UrlGenerator
+import io.github.wulkanowy.sdk.scrapper.register.RegisterStudent
 import io.github.wulkanowy.sdk.scrapper.register.RegisterTest
 import io.github.wulkanowy.sdk.scrapper.service.LoginService
 import io.github.wulkanowy.sdk.scrapper.service.RegisterService
 import io.github.wulkanowy.sdk.scrapper.service.StudentService
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
@@ -48,7 +48,7 @@ class RegisterRepositoryTest : BaseLocalTest() {
     }
 
     @Test
-    fun normalLogin_one() {
+    fun normalLogin_one() = runTest {
         with(server) {
             enqueue("LoginPage-standard.html", LoginTest::class.java)
             enqueue("Logowanie-uonet.html", LoginTest::class.java)
@@ -65,18 +65,20 @@ class RegisterRepositoryTest : BaseLocalTest() {
             start(3000)
         }
 
-        val students = runBlocking { getRegisterRepository("Default").getStudents() }
+        val user = getRegisterRepository("Default").getUserSubjects()
+        val school = user.symbols[0].schools[0]
+        val students = school.subjects.filterIsInstance<RegisterStudent>()
 
-        assertEquals(1, students.size)
-        with(students[0]) {
-            assertEquals("123456", schoolSymbol)
+        with(school) {
+            assertEquals("123456", schoolId)
             assertEquals("Fake123456", schoolShortName)
-            assertEquals(2, semesters.size)
         }
+        assertEquals(1, students.size)
+        assertEquals(2, students[0].semesters.size)
     }
 
     @Test
-    fun normalLogin_semesters() {
+    fun normalLogin_semesters() = runTest {
         with(server) {
             enqueue("LoginPage-standard.html", LoginTest::class.java)
             enqueue("Logowanie-uonet.html", LoginTest::class.java)
@@ -93,19 +95,21 @@ class RegisterRepositoryTest : BaseLocalTest() {
             start(3000)
         }
 
-        val students = runBlocking { getRegisterRepository("Default").getStudents() }
+        val user = getRegisterRepository("Default").getUserSubjects()
+        val school = user.symbols[0].schools[0]
+        val students = school.subjects.filterIsInstance<RegisterStudent>()
 
-        assertEquals(2, students.size)
-        with(students[0]) {
-            assertEquals("123456", schoolSymbol)
+        with(school) {
+            assertEquals("123456", schoolId)
             assertEquals("Fake123456", schoolShortName)
-            assertEquals(6, semesters.size)
         }
+        assertEquals(6, students[0].semesters.size)
+        assertEquals(2, students.size)
         assertEquals(6, students[1].semesters.size)
     }
 
     @Test
-    fun normalLogin_triple() {
+    fun normalLogin_triple() = runTest {
         with(server) {
             enqueue("LoginPage-standard.html", LoginTest::class.java)
             enqueue("Logowanie-uonet.html", LoginTest::class.java)
@@ -124,21 +128,22 @@ class RegisterRepositoryTest : BaseLocalTest() {
             start(3000)
         }
 
-        val students = runBlocking { getRegisterRepository("Default").getStudents() }
-        assertEquals(3, students.size)
+        val user = getRegisterRepository("Default").getUserSubjects()
+        val schools = user.symbols[0].schools
+        assertEquals(3, schools.size)
 
-        with(students[0]) {
-            assertEquals("000788", schoolSymbol)
+        with(schools[0]) {
+            assertEquals("000788", schoolId)
             assertEquals("ZST-CKZiU", schoolShortName)
         }
 
-        with(students[1]) {
-            assertEquals("004355", schoolSymbol)
+        with(schools[1]) {
+            assertEquals("004355", schoolId)
             assertEquals("ZSET", schoolShortName)
         }
 
-        with(students[2]) {
-            assertEquals("016636", schoolSymbol)
+        with(schools[2]) {
+            assertEquals("016636", schoolId)
             assertEquals("G7 Wulkanowo", schoolShortName)
         }
     }
@@ -165,7 +170,12 @@ class RegisterRepositoryTest : BaseLocalTest() {
             start(3000)
         }
 
-        val students = getRegisterRepository("Default").getStudents()
+        val user = getRegisterRepository("Default").getUserSubjects()
+        val students = user.symbols
+            .flatMap { it.schools }
+            .flatMap { it.subjects }
+            .filterIsInstance<RegisterStudent>()
+
         assertEquals(2, students.size)
     }
 
@@ -174,25 +184,26 @@ class RegisterRepositoryTest : BaseLocalTest() {
         with(server) {
             enqueue("LoginPage-standard.html", LoginTest::class.java)
             enqueue("Logowanie-uonet.html", LoginTest::class.java)
+
             enqueue("Logowanie-brak-dostepu.html", LoginTest::class.java)
             enqueue("Offline.html", ErrorInterceptorTest::class.java)
-
             enqueue("Logowanie-brak-dostepu.html", LoginTest::class.java)
             enqueue("Logowanie-brak-dostepu.html", LoginTest::class.java)
             enqueue("Logowanie-brak-dostepu.html", LoginTest::class.java)
             start(3000)
         }
 
-        val res = runCatching { normal.getStudents() }
+        val res = normal.getUserSubjects().symbols
+        assertEquals(5, res.size)
         assertEquals(
             "Wystąpił nieoczekiwany błąd. Wystąpił błąd aplikacji. Prosimy zalogować się ponownie. Jeśli problem będzie się powtarzał, prosimy o kontakt z serwisem.",
-            res.exceptionOrNull()?.message,
+            res[1].error?.message,
         )
-        assertEquals(VulcanException::class.java, res.exceptionOrNull()!!::class.java)
+        assertEquals(VulcanException::class.java, res[1].error!!::class.java)
     }
 
     @Test
-    fun filterSymbolsWithSpaces() {
+    fun filterSymbolsWithSpaces() = runTest {
         with(server) {
             enqueue("LoginPage-standard.html", LoginTest::class.java)
             enqueue("Logowanie-uonet.html", LoginTest::class.java)
@@ -204,18 +215,21 @@ class RegisterRepositoryTest : BaseLocalTest() {
             start(3000)
         }
 
-        val students = runBlocking { normal.getStudents() }
-        assertEquals(0, students.size)
+        val user = normal.getUserSubjects().symbols
+            .flatMap { it.schools }
+            .flatMap { it.subjects }
+
+        assertEquals(0, user.size)
     }
 
     @Test
-    fun normalizeInvalidSymbol_default() {
+    fun normalizeInvalidSymbol_default() = runTest {
         with(server) {
             enqueue("LoginPage-standard.html", LoginTest::class.java)
             enqueue("Logowanie-uonet.html", LoginTest::class.java)
+
             enqueue("Logowanie-brak-dostepu.html", LoginTest::class.java)
             enqueue("Offline.html", ErrorInterceptorTest::class.java)
-
             enqueue("Logowanie-brak-dostepu.html", LoginTest::class.java)
             enqueue("Logowanie-brak-dostepu.html", LoginTest::class.java)
             enqueue("Logowanie-brak-dostepu.html", LoginTest::class.java)
@@ -223,23 +237,24 @@ class RegisterRepositoryTest : BaseLocalTest() {
             start(3000)
         }
 
-        val res = runCatching { runBlocking { getRegisterRepository("Default").getStudents() } }
+        val res = getRegisterRepository("Default").getUserSubjects()
+        assertEquals(5, res.symbols.size)
         assertEquals(
             "Wystąpił nieoczekiwany błąd. Wystąpił błąd aplikacji. Prosimy zalogować się ponownie. Jeśli problem będzie się powtarzał, prosimy o kontakt z serwisem.",
-            res.exceptionOrNull()?.message,
+            res.symbols[1].error?.message,
         )
-        assertTrue(res.exceptionOrNull() is VulcanException)
+        assertTrue(res.symbols[1].error is VulcanException)
         assertEquals("/Default/Account/LogOn", server.takeRequest().path)
     }
 
     @Test
-    fun normalizeInvalidSymbol_custom() {
+    fun normalizeInvalidSymbol_custom() = runTest {
         with(server) {
             enqueue("LoginPage-standard.html", LoginTest::class.java)
             enqueue("Logowanie-uonet.html", LoginTest::class.java)
+
             enqueue("Logowanie-brak-dostepu.html", LoginTest::class.java)
             enqueue("Offline.html", ErrorInterceptorTest::class.java)
-
             enqueue("Logowanie-brak-dostepu.html", LoginTest::class.java)
             enqueue("Logowanie-brak-dostepu.html", LoginTest::class.java)
             enqueue("Logowanie-brak-dostepu.html", LoginTest::class.java)
@@ -247,23 +262,24 @@ class RegisterRepositoryTest : BaseLocalTest() {
             start(3000)
         }
 
-        val res = runCatching { runBlocking { getRegisterRepository(" Rzeszów + ").getStudents() } }
-        assertTrue(res.exceptionOrNull() is VulcanException)
+        val res = getRegisterRepository(" Rzeszów + ").getUserSubjects()
+        assertEquals(5, res.symbols.size)
+        assertTrue(res.symbols[1].error is VulcanException)
         assertEquals(
             "Wystąpił nieoczekiwany błąd. Wystąpił błąd aplikacji. Prosimy zalogować się ponownie. Jeśli problem będzie się powtarzał, prosimy o kontakt z serwisem.",
-            res.exceptionOrNull()?.message,
+            res.symbols[1].error?.message,
         )
         assertEquals("/rzeszow/Account/LogOn", server.takeRequest().path)
     }
 
     @Test
-    fun normalizeInvalidSymbol_trimMultipleSpaces() {
+    fun normalizeInvalidSymbol_trimMultipleSpaces() = runTest {
         with(server) {
             enqueue("LoginPage-standard.html", LoginTest::class.java)
             enqueue("Logowanie-uonet.html", LoginTest::class.java)
+
             enqueue("Logowanie-brak-dostepu.html", LoginTest::class.java)
             enqueue("Offline.html", ErrorInterceptorTest::class.java)
-
             enqueue("Logowanie-brak-dostepu.html", LoginTest::class.java)
             enqueue("Logowanie-brak-dostepu.html", LoginTest::class.java)
             enqueue("Logowanie-brak-dostepu.html", LoginTest::class.java)
@@ -271,24 +287,24 @@ class RegisterRepositoryTest : BaseLocalTest() {
             start(3000)
         }
 
-        val res = runCatching { runBlocking { getRegisterRepository(" Niepoprawny    symbol no ale + ").getStudents() } }
-        assertTrue(res.exceptionOrNull() is VulcanException)
+        val res = getRegisterRepository(" Niepoprawny    symbol no ale + ").getUserSubjects()
+        assertTrue(res.symbols[1].error is VulcanException)
         assertEquals(
             "Wystąpił nieoczekiwany błąd. Wystąpił błąd aplikacji. Prosimy zalogować się ponownie. Jeśli problem będzie się powtarzał, prosimy o kontakt z serwisem.",
-            res.exceptionOrNull()?.message,
+            res.symbols[1].error?.message,
         )
 
         assertEquals("/niepoprawnysymbolnoale/Account/LogOn", server.takeRequest().path)
     }
 
     @Test
-    fun normalizeInvalidSymbol_emptyFallback() {
+    fun normalizeInvalidSymbol_emptyFallback() = runTest {
         with(server) {
             enqueue("LoginPage-standard.html", LoginTest::class.java)
             enqueue("Logowanie-uonet.html", LoginTest::class.java)
+
             enqueue("Logowanie-brak-dostepu.html", LoginTest::class.java)
             enqueue("Offline.html", ErrorInterceptorTest::class.java)
-
             enqueue("Logowanie-brak-dostepu.html", LoginTest::class.java)
             enqueue("Logowanie-brak-dostepu.html", LoginTest::class.java)
             enqueue("Logowanie-brak-dostepu.html", LoginTest::class.java)
@@ -296,23 +312,24 @@ class RegisterRepositoryTest : BaseLocalTest() {
             start(3000)
         }
 
-        val res = runCatching { runBlocking { getRegisterRepository(" + ").getStudents() } }
-        assertTrue(res.exceptionOrNull() is VulcanException)
+        val res = getRegisterRepository(" + ").getUserSubjects()
+        assertEquals(5, res.symbols.size)
+        assertTrue(res.symbols[1].error is VulcanException)
         assertEquals(
             "Wystąpił nieoczekiwany błąd. Wystąpił błąd aplikacji. Prosimy zalogować się ponownie. Jeśli problem będzie się powtarzał, prosimy o kontakt z serwisem.",
-            res.exceptionOrNull()?.message,
+            res.symbols[1].error?.message,
         )
         assertEquals("/Default/Account/LogOn", server.takeRequest().path)
     }
 
     @Test
-    fun normalizeInvalidSymbol_digits() {
+    fun normalizeInvalidSymbol_digits() = runTest {
         with(server) {
             enqueue("LoginPage-standard.html", LoginTest::class.java)
             enqueue("Logowanie-uonet.html", LoginTest::class.java)
+
             enqueue("Logowanie-brak-dostepu.html", LoginTest::class.java)
             enqueue("Offline.html", ErrorInterceptorTest::class.java)
-
             enqueue("Logowanie-brak-dostepu.html", LoginTest::class.java)
             enqueue("Logowanie-brak-dostepu.html", LoginTest::class.java)
             enqueue("Logowanie-brak-dostepu.html", LoginTest::class.java)
@@ -320,11 +337,12 @@ class RegisterRepositoryTest : BaseLocalTest() {
             start(3000)
         }
 
-        val res = runCatching { runBlocking { getRegisterRepository("Default").getStudents() } }
-        assertTrue(res.exceptionOrNull() is VulcanException)
+        val res = getRegisterRepository("Default").getUserSubjects()
+        assertEquals(5, res.symbols.size)
+        assertTrue(res.symbols[1].error is VulcanException)
         assertEquals(
             "Wystąpił nieoczekiwany błąd. Wystąpił błąd aplikacji. Prosimy zalogować się ponownie. Jeśli problem będzie się powtarzał, prosimy o kontakt z serwisem.",
-            res.exceptionOrNull()?.message,
+            res.symbols[1].error?.message,
         )
         assertEquals("/Default/Account/LogOn", server.takeRequest().path)
         assertEquals(true, server.takeRequest().path?.startsWith("/Account/LogOn?ReturnUrl=%2FDefault"))
