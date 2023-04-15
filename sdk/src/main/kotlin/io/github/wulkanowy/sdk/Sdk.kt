@@ -271,6 +271,35 @@ class Sdk {
             .mapHebeStudents(certificateId, privateKey)
     }
 
+    suspend fun getStudentsHybrid(
+        email: String,
+        password: String,
+        scrapperBaseUrl: String,
+        firebaseToken: String,
+        startSymbol: String = "Default",
+    ) = withContext(Dispatchers.IO) {
+        getStudentsFromScrapper(email, password, scrapperBaseUrl, startSymbol)
+            .distinctBy { it.symbol }
+            .map { scrapperStudent ->
+                scrapper.let {
+                    it.symbol = scrapperStudent.symbol
+                    it.schoolSymbol = scrapperStudent.schoolSymbol
+                    it.studentId = scrapperStudent.studentId
+                    it.diaryId = -1
+                    it.classId = scrapperStudent.classId
+                    it.loginType = Scrapper.LoginType.valueOf(scrapperStudent.loginType.name)
+                }
+                val token = scrapper.getToken()
+                getStudentsFromHebe(token.token, token.pin, token.symbol).map { student ->
+                    student.copy(
+                        loginMode = Mode.HYBRID,
+                        loginType = scrapperStudent.loginType,
+                        scrapperBaseUrl = scrapperStudent.scrapperBaseUrl,
+                    )
+                }
+            }.toList().flatten()
+    }
+
     suspend fun getUserSubjectsFromScrapper(email: String, password: String, scrapperBaseUrl: String, symbol: String = "Default"): RegisterUser = withContext(Dispatchers.IO) {
         scrapper.let {
             it.baseUrl = scrapperBaseUrl
