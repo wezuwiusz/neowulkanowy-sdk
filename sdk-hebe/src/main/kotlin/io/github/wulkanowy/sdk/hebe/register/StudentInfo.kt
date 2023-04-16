@@ -172,7 +172,7 @@ class StudentInfo(
         val loginRole: String,
 
         @SerialName("SecondName")
-        val secondName: String,
+        val secondName: String?,
 
         @SerialName("Surname")
         val surname: String,
