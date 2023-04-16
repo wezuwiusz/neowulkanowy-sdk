@@ -56,7 +56,7 @@ internal fun getScriptParam(name: String, content: String, fallback: String = ""
     }
 }
 
-internal fun String.getNormalizedSymbol(): String = this
+fun String.getNormalizedSymbol(): String = this
     .trim().lowercase()
     .replace("default", "")
     .run {
