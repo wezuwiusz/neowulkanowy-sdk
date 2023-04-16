@@ -268,7 +268,12 @@ class Sdk {
         }
     }
 
-    suspend fun getStudentsFromHebe(token: String, pin: String, symbol: String, firebaseToken: String): RegisterUser {
+    suspend fun getStudentsFromHebe(
+        token: String,
+        pin: String,
+        symbol: String,
+        firebaseToken: String? = null,
+    ): RegisterUser {
         val registerDevice = hebe.register(
             firebaseToken = firebaseToken,
             token = token,
@@ -284,8 +289,8 @@ class Sdk {
         email: String,
         password: String,
         scrapperBaseUrl: String,
-        firebaseToken: String,
         startSymbol: String = "Default",
+        firebaseToken: String? = null,
     ): RegisterUser = withContext(Dispatchers.IO) {
         val scrapperUser = getUserSubjectsFromScrapper(email, password, scrapperBaseUrl, startSymbol)
         scrapperUser.copy(

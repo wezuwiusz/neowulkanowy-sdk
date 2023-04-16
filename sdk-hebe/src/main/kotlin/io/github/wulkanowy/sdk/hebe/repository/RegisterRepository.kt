@@ -10,18 +10,18 @@ import io.github.wulkanowy.sdk.hebe.service.RegisterService
 internal class RegisterRepository(private val service: RegisterService) {
 
     suspend fun register(
-        firebaseToken: String,
         token: String,
         pin: String,
         deviceModel: String,
         certificatePem: String,
         certificateId: String,
+        firebaseToken: String?,
     ): RegisterResponse {
         val response = registerDevice(
             privateKey = certificatePem,
             certificateId = certificateId,
             deviceModel = deviceModel,
-            firebaseToken = firebaseToken,
+            firebaseToken = firebaseToken.orEmpty(),
             pin = pin,
             token = token,
         )

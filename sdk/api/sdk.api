@@ -70,6 +70,7 @@ public final class io/github/wulkanowy/sdk/Sdk {
 	public final fun getStudentPhoto (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public final fun getStudentThreats (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public final fun getStudentsFromHebe (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public static synthetic fun getStudentsFromHebe$default (Lio/github/wulkanowy/sdk/Sdk;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
 	public final fun getStudentsHybrid (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public static synthetic fun getStudentsHybrid$default (Lio/github/wulkanowy/sdk/Sdk;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
 	public final fun getStudentsTrips (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;

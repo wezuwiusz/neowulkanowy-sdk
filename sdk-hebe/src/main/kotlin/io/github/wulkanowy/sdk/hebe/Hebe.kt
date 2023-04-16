@@ -68,7 +68,7 @@ class Hebe {
 
     private val routes by resettableLazy(resettableManager) { serviceManager.getRoutesRepository() }
 
-    suspend fun register(firebaseToken: String, token: String, pin: String, symbol: String): RegisterDevice {
+    suspend fun register(token: String, pin: String, symbol: String, firebaseToken: String? = null): RegisterDevice {
         val (publicPem, privatePem, publicHash) = generateKeyPair()
 
         this.keyId = publicHash

@@ -10,6 +10,7 @@ public final class io/github/wulkanowy/sdk/hebe/Hebe {
 	public final fun getSchoolSymbol ()Ljava/lang/String;
 	public final fun getStudents (Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public final fun register (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public static synthetic fun register$default (Lio/github/wulkanowy/sdk/hebe/Hebe;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
 	public final fun setBaseUrl (Ljava/lang/String;)V
 	public final fun setDeviceModel (Ljava/lang/String;)V
 	public final fun setKeyId (Ljava/lang/String;)V
