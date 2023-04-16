@@ -104,16 +104,16 @@ class Sdk {
             hebe.baseUrl = value
         }
 
-    var certKey = ""
+    var keyId = ""
         set(value) {
             field = value
-            // hebe.certKey = value
+            hebe.keyId = value
         }
 
-    var privateKey = ""
+    var privatePem = ""
         set(value) {
             field = value
-            hebe.privateKey = privateKey
+            hebe.privatePem = privatePem
         }
 
     var scrapperBaseUrl = ""
@@ -268,20 +268,15 @@ class Sdk {
     }
 
     suspend fun getStudentsFromHebe(token: String, pin: String, symbol: String, firebaseToken: String): RegisterUser {
-        val privateKey = "" // TODO
-        val certificateId = "" // TODO
-
-        val registerResponse = hebe.register(
-            privateKey = privateKey,
-            certificateId = certificateId,
+        val registerDevice = hebe.register(
             firebaseToken = firebaseToken,
             token = token,
             pin = pin,
             symbol = symbol,
         )
         return hebe
-            .getStudents(registerResponse.restUrl, symbol)
-            .mapHebeUser(registerResponse, certificateId, privateKey)
+            .getStudents(registerDevice.restUrl, symbol)
+            .mapHebeUser(registerDevice)
     }
 
     suspend fun getStudentsHybrid(
@@ -316,8 +311,8 @@ class Sdk {
                         firebaseToken = firebaseToken,
                     )
                     symbol.copy(
-                        certificateKey = hebeUser.symbols.first().certificateKey,
-                        privateKey = hebeUser.symbols.first().privateKey,
+                        keyId = hebeUser.symbols.first().keyId,
+                        privatePem = hebeUser.symbols.first().privatePem,
                         hebeBaseUrl = hebeUser.symbols.first().hebeBaseUrl,
                     )
                 },

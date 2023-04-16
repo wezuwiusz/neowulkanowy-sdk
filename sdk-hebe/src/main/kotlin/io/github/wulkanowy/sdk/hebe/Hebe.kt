@@ -1,8 +1,10 @@
 package io.github.wulkanowy.sdk.hebe
 
-import io.github.wulkanowy.sdk.hebe.register.RegisterResponse
+import io.github.wulkanowy.sdk.hebe.register.RegisterDevice
 import io.github.wulkanowy.sdk.hebe.register.StudentInfo
 import io.github.wulkanowy.sdk.hebe.repository.RepositoryManager
+import io.github.wulkanowy.signer.hebe.generateCertificate
+import io.github.wulkanowy.signer.hebe.generateKeyPair
 import okhttp3.Interceptor
 import okhttp3.logging.HttpLoggingInterceptor
 
@@ -16,7 +18,13 @@ class Hebe {
             resettableManager.reset()
         }
 
-    var privateKey = ""
+    var keyId = ""
+        set(value) {
+            field = value
+            resettableManager.reset()
+        }
+
+    var privatePem = ""
         set(value) {
             field = value
             resettableManager.reset()
@@ -42,20 +50,33 @@ class Hebe {
 
     private val interceptors: MutableList<Pair<Interceptor, Boolean>> = mutableListOf()
 
-    private val serviceManager by resettableLazy(resettableManager) { RepositoryManager(logLevel, privateKey, interceptors, baseUrl, schoolSymbol) }
+    private val serviceManager by resettableLazy(resettableManager) {
+        RepositoryManager(
+            logLevel = logLevel,
+            keyId = keyId,
+            privatePem = privatePem,
+            deviceModel = deviceModel,
+            interceptors = interceptors,
+        )
+    }
 
     private val routes by resettableLazy(resettableManager) { serviceManager.getRoutesRepository() }
 
-    suspend fun register(privateKey: String, certificateId: String, firebaseToken: String, token: String, pin: String, symbol: String): RegisterResponse {
-        return serviceManager
-            .getRegisterRepository(routes.getRouteByToken(token), symbol)
-            .registerDevice(
-                privateKey = privateKey,
-                certificateId = certificateId,
-                deviceModel = deviceModel,
+    suspend fun register(firebaseToken: String, token: String, pin: String, symbol: String): RegisterDevice {
+        val (publicPem, privatePem, publicHash) = generateKeyPair()
+        val (certificatePem, certificateHash) = generateCertificate(privatePem)
+
+        this.privatePem = privatePem
+        this.keyId = certificateHash
+
+        return serviceManager.getRegisterRepository(routes.getRouteByToken(token), symbol)
+            .register(
                 firebaseToken = firebaseToken,
-                pin = pin,
                 token = token,
+                pin = pin,
+                privatePem = privatePem,
+                keyId = keyId,
+                deviceModel = deviceModel,
             )
     }
 

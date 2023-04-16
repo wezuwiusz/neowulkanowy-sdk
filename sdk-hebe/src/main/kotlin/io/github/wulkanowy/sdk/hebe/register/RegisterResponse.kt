@@ -1,8 +1,10 @@
 package io.github.wulkanowy.sdk.hebe.register
 
 import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
-data class RegisterResponse(
+@Serializable
+internal data class RegisterResponse(
 
     @SerialName("LoginId")
     val loginId: Int,

@@ -16,8 +16,8 @@ data class RegisterSymbol(
     val symbol: String,
     val error: Throwable?,
     val userName: String,
-    val certificateKey: String?,
-    val privateKey: String?,
+    val keyId: String?,
+    val privatePem: String?,
     val hebeBaseUrl: String?,
     val schools: List<RegisterUnit>,
 )

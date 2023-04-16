@@ -1,7 +1,7 @@
 package io.github.wulkanowy.sdk.mapper
 
 import io.github.wulkanowy.sdk.Sdk
-import io.github.wulkanowy.sdk.hebe.register.RegisterResponse
+import io.github.wulkanowy.sdk.hebe.register.RegisterDevice
 import io.github.wulkanowy.sdk.hebe.register.StudentInfo
 import io.github.wulkanowy.sdk.pojo.RegisterEmployee
 import io.github.wulkanowy.sdk.pojo.RegisterStudent
@@ -31,8 +31,8 @@ internal fun SdkRegisterSymbol.mapSymbol(): RegisterSymbol = RegisterSymbol(
     symbol = symbol,
     userName = userName,
     error = error,
-    certificateKey = null,
-    privateKey = null,
+    keyId = null,
+    privatePem = null,
     hebeBaseUrl = null,
     schools = schools.map { it.mapUnit() },
 )
@@ -73,12 +73,10 @@ internal fun ScrapperRegisterStudent.mapStudent(): RegisterStudent = RegisterStu
 )
 
 fun List<StudentInfo>.mapHebeUser(
-    registerResponse: RegisterResponse,
-    certificateKey: String,
-    privateKey: String,
+    device: RegisterDevice,
 ): RegisterUser = RegisterUser(
-    email = registerResponse.userName,
-    login = registerResponse.userLogin,
+    email = device.userName,
+    login = device.userLogin,
     scrapperBaseUrl = null,
     loginType = null,
     loginMode = Sdk.Mode.HEBE,
@@ -88,9 +86,9 @@ fun List<StudentInfo>.mapHebeUser(
             RegisterSymbol(
                 symbol = symbol,
                 error = null,
-                certificateKey = certificateKey,
-                privateKey = privateKey,
-                hebeBaseUrl = registerResponse.restUrl,
+                keyId = device.certificateHash,
+                privatePem = device.privatePem,
+                hebeBaseUrl = device.restUrl,
                 userName = students.firstOrNull()?.login?.displayName ?: return@mapNotNull null,
                 schools = students.mapUnit(),
             )

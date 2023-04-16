@@ -1,8 +1,10 @@
 package io.github.wulkanowy.sdk.hebe.register
 
 import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 import java.util.UUID
 
+@Serializable
 internal data class RegisterRequest(
 
     @SerialName("Certificate")

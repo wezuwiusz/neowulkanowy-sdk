@@ -2,15 +2,17 @@ public final class io/github/wulkanowy/sdk/hebe/Hebe {
 	public fun <init> ()V
 	public final fun getBaseUrl ()Ljava/lang/String;
 	public final fun getDeviceModel ()Ljava/lang/String;
+	public final fun getKeyId ()Ljava/lang/String;
 	public final fun getLogLevel ()Lokhttp3/logging/HttpLoggingInterceptor$Level;
-	public final fun getPrivateKey ()Ljava/lang/String;
+	public final fun getPrivatePem ()Ljava/lang/String;
 	public final fun getSchoolSymbol ()Ljava/lang/String;
 	public final fun getStudents (Ljava/lang/String;Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
-	public final fun register (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public final fun register (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public final fun setBaseUrl (Ljava/lang/String;)V
 	public final fun setDeviceModel (Ljava/lang/String;)V
+	public final fun setKeyId (Ljava/lang/String;)V
 	public final fun setLogLevel (Lokhttp3/logging/HttpLoggingInterceptor$Level;)V
-	public final fun setPrivateKey (Ljava/lang/String;)V
+	public final fun setPrivatePem (Ljava/lang/String;)V
 	public final fun setSchoolSymbol (Ljava/lang/String;)V
 }
 
@@ -30,16 +32,20 @@ public final class io/github/wulkanowy/sdk/hebe/exception/UnknownTokenException 
 	public fun <init> (Ljava/lang/String;)V
 }
 
-public final class io/github/wulkanowy/sdk/hebe/register/RegisterResponse {
-	public fun <init> (ILjava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+public final class io/github/wulkanowy/sdk/hebe/register/RegisterDevice {
+	public fun <init> (ILjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
 	public final fun component1 ()I
 	public final fun component2 ()Ljava/lang/String;
 	public final fun component3 ()Ljava/lang/String;
 	public final fun component4 ()Ljava/lang/String;
-	public final fun copy (ILjava/lang/String;Ljava/lang/String;Ljava/lang/String;)Lio/github/wulkanowy/sdk/hebe/register/RegisterResponse;
-	public static synthetic fun copy$default (Lio/github/wulkanowy/sdk/hebe/register/RegisterResponse;ILjava/lang/String;Ljava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Lio/github/wulkanowy/sdk/hebe/register/RegisterResponse;
+	public final fun component5 ()Ljava/lang/String;
+	public final fun component6 ()Ljava/lang/String;
+	public final fun copy (ILjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Lio/github/wulkanowy/sdk/hebe/register/RegisterDevice;
+	public static synthetic fun copy$default (Lio/github/wulkanowy/sdk/hebe/register/RegisterDevice;ILjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Lio/github/wulkanowy/sdk/hebe/register/RegisterDevice;
 	public fun equals (Ljava/lang/Object;)Z
+	public final fun getCertificateHash ()Ljava/lang/String;
 	public final fun getLoginId ()I
+	public final fun getPrivatePem ()Ljava/lang/String;
 	public final fun getRestUrl ()Ljava/lang/String;
 	public final fun getUserLogin ()Ljava/lang/String;
 	public final fun getUserName ()Ljava/lang/String;

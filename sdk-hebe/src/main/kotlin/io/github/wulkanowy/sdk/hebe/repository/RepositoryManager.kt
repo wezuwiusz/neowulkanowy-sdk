@@ -15,10 +15,10 @@ import retrofit2.create
 
 internal class RepositoryManager(
     private val logLevel: HttpLoggingInterceptor.Level,
-    private val privateKey: String,
+    private val keyId: String,
+    private val privatePem: String,
+    private val deviceModel: String,
     private val interceptors: MutableList<Pair<Interceptor, Boolean>>,
-    private val baseUrl: String,
-    private val schoolSymbol: String,
 ) {
 
     @OptIn(ExperimentalSerializationApi::class)
@@ -33,7 +33,7 @@ internal class RepositoryManager(
 
     fun getRoutesRepository(): RoutingRulesRepository {
         return RoutingRulesRepository(
-            getRetrofitBuilder(interceptors)
+            getRetrofitBuilder(isJson = false, signInterceptor = false)
                 .baseUrl("http://komponenty.vulcan.net.pl")
                 .build()
                 .create(),
@@ -41,31 +41,36 @@ internal class RepositoryManager(
     }
 
     internal fun getRegisterRepository(baseUrl: String, symbol: String): RegisterRepository = getRegisterRepository(
-        "${baseUrl.removeSuffix("/")}/$symbol",
+        baseUrl = "${baseUrl.removeSuffix("/")}/$symbol",
     )
 
     private fun getRegisterRepository(baseUrl: String): RegisterRepository = RegisterRepository(
-        getRetrofitBuilder(interceptors)
+        getRetrofitBuilder(signInterceptor = true)
             .baseUrl("${baseUrl.removeSuffix("/")}/api/mobile/register/")
             .build()
             .create(),
     )
 
     @OptIn(ExperimentalSerializationApi::class)
-    private fun getRetrofitBuilder(interceptors: MutableList<Pair<Interceptor, Boolean>>): Retrofit.Builder {
+    private fun getRetrofitBuilder(isJson: Boolean = true, signInterceptor: Boolean): Retrofit.Builder {
         return Retrofit.Builder()
-            .addConverterFactory(ScalarsConverterFactory.create())
-            .addConverterFactory(json.asConverterFactory("application/json".toMediaType()))
+            .apply {
+                if (isJson) {
+                    addConverterFactory(json.asConverterFactory("application/json".toMediaType()))
+                } else addConverterFactory(ScalarsConverterFactory.create())
+            }
             .client(
                 OkHttpClient().newBuilder()
-                    .addInterceptor(HttpLoggingInterceptor().setLevel(logLevel))
                     .addInterceptor(ErrorInterceptor())
-                    .addInterceptor(SignInterceptor(privateKey))
                     .apply {
+                        if (signInterceptor) {
+                            addInterceptor(SignInterceptor(keyId, privatePem, deviceModel))
+                        }
                         interceptors.forEach {
                             if (it.second) addNetworkInterceptor(it.first)
                             else addInterceptor(it.first)
                         }
+                        addInterceptor(HttpLoggingInterceptor().setLevel(logLevel))
                     }
                     .build(),
             )

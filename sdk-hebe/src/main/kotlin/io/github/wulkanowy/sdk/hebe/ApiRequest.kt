@@ -1,11 +1,13 @@
 package io.github.wulkanowy.sdk.hebe
 
 import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 import java.time.LocalDateTime
 import java.time.ZoneOffset.UTC
 import java.time.format.DateTimeFormatter.ofPattern
 import java.util.UUID
 
+@Serializable
 internal data class ApiRequest<T>(
 
     @SerialName("API")
@@ -15,7 +17,7 @@ internal data class ApiRequest<T>(
     val appName: String = "DzienniczekPlus 2.0",
 
     @SerialName("AppVersion")
-    val appVersion: String = "1.0",
+    val appVersion: String = "1.4.2",
 
     @SerialName("CertificateId")
     val certificateId: String,
