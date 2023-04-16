@@ -290,36 +290,38 @@ class Sdk {
         scrapperBaseUrl: String,
         firebaseToken: String,
         startSymbol: String = "Default",
-    ) = withContext(Dispatchers.IO) {
+    ): RegisterUser = withContext(Dispatchers.IO) {
         val scrapperUser = getUserSubjectsFromScrapper(email, password, scrapperBaseUrl, startSymbol)
-        scrapperUser.symbols
-            .mapNotNull { symbol ->
-                val school = symbol.schools
-                    .firstOrNull() ?: return@mapNotNull null
-                val student = school.subjects
-                    .firstOrNull() as? RegisterStudent ?: return@mapNotNull null
-                scrapper.also {
-                    it.symbol = symbol.symbol
-                    it.schoolId = school.schoolId
-                    it.studentId = student.studentId
-                    it.diaryId = -1
-                    it.classId = student.classId
-                    it.loginType = Scrapper.LoginType.valueOf(scrapperUser.loginType!!.name)
-                }
-                val token = scrapper.getToken()
-                val hebeUser = getStudentsFromHebe(
-                    token = token.token,
-                    pin = token.pin,
-                    symbol = token.symbol,
-                    firebaseToken = firebaseToken,
-                )
-                hebeUser.copy(
-                    loginMode = Mode.HYBRID,
-                    loginType = scrapperUser.loginType,
-                    scrapperBaseUrl = scrapperUser.scrapperBaseUrl,
-                    hebeBaseUrl = hebeUser.hebeBaseUrl,
-                )
-            }.toList()
+        scrapperUser.copy(
+            loginMode = Mode.HYBRID,
+            symbols = scrapperUser.symbols
+                .mapNotNull { symbol ->
+                    val school = symbol.schools
+                        .firstOrNull() ?: return@mapNotNull null
+                    val student = school.subjects
+                        .firstOrNull() as? RegisterStudent ?: return@mapNotNull null
+                    scrapper.also {
+                        it.symbol = symbol.symbol
+                        it.schoolId = school.schoolId
+                        it.studentId = student.studentId
+                        it.diaryId = -1
+                        it.classId = student.classId
+                        it.loginType = Scrapper.LoginType.valueOf(scrapperUser.loginType!!.name)
+                    }
+                    val token = scrapper.getToken()
+                    val hebeUser = getStudentsFromHebe(
+                        token = token.token,
+                        pin = token.pin,
+                        symbol = token.symbol,
+                        firebaseToken = firebaseToken,
+                    )
+                    symbol.copy(
+                        certificateKey = hebeUser.symbols.first().certificateKey,
+                        privateKey = hebeUser.symbols.first().privateKey,
+                        hebeBaseUrl = hebeUser.symbols.first().hebeBaseUrl,
+                    )
+                },
+        )
     }
 
     suspend fun getSemesters(): List<Semester> = withContext(Dispatchers.IO) {

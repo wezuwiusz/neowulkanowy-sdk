@@ -868,15 +868,21 @@ public abstract interface class io/github/wulkanowy/sdk/pojo/RegisterSubject {
 }
 
 public final class io/github/wulkanowy/sdk/pojo/RegisterSymbol {
-	public fun <init> (Ljava/lang/String;Ljava/lang/Throwable;Ljava/lang/String;Ljava/util/List;)V
+	public fun <init> (Ljava/lang/String;Ljava/lang/Throwable;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/util/List;)V
 	public final fun component1 ()Ljava/lang/String;
 	public final fun component2 ()Ljava/lang/Throwable;
 	public final fun component3 ()Ljava/lang/String;
-	public final fun component4 ()Ljava/util/List;
-	public final fun copy (Ljava/lang/String;Ljava/lang/Throwable;Ljava/lang/String;Ljava/util/List;)Lio/github/wulkanowy/sdk/pojo/RegisterSymbol;
-	public static synthetic fun copy$default (Lio/github/wulkanowy/sdk/pojo/RegisterSymbol;Ljava/lang/String;Ljava/lang/Throwable;Ljava/lang/String;Ljava/util/List;ILjava/lang/Object;)Lio/github/wulkanowy/sdk/pojo/RegisterSymbol;
+	public final fun component4 ()Ljava/lang/String;
+	public final fun component5 ()Ljava/lang/String;
+	public final fun component6 ()Ljava/lang/String;
+	public final fun component7 ()Ljava/util/List;
+	public final fun copy (Ljava/lang/String;Ljava/lang/Throwable;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/util/List;)Lio/github/wulkanowy/sdk/pojo/RegisterSymbol;
+	public static synthetic fun copy$default (Lio/github/wulkanowy/sdk/pojo/RegisterSymbol;Ljava/lang/String;Ljava/lang/Throwable;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/util/List;ILjava/lang/Object;)Lio/github/wulkanowy/sdk/pojo/RegisterSymbol;
 	public fun equals (Ljava/lang/Object;)Z
+	public final fun getCertificateKey ()Ljava/lang/String;
 	public final fun getError ()Ljava/lang/Throwable;
+	public final fun getHebeBaseUrl ()Ljava/lang/String;
+	public final fun getPrivateKey ()Ljava/lang/String;
 	public final fun getSchools ()Ljava/util/List;
 	public final fun getSymbol ()Ljava/lang/String;
 	public final fun getUserName ()Ljava/lang/String;
@@ -912,26 +918,20 @@ public final class io/github/wulkanowy/sdk/pojo/RegisterUnit {
 }
 
 public final class io/github/wulkanowy/sdk/pojo/RegisterUser {
-	public fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lio/github/wulkanowy/sdk/scrapper/Scrapper$LoginType;Lio/github/wulkanowy/sdk/Sdk$Mode;Ljava/util/List;)V
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lio/github/wulkanowy/sdk/scrapper/Scrapper$LoginType;Lio/github/wulkanowy/sdk/Sdk$Mode;Ljava/util/List;)V
 	public final fun component1 ()Ljava/lang/String;
 	public final fun component2 ()Ljava/lang/String;
 	public final fun component3 ()Ljava/lang/String;
-	public final fun component4 ()Ljava/lang/String;
-	public final fun component5 ()Ljava/lang/String;
-	public final fun component6 ()Ljava/lang/String;
-	public final fun component7 ()Lio/github/wulkanowy/sdk/scrapper/Scrapper$LoginType;
-	public final fun component8 ()Lio/github/wulkanowy/sdk/Sdk$Mode;
-	public final fun component9 ()Ljava/util/List;
-	public final fun copy (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lio/github/wulkanowy/sdk/scrapper/Scrapper$LoginType;Lio/github/wulkanowy/sdk/Sdk$Mode;Ljava/util/List;)Lio/github/wulkanowy/sdk/pojo/RegisterUser;
-	public static synthetic fun copy$default (Lio/github/wulkanowy/sdk/pojo/RegisterUser;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lio/github/wulkanowy/sdk/scrapper/Scrapper$LoginType;Lio/github/wulkanowy/sdk/Sdk$Mode;Ljava/util/List;ILjava/lang/Object;)Lio/github/wulkanowy/sdk/pojo/RegisterUser;
+	public final fun component4 ()Lio/github/wulkanowy/sdk/scrapper/Scrapper$LoginType;
+	public final fun component5 ()Lio/github/wulkanowy/sdk/Sdk$Mode;
+	public final fun component6 ()Ljava/util/List;
+	public final fun copy (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lio/github/wulkanowy/sdk/scrapper/Scrapper$LoginType;Lio/github/wulkanowy/sdk/Sdk$Mode;Ljava/util/List;)Lio/github/wulkanowy/sdk/pojo/RegisterUser;
+	public static synthetic fun copy$default (Lio/github/wulkanowy/sdk/pojo/RegisterUser;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lio/github/wulkanowy/sdk/scrapper/Scrapper$LoginType;Lio/github/wulkanowy/sdk/Sdk$Mode;Ljava/util/List;ILjava/lang/Object;)Lio/github/wulkanowy/sdk/pojo/RegisterUser;
 	public fun equals (Ljava/lang/Object;)Z
-	public final fun getCertificateKey ()Ljava/lang/String;
 	public final fun getEmail ()Ljava/lang/String;
-	public final fun getHebeBaseUrl ()Ljava/lang/String;
 	public final fun getLogin ()Ljava/lang/String;
 	public final fun getLoginMode ()Lio/github/wulkanowy/sdk/Sdk$Mode;
 	public final fun getLoginType ()Lio/github/wulkanowy/sdk/scrapper/Scrapper$LoginType;
-	public final fun getPrivateKey ()Ljava/lang/String;
 	public final fun getScrapperBaseUrl ()Ljava/lang/String;
 	public final fun getSymbols ()Ljava/util/List;
 	public fun hashCode ()I

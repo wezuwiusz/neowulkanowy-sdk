@@ -7,9 +7,6 @@ data class RegisterUser(
     val email: String,
     val login: String, // may be the same as email
     val scrapperBaseUrl: String?,
-    val hebeBaseUrl: String?,
-    val certificateKey: String?,
-    val privateKey: String?,
     val loginType: Scrapper.LoginType?,
     val loginMode: Sdk.Mode,
     val symbols: List<RegisterSymbol>,
@@ -19,6 +16,9 @@ data class RegisterSymbol(
     val symbol: String,
     val error: Throwable?,
     val userName: String,
+    val certificateKey: String?,
+    val privateKey: String?,
+    val hebeBaseUrl: String?,
     val schools: List<RegisterUnit>,
 )
 

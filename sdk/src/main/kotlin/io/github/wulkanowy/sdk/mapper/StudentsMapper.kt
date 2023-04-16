@@ -22,9 +22,6 @@ internal fun ScrapperRegisterUser.mapUser(): RegisterUser = RegisterUser(
     email = email,
     login = login,
     scrapperBaseUrl = baseUrl,
-    hebeBaseUrl = null,
-    certificateKey = null,
-    privateKey = null,
     loginType = loginType,
     loginMode = Sdk.Mode.SCRAPPER,
     symbols = symbols.map { it.mapSymbol() },
@@ -34,6 +31,9 @@ internal fun SdkRegisterSymbol.mapSymbol(): RegisterSymbol = RegisterSymbol(
     symbol = symbol,
     userName = userName,
     error = error,
+    certificateKey = null,
+    privateKey = null,
+    hebeBaseUrl = null,
     schools = schools.map { it.mapUnit() },
 )
 
@@ -82,15 +82,15 @@ fun List<StudentInfo>.mapHebeUser(
     scrapperBaseUrl = null,
     loginType = null,
     loginMode = Sdk.Mode.HEBE,
-    hebeBaseUrl = registerResponse.restUrl,
-    certificateKey = certificateKey,
-    privateKey = privateKey,
     symbols = this
         .groupBy { it.topLevelPartition }
         .mapNotNull { (symbol, students) ->
             RegisterSymbol(
                 symbol = symbol,
                 error = null,
+                certificateKey = certificateKey,
+                privateKey = privateKey,
+                hebeBaseUrl = registerResponse.restUrl,
                 userName = students.firstOrNull()?.login?.displayName ?: return@mapNotNull null,
                 schools = students.mapUnit(),
             )
