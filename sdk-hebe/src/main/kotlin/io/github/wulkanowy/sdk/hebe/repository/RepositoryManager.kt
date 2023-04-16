@@ -35,7 +35,7 @@ internal class RepositoryManager(
     fun getRoutesRepository(): RoutingRulesRepository {
         return RoutingRulesRepository(
             getRetrofitBuilder(isJson = false, signInterceptor = false)
-                .baseUrl("http://komponenty.vulcan.net.pl")
+                .baseUrl("https://komponenty.vulcan.net.pl")
                 .build()
                 .create(),
         )
