@@ -10,7 +10,7 @@ import java.time.format.DateTimeFormatter
 
 @OptIn(ExperimentalSerializationApi::class)
 @Serializer(forClass = LocalDateTime::class)
-object CustomDateAdapter : KSerializer<LocalDateTime> {
+internal object CustomDateAdapter : KSerializer<LocalDateTime> {
 
     private const val DATE_FORMAT_1 = "yyyy-MM-dd'T'HH:mm:ss.SSSXXX"
     private const val DATE_FORMAT_2 = "yyyy-MM-dd'T'HH:mm:ss.SSXXX"

@@ -4,7 +4,7 @@ import io.github.wulkanowy.sdk.pojo.Semester
 import io.github.wulkanowy.sdk.scrapper.register.Semester as ScrapperSemester
 
 @JvmName("mapScrapperSemesters")
-fun List<ScrapperSemester>.mapSemesters() = map {
+internal fun List<ScrapperSemester>.mapSemesters() = map {
     Semester(
         diaryId = it.diaryId,
         kindergartenDiaryId = it.kindergartenDiaryId,

@@ -5,7 +5,7 @@ import io.github.wulkanowy.sdk.pojo.MailboxType
 import io.github.wulkanowy.sdk.pojo.Mailbox as SdkMailbox
 import io.github.wulkanowy.sdk.scrapper.messages.Mailbox as ScrapperMailbox
 
-fun List<ScrapperMailbox>.mapMailboxes(): List<Mailbox> {
+internal fun List<ScrapperMailbox>.mapMailboxes(): List<Mailbox> {
     return map {
         SdkMailbox(
             globalKey = it.globalKey,

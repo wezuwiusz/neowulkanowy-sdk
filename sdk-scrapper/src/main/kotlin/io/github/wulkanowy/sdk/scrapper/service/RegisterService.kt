@@ -4,7 +4,7 @@ import io.github.wulkanowy.sdk.scrapper.register.LoginForm
 import retrofit2.http.GET
 import retrofit2.http.Url
 
-interface RegisterService {
+internal interface RegisterService {
 
     @GET
     suspend fun getFormType(@Url url: String): LoginForm

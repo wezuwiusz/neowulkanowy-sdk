@@ -17,7 +17,7 @@ import io.github.wulkanowy.sdk.scrapper.login.UrlGenerator
 import io.github.wulkanowy.sdk.scrapper.service.AccountService
 import java.net.URL
 
-class AccountRepository(private val account: AccountService) {
+internal class AccountRepository(private val account: AccountService) {
 
     companion object {
         const val SELECTOR_STANDARD = ".loginButton, .LogOnBoard input[type=submit]" // remove second selector?

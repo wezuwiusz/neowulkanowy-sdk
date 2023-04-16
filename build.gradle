@@ -142,7 +142,7 @@ subprojects {
 
     jacocoTestReport {
         reports {
-            xml.enabled true
+            xml.getRequired().set(true)
         }
     }
     jacoco {

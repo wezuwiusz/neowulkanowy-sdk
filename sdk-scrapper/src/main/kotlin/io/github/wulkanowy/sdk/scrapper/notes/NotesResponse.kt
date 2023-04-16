@@ -4,7 +4,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class NotesResponse(
+internal data class NotesResponse(
 
     @SerialName("Uwagi")
     val notes: List<Note> = emptyList(),

@@ -1,6 +1,7 @@
 plugins {
     id 'java'
     id 'org.jetbrains.kotlin.jvm'
+    alias(libs.plugins.validator)
 }
 
 dependencies {
@@ -18,4 +19,11 @@ dependencies {
     implementation "com.squareup.okhttp3:okhttp-urlconnection"
 
     testImplementation "io.mockk:mockk-jvm:1.13.4"
+}
+
+tasks.withType(Test) {
+    /**
+     * fix for retrofit https://github.com/square/retrofit/issues/3341
+     */
+    jvmArgs = ["--add-opens", "java.base/java.lang.invoke=ALL-UNNAMED"]
 }

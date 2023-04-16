@@ -6,7 +6,7 @@ import kotlinx.serialization.Serializable
 import java.time.LocalDateTime
 
 @Serializable
-class CacheResponse {
+internal class CacheResponse {
 
     @SerialName("isParentUser")
     var isParent: Boolean = false

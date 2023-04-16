@@ -7,14 +7,14 @@ import java.time.LocalDateTime
 import java.time.ZoneId
 import io.github.wulkanowy.sdk.scrapper.mobile.Device as ScrapperDevice
 
-fun TokenResponse.mapToken() = Token(
+internal fun TokenResponse.mapToken() = Token(
     token = token,
     symbol = symbol,
     pin = pin,
     qrCodeImage = qrCodeImage,
 )
 
-fun List<ScrapperDevice>.mapDevices(zoneId: ZoneId) = map {
+internal fun List<ScrapperDevice>.mapDevices(zoneId: ZoneId): List<Device> = map {
     Device(
         id = it.id,
         deviceId = it.deviceId.orEmpty(),

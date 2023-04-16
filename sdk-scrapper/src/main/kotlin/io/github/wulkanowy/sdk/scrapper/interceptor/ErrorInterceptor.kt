@@ -17,7 +17,7 @@ import org.jsoup.nodes.Document
 import org.slf4j.LoggerFactory
 import java.net.CookieManager
 
-class ErrorInterceptor(
+internal class ErrorInterceptor(
     private val cookies: CookieManager,
 ) : Interceptor {
 

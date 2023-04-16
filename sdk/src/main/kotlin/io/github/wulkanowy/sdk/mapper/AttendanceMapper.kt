@@ -14,7 +14,7 @@ import io.github.wulkanowy.sdk.scrapper.attendance.Absent as ScrapperAbsent
 import io.github.wulkanowy.sdk.scrapper.attendance.Attendance as ScrapperAttendance
 import io.github.wulkanowy.sdk.scrapper.attendance.AttendanceSummary as ScrapperAttendanceSummary
 
-fun List<ScrapperAttendance>.mapAttendance() = map {
+internal fun List<ScrapperAttendance>.mapAttendance() = map {
     Attendance(
         number = it.number,
         name = it.category.name,
@@ -33,7 +33,7 @@ fun List<ScrapperAttendance>.mapAttendance() = map {
     )
 }
 
-fun List<ScrapperAttendanceSummary>.mapAttendanceSummary() = map {
+internal fun List<ScrapperAttendanceSummary>.mapAttendanceSummary() = map {
     AttendanceSummary(
         month = it.month,
         presence = it.presence,
@@ -46,7 +46,7 @@ fun List<ScrapperAttendanceSummary>.mapAttendanceSummary() = map {
     )
 }
 
-fun List<Absent>.mapToScrapperAbsent() = map {
+internal fun List<Absent>.mapToScrapperAbsent() = map {
     ScrapperAbsent(
         date = it.date,
         timeId = it.timeId,

@@ -2,7 +2,10 @@ package io.github.wulkanowy.sdk.scrapper
 
 import io.github.wulkanowy.sdk.scrapper.attendance.AttendanceCategory
 import io.github.wulkanowy.sdk.scrapper.messages.Folder
+import io.github.wulkanowy.sdk.scrapper.register.RegisterStudent
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.test.runTest
 import okhttp3.logging.HttpLoggingInterceptor
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
@@ -12,6 +15,7 @@ import org.junit.Test
 import java.time.LocalDate
 import java.time.Month
 
+@OptIn(ExperimentalCoroutinesApi::class)
 @Ignore
 class ScrapperRemoteTest : BaseTest() {
 
@@ -67,20 +71,21 @@ class ScrapperRemoteTest : BaseTest() {
     }
 
     @Test
-    fun studentsTest() {
-        val students = runBlocking { api.getStudents() }
+    fun studentsTest() = runTest {
+        val user = api.getUserSubjects()
+        val symbol = user.symbols[0]
+        val school = symbol.schools[0]
+        val student = school.subjects[0] as RegisterStudent
 
-        students[0].run {
-            assertEquals("powiatwulkanowy", symbol)
-            assertEquals("jan@fakelog.cf", email)
-            assertEquals("Jan", studentName)
-            assertEquals("Kowalski", studentSurname)
-            assertEquals("123456", schoolSymbol)
-            assertEquals(1, studentId)
-            assertEquals(1, classId)
-            assertEquals("A", className)
-            assertEquals("Publiczna szkoła Wulkanowego nr 1 w fakelog.cf", schoolName)
-        }
+        assertEquals("powiatwulkanowy", symbol.symbol)
+        assertEquals("jan@fakelog.cf", user.email)
+        assertEquals("Jan", student.studentName)
+        assertEquals("Kowalski", student.studentSurname)
+        assertEquals("123456", school.schoolId)
+        assertEquals(1, student.studentId)
+        assertEquals(1, student.classId)
+        assertEquals("A", student.className)
+        assertEquals("Publiczna szkoła Wulkanowego nr 1 w fakelog.cf", school.schoolName)
     }
 
     @Test

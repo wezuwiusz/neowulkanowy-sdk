@@ -15,7 +15,7 @@ import io.github.wulkanowy.sdk.scrapper.toRecipient
 import org.slf4j.LoggerFactory
 import java.util.UUID
 
-class MessagesRepository(private val api: MessagesService) {
+internal class MessagesRepository(private val api: MessagesService) {
 
     companion object {
         @JvmStatic

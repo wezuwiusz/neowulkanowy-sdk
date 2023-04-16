@@ -20,7 +20,7 @@ import java.time.LocalDateTime.now
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 
-class LoginHelper(
+internal class LoginHelper(
     var loginType: Scrapper.LoginType,
     private val schema: String,
     private val host: String,

@@ -2,7 +2,7 @@ package io.github.wulkanowy.sdk.scrapper.login
 
 import java.net.URL
 
-class UrlGenerator(
+internal class UrlGenerator(
     private val schema: String,
     private val host: String,
     var symbol: String,

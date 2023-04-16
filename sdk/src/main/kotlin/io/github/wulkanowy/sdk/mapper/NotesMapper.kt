@@ -4,7 +4,7 @@ import io.github.wulkanowy.sdk.pojo.Note
 import io.github.wulkanowy.sdk.scrapper.notes.NoteCategory
 import io.github.wulkanowy.sdk.scrapper.notes.Note as ScrapperNote
 
-fun List<ScrapperNote>.mapNotes() = map {
+internal fun List<ScrapperNote>.mapNotes() = map {
     Note(
         date = it.date.toLocalDate(),
         teacher = it.teacher,

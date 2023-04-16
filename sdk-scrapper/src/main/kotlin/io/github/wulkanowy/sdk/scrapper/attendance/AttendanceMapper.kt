@@ -9,7 +9,7 @@ import kotlinx.serialization.json.Json
 import java.time.LocalDate
 import java.time.Month
 
-fun AttendanceResponse.mapAttendanceList(start: LocalDate, end: LocalDate?, times: List<Time>): List<Attendance> {
+internal fun AttendanceResponse.mapAttendanceList(start: LocalDate, end: LocalDate?, times: List<Time>): List<Attendance> {
     val endDate = end ?: start.plusDays(4)
     return lessons.map {
         val sentExcuse = sentExcuses.firstOrNull { excuse -> excuse.date == it.date && excuse.timeId == it.timeId }
@@ -17,14 +17,14 @@ fun AttendanceResponse.mapAttendanceList(start: LocalDate, end: LocalDate?, time
             number = times.single { time -> time.id == it.timeId }.number
             category = AttendanceCategory.getCategoryById(categoryId)
             excusable = excuseActive && (category == ABSENCE_UNEXCUSED || category == UNEXCUSED_LATENESS) && sentExcuse == null
-            if (sentExcuse != null) excuseStatus = SentExcuse.Status.getByValue(sentExcuse.status)
+            if (sentExcuse != null) excuseStatus = SentExcuseStatus.getByValue(sentExcuse.status)
         }
     }.filter {
         it.date.toLocalDate() >= start && it.date.toLocalDate() <= endDate
     }.sortedWith(compareBy({ it.date }, { it.number }))
 }
 
-fun AttendanceSummaryResponse.mapAttendanceSummaryList(): List<AttendanceSummary> {
+internal fun AttendanceSummaryResponse.mapAttendanceSummaryList(): List<AttendanceSummary> {
     val jsonObject = Json {
         isLenient = true
     }

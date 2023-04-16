@@ -9,7 +9,7 @@ import kotlinx.serialization.encoding.Encoder
 
 @OptIn(ExperimentalSerializationApi::class)
 @Serializer(forClass = Object::class)
-object ObjectSerializer : KSerializer<Any> {
+internal object ObjectSerializer : KSerializer<Any> {
 
     override fun deserialize(decoder: Decoder): Any = Any()
 

@@ -37,11 +37,16 @@ abstract class BaseLocalTest : BaseTest() {
         server.shutdown()
     }
 
-    fun getStudentRepo(testClass: Class<*>, fixture: String, loginType: Scrapper.LoginType = Scrapper.LoginType.STANDARD, autoLogin: Boolean = false): StudentRepository {
+    internal fun getStudentRepo(
+        testClass: Class<*>,
+        fixture: String,
+        loginType: Scrapper.LoginType = Scrapper.LoginType.STANDARD,
+        autoLogin: Boolean = false,
+    ): StudentRepository {
         return getStudentRepo(loginType, autoLogin) { it.enqueue(fixture, testClass) }
     }
 
-    fun getStudentRepo(loginType: Scrapper.LoginType = Scrapper.LoginType.STANDARD, autoLogin: Boolean = false, responses: (MockWebServer) -> Unit): StudentRepository {
+    internal fun getStudentRepo(loginType: Scrapper.LoginType = Scrapper.LoginType.STANDARD, autoLogin: Boolean = false, responses: (MockWebServer) -> Unit): StudentRepository {
         responses(server)
         val okHttp = getOkHttp(errorInterceptor = true, autoLoginInterceptorOn = true, loginType = loginType, autoLogin = autoLogin)
         return StudentRepository(getService(StudentService::class.java, server.url("/").toString(), false, okHttp))
@@ -75,7 +80,7 @@ abstract class BaseLocalTest : BaseTest() {
         .build()
         .create(service)
 
-    fun getOkHttp(
+    internal fun getOkHttp(
         errorInterceptor: Boolean = true,
         autoLoginInterceptorOn: Boolean = true,
         loginType: Scrapper.LoginType = Scrapper.LoginType.STANDARD,

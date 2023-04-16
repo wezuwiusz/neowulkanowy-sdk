@@ -4,7 +4,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class ApiResponse<out T>(
+internal data class ApiResponse<out T>(
     val success: Boolean,
     val data: T?,
     val feedback: Feedback? = null,
@@ -12,7 +12,7 @@ data class ApiResponse<out T>(
 )
 
 @Serializable
-data class Feedback(
+internal data class Feedback(
 
     @SerialName("Handled")
     val handled: Boolean?,

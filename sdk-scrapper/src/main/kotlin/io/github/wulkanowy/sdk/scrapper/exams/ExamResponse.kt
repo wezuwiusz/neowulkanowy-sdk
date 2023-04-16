@@ -6,7 +6,7 @@ import kotlinx.serialization.Serializable
 import java.time.LocalDateTime
 
 @Serializable
-class ExamResponse {
+internal class ExamResponse {
 
     @SerialName("SprawdzianyGroupedByDayList")
     var weeks: List<ExamDay> = emptyList()

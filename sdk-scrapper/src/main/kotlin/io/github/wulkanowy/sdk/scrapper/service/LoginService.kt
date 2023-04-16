@@ -10,7 +10,7 @@ import retrofit2.http.POST
 import retrofit2.http.Query
 import retrofit2.http.Url
 
-interface LoginService {
+internal interface LoginService {
 
     @POST("Account/LogOn")
     @FormUrlEncoded

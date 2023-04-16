@@ -4,7 +4,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class HomepageTileResponse(
+internal data class HomepageTileResponse(
 
     @SerialName("IkonkaNazwa")
     val iconName: String?,

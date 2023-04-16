@@ -5,14 +5,14 @@ import io.github.wulkanowy.sdk.pojo.GovernmentUnit
 import io.github.wulkanowy.sdk.scrapper.home.GovernmentMember as ScrapperGovernmentMember
 import io.github.wulkanowy.sdk.scrapper.home.GovernmentUnit as ScrapperGovernmentUnit
 
-fun List<ScrapperGovernmentUnit>.mapToUnits() = map {
+internal fun List<ScrapperGovernmentUnit>.mapToUnits() = map {
     GovernmentUnit(
         unitName = it.unitName,
         people = it.people.mapToMembers(),
     )
 }
 
-fun List<ScrapperGovernmentMember>.mapToMembers() = map {
+internal fun List<ScrapperGovernmentMember>.mapToMembers() = map {
     GovernmentMember(
         name = it.name,
         division = it.division,

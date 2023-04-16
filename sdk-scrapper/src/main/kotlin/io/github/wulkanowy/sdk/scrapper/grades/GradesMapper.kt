@@ -8,7 +8,7 @@ private val pointGradeRegex = "\\d+\\.?\\d+/\\d+".toRegex()
 
 private fun String.isEntryContainsCommentWithGrade() = isGradeValid(removeSurrounding("(", ")"))
 
-fun GradesResponse.mapGradesList() = gradesWithSubjects.map { gradesSubject ->
+internal fun GradesResponse.mapGradesList() = gradesWithSubjects.map { gradesSubject ->
     gradesSubject.grades.map { grade ->
         val (gradeValue, gradeModifier) = getGradeValueWithModifier(grade.entry)
         val gradeEntryWithoutComment = grade.entry.substringBefore(" (")
@@ -45,7 +45,7 @@ fun GradesResponse.mapGradesList() = gradesWithSubjects.map { gradesSubject ->
     }
 }.flatten().sortedByDescending { it.date }
 
-fun GradesResponse.mapGradesSummary() = gradesWithSubjects.map { subject ->
+internal fun GradesResponse.mapGradesSummary() = gradesWithSubjects.map { subject ->
     GradeSummary(
         visibleSubject = subject.visibleSubject,
         order = subject.order,
@@ -59,7 +59,7 @@ fun GradesResponse.mapGradesSummary() = gradesWithSubjects.map { subject ->
     )
 }.sortedBy { it.name }.toList()
 
-fun List<GradesStatisticsSemester>.mapGradesStatisticsSemester() = map {
+internal fun List<GradesStatisticsSemester>.mapGradesStatisticsSemester() = map {
     it.copy(
         items = it.items.orEmpty().reversed().mapIndexed { index, item ->
             item.copy().apply {
@@ -70,7 +70,7 @@ fun List<GradesStatisticsSemester>.mapGradesStatisticsSemester() = map {
     )
 }
 
-fun List<GradesStatisticsPartial>.mapGradesStatisticsPartial() = map {
+internal fun List<GradesStatisticsPartial>.mapGradesStatisticsPartial() = map {
     it.copy(
         classSeries = it.classSeries.addGradeValue(),
         studentSeries = it.studentSeries.addGradeValue(),

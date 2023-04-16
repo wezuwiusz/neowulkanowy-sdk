@@ -6,7 +6,7 @@ import kotlinx.serialization.Serializable
 import java.time.LocalDateTime
 
 @Serializable
-data class Diary(
+internal data class Diary(
 
     @SerialName("Id")
     val id: Int,

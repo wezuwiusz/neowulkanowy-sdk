@@ -6,7 +6,7 @@ import kotlinx.serialization.Serializable
 import java.time.LocalDateTime
 
 @Serializable
-data class AttendanceRequest(
+internal data class AttendanceRequest(
 
     @SerialName("data")
     @Serializable(with = CustomDateAdapter::class)
@@ -17,7 +17,7 @@ data class AttendanceRequest(
 )
 
 @Serializable
-data class AttendanceRecordsRequest(
+internal data class AttendanceRecordsRequest(
 
     @SerialName("miesiac")
     val month: Int,

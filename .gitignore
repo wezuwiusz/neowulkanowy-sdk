@@ -75,3 +75,5 @@ classes
 .idea/kotlinc.xml
 .idea/jpa-buddy.xml
 .idea/kotlinScripting.xml
+Snap.*.trc
+javacore.*.txt

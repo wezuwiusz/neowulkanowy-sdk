@@ -4,7 +4,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-class SchoolAndTeachersResponse {
+internal class SchoolAndTeachersResponse {
 
     @SerialName("Nauczyciele")
     var teachers: List<Teacher> = emptyList()

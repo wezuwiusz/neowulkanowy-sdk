@@ -10,7 +10,7 @@ import java.time.format.DateTimeFormatter
 
 @OptIn(ExperimentalSerializationApi::class)
 @Serializer(forClass = LocalDate::class)
-object GradeDateDeserializer : KSerializer<LocalDate> {
+internal object GradeDateDeserializer : KSerializer<LocalDate> {
 
     private const val SERVER_FORMAT = "dd.MM.yyyy"
     private const val SERVER_FORMAT_2 = "dd.M.yyyy"

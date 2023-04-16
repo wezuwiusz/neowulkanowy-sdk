@@ -4,7 +4,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class GradesResponse(
+internal data class GradesResponse(
 
     @SerialName("IsSrednia")
     val isAverage: Boolean,

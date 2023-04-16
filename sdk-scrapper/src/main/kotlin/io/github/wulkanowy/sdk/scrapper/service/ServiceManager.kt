@@ -34,7 +34,7 @@ import java.util.concurrent.TimeUnit.SECONDS
 import javax.net.ssl.TrustManagerFactory
 import javax.net.ssl.X509TrustManager
 
-class ServiceManager(
+internal class ServiceManager(
     private val okHttpClientBuilderFactory: OkHttpClientBuilderFactory,
     logLevel: HttpLoggingInterceptor.Level,
     private val loginType: Scrapper.LoginType,

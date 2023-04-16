@@ -13,7 +13,7 @@ private val parser = TimetableParser()
 private val formatter1 = DateTimeFormatter.ofPattern("dd.MM.yyyy")
 private val formatter2 = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")
 
-fun TimetableResponse.mapTimetableList(startDate: LocalDate, endDate: LocalDate?): List<Lesson> = rows.flatMap { lessons ->
+internal fun TimetableResponse.mapTimetableList(startDate: LocalDate, endDate: LocalDate?): List<Lesson> = rows.flatMap { lessons ->
     lessons.drop(1).mapIndexed { i, it ->
         val times = lessons[0].split("<br />")
         val header = headers.drop(1)[i].date.split("<br />")
@@ -30,7 +30,7 @@ fun TimetableResponse.mapTimetableList(startDate: LocalDate, endDate: LocalDate?
     it.date >= startDate && it.date <= (endDate ?: startDate.plusDays(4))
 }.sortedWith(compareBy({ it.date }, { it.number })).toList()
 
-fun TimetableResponse.mapTimetableHeaders() = headers.drop(1).map {
+internal fun TimetableResponse.mapTimetableHeaders(): List<TimetableDayHeader> = headers.drop(1).map {
     val header = it.date.split("<br />")
     TimetableDayHeader(
         date = header[1].toDate("dd.MM.yyyy").toLocalDate(),
@@ -38,7 +38,7 @@ fun TimetableResponse.mapTimetableHeaders() = headers.drop(1).map {
     )
 }
 
-fun TimetableResponse.mapTimetableAdditional() = additional.flatMap { day ->
+internal fun TimetableResponse.mapTimetableAdditional(): List<LessonAdditional> = additional.flatMap { day ->
     val date = LocalDate.parse(day.header.substringAfter(", "), formatter1)
     day.descriptions.map { lesson ->
         val description = Jsoup.parse(lesson.description).text()
@@ -53,7 +53,7 @@ fun TimetableResponse.mapTimetableAdditional() = additional.flatMap { day ->
     }
 }
 
-fun ApiResponse<Map<String, List<CompletedLesson>>>.mapCompletedLessonsList(start: LocalDate, endDate: LocalDate?): List<CompletedLesson> {
+internal fun ApiResponse<Map<String, List<CompletedLesson>>>.mapCompletedLessonsList(start: LocalDate, endDate: LocalDate?): List<CompletedLesson> {
     return data.orEmpty()
         .flatMap { it.value }
         .map {

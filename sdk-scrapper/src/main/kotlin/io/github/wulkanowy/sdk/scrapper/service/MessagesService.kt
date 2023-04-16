@@ -14,7 +14,7 @@ import retrofit2.http.POST
 import retrofit2.http.PUT
 import retrofit2.http.Query
 
-interface MessagesService {
+internal interface MessagesService {
 
     @GET(".")
     suspend fun getStart(): String

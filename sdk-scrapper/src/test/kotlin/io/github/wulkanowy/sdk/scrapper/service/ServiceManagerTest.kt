@@ -108,7 +108,7 @@ class ServiceManagerTest : BaseLocalTest() {
         }
 
         try {
-            runBlocking { api.getStudents() }
+            runBlocking { api.getUserSubjects() }
         } catch (e: Throwable) {
             assertTrue(e is ScrapperException)
         }

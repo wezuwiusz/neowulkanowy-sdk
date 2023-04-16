@@ -4,7 +4,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class AttendanceExcuseRequest(
+internal data class AttendanceExcuseRequest(
 
     @SerialName("usprawiedliwienie")
     val excuse: Excuse,

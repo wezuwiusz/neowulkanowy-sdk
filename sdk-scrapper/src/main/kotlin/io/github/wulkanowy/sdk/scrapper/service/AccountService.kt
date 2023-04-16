@@ -10,7 +10,7 @@ import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.Url
 
-interface AccountService {
+internal interface AccountService {
 
     @GET
     suspend fun getFormType(@Url url: String): LoginForm

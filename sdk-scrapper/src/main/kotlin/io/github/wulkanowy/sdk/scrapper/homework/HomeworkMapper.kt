@@ -3,7 +3,7 @@ package io.github.wulkanowy.sdk.scrapper.homework
 import org.jsoup.parser.Parser
 import java.time.LocalDate
 
-fun List<HomeworkDay>.mapHomework(startDate: LocalDate, endDate: LocalDate?): List<Homework> {
+internal fun List<HomeworkDay>.mapHomework(startDate: LocalDate, endDate: LocalDate?): List<Homework> {
     val end = endDate ?: startDate
     return asSequence().map { day ->
         day.items.map { homework ->

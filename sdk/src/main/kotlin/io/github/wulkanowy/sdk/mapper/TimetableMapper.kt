@@ -12,13 +12,13 @@ import io.github.wulkanowy.sdk.scrapper.timetable.LessonAdditional as ScrapperTi
 import io.github.wulkanowy.sdk.scrapper.timetable.Timetable as ScrapperTimetableFull
 import io.github.wulkanowy.sdk.scrapper.timetable.TimetableDayHeader as ScrapperTimetableDayHeader
 
-fun ScrapperTimetableFull.mapTimetableFull(zoneId: ZoneId) = Timetable(
+internal fun ScrapperTimetableFull.mapTimetableFull(zoneId: ZoneId) = Timetable(
     headers = headers.mapTimetableDayHeaders(),
     lessons = lessons.mapTimetable(zoneId),
     additional = additional.mapTimetableAdditional(zoneId),
 )
 
-fun List<ScrapperTimetable>.mapTimetable(zoneId: ZoneId) = map {
+internal fun List<ScrapperTimetable>.mapTimetable(zoneId: ZoneId) = map {
     Lesson(
         canceled = it.canceled,
         changes = it.changes,
@@ -38,14 +38,14 @@ fun List<ScrapperTimetable>.mapTimetable(zoneId: ZoneId) = map {
     )
 }
 
-fun List<ScrapperTimetableDayHeader>.mapTimetableDayHeaders() = map {
+internal fun List<ScrapperTimetableDayHeader>.mapTimetableDayHeaders() = map {
     TimetableDayHeader(
         date = it.date,
         content = it.content,
     )
 }
 
-fun List<ScrapperTimetableAdditional>.mapTimetableAdditional(zoneId: ZoneId) = map {
+internal fun List<ScrapperTimetableAdditional>.mapTimetableAdditional(zoneId: ZoneId) = map {
     LessonAdditional(
         subject = it.subject,
         date = it.date,
@@ -54,7 +54,7 @@ fun List<ScrapperTimetableAdditional>.mapTimetableAdditional(zoneId: ZoneId) = m
     )
 }
 
-fun List<ScrapperCompletedLesson>.mapCompletedLessons() = map {
+internal fun List<ScrapperCompletedLesson>.mapCompletedLessons() = map {
     CompletedLesson(
         date = it.date.toLocalDate(),
         number = it.number,

@@ -6,7 +6,7 @@ import javax.net.ssl.SSLContext
 import javax.net.ssl.SSLSocket
 import javax.net.ssl.SSLSocketFactory
 
-class TLSSocketFactory : SSLSocketFactory() {
+internal class TLSSocketFactory : SSLSocketFactory() {
 
     private val factory: SSLSocketFactory
 
