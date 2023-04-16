@@ -1,5 +1,6 @@
 package io.github.wulkanowy.sdk.hebe
 
+import io.github.wulkanowy.sdk.hebe.models.Grade
 import io.github.wulkanowy.sdk.hebe.register.RegisterDevice
 import io.github.wulkanowy.sdk.hebe.register.StudentInfo
 import io.github.wulkanowy.sdk.hebe.repository.RepositoryManager
@@ -35,10 +36,16 @@ class Hebe {
             resettableManager.reset()
         }
 
-    var schoolSymbol = ""
+    var schoolId = ""
         set(value) {
             field = value
             resettableManager.reset()
+        }
+
+    var pupilId = -1
+        set(value) {
+            field = value
+            // resettableManager.reset() // todo: uncomment if some repo should be changed
         }
 
     var deviceModel = ""
@@ -67,6 +74,13 @@ class Hebe {
     }
 
     private val routes by resettableLazy(resettableManager) { serviceManager.getRoutesRepository() }
+
+    private val studentRepository by resettableLazy(resettableManager) {
+        serviceManager.getStudentRepository(
+            baseUrl = baseUrl,
+            schoolId = schoolId,
+        )
+    }
 
     suspend fun register(token: String, pin: String, symbol: String, firebaseToken: String? = null): RegisterDevice {
         val (publicPem, privatePem, publicHash) = generateKeyPair()
@@ -100,5 +114,12 @@ class Hebe {
         return serviceManager
             .getRegisterRepository(url)
             .getStudentInfo()
+    }
+
+    suspend fun getGrades(periodId: Int): List<Grade> {
+        return studentRepository.getGrades(
+            pupilId = pupilId,
+            periodId = periodId,
+        ).orEmpty()
     }
 }

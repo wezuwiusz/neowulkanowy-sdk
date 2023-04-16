@@ -49,6 +49,13 @@ internal class RepositoryManager(
         )
     }
 
+    fun getStudentRepository(baseUrl: String, schoolId: String): StudentRepository = StudentRepository(
+        getRetrofitBuilder(isJson = true, signInterceptor = true)
+            .baseUrl("${baseUrl.removeSuffix("/")}/$schoolId/")
+            .build()
+            .create(),
+    )
+
     internal fun getRegisterRepository(baseUrl: String, symbol: String = ""): RegisterRepository = getRegisterRepository(
         baseUrl = "${baseUrl.removeSuffix("/")}/$symbol",
     )

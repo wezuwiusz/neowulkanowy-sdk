@@ -138,7 +138,7 @@ class Sdk {
         set(value) {
             field = value
             scrapper.schoolId = value
-            hebe.schoolSymbol = value
+            hebe.schoolId = value
         }
 
     var classId = 0
@@ -370,8 +370,8 @@ class Sdk {
 
     suspend fun getGrades(semesterId: Int): Grades = withContext(Dispatchers.IO) {
         when (mode) {
-            Mode.HYBRID, Mode.SCRAPPER -> scrapper.getGrades(semesterId).mapGrades()
-            Mode.HEBE -> throw NotImplementedError("Not available in HEBE mode")
+            Mode.SCRAPPER -> scrapper.getGrades(semesterId).mapGrades()
+            Mode.HYBRID, Mode.HEBE -> hebe.getGrades(semesterId).mapGrades()
         }
     }
 

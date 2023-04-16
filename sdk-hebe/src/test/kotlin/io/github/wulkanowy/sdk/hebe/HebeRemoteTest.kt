@@ -3,6 +3,7 @@ package io.github.wulkanowy.sdk.hebe
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import okhttp3.logging.HttpLoggingInterceptor
+import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Ignore
 import org.junit.Test
@@ -17,10 +18,11 @@ class HebeRemoteTest {
     fun setUp() {
         with(hebe) {
             logLevel = HttpLoggingInterceptor.Level.BODY
-            keyId = ""
-            privatePem = ""
-            baseUrl = ""
-            schoolSymbol = ""
+            keyId = "///"
+            privatePem = "///"
+            baseUrl = "https://api.fakelog.cf/powiatwulkanowy/"
+            pupilId = 1234
+            schoolId = "008520"
             deviceModel = "Pixel 4a (5G)"
         }
     }
@@ -34,5 +36,12 @@ class HebeRemoteTest {
             symbol = "powiatwulkanowy",
         )
         println(res)
+    }
+
+    @Test
+    fun `get grades`() = runTest {
+        val grades = hebe.getGrades(559)
+        assertTrue(grades.isNotEmpty())
+        println(grades[0])
     }
 }
