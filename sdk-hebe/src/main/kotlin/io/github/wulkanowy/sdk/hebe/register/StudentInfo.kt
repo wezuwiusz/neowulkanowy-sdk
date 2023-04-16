@@ -75,7 +75,7 @@ class StudentInfo(
     data class Educator(
 
         @SerialName("Id")
-        val id: Int,
+        val id: String,
 
         @SerialName("Initials")
         val initials: String,
