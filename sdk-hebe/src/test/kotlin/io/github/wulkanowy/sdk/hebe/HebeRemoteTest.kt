@@ -42,6 +42,5 @@ class HebeRemoteTest {
     fun `get grades`() = runTest {
         val grades = hebe.getGrades(559)
         assertTrue(grades.isNotEmpty())
-        println(grades[0])
     }
 }

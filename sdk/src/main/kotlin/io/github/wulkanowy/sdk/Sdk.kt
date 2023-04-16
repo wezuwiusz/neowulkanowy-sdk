@@ -152,7 +152,7 @@ class Sdk {
         set(value) {
             field = value
             scrapper.studentId = value
-            // hebe.studentId = value // todo
+            hebe.pupilId = value
         }
 
     var diaryId = 0

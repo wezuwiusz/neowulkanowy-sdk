@@ -2,6 +2,7 @@ package io.github.wulkanowy.sdk.hebe.repository
 
 import io.github.wulkanowy.sdk.hebe.ApiRequest
 import io.github.wulkanowy.sdk.hebe.ApiResponse
+import io.github.wulkanowy.sdk.hebe.getEnvelopeOrThrowError
 import io.github.wulkanowy.sdk.hebe.register.RegisterRequest
 import io.github.wulkanowy.sdk.hebe.register.RegisterResponse
 import io.github.wulkanowy.sdk.hebe.register.StudentInfo
@@ -16,24 +17,14 @@ internal class RegisterRepository(private val service: RegisterService) {
         certificatePem: String,
         certificateId: String,
         firebaseToken: String?,
-    ): RegisterResponse {
-        val response = registerDevice(
-            privateKey = certificatePem,
-            certificateId = certificateId,
-            deviceModel = deviceModel,
-            firebaseToken = firebaseToken.orEmpty(),
-            pin = pin,
-            token = token,
-        )
-        if (response.envelope == null) {
-            when (response.status.code) {
-                // todo: add more codes
-                else -> error("Unknown error: ${response.status.message}")
-            }
-        }
-
-        return response.envelope!!
-    }
+    ): RegisterResponse = registerDevice(
+        privateKey = certificatePem,
+        certificateId = certificateId,
+        deviceModel = deviceModel,
+        firebaseToken = firebaseToken.orEmpty(),
+        pin = pin,
+        token = token,
+    ).getEnvelopeOrThrowError()!!
 
     private suspend fun registerDevice(
         privateKey: String,
