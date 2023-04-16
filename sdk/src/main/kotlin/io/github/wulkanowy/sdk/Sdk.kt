@@ -232,7 +232,7 @@ class Sdk {
 
     fun addInterceptor(interceptor: Interceptor, network: Boolean = false) {
         scrapper.addInterceptor(interceptor, network)
-        // hebe.setInterceptor(interceptor, network)
+        hebe.addInterceptor(interceptor, network)
         interceptors.add(interceptor to network)
     }
 

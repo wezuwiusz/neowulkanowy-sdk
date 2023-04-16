@@ -18,8 +18,16 @@ internal class RepositoryManager(
     private val keyId: String,
     private val privatePem: String,
     private val deviceModel: String,
-    private val interceptors: MutableList<Pair<Interceptor, Boolean>>,
 ) {
+
+    private val interceptors: MutableList<Pair<Interceptor, Boolean>> = mutableListOf(
+        HttpLoggingInterceptor().setLevel(logLevel) to true,
+        ErrorInterceptor() to false,
+    )
+
+    fun setInterceptor(interceptor: Interceptor, network: Boolean = false) {
+        interceptors.add(0, interceptor to network)
+    }
 
     @OptIn(ExperimentalSerializationApi::class)
     private val json by lazy {
@@ -62,7 +70,6 @@ internal class RepositoryManager(
             }
             .client(
                 OkHttpClient().newBuilder()
-                    .addInterceptor(ErrorInterceptor())
                     .apply {
                         if (signInterceptor) {
                             addInterceptor(SignInterceptor(keyId, privatePem, deviceModel))

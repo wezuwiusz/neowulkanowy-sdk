@@ -47,7 +47,11 @@ class Hebe {
             resettableManager.reset()
         }
 
-    private val interceptors: MutableList<Pair<Interceptor, Boolean>> = mutableListOf()
+    private val appInterceptors: MutableList<Pair<Interceptor, Boolean>> = mutableListOf()
+
+    fun addInterceptor(interceptor: Interceptor, network: Boolean = false) {
+        appInterceptors.add(interceptor to network)
+    }
 
     private val serviceManager by resettableLazy(resettableManager) {
         RepositoryManager(
@@ -55,8 +59,11 @@ class Hebe {
             keyId = keyId,
             privatePem = privatePem,
             deviceModel = deviceModel,
-            interceptors = interceptors,
-        )
+        ).apply {
+            appInterceptors.forEach { (interceptor, isNetwork) ->
+                setInterceptor(interceptor, isNetwork)
+            }
+        }
     }
 
     private val routes by resettableLazy(resettableManager) { serviceManager.getRoutesRepository() }
