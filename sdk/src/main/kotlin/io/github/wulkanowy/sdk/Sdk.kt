@@ -206,6 +206,7 @@ class Sdk {
     var buildTag = "SM-G950F Build/NRD90M"
         set(value) {
             field = value
+            hebe.deviceModel = value
             scrapper.buildTag = value
         }
 
