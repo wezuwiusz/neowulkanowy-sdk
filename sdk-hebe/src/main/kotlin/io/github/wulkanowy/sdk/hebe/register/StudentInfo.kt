@@ -1,7 +1,9 @@
 package io.github.wulkanowy.sdk.hebe.register
 
 import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
+@Serializable
 class StudentInfo(
 
     @SerialName("Capabilities")
@@ -47,6 +49,7 @@ class StudentInfo(
     val unit: Unit,
 ) {
 
+    @Serializable
     data class ConstituentUnit(
 
         @SerialName("Address")
@@ -68,6 +71,7 @@ class StudentInfo(
         val short: String,
     )
 
+    @Serializable
     data class Educator(
 
         @SerialName("Id")
@@ -88,6 +92,7 @@ class StudentInfo(
         @SerialName("Roles")
         val roles: List<Role>,
     ) {
+        @Serializable
         data class Role(
 
             @SerialName("Address")
@@ -122,6 +127,7 @@ class StudentInfo(
         )
     }
 
+    @Serializable
     data class Journal(
 
         @SerialName("Id")
@@ -134,6 +140,7 @@ class StudentInfo(
         val yearEnd: PeriodDate,
     )
 
+    @Serializable
     data class PeriodDate(
 
         @SerialName("Date")
@@ -149,6 +156,7 @@ class StudentInfo(
         val timestamp: Long,
     )
 
+    @Serializable
     data class Login(
 
         @SerialName("DisplayName")
@@ -173,6 +181,7 @@ class StudentInfo(
         val value: String,
     )
 
+    @Serializable
     data class Period(
 
         @SerialName("Current")
@@ -197,6 +206,7 @@ class StudentInfo(
         val start: PeriodDate,
     )
 
+    @Serializable
     data class Pupil(
 
         @SerialName("FirstName")
@@ -221,6 +231,7 @@ class StudentInfo(
         val surname: String,
     )
 
+    @Serializable
     data class SenderEntry(
 
         @SerialName("Address")
@@ -236,6 +247,7 @@ class StudentInfo(
         val loginId: Int,
     )
 
+    @Serializable
     data class Unit(
 
         @SerialName("Address")

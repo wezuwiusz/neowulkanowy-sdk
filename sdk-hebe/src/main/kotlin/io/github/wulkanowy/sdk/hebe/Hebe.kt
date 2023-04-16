@@ -3,7 +3,6 @@ package io.github.wulkanowy.sdk.hebe
 import io.github.wulkanowy.sdk.hebe.register.RegisterDevice
 import io.github.wulkanowy.sdk.hebe.register.StudentInfo
 import io.github.wulkanowy.sdk.hebe.repository.RepositoryManager
-import io.github.wulkanowy.signer.hebe.generateCertificate
 import io.github.wulkanowy.signer.hebe.generateKeyPair
 import okhttp3.Interceptor
 import okhttp3.logging.HttpLoggingInterceptor
