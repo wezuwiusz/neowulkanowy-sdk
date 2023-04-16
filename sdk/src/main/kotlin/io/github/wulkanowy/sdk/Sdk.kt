@@ -297,8 +297,9 @@ class Sdk {
             loginMode = Mode.HYBRID,
             symbols = scrapperUser.symbols
                 .mapNotNull { symbol ->
-                    val school = symbol.schools
-                        .firstOrNull() ?: return@mapNotNull null
+                    val school = symbol.schools.firstOrNull {
+                        it.subjects.filterIsInstance<RegisterStudent>().isNotEmpty()
+                    } ?: return@mapNotNull null
                     val student = school.subjects
                         .firstOrNull() as? RegisterStudent ?: return@mapNotNull null
                     scrapper.also {
