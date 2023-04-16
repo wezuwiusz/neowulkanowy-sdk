@@ -145,14 +145,14 @@ class Sdk {
         set(value) {
             field = value
             scrapper.classId = value
-            // hebe.classId = value
+            // hebe.classId = value // todo
         }
 
     var studentId = 0
         set(value) {
             field = value
             scrapper.studentId = value
-            // hebe.studentId = value
+            // hebe.studentId = value // todo
         }
 
     var diaryId = 0
@@ -275,7 +275,7 @@ class Sdk {
             symbol = symbol,
         )
         return hebe
-            .getStudents(registerDevice.restUrl, symbol)
+            .getStudents(registerDevice.restUrl)
             .mapHebeUser(registerDevice)
     }
 

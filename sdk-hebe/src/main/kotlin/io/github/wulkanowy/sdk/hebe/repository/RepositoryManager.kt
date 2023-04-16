@@ -49,7 +49,7 @@ internal class RepositoryManager(
         )
     }
 
-    internal fun getRegisterRepository(baseUrl: String, symbol: String): RegisterRepository = getRegisterRepository(
+    internal fun getRegisterRepository(baseUrl: String, symbol: String = ""): RegisterRepository = getRegisterRepository(
         baseUrl = "${baseUrl.removeSuffix("/")}/$symbol",
     )
 

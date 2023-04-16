@@ -96,9 +96,9 @@ class Hebe {
         )
     }
 
-    suspend fun getStudents(url: String, symbol: String): List<StudentInfo> {
+    suspend fun getStudents(url: String): List<StudentInfo> {
         return serviceManager
-            .getRegisterRepository(url, symbol)
+            .getRegisterRepository(url)
             .getStudentInfo()
     }
 }
