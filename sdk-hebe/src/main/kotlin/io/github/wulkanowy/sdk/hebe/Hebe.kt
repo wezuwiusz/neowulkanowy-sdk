@@ -46,10 +46,17 @@ class Hebe {
 
     private val routes by resettableLazy(resettableManager) { serviceManager.getRoutesRepository() }
 
-    suspend fun register(privateKey: String, certificateId: String, token: String, pin: String, symbol: String): ApiResponse<RegisterResponse> {
+    suspend fun register(privateKey: String, certificateId: String, firebaseToken: String, token: String, pin: String, symbol: String): RegisterResponse {
         return serviceManager
             .getRegisterRepository(routes.getRouteByToken(token), symbol)
-            .registerDevice(privateKey, certificateId, deviceModel, pin, token)
+            .registerDevice(
+                privateKey = privateKey,
+                certificateId = certificateId,
+                deviceModel = deviceModel,
+                firebaseToken = firebaseToken,
+                pin = pin,
+                token = token,
+            )
     }
 
     suspend fun getStudents(url: String, symbol: String): List<StudentInfo> {

@@ -1,12 +1,17 @@
 package io.github.wulkanowy.sdk.pojo
 
+import io.github.wulkanowy.sdk.Sdk
 import io.github.wulkanowy.sdk.scrapper.Scrapper
 
 data class RegisterUser(
     val email: String,
     val login: String, // may be the same as email
-    val baseUrl: String,
+    val scrapperBaseUrl: String?,
+    val hebeBaseUrl: String?,
+    val certificateKey: String?,
+    val privateKey: String?,
     val loginType: Scrapper.LoginType?,
+    val loginMode: Sdk.Mode,
     val symbols: List<RegisterSymbol>,
 )
 

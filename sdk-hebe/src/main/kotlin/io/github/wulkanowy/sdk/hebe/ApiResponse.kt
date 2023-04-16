@@ -4,7 +4,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-class ApiResponse<T> {
+internal class ApiResponse<T> {
 
     @SerialName("Envelope")
     var envelope: T? = null

@@ -31,7 +31,7 @@ class ScrapperRemoteTest : BaseTest() {
             symbol = "powiatwulkanowy"
             email = "jan@fakelog.cf"
             password = "jan123"
-            schoolSymbol = "123456"
+            schoolId = "123456"
             studentId = 1
             diaryId = 101
             kindergartenDiaryId = 1

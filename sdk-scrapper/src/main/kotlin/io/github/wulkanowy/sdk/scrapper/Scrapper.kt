@@ -109,7 +109,7 @@ class Scrapper {
             field = value
         }
 
-    var schoolSymbol: String = ""
+    var schoolId: String = ""
         set(value) {
             if (field != value) changeManager.reset()
             field = value
@@ -197,7 +197,7 @@ class Scrapper {
             symbol = normalizedSymbol,
             email = email,
             password = password,
-            schoolSymbol = schoolSymbol,
+            schoolId = schoolId,
             studentId = studentId,
             diaryId = diaryId,
             kindergartenDiaryId = kindergartenDiaryId,

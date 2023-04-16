@@ -6,7 +6,7 @@ import java.time.ZoneOffset.UTC
 import java.time.format.DateTimeFormatter.ofPattern
 import java.util.UUID
 
-data class ApiRequest<T>(
+internal data class ApiRequest<T>(
 
     @SerialName("API")
     val apiVersion: Int = 1,

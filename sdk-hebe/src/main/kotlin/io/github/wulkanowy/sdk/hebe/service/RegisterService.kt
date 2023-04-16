@@ -8,7 +8,7 @@ import io.github.wulkanowy.sdk.hebe.register.StudentInfo
 import retrofit2.http.GET
 import retrofit2.http.POST
 
-interface RegisterService {
+internal interface RegisterService {
 
     @POST("new")
     suspend fun registerDevice(request: ApiRequest<RegisterRequest>): ApiResponse<RegisterResponse>

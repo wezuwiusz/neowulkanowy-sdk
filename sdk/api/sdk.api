@@ -12,6 +12,7 @@ public final class io/github/wulkanowy/sdk/Sdk {
 	public final fun getAttendanceSummary (Ljava/lang/Integer;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public static synthetic fun getAttendanceSummary$default (Lio/github/wulkanowy/sdk/Sdk;Ljava/lang/Integer;Lkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
 	public final fun getBuildTag ()Ljava/lang/String;
+	public final fun getCertKey ()Ljava/lang/String;
 	public final fun getClassId ()I
 	public final fun getCompletedLessons (Ljava/time/LocalDate;Ljava/time/LocalDate;ILkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public static synthetic fun getCompletedLessons$default (Lio/github/wulkanowy/sdk/Sdk;Ljava/time/LocalDate;Ljava/time/LocalDate;ILkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
@@ -46,10 +47,12 @@ public final class io/github/wulkanowy/sdk/Sdk {
 	public final fun getMessageReplayDetails (Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public final fun getMessages (Lio/github/wulkanowy/sdk/pojo/Folder;Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public static synthetic fun getMessages$default (Lio/github/wulkanowy/sdk/Sdk;Lio/github/wulkanowy/sdk/pojo/Folder;Ljava/lang/String;Lkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
+	public final fun getMobileBaseUrl ()Ljava/lang/String;
 	public final fun getMode ()Lio/github/wulkanowy/sdk/Sdk$Mode;
 	public final fun getNotes (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public final fun getPassword ()Ljava/lang/String;
 	public final fun getPasswordResetCaptchaCode (Ljava/lang/String;Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public final fun getPrivateKey ()Ljava/lang/String;
 	public final fun getReceivedMessages (Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public static synthetic fun getReceivedMessages$default (Lio/github/wulkanowy/sdk/Sdk;Ljava/lang/String;Lkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
 	public final fun getRecipients (Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
@@ -66,6 +69,9 @@ public final class io/github/wulkanowy/sdk/Sdk {
 	public final fun getStudentInfo (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public final fun getStudentPhoto (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public final fun getStudentThreats (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public final fun getStudentsFromHebe (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public final fun getStudentsHybrid (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public static synthetic fun getStudentsHybrid$default (Lio/github/wulkanowy/sdk/Sdk;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
 	public final fun getStudentsTrips (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public final fun getSubjects (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public final fun getSymbol ()Ljava/lang/String;
@@ -79,6 +85,7 @@ public final class io/github/wulkanowy/sdk/Sdk {
 	public final fun sendPasswordResetRequest (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public final fun setAndroidVersion (Ljava/lang/String;)V
 	public final fun setBuildTag (Ljava/lang/String;)V
+	public final fun setCertKey (Ljava/lang/String;)V
 	public final fun setClassId (I)V
 	public final fun setDiaryId (I)V
 	public final fun setEmail (Ljava/lang/String;)V
@@ -86,8 +93,10 @@ public final class io/github/wulkanowy/sdk/Sdk {
 	public final fun setKindergartenDiaryId (I)V
 	public final fun setLogLevel (Lokhttp3/logging/HttpLoggingInterceptor$Level;)V
 	public final fun setLoginType (Lio/github/wulkanowy/sdk/Sdk$ScrapperLoginType;)V
+	public final fun setMobileBaseUrl (Ljava/lang/String;)V
 	public final fun setMode (Lio/github/wulkanowy/sdk/Sdk$Mode;)V
 	public final fun setPassword (Ljava/lang/String;)V
+	public final fun setPrivateKey (Ljava/lang/String;)V
 	public final fun setSchoolSymbol (Ljava/lang/String;)V
 	public final fun setSchoolYear (I)V
 	public final fun setScrapperBaseUrl (Ljava/lang/String;)V
@@ -103,6 +112,7 @@ public final class io/github/wulkanowy/sdk/Sdk$Companion {
 }
 
 public final class io/github/wulkanowy/sdk/Sdk$Mode : java/lang/Enum {
+	public static final field HEBE Lio/github/wulkanowy/sdk/Sdk$Mode;
 	public static final field HYBRID Lio/github/wulkanowy/sdk/Sdk$Mode;
 	public static final field SCRAPPER Lio/github/wulkanowy/sdk/Sdk$Mode;
 	public static fun valueOf (Ljava/lang/String;)Lio/github/wulkanowy/sdk/Sdk$Mode;
@@ -132,6 +142,10 @@ public final class io/github/wulkanowy/sdk/exception/FeatureNotAvailableExceptio
 }
 
 public final class io/github/wulkanowy/sdk/exception/VulcanException : java/io/IOException {
+}
+
+public final class io/github/wulkanowy/sdk/mapper/StudentsMapperKt {
+	public static final fun mapHebeUser (Ljava/util/List;Lio/github/wulkanowy/sdk/hebe/register/RegisterResponse;Ljava/lang/String;Ljava/lang/String;)Lio/github/wulkanowy/sdk/pojo/RegisterUser;
 }
 
 public final class io/github/wulkanowy/sdk/pojo/Absent {
@@ -898,19 +912,27 @@ public final class io/github/wulkanowy/sdk/pojo/RegisterUnit {
 }
 
 public final class io/github/wulkanowy/sdk/pojo/RegisterUser {
-	public fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lio/github/wulkanowy/sdk/scrapper/Scrapper$LoginType;Ljava/util/List;)V
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lio/github/wulkanowy/sdk/scrapper/Scrapper$LoginType;Lio/github/wulkanowy/sdk/Sdk$Mode;Ljava/util/List;)V
 	public final fun component1 ()Ljava/lang/String;
 	public final fun component2 ()Ljava/lang/String;
 	public final fun component3 ()Ljava/lang/String;
-	public final fun component4 ()Lio/github/wulkanowy/sdk/scrapper/Scrapper$LoginType;
-	public final fun component5 ()Ljava/util/List;
-	public final fun copy (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lio/github/wulkanowy/sdk/scrapper/Scrapper$LoginType;Ljava/util/List;)Lio/github/wulkanowy/sdk/pojo/RegisterUser;
-	public static synthetic fun copy$default (Lio/github/wulkanowy/sdk/pojo/RegisterUser;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lio/github/wulkanowy/sdk/scrapper/Scrapper$LoginType;Ljava/util/List;ILjava/lang/Object;)Lio/github/wulkanowy/sdk/pojo/RegisterUser;
+	public final fun component4 ()Ljava/lang/String;
+	public final fun component5 ()Ljava/lang/String;
+	public final fun component6 ()Ljava/lang/String;
+	public final fun component7 ()Lio/github/wulkanowy/sdk/scrapper/Scrapper$LoginType;
+	public final fun component8 ()Lio/github/wulkanowy/sdk/Sdk$Mode;
+	public final fun component9 ()Ljava/util/List;
+	public final fun copy (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lio/github/wulkanowy/sdk/scrapper/Scrapper$LoginType;Lio/github/wulkanowy/sdk/Sdk$Mode;Ljava/util/List;)Lio/github/wulkanowy/sdk/pojo/RegisterUser;
+	public static synthetic fun copy$default (Lio/github/wulkanowy/sdk/pojo/RegisterUser;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lio/github/wulkanowy/sdk/scrapper/Scrapper$LoginType;Lio/github/wulkanowy/sdk/Sdk$Mode;Ljava/util/List;ILjava/lang/Object;)Lio/github/wulkanowy/sdk/pojo/RegisterUser;
 	public fun equals (Ljava/lang/Object;)Z
-	public final fun getBaseUrl ()Ljava/lang/String;
+	public final fun getCertificateKey ()Ljava/lang/String;
 	public final fun getEmail ()Ljava/lang/String;
+	public final fun getHebeBaseUrl ()Ljava/lang/String;
 	public final fun getLogin ()Ljava/lang/String;
+	public final fun getLoginMode ()Lio/github/wulkanowy/sdk/Sdk$Mode;
 	public final fun getLoginType ()Lio/github/wulkanowy/sdk/scrapper/Scrapper$LoginType;
+	public final fun getPrivateKey ()Ljava/lang/String;
+	public final fun getScrapperBaseUrl ()Ljava/lang/String;
 	public final fun getSymbols ()Ljava/util/List;
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;

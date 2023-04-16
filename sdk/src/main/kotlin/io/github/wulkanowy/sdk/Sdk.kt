@@ -12,7 +12,7 @@ import io.github.wulkanowy.sdk.mapper.mapGradePointsStatistics
 import io.github.wulkanowy.sdk.mapper.mapGradeStatistics
 import io.github.wulkanowy.sdk.mapper.mapGrades
 import io.github.wulkanowy.sdk.mapper.mapGradesSemesterStatistics
-import io.github.wulkanowy.sdk.mapper.mapHebeStudents
+import io.github.wulkanowy.sdk.mapper.mapHebeUser
 import io.github.wulkanowy.sdk.mapper.mapHomework
 import io.github.wulkanowy.sdk.mapper.mapLuckyNumbers
 import io.github.wulkanowy.sdk.mapper.mapMailboxes
@@ -53,6 +53,7 @@ import io.github.wulkanowy.sdk.pojo.MessageDetails
 import io.github.wulkanowy.sdk.pojo.MessageReplayDetails
 import io.github.wulkanowy.sdk.pojo.Note
 import io.github.wulkanowy.sdk.pojo.Recipient
+import io.github.wulkanowy.sdk.pojo.RegisterStudent
 import io.github.wulkanowy.sdk.pojo.RegisterUser
 import io.github.wulkanowy.sdk.pojo.School
 import io.github.wulkanowy.sdk.pojo.Semester
@@ -136,7 +137,7 @@ class Sdk {
     var schoolSymbol = ""
         set(value) {
             field = value
-            scrapper.schoolSymbol = value
+            scrapper.schoolId = value
             hebe.schoolSymbol = value
         }
 
@@ -266,13 +267,21 @@ class Sdk {
         }
     }
 
-    suspend fun getStudentsFromHebe(token: String, pin: String, symbol: String): List<Student> {
+    suspend fun getStudentsFromHebe(token: String, pin: String, symbol: String, firebaseToken: String): RegisterUser {
         val privateKey = "" // TODO
         val certificateId = "" // TODO
 
-        val students = hebe.register(privateKey, certificateId, token, pin, symbol)
-        return hebe.getStudents(students.envelope!!.restUrl, symbol)
-            .mapHebeStudents(certificateId, privateKey)
+        val registerResponse = hebe.register(
+            privateKey = privateKey,
+            certificateId = certificateId,
+            firebaseToken = firebaseToken,
+            token = token,
+            pin = pin,
+            symbol = symbol,
+        )
+        return hebe
+            .getStudents(registerResponse.restUrl, symbol)
+            .mapHebeUser(registerResponse, certificateId, privateKey)
     }
 
     suspend fun getStudentsHybrid(
@@ -282,36 +291,35 @@ class Sdk {
         firebaseToken: String,
         startSymbol: String = "Default",
     ) = withContext(Dispatchers.IO) {
-        getStudentsFromScrapper(email, password, scrapperBaseUrl, startSymbol)
-            .distinctBy { it.symbol }
-            .map { scrapperStudent ->
-                scrapper.let {
-                    it.symbol = scrapperStudent.symbol
-                    it.schoolSymbol = scrapperStudent.schoolSymbol
-                    it.studentId = scrapperStudent.studentId
+        val scrapperUser = getUserSubjectsFromScrapper(email, password, scrapperBaseUrl, startSymbol)
+        scrapperUser.symbols
+            .mapNotNull { symbol ->
+                val school = symbol.schools
+                    .firstOrNull() ?: return@mapNotNull null
+                val student = school.subjects
+                    .firstOrNull() as? RegisterStudent ?: return@mapNotNull null
+                scrapper.also {
+                    it.symbol = symbol.symbol
+                    it.schoolId = school.schoolId
+                    it.studentId = student.studentId
                     it.diaryId = -1
-                    it.classId = scrapperStudent.classId
-                    it.loginType = Scrapper.LoginType.valueOf(scrapperStudent.loginType.name)
+                    it.classId = student.classId
+                    it.loginType = Scrapper.LoginType.valueOf(scrapperUser.loginType!!.name)
                 }
                 val token = scrapper.getToken()
-                getStudentsFromHebe(token.token, token.pin, token.symbol).map { student ->
-                    student.copy(
-                        loginMode = Mode.HYBRID,
-                        loginType = scrapperStudent.loginType,
-                        scrapperBaseUrl = scrapperStudent.scrapperBaseUrl,
-                    )
-                }
-            }.toList().flatten()
-    }
-
-    suspend fun getUserSubjectsFromScrapper(email: String, password: String, scrapperBaseUrl: String, symbol: String = "Default"): RegisterUser = withContext(Dispatchers.IO) {
-        scrapper.let {
-            it.baseUrl = scrapperBaseUrl
-            it.email = email
-            it.password = password
-            it.symbol = symbol
-            it.getUserSubjects()
-        }
+                val hebeUser = getStudentsFromHebe(
+                    token = token.token,
+                    pin = token.pin,
+                    symbol = token.symbol,
+                    firebaseToken = firebaseToken,
+                )
+                hebeUser.copy(
+                    loginMode = Mode.HYBRID,
+                    loginType = scrapperUser.loginType,
+                    scrapperBaseUrl = scrapperUser.scrapperBaseUrl,
+                    hebeBaseUrl = hebeUser.hebeBaseUrl,
+                )
+            }.toList()
     }
 
     suspend fun getSemesters(): List<Semester> = withContext(Dispatchers.IO) {

@@ -54,7 +54,7 @@ public final class io/github/wulkanowy/sdk/scrapper/Scrapper {
 	public final fun getRecipients (Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public final fun getRegisteredDevices (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public final fun getSchool (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
-	public final fun getSchoolSymbol ()Ljava/lang/String;
+	public final fun getSchoolId ()Ljava/lang/String;
 	public final fun getSchoolYear ()I
 	public final fun getSelfGovernments (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public final fun getSemesters (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
@@ -89,7 +89,7 @@ public final class io/github/wulkanowy/sdk/scrapper/Scrapper {
 	public final fun setLogLevel (Lokhttp3/logging/HttpLoggingInterceptor$Level;)V
 	public final fun setLoginType (Lio/github/wulkanowy/sdk/scrapper/Scrapper$LoginType;)V
 	public final fun setPassword (Ljava/lang/String;)V
-	public final fun setSchoolSymbol (Ljava/lang/String;)V
+	public final fun setSchoolId (Ljava/lang/String;)V
 	public final fun setSchoolYear (I)V
 	public final fun setSsl (Z)V
 	public final fun setStudentId (I)V
@@ -109,6 +109,10 @@ public final class io/github/wulkanowy/sdk/scrapper/Scrapper$LoginType : java/la
 	public static final field STANDARD Lio/github/wulkanowy/sdk/scrapper/Scrapper$LoginType;
 	public static fun valueOf (Ljava/lang/String;)Lio/github/wulkanowy/sdk/scrapper/Scrapper$LoginType;
 	public static fun values ()[Lio/github/wulkanowy/sdk/scrapper/Scrapper$LoginType;
+}
+
+public final class io/github/wulkanowy/sdk/scrapper/UtilsKt {
+	public static final fun getNormalizedSymbol (Ljava/lang/String;)Ljava/lang/String;
 }
 
 public final class io/github/wulkanowy/sdk/scrapper/attendance/Absent {

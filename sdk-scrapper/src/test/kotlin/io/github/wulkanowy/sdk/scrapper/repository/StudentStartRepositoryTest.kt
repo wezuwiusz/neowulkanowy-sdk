@@ -18,7 +18,7 @@ class StudentStartRepositoryTest : BaseLocalTest() {
             symbol = "Default"
             email = "jan@fakelog.cf"
             password = "jan123"
-            schoolSymbol = "123456"
+            schoolId = "123456"
             diaryId = 101
         }
     }

@@ -3,7 +3,7 @@ package io.github.wulkanowy.sdk.hebe.register
 import kotlinx.serialization.SerialName
 import java.util.UUID
 
-data class RegisterRequest(
+internal data class RegisterRequest(
 
     @SerialName("Certificate")
     val certificate: String,
@@ -27,5 +27,5 @@ data class RegisterRequest(
     val securityToken: String,
 
     @SerialName("SelfIdentifier")
-    val selfIdentifier: String = UUID.randomUUID().toString()
+    val selfIdentifier: String = UUID.randomUUID().toString(),
 )

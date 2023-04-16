@@ -13,7 +13,7 @@ import retrofit2.Retrofit
 import retrofit2.converter.scalars.ScalarsConverterFactory
 import retrofit2.create
 
-class RepositoryManager(
+internal class RepositoryManager(
     private val logLevel: HttpLoggingInterceptor.Level,
     private val privateKey: String,
     private val interceptors: MutableList<Pair<Interceptor, Boolean>>,
@@ -32,14 +32,24 @@ class RepositoryManager(
     }
 
     fun getRoutesRepository(): RoutingRulesRepository {
-        return RoutingRulesRepository(getRetrofitBuilder(interceptors).baseUrl("http://komponenty.vulcan.net.pl").build().create())
+        return RoutingRulesRepository(
+            getRetrofitBuilder(interceptors)
+                .baseUrl("http://komponenty.vulcan.net.pl")
+                .build()
+                .create(),
+        )
     }
 
-    fun getRegisterRepository(baseUrl: String, symbol: String) = getRegisterRepository("${baseUrl.removeSuffix("/")}/$symbol")
+    internal fun getRegisterRepository(baseUrl: String, symbol: String): RegisterRepository = getRegisterRepository(
+        "${baseUrl.removeSuffix("/")}/$symbol",
+    )
 
-    fun getRegisterRepository(baseUrl: String): RegisterRepository {
-        return RegisterRepository(getRetrofitBuilder(interceptors).baseUrl("${baseUrl.removeSuffix("/")}/api/mobile/register/").build().create())
-    }
+    private fun getRegisterRepository(baseUrl: String): RegisterRepository = RegisterRepository(
+        getRetrofitBuilder(interceptors)
+            .baseUrl("${baseUrl.removeSuffix("/")}/api/mobile/register/")
+            .build()
+            .create(),
+    )
 
     @OptIn(ExperimentalSerializationApi::class)
     private fun getRetrofitBuilder(interceptors: MutableList<Pair<Interceptor, Boolean>>): Retrofit.Builder {
