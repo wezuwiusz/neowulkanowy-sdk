@@ -64,20 +64,30 @@ class Hebe {
 
     suspend fun register(firebaseToken: String, token: String, pin: String, symbol: String): RegisterDevice {
         val (publicPem, privatePem, publicHash) = generateKeyPair()
-        val (certificatePem, certificateHash) = generateCertificate(privatePem)
 
+        this.keyId = publicHash
         this.privatePem = privatePem
-        this.keyId = certificateHash
 
-        return serviceManager.getRegisterRepository(routes.getRouteByToken(token), symbol)
-            .register(
-                firebaseToken = firebaseToken,
-                token = token,
-                pin = pin,
-                privatePem = privatePem,
-                keyId = keyId,
-                deviceModel = deviceModel,
-            )
+        val envelope = serviceManager.getRegisterRepository(
+            baseUrl = routes.getRouteByToken(token),
+            symbol = symbol,
+        ).register(
+            firebaseToken = firebaseToken,
+            token = token,
+            pin = pin,
+            certificatePem = publicPem,
+            certificateId = publicHash,
+            deviceModel = deviceModel,
+        )
+
+        return RegisterDevice(
+            loginId = envelope.loginId,
+            restUrl = envelope.restUrl,
+            userLogin = envelope.userLogin,
+            userName = envelope.userName,
+            certificateHash = publicHash,
+            privatePem = privatePem,
+        )
     }
 
     suspend fun getStudents(url: String, symbol: String): List<StudentInfo> {

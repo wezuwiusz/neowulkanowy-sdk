@@ -2,8 +2,8 @@ package io.github.wulkanowy.sdk.hebe
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
-import java.time.LocalDateTime
-import java.time.ZoneOffset.UTC
+import java.time.ZoneId
+import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter.ofPattern
 import java.util.UUID
 
@@ -17,7 +17,7 @@ internal data class ApiRequest<T>(
     val appName: String = "DzienniczekPlus 2.0",
 
     @SerialName("AppVersion")
-    val appVersion: String = "1.4.2",
+    val appVersion: String = "22.09.02 (G)",
 
     @SerialName("CertificateId")
     val certificateId: String,
@@ -32,8 +32,8 @@ internal data class ApiRequest<T>(
     val requestId: String = UUID.randomUUID().toString(),
 
     @SerialName("Timestamp")
-    val timestamp: Long = LocalDateTime.now().toEpochSecond(UTC),
+    val timestamp: Long = ZonedDateTime.now(ZoneId.of("GMT")).toInstant().toEpochMilli(),
 
     @SerialName("TimestampFormatted")
-    val timestampFormatted: String = LocalDateTime.now().format(ofPattern("yyyy-MM-dd hh:mm:ss")),
+    val timestampFormatted: String = ZonedDateTime.now(ZoneId.of("GMT")).format(ofPattern("yyyy-MM-dd hh:mm:ss")),
 )

@@ -18,7 +18,7 @@ internal class SignInterceptor(
         val original = chain.request()
         val request = original.newBuilder()
 
-        request.header("UserAgent", "Dart/2.10 (dart:io)")
+        request.header("User-Agent", "Dart/2.10 (dart:io)")
         request.header("vOS", "Android")
         request.header("vDeviceModel", deviceModel)
         request.header("vAPI", "1")

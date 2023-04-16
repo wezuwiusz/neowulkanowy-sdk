@@ -25,6 +25,7 @@ internal class RepositoryManager(
     private val json by lazy {
         Json {
             explicitNulls = false
+            encodeDefaults = true
             ignoreUnknownKeys = true
             coerceInputValues = true
             isLenient = true

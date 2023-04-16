@@ -14,7 +14,7 @@ internal data class RegisterRequest(
     val certificateThumbprint: String,
 
     @SerialName("CertificateType")
-    val certificateType: String = "X509",
+    val certificateType: String = "RSA_PEM",
 
     @SerialName("DeviceModel")
     val deviceModel: String,

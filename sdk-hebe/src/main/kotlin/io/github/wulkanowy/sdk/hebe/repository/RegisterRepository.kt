@@ -15,12 +15,12 @@ internal class RegisterRepository(private val service: RegisterService) {
         token: String,
         pin: String,
         deviceModel: String,
-        privatePem: String,
-        keyId: String,
-    ): RegisterDevice {
+        certificatePem: String,
+        certificateId: String,
+    ): RegisterResponse {
         val response = registerDevice(
-            privateKey = privatePem,
-            certificateId = keyId,
+            privateKey = certificatePem,
+            certificateId = certificateId,
             deviceModel = deviceModel,
             firebaseToken = firebaseToken,
             pin = pin,
@@ -33,15 +33,7 @@ internal class RegisterRepository(private val service: RegisterService) {
             }
         }
 
-        val envelope = response.envelope!!
-        return RegisterDevice(
-            loginId = envelope.loginId,
-            restUrl = envelope.restUrl,
-            userLogin = envelope.userLogin,
-            userName = envelope.userName,
-            certificateHash = keyId,
-            privatePem = privatePem,
-        )
+        return response.envelope!!
     }
 
     private suspend fun registerDevice(
