@@ -123,7 +123,7 @@ class StudentInfo(
             val surname: String,
 
             @SerialName("UnitSymbol")
-            val unitSymbol: String?,
+            val unitSymbol: String? = null,
         )
     }
 
@@ -209,26 +209,26 @@ class StudentInfo(
     @Serializable
     data class Pupil(
 
-        @SerialName("FirstName")
-        val firstName: String,
-
         @SerialName("Id")
         val id: Int,
 
         @SerialName("LoginId")
-        val loginId: Int,
+        val loginId: Int = -1,
 
         @SerialName("LoginValue")
-        val loginValue: String,
+        val loginValue: String? = null,
+
+        @SerialName("FirstName")
+        val firstName: String,
 
         @SerialName("SecondName")
-        val secondName: String,
-
-        @SerialName("Sex")
-        val sex: Boolean,
+        val secondName: String = "",
 
         @SerialName("Surname")
         val surname: String,
+
+        @SerialName("Sex")
+        val sex: Boolean,
     )
 
     @Serializable
