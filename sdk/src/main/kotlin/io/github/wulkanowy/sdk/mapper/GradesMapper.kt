@@ -62,7 +62,7 @@ internal fun List<HebeGrade>.mapGrades() = Grades(
             description = it.column.name,
             color = it.column.color.toString(16).uppercase(),
             teacher = "${it.creator.name} ${it.creator.surname}",
-            date = LocalDate.parse(it.dateCreated.date, DateTimeFormatter.ofPattern("yyyy.MM.dd")),
+            date = LocalDate.parse(it.dateCreated.date, DateTimeFormatter.ofPattern("yyyy-MM-dd")),
         )
     },
     summary = listOf(),
