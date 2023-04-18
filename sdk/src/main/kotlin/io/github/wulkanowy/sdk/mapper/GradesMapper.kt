@@ -6,6 +6,8 @@ import io.github.wulkanowy.sdk.pojo.Grades
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import io.github.wulkanowy.sdk.hebe.models.Grade as HebeGrade
+import io.github.wulkanowy.sdk.hebe.models.GradeSummary as HebeGradeSummary
+import io.github.wulkanowy.sdk.hebe.models.GradeAverage as HebeGradeAverage
 import io.github.wulkanowy.sdk.scrapper.grades.Grade as ScrapperGrade
 import io.github.wulkanowy.sdk.scrapper.grades.GradeSummary as ScrapperGradeSummary
 import io.github.wulkanowy.sdk.scrapper.grades.Grades as ScrapperGrades
@@ -48,24 +50,36 @@ internal fun ScrapperGrades.mapGrades() = Grades(
     type = type,
 )
 
-internal fun List<HebeGrade>.mapGrades() = Grades(
-    details = map {
+internal fun Triple<List<HebeGrade>, List<HebeGradeSummary>, List<HebeGradeAverage>>.mapGrades() = Grades(
+    details = first.map { grade ->
         Grade(
-            subject = it.column.subject.name,
-            entry = it.content,
-            value = it.value ?: 0.0,
+            subject = grade.column.subject.name,
+            entry = grade.content,
+            value = grade.value ?: 0.0,
             modifier = 0.0,
-            weight = it.column.weight.toString(),
-            weightValue = it.column.weight,
-            comment = it.comment,
-            symbol = it.column.code,
-            description = it.column.name,
-            color = it.column.color.toString(16).uppercase(),
-            teacher = "${it.creator.name} ${it.creator.surname}",
-            date = LocalDate.parse(it.dateCreated.date, DateTimeFormatter.ofPattern("yyyy-MM-dd")),
+            weight = String.format("%.2f", grade.column.weight),
+            weightValue = grade.column.weight,
+            comment = grade.comment,
+            symbol = grade.column.code,
+            description = grade.column.name,
+            color = grade.column.color.toString(16).uppercase(),
+            teacher = "${grade.creator.name} ${grade.creator.surname}",
+            date = LocalDate.parse(grade.dateCreated.date, DateTimeFormatter.ofPattern("yyyy-MM-dd")),
         )
     },
-    summary = listOf(),
+    summary = second.map { summary ->
+        GradeSummary(
+            name = summary.subject.name,
+            average = third.find { it.id == summary.id }
+                ?.average?.replace(",", ".")
+                ?.toDoubleOrNull() ?: .0,
+            predicted = summary.entry1.orEmpty(),
+            final = summary.entry2.orEmpty(),
+            pointsSum = "",
+            proposedPoints = "",
+            finalPoints = "",
+        )
+    },
     isAverage = false,
     isPoints = false,
     isForAdults = false,

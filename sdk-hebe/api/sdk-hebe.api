@@ -5,6 +5,8 @@ public final class io/github/wulkanowy/sdk/hebe/Hebe {
 	public final fun getBaseUrl ()Ljava/lang/String;
 	public final fun getDeviceModel ()Ljava/lang/String;
 	public final fun getGrades (ILkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public final fun getGradesAverage (ILkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public final fun getGradesSummary (ILkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public final fun getKeyId ()Ljava/lang/String;
 	public final fun getLogLevel ()Lokhttp3/logging/HttpLoggingInterceptor$Level;
 	public final fun getPrivatePem ()Ljava/lang/String;
@@ -347,6 +349,194 @@ public final class io/github/wulkanowy/sdk/hebe/models/Grade$Modifier$$serialize
 }
 
 public final class io/github/wulkanowy/sdk/hebe/models/Grade$Modifier$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public final class io/github/wulkanowy/sdk/hebe/models/GradeAverage {
+	public static final field Companion Lio/github/wulkanowy/sdk/hebe/models/GradeAverage$Companion;
+	public synthetic fun <init> (ILjava/lang/String;IIILio/github/wulkanowy/sdk/hebe/models/GradeAverage$Subject;Lkotlinx/serialization/internal/SerializationConstructorMarker;)V
+	public fun <init> (Ljava/lang/String;IIILio/github/wulkanowy/sdk/hebe/models/GradeAverage$Subject;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()I
+	public final fun component3 ()I
+	public final fun component4 ()I
+	public final fun component5 ()Lio/github/wulkanowy/sdk/hebe/models/GradeAverage$Subject;
+	public final fun copy (Ljava/lang/String;IIILio/github/wulkanowy/sdk/hebe/models/GradeAverage$Subject;)Lio/github/wulkanowy/sdk/hebe/models/GradeAverage;
+	public static synthetic fun copy$default (Lio/github/wulkanowy/sdk/hebe/models/GradeAverage;Ljava/lang/String;IIILio/github/wulkanowy/sdk/hebe/models/GradeAverage$Subject;ILjava/lang/Object;)Lio/github/wulkanowy/sdk/hebe/models/GradeAverage;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getAverage ()Ljava/lang/String;
+	public final fun getId ()I
+	public final fun getPeriodId ()I
+	public final fun getPupilId ()I
+	public final fun getSubject ()Lio/github/wulkanowy/sdk/hebe/models/GradeAverage$Subject;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+	public static final synthetic fun write$Self (Lio/github/wulkanowy/sdk/hebe/models/GradeAverage;Lkotlinx/serialization/encoding/CompositeEncoder;Lkotlinx/serialization/descriptors/SerialDescriptor;)V
+}
+
+public final class io/github/wulkanowy/sdk/hebe/models/GradeAverage$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+	public static final field INSTANCE Lio/github/wulkanowy/sdk/hebe/models/GradeAverage$$serializer;
+	public fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lio/github/wulkanowy/sdk/hebe/models/GradeAverage;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public fun serialize (Lkotlinx/serialization/encoding/Encoder;Lio/github/wulkanowy/sdk/hebe/models/GradeAverage;)V
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+	public fun typeParametersSerializers ()[Lkotlinx/serialization/KSerializer;
+}
+
+public final class io/github/wulkanowy/sdk/hebe/models/GradeAverage$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public final class io/github/wulkanowy/sdk/hebe/models/GradeAverage$Subject {
+	public static final field Companion Lio/github/wulkanowy/sdk/hebe/models/GradeAverage$Subject$Companion;
+	public synthetic fun <init> (IILjava/lang/String;Ljava/lang/String;Ljava/lang/String;ILkotlinx/serialization/internal/SerializationConstructorMarker;)V
+	public fun <init> (ILjava/lang/String;Ljava/lang/String;Ljava/lang/String;I)V
+	public final fun component1 ()I
+	public final fun component2 ()Ljava/lang/String;
+	public final fun component3 ()Ljava/lang/String;
+	public final fun component4 ()Ljava/lang/String;
+	public final fun component5 ()I
+	public final fun copy (ILjava/lang/String;Ljava/lang/String;Ljava/lang/String;I)Lio/github/wulkanowy/sdk/hebe/models/GradeAverage$Subject;
+	public static synthetic fun copy$default (Lio/github/wulkanowy/sdk/hebe/models/GradeAverage$Subject;ILjava/lang/String;Ljava/lang/String;Ljava/lang/String;IILjava/lang/Object;)Lio/github/wulkanowy/sdk/hebe/models/GradeAverage$Subject;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getId ()I
+	public final fun getKey ()Ljava/lang/String;
+	public final fun getKod ()Ljava/lang/String;
+	public final fun getName ()Ljava/lang/String;
+	public final fun getPosition ()I
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+	public static final synthetic fun write$Self (Lio/github/wulkanowy/sdk/hebe/models/GradeAverage$Subject;Lkotlinx/serialization/encoding/CompositeEncoder;Lkotlinx/serialization/descriptors/SerialDescriptor;)V
+}
+
+public final class io/github/wulkanowy/sdk/hebe/models/GradeAverage$Subject$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+	public static final field INSTANCE Lio/github/wulkanowy/sdk/hebe/models/GradeAverage$Subject$$serializer;
+	public fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lio/github/wulkanowy/sdk/hebe/models/GradeAverage$Subject;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public fun serialize (Lkotlinx/serialization/encoding/Encoder;Lio/github/wulkanowy/sdk/hebe/models/GradeAverage$Subject;)V
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+	public fun typeParametersSerializers ()[Lkotlinx/serialization/KSerializer;
+}
+
+public final class io/github/wulkanowy/sdk/hebe/models/GradeAverage$Subject$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public final class io/github/wulkanowy/sdk/hebe/models/GradeSummary {
+	public static final field Companion Lio/github/wulkanowy/sdk/hebe/models/GradeSummary$Companion;
+	public synthetic fun <init> (ILio/github/wulkanowy/sdk/hebe/models/GradeSummary$DateModify;Ljava/lang/String;Ljava/lang/String;IIILio/github/wulkanowy/sdk/hebe/models/GradeSummary$Subject;Lkotlinx/serialization/internal/SerializationConstructorMarker;)V
+	public fun <init> (Lio/github/wulkanowy/sdk/hebe/models/GradeSummary$DateModify;Ljava/lang/String;Ljava/lang/String;IIILio/github/wulkanowy/sdk/hebe/models/GradeSummary$Subject;)V
+	public synthetic fun <init> (Lio/github/wulkanowy/sdk/hebe/models/GradeSummary$DateModify;Ljava/lang/String;Ljava/lang/String;IIILio/github/wulkanowy/sdk/hebe/models/GradeSummary$Subject;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Lio/github/wulkanowy/sdk/hebe/models/GradeSummary$DateModify;
+	public final fun component2 ()Ljava/lang/String;
+	public final fun component3 ()Ljava/lang/String;
+	public final fun component4 ()I
+	public final fun component5 ()I
+	public final fun component6 ()I
+	public final fun component7 ()Lio/github/wulkanowy/sdk/hebe/models/GradeSummary$Subject;
+	public final fun copy (Lio/github/wulkanowy/sdk/hebe/models/GradeSummary$DateModify;Ljava/lang/String;Ljava/lang/String;IIILio/github/wulkanowy/sdk/hebe/models/GradeSummary$Subject;)Lio/github/wulkanowy/sdk/hebe/models/GradeSummary;
+	public static synthetic fun copy$default (Lio/github/wulkanowy/sdk/hebe/models/GradeSummary;Lio/github/wulkanowy/sdk/hebe/models/GradeSummary$DateModify;Ljava/lang/String;Ljava/lang/String;IIILio/github/wulkanowy/sdk/hebe/models/GradeSummary$Subject;ILjava/lang/Object;)Lio/github/wulkanowy/sdk/hebe/models/GradeSummary;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getDateModify ()Lio/github/wulkanowy/sdk/hebe/models/GradeSummary$DateModify;
+	public final fun getEntry1 ()Ljava/lang/String;
+	public final fun getEntry2 ()Ljava/lang/String;
+	public final fun getId ()I
+	public final fun getPeriodId ()I
+	public final fun getPupilId ()I
+	public final fun getSubject ()Lio/github/wulkanowy/sdk/hebe/models/GradeSummary$Subject;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+	public static final synthetic fun write$Self (Lio/github/wulkanowy/sdk/hebe/models/GradeSummary;Lkotlinx/serialization/encoding/CompositeEncoder;Lkotlinx/serialization/descriptors/SerialDescriptor;)V
+}
+
+public final class io/github/wulkanowy/sdk/hebe/models/GradeSummary$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+	public static final field INSTANCE Lio/github/wulkanowy/sdk/hebe/models/GradeSummary$$serializer;
+	public fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lio/github/wulkanowy/sdk/hebe/models/GradeSummary;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public fun serialize (Lkotlinx/serialization/encoding/Encoder;Lio/github/wulkanowy/sdk/hebe/models/GradeSummary;)V
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+	public fun typeParametersSerializers ()[Lkotlinx/serialization/KSerializer;
+}
+
+public final class io/github/wulkanowy/sdk/hebe/models/GradeSummary$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public final class io/github/wulkanowy/sdk/hebe/models/GradeSummary$DateModify {
+	public static final field Companion Lio/github/wulkanowy/sdk/hebe/models/GradeSummary$DateModify$Companion;
+	public synthetic fun <init> (ILjava/lang/String;Ljava/lang/String;Ljava/lang/String;JLkotlinx/serialization/internal/SerializationConstructorMarker;)V
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;J)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Ljava/lang/String;
+	public final fun component3 ()Ljava/lang/String;
+	public final fun component4 ()J
+	public final fun copy (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;J)Lio/github/wulkanowy/sdk/hebe/models/GradeSummary$DateModify;
+	public static synthetic fun copy$default (Lio/github/wulkanowy/sdk/hebe/models/GradeSummary$DateModify;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;JILjava/lang/Object;)Lio/github/wulkanowy/sdk/hebe/models/GradeSummary$DateModify;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getDate ()Ljava/lang/String;
+	public final fun getDateDisplay ()Ljava/lang/String;
+	public final fun getTime ()Ljava/lang/String;
+	public final fun getTimestamp ()J
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+	public static final synthetic fun write$Self (Lio/github/wulkanowy/sdk/hebe/models/GradeSummary$DateModify;Lkotlinx/serialization/encoding/CompositeEncoder;Lkotlinx/serialization/descriptors/SerialDescriptor;)V
+}
+
+public final class io/github/wulkanowy/sdk/hebe/models/GradeSummary$DateModify$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+	public static final field INSTANCE Lio/github/wulkanowy/sdk/hebe/models/GradeSummary$DateModify$$serializer;
+	public fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lio/github/wulkanowy/sdk/hebe/models/GradeSummary$DateModify;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public fun serialize (Lkotlinx/serialization/encoding/Encoder;Lio/github/wulkanowy/sdk/hebe/models/GradeSummary$DateModify;)V
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+	public fun typeParametersSerializers ()[Lkotlinx/serialization/KSerializer;
+}
+
+public final class io/github/wulkanowy/sdk/hebe/models/GradeSummary$DateModify$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public final class io/github/wulkanowy/sdk/hebe/models/GradeSummary$Subject {
+	public static final field Companion Lio/github/wulkanowy/sdk/hebe/models/GradeSummary$Subject$Companion;
+	public synthetic fun <init> (IILjava/lang/String;Ljava/lang/String;Ljava/lang/String;ILkotlinx/serialization/internal/SerializationConstructorMarker;)V
+	public fun <init> (ILjava/lang/String;Ljava/lang/String;Ljava/lang/String;I)V
+	public final fun component1 ()I
+	public final fun component2 ()Ljava/lang/String;
+	public final fun component3 ()Ljava/lang/String;
+	public final fun component4 ()Ljava/lang/String;
+	public final fun component5 ()I
+	public final fun copy (ILjava/lang/String;Ljava/lang/String;Ljava/lang/String;I)Lio/github/wulkanowy/sdk/hebe/models/GradeSummary$Subject;
+	public static synthetic fun copy$default (Lio/github/wulkanowy/sdk/hebe/models/GradeSummary$Subject;ILjava/lang/String;Ljava/lang/String;Ljava/lang/String;IILjava/lang/Object;)Lio/github/wulkanowy/sdk/hebe/models/GradeSummary$Subject;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getId ()I
+	public final fun getKey ()Ljava/lang/String;
+	public final fun getKod ()Ljava/lang/String;
+	public final fun getName ()Ljava/lang/String;
+	public final fun getPosition ()I
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+	public static final synthetic fun write$Self (Lio/github/wulkanowy/sdk/hebe/models/GradeSummary$Subject;Lkotlinx/serialization/encoding/CompositeEncoder;Lkotlinx/serialization/descriptors/SerialDescriptor;)V
+}
+
+public final class io/github/wulkanowy/sdk/hebe/models/GradeSummary$Subject$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+	public static final field INSTANCE Lio/github/wulkanowy/sdk/hebe/models/GradeSummary$Subject$$serializer;
+	public fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lio/github/wulkanowy/sdk/hebe/models/GradeSummary$Subject;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public fun serialize (Lkotlinx/serialization/encoding/Encoder;Lio/github/wulkanowy/sdk/hebe/models/GradeSummary$Subject;)V
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+	public fun typeParametersSerializers ()[Lkotlinx/serialization/KSerializer;
+}
+
+public final class io/github/wulkanowy/sdk/hebe/models/GradeSummary$Subject$Companion {
 	public final fun serializer ()Lkotlinx/serialization/KSerializer;
 }
 

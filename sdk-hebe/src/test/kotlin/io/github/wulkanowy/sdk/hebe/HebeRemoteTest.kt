@@ -43,4 +43,10 @@ class HebeRemoteTest {
         val grades = hebe.getGrades(559)
         assertTrue(grades.isNotEmpty())
     }
+
+    @Test
+    fun `get grades summary`() = runTest {
+        val summaries = hebe.getGradesSummary(559)
+        assertTrue(summaries.isNotEmpty())
+    }
 }

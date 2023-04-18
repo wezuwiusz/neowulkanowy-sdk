@@ -1,6 +1,8 @@
 package io.github.wulkanowy.sdk.hebe
 
 import io.github.wulkanowy.sdk.hebe.models.Grade
+import io.github.wulkanowy.sdk.hebe.models.GradeAverage
+import io.github.wulkanowy.sdk.hebe.models.GradeSummary
 import io.github.wulkanowy.sdk.hebe.register.RegisterDevice
 import io.github.wulkanowy.sdk.hebe.register.StudentInfo
 import io.github.wulkanowy.sdk.hebe.repository.RepositoryManager
@@ -120,6 +122,20 @@ class Hebe {
         return studentRepository.getGrades(
             pupilId = pupilId,
             periodId = periodId,
-        ).orEmpty()
+        )
+    }
+
+    suspend fun getGradesSummary(periodId: Int): List<GradeSummary> {
+        return studentRepository.getGradesSummary(
+            pupilId = pupilId,
+            periodId = periodId,
+        )
+    }
+
+    suspend fun getGradesAverage(periodId: Int): List<GradeAverage> {
+        return studentRepository.getGradesAverage(
+            pupilId = pupilId,
+            periodId = periodId,
+        )
     }
 }

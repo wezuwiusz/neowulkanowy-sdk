@@ -371,7 +371,11 @@ class Sdk {
     suspend fun getGrades(semesterId: Int): Grades = withContext(Dispatchers.IO) {
         when (mode) {
             Mode.SCRAPPER -> scrapper.getGrades(semesterId).mapGrades()
-            Mode.HYBRID, Mode.HEBE -> hebe.getGrades(semesterId).mapGrades()
+            Mode.HYBRID, Mode.HEBE -> Triple(
+                hebe.getGrades(semesterId),
+                hebe.getGradesSummary(semesterId),
+                hebe.getGradesAverage(semesterId),
+            ).mapGrades()
         }
     }
 
