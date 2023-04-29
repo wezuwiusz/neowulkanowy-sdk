@@ -80,7 +80,7 @@ internal fun Triple<List<HebeGrade>, List<HebeGradeSummary>, List<HebeGradeAvera
             finalPoints = "",
         )
     },
-    isAverage = false,
+    isAverage = third.isNotEmpty(),
     isPoints = false,
     isForAdults = false,
     type = 0,

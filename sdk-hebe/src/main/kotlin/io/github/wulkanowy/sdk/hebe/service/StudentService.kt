@@ -1,12 +1,15 @@
 package io.github.wulkanowy.sdk.hebe.service
 
 import io.github.wulkanowy.sdk.hebe.ApiResponse
+import io.github.wulkanowy.sdk.hebe.models.Exam
 import io.github.wulkanowy.sdk.hebe.models.Grade
 import io.github.wulkanowy.sdk.hebe.models.GradeAverage
 import io.github.wulkanowy.sdk.hebe.models.GradeSummary
 import retrofit2.http.GET
 import retrofit2.http.Query
+import retrofit2.http.QueryMap
 
+@JvmSuppressWildcards
 internal interface StudentService {
 
     @GET("api/mobile/grade/byPupil")
@@ -18,7 +21,7 @@ internal interface StudentService {
         @Query("pageSize") pageSize: Int = 500,
     ): ApiResponse<List<Grade>>
 
-    @GET("api/mobile/grade/average/byPupil")
+    @GET("api/mobile/grade/summary/byPupil")
     suspend fun getGradesSummary(
         @Query("pupilId") pupilId: Int,
         @Query("periodId") periodId: Int,
@@ -35,4 +38,7 @@ internal interface StudentService {
         @Query("lastId") lastId: Int = Int.MIN_VALUE,
         @Query("pageSize") pageSize: Int = 500,
     ): ApiResponse<List<GradeAverage>>
+
+    @GET("api/mobile/exam/byPupil")
+    suspend fun getExams(@QueryMap query: Map<String, Any?>): ApiResponse<List<Exam>>
 }

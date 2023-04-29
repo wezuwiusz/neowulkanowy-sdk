@@ -30,12 +30,18 @@ class HebeRemoteTest {
     @Test
     fun `register device`() = runTest {
         val res = hebe.register(
-            firebaseToken = "###",
-            token = "FK11234",
-            pin = "12334",
-            symbol = "powiatwulkanowy",
+            firebaseToken = "",
+            token = "3S1JDDR",
+            pin = "212343",
+            symbol = "gminanowosolna",
         )
-        println(res)
+        assertTrue(res.privatePem.isNotEmpty())
+    }
+
+    @Test
+    fun `get students`() = runTest {
+        val res = hebe.getStudents(hebe.baseUrl)
+        assertTrue(res.isNotEmpty())
     }
 
     @Test
@@ -48,5 +54,11 @@ class HebeRemoteTest {
     fun `get grades summary`() = runTest {
         val summaries = hebe.getGradesSummary(559)
         assertTrue(summaries.isNotEmpty())
+    }
+
+    @Test
+    fun `get exams`() = runTest {
+        val exams = hebe.getExams()
+        assertTrue(exams.isNotEmpty())
     }
 }

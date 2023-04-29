@@ -364,7 +364,7 @@ class Sdk {
     suspend fun getExams(start: LocalDate, end: LocalDate): List<Exam> = withContext(Dispatchers.IO) {
         when (mode) {
             Mode.HYBRID, Mode.SCRAPPER -> scrapper.getExams(start, end).mapExams()
-            Mode.HEBE -> throw NotImplementedError("Not available in HEBE mode")
+            Mode.HEBE -> hebe.getExams().mapExams()
         }
     }
 
