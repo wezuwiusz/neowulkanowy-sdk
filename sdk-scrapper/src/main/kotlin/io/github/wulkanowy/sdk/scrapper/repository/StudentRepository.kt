@@ -31,6 +31,8 @@ import io.github.wulkanowy.sdk.scrapper.homework.Homework
 import io.github.wulkanowy.sdk.scrapper.homework.HomeworkRequest
 import io.github.wulkanowy.sdk.scrapper.homework.mapHomework
 import io.github.wulkanowy.sdk.scrapper.interceptor.handleErrors
+import io.github.wulkanowy.sdk.scrapper.menu.Menu
+import io.github.wulkanowy.sdk.scrapper.menu.MenuRequest
 import io.github.wulkanowy.sdk.scrapper.mobile.Device
 import io.github.wulkanowy.sdk.scrapper.mobile.TokenResponse
 import io.github.wulkanowy.sdk.scrapper.mobile.UnregisterDeviceRequest
@@ -167,6 +169,11 @@ internal class StudentRepository(private val api: StudentService) {
         return api.getConferences()
             .handleErrors().data.orEmpty()
             .mapConferences()
+    }
+
+    suspend fun getMenu(date: LocalDate): List<Menu> {
+        val menuRequest = MenuRequest(date = date.atStartOfDay())
+        return api.getMenu(menuRequest).handleErrors().data.orEmpty()
     }
 
     suspend fun getTimetable(startDate: LocalDate, endDate: LocalDate? = null): Timetable {

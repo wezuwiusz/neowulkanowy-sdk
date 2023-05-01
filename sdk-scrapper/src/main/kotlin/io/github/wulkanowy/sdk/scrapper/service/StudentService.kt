@@ -20,6 +20,8 @@ import io.github.wulkanowy.sdk.scrapper.grades.GradesStatisticsRequest
 import io.github.wulkanowy.sdk.scrapper.grades.GradesStatisticsSemester
 import io.github.wulkanowy.sdk.scrapper.homework.HomeworkDay
 import io.github.wulkanowy.sdk.scrapper.homework.HomeworkRequest
+import io.github.wulkanowy.sdk.scrapper.menu.MenuRequest
+import io.github.wulkanowy.sdk.scrapper.menu.Menu
 import io.github.wulkanowy.sdk.scrapper.mobile.Device
 import io.github.wulkanowy.sdk.scrapper.mobile.TokenResponse
 import io.github.wulkanowy.sdk.scrapper.mobile.UnregisterDeviceRequest
@@ -122,6 +124,9 @@ internal interface StudentService {
 
     @POST("Zebrania.mvc/Get")
     suspend fun getConferences(): ApiResponse<List<Conference>>
+
+    @POST("Jadlospis.mvc/Get")
+    suspend fun getMenu(@Body menuRequest: MenuRequest): ApiResponse<List<Menu>>
 
     @POST("ZarejestrowaneUrzadzenia.mvc/Get")
     suspend fun getRegisteredDevices(@Body body: Any = Any()): ApiResponse<List<Device>>

@@ -16,6 +16,7 @@ import io.github.wulkanowy.sdk.mapper.mapHebeUser
 import io.github.wulkanowy.sdk.mapper.mapHomework
 import io.github.wulkanowy.sdk.mapper.mapLuckyNumbers
 import io.github.wulkanowy.sdk.mapper.mapMailboxes
+import io.github.wulkanowy.sdk.mapper.mapMenu
 import io.github.wulkanowy.sdk.mapper.mapMessages
 import io.github.wulkanowy.sdk.mapper.mapNotes
 import io.github.wulkanowy.sdk.mapper.mapPhoto
@@ -48,6 +49,7 @@ import io.github.wulkanowy.sdk.pojo.Grades
 import io.github.wulkanowy.sdk.pojo.Homework
 import io.github.wulkanowy.sdk.pojo.LuckyNumber
 import io.github.wulkanowy.sdk.pojo.Mailbox
+import io.github.wulkanowy.sdk.pojo.Menu
 import io.github.wulkanowy.sdk.pojo.Message
 import io.github.wulkanowy.sdk.pojo.MessageDetails
 import io.github.wulkanowy.sdk.pojo.MessageReplayDetails
@@ -417,6 +419,13 @@ class Sdk {
     suspend fun getConferences(): List<Conference> = withContext(Dispatchers.IO) {
         when (mode) {
             Mode.HYBRID, Mode.SCRAPPER -> scrapper.getConferences().mapConferences(registerTimeZone)
+            Mode.HEBE -> throw NotImplementedError("Not available in HEBE mode")
+        }
+    }
+
+    suspend fun getMenu(date: LocalDate): List<Menu> = withContext(Dispatchers.IO) {
+        when (mode) {
+            Mode.HYBRID, Mode.SCRAPPER -> scrapper.getMenu(date).mapMenu()
             Mode.HEBE -> throw NotImplementedError("Not available in HEBE mode")
         }
     }
