@@ -1,0 +1,18 @@
+plugins {
+    id 'java'
+    id 'org.jetbrains.kotlin.jvm'
+    alias(libs.plugins.validator)
+    id 'jacoco'
+}
+
+dependencies {
+    implementation 'com.github.wulkanowy.uonet-request-signer:hebe-jvm:5412ed8'
+
+    implementation "com.brsanthu:migbase64:2.2"
+
+    implementation libs.retrofit.core
+    implementation libs.retrofit.scalars
+    implementation "com.jakewharton.retrofit:retrofit2-kotlinx-serialization-converter:0.8.0"
+
+    testImplementation "io.mockk:mockk-jvm:1.13.4"
+}

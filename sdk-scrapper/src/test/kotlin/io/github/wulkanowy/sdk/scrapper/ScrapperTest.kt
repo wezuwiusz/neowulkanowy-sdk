@@ -20,7 +20,7 @@ class ScrapperTest : BaseLocalTest() {
             symbol = "Default"
             email = "jan@fakelog.cf"
             password = "jan123"
-            schoolSymbol = "123456"
+            schoolId = "123456"
             studentId = 1
             diaryId = 101
         }

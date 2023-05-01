@@ -43,7 +43,7 @@ internal class ServiceManager(
     private val symbol: String,
     private val email: String,
     private val password: String,
-    private val schoolSymbol: String,
+    private val schoolId: String,
     private val studentId: Int,
     private val diaryId: Int,
     private val kindergartenDiaryId: Int,
@@ -65,7 +65,7 @@ internal class ServiceManager(
     }
 
     val urlGenerator by lazy {
-        UrlGenerator(schema, host, symbol, schoolSymbol)
+        UrlGenerator(schema, host, symbol, schoolId)
     }
 
     @OptIn(ExperimentalSerializationApi::class)
@@ -141,7 +141,7 @@ internal class ServiceManager(
     }
 
     private fun prepareStudentService(withLogin: Boolean, studentInterceptor: Boolean): OkHttpClient.Builder {
-        if (withLogin && schoolSymbol.isBlank()) throw ScrapperException("School id is not set")
+        if (withLogin && schoolId.isBlank()) throw ScrapperException("School id is not set")
 
         val client = getClientBuilder(loginIntercept = withLogin)
         if (studentInterceptor) {
