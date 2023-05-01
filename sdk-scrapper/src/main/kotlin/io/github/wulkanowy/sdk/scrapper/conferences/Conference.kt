@@ -9,10 +9,10 @@ import java.time.LocalDateTime
 data class Conference(
 
     @SerialName("Tytul")
-    val title: String,
+    val place: String,
 
     @SerialName("TematZebrania")
-    val subject: String,
+    val topic: String,
 
     @SerialName("Agenda")
     val agenda: String,

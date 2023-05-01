@@ -292,9 +292,9 @@ public final class io/github/wulkanowy/sdk/scrapper/conferences/Conference {
 	public final fun getDate ()Ljava/time/LocalDateTime;
 	public final fun getId ()I
 	public final fun getOnline ()Ljava/lang/String;
+	public final fun getPlace ()Ljava/lang/String;
 	public final fun getPresentOnConference ()Ljava/lang/String;
-	public final fun getSubject ()Ljava/lang/String;
-	public final fun getTitle ()Ljava/lang/String;
+	public final fun getTopic ()Ljava/lang/String;
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;
 	public static final synthetic fun write$Self (Lio/github/wulkanowy/sdk/scrapper/conferences/Conference;Lkotlinx/serialization/encoding/CompositeEncoder;Lkotlinx/serialization/descriptors/SerialDescriptor;)V

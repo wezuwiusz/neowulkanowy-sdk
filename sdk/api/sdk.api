@@ -268,9 +268,9 @@ public final class io/github/wulkanowy/sdk/pojo/Conference {
 	public final fun getDate ()Ljava/time/ZonedDateTime;
 	public final fun getId ()I
 	public final fun getOnline ()Ljava/lang/Object;
+	public final fun getPlace ()Ljava/lang/String;
 	public final fun getPresentOnConference ()Ljava/lang/String;
-	public final fun getSubject ()Ljava/lang/String;
-	public final fun getTitle ()Ljava/lang/String;
+	public final fun getTopic ()Ljava/lang/String;
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;
 }

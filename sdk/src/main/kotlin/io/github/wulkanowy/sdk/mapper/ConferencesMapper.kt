@@ -6,8 +6,8 @@ import io.github.wulkanowy.sdk.scrapper.conferences.Conference as ScrapperConfer
 
 internal fun List<ScrapperConference>.mapConferences(zoneId: ZoneId) = map {
     Conference(
-        title = it.title,
-        subject = it.subject,
+        place = it.place,
+        topic = it.topic,
         agenda = it.agenda,
         presentOnConference = it.presentOnConference,
         online = it.online,

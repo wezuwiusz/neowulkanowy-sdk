@@ -6,9 +6,9 @@ import java.time.format.DateTimeFormatter
 private val dateFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm")
 
 internal fun List<Conference>.mapConferences(): List<Conference> = map {
-    val dateString = it.title.split(",")[1].trim().replace(" godzina", "")
+    val dateString = it.place.split(",")[1].trim().replace(" godzina", "")
     it.copy(
-        title = it.title.substringAfter(", ").substringAfter(", "),
+        place = it.place.substringAfter(", ").substringAfter(", "),
         date = LocalDateTime.parse(dateString, dateFormatter),
     )
 }.sortedBy { it.date }

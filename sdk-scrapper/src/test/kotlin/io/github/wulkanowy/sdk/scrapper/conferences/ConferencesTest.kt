@@ -16,8 +16,8 @@ class ConferencesTest : BaseLocalTest() {
         assertEquals(2, conferences.size)
 
         with(conferences[0]) {
-            assertEquals("ZSW", title)
-            assertEquals("Pierwsze - organizacyjne zebranie z rodzicami klas pierwszych", subject)
+            assertEquals("ZSW", place)
+            assertEquals("Pierwsze - organizacyjne zebranie z rodzicami klas pierwszych", topic)
             assertEquals("", agenda)
             assertEquals("Kowalski Mieczysław", presentOnConference)
             assertEquals(2121, id)
@@ -25,8 +25,8 @@ class ConferencesTest : BaseLocalTest() {
         }
 
         with(conferences[1]) {
-            assertEquals("Spotkanie z rodzicami/opiekunami. ", title)
-            assertEquals("Podsumowanie I semestru - średnia klasy, oceny, frekwencja, zachowanie.", subject)
+            assertEquals("Spotkanie z rodzicami/opiekunami. ", place)
+            assertEquals("Podsumowanie I semestru - średnia klasy, oceny, frekwencja, zachowanie.", topic)
             assertEquals("", agenda)
             assertEquals("", presentOnConference)
             assertEquals(3737, id)
