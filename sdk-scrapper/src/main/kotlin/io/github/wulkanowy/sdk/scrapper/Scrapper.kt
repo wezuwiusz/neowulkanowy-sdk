@@ -16,6 +16,7 @@ import io.github.wulkanowy.sdk.scrapper.home.GovernmentUnit
 import io.github.wulkanowy.sdk.scrapper.home.LuckyNumber
 import io.github.wulkanowy.sdk.scrapper.homework.Homework
 import io.github.wulkanowy.sdk.scrapper.login.LoginHelper
+import io.github.wulkanowy.sdk.scrapper.menu.Menu
 import io.github.wulkanowy.sdk.scrapper.messages.Folder
 import io.github.wulkanowy.sdk.scrapper.messages.Mailbox
 import io.github.wulkanowy.sdk.scrapper.messages.MessageDetails
@@ -329,6 +330,8 @@ class Scrapper {
     suspend fun getNotes(): List<Note> = student.getNotes()
 
     suspend fun getConferences(): List<Conference> = student.getConferences()
+
+    suspend fun getMenu(date: LocalDate): List<Menu> = student.getMenu(date)
 
     suspend fun getTimetable(startDate: LocalDate, endDate: LocalDate? = null): Timetable {
         if (diaryId == 0) return Timetable(

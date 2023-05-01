@@ -42,6 +42,7 @@ public final class io/github/wulkanowy/sdk/scrapper/Scrapper {
 	public final fun getLogLevel ()Lokhttp3/logging/HttpLoggingInterceptor$Level;
 	public final fun getLoginType ()Lio/github/wulkanowy/sdk/scrapper/Scrapper$LoginType;
 	public final fun getMailboxes (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public final fun getMenu (Ljava/time/LocalDate;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public final fun getMessageDetails (Ljava/lang/String;ZLkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public final fun getMessageReplayDetails (Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public final fun getMessages (Lio/github/wulkanowy/sdk/scrapper/messages/Folder;Ljava/lang/String;IILkotlin/coroutines/Continuation;)Ljava/lang/Object;
@@ -946,6 +947,143 @@ public final class io/github/wulkanowy/sdk/scrapper/login/NotLoggedInException :
 
 public final class io/github/wulkanowy/sdk/scrapper/login/PasswordChangeRequiredException : io/github/wulkanowy/sdk/scrapper/exception/ScrapperException {
 	public final fun getRedirectUrl ()Ljava/lang/String;
+}
+
+public final class io/github/wulkanowy/sdk/scrapper/menu/Meal {
+	public static final field Companion Lio/github/wulkanowy/sdk/scrapper/menu/Meal$Companion;
+	public synthetic fun <init> (ILjava/util/List;Ljava/lang/String;Ljava/util/List;Ljava/util/List;Lkotlinx/serialization/internal/SerializationConstructorMarker;)V
+	public fun <init> (Ljava/util/List;Ljava/lang/String;Ljava/util/List;Ljava/util/List;)V
+	public final fun component1 ()Ljava/util/List;
+	public final fun component2 ()Ljava/lang/String;
+	public final fun component3 ()Ljava/util/List;
+	public final fun component4 ()Ljava/util/List;
+	public final fun copy (Ljava/util/List;Ljava/lang/String;Ljava/util/List;Ljava/util/List;)Lio/github/wulkanowy/sdk/scrapper/menu/Meal;
+	public static synthetic fun copy$default (Lio/github/wulkanowy/sdk/scrapper/menu/Meal;Ljava/util/List;Ljava/lang/String;Ljava/util/List;Ljava/util/List;ILjava/lang/Object;)Lio/github/wulkanowy/sdk/scrapper/menu/Meal;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getAllergens ()Ljava/util/List;
+	public final fun getDetails ()Ljava/util/List;
+	public final fun getIngredients ()Ljava/util/List;
+	public final fun getName ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+	public static final synthetic fun write$Self (Lio/github/wulkanowy/sdk/scrapper/menu/Meal;Lkotlinx/serialization/encoding/CompositeEncoder;Lkotlinx/serialization/descriptors/SerialDescriptor;)V
+}
+
+public final class io/github/wulkanowy/sdk/scrapper/menu/Meal$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+	public static final field INSTANCE Lio/github/wulkanowy/sdk/scrapper/menu/Meal$$serializer;
+	public fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lio/github/wulkanowy/sdk/scrapper/menu/Meal;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public fun serialize (Lkotlinx/serialization/encoding/Encoder;Lio/github/wulkanowy/sdk/scrapper/menu/Meal;)V
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+	public fun typeParametersSerializers ()[Lkotlinx/serialization/KSerializer;
+}
+
+public final class io/github/wulkanowy/sdk/scrapper/menu/Meal$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public final class io/github/wulkanowy/sdk/scrapper/menu/MealDetail {
+	public static final field Companion Lio/github/wulkanowy/sdk/scrapper/menu/MealDetail$Companion;
+	public synthetic fun <init> (ILjava/lang/String;Ljava/lang/String;Lkotlinx/serialization/internal/SerializationConstructorMarker;)V
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Ljava/lang/String;
+	public final fun copy (Ljava/lang/String;Ljava/lang/String;)Lio/github/wulkanowy/sdk/scrapper/menu/MealDetail;
+	public static synthetic fun copy$default (Lio/github/wulkanowy/sdk/scrapper/menu/MealDetail;Ljava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Lio/github/wulkanowy/sdk/scrapper/menu/MealDetail;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getLabel ()Ljava/lang/String;
+	public final fun getValue ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+	public static final synthetic fun write$Self (Lio/github/wulkanowy/sdk/scrapper/menu/MealDetail;Lkotlinx/serialization/encoding/CompositeEncoder;Lkotlinx/serialization/descriptors/SerialDescriptor;)V
+}
+
+public final class io/github/wulkanowy/sdk/scrapper/menu/MealDetail$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+	public static final field INSTANCE Lio/github/wulkanowy/sdk/scrapper/menu/MealDetail$$serializer;
+	public fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lio/github/wulkanowy/sdk/scrapper/menu/MealDetail;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public fun serialize (Lkotlinx/serialization/encoding/Encoder;Lio/github/wulkanowy/sdk/scrapper/menu/MealDetail;)V
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+	public fun typeParametersSerializers ()[Lkotlinx/serialization/KSerializer;
+}
+
+public final class io/github/wulkanowy/sdk/scrapper/menu/MealDetail$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public final class io/github/wulkanowy/sdk/scrapper/menu/MealIngredient {
+	public static final field Companion Lio/github/wulkanowy/sdk/scrapper/menu/MealIngredient$Companion;
+	public synthetic fun <init> (IILjava/lang/String;Ljava/lang/String;ILkotlinx/serialization/internal/SerializationConstructorMarker;)V
+	public fun <init> (ILjava/lang/String;Ljava/lang/String;I)V
+	public final fun component1 ()I
+	public final fun component2 ()Ljava/lang/String;
+	public final fun component3 ()Ljava/lang/String;
+	public final fun component4 ()I
+	public final fun copy (ILjava/lang/String;Ljava/lang/String;I)Lio/github/wulkanowy/sdk/scrapper/menu/MealIngredient;
+	public static synthetic fun copy$default (Lio/github/wulkanowy/sdk/scrapper/menu/MealIngredient;ILjava/lang/String;Ljava/lang/String;IILjava/lang/Object;)Lio/github/wulkanowy/sdk/scrapper/menu/MealIngredient;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getCounter ()I
+	public final fun getMeasurementUnit ()Ljava/lang/String;
+	public final fun getMeasurementUnitValue ()I
+	public final fun getRecipe ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+	public static final synthetic fun write$Self (Lio/github/wulkanowy/sdk/scrapper/menu/MealIngredient;Lkotlinx/serialization/encoding/CompositeEncoder;Lkotlinx/serialization/descriptors/SerialDescriptor;)V
+}
+
+public final class io/github/wulkanowy/sdk/scrapper/menu/MealIngredient$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+	public static final field INSTANCE Lio/github/wulkanowy/sdk/scrapper/menu/MealIngredient$$serializer;
+	public fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lio/github/wulkanowy/sdk/scrapper/menu/MealIngredient;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public fun serialize (Lkotlinx/serialization/encoding/Encoder;Lio/github/wulkanowy/sdk/scrapper/menu/MealIngredient;)V
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+	public fun typeParametersSerializers ()[Lkotlinx/serialization/KSerializer;
+}
+
+public final class io/github/wulkanowy/sdk/scrapper/menu/MealIngredient$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public final class io/github/wulkanowy/sdk/scrapper/menu/Menu {
+	public static final field Companion Lio/github/wulkanowy/sdk/scrapper/menu/Menu$Companion;
+	public synthetic fun <init> (ILjava/time/LocalDateTime;Ljava/lang/String;ILjava/util/List;Lkotlinx/serialization/internal/SerializationConstructorMarker;)V
+	public fun <init> (Ljava/time/LocalDateTime;Ljava/lang/String;ILjava/util/List;)V
+	public synthetic fun <init> (Ljava/time/LocalDateTime;Ljava/lang/String;ILjava/util/List;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ljava/time/LocalDateTime;
+	public final fun component2 ()Ljava/lang/String;
+	public final fun component3 ()I
+	public final fun component4 ()Ljava/util/List;
+	public final fun copy (Ljava/time/LocalDateTime;Ljava/lang/String;ILjava/util/List;)Lio/github/wulkanowy/sdk/scrapper/menu/Menu;
+	public static synthetic fun copy$default (Lio/github/wulkanowy/sdk/scrapper/menu/Menu;Ljava/time/LocalDateTime;Ljava/lang/String;ILjava/util/List;ILjava/lang/Object;)Lio/github/wulkanowy/sdk/scrapper/menu/Menu;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getDate ()Ljava/time/LocalDateTime;
+	public final fun getDiet ()Ljava/lang/String;
+	public final fun getId ()I
+	public final fun getMeals ()Ljava/util/List;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+	public static final synthetic fun write$Self (Lio/github/wulkanowy/sdk/scrapper/menu/Menu;Lkotlinx/serialization/encoding/CompositeEncoder;Lkotlinx/serialization/descriptors/SerialDescriptor;)V
+}
+
+public final class io/github/wulkanowy/sdk/scrapper/menu/Menu$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+	public static final field INSTANCE Lio/github/wulkanowy/sdk/scrapper/menu/Menu$$serializer;
+	public fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lio/github/wulkanowy/sdk/scrapper/menu/Menu;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public fun serialize (Lkotlinx/serialization/encoding/Encoder;Lio/github/wulkanowy/sdk/scrapper/menu/Menu;)V
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+	public fun typeParametersSerializers ()[Lkotlinx/serialization/KSerializer;
+}
+
+public final class io/github/wulkanowy/sdk/scrapper/menu/Menu$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
 }
 
 public final class io/github/wulkanowy/sdk/scrapper/messages/Folder : java/lang/Enum {

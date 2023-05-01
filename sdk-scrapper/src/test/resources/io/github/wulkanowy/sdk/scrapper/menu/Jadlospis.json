@@ -1,0 +1,476 @@
+{
+  "data": [
+    {
+      "Dieta": "młodzież",
+      "Data": "2023-04-28 00:00:00",
+      "Posilki": [
+        {
+          "Nazwa": "śniadanie",
+          "Sklad": [
+            {
+              "Licznik": 1,
+              "Receptura": "rogal maślany  /  bułka maślana",
+              "JednostkaMiary": "gram",
+              "WartoscJednostkiMiary": 80
+            },
+            {
+              "Licznik": 1,
+              "Receptura": "chleb",
+              "JednostkaMiary": "gram",
+              "WartoscJednostkiMiary": 21
+            },
+            {
+              "Licznik": 1,
+              "Receptura": "bułka sojowa, z dynią ,ze slonecznikiem",
+              "JednostkaMiary": "gram",
+              "WartoscJednostkiMiary": 80
+            },
+            {
+              "Licznik": 1,
+              "Receptura": "masło",
+              "JednostkaMiary": "gram",
+              "WartoscJednostkiMiary": 14
+            },
+            {
+              "Licznik": 1,
+              "Receptura": "mleko z płatkami kukurydzianymi",
+              "JednostkaMiary": "gram",
+              "WartoscJednostkiMiary": 110
+            },
+            {
+              "Licznik": 1,
+              "Receptura": "herbata  owocowa z cytryną",
+              "JednostkaMiary": "gram",
+              "WartoscJednostkiMiary": 244
+            },
+            {
+              "Licznik": 1,
+              "Receptura": "ser żółty",
+              "JednostkaMiary": "gram",
+              "WartoscJednostkiMiary": 20
+            },
+            {
+              "Licznik": 1,
+              "Receptura": "szynka naturalnie wędzona",
+              "JednostkaMiary": "gram",
+              "WartoscJednostkiMiary": 20
+            },
+            {
+              "Licznik": 1,
+              "Receptura": "kiełbasa szynkowa",
+              "JednostkaMiary": "gram",
+              "WartoscJednostkiMiary": 7
+            },
+            {
+              "Licznik": 1,
+              "Receptura": "mix serów",
+              "JednostkaMiary": "gram",
+              "WartoscJednostkiMiary": 27
+            },
+            {
+              "Licznik": 1,
+              "Receptura": "mix świeżych warzyw",
+              "JednostkaMiary": "gram",
+              "WartoscJednostkiMiary": 42
+            },
+            {
+              "Licznik": 1,
+              "Receptura": "jogurt owocowy",
+              "JednostkaMiary": "gram",
+              "WartoscJednostkiMiary": 150
+            },
+            {
+              "Licznik": 1,
+              "Receptura": "banan",
+              "JednostkaMiary": "gram",
+              "WartoscJednostkiMiary": 100
+            }
+          ],
+          "Alergeny": [
+            "Dwutlenek siarki i siarczany",
+            "Gorczyca",
+            "Jaja",
+            "Łubin",
+            "Mleko",
+            "Orzechy",
+            "Sezam",
+            "Skorupiaki",
+            "Soja",
+            "Zboża zawierające gluten"
+          ],
+          "Szczegoly": [
+            {
+              "Label": "Wartość energetyczna",
+              "Wartosc": "1140 kcal"
+            },
+            {
+              "Label": "Wartość energetyczna",
+              "Wartosc": "4771 kJ"
+            },
+            {
+              "Label": "Białko",
+              "Wartosc": "37,9 g"
+            },
+            {
+              "Label": "Fosfor",
+              "Wartosc": "646 mg"
+            },
+            {
+              "Label": "Sód",
+              "Wartosc": "1163 mg"
+            },
+            {
+              "Label": "Sól",
+              "Wartosc": "2,922 g"
+            },
+            {
+              "Label": "Tłuszcz",
+              "Wartosc": "38,3 g"
+            },
+            {
+              "Label": "w tym kwasy nasycone",
+              "Wartosc": "3,61 g"
+            },
+            {
+              "Label": "Wapń",
+              "Wartosc": "1122 mg"
+            },
+            {
+              "Label": "Węglowodany",
+              "Wartosc": "160,5 g"
+            },
+            {
+              "Label": "w tym cukry",
+              "Wartosc": "51,1 g"
+            },
+            {
+              "Label": "Żelazo",
+              "Wartosc": "4,2 mg"
+            },
+            {
+              "Label": "Witamina A",
+              "Wartosc": "439 mcg"
+            },
+            {
+              "Label": "Witamina B1",
+              "Wartosc": "0,529 mg"
+            },
+            {
+              "Label": "Witamina B2",
+              "Wartosc": "1,027 mg"
+            },
+            {
+              "Label": "Witamina C",
+              "Wartosc": "55,1 mg"
+            },
+            {
+              "Label": "Witamina D",
+              "Wartosc": "0,00 mcg"
+            },
+            {
+              "Label": "Witamina E",
+              "Wartosc": "0,00 mg"
+            },
+            {
+              "Label": "Błonnik",
+              "Wartosc": "0,0 g"
+            },
+            {
+              "Label": "Cholesterol",
+              "Wartosc": "0 mg"
+            },
+            {
+              "Label": "Magnez",
+              "Wartosc": "0 mg"
+            },
+            {
+              "Label": "Potas",
+              "Wartosc": "0 mg"
+            }
+          ]
+        },
+        {
+          "Nazwa": "obiad",
+          "Sklad": [
+            {
+              "Licznik": 1,
+              "Receptura": "barszcz czerwony zabielany",
+              "JednostkaMiary": "gram",
+              "WartoscJednostkiMiary": 459
+            },
+            {
+              "Licznik": 1,
+              "Receptura": "zapiekanka makaronowa",
+              "JednostkaMiary": "gram",
+              "WartoscJednostkiMiary": 396
+            },
+            {
+              "Licznik": 1,
+              "Receptura": "kompot z mrożonych owoców",
+              "JednostkaMiary": "gram",
+              "WartoscJednostkiMiary": 225
+            },
+            {
+              "Licznik": 1,
+              "Receptura": "mandarynki",
+              "JednostkaMiary": "gram",
+              "WartoscJednostkiMiary": 90
+            }
+          ],
+          "Alergeny": [
+            "Mięczaki",
+            "Mleko",
+            "Seler",
+            "Skorupiaki"
+          ],
+          "Szczegoly": [
+            {
+              "Label": "Wartość energetyczna",
+              "Wartosc": "385 kcal"
+            },
+            {
+              "Label": "Wartość energetyczna",
+              "Wartosc": "1611 kJ"
+            },
+            {
+              "Label": "Białko",
+              "Wartosc": "28,6 g"
+            },
+            {
+              "Label": "Fosfor",
+              "Wartosc": "408 mg"
+            },
+            {
+              "Label": "Sód",
+              "Wartosc": "196 mg"
+            },
+            {
+              "Label": "Sól",
+              "Wartosc": "0,485 g"
+            },
+            {
+              "Label": "Tłuszcz",
+              "Wartosc": "6,0 g"
+            },
+            {
+              "Label": "w tym kwasy nasycone",
+              "Wartosc": "0,00 g"
+            },
+            {
+              "Label": "Wapń",
+              "Wartosc": "255 mg"
+            },
+            {
+              "Label": "Węglowodany",
+              "Wartosc": "66,1 g"
+            },
+            {
+              "Label": "w tym cukry",
+              "Wartosc": "33,3 g"
+            },
+            {
+              "Label": "Żelazo",
+              "Wartosc": "6,7 mg"
+            },
+            {
+              "Label": "Witamina A",
+              "Wartosc": "1304 mcg"
+            },
+            {
+              "Label": "Witamina B1",
+              "Wartosc": "0,716 mg"
+            },
+            {
+              "Label": "Witamina B2",
+              "Wartosc": "0,551 mg"
+            },
+            {
+              "Label": "Witamina C",
+              "Wartosc": "112,5 mg"
+            },
+            {
+              "Label": "Witamina D",
+              "Wartosc": "0,00 mcg"
+            },
+            {
+              "Label": "Witamina E",
+              "Wartosc": "0,00 mg"
+            },
+            {
+              "Label": "Błonnik",
+              "Wartosc": "0,0 g"
+            },
+            {
+              "Label": "Cholesterol",
+              "Wartosc": "0 mg"
+            },
+            {
+              "Label": "Magnez",
+              "Wartosc": "0 mg"
+            },
+            {
+              "Label": "Potas",
+              "Wartosc": "0 mg"
+            }
+          ]
+        },
+        {
+          "Nazwa": "kolacja",
+          "Sklad": [
+            {
+              "Licznik": 1,
+              "Receptura": "bułka",
+              "JednostkaMiary": "gram",
+              "WartoscJednostkiMiary": 90
+            },
+            {
+              "Licznik": 1,
+              "Receptura": "bułka wieloziarnista",
+              "JednostkaMiary": "gram",
+              "WartoscJednostkiMiary": 80
+            },
+            {
+              "Licznik": 1,
+              "Receptura": "chleb",
+              "JednostkaMiary": "gram",
+              "WartoscJednostkiMiary": 21
+            },
+            {
+              "Licznik": 1,
+              "Receptura": "masło",
+              "JednostkaMiary": "gram",
+              "WartoscJednostkiMiary": 14
+            },
+            {
+              "Licznik": 1,
+              "Receptura": "ser żółty",
+              "JednostkaMiary": "gram",
+              "WartoscJednostkiMiary": 20
+            },
+            {
+              "Licznik": 1,
+              "Receptura": "pasztet drobiowy",
+              "JednostkaMiary": "gram",
+              "WartoscJednostkiMiary": 10
+            },
+            {
+              "Licznik": 1,
+              "Receptura": "mix serów",
+              "JednostkaMiary": "gram",
+              "WartoscJednostkiMiary": 27
+            },
+            {
+              "Licznik": 1,
+              "Receptura": "mix świeżych warzyw",
+              "JednostkaMiary": "gram",
+              "WartoscJednostkiMiary": 42
+            }
+          ],
+          "Alergeny": [
+            "Dwutlenek siarki i siarczany",
+            "Gorczyca",
+            "Mleko",
+            "Orzechy",
+            "Orzeszki ziemne",
+            "Sezam",
+            "Skorupiaki",
+            "Soja",
+            "Zboża zawierające gluten"
+          ],
+          "Szczegoly": [
+            {
+              "Label": "Wartość energetyczna",
+              "Wartosc": "793 kcal"
+            },
+            {
+              "Label": "Wartość energetyczna",
+              "Wartosc": "3319 kJ"
+            },
+            {
+              "Label": "Białko",
+              "Wartosc": "22,9 g"
+            },
+            {
+              "Label": "Fosfor",
+              "Wartosc": "340 mg"
+            },
+            {
+              "Label": "Sód",
+              "Wartosc": "919 mg"
+            },
+            {
+              "Label": "Sól",
+              "Wartosc": "2,308 g"
+            },
+            {
+              "Label": "Tłuszcz",
+              "Wartosc": "30,6 g"
+            },
+            {
+              "Label": "w tym kwasy nasycone",
+              "Wartosc": "2,34 g"
+            },
+            {
+              "Label": "Wapń",
+              "Wartosc": "209 mg"
+            },
+            {
+              "Label": "Węglowodany",
+              "Wartosc": "84,1 g"
+            },
+            {
+              "Label": "w tym cukry",
+              "Wartosc": "12,6 g"
+            },
+            {
+              "Label": "Żelazo",
+              "Wartosc": "3,1 mg"
+            },
+            {
+              "Label": "Witamina A",
+              "Wartosc": "409 mcg"
+            },
+            {
+              "Label": "Witamina B1",
+              "Wartosc": "0,262 mg"
+            },
+            {
+              "Label": "Witamina B2",
+              "Wartosc": "0,352 mg"
+            },
+            {
+              "Label": "Witamina C",
+              "Wartosc": "23,2 mg"
+            },
+            {
+              "Label": "Witamina D",
+              "Wartosc": "0,00 mcg"
+            },
+            {
+              "Label": "Witamina E",
+              "Wartosc": "0,00 mg"
+            },
+            {
+              "Label": "Błonnik",
+              "Wartosc": "0,0 g"
+            },
+            {
+              "Label": "Cholesterol",
+              "Wartosc": "0 mg"
+            },
+            {
+              "Label": "Magnez",
+              "Wartosc": "0 mg"
+            },
+            {
+              "Label": "Potas",
+              "Wartosc": "0 mg"
+            }
+          ]
+        }
+      ],
+      "Id": 1
+    }
+  ],
+  "success": true
+}
