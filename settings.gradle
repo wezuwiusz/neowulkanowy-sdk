@@ -11,6 +11,7 @@ dependencyResolutionManagement {
             version('kotlin', kotlin)
             version('coroutines', '1.6.4')
             version('retrofit', '2.9.0')
+            version('retrofit-kotlinx-serialization', '1.0.0')
             version('ksp', "${kotlin}-1.0.10")
 
             plugin('kotlin', 'org.jetbrains.kotlin.jvm').versionRef('kotlin')
@@ -25,8 +26,9 @@ dependencyResolutionManagement {
             library('retrofit-scalars', 'com.squareup.retrofit2', 'converter-scalars').versionRef('retrofit')
             library('retrofit-moshi', 'com.squareup.retrofit2', 'converter-moshi').versionRef('retrofit')
             library('retrofit-mock', 'com.squareup.retrofit2', 'retrofit-mock').versionRef('retrofit')
+            library('retrofit-serialization', 'com.jakewharton.retrofit', 'retrofit2-kotlinx-serialization-converter').versionRef('retrofit-kotlinx-serialization')
 
-            library('okhttp-bom', 'com.squareup.okhttp3:okhttp-bom:4.10.0')
+            library('okhttp-bom', 'com.squareup.okhttp3:okhttp-bom:4.11.0')
         }
     }
 }
