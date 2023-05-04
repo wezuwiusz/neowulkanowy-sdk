@@ -14,10 +14,10 @@ import retrofit2.converter.scalars.ScalarsConverterFactory
 import retrofit2.create
 
 internal class RepositoryManager(
-    private val logLevel: HttpLoggingInterceptor.Level,
     private val keyId: String,
     private val privatePem: String,
     private val deviceModel: String,
+    logLevel: HttpLoggingInterceptor.Level,
 ) {
 
     private val interceptors: MutableList<Pair<Interceptor, Boolean>> = mutableListOf(
@@ -67,7 +67,6 @@ internal class RepositoryManager(
             .create(),
     )
 
-    @OptIn(ExperimentalSerializationApi::class)
     private fun getRetrofitBuilder(isJson: Boolean = true, signInterceptor: Boolean): Retrofit.Builder {
         return Retrofit.Builder()
             .apply {
@@ -85,7 +84,6 @@ internal class RepositoryManager(
                             if (it.second) addNetworkInterceptor(it.first)
                             else addInterceptor(it.first)
                         }
-                        addInterceptor(HttpLoggingInterceptor().setLevel(logLevel))
                     }
                     .build(),
             )

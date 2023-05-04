@@ -4,7 +4,7 @@ public final class io/github/wulkanowy/sdk/hebe/Hebe {
 	public static synthetic fun addInterceptor$default (Lio/github/wulkanowy/sdk/hebe/Hebe;Lokhttp3/Interceptor;ZILjava/lang/Object;)V
 	public final fun getBaseUrl ()Ljava/lang/String;
 	public final fun getDeviceModel ()Ljava/lang/String;
-	public final fun getExams (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public final fun getExams (Ljava/time/LocalDate;Ljava/time/LocalDate;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public final fun getGrades (ILkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public final fun getGradesAverage (ILkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public final fun getGradesSummary (ILkotlin/coroutines/Continuation;)Ljava/lang/Object;
@@ -125,16 +125,16 @@ public final class io/github/wulkanowy/sdk/hebe/models/Exam$Creator$Companion {
 
 public final class io/github/wulkanowy/sdk/hebe/models/Exam$DateCreated {
 	public static final field Companion Lio/github/wulkanowy/sdk/hebe/models/Exam$DateCreated$Companion;
-	public synthetic fun <init> (ILjava/lang/String;Ljava/lang/String;Ljava/lang/String;JLkotlinx/serialization/internal/SerializationConstructorMarker;)V
-	public fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;J)V
-	public final fun component1 ()Ljava/lang/String;
+	public synthetic fun <init> (ILjava/time/LocalDate;Ljava/lang/String;Ljava/lang/String;JLkotlinx/serialization/internal/SerializationConstructorMarker;)V
+	public fun <init> (Ljava/time/LocalDate;Ljava/lang/String;Ljava/lang/String;J)V
+	public final fun component1 ()Ljava/time/LocalDate;
 	public final fun component2 ()Ljava/lang/String;
 	public final fun component3 ()Ljava/lang/String;
 	public final fun component4 ()J
-	public final fun copy (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;J)Lio/github/wulkanowy/sdk/hebe/models/Exam$DateCreated;
-	public static synthetic fun copy$default (Lio/github/wulkanowy/sdk/hebe/models/Exam$DateCreated;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;JILjava/lang/Object;)Lio/github/wulkanowy/sdk/hebe/models/Exam$DateCreated;
+	public final fun copy (Ljava/time/LocalDate;Ljava/lang/String;Ljava/lang/String;J)Lio/github/wulkanowy/sdk/hebe/models/Exam$DateCreated;
+	public static synthetic fun copy$default (Lio/github/wulkanowy/sdk/hebe/models/Exam$DateCreated;Ljava/time/LocalDate;Ljava/lang/String;Ljava/lang/String;JILjava/lang/Object;)Lio/github/wulkanowy/sdk/hebe/models/Exam$DateCreated;
 	public fun equals (Ljava/lang/Object;)Z
-	public final fun getDate ()Ljava/lang/String;
+	public final fun getDate ()Ljava/time/LocalDate;
 	public final fun getDateDisplay ()Ljava/lang/String;
 	public final fun getTime ()Ljava/lang/String;
 	public final fun getTimestamp ()J
@@ -160,16 +160,16 @@ public final class io/github/wulkanowy/sdk/hebe/models/Exam$DateCreated$Companio
 
 public final class io/github/wulkanowy/sdk/hebe/models/Exam$DateModify {
 	public static final field Companion Lio/github/wulkanowy/sdk/hebe/models/Exam$DateModify$Companion;
-	public synthetic fun <init> (ILjava/lang/String;Ljava/lang/String;Ljava/lang/String;JLkotlinx/serialization/internal/SerializationConstructorMarker;)V
-	public fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;J)V
-	public final fun component1 ()Ljava/lang/String;
+	public synthetic fun <init> (ILjava/time/LocalDate;Ljava/lang/String;Ljava/lang/String;JLkotlinx/serialization/internal/SerializationConstructorMarker;)V
+	public fun <init> (Ljava/time/LocalDate;Ljava/lang/String;Ljava/lang/String;J)V
+	public final fun component1 ()Ljava/time/LocalDate;
 	public final fun component2 ()Ljava/lang/String;
 	public final fun component3 ()Ljava/lang/String;
 	public final fun component4 ()J
-	public final fun copy (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;J)Lio/github/wulkanowy/sdk/hebe/models/Exam$DateModify;
-	public static synthetic fun copy$default (Lio/github/wulkanowy/sdk/hebe/models/Exam$DateModify;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;JILjava/lang/Object;)Lio/github/wulkanowy/sdk/hebe/models/Exam$DateModify;
+	public final fun copy (Ljava/time/LocalDate;Ljava/lang/String;Ljava/lang/String;J)Lio/github/wulkanowy/sdk/hebe/models/Exam$DateModify;
+	public static synthetic fun copy$default (Lio/github/wulkanowy/sdk/hebe/models/Exam$DateModify;Ljava/time/LocalDate;Ljava/lang/String;Ljava/lang/String;JILjava/lang/Object;)Lio/github/wulkanowy/sdk/hebe/models/Exam$DateModify;
 	public fun equals (Ljava/lang/Object;)Z
-	public final fun getDate ()Ljava/lang/String;
+	public final fun getDate ()Ljava/time/LocalDate;
 	public final fun getDateDisplay ()Ljava/lang/String;
 	public final fun getTime ()Ljava/lang/String;
 	public final fun getTimestamp ()J
@@ -195,16 +195,16 @@ public final class io/github/wulkanowy/sdk/hebe/models/Exam$DateModify$Companion
 
 public final class io/github/wulkanowy/sdk/hebe/models/Exam$Deadline {
 	public static final field Companion Lio/github/wulkanowy/sdk/hebe/models/Exam$Deadline$Companion;
-	public synthetic fun <init> (ILjava/lang/String;Ljava/lang/String;Ljava/lang/String;JLkotlinx/serialization/internal/SerializationConstructorMarker;)V
-	public fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;J)V
-	public final fun component1 ()Ljava/lang/String;
+	public synthetic fun <init> (ILjava/time/LocalDate;Ljava/lang/String;Ljava/lang/String;JLkotlinx/serialization/internal/SerializationConstructorMarker;)V
+	public fun <init> (Ljava/time/LocalDate;Ljava/lang/String;Ljava/lang/String;J)V
+	public final fun component1 ()Ljava/time/LocalDate;
 	public final fun component2 ()Ljava/lang/String;
 	public final fun component3 ()Ljava/lang/String;
 	public final fun component4 ()J
-	public final fun copy (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;J)Lio/github/wulkanowy/sdk/hebe/models/Exam$Deadline;
-	public static synthetic fun copy$default (Lio/github/wulkanowy/sdk/hebe/models/Exam$Deadline;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;JILjava/lang/Object;)Lio/github/wulkanowy/sdk/hebe/models/Exam$Deadline;
+	public final fun copy (Ljava/time/LocalDate;Ljava/lang/String;Ljava/lang/String;J)Lio/github/wulkanowy/sdk/hebe/models/Exam$Deadline;
+	public static synthetic fun copy$default (Lio/github/wulkanowy/sdk/hebe/models/Exam$Deadline;Ljava/time/LocalDate;Ljava/lang/String;Ljava/lang/String;JILjava/lang/Object;)Lio/github/wulkanowy/sdk/hebe/models/Exam$Deadline;
 	public fun equals (Ljava/lang/Object;)Z
-	public final fun getDate ()Ljava/lang/String;
+	public final fun getDate ()Ljava/time/LocalDate;
 	public final fun getDateDisplay ()Ljava/lang/String;
 	public final fun getTime ()Ljava/lang/String;
 	public final fun getTimestamp ()J

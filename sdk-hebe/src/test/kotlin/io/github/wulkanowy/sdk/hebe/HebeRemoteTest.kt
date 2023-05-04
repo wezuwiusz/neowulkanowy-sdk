@@ -7,6 +7,7 @@ import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Ignore
 import org.junit.Test
+import java.time.LocalDate
 
 @Ignore
 @OptIn(ExperimentalCoroutinesApi::class)
@@ -46,19 +47,19 @@ class HebeRemoteTest {
 
     @Test
     fun `get grades`() = runTest {
-        val grades = hebe.getGrades(559)
+        val grades = hebe.getGrades(560)
         assertTrue(grades.isNotEmpty())
     }
 
     @Test
     fun `get grades summary`() = runTest {
-        val summaries = hebe.getGradesSummary(559)
+        val summaries = hebe.getGradesSummary(560)
         assertTrue(summaries.isNotEmpty())
     }
 
     @Test
     fun `get exams`() = runTest {
-        val exams = hebe.getExams()
+        val exams = hebe.getExams(LocalDate.of(2023, 4, 1), LocalDate.of(2023, 5, 1))
         assertTrue(exams.isNotEmpty())
     }
 }

@@ -1,7 +1,9 @@
 package io.github.wulkanowy.sdk.hebe.models
 
+import io.github.wulkanowy.sdk.hebe.CustomDateAdapter
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+import java.time.LocalDate
 
 @Serializable
 data class Exam(
@@ -41,7 +43,8 @@ data class Exam(
     @Serializable
     data class DateCreated(
         @SerialName("Date")
-        val date: String,
+        @Serializable(with = CustomDateAdapter::class)
+        val date: LocalDate,
         @SerialName("DateDisplay")
         val dateDisplay: String,
         @SerialName("Time")
@@ -53,7 +56,8 @@ data class Exam(
     @Serializable
     data class DateModify(
         @SerialName("Date")
-        val date: String,
+        @Serializable(with = CustomDateAdapter::class)
+        val date: LocalDate,
         @SerialName("DateDisplay")
         val dateDisplay: String,
         @SerialName("Time")
@@ -65,7 +69,8 @@ data class Exam(
     @Serializable
     data class Deadline(
         @SerialName("Date")
-        val date: String,
+        @Serializable(with = CustomDateAdapter::class)
+        val date: LocalDate,
         @SerialName("DateDisplay")
         val dateDisplay: String,
         @SerialName("Time")

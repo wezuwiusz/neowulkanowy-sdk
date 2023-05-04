@@ -10,6 +10,7 @@ import io.github.wulkanowy.sdk.hebe.repository.RepositoryManager
 import io.github.wulkanowy.signer.hebe.generateKeyPair
 import okhttp3.Interceptor
 import okhttp3.logging.HttpLoggingInterceptor
+import java.time.LocalDate
 
 class Hebe {
 
@@ -140,9 +141,11 @@ class Hebe {
         )
     }
 
-    suspend fun getExams(): List<Exam> {
+    suspend fun getExams(startDate: LocalDate, endDate: LocalDate): List<Exam> {
         return studentRepository.getExams(
             pupilId = pupilId,
+            startDate = startDate,
+            endDate = endDate,
         )
     }
 }

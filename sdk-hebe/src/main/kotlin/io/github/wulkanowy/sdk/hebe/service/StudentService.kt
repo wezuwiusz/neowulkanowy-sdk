@@ -13,31 +13,13 @@ import retrofit2.http.QueryMap
 internal interface StudentService {
 
     @GET("api/mobile/grade/byPupil")
-    suspend fun getGrades(
-        @Query("pupilId") pupilId: Int,
-        @Query("periodId") periodId: Int,
-        @Query("lastSyncDate") lastSyncDate: String = "1970-01-01 01:00:00",
-        @Query("lastId") lastId: Int = Int.MIN_VALUE,
-        @Query("pageSize") pageSize: Int = 500,
-    ): ApiResponse<List<Grade>>
+    suspend fun getGrades(@QueryMap query: Map<String, Any?>): ApiResponse<List<Grade>>
 
     @GET("api/mobile/grade/summary/byPupil")
-    suspend fun getGradesSummary(
-        @Query("pupilId") pupilId: Int,
-        @Query("periodId") periodId: Int,
-        @Query("lastSyncDate") lastSyncDate: String = "1970-01-01 01:00:00",
-        @Query("lastId") lastId: Int = Int.MIN_VALUE,
-        @Query("pageSize") pageSize: Int = 500,
-    ): ApiResponse<List<GradeSummary>>
+    suspend fun getGradesSummary(@QueryMap query: Map<String, Any?> ): ApiResponse<List<GradeSummary>>
 
     @GET("api/mobile/grade/average/byPupil")
-    suspend fun getGradesAverage(
-        @Query("pupilId") pupilId: Int,
-        @Query("periodId") periodId: Int,
-        @Query("lastSyncDate") lastSyncDate: String = "1970-01-01 01:00:00",
-        @Query("lastId") lastId: Int = Int.MIN_VALUE,
-        @Query("pageSize") pageSize: Int = 500,
-    ): ApiResponse<List<GradeAverage>>
+    suspend fun getGradesAverage(@QueryMap query: Map<String, Any?>): ApiResponse<List<GradeAverage>>
 
     @GET("api/mobile/exam/byPupil")
     suspend fun getExams(@QueryMap query: Map<String, Any?>): ApiResponse<List<Exam>>
