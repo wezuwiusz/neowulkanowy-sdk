@@ -147,7 +147,6 @@ class Sdk {
         set(value) {
             field = value
             scrapper.classId = value
-            // hebe.classId = value // todo
         }
 
     var studentId = 0
@@ -190,6 +189,7 @@ class Sdk {
     var logLevel = HttpLoggingInterceptor.Level.BASIC
         set(value) {
             field = value
+            hebe.logLevel = value
             scrapper.logLevel = value
         }
 

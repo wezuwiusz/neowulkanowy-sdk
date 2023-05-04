@@ -49,7 +49,7 @@ class Hebe {
     var pupilId = -1
         set(value) {
             field = value
-            // resettableManager.reset() // todo: uncomment if some repo should be changed
+            resettableManager.reset()
         }
 
     var deviceModel = ""
