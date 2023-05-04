@@ -48,7 +48,6 @@ internal class ServiceManager(
     private val diaryId: Int,
     private val kindergartenDiaryId: Int,
     private val schoolYear: Int,
-    emptyCookieJarIntercept: Boolean,
     androidVersion: String,
     buildTag: String,
     userAgentTemplate: String,
@@ -84,7 +83,7 @@ internal class ServiceManager(
     private val interceptors: MutableList<Pair<Interceptor, Boolean>> = mutableListOf(
         HttpLoggingInterceptor().setLevel(logLevel) to true,
         ErrorInterceptor(cookies) to false,
-        AutoLoginInterceptor(loginType, cookies, emptyCookieJarIntercept) { loginHelper.login(email, password) } to false,
+        AutoLoginInterceptor(loginType, cookies) { loginHelper.login(email, password) } to false,
         UserAgentInterceptor(androidVersion, buildTag, userAgentTemplate) to false,
         HttpErrorInterceptor() to false,
     )

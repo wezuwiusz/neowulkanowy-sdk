@@ -1,5 +1,4 @@
 public final class io/github/wulkanowy/sdk/Sdk {
-	public static final field Companion Lio/github/wulkanowy/sdk/Sdk$Companion;
 	public fun <init> ()V
 	public final fun addInterceptor (Lokhttp3/Interceptor;Z)V
 	public static synthetic fun addInterceptor$default (Lio/github/wulkanowy/sdk/Sdk;Lokhttp3/Interceptor;ZILjava/lang/Object;)V
@@ -21,7 +20,6 @@ public final class io/github/wulkanowy/sdk/Sdk {
 	public final fun getDiaryId ()I
 	public final fun getDirectorInformation (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public final fun getEmail ()Ljava/lang/String;
-	public final fun getEmptyCookieJarInterceptor ()Z
 	public final fun getExams (Ljava/time/LocalDate;Ljava/time/LocalDate;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public final fun getFreeDays (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public final fun getGrades (ILkotlin/coroutines/Continuation;)Ljava/lang/Object;
@@ -90,7 +88,6 @@ public final class io/github/wulkanowy/sdk/Sdk {
 	public final fun setClassId (I)V
 	public final fun setDiaryId (I)V
 	public final fun setEmail (Ljava/lang/String;)V
-	public final fun setEmptyCookieJarInterceptor (Z)V
 	public final fun setKeyId (Ljava/lang/String;)V
 	public final fun setKindergartenDiaryId (I)V
 	public final fun setLogLevel (Lokhttp3/logging/HttpLoggingInterceptor$Level;)V
@@ -108,9 +105,6 @@ public final class io/github/wulkanowy/sdk/Sdk {
 	public final fun setUserAgentTemplate (Ljava/lang/String;)V
 	public final fun switchDiary (III)Lio/github/wulkanowy/sdk/Sdk;
 	public final fun unregisterDevice (ILkotlin/coroutines/Continuation;)Ljava/lang/Object;
-}
-
-public final class io/github/wulkanowy/sdk/Sdk$Companion {
 }
 
 public final class io/github/wulkanowy/sdk/Sdk$Mode : java/lang/Enum {

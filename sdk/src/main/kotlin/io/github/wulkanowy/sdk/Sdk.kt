@@ -70,7 +70,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import okhttp3.Interceptor
 import okhttp3.logging.HttpLoggingInterceptor
-import org.slf4j.LoggerFactory
 import java.time.LocalDate
 import java.time.ZoneId
 
@@ -211,17 +210,6 @@ class Sdk {
             hebe.deviceModel = value
             scrapper.buildTag = value
         }
-
-    var emptyCookieJarInterceptor: Boolean = false
-        set(value) {
-            field = value
-            scrapper.emptyCookieJarInterceptor = value
-        }
-
-    companion object {
-        @JvmStatic
-        private val logger = LoggerFactory.getLogger(this::class.java)
-    }
 
     private val interceptors: MutableList<Pair<Interceptor, Boolean>> = mutableListOf()
 

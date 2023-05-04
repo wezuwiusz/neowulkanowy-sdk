@@ -21,7 +21,6 @@ public final class io/github/wulkanowy/sdk/scrapper/Scrapper {
 	public final fun getDiaryId ()I
 	public final fun getDirectorInformation (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public final fun getEmail ()Ljava/lang/String;
-	public final fun getEmptyCookieJarInterceptor ()Z
 	public final fun getExams (Ljava/time/LocalDate;Ljava/time/LocalDate;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public static synthetic fun getExams$default (Lio/github/wulkanowy/sdk/scrapper/Scrapper;Ljava/time/LocalDate;Ljava/time/LocalDate;Lkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
 	public final fun getFreeDays (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
@@ -84,7 +83,6 @@ public final class io/github/wulkanowy/sdk/scrapper/Scrapper {
 	public final fun setClassId (I)V
 	public final fun setDiaryId (I)V
 	public final fun setEmail (Ljava/lang/String;)V
-	public final fun setEmptyCookieJarInterceptor (Z)V
 	public final fun setHost (Ljava/lang/String;)V
 	public final fun setKindergartenDiaryId (I)V
 	public final fun setLogLevel (Lokhttp3/logging/HttpLoggingInterceptor$Level;)V

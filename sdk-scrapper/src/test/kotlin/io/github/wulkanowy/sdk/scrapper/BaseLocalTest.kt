@@ -96,7 +96,7 @@ abstract class BaseLocalTest : BaseTest() {
         .build()
 
     private fun getAutoLoginInterceptor(loginType: Scrapper.LoginType, autoLogin: Boolean): AutoLoginInterceptor {
-        return AutoLoginInterceptor(loginType, CookieManager(), false) {
+        return AutoLoginInterceptor(loginType, CookieManager()) {
             if (autoLogin) {
                 LoginHelper(loginType, "http", "localhost", "powiatwulkanowy", CookieManager(), getService(LoginService::class.java))
                     .login("jan", "kowalski")

@@ -36,7 +36,7 @@ import java.util.concurrent.locks.ReentrantLock
 internal class AutoLoginInterceptor(
     private val loginType: LoginType,
     private val jar: CookieManager,
-    private val emptyCookieJarIntercept: Boolean,
+    private val emptyCookieJarIntercept: Boolean = false,
     private val notLoggedInCallback: suspend () -> Unit,
 ) : Interceptor {
 
