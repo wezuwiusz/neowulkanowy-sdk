@@ -32,9 +32,9 @@ class HebeRemoteTest {
     fun `register device`() = runTest {
         val res = hebe.register(
             firebaseToken = "",
-            token = "3S1JDDR",
-            pin = "212343",
-            symbol = "gminanowosolna",
+            token = "FK11234",
+            pin = "123456",
+            symbol = "powiatwulkanowy",
         )
         assertTrue(res.privatePem.isNotEmpty())
     }
