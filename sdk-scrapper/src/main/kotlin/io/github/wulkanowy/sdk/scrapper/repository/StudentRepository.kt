@@ -15,6 +15,7 @@ import io.github.wulkanowy.sdk.scrapper.exams.Exam
 import io.github.wulkanowy.sdk.scrapper.exams.ExamRequest
 import io.github.wulkanowy.sdk.scrapper.exams.mapExamsList
 import io.github.wulkanowy.sdk.scrapper.exception.FeatureDisabledException
+import io.github.wulkanowy.sdk.scrapper.exception.ScrapperException
 import io.github.wulkanowy.sdk.scrapper.getSchoolYear
 import io.github.wulkanowy.sdk.scrapper.getScriptParam
 import io.github.wulkanowy.sdk.scrapper.grades.GradePointsSummary
@@ -55,6 +56,8 @@ import io.github.wulkanowy.sdk.scrapper.timetable.mapTimetableHeaders
 import io.github.wulkanowy.sdk.scrapper.timetable.mapTimetableList
 import io.github.wulkanowy.sdk.scrapper.toFormat
 import org.jsoup.Jsoup
+import retrofit2.HttpException
+import java.net.HttpURLConnection.HTTP_NOT_FOUND
 import java.time.LocalDate
 
 internal class StudentRepository(private val api: StudentService) {
@@ -62,7 +65,7 @@ internal class StudentRepository(private val api: StudentService) {
     private fun LocalDate.toISOFormat(): String = toFormat("yyyy-MM-dd'T00:00:00'")
 
     private suspend fun getCache(): CacheResponse {
-        val startPage = api.getStart("Start")
+        val startPage = getStartPage()
 
         val res = api.getUserCache(
             token = getScriptParam("antiForgeryToken", startPage),
@@ -89,7 +92,7 @@ internal class StudentRepository(private val api: StudentService) {
     }
 
     suspend fun excuseForAbsence(absents: List<Absent>, content: String?): Boolean {
-        val startPage = api.getStart("Start")
+        val startPage = getStartPage()
         return api.excuseForAbsence(
             token = getScriptParam("antiForgeryToken", startPage),
             appGuid = getScriptParam("appGuid", startPage),
@@ -238,12 +241,22 @@ internal class StudentRepository(private val api: StudentService) {
     }
 
     suspend fun unregisterDevice(id: Int): Boolean {
-        val it = api.getStart("Start")
+        val it = getStartPage()
         return api.unregisterDevice(
             getScriptParam("antiForgeryToken", it),
             getScriptParam("appGuid", it),
             getScriptParam("version", it),
             UnregisterDeviceRequest(id),
         ).handleErrors().success
+    }
+
+    private suspend fun getStartPage(): String {
+        return runCatching {
+            api.getStart("App")
+        }.recoverCatching {
+            if (it is ScrapperException && it.code == HTTP_NOT_FOUND) {
+                api.getStart("Start")
+            } else throw it
+        }.getOrThrow()
     }
 }

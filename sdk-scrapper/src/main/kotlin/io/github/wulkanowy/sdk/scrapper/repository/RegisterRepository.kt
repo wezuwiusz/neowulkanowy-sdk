@@ -35,6 +35,8 @@ import org.jsoup.Jsoup
 import org.jsoup.parser.Parser
 import org.jsoup.select.Elements
 import org.slf4j.LoggerFactory
+import retrofit2.HttpException
+import java.net.HttpURLConnection
 import java.nio.charset.StandardCharsets
 
 internal class RegisterRepository(
@@ -249,7 +251,13 @@ internal class RegisterRepository(
     }
 
     private suspend fun getStudentCache(): CacheResponse? {
-        val startPage = student.getStart(url.generate(UrlGenerator.Site.STUDENT) + "Start")
+        val startPage = runCatching {
+            student.getStart("App")
+        }.recoverCatching {
+            if (it is ScrapperException && it.code == HttpURLConnection.HTTP_NOT_FOUND) {
+                student.getStart("Start")
+            } else throw it
+        }.getOrThrow()
 
         return student.getUserCache(
             url.generate(UrlGenerator.Site.STUDENT) + "UczenCache.mvc/Get",
