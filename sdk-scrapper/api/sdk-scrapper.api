@@ -389,6 +389,7 @@ public class io/github/wulkanowy/sdk/scrapper/exception/PasswordResetErrorExcept
 }
 
 public class io/github/wulkanowy/sdk/scrapper/exception/ScrapperException : java/io/IOException {
+	public final fun getCode ()I
 }
 
 public final class io/github/wulkanowy/sdk/scrapper/exception/ServiceUnavailableException : io/github/wulkanowy/sdk/scrapper/exception/VulcanException {

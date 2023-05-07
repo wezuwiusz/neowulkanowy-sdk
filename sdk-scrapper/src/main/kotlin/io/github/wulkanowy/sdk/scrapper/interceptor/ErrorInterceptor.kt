@@ -16,6 +16,7 @@ import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import org.slf4j.LoggerFactory
 import java.net.CookieManager
+import java.net.HttpURLConnection.HTTP_NOT_FOUND
 
 internal class ErrorInterceptor(
     private val cookies: CookieManager,
@@ -31,16 +32,23 @@ internal class ErrorInterceptor(
 
         if (response.body?.contentType()?.subtype != "json") {
             val url = response.request.url.toString()
-            checkForError(Jsoup.parse(response.peekBody(Long.MAX_VALUE).byteStream(), null, url), url)
+            checkForError(
+                doc = Jsoup.parse(response.peekBody(Long.MAX_VALUE).byteStream(), null, url),
+                redirectUrl = url,
+                httpCode = response.code,
+            )
         }
 
         return response
     }
 
-    private fun checkForError(doc: Document, redirectUrl: String) {
+    private fun checkForError(doc: Document, redirectUrl: String, httpCode: Int) {
         doc.select(".errorBlock").let {
             if (it.isNotEmpty()) {
-                throw VulcanException("${it.select(".errorTitle").text()}. ${it.select(".errorMessage").text()}")
+                when (val title = it.select(".errorTitle").text()) {
+                    "HTTP Error 404" -> throw ScrapperException(title, HTTP_NOT_FOUND)
+                    else -> throw VulcanException("$title. ${it.select(".errorMessage").text()}", httpCode)
+                }
             }
         }
 
@@ -55,7 +63,7 @@ internal class ErrorInterceptor(
         doc.select("#MainPage_ErrorDiv div").let {
             if (it.text().contains("Trwa aktualizacja bazy danych")) throw ServiceUnavailableException(it.last()?.ownText().orEmpty())
             if (it.last()?.ownText()?.contains("czasowo wyłączona") == true) throw TemporarilyDisabledException(it.last()?.ownText().orEmpty())
-            if (it.isNotEmpty()) throw VulcanException(it[0].ownText())
+            if (it.isNotEmpty()) throw VulcanException(it[0].ownText(), httpCode)
         }
 
         doc.select("h2.error").let {
@@ -76,26 +84,24 @@ internal class ErrorInterceptor(
         }
 
         when (doc.title()) {
-            "Błąd" -> throw VulcanException(doc.body().text())
-            "Błąd strony" -> throw VulcanException(doc.select(".errorMessage").text())
+            "Błąd" -> throw VulcanException(doc.body().text(), httpCode)
+            "Błąd strony" -> throw VulcanException(doc.select(".errorMessage").text(), httpCode)
             "Logowanie" -> throw AccountPermissionException(doc.select("div").last()?.ownText().orEmpty().split(" Jeśli")[0])
             "Login Service" -> {
                 cookies.cookieStore.removeAll() // workaround for very strange (random) errors
-                throw ScrapperException(doc.select("#MainDiv > div").text())
+                throw ScrapperException(doc.select("#MainDiv > div").text(), httpCode)
             }
             "Połączenie zablokowane" -> throw ConnectionBlockedException(doc.body().text())
             "Just a moment..." -> if (doc.select(".footer").text().contains("Cloudflare")) {
                 throw ConnectionBlockedException(doc.select("#challenge-body-text").text())
             }
             "Przerwa techniczna" -> throw ServiceUnavailableException(doc.title())
-            "Strona nie została odnaleziona" -> throw ScrapperException(doc.title())
-            "Strona nie znaleziona" -> throw ScrapperException(doc.selectFirst("div div")?.text().orEmpty())
+            "Strona nie została odnaleziona" -> throw ScrapperException(doc.title(), httpCode)
+            "Strona nie znaleziona" -> throw ScrapperException(doc.selectFirst("div div")?.text().orEmpty(), httpCode)
         }
-
         doc.select("h2").text().let {
-            if (it == "Strona nie znaleziona") throw ScrapperException(it)
+            if (it == "Strona nie znaleziona") throw ScrapperException(it, httpCode)
         }
-
         if (isBobCmn(doc, redirectUrl)) {
             throw ConnectionBlockedException("Połączenie zablokowane przez system antybotowy. Spróbuj ponownie za chwilę")
         }

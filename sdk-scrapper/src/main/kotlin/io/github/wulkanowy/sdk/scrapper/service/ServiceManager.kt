@@ -176,7 +176,6 @@ internal class ServiceManager(
         return getRetrofit(getClientBuilder(), urlGenerator.generate(UrlGenerator.Site.HOME), json = true).create()
     }
 
-    @OptIn(ExperimentalSerializationApi::class)
     private fun getRetrofit(client: OkHttpClient.Builder, baseUrl: String, json: Boolean = false) = Retrofit.Builder()
         .baseUrl(baseUrl)
         .client(client.build())

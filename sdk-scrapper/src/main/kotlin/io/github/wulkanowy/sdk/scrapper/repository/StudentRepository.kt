@@ -56,7 +56,6 @@ import io.github.wulkanowy.sdk.scrapper.timetable.mapTimetableHeaders
 import io.github.wulkanowy.sdk.scrapper.timetable.mapTimetableList
 import io.github.wulkanowy.sdk.scrapper.toFormat
 import org.jsoup.Jsoup
-import retrofit2.HttpException
 import java.net.HttpURLConnection.HTTP_NOT_FOUND
 import java.time.LocalDate
 
