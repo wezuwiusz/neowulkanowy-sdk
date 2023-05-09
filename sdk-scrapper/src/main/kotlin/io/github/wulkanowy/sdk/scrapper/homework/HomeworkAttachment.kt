@@ -7,10 +7,10 @@ import kotlinx.serialization.Serializable
 data class HomeworkAttachment(
 
     @SerialName("IdZadanieDomowe")
-    val homeworkId: Int,
+    val homeworkId: Int? = null,
 
     @SerialName("HtmlTag")
-    val html: String,
+    val html: String? = null,
 
     @SerialName("Url")
     val url: String,
@@ -19,8 +19,8 @@ data class HomeworkAttachment(
     val filename: String,
 
     @SerialName("IdOneDrive")
-    val oneDriveId: String,
+    val oneDriveId: String? = null,
 
     @SerialName("Id")
-    val id: Int,
+    val id: Int? = null,
 )
