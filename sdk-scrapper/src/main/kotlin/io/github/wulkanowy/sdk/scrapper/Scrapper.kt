@@ -259,6 +259,8 @@ class Scrapper {
 
     suspend fun getUserSubjects(): RegisterUser = register.getUserSubjects()
 
+    suspend fun authorizePermission(pesel: String) = student.authorizePermission(pesel)
+
     suspend fun getSemesters(): List<Semester> = studentStart.getSemesters()
 
     suspend fun getAttendance(startDate: LocalDate, endDate: LocalDate? = null): List<Attendance> {

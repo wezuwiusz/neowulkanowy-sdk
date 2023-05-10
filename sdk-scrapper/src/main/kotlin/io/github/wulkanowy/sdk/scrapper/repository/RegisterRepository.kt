@@ -259,10 +259,10 @@ internal class RegisterRepository(
         }.getOrThrow()
 
         return student.getUserCache(
-            url.generate(UrlGenerator.Site.STUDENT) + "UczenCache.mvc/Get",
-            getScriptParam("antiForgeryToken", startPage),
-            getScriptParam("appGuid", startPage),
-            getScriptParam("version", startPage),
+            url = url.generate(UrlGenerator.Site.STUDENT) + "UczenCache.mvc/Get",
+            token = getScriptParam("antiForgeryToken", startPage),
+            appGuid = getScriptParam("appGuid", startPage),
+            appVersion = getScriptParam("version", startPage),
         ).data
     }
 

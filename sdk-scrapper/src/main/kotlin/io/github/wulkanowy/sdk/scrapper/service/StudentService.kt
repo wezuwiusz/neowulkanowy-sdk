@@ -26,6 +26,8 @@ import io.github.wulkanowy.sdk.scrapper.mobile.Device
 import io.github.wulkanowy.sdk.scrapper.mobile.TokenResponse
 import io.github.wulkanowy.sdk.scrapper.mobile.UnregisterDeviceRequest
 import io.github.wulkanowy.sdk.scrapper.notes.NotesResponse
+import io.github.wulkanowy.sdk.scrapper.register.AuthorizePermissionRequest
+import io.github.wulkanowy.sdk.scrapper.register.AuthorizePermissionResponse
 import io.github.wulkanowy.sdk.scrapper.register.Diary
 import io.github.wulkanowy.sdk.scrapper.school.SchoolAndTeachersResponse
 import io.github.wulkanowy.sdk.scrapper.student.StudentInfo
@@ -62,6 +64,9 @@ internal interface StudentService {
         @Header("X-V-AppVersion") appVersion: String,
         @Body body: Any = Any(),
     ): ApiResponse<CacheResponse>
+
+    @POST("Autoryzacja.mvc/Post")
+    suspend fun authorizePermission(@Body authorizePermissionRequest: AuthorizePermissionRequest): ApiResponse<AuthorizePermissionResponse>
 
     @POST
     suspend fun getSchoolInfo(@Url url: String, @Body body: Any = Any()): ApiResponse<List<Diary>>

@@ -316,6 +316,13 @@ class Sdk {
         )
     }
 
+    suspend fun authorizePermission(pesel: String): Boolean = withContext(Dispatchers.IO) {
+        when (mode) {
+            Mode.HYBRID, Mode.SCRAPPER -> scrapper.authorizePermission(pesel)
+            Mode.HEBE -> throw NotImplementedError("Not available in HEBE mode")
+        }
+    }
+
     suspend fun getSemesters(): List<Semester> = withContext(Dispatchers.IO) {
         when (mode) {
             Mode.HYBRID, Mode.SCRAPPER -> scrapper.getSemesters().mapSemesters()

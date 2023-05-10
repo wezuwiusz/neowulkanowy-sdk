@@ -8,6 +8,7 @@ import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.runTest
 import okhttp3.logging.HttpLoggingInterceptor
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Ignore
@@ -68,6 +69,12 @@ class ScrapperRemoteTest : BaseTest() {
         }
 
         assertTrue(res.startsWith("Wysłano wiadomość na zapisany w systemie adres e-mail"))
+    }
+
+    @Test
+    fun testAuthorizePermission() = runTest {
+        assertFalse(api.authorizePermission("123456q2934234"))
+        assertTrue(api.authorizePermission("72041523721"))
     }
 
     @Test

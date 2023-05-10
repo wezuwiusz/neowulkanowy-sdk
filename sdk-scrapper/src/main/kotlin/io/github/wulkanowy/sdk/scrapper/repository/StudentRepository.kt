@@ -38,6 +38,8 @@ import io.github.wulkanowy.sdk.scrapper.mobile.Device
 import io.github.wulkanowy.sdk.scrapper.mobile.TokenResponse
 import io.github.wulkanowy.sdk.scrapper.mobile.UnregisterDeviceRequest
 import io.github.wulkanowy.sdk.scrapper.notes.Note
+import io.github.wulkanowy.sdk.scrapper.register.AuthorizePermission
+import io.github.wulkanowy.sdk.scrapper.register.AuthorizePermissionRequest
 import io.github.wulkanowy.sdk.scrapper.school.School
 import io.github.wulkanowy.sdk.scrapper.school.Teacher
 import io.github.wulkanowy.sdk.scrapper.school.mapToSchool
@@ -76,6 +78,10 @@ internal class StudentRepository(private val api: StudentService) {
             "Required value was null. $res"
         }
         return data
+    }
+
+    suspend fun authorizePermission(pesel: String): Boolean {
+        return api.authorizePermission(AuthorizePermissionRequest(AuthorizePermission(pesel))).data?.success ?: false
     }
 
     suspend fun getAttendance(startDate: LocalDate, endDate: LocalDate?): List<Attendance> {
