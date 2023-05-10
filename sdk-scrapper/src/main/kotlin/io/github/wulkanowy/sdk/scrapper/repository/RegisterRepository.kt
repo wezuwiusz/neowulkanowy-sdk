@@ -168,6 +168,7 @@ internal class RegisterRepository(
                 className = diary.symbol.orEmpty(),
                 classId = classId,
                 isParent = cache?.isParent == true,
+                isAuthorized = diary.isAuthorized == true,
                 semesters = diaries.toSemesters(
                     studentId = diary.studentId,
                     classId = classId,

@@ -897,7 +897,7 @@ public final class io/github/wulkanowy/sdk/pojo/RegisterEmployee : io/github/wul
 }
 
 public final class io/github/wulkanowy/sdk/pojo/RegisterStudent : io/github/wulkanowy/sdk/pojo/RegisterSubject {
-	public fun <init> (ILjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;IZLjava/util/List;)V
+	public fun <init> (ILjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;IZLjava/util/List;Z)V
 	public final fun component1 ()I
 	public final fun component2 ()Ljava/lang/String;
 	public final fun component3 ()Ljava/lang/String;
@@ -906,8 +906,9 @@ public final class io/github/wulkanowy/sdk/pojo/RegisterStudent : io/github/wulk
 	public final fun component6 ()I
 	public final fun component7 ()Z
 	public final fun component8 ()Ljava/util/List;
-	public final fun copy (ILjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;IZLjava/util/List;)Lio/github/wulkanowy/sdk/pojo/RegisterStudent;
-	public static synthetic fun copy$default (Lio/github/wulkanowy/sdk/pojo/RegisterStudent;ILjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;IZLjava/util/List;ILjava/lang/Object;)Lio/github/wulkanowy/sdk/pojo/RegisterStudent;
+	public final fun component9 ()Z
+	public final fun copy (ILjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;IZLjava/util/List;Z)Lio/github/wulkanowy/sdk/pojo/RegisterStudent;
+	public static synthetic fun copy$default (Lio/github/wulkanowy/sdk/pojo/RegisterStudent;ILjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;IZLjava/util/List;ZILjava/lang/Object;)Lio/github/wulkanowy/sdk/pojo/RegisterStudent;
 	public fun equals (Ljava/lang/Object;)Z
 	public final fun getClassId ()I
 	public final fun getClassName ()Ljava/lang/String;
@@ -917,6 +918,7 @@ public final class io/github/wulkanowy/sdk/pojo/RegisterStudent : io/github/wulk
 	public final fun getStudentSecondName ()Ljava/lang/String;
 	public final fun getStudentSurname ()Ljava/lang/String;
 	public fun hashCode ()I
+	public final fun isAuthorized ()Z
 	public final fun isParent ()Z
 	public fun toString ()Ljava/lang/String;
 }
