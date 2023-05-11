@@ -324,7 +324,7 @@ class Sdk {
     }
 
     suspend fun getCurrentStudent(): RegisterStudent? = withContext(Dispatchers.IO) {
-        when(mode) {
+        when (mode) {
             Mode.SCRAPPER, Mode.HYBRID -> scrapper.getCurrentStudent()?.mapStudent()
             Mode.HEBE -> throw NotImplementedError("Not available in HEBE mode")
         }
