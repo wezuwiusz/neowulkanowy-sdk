@@ -79,6 +79,9 @@ class ScrapperRemoteTest : BaseTest() {
 
     @Test
     fun studentsTest() = runTest {
+        val res = api.getCurrentStudent()
+        assertEquals("Jan", res?.studentName)
+
         val user = api.getUserSubjects()
         val symbol = user.symbols[0]
         val school = symbol.schools[0]

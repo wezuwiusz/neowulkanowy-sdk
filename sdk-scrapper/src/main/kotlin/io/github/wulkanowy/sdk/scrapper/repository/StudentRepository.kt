@@ -40,6 +40,8 @@ import io.github.wulkanowy.sdk.scrapper.mobile.UnregisterDeviceRequest
 import io.github.wulkanowy.sdk.scrapper.notes.Note
 import io.github.wulkanowy.sdk.scrapper.register.AuthorizePermission
 import io.github.wulkanowy.sdk.scrapper.register.AuthorizePermissionRequest
+import io.github.wulkanowy.sdk.scrapper.register.RegisterStudent
+import io.github.wulkanowy.sdk.scrapper.register.getStudentsFromDiaries
 import io.github.wulkanowy.sdk.scrapper.school.School
 import io.github.wulkanowy.sdk.scrapper.school.Teacher
 import io.github.wulkanowy.sdk.scrapper.school.mapToSchool
@@ -82,6 +84,16 @@ internal class StudentRepository(private val api: StudentService) {
 
     suspend fun authorizePermission(pesel: String): Boolean {
         return api.authorizePermission(AuthorizePermissionRequest(AuthorizePermission(pesel))).data?.success ?: false
+    }
+
+    suspend fun getStudent(studentId: Int, unitId: Int): RegisterStudent? {
+        return getStudentsFromDiaries(
+            cache = getCache(),
+            diaries = api.getDiaries().data.orEmpty(),
+            unitId = unitId,
+        ).find {
+            it.studentId == studentId
+        }
     }
 
     suspend fun getAttendance(startDate: LocalDate, endDate: LocalDate?): List<Attendance> {

@@ -21,6 +21,7 @@ import io.github.wulkanowy.sdk.scrapper.register.RegisterStudent
 import io.github.wulkanowy.sdk.scrapper.register.RegisterSymbol
 import io.github.wulkanowy.sdk.scrapper.register.RegisterUnit
 import io.github.wulkanowy.sdk.scrapper.register.RegisterUser
+import io.github.wulkanowy.sdk.scrapper.register.getStudentsFromDiaries
 import io.github.wulkanowy.sdk.scrapper.register.toSemesters
 import io.github.wulkanowy.sdk.scrapper.repository.AccountRepository.Companion.SELECTOR_ADFS
 import io.github.wulkanowy.sdk.scrapper.repository.AccountRepository.Companion.SELECTOR_ADFS_CARDS
@@ -149,33 +150,6 @@ internal class RegisterRepository(
             )
         }
     }
-
-    private fun getStudentsFromDiaries(
-        diaries: List<Diary>,
-        cache: CacheResponse?,
-        unitId: Int,
-    ): List<RegisterStudent> = diaries
-        .filter { it.semesters.orEmpty().isNotEmpty() || it.kindergartenDiaryId != 0 }
-        .sortedByDescending { it.level }
-        .distinctBy { listOf(it.studentId, it.semesters?.firstOrNull()?.classId ?: 0) }
-        .map { diary ->
-            val classId = diary.semesters?.firstOrNull()?.classId ?: 0
-            RegisterStudent(
-                studentId = diary.studentId,
-                studentName = diary.studentName.trim(),
-                studentSecondName = diary.studentSecondName.orEmpty(),
-                studentSurname = diary.studentSurname,
-                className = diary.symbol.orEmpty(),
-                classId = classId,
-                isParent = cache?.isParent == true,
-                isAuthorized = diary.isAuthorized == true,
-                semesters = diaries.toSemesters(
-                    studentId = diary.studentId,
-                    classId = classId,
-                    unitId = unitId,
-                ),
-            )
-        }
 
     private suspend fun getLoginType(symbol: String): Scrapper.LoginType {
         val urlGenerator = url.also { it.symbol = symbol }

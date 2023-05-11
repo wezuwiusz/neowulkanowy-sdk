@@ -26,6 +26,7 @@ import io.github.wulkanowy.sdk.scrapper.messages.Recipient
 import io.github.wulkanowy.sdk.scrapper.mobile.Device
 import io.github.wulkanowy.sdk.scrapper.mobile.TokenResponse
 import io.github.wulkanowy.sdk.scrapper.notes.Note
+import io.github.wulkanowy.sdk.scrapper.register.RegisterStudent
 import io.github.wulkanowy.sdk.scrapper.register.RegisterUser
 import io.github.wulkanowy.sdk.scrapper.register.Semester
 import io.github.wulkanowy.sdk.scrapper.repository.AccountRepository
@@ -262,6 +263,8 @@ class Scrapper {
     suspend fun authorizePermission(pesel: String) = student.authorizePermission(pesel)
 
     suspend fun getSemesters(): List<Semester> = studentStart.getSemesters()
+
+    suspend fun getCurrentStudent(): RegisterStudent? = student.getStudent(studentId, unitId)
 
     suspend fun getAttendance(startDate: LocalDate, endDate: LocalDate? = null): List<Attendance> {
         if (diaryId == 0) return emptyList()

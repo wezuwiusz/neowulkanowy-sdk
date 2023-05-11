@@ -323,6 +323,13 @@ class Sdk {
         }
     }
 
+    suspend fun getCurrentStudent(): RegisterStudent? = withContext(Dispatchers.IO) {
+        when(mode) {
+            Mode.SCRAPPER, Mode.HYBRID -> scrapper.getCurrentStudent()?.mapStudent()
+            Mode.HEBE -> throw NotImplementedError("Not available in HEBE mode")
+        }
+    }
+
     suspend fun getSemesters(): List<Semester> = withContext(Dispatchers.IO) {
         when (mode) {
             Mode.HYBRID, Mode.SCRAPPER -> scrapper.getSemesters().mapSemesters()
