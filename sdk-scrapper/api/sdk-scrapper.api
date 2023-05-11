@@ -365,6 +365,10 @@ public final class io/github/wulkanowy/sdk/scrapper/exception/AccountInactiveExc
 	public fun <init> (Ljava/lang/String;)V
 }
 
+public final class io/github/wulkanowy/sdk/scrapper/exception/AuthorizationRequiredException : io/github/wulkanowy/sdk/scrapper/exception/VulcanException {
+	public fun <init> (Ljava/lang/String;)V
+}
+
 public final class io/github/wulkanowy/sdk/scrapper/exception/ConnectionBlockedException : io/github/wulkanowy/sdk/scrapper/exception/VulcanException {
 }
 
