@@ -89,13 +89,13 @@ internal class StudentRepository(private val api: StudentService) {
             appGuid = getScriptParam("appGuid", startPage),
             appVersion = getScriptParam("version", startPage),
             body = AuthorizePermissionRequest(AuthorizePermission(pesel)),
-        ).data?.success ?: false
+        ).handleErrors().data?.success ?: false
     }
 
     suspend fun getStudent(studentId: Int, unitId: Int): RegisterStudent? {
         return getStudentsFromDiaries(
             cache = getCache(),
-            diaries = api.getDiaries().data.orEmpty(),
+            diaries = api.getDiaries().handleErrors().data.orEmpty(),
             unitId = unitId,
         ).find {
             it.studentId == studentId
@@ -103,9 +103,10 @@ internal class StudentRepository(private val api: StudentService) {
     }
 
     suspend fun getAttendance(startDate: LocalDate, endDate: LocalDate?): List<Attendance> {
+        val lessonTimes = getCache().times
         return api.getAttendance(AttendanceRequest(startDate.atStartOfDay()))
             .handleErrors()
-            .data?.mapAttendanceList(startDate, endDate, getCache().times).orEmpty()
+            .data?.mapAttendanceList(startDate, endDate, lessonTimes).orEmpty()
     }
 
     suspend fun getAttendanceSummary(subjectId: Int?): List<AttendanceSummary> {

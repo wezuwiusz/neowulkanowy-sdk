@@ -16,9 +16,9 @@ class AttendanceTest : BaseLocalTest() {
 
     private val student by lazy {
         val repo = getStudentRepo {
-            it.enqueue("Frekwencja.json", AttendanceTest::class.java)
             it.enqueue("WitrynaUcznia.html", RegisterTest::class.java)
             it.enqueue("UczenCache.json", RegisterTest::class.java)
+            it.enqueue("Frekwencja.json", AttendanceTest::class.java)
         }
         runBlocking { repo.getAttendance(getLocalDate(2018, 10, 1), null) }
     }
@@ -158,12 +158,14 @@ class AttendanceTest : BaseLocalTest() {
     @Test
     fun getAttendance_requestDateFormat() {
         val repo = getStudentRepo {
-            it.enqueue("Frekwencja.json", AttendanceTest::class.java)
             it.enqueue("WitrynaUcznia.html", RegisterTest::class.java)
             it.enqueue("UczenCache.json", RegisterTest::class.java)
+            it.enqueue("Frekwencja.json", AttendanceTest::class.java)
         }
         runBlocking { repo.getAttendance(getLocalDate(2018, 10, 1), null) }
 
+        server.takeRequest()
+        server.takeRequest()
         val request = server.takeRequest()
 
         val requestObject = Json.decodeFromString<AttendanceRequest>(request.body.readUtf8())
