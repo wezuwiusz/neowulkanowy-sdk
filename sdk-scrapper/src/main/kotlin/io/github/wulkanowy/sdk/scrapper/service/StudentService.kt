@@ -66,7 +66,12 @@ internal interface StudentService {
     ): ApiResponse<CacheResponse>
 
     @POST("Autoryzacja.mvc/Post")
-    suspend fun authorizePermission(@Body authorizePermissionRequest: AuthorizePermissionRequest): ApiResponse<AuthorizePermissionResponse>
+    suspend fun authorizePermission(
+        @Header("X-V-RequestVerificationToken") token: String,
+        @Header("X-V-AppGuid") appGuid: String,
+        @Header("X-V-AppVersion") appVersion: String,
+        @Body body: AuthorizePermissionRequest,
+    ): ApiResponse<AuthorizePermissionResponse>
 
     @POST
     suspend fun getSchoolInfo(@Url url: String, @Body body: Any = Any()): ApiResponse<List<Diary>>

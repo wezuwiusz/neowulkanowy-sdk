@@ -12,17 +12,14 @@ import io.github.wulkanowy.sdk.scrapper.login.InvalidSymbolException
 import io.github.wulkanowy.sdk.scrapper.login.LoginHelper
 import io.github.wulkanowy.sdk.scrapper.login.UrlGenerator
 import io.github.wulkanowy.sdk.scrapper.register.AuthInfo
-import io.github.wulkanowy.sdk.scrapper.register.Diary
 import io.github.wulkanowy.sdk.scrapper.register.HomePageResponse
 import io.github.wulkanowy.sdk.scrapper.register.PermissionUnit
 import io.github.wulkanowy.sdk.scrapper.register.Permissions
 import io.github.wulkanowy.sdk.scrapper.register.RegisterEmployee
-import io.github.wulkanowy.sdk.scrapper.register.RegisterStudent
 import io.github.wulkanowy.sdk.scrapper.register.RegisterSymbol
 import io.github.wulkanowy.sdk.scrapper.register.RegisterUnit
 import io.github.wulkanowy.sdk.scrapper.register.RegisterUser
 import io.github.wulkanowy.sdk.scrapper.register.getStudentsFromDiaries
-import io.github.wulkanowy.sdk.scrapper.register.toSemesters
 import io.github.wulkanowy.sdk.scrapper.repository.AccountRepository.Companion.SELECTOR_ADFS
 import io.github.wulkanowy.sdk.scrapper.repository.AccountRepository.Companion.SELECTOR_ADFS_CARDS
 import io.github.wulkanowy.sdk.scrapper.repository.AccountRepository.Companion.SELECTOR_ADFS_LIGHT

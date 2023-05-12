@@ -7,7 +7,7 @@ dependencyResolutionManagement {
         libs {
             def kotlin = '1.8.20'
 
-            version('sdk', '2.0.1')
+            version('sdk', '2.0.2-SNAPSHOT')
             version('kotlin', kotlin)
             version('coroutines', '1.6.4')
             version('retrofit', '2.9.0')

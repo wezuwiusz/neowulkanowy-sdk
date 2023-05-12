@@ -83,7 +83,13 @@ internal class StudentRepository(private val api: StudentService) {
     }
 
     suspend fun authorizePermission(pesel: String): Boolean {
-        return api.authorizePermission(AuthorizePermissionRequest(AuthorizePermission(pesel))).data?.success ?: false
+        val startPage = getStartPage()
+        return api.authorizePermission(
+            token = getScriptParam("antiForgeryToken", startPage),
+            appGuid = getScriptParam("appGuid", startPage),
+            appVersion = getScriptParam("version", startPage),
+            body = AuthorizePermissionRequest(AuthorizePermission(pesel)),
+        ).data?.success ?: false
     }
 
     suspend fun getStudent(studentId: Int, unitId: Int): RegisterStudent? {
