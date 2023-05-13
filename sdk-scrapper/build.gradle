@@ -14,8 +14,6 @@ dependencies {
     implementation "pl.droidsonroids.retrofit2:converter-jspoon:$jspoon"
     implementation libs.retrofit.serialization
 
-    implementation "com.brsanthu:migbase64:2.2"
-
     implementation "com.squareup.okhttp3:okhttp-urlconnection"
 
     testImplementation "io.mockk:mockk-jvm:1.13.5"

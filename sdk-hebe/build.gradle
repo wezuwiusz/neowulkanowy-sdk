@@ -8,8 +8,6 @@ plugins {
 dependencies {
     implementation 'com.github.wulkanowy.uonet-request-signer:hebe-jvm:5412ed8'
 
-    implementation "com.brsanthu:migbase64:2.2"
-
     implementation libs.retrofit.core
     implementation libs.retrofit.scalars
     implementation libs.retrofit.serialization

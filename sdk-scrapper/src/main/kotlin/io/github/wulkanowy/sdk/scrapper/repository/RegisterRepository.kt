@@ -1,6 +1,5 @@
 package io.github.wulkanowy.sdk.scrapper.repository
 
-import com.migcomponents.migbase64.Base64
 import io.github.wulkanowy.sdk.scrapper.Scrapper
 import io.github.wulkanowy.sdk.scrapper.exception.ScrapperException
 import io.github.wulkanowy.sdk.scrapper.exception.StudentGraduateException
@@ -35,7 +34,11 @@ import org.jsoup.select.Elements
 import org.slf4j.LoggerFactory
 import java.net.HttpURLConnection
 import java.nio.charset.StandardCharsets
+import kotlin.io.encoding.Base64
+import kotlin.io.encoding.ExperimentalEncodingApi
 
+@Suppress("UnnecessaryOptInAnnotation")
+@OptIn(ExperimentalEncodingApi::class)
 internal class RegisterRepository(
     private val startSymbol: String,
     private val email: String,
