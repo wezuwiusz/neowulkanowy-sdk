@@ -7,9 +7,9 @@ dependencyResolutionManagement {
         libs {
             def kotlin = '1.8.21'
 
-            version('sdk', '2.0.3')
+            version('sdk', '2.0.4-SNAPSHOT')
             version('kotlin', kotlin)
-            version('coroutines', '1.7.0')
+            version('coroutines', '1.7.1')
             version('retrofit', '2.9.0')
             version('retrofit-kotlinx-serialization', '1.0.0')
             version('ksp', "${kotlin}-1.0.11")
