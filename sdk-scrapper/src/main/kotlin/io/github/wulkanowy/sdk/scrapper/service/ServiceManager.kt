@@ -125,7 +125,7 @@ internal class ServiceManager(
 
     fun getRegisterService(): RegisterService {
         return getRetrofit(
-            client = getClientBuilder(errIntercept = false, loginIntercept = false, separateJar = true),
+            client = getClientBuilder(errIntercept = true, loginIntercept = false, separateJar = true),
             baseUrl = urlGenerator.generate(UrlGenerator.Site.LOGIN),
             json = false,
         ).create()

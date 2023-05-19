@@ -3,7 +3,6 @@ package io.github.wulkanowy.sdk.scrapper
 import io.github.wulkanowy.sdk.scrapper.attendance.AttendanceCategory
 import io.github.wulkanowy.sdk.scrapper.messages.Folder
 import io.github.wulkanowy.sdk.scrapper.register.RegisterStudent
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.runTest
 import okhttp3.logging.HttpLoggingInterceptor
@@ -16,7 +15,6 @@ import org.junit.Test
 import java.time.LocalDate
 import java.time.Month
 
-@OptIn(ExperimentalCoroutinesApi::class)
 @Ignore
 class ScrapperRemoteTest : BaseTest() {
 

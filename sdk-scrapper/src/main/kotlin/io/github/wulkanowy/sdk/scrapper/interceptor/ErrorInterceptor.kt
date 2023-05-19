@@ -95,6 +95,7 @@ internal class ErrorInterceptor(
             "Just a moment..." -> if (doc.select(".footer").text().contains("Cloudflare")) {
                 throw ConnectionBlockedException(doc.select("#challenge-body-text").text())
             }
+            "Przerwa" -> throw ServiceUnavailableException(doc.title())
             "Przerwa techniczna" -> throw ServiceUnavailableException(doc.title())
             "Strona nie została odnaleziona" -> throw ScrapperException(doc.title(), httpCode)
             "Strona nie znaleziona" -> throw ScrapperException(doc.selectFirst("div div")?.text().orEmpty(), httpCode)
