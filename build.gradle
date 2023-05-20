@@ -7,7 +7,6 @@ plugins {
 }
 
 ext {
-    PUBLISH_VERSION = "2.0.4-SNAPSHOT"
     SITE_URL = 'https://github.com/wulkanowy/sdk'
     GIT_URL = 'https://github.com/wulkanowy/sdk.git'
 
@@ -17,7 +16,7 @@ ext {
     moshi = "1.13.0"
 }
 
-version = PUBLISH_VERSION
+version = "2.0.4-SNAPSHOT"
 group = "io.github.wulkanowy"
 
 nexusPublishing {
