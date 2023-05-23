@@ -60,6 +60,12 @@ internal class ErrorInterceptor(
             } else throw BadCredentialsException(errorMessage)
         }
 
+        doc.select(".app-error-container").takeIf { it.isNotEmpty() }?.let {
+            if (it.select("h2").text() == "Informacja") {
+                throw ServiceUnavailableException(it.select("span").firstOrNull()?.text().orEmpty())
+            }
+        }
+
         doc.select("#MainPage_ErrorDiv div").let {
             if (it.text().contains("Trwa aktualizacja bazy danych")) throw ServiceUnavailableException(it.last()?.ownText().orEmpty())
             if (it.last()?.ownText()?.contains("czasowo wyłączona") == true) throw TemporarilyDisabledException(it.last()?.ownText().orEmpty())
