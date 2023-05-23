@@ -9,7 +9,7 @@ dependencyResolutionManagement {
 
             version('kotlin', kotlin)
             version('coroutines', '1.7.1')
-            version('retrofit', '2.9.0')
+            version('retrofit', '2.10.0-SNAPSHOT')
             version('retrofit-kotlinx-serialization', '1.0.0')
             version('ksp', "${kotlin}-1.0.11")
 
