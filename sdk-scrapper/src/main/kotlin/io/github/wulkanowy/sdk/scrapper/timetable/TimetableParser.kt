@@ -224,7 +224,7 @@ internal class TimetableParser {
             subject = getLessonAndGroupInfoFromSpan(spans[0])[0],
             group = getLessonAndGroupInfoFromSpan(spans[0])[1],
             room = spans[1 + offset].text(),
-            teacher = getTeacherFromInfo(changes).getTeacherNameInReverse(),
+            teacher = getTeacherFromInfo(changes),
             teacherOld = spans[2 + offset].text(),
             info = getTeacherChangesWithoutSubstitution(changes),
             changes = true,
@@ -251,8 +251,6 @@ internal class TimetableParser {
 
     private fun getTeacherChangesWithoutSubstitution(changes: String?) = changes?.substringBefore("(zastępstwo: ").orEmpty()
     private fun getRoomChangesWithoutSubstitution(changes: String?) = changes?.substringBefore("(zmieniono salę z ").orEmpty()
-
-    private fun String?.getTeacherNameInReverse() = orEmpty().split(" ").asReversed().joinToString(" ")
 
     private fun stripLessonInfo(info: String) = info
         .replace("okienko dla uczniów", "")

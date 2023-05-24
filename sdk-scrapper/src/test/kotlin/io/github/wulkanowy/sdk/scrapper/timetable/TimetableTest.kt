@@ -565,7 +565,7 @@ class TimetableTest : BaseLocalTest() {
 
             assertEquals("pracownia programowania", subject)
             assertEquals("JA 2", group)
-            assertEquals("Jakub Tabaluga", teacher)
+            assertEquals("Tabaluga Jakub", teacher)
             assertEquals("B149", room)
             assertEquals("", info)
             assertEquals("", subjectOld)
@@ -587,11 +587,11 @@ class TimetableTest : BaseLocalTest() {
 
             assertEquals("Wychowanie fizyczne", subject)
             assertEquals("2/2", group)
-            assertEquals("Jan Nowak", teacher)
+            assertEquals("Nowak Jan", teacher)
             assertEquals("SG2", room)
             assertEquals("", info)
             assertEquals("", subjectOld)
-            assertEquals("Joanna Kowalska", teacherOld)
+            assertEquals("Kowalska Joanna", teacherOld)
             assertEquals("", roomOld)
 
             assertEquals(false, canceled)
@@ -609,11 +609,11 @@ class TimetableTest : BaseLocalTest() {
 
             assertEquals("testowanie i dokumentowanie projektu informatycznego", subject)
             assertEquals("", group)
-            assertEquals("Jan Nowak", teacher)
+            assertEquals("Nowak Jan", teacher)
             assertEquals("A220", room)
             assertEquals("", info)
             assertEquals("", subjectOld)
-            assertEquals("Joanna Kowalska", teacherOld)
+            assertEquals("Kowalska Joanna", teacherOld)
             assertEquals("", roomOld)
 
             assertEquals(false, canceled)
@@ -631,10 +631,10 @@ class TimetableTest : BaseLocalTest() {
 
             assertEquals("Chemia", subject)
             assertEquals("", group)
-            assertEquals("Marcin Gwóźdź", teacher)
+            assertEquals("Gwóźdź Marcin", teacher)
             assertEquals("A54", room)
             assertEquals("Podstawy przedsiębiorczości", subjectOld)
-            assertEquals("Izabela Makrowska", teacherOld)
+            assertEquals("Makrowska Izabela", teacherOld)
             assertEquals("B29", roomOld)
             assertEquals("przeniesiona z lekcji 8, 06.10.2021", info)
 
