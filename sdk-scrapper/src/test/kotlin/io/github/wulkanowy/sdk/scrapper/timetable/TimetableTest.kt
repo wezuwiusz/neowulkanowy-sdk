@@ -22,16 +22,16 @@ class TimetableTest : BaseLocalTest() {
 
     companion object {
         private const val MONDAY_OFFSET = 0
-        private const val TUESDAY_OFFSET = 6
-        private const val WEDNESDAY_OFFSET = 12
-        private const val THURSDAY_OFFSET = 18
-        private const val FRIDAY_OFFSET = 24
+        private const val TUESDAY_OFFSET = 7
+        private const val WEDNESDAY_OFFSET = 13
+        private const val THURSDAY_OFFSET = 19
+        private const val FRIDAY_OFFSET = 25
     }
 
     @Test
     fun getTimetableTest() {
         assertEquals(5, headers.size)
-        assertEquals(30, timetable.size)
+        assertEquals(31, timetable.size)
         assertEquals(2, additional.size)
     }
 
@@ -684,6 +684,28 @@ class TimetableTest : BaseLocalTest() {
 
             assertEquals(false, canceled)
             assertEquals(true, changes)
+        }
+    }
+
+    @Test
+    fun getGroupReplacementWithUnknownName() {
+        with(timetable[MONDAY_OFFSET + 6]) {
+            // poniedziałek, 6
+            assertEquals(6, number)
+            assertEquals(getLocalDateTime(2018, 9, 24, 12, 35, 0), start)
+            assertEquals(getLocalDateTime(2018, 9, 24, 13, 20, 0), end)
+
+            assertEquals("Wychowanie fizyczne", subject)
+            assertEquals("1/2", group)
+            assertEquals("Nazwisko Imie", teacher)
+            assertEquals("H1", room)
+            assertEquals("nieobecność nauczyciela: zastępstwo", info)
+            assertEquals("", subjectOld)
+            assertEquals("", teacherOld)
+            assertEquals("", roomOld)
+
+            assertEquals(true, canceled)
+            assertEquals(false, changes)
         }
     }
 

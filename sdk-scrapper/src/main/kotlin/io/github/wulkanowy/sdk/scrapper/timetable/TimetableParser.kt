@@ -12,8 +12,8 @@ internal class TimetableParser {
         const val CLASS_CHANGES = "x-treelabel-zas"
         const val CLASS_MOVED_OR_CANCELED = "x-treelabel-inv"
 
-        const val INFO_REPLACEMENT_TEACHER = "zastępstwo"
-        const val INFO_REPLACEMENT_ROOM = "zmieniono salę"
+        const val INFO_REPLACEMENT_TEACHER = "(zastępstwo"
+        const val INFO_REPLACEMENT_ROOM = "(zmieniono salę"
     }
 
     fun getTimetable(c: TimetableCell): Lesson? {
