@@ -66,6 +66,19 @@ internal class TimetableParser {
                     )
                 }
             }
+            divs.size == 2 && divs[0]?.selectFirst("span")?.hasClass(CLASS_CHANGES) == true -> {
+                val oldLesson = getLessonInfo(lesson, divs[0])
+                val newLesson = getLessonInfo(lesson, divs[1])
+                val isNewLessonEmpty = divs[1]?.select("span").isNullOrEmpty()
+                if (!isNewLessonEmpty && oldLesson.teacher == newLesson.teacher) {
+                    newLesson.copy(
+                        subjectOld = oldLesson.subject,
+                        roomOld = oldLesson.room,
+                        teacherOld = oldLesson.teacherOld,
+                        changes = true,
+                    )
+                } else oldLesson
+            }
             divs.size == 2 -> getLessonInfo(lesson, divs[0])
             divs.size == 3 -> when { // TODO: refactor this
                 divs[0]?.selectFirst("span")?.hasClass(CLASS_CHANGES) == true &&
@@ -96,6 +109,7 @@ internal class TimetableParser {
                         )
                     }
                 }
+
                 else -> getLessonInfo(lesson, divs[1])
             }
             else -> null
