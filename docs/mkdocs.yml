@@ -1,0 +1,103 @@
+site_name: VULCAN UONET+ SDK
+
+# Meta tags (placed in header)
+site_description:
+#site_author: Your Name
+site_url: # https://github.com/wulkanowy/sdk
+
+# Repository (add link to repository on each page)
+repo_name: sdk
+repo_url: https://github.com/wulkanowy/sdk
+edit_uri: edit/master/docs/docs/
+
+#Copyright (shown at the footer)
+copyright: 'Copyright &copy; 2023 Wulkanowy'
+
+# Meterial theme
+theme:
+  name: 'material'
+  palette:
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: red
+      accent: red
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: red
+      accent: red
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+  features:
+    #- navigation.tabs
+    #- navigation.tabs.sticky
+    #- navigation.instant
+    - navigation.tracking
+    - navigation.top
+
+plugins:
+  - search
+#    Required for variables support (https://github.com/rosscdh/mkdocs-markdownextradata-plugin)
+#  - markdownextradata
+
+extra:
+
+#  version:
+#    provider: mike
+
+  social:
+    - icon: fontawesome/brands/facebook
+      link: https://facebook.com/wulkanowy
+    - icon: fontawesome/brands/github
+      link: https://github.com/wulkanowy
+    - icon: fontawesome/brands/twitter
+      link: https://twitter.com/wulkanowy
+#
+# Google Analytics
+#  analytics:
+#    provider: google
+#    property: UA-XXXXXXXX-X
+
+markdown_extensions:
+  # Python Markdown
+  - abbr
+  - admonition
+  - attr_list
+  - def_list
+  - footnotes
+  - meta
+  - md_in_html
+  - toc:
+      permalink: true
+
+  # Python Markdown Extensions
+  - pymdownx.arithmatex:
+      generic: true
+  - pymdownx.betterem:
+      smart_enable: all
+  - pymdownx.caret
+  - pymdownx.details
+  - pymdownx.emoji:
+      emoji_index: !!python/name:materialx.emoji.twemoji
+      emoji_generator: !!python/name:materialx.emoji.to_svg
+  - pymdownx.highlight
+  - pymdownx.inlinehilite
+  - pymdownx.keys
+  - pymdownx.mark
+  - pymdownx.smartsymbols
+  - pymdownx.superfences
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.tasklist:
+      custom_checkbox: true
+  - pymdownx.tilde
+
+nav:
+  - Start: index.md
+  - User guide:
+      - Instalacja: guide/installation.md
+  - O projekcie:
+      - Historia wydań: about/history.md
