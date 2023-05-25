@@ -26,7 +26,7 @@ internal class TimetableParser {
 
         return when {
             divs.size == 1 -> getLessonInfo(lesson, divs[0])
-            divs.size == 2 && divs[1]?.selectFirst("span")?.hasClass(CLASS_MOVED_OR_CANCELED) ?: false -> {
+            divs.size == 2 && divs.has(1, CLASS_MOVED_OR_CANCELED) -> {
                 when {
                     divs[1]?.selectFirst("span")?.hasClass(CLASS_PLANNED) == true -> getLessonInfo(lesson, divs[0]).run {
                         val old = getLessonInfo(lesson, divs[1])
@@ -41,7 +41,7 @@ internal class TimetableParser {
                     else -> getLessonInfo(lesson, divs[1])
                 }
             }
-            divs.size == 2 && divs[1]?.selectFirst("span")?.hasClass(CLASS_CHANGES) == true -> getLessonInfo(lesson, divs[1]).run {
+            divs.size == 2 && divs.has(1, CLASS_CHANGES) -> getLessonInfo(lesson, divs[1]).run {
                 val old = getLessonInfo(lesson, divs[0])
                 copy(
                     changes = true,
@@ -51,9 +51,7 @@ internal class TimetableParser {
                     roomOld = old.room,
                 )
             }
-            divs.size == 2 && divs[0]?.selectFirst("span")?.hasClass(CLASS_MOVED_OR_CANCELED) == true &&
-                divs[0]?.selectFirst("span")?.hasClass(CLASS_PLANNED) == true &&
-                divs[1]?.selectFirst("span")?.attr("class")?.isEmpty() == true -> {
+            divs.size == 2 && divs.has(0, CLASS_MOVED_OR_CANCELED) && divs.has(0, CLASS_PLANNED) && divs.has(1, null) -> {
                 getLessonInfo(lesson, divs[1]).run {
                     val old = getLessonInfo(lesson, divs[0])
                     copy(
@@ -66,7 +64,7 @@ internal class TimetableParser {
                     )
                 }
             }
-            divs.size == 2 && divs[0]?.selectFirst("span")?.hasClass(CLASS_CHANGES) == true -> {
+            divs.size == 2 && divs.has(0,CLASS_CHANGES) -> {
                 val oldLesson = getLessonInfo(lesson, divs[0])
                 val newLesson = getLessonInfo(lesson, divs[1])
                 val isNewLessonEmpty = divs[1]?.select("span").isNullOrEmpty()
@@ -81,9 +79,7 @@ internal class TimetableParser {
             }
             divs.size == 2 -> getLessonInfo(lesson, divs[0])
             divs.size == 3 -> when { // TODO: refactor this
-                divs[0]?.selectFirst("span")?.hasClass(CLASS_CHANGES) == true &&
-                    divs[1]?.selectFirst("span")?.hasClass(CLASS_MOVED_OR_CANCELED) == true &&
-                    divs[2]?.selectFirst("span")?.hasClass(CLASS_MOVED_OR_CANCELED) == true -> {
+                divs.has(0, CLASS_CHANGES) && divs.has(1, CLASS_MOVED_OR_CANCELED) && divs.has(2, CLASS_MOVED_OR_CANCELED) -> {
                     getLessonInfo(lesson, divs[0]).run {
                         val old = getLessonInfo(lesson, divs[1])
                         copy(
@@ -95,9 +91,7 @@ internal class TimetableParser {
                         )
                     }
                 }
-                divs[0]?.selectFirst("span")?.hasClass(CLASS_MOVED_OR_CANCELED) == true &&
-                    divs[1]?.selectFirst("span")?.hasClass(CLASS_MOVED_OR_CANCELED) == true &&
-                    divs[2]?.selectFirst("span")?.hasClass(CLASS_CHANGES) == true -> {
+                divs.has(0, CLASS_MOVED_OR_CANCELED) && divs.has(1, CLASS_MOVED_OR_CANCELED) && divs.has(2, CLASS_CHANGES) -> {
                     getLessonInfo(lesson, divs[2]).run {
                         val old = getLessonInfo(lesson, divs[0])
                         copy(
@@ -118,6 +112,15 @@ internal class TimetableParser {
                 if (it.info.isBlank()) it.copy(info = warn.text())
                 else it.copy(info = "${it.info}: ${warn.text()}")
             } ?: it
+        }
+    }
+
+    private fun Elements.has(index: Int, className: String?): Boolean {
+        return this[index]?.selectFirst("span").let {
+            when (className) {
+                null -> it?.attr("class").isNullOrBlank()
+                else -> it?.hasClass(className) == true
+            }
         }
     }
 
