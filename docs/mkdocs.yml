@@ -99,5 +99,6 @@ nav:
   - Start: index.md
   - User guide:
       - Instalacja: guide/installation.md
+      - Rejestracja: guide/registration.md
   - O projekcie:
       - Historia wydań: about/history.md

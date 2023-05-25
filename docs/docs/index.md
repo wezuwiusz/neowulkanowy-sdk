@@ -6,6 +6,6 @@
 
 ## Składniki SDK
 
-- sdk-hebe — używa API "Hebe", którego używa oficjalna aplikacja "Dzienniczek VULCAN"
+- sdk-hebe — używa API "Hebe", którego używa oficjalna aplikacja "Dzienniczek VULCAN". W tej chwili posiada bardzo ograniczoną funkcjonalność
 - sdk-scrapper — jak wskazuje nazwa, "scrapuje" stronę www dziennika
 - sdk — łączy dwie powyższe metody w miarę spójny interfejs
