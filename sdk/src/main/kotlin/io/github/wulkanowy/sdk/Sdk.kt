@@ -97,7 +97,7 @@ class Sdk {
 
     private val registerTimeZone = ZoneId.of("Europe/Warsaw")
 
-    var mode = Mode.HYBRID
+    var mode = Mode.SCRAPPER
 
     var mobileBaseUrl = ""
         set(value) {

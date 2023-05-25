@@ -11,7 +11,7 @@ allprojects {
     }
 }
 dependencies {
-    implementation 'io.github.wulkanowy:sdk:2.0.61' // lub inna wersja, patrz na badge wyżej
+    implementation 'io.github.wulkanowy:sdk:2.0.6' // lub nowsza wersja, patrz na badge wyżej
 }
 ```
 

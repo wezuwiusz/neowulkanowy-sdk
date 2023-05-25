@@ -100,5 +100,6 @@ nav:
   - User guide:
       - Instalacja: guide/installation.md
       - Rejestracja: guide/registration.md
+      - Oceny: guide/grades.md
   - O projekcie:
       - Historia wydań: about/history.md
