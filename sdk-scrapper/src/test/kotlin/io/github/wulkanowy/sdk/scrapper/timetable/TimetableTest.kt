@@ -732,7 +732,7 @@ class TimetableTest : BaseLocalTest() {
     }
 
     @Test
-    fun getReplacementFromNestedLesson() {
+    fun getReplecementFromTwiceCancelledLesson() {
         with(timetable[WEDNESDAY_OFFSET + 6]) {
             // środa, 6
             assertEquals(6, number)

@@ -22,26 +22,90 @@ internal class TimetableParser {
 
     private fun addLessonDetails(lesson: Lesson, td: Element): Lesson? {
         val divs = td.select("div:not([class])")
-        val warnElement = td.select(".uwaga-panel").getOrNull(0)
 
-        return when {
-            divs.size == 1 -> getLessonInfo(lesson, divs[0])
-            divs.size == 2 && divs.has(1, CLASS_MOVED_OR_CANCELED) -> {
-                when {
-                    divs[1]?.selectFirst("span")?.hasClass(CLASS_PLANNED) == true -> getLessonInfo(lesson, divs[0]).run {
-                        val old = getLessonInfo(lesson, divs[1])
-                        copy(
-                            changes = true,
-                            subjectOld = old.subject,
-                            teacherOld = old.teacher,
-                            roomOld = old.room,
-                            info = stripLessonInfo("${getFormattedLessonInfo(info)}, ${old.info}").replace("$subject ", "").capitalise(),
-                        )
-                    }
-                    else -> getLessonInfo(lesson, divs[1])
+        return when (divs.size) {
+            1 -> getLessonInfo(lesson, divs[0])
+            2 -> getLessonInfoForDuoDivs(lesson, divs)
+            3 -> getLessonInfoForTripleDivs(lesson, divs)
+            else -> null
+        }?.let {
+            td.select(".uwaga-panel").getOrNull(0)?.let { warn ->
+                if (it.info.isBlank()) it.copy(info = warn.text())
+                else it.copy(info = "${it.info}: ${warn.text()}")
+            } ?: it
+        }
+    }
+
+    private fun getLessonInfoForDuoDivs(lesson: Lesson, divs: Elements) = when {
+        divs.has(1, CLASS_MOVED_OR_CANCELED) -> {
+            when {
+                divs[1]?.selectFirst("span")?.hasClass(CLASS_PLANNED) == true -> getLessonInfo(lesson, divs[0]).run {
+                    val old = getLessonInfo(lesson, divs[1])
+                    copy(
+                        changes = true,
+                        subjectOld = old.subject,
+                        teacherOld = old.teacher,
+                        roomOld = old.room,
+                        info = stripLessonInfo("${getFormattedLessonInfo(info)}, ${old.info}").replace("$subject ", "").capitalise(),
+                    )
                 }
+                else -> getLessonInfo(lesson, divs[1])
             }
-            divs.size == 2 && divs.has(1, CLASS_CHANGES) -> getLessonInfo(lesson, divs[1]).run {
+        }
+        divs.has(1, CLASS_CHANGES) -> getLessonInfo(lesson, divs[1]).run {
+            val old = getLessonInfo(lesson, divs[0])
+            copy(
+                changes = true,
+                canceled = false,
+                subjectOld = old.subject,
+                teacherOld = old.teacher,
+                roomOld = old.room,
+            )
+        }
+        divs.has(0, CLASS_MOVED_OR_CANCELED) && divs.has(0, CLASS_PLANNED) && divs.has(1, null) -> {
+            getLessonInfo(lesson, divs[1]).run {
+                val old = getLessonInfo(lesson, divs[0])
+                copy(
+                    changes = true,
+                    canceled = false,
+                    subjectOld = old.subject,
+                    teacherOld = old.teacher,
+                    roomOld = old.room,
+                    info = getFormattedLessonInfo(info).ifEmpty { "Poprzednio: ${old.subject} (${old.info})" },
+                )
+            }
+        }
+        divs.has(0, CLASS_CHANGES) -> {
+            val oldLesson = getLessonInfo(lesson, divs[0])
+            val newLesson = getLessonInfo(lesson, divs[1])
+            val isNewLessonEmpty = divs[1]?.select("span").isNullOrEmpty()
+            if (!isNewLessonEmpty && oldLesson.teacher == newLesson.teacher) {
+                newLesson.copy(
+                    subjectOld = oldLesson.subject,
+                    roomOld = oldLesson.room,
+                    teacherOld = oldLesson.teacherOld,
+                    changes = true,
+                )
+            } else oldLesson
+        }
+        else -> getLessonInfo(lesson, divs[0])
+    }
+
+    private fun getLessonInfoForTripleDivs(lesson: Lesson, divs: Elements) = when {
+        divs.has(0, CLASS_CHANGES) && divs.has(1, CLASS_MOVED_OR_CANCELED) && divs.has(2, CLASS_MOVED_OR_CANCELED) -> {
+            getLessonInfo(lesson, divs[0]).run {
+                val old = getLessonInfo(lesson, divs[1])
+                copy(
+                    changes = true,
+                    canceled = false,
+                    subjectOld = old.subject,
+                    teacherOld = old.teacher,
+                    roomOld = old.room,
+                )
+            }
+        }
+        divs.has(0, CLASS_MOVED_OR_CANCELED) && divs.has(1, CLASS_MOVED_OR_CANCELED) && divs.has(2, CLASS_CHANGES) -> {
+            getLessonInfo(lesson, divs[2]).run {
                 val old = getLessonInfo(lesson, divs[0])
                 copy(
                     changes = true,
@@ -51,75 +115,16 @@ internal class TimetableParser {
                     roomOld = old.room,
                 )
             }
-            divs.size == 2 && divs.has(0, CLASS_MOVED_OR_CANCELED) && divs.has(0, CLASS_PLANNED) && divs.has(1, null) -> {
-                getLessonInfo(lesson, divs[1]).run {
-                    val old = getLessonInfo(lesson, divs[0])
-                    copy(
-                        changes = true,
-                        canceled = false,
-                        subjectOld = old.subject,
-                        teacherOld = old.teacher,
-                        roomOld = old.room,
-                        info = getFormattedLessonInfo(info).ifEmpty { "Poprzednio: ${old.subject} (${old.info})" },
-                    )
-                }
-            }
-            divs.size == 2 && divs.has(0, CLASS_CHANGES) -> {
-                val oldLesson = getLessonInfo(lesson, divs[0])
-                val newLesson = getLessonInfo(lesson, divs[1])
-                val isNewLessonEmpty = divs[1]?.select("span").isNullOrEmpty()
-                if (!isNewLessonEmpty && oldLesson.teacher == newLesson.teacher) {
-                    newLesson.copy(
-                        subjectOld = oldLesson.subject,
-                        roomOld = oldLesson.room,
-                        teacherOld = oldLesson.teacherOld,
-                        changes = true,
-                    )
-                } else oldLesson
-            }
-            divs.size == 2 -> getLessonInfo(lesson, divs[0])
-            divs.size == 3 -> when { // TODO: refactor this
-                divs.has(0, CLASS_CHANGES) && divs.has(1, CLASS_MOVED_OR_CANCELED) && divs.has(2, CLASS_MOVED_OR_CANCELED) -> {
-                    getLessonInfo(lesson, divs[0]).run {
-                        val old = getLessonInfo(lesson, divs[1])
-                        copy(
-                            changes = true,
-                            canceled = false,
-                            subjectOld = old.subject,
-                            teacherOld = old.teacher,
-                            roomOld = old.room,
-                        )
-                    }
-                }
-                divs.has(0, CLASS_MOVED_OR_CANCELED) && divs.has(1, CLASS_MOVED_OR_CANCELED) && divs.has(2, CLASS_CHANGES) -> {
-                    getLessonInfo(lesson, divs[2]).run {
-                        val old = getLessonInfo(lesson, divs[0])
-                        copy(
-                            changes = true,
-                            canceled = false,
-                            subjectOld = old.subject,
-                            teacherOld = old.teacher,
-                            roomOld = old.room,
-                        )
-                    }
-                }
-                divs.has(0, CLASS_MOVED_OR_CANCELED) && divs.has(1, CLASS_CHANGES) && divs.has(1, CLASS_MOVED_OR_CANCELED) && divs.has(2, null) -> {
-                    val oldLesson = getLessonInfo(lesson, divs[0])
-                    getLessonInfo(lesson, divs[2]).copy(
-                        subjectOld = oldLesson.subject,
-                        teacherOld = oldLesson.teacher,
-                        roomOld = oldLesson.room,
-                    )
-                }
-                else -> getLessonInfo(lesson, divs[1])
-            }
-            else -> null
-        }?.let {
-            warnElement?.let { warn ->
-                if (it.info.isBlank()) it.copy(info = warn.text())
-                else it.copy(info = "${it.info}: ${warn.text()}")
-            } ?: it
         }
+        divs.has(0, CLASS_MOVED_OR_CANCELED) && divs.has(1, CLASS_CHANGES) && divs.has(1, CLASS_MOVED_OR_CANCELED) && divs.has(2, null) -> {
+            val oldLesson = getLessonInfo(lesson, divs[0])
+            getLessonInfo(lesson, divs[2]).copy(
+                subjectOld = oldLesson.subject,
+                teacherOld = oldLesson.teacher,
+                roomOld = oldLesson.room,
+            )
+        }
+        else -> getLessonInfo(lesson, divs[1])
     }
 
     private fun Elements.has(index: Int, className: String?): Boolean {
