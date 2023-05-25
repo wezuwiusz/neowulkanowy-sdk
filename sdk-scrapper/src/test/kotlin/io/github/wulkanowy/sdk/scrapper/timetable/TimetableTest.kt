@@ -24,14 +24,14 @@ class TimetableTest : BaseLocalTest() {
         private const val MONDAY_OFFSET = 0
         private const val TUESDAY_OFFSET = 7
         private const val WEDNESDAY_OFFSET = 14
-        private const val THURSDAY_OFFSET = 20
-        private const val FRIDAY_OFFSET = 26
+        private const val THURSDAY_OFFSET = 21
+        private const val FRIDAY_OFFSET = 27
     }
 
     @Test
     fun getTimetableTest() {
         assertEquals(5, headers.size)
-        assertEquals(32, timetable.size)
+        assertEquals(33, timetable.size)
         assertEquals(2, additional.size)
     }
 
@@ -725,6 +725,28 @@ class TimetableTest : BaseLocalTest() {
             assertEquals("estetyka i historia fotografii", subjectOld)
             assertEquals("Kaczyński Bartosz", teacherOld)
             assertEquals("", roomOld)
+
+            assertEquals(false, canceled)
+            assertEquals(true, changes)
+        }
+    }
+
+    @Test
+    fun getReplacementFromNestedLesson() {
+        with(timetable[WEDNESDAY_OFFSET + 6]) {
+            // środa, 6
+            assertEquals(6, number)
+            assertEquals(getLocalDateTime(2018, 9, 26, 12, 35, 0), start)
+            assertEquals(getLocalDateTime(2018, 9, 26, 13, 20, 0), end)
+
+            assertEquals("Chemia", subject)
+            assertEquals("", group)
+            assertEquals("Kość Elżbieta", teacher)
+            assertEquals("411", room)
+            assertEquals("przeniesiona z lekcji 6, 25.05.2023", info)
+            assertEquals("Fizyka", subjectOld)
+            assertEquals("Rekiel Jarosław", teacherOld)
+            assertEquals("513", roomOld)
 
             assertEquals(false, canceled)
             assertEquals(true, changes)

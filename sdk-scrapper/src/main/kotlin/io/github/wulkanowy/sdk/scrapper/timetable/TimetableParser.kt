@@ -64,7 +64,7 @@ internal class TimetableParser {
                     )
                 }
             }
-            divs.size == 2 && divs.has(0,CLASS_CHANGES) -> {
+            divs.size == 2 && divs.has(0, CLASS_CHANGES) -> {
                 val oldLesson = getLessonInfo(lesson, divs[0])
                 val newLesson = getLessonInfo(lesson, divs[1])
                 val isNewLessonEmpty = divs[1]?.select("span").isNullOrEmpty()
@@ -103,7 +103,14 @@ internal class TimetableParser {
                         )
                     }
                 }
-
+                divs.has(0, CLASS_MOVED_OR_CANCELED) && divs.has(1, CLASS_CHANGES) && divs.has(1, CLASS_MOVED_OR_CANCELED) && divs.has(2, null) -> {
+                    val oldLesson = getLessonInfo(lesson, divs[0])
+                    getLessonInfo(lesson, divs[2]).copy(
+                        subjectOld = oldLesson.subject,
+                        teacherOld = oldLesson.teacher,
+                        roomOld = oldLesson.room,
+                    )
+                }
                 else -> getLessonInfo(lesson, divs[1])
             }
             else -> null
