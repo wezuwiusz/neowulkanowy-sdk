@@ -17,7 +17,7 @@ dependencies {
 
 ---
 
-![Sonatype Nexus (Snapshots)](https://img.shields.io/nexus/s/io.github.wulkanowy/sdk?server=https%3A%2F%2Fs01.oss.sonatype.org&style=flat-square)
+[![Sonatype Nexus (Snapshots)](https://img.shields.io/nexus/s/io.github.wulkanowy/sdk?server=https%3A%2F%2Fs01.oss.sonatype.org&style=flat-square)](https://s01.oss.sonatype.org/content/repositories/snapshots/io/github/wulkanowy/sdk/)
 
 W razie potrzeby możesz też pobrać wersję SNAPSHOT zawierającą jeszcze niewydane zmiany, które znajdą się w następnej wersji:
 
