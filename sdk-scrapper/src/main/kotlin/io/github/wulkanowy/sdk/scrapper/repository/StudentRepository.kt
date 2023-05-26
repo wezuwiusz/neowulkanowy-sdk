@@ -151,6 +151,7 @@ internal class StudentRepository(private val api: StudentService) {
         return Grades(
             details = data?.mapGradesList().orEmpty(),
             summary = data?.mapGradesSummary().orEmpty(),
+            descriptive = data?.gradesDescriptive.orEmpty(),
             isAverage = data?.isAverage ?: false,
             isPoints = data?.isPoints ?: false,
             isForAdults = data?.isForAdults ?: false,

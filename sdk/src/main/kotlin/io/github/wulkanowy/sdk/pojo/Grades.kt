@@ -5,6 +5,7 @@ import java.time.LocalDate
 data class Grades(
     val details: List<Grade>,
     val summary: List<GradeSummary>,
+    val descriptive: List<GradeDescriptive>,
     val isAverage: Boolean,
     val isPoints: Boolean,
     val isForAdults: Boolean,
@@ -38,4 +39,9 @@ data class GradeSummary(
     val pointsSum: String,
     val proposedPoints: String,
     val finalPoints: String,
+)
+
+data class GradeDescriptive(
+    val subject: String,
+    val description: String,
 )

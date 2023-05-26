@@ -300,6 +300,7 @@ class Scrapper {
         if (diaryId == 0) return Grades(
             details = emptyList(),
             summary = emptyList(),
+            descriptive = emptyList(),
             isAverage = false,
             isPoints = false,
             isForAdults = false,

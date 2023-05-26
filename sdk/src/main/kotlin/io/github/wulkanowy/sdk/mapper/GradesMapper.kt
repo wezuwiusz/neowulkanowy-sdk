@@ -1,14 +1,16 @@
 package io.github.wulkanowy.sdk.mapper
 
 import io.github.wulkanowy.sdk.pojo.Grade
+import io.github.wulkanowy.sdk.pojo.GradeDescriptive
 import io.github.wulkanowy.sdk.pojo.GradeSummary
 import io.github.wulkanowy.sdk.pojo.Grades
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import io.github.wulkanowy.sdk.hebe.models.Grade as HebeGrade
-import io.github.wulkanowy.sdk.hebe.models.GradeSummary as HebeGradeSummary
 import io.github.wulkanowy.sdk.hebe.models.GradeAverage as HebeGradeAverage
+import io.github.wulkanowy.sdk.hebe.models.GradeSummary as HebeGradeSummary
 import io.github.wulkanowy.sdk.scrapper.grades.Grade as ScrapperGrade
+import io.github.wulkanowy.sdk.scrapper.grades.GradeDescriptive as ScrapperGradeDescriptive
 import io.github.wulkanowy.sdk.scrapper.grades.GradeSummary as ScrapperGradeSummary
 import io.github.wulkanowy.sdk.scrapper.grades.Grades as ScrapperGrades
 
@@ -44,11 +46,19 @@ internal fun List<ScrapperGradeSummary>.mapGradesSummary() = map {
 internal fun ScrapperGrades.mapGrades() = Grades(
     details = details.mapGradesDetails(),
     summary = summary.mapGradesSummary(),
+    descriptive = descriptive.mapDescriptive(),
     isAverage = isAverage,
     isPoints = isPoints,
     isForAdults = isForAdults,
     type = type,
 )
+
+internal fun List<ScrapperGradeDescriptive>.mapDescriptive() = map {
+    GradeDescriptive(
+        subject = it.subject,
+        description = it.description,
+    )
+}
 
 internal fun Triple<List<HebeGrade>, List<HebeGradeSummary>, List<HebeGradeAverage>>.mapGrades() = Grades(
     details = first.map { grade ->
@@ -80,6 +90,7 @@ internal fun Triple<List<HebeGrade>, List<HebeGradeSummary>, List<HebeGradeAvera
             finalPoints = "",
         )
     },
+    descriptive = emptyList(),
     isAverage = third.isNotEmpty(),
     isPoints = false,
     isForAdults = false,

@@ -19,40 +19,55 @@ internal data class GradesResponse(
     val type: Int,
 
     @SerialName("Oceny")
-    val gradesWithSubjects: List<Subject>,
-) {
+    val gradesWithSubjects: List<GradeSubject>,
 
-    @Serializable
-    data class Subject(
+    @SerialName("OcenyOpisowe")
+    val gradesDescriptive: List<GradeDescriptive>,
+)
 
-        @SerialName("WidocznyPrzedmiot")
-        val visibleSubject: Boolean = false,
+@Serializable
+internal data class GradeSubject(
 
-        @SerialName("Pozycja")
-        val order: Int = 0,
+    @SerialName("WidocznyPrzedmiot")
+    val visibleSubject: Boolean = false,
 
-        @SerialName("Przedmiot")
-        val name: String = "",
+    @SerialName("Pozycja")
+    val order: Int = 0,
 
-        @SerialName("Srednia")
-        val average: Double = .0,
+    @SerialName("Przedmiot")
+    val name: String = "",
 
-        @SerialName("ProponowanaOcenaRoczna")
-        val proposed: String? = "",
+    @SerialName("Srednia")
+    val average: Double = .0,
 
-        @SerialName("OcenaRoczna")
-        val annual: String? = "",
+    @SerialName("ProponowanaOcenaRoczna")
+    val proposed: String? = "",
 
-        @SerialName("SumaPunktow")
-        val pointsSum: String? = "",
+    @SerialName("OcenaRoczna")
+    val annual: String? = "",
 
-        @SerialName("ProponowanaOcenaRocznaPunkty")
-        val proposedPoints: String? = "",
+    @SerialName("SumaPunktow")
+    val pointsSum: String? = "",
 
-        @SerialName("OcenaRocznaPunkty")
-        val finalPoints: String? = "",
+    @SerialName("ProponowanaOcenaRocznaPunkty")
+    val proposedPoints: String? = "",
 
-        @SerialName("OcenyCzastkowe")
-        val grades: List<Grade> = emptyList(),
-    )
-}
+    @SerialName("OcenaRocznaPunkty")
+    val finalPoints: String? = "",
+
+    @SerialName("OcenyCzastkowe")
+    val grades: List<Grade> = emptyList(),
+)
+
+@Serializable
+data class GradeDescriptive(
+
+    @SerialName("IsReligiaEtyka")
+    val isEthics: Boolean,
+
+    @SerialName("NazwaPrzedmiotu")
+    val subject: String,
+
+    @SerialName("Opis")
+    val description: String,
+)

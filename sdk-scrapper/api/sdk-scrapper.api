@@ -478,6 +478,39 @@ public final class io/github/wulkanowy/sdk/scrapper/grades/GradeCustomConverters
 	public static final fun isGradeValid (Ljava/lang/String;)Z
 }
 
+public final class io/github/wulkanowy/sdk/scrapper/grades/GradeDescriptive {
+	public static final field Companion Lio/github/wulkanowy/sdk/scrapper/grades/GradeDescriptive$Companion;
+	public synthetic fun <init> (IZLjava/lang/String;Ljava/lang/String;Lkotlinx/serialization/internal/SerializationConstructorMarker;)V
+	public fun <init> (ZLjava/lang/String;Ljava/lang/String;)V
+	public final fun component1 ()Z
+	public final fun component2 ()Ljava/lang/String;
+	public final fun component3 ()Ljava/lang/String;
+	public final fun copy (ZLjava/lang/String;Ljava/lang/String;)Lio/github/wulkanowy/sdk/scrapper/grades/GradeDescriptive;
+	public static synthetic fun copy$default (Lio/github/wulkanowy/sdk/scrapper/grades/GradeDescriptive;ZLjava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Lio/github/wulkanowy/sdk/scrapper/grades/GradeDescriptive;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getDescription ()Ljava/lang/String;
+	public final fun getSubject ()Ljava/lang/String;
+	public fun hashCode ()I
+	public final fun isEthics ()Z
+	public fun toString ()Ljava/lang/String;
+	public static final synthetic fun write$Self (Lio/github/wulkanowy/sdk/scrapper/grades/GradeDescriptive;Lkotlinx/serialization/encoding/CompositeEncoder;Lkotlinx/serialization/descriptors/SerialDescriptor;)V
+}
+
+public final class io/github/wulkanowy/sdk/scrapper/grades/GradeDescriptive$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+	public static final field INSTANCE Lio/github/wulkanowy/sdk/scrapper/grades/GradeDescriptive$$serializer;
+	public fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lio/github/wulkanowy/sdk/scrapper/grades/GradeDescriptive;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public fun serialize (Lkotlinx/serialization/encoding/Encoder;Lio/github/wulkanowy/sdk/scrapper/grades/GradeDescriptive;)V
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+	public fun typeParametersSerializers ()[Lkotlinx/serialization/KSerializer;
+}
+
+public final class io/github/wulkanowy/sdk/scrapper/grades/GradeDescriptive$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
 public final class io/github/wulkanowy/sdk/scrapper/grades/GradePointsSummary {
 	public static final field Companion Lio/github/wulkanowy/sdk/scrapper/grades/GradePointsSummary$Companion;
 	public synthetic fun <init> (ILjava/lang/String;DDLkotlinx/serialization/internal/SerializationConstructorMarker;)V
@@ -608,16 +641,18 @@ public final class io/github/wulkanowy/sdk/scrapper/grades/GradeSummary {
 }
 
 public final class io/github/wulkanowy/sdk/scrapper/grades/Grades {
-	public fun <init> (Ljava/util/List;Ljava/util/List;ZZZI)V
+	public fun <init> (Ljava/util/List;Ljava/util/List;Ljava/util/List;ZZZI)V
 	public final fun component1 ()Ljava/util/List;
 	public final fun component2 ()Ljava/util/List;
-	public final fun component3 ()Z
+	public final fun component3 ()Ljava/util/List;
 	public final fun component4 ()Z
 	public final fun component5 ()Z
-	public final fun component6 ()I
-	public final fun copy (Ljava/util/List;Ljava/util/List;ZZZI)Lio/github/wulkanowy/sdk/scrapper/grades/Grades;
-	public static synthetic fun copy$default (Lio/github/wulkanowy/sdk/scrapper/grades/Grades;Ljava/util/List;Ljava/util/List;ZZZIILjava/lang/Object;)Lio/github/wulkanowy/sdk/scrapper/grades/Grades;
+	public final fun component6 ()Z
+	public final fun component7 ()I
+	public final fun copy (Ljava/util/List;Ljava/util/List;Ljava/util/List;ZZZI)Lio/github/wulkanowy/sdk/scrapper/grades/Grades;
+	public static synthetic fun copy$default (Lio/github/wulkanowy/sdk/scrapper/grades/Grades;Ljava/util/List;Ljava/util/List;Ljava/util/List;ZZZIILjava/lang/Object;)Lio/github/wulkanowy/sdk/scrapper/grades/Grades;
 	public fun equals (Ljava/lang/Object;)Z
+	public final fun getDescriptive ()Ljava/util/List;
 	public final fun getDetails ()Ljava/util/List;
 	public final fun getSummary ()Ljava/util/List;
 	public final fun getType ()I
