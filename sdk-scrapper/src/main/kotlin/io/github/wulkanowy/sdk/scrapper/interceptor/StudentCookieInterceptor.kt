@@ -10,6 +10,7 @@ internal class StudentCookieInterceptor(
     private val cookies: CookieManager,
     private val schema: String,
     private val host: String,
+    private val domainSuffix: String,
     private val diaryId: Int,
     private val kindergartenDiaryId: Int,
     private val studentId: Int,
@@ -25,7 +26,7 @@ internal class StudentCookieInterceptor(
         ).forEach { (name, value) ->
             HttpCookie(name, value.toString()).let {
                 it.path = "/"
-                it.domain = "uonetplus-uczen.$host"
+                it.domain = "uonetplus-uczen$domainSuffix.$host"
                 cookies.cookieStore.add(URI("$schema://${it.domain}"), it)
             }
         }

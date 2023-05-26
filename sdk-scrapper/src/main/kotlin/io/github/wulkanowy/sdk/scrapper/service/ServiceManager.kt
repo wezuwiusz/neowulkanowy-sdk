@@ -166,6 +166,7 @@ internal class ServiceManager(
                     cookies = cookies,
                     schema = schema,
                     host = host,
+                    domainSuffix = domainSuffix,
                     diaryId = diaryId,
                     kindergartenDiaryId = kindergartenDiaryId,
                     studentId = studentId,
