@@ -26,14 +26,14 @@ internal class AccountRepository(private val account: AccountService) {
         const val SELECTOR_ADFS_CARDS = "#__VIEWSTATE"
     }
 
-    suspend fun getPasswordResetCaptcha(registerBaseUrl: String, symbol: String): Pair<String, String> {
-        val (_, resetUrl) = getPasswordResetUrl(registerBaseUrl, symbol.trim())
+    suspend fun getPasswordResetCaptcha(registerBaseUrl: String, domainSuffix: String, symbol: String): Pair<String, String> {
+        val (_, resetUrl) = getPasswordResetUrl(registerBaseUrl, domainSuffix, symbol.trim())
         val res = account.getPasswordResetPageWithCaptcha(resetUrl)
         return resetUrl to res.recaptchaSiteKey
     }
 
-    suspend fun sendPasswordResetRequest(registerBaseUrl: String, symbol: String, email: String, captchaCode: String): String {
-        val (type, url) = getPasswordResetUrl(registerBaseUrl, symbol.trim())
+    suspend fun sendPasswordResetRequest(registerBaseUrl: String, domainSuffix: String, symbol: String, email: String, captchaCode: String): String {
+        val (type, url) = getPasswordResetUrl(registerBaseUrl, domainSuffix, symbol.trim())
 
         val res = when (type) {
             STANDARD -> account.sendPasswordResetRequest(url, email, captchaCode)
@@ -70,7 +70,7 @@ internal class AccountRepository(private val account: AccountService) {
         return res.message.ifBlank { "Wysłano wiadomość na zapisany w systemie adres e-mail" }
     }
 
-    private suspend fun getPasswordResetUrl(registerBaseUrl: String, symbol: String): Pair<Scrapper.LoginType, String> {
+    private suspend fun getPasswordResetUrl(registerBaseUrl: String, domainSuffix: String, symbol: String): Pair<Scrapper.LoginType, String> {
         val url = URL(registerBaseUrl)
         val unlockUrl = when (url.host) {
             "fakelog.cf" -> STANDARD to "https://cufs.fakelog.cf/Default/AccountManage/UnlockAccount"
@@ -85,7 +85,7 @@ internal class AccountRepository(private val account: AccountService) {
         }
 
         return if (unlockUrl.first == AUTO) {
-            val loginType = getLoginType(UrlGenerator(url, symbol, ""))
+            val loginType = getLoginType(UrlGenerator(url, domainSuffix, symbol, ""))
             loginType to when (loginType) {
                 STANDARD -> "https://cufs.vulcan.net.pl/$symbol/AccountManage/UnlockAccount"
                 ADFSLightScoped -> "https://adfslight.vulcan.net.pl/$symbol/AccountManage/UnlockAccountRequest"

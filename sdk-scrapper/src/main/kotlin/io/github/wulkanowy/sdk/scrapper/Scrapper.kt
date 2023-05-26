@@ -87,6 +87,12 @@ class Scrapper {
             field = value
         }
 
+    var domainSuffix: String = ""
+        set(value) {
+            if (field != value) changeManager.reset()
+            field = value
+        }
+
     var loginType: LoginType = LoginType.AUTO
         set(value) {
             if (field != value) changeManager.reset()
@@ -190,6 +196,7 @@ class Scrapper {
             loginType = loginType,
             schema = schema,
             host = host,
+            domainSuffix = domainSuffix,
             symbol = normalizedSymbol,
             email = email,
             password = password,
@@ -219,6 +226,7 @@ class Scrapper {
                 loginType = loginType,
                 schema = schema,
                 host = host,
+                domainSuffix = domainSuffix,
                 symbol = normalizedSymbol,
                 cookies = serviceManager.getCookieManager(),
                 api = serviceManager.getLoginService(),
@@ -252,10 +260,10 @@ class Scrapper {
         HomepageRepository(serviceManager.getHomepageService())
     }
 
-    suspend fun getPasswordResetCaptcha(registerBaseUrl: String, symbol: String): Pair<String, String> = account.getPasswordResetCaptcha(registerBaseUrl, symbol)
+    suspend fun getPasswordResetCaptcha(registerBaseUrl: String, symbol: String): Pair<String, String> = account.getPasswordResetCaptcha(registerBaseUrl, domainSuffix, symbol)
 
     suspend fun sendPasswordResetRequest(registerBaseUrl: String, symbol: String, email: String, captchaCode: String): String {
-        return account.sendPasswordResetRequest(registerBaseUrl, symbol, email.trim(), captchaCode)
+        return account.sendPasswordResetRequest(registerBaseUrl, symbol, email.trim(), domainSuffix, captchaCode)
     }
 
     suspend fun getUserSubjects(): RegisterUser = register.getUserSubjects()

@@ -9,13 +9,11 @@ import io.github.wulkanowy.sdk.scrapper.repository.RegisterRepository
 import io.github.wulkanowy.sdk.scrapper.service.LoginService
 import io.github.wulkanowy.sdk.scrapper.service.RegisterService
 import io.github.wulkanowy.sdk.scrapper.service.StudentService
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
 import org.junit.Test
 import java.net.CookieManager
 
-@OptIn(ExperimentalCoroutinesApi::class)
 class RegisterTest : BaseLocalTest() {
 
     private val login by lazy {
@@ -23,6 +21,7 @@ class RegisterTest : BaseLocalTest() {
             loginType = Scrapper.LoginType.STANDARD,
             schema = "http",
             host = "fakelog.localhost:3000",
+            domainSuffix = "",
             symbol = "default",
             cookies = CookieManager(),
             api = getService(
@@ -54,7 +53,13 @@ class RegisterTest : BaseLocalTest() {
                 ),
             ),
             student = getService(StudentService::class.java, "http://fakelog.localhost:3000", false),
-            url = UrlGenerator("http", "fakelog.localhost:3000", "default", "123"),
+            url = UrlGenerator(
+                schema = "http",
+                host = "fakelog.localhost:3000",
+                domainSuffix = "",
+                symbol = "default",
+                schoolId = "123",
+            ),
         )
     }
 

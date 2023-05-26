@@ -22,6 +22,7 @@ public final class io/github/wulkanowy/sdk/scrapper/Scrapper {
 	public static synthetic fun getDeletedMessages$default (Lio/github/wulkanowy/sdk/scrapper/Scrapper;Ljava/lang/String;IILkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
 	public final fun getDiaryId ()I
 	public final fun getDirectorInformation (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public final fun getDomainSuffix ()Ljava/lang/String;
 	public final fun getEmail ()Ljava/lang/String;
 	public final fun getExams (Ljava/time/LocalDate;Ljava/time/LocalDate;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public static synthetic fun getExams$default (Lio/github/wulkanowy/sdk/scrapper/Scrapper;Ljava/time/LocalDate;Ljava/time/LocalDate;Lkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
@@ -84,6 +85,7 @@ public final class io/github/wulkanowy/sdk/scrapper/Scrapper {
 	public final fun setBuildTag (Ljava/lang/String;)V
 	public final fun setClassId (I)V
 	public final fun setDiaryId (I)V
+	public final fun setDomainSuffix (Ljava/lang/String;)V
 	public final fun setEmail (Ljava/lang/String;)V
 	public final fun setHost (Ljava/lang/String;)V
 	public final fun setKindergartenDiaryId (I)V

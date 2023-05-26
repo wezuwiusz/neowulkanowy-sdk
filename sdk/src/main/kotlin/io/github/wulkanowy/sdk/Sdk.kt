@@ -123,6 +123,12 @@ class Sdk {
             scrapper.baseUrl = value
         }
 
+    var domainSuffix: String = ""
+        set(value) {
+            field = value
+            scrapper.domainSuffix = value
+        }
+
     var email = ""
         set(value) {
             field = value
@@ -248,9 +254,24 @@ class Sdk {
         password: String,
         scrapperBaseUrl: String,
         symbol: String = "Default",
+    ): RegisterUser = getUserSubjectsFromScrapper(
+        email = email,
+        password = password,
+        scrapperBaseUrl = scrapperBaseUrl,
+        domainSuffix = domainSuffix,
+        symbol = symbol,
+    )
+
+    suspend fun getUserSubjectsFromScrapper(
+        email: String,
+        password: String,
+        scrapperBaseUrl: String,
+        domainSuffix: String,
+        symbol: String,
     ): RegisterUser = withContext(Dispatchers.IO) {
         scrapper.let {
             it.baseUrl = scrapperBaseUrl
+            it.domainSuffix = domainSuffix
             it.email = email
             it.password = password
             it.symbol = symbol

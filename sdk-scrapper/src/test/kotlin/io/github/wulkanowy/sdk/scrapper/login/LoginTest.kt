@@ -20,6 +20,7 @@ class LoginTest : BaseLocalTest() {
             loginType = Scrapper.LoginType.STANDARD,
             schema = "http",
             host = "fakelog.localhost:3000",
+            domainSuffix = "",
             symbol = "default",
             cookies = CookieManager(),
             api = getService(LoginService::class.java, "http://fakelog.localhost:3000/"),
@@ -31,6 +32,7 @@ class LoginTest : BaseLocalTest() {
             loginType = Scrapper.LoginType.ADFS,
             schema = "http",
             host = "fakelog.localhost:3000",
+            domainSuffix = "",
             symbol = "default",
             cookies = CookieManager(),
             api = getService(

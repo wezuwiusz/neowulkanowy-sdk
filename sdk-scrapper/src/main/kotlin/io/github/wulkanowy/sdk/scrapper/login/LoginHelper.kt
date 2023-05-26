@@ -24,6 +24,7 @@ internal class LoginHelper(
     var loginType: Scrapper.LoginType,
     private val schema: String,
     private val host: String,
+    private val domainSuffix: String,
     private val symbol: String,
     private val cookies: CookieManager,
     private val api: LoginService,
@@ -39,7 +40,7 @@ internal class LoginHelper(
     }
 
     private val firstStepReturnUrl by lazy {
-        encode("$schema://uonetplus.$host/$symbol/LoginEndpoint.aspx").let {
+        encode("$schema://uonetplus$domainSuffix.$host/$symbol/LoginEndpoint.aspx").let {
             "/$symbol/FS/LS?wa=wsignin1.0&wtrealm=$it&wctx=$it"
         }
     }
@@ -92,7 +93,7 @@ internal class LoginHelper(
     suspend fun sendCertificate(cert: CertificateResponse, email: String, url: String = cert.action): HomePageResponse {
         cookies.cookieStore.removeAll()
         val res = api.sendCertificate(
-            referer = "$schema://cufs.$host/",
+            referer = "$schema://cufs$domainSuffix.$host/",
             url = url,
             certificate = mapOf(
                 "wa" to cert.wa,
@@ -221,7 +222,7 @@ internal class LoginHelper(
         }
 
         val query = "?wa=wsignin1.0" +
-            "&wtrealm=" + encode("http${if (ADFSCards != type) "s" else ""}://cufs.$host/$symbol/Account/LogOn") +
+            "&wtrealm=" + encode("http${if (ADFSCards != type) "s" else ""}://cufs$domainSuffix.$host/$symbol/Account/LogOn") +
             "&wctx=" + encode("rm=0&id=$id&ru=" + encode(firstStepReturnUrl)) +
             "&wct=" + encode(now(ZoneId.of("UTC")).format(DateTimeFormatter.ISO_LOCAL_DATE_TIME) + "Z")
 

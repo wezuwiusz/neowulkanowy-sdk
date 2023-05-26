@@ -5,19 +5,24 @@ import java.net.URL
 internal class UrlGenerator(
     private val schema: String,
     private val host: String,
+    private val domainSuffix: String,
     var symbol: String,
     var schoolId: String,
 ) {
 
-    constructor(url: URL, symbol: String, schoolId: String) : this(url.protocol, url.host, symbol, schoolId)
+    constructor(url: URL, domainSuffix: String, symbol: String, schoolId: String) : this(url.protocol, url.host, domainSuffix, symbol, schoolId)
 
     enum class Site {
-        BASE, LOGIN, HOME, STUDENT, MESSAGES
+        BASE,
+        LOGIN,
+        HOME,
+        STUDENT,
+        MESSAGES,
     }
 
     fun generate(type: Site): String {
         if (type == Site.BASE) return "$schema://$host"
-        return "$schema://${getSubDomain(type)}.$host/$symbol/${if (type == Site.STUDENT) "$schoolId/" else ""}"
+        return "$schema://${getSubDomain(type)}$domainSuffix.$host/$symbol/${if (type == Site.STUDENT) "$schoolId/" else ""}"
     }
 
     private fun getSubDomain(type: Site): String {

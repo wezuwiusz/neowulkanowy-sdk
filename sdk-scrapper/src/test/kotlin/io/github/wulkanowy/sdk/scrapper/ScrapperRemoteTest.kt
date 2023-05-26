@@ -225,7 +225,7 @@ class ScrapperRemoteTest : BaseTest() {
 
     @Test
     fun gradesTest() {
-        val grades = runBlocking { api.getGrades(865).details }
+        val grades = runBlocking { api.getGrades(57).details }
 
         // dynamic grade
         grades[7].run {

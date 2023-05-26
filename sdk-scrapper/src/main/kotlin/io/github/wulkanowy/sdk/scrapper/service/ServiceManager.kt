@@ -40,6 +40,7 @@ internal class ServiceManager(
     private val loginType: Scrapper.LoginType,
     private val schema: String,
     private val host: String,
+    private val domainSuffix: String,
     private val symbol: String,
     private val email: String,
     private val password: String,
@@ -60,11 +61,25 @@ internal class ServiceManager(
     }
 
     private val loginHelper by lazy {
-        LoginHelper(loginType, schema, host, symbol, cookies, getLoginService())
+        LoginHelper(
+            loginType = loginType,
+            schema = schema,
+            host = host,
+            domainSuffix = domainSuffix,
+            symbol = symbol,
+            cookies = cookies,
+            api = getLoginService(),
+        )
     }
 
     val urlGenerator by lazy {
-        UrlGenerator(schema, host, symbol, schoolId)
+        UrlGenerator(
+            schema = schema,
+            host = host,
+            domainSuffix = domainSuffix,
+            symbol = symbol,
+            schoolId = schoolId,
+        )
     }
 
     @OptIn(ExperimentalSerializationApi::class)

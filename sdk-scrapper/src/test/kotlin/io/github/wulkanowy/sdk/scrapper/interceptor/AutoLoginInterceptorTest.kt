@@ -124,6 +124,7 @@ class AutoLoginInterceptorTest : BaseLocalTest() {
             loginType = Scrapper.LoginType.STANDARD,
             schema = "http",
             host = "${server.hostName}:${server.port}",
+            domainSuffix = "",
             symbol = "powiatwulkanowy",
             cookies = CookieManager(),
             api = loginService,
