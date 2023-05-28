@@ -20,7 +20,7 @@ class AttendanceTest : BaseLocalTest() {
             it.enqueue("UczenCache.json", RegisterTest::class.java)
             it.enqueue("Frekwencja.json", AttendanceTest::class.java)
         }
-        runBlocking { repo.getAttendance(getLocalDate(2018, 10, 1), null) }
+        runBlocking { repo.getAttendance(getLocalDate(2018, 10, 1), null, 1, 1) }
     }
 
     @Test
@@ -162,7 +162,7 @@ class AttendanceTest : BaseLocalTest() {
             it.enqueue("UczenCache.json", RegisterTest::class.java)
             it.enqueue("Frekwencja.json", AttendanceTest::class.java)
         }
-        runBlocking { repo.getAttendance(getLocalDate(2018, 10, 1), null) }
+        runBlocking { repo.getAttendance(getLocalDate(2018, 10, 1), null, 1, 2) }
 
         server.takeRequest()
         server.takeRequest()

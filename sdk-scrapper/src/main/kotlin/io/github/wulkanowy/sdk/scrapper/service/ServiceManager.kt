@@ -154,6 +154,14 @@ internal class ServiceManager(
         ).create()
     }
 
+    fun getStudentPlusService(withLogin: Boolean = true, studentInterceptor: Boolean = true): StudentPlusService {
+        return getRetrofit(
+            client = prepareStudentService(withLogin, studentInterceptor),
+            baseUrl = urlGenerator.generate(UrlGenerator.Site.STUDENT_PLUS),
+            json = true,
+        ).create()
+    }
+
     private fun prepareStudentService(withLogin: Boolean, studentInterceptor: Boolean): OkHttpClient.Builder {
         if (withLogin && schoolId.isBlank()) throw ScrapperException("School id is not set")
 

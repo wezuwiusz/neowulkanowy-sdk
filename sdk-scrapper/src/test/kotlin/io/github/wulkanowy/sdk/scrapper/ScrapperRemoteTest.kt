@@ -128,7 +128,7 @@ class ScrapperRemoteTest : BaseTest() {
 
     @Test
     fun attendanceTest() {
-        val attendance = runBlocking { api.getAttendance(getLocalDate(2018, 10, 1)) }
+        val attendance = runBlocking { api.getAttendance(getLocalDate(2023, 5, 1), getLocalDate(2023, 5, 30)) }
 
         attendance[0].run {
             assertEquals(1, number)

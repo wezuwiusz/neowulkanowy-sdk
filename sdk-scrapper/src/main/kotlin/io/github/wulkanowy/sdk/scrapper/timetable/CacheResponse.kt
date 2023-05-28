@@ -1,23 +1,29 @@
 package io.github.wulkanowy.sdk.scrapper.timetable
 
 import io.github.wulkanowy.sdk.scrapper.adapter.CustomDateAdapter
+import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.json.JsonNames
 import java.time.LocalDateTime
 
 @Serializable
+@OptIn(ExperimentalSerializationApi::class)
 internal class CacheResponse {
 
     @SerialName("isParentUser")
+    @JsonNames("isParent")
     var isParent: Boolean = false
 
     @SerialName("poryLekcji")
     var times: List<Time> = emptyList()
 
     @SerialName("isMenuOn")
+    @JsonNames("isMenu")
     var isMenu: Boolean = false
 
     @SerialName("pokazLekcjeZrealizowane")
+    @JsonNames("isPokazLekcjeZrealizowaneOn")
     var showCompletedLessons: Boolean = false
 
     @Serializable

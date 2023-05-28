@@ -8,6 +8,7 @@ import io.github.wulkanowy.sdk.scrapper.interceptor.HttpErrorInterceptor
 import io.github.wulkanowy.sdk.scrapper.login.LoginHelper
 import io.github.wulkanowy.sdk.scrapper.repository.StudentRepository
 import io.github.wulkanowy.sdk.scrapper.service.LoginService
+import io.github.wulkanowy.sdk.scrapper.service.StudentPlusService
 import io.github.wulkanowy.sdk.scrapper.service.StudentService
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.Json
@@ -49,7 +50,10 @@ abstract class BaseLocalTest : BaseTest() {
     internal fun getStudentRepo(loginType: Scrapper.LoginType = Scrapper.LoginType.STANDARD, autoLogin: Boolean = false, responses: (MockWebServer) -> Unit): StudentRepository {
         responses(server)
         val okHttp = getOkHttp(errorInterceptor = true, autoLoginInterceptorOn = true, loginType = loginType, autoLogin = autoLogin)
-        return StudentRepository(getService(StudentService::class.java, server.url("/").toString(), false, okHttp))
+        return StudentRepository(
+            api = getService(StudentService::class.java, server.url("/").toString(), false, okHttp),
+            studentPlusService = getService(StudentPlusService::class.java, server.url("/").toString(), false, okHttp),
+        )
     }
 
     @OptIn(ExperimentalSerializationApi::class)

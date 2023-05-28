@@ -17,6 +17,7 @@ import io.github.wulkanowy.sdk.scrapper.exams.mapExamsList
 import io.github.wulkanowy.sdk.scrapper.exception.FeatureDisabledException
 import io.github.wulkanowy.sdk.scrapper.exception.ScrapperException
 import io.github.wulkanowy.sdk.scrapper.getSchoolYear
+import io.github.wulkanowy.sdk.scrapper.getScriptFlag
 import io.github.wulkanowy.sdk.scrapper.getScriptParam
 import io.github.wulkanowy.sdk.scrapper.grades.GradePointsSummary
 import io.github.wulkanowy.sdk.scrapper.grades.GradeRequest
@@ -46,6 +47,7 @@ import io.github.wulkanowy.sdk.scrapper.school.School
 import io.github.wulkanowy.sdk.scrapper.school.Teacher
 import io.github.wulkanowy.sdk.scrapper.school.mapToSchool
 import io.github.wulkanowy.sdk.scrapper.school.mapToTeachers
+import io.github.wulkanowy.sdk.scrapper.service.StudentPlusService
 import io.github.wulkanowy.sdk.scrapper.service.StudentService
 import io.github.wulkanowy.sdk.scrapper.student.StudentInfo
 import io.github.wulkanowy.sdk.scrapper.student.StudentPhoto
@@ -62,13 +64,24 @@ import io.github.wulkanowy.sdk.scrapper.toFormat
 import org.jsoup.Jsoup
 import java.net.HttpURLConnection.HTTP_NOT_FOUND
 import java.time.LocalDate
+import kotlin.io.encoding.Base64
+import kotlin.io.encoding.ExperimentalEncodingApi
 
-internal class StudentRepository(private val api: StudentService) {
+internal class StudentRepository(
+    private val api: StudentService,
+    private val studentPlusService: StudentPlusService,
+) {
+
+    private var isEduOne: Boolean = false
 
     private fun LocalDate.toISOFormat(): String = toFormat("yyyy-MM-dd'T00:00:00'")
 
     private suspend fun getCache(): CacheResponse {
+        if (isEduOne) error("Cache unavailable in eduOne compatibility mode")
         val startPage = getStartPage()
+
+        isEduOne = getScriptFlag("isEduOne", startPage)
+        if (isEduOne) error("Unsupported eduOne detected!")
 
         val res = api.getUserCache(
             token = getScriptParam("antiForgeryToken", startPage),
@@ -102,11 +115,20 @@ internal class StudentRepository(private val api: StudentService) {
         }
     }
 
-    suspend fun getAttendance(startDate: LocalDate, endDate: LocalDate?): List<Attendance> {
-        val lessonTimes = getCache().times
+    @Suppress("UnnecessaryOptInAnnotation")
+    @OptIn(ExperimentalEncodingApi::class)
+    suspend fun getAttendance(startDate: LocalDate, endDate: LocalDate?, studentId: Int, diaryId: Int): List<Attendance> {
+        val lessonTimes = runCatching { getCache().times }
+        if (lessonTimes.isFailure && isEduOne) {
+            return studentPlusService.getAttendance(
+                key = Base64.encode("$studentId-$diaryId-1".toByteArray()),
+                from = startDate.toISOFormat(),
+                to = endDate?.toISOFormat() ?: startDate.plusDays(7).toISOFormat(),
+            )
+        }
         return api.getAttendance(AttendanceRequest(startDate.atStartOfDay()))
             .handleErrors()
-            .data?.mapAttendanceList(startDate, endDate, lessonTimes).orEmpty()
+            .data?.mapAttendanceList(startDate, endDate, lessonTimes.getOrThrow()).orEmpty()
     }
 
     suspend fun getAttendanceSummary(subjectId: Int?): List<AttendanceSummary> {

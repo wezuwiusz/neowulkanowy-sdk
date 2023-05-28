@@ -249,7 +249,10 @@ class Scrapper {
     }
 
     private val student by resettableLazy(changeManager) {
-        StudentRepository(serviceManager.getStudentService())
+        StudentRepository(
+            api = serviceManager.getStudentService(),
+            studentPlusService = serviceManager.getStudentPlusService(),
+        )
     }
 
     private val messages by resettableLazy(changeManager) {
@@ -277,7 +280,7 @@ class Scrapper {
     suspend fun getAttendance(startDate: LocalDate, endDate: LocalDate? = null): List<Attendance> {
         if (diaryId == 0) return emptyList()
 
-        return student.getAttendance(startDate, endDate)
+        return student.getAttendance(startDate, endDate, studentId, diaryId)
     }
 
     suspend fun getAttendanceSummary(subjectId: Int? = -1): List<AttendanceSummary> {

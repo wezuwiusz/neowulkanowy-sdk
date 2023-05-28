@@ -13,8 +13,9 @@ internal fun AttendanceResponse.mapAttendanceList(start: LocalDate, end: LocalDa
     val endDate = end ?: start.plusDays(4)
     return lessons.map {
         val sentExcuse = sentExcuses.firstOrNull { excuse -> excuse.date == it.date && excuse.timeId == it.timeId }
-        it.apply {
-            number = times.single { time -> time.id == it.timeId }.number
+        it.copy(
+            number = times.single { time -> time.id == it.timeId }.number,
+        ).apply {
             category = AttendanceCategory.getCategoryById(categoryId)
             excusable = excuseActive && (category == ABSENCE_UNEXCUSED || category == UNEXCUSED_LATENESS) && sentExcuse == null
             if (sentExcuse != null) excuseStatus = SentExcuseStatus.getByValue(sentExcuse.status)

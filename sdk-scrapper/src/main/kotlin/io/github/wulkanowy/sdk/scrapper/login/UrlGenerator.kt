@@ -17,12 +17,17 @@ internal class UrlGenerator(
         LOGIN,
         HOME,
         STUDENT,
+        STUDENT_PLUS,
         MESSAGES,
+        ;
+
+        val isStudent: Boolean
+            get() = this == STUDENT_PLUS || this == STUDENT
     }
 
     fun generate(type: Site): String {
         if (type == Site.BASE) return "$schema://$host"
-        return "$schema://${getSubDomain(type)}$domainSuffix.$host/$symbol/${if (type == Site.STUDENT) "$schoolId/" else ""}"
+        return "$schema://${getSubDomain(type)}$domainSuffix.$host/$symbol/${if (type.isStudent) "$schoolId/" else ""}"
     }
 
     private fun getSubDomain(type: Site): String {
@@ -30,6 +35,7 @@ internal class UrlGenerator(
             Site.LOGIN -> "cufs"
             Site.HOME -> "uonetplus"
             Site.STUDENT -> "uonetplus-uczen"
+            Site.STUDENT_PLUS -> "uonetplus-uczenplus"
             Site.MESSAGES -> "uonetplus-wiadomosciplus"
             else -> error("unknown")
         }

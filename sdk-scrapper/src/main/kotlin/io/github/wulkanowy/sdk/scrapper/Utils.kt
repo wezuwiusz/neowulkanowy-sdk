@@ -3,7 +3,7 @@ package io.github.wulkanowy.sdk.scrapper
 import io.github.wulkanowy.sdk.scrapper.messages.Mailbox
 import io.github.wulkanowy.sdk.scrapper.messages.Recipient
 import io.github.wulkanowy.sdk.scrapper.messages.RecipientType
-import org.jsoup.Jsoup.parse
+import org.jsoup.Jsoup
 import java.text.Normalizer
 import java.text.SimpleDateFormat
 import java.time.Instant.ofEpochMilli
@@ -52,7 +52,13 @@ internal fun String.getGradePointPercent(): String {
 
 internal fun getScriptParam(name: String, content: String, fallback: String = ""): String {
     return "$name: '(.)*'".toRegex().find(content).let { result ->
-        if (null !== result) parse(result.groupValues[0].substringAfter("'").substringBefore("'")).text() else fallback
+        if (null !== result) Jsoup.parse(result.groupValues[0].substringAfter("'").substringBefore("'")).text() else fallback
+    }
+}
+
+internal fun getScriptFlag(name: String, content: String, fallback: Boolean = false): Boolean {
+    return "$name: (false|true)".toRegex().find(content).let { result ->
+        if (null !== result) result.groupValues[1].toBoolean() else fallback
     }
 }
 
