@@ -2,6 +2,7 @@ package io.github.wulkanowy.sdk.scrapper.repository
 
 import io.github.wulkanowy.sdk.scrapper.attendance.Absent
 import io.github.wulkanowy.sdk.scrapper.attendance.Attendance
+import io.github.wulkanowy.sdk.scrapper.attendance.AttendanceCategory
 import io.github.wulkanowy.sdk.scrapper.attendance.AttendanceExcuseRequest
 import io.github.wulkanowy.sdk.scrapper.attendance.AttendanceRequest
 import io.github.wulkanowy.sdk.scrapper.attendance.AttendanceSummary
@@ -124,7 +125,9 @@ internal class StudentRepository(
                 key = Base64.encode("$studentId-$diaryId-1".toByteArray()),
                 from = startDate.toISOFormat(),
                 to = endDate?.toISOFormat() ?: startDate.plusDays(7).toISOFormat(),
-            )
+            ).onEach {
+                it.category = AttendanceCategory.getCategoryById(it.categoryId)
+            }
         }
         return api.getAttendance(AttendanceRequest(startDate.atStartOfDay()))
             .handleErrors()
