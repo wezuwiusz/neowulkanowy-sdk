@@ -16,11 +16,10 @@ data class Conference(
     val place: String,
 
     @SerialName("TematZebrania")
-    @JsonNames("opis")
     val topic: String,
 
     @SerialName("Agenda")
-    @JsonNames("opis") // todo
+    @JsonNames("opis")
     val agenda: String,
 
     @SerialName("ObecniNaZebraniu")
@@ -36,6 +35,5 @@ data class Conference(
     val id: Int,
 
     @Transient
-    @JsonNames("dataCzas") // todo
     val date: LocalDateTime = LocalDateTime.now(),
 )
