@@ -69,5 +69,5 @@ data class GradeDescriptive(
     val subject: String,
 
     @SerialName("Opis")
-    val description: String,
+    val description: String? = "",
 )

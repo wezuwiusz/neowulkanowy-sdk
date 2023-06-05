@@ -482,6 +482,7 @@ public final class io/github/wulkanowy/sdk/scrapper/grades/GradeDescriptive {
 	public static final field Companion Lio/github/wulkanowy/sdk/scrapper/grades/GradeDescriptive$Companion;
 	public synthetic fun <init> (IZLjava/lang/String;Ljava/lang/String;Lkotlinx/serialization/internal/SerializationConstructorMarker;)V
 	public fun <init> (ZLjava/lang/String;Ljava/lang/String;)V
+	public synthetic fun <init> (ZLjava/lang/String;Ljava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public final fun component1 ()Z
 	public final fun component2 ()Ljava/lang/String;
 	public final fun component3 ()Ljava/lang/String;

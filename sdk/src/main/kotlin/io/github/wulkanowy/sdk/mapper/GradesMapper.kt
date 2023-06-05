@@ -56,7 +56,7 @@ internal fun ScrapperGrades.mapGrades() = Grades(
 internal fun List<ScrapperGradeDescriptive>.mapDescriptive() = map {
     GradeDescriptive(
         subject = it.subject,
-        description = it.description,
+        description = it.description.orEmpty(),
     )
 }
 
