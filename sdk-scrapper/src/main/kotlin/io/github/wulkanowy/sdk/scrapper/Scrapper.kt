@@ -266,7 +266,7 @@ class Scrapper {
     suspend fun getPasswordResetCaptcha(registerBaseUrl: String, symbol: String): Pair<String, String> = account.getPasswordResetCaptcha(registerBaseUrl, domainSuffix, symbol)
 
     suspend fun sendPasswordResetRequest(registerBaseUrl: String, symbol: String, email: String, captchaCode: String): String {
-        return account.sendPasswordResetRequest(registerBaseUrl, symbol, email.trim(), domainSuffix, captchaCode)
+        return account.sendPasswordResetRequest(registerBaseUrl, domainSuffix, symbol, email.trim(), captchaCode)
     }
 
     suspend fun getUserSubjects(): RegisterUser = register.getUserSubjects()
