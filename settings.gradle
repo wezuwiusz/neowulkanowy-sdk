@@ -5,18 +5,18 @@ include 'sdk'
 dependencyResolutionManagement {
     versionCatalogs {
         libs {
-            def kotlin = '1.8.21'
+            def kotlin = '1.9.10'
 
             version('kotlin', kotlin)
-            version('coroutines', '1.7.1')
+            version('coroutines', '1.7.3')
             version('retrofit', '2.10.0-SNAPSHOT')
             version('retrofit-kotlinx-serialization', '1.0.0')
-            version('ksp', "${kotlin}-1.0.11")
+            version('ksp', "${kotlin}-1.0.13")
 
             plugin('kotlin', 'org.jetbrains.kotlin.jvm').versionRef('kotlin')
             plugin('ksp', 'com.google.devtools.ksp').versionRef('ksp')
             plugin('serialization', 'org.jetbrains.kotlin.plugin.serialization').versionRef('kotlin')
-            plugin('validator', 'org.jetbrains.kotlinx.binary-compatibility-validator').version('0.13.1')
+            plugin('validator', 'org.jetbrains.kotlinx.binary-compatibility-validator').version('0.13.2')
 
             library('coroutines-core', 'org.jetbrains.kotlinx', 'kotlinx-coroutines-core').versionRef('coroutines')
             library('coroutines-test', 'org.jetbrains.kotlinx', 'kotlinx-coroutines-test').versionRef('coroutines')

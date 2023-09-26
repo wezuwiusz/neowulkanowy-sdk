@@ -116,6 +116,7 @@ public final class io/github/wulkanowy/sdk/Sdk$Mode : java/lang/Enum {
 	public static final field HEBE Lio/github/wulkanowy/sdk/Sdk$Mode;
 	public static final field HYBRID Lio/github/wulkanowy/sdk/Sdk$Mode;
 	public static final field SCRAPPER Lio/github/wulkanowy/sdk/Sdk$Mode;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
 	public static fun valueOf (Ljava/lang/String;)Lio/github/wulkanowy/sdk/Sdk$Mode;
 	public static fun values ()[Lio/github/wulkanowy/sdk/Sdk$Mode;
 }
@@ -128,6 +129,7 @@ public final class io/github/wulkanowy/sdk/Sdk$ScrapperLoginType : java/lang/Enu
 	public static final field ADFSLightScoped Lio/github/wulkanowy/sdk/Sdk$ScrapperLoginType;
 	public static final field AUTO Lio/github/wulkanowy/sdk/Sdk$ScrapperLoginType;
 	public static final field STANDARD Lio/github/wulkanowy/sdk/Sdk$ScrapperLoginType;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
 	public static fun valueOf (Ljava/lang/String;)Lio/github/wulkanowy/sdk/Sdk$ScrapperLoginType;
 	public static fun values ()[Lio/github/wulkanowy/sdk/Sdk$ScrapperLoginType;
 }
@@ -335,6 +337,7 @@ public final class io/github/wulkanowy/sdk/pojo/Folder : java/lang/Enum {
 	public static final field RECEIVED Lio/github/wulkanowy/sdk/pojo/Folder;
 	public static final field SENT Lio/github/wulkanowy/sdk/pojo/Folder;
 	public static final field TRASHED Lio/github/wulkanowy/sdk/pojo/Folder;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
 	public final fun getId ()I
 	public static fun valueOf (Ljava/lang/String;)Lio/github/wulkanowy/sdk/pojo/Folder;
 	public static fun values ()[Lio/github/wulkanowy/sdk/pojo/Folder;
@@ -675,6 +678,7 @@ public final class io/github/wulkanowy/sdk/pojo/MailboxType : java/lang/Enum {
 	public static final field PARENT Lio/github/wulkanowy/sdk/pojo/MailboxType;
 	public static final field STUDENT Lio/github/wulkanowy/sdk/pojo/MailboxType;
 	public static final field UNKNOWN Lio/github/wulkanowy/sdk/pojo/MailboxType;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
 	public final fun getLetter ()Ljava/lang/String;
 	public static fun valueOf (Ljava/lang/String;)Lio/github/wulkanowy/sdk/pojo/MailboxType;
 	public static fun values ()[Lio/github/wulkanowy/sdk/pojo/MailboxType;
@@ -1109,6 +1113,7 @@ public final class io/github/wulkanowy/sdk/pojo/SentMessage {
 public final class io/github/wulkanowy/sdk/pojo/StudentGender : java/lang/Enum {
 	public static final field FEMALE Lio/github/wulkanowy/sdk/pojo/StudentGender;
 	public static final field MALE Lio/github/wulkanowy/sdk/pojo/StudentGender;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
 	public static fun valueOf (Ljava/lang/String;)Lio/github/wulkanowy/sdk/pojo/StudentGender;
 	public static fun values ()[Lio/github/wulkanowy/sdk/pojo/StudentGender;
 }
