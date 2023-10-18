@@ -45,7 +45,7 @@ internal fun String.getEmptyIfDash(): String {
 
 internal fun String.getGradePointPercent(): String {
     return split("/").let { (student, max) ->
-        if (max == "0") return this
+        if (max.toDouble() == 0.0) return this
         "${(student.toDouble() / max.toDouble() * 100).roundToInt()}%"
     }
 }

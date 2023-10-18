@@ -78,4 +78,18 @@ class UtilsTest {
         assertEquals(RecipientType.UNKNOWN, recipient.type)
         assertEquals("", recipient.schoolNameShort)
     }
+
+    @Test
+    fun `get normalized symbol`() {
+        assertEquals("warszawa", "Warszawa".getNormalizedSymbol())
+        assertEquals("lodz", "Łódź".getNormalizedSymbol())
+        assertEquals("tomaszowmazowiecki", "Tomaszów Mazowiecki".getNormalizedSymbol())
+    }
+
+    @Test
+    fun `get grade point percent`() {
+        assertEquals("0%", "0/100".getGradePointPercent())
+        assertEquals("100%", "100/100".getGradePointPercent())
+        assertEquals("0/0.0", "0/0.0".getGradePointPercent())
+    }
 }
