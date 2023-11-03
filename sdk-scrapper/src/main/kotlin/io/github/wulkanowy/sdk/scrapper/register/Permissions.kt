@@ -7,10 +7,10 @@ import kotlinx.serialization.Serializable
 internal data class Permissions(
 
     @SerialName("AuthInfos")
-    val authInfos: List<AuthInfo>,
+    val authInfos: List<AuthInfo> = emptyList(),
 
     @SerialName("Units")
-    val units: List<PermissionUnit>,
+    val units: List<PermissionUnit> = emptyList(),
 )
 
 @Serializable
@@ -18,26 +18,17 @@ internal data class AuthInfo(
     @SerialName("JednostkaSprawozdawczaId")
     val unitId: Int,
 
-    @SerialName("LinkedAccountUids")
-    val linkedAccountUids: List<Int>,
-
     @SerialName("LoginId")
     val loginId: Int,
 
-    @SerialName("LoginValue")
-    val loginValue: String,
-
     @SerialName("OpiekunIds")
-    val parentIds: List<Int>,
+    val parentIds: List<Int> = emptyList(),
 
     @SerialName("PracownikIds")
-    val employeeIds: List<Int>,
-
-    @SerialName("Roles")
-    val roles: List<Int>,
+    val employeeIds: List<Int> = emptyList(),
 
     @SerialName("UczenIds")
-    val studentIds: List<Int>,
+    val studentIds: List<Int> = emptyList(),
 )
 
 @Serializable
