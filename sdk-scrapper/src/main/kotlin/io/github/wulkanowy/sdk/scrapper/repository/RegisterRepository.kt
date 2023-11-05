@@ -9,6 +9,7 @@ import io.github.wulkanowy.sdk.scrapper.interceptor.handleErrors
 import io.github.wulkanowy.sdk.scrapper.login.CertificateResponse
 import io.github.wulkanowy.sdk.scrapper.login.InvalidSymbolException
 import io.github.wulkanowy.sdk.scrapper.login.LoginHelper
+import io.github.wulkanowy.sdk.scrapper.login.NotLoggedInException
 import io.github.wulkanowy.sdk.scrapper.login.UrlGenerator
 import io.github.wulkanowy.sdk.scrapper.register.AuthInfo
 import io.github.wulkanowy.sdk.scrapper.register.HomePageResponse
@@ -26,9 +27,9 @@ import io.github.wulkanowy.sdk.scrapper.repository.AccountRepository.Companion.S
 import io.github.wulkanowy.sdk.scrapper.service.RegisterService
 import io.github.wulkanowy.sdk.scrapper.service.StudentService
 import io.github.wulkanowy.sdk.scrapper.timetable.CacheResponse
-import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 import org.jsoup.Jsoup
+import org.jsoup.nodes.Element
 import org.jsoup.parser.Parser
 import org.jsoup.select.Elements
 import org.slf4j.LoggerFactory
@@ -71,6 +72,7 @@ internal class RegisterRepository(
             symbols = getRegisterSymbols(
                 symbols = symbols,
                 loginCert = certificateResponse,
+                symbolLoginType = symbolLoginType,
             ),
         )
     }
@@ -78,6 +80,7 @@ internal class RegisterRepository(
     private suspend fun getRegisterSymbols(
         symbols: List<String>,
         loginCert: CertificateResponse,
+        symbolLoginType: Scrapper.LoginType,
     ): List<RegisterSymbol> = symbols.map { symbol ->
         val homeResponse = runCatching {
             val res = loginHelper.sendCertificate(
@@ -91,15 +94,8 @@ internal class RegisterRepository(
             url.symbol = symbol
             res
         }
-        val graduateMessage = homeResponse.getOrNull()?.document?.selectFirst(".splashScreen")?.ownText().orEmpty()
-        val graduateException = if (graduateMessage.contains("Twoje konto jest nieaktywne")) {
-            StudentGraduateException(graduateMessage)
-        } else null
 
-        val invalidSymbolMessage = homeResponse.getOrNull()?.document?.selectFirst("#page-error .error__box")?.text().orEmpty()
-        val isInvalidSymbol = if (invalidSymbolMessage.contains("musi mieć następujący format")) {
-            InvalidSymbolException(invalidSymbolMessage)
-        } else null
+        val errors = checkForErrors(symbolLoginType, homeResponse.getOrNull()?.document)
 
         val userName = homeResponse.getOrNull().getUserNameFromUserData()
         val schools = homeResponse.getOrNull()
@@ -109,10 +105,32 @@ internal class RegisterRepository(
 
         RegisterSymbol(
             symbol = symbol,
-            error = homeResponse.exceptionOrNull() ?: graduateException ?: isInvalidSymbol,
+            error = homeResponse.exceptionOrNull() ?: errors,
             userName = userName,
             schools = schools,
         )
+    }
+
+    private fun checkForErrors(loginType: Scrapper.LoginType, document: Element?): Throwable? {
+        document ?: return null
+
+        val graduateMessage = document.selectFirst(".splashScreen")?.ownText().orEmpty()
+        val invalidSymbolMessage = document.selectFirst("#page-error .error__box")?.text().orEmpty()
+
+        val loginSelectors = when (loginType) {
+            Scrapper.LoginType.STANDARD -> document.select(SELECTOR_STANDARD)
+            Scrapper.LoginType.ADFS -> document.select(SELECTOR_ADFS)
+            Scrapper.LoginType.ADFSLight, Scrapper.LoginType.ADFSLightCufs, Scrapper.LoginType.ADFSLightScoped -> document.select(SELECTOR_ADFS_LIGHT)
+            Scrapper.LoginType.ADFSCards -> document.select(SELECTOR_ADFS_CARDS)
+            else -> Elements()
+        }
+
+        return when {
+            "Twoje konto jest nieaktywne" in graduateMessage -> StudentGraduateException(graduateMessage)
+            "musi mieć następujący format" in invalidSymbolMessage -> InvalidSymbolException(invalidSymbolMessage)
+            loginSelectors.isNotEmpty() -> NotLoggedInException("Nie udało się zalogować")
+            else -> null
+        }
     }
 
     private suspend fun Map<PermissionUnit, AuthInfo?>.getRegisterUnits(userName: String): List<RegisterUnit> {
