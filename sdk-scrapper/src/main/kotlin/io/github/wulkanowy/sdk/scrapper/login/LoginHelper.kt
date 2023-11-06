@@ -116,6 +116,7 @@ internal class LoginHelper(
         return res
     }
 
+    @Suppress("DuplicatedCode")
     private suspend fun sendStandard(email: String, password: String): CertificateResponse {
         val targetRealm = encode("$schema://uonetplus$domainSuffix.$host/$symbol/LoginEndpoint.aspx")
         val intermediateRealmPath = buildString {
@@ -143,7 +144,7 @@ internal class LoginHelper(
             ),
         )
         if ("dziennik-logowanie" in res.action) {
-            val response = certificateAdapter.fromHtml(
+            return certificateAdapter.fromHtml(
                 api.sendCertificate(
                     url = res.action,
                     certificate = mapOf(
@@ -153,11 +154,11 @@ internal class LoginHelper(
                     ),
                 ),
             )
-            return response
         }
         return res
     }
 
+    @Suppress("DuplicatedCode")
     private suspend fun sendADFSLightGeneric(email: String, password: String, type: Scrapper.LoginType): CertificateResponse {
         val res = certificateAdapter.fromHtml(
             api.sendADFSForm(
@@ -173,7 +174,7 @@ internal class LoginHelper(
 
         logger.debug("Page title after credentials sent: ${res.title}, action: ${res.action} wresult: ${res.wresult.length}, wctx: ${res.wctx}")
 
-        return certificateAdapter.fromHtml(
+        val res2 = certificateAdapter.fromHtml(
             api.sendADFSForm(
                 url = res.action,
                 values = mapOf(
@@ -183,6 +184,20 @@ internal class LoginHelper(
                 ),
             ),
         )
+
+        if ("dziennik-logowanie" in res2.action) {
+            return certificateAdapter.fromHtml(
+                api.sendCertificate(
+                    url = res2.action,
+                    certificate = mapOf(
+                        "wa" to res2.wa,
+                        "wresult" to res2.wresult,
+                        "wctx" to res2.wctx,
+                    ),
+                ),
+            )
+        }
+        return res2
     }
 
     private suspend fun sendADFSMS(email: String, password: String): CertificateResponse {
@@ -256,7 +271,6 @@ internal class LoginHelper(
         val id = when (type) {
             ADFS -> if (host == "eduportal.koszalin.pl") "ADFS" else "adfs"
             ADFSCards -> "eSzkola"
-            ADFSLightScoped -> if (symbol == "rzeszowprojekt") "AdfsLight" else "ADFSLight"
             ADFSLightCufs -> "AdfsLight"
             else -> "ADFS"
         }
@@ -269,9 +283,38 @@ internal class LoginHelper(
         return when (type) {
             ADFSLight -> "$schema://adfslight.$host/LoginPage.aspx?ReturnUrl=" + encode("/$query")
             ADFSLightCufs -> "$schema://logowanie.$host/LoginPage.aspx?ReturnUrl=" + encode("/$query")
-            ADFSLightScoped -> "$schema://adfslight.$host/$symbol/LoginPage.aspx?ReturnUrl=" + encode("/$symbol/default.aspx$query")
+            ADFSLightScoped -> getADFSLightScopedUrl()
             else -> "$schema://adfs.$host/adfs/ls/$query"
         }
+    }
+
+    @Suppress("DuplicatedCode")
+    private fun getADFSLightScopedUrl(): String {
+        val targetRealm = encode("$schema://uonetplus$domainSuffix.$host/$symbol/LoginEndpoint.aspx")
+        val intermediateRealmPath = buildString {
+            append("/$symbol/FS/LS")
+            append("?wa=wsignin1.0")
+            append("&wtrealm=$targetRealm")
+            append("&wctx=$targetRealm")
+        }
+        val intermediateRealm = encode("$schema://dziennik-logowanie$domainSuffix.$host$intermediateRealmPath")
+        val returnUrl = buildString {
+            append("/$symbol/FS/LS")
+            append("?wa=wsignin1.0")
+            append("&wtrealm=$intermediateRealm")
+            append("&wctx=${encode("rm=0&id=")}")
+            append("&wct=${encode(ZonedDateTime.now(ZoneId.of("UTC")).format(instantFormatter))}")
+        }
+
+        val id = if (symbol == "rzeszowprojekt") "AdfsLight" else "ADFSLight"
+        val query = buildString {
+            append("?wa=wsignin1.0")
+            append("&wtrealm=${encode("https://cufs$domainSuffix.$host/$symbol/Account/LogOn")}")
+            append("&wctx=${encode("rm=0&id=$id&ru=" + encode(returnUrl))}")
+            append("&wct=${encode(ZonedDateTime.now(ZoneId.of("UTC")).format(instantFormatter))}")
+        }
+
+        return "$schema://adfslight.$host/$symbol/LoginPage.aspx?ReturnUrl=" + encode("/$symbol/Default.aspx$query")
     }
 
     private fun encode(url: String) = URLEncoder.encode(url, "UTF-8")
