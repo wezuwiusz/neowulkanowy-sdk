@@ -18,6 +18,10 @@ internal interface LoginService {
 
     @POST
     @FormUrlEncoded
+    suspend fun sendCertificate(@Url url: String, @FieldMap certificate: Map<String, String>): String
+
+    @POST
+    @FormUrlEncoded
     suspend fun sendCertificate(@Header("Referer") referer: String, @Url url: String, @FieldMap certificate: Map<String, String>): HomePageResponse
 
     @GET

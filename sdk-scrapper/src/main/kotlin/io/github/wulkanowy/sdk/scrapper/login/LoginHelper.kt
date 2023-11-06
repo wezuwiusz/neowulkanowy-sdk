@@ -18,7 +18,10 @@ import java.net.CookieManager
 import java.net.URLEncoder
 import java.time.LocalDateTime.now
 import java.time.ZoneId
+import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
+import java.time.format.DateTimeFormatterBuilder
+import java.util.Locale
 
 internal class LoginHelper(
     var loginType: Scrapper.LoginType,
@@ -39,11 +42,10 @@ internal class LoginHelper(
         logger.debug(toString())
     }
 
-    private val firstStepReturnUrl by lazy {
-        encode("$schema://uonetplus$domainSuffix.$host/$symbol/LoginEndpoint.aspx").let {
-            "/$symbol/FS/LS?wa=wsignin1.0&wtrealm=$it&wctx=$it"
-        }
-    }
+    private val instantFormatter = DateTimeFormatterBuilder()
+        .parseCaseInsensitive()
+        .appendInstant(0)
+        .toFormatter(Locale.US)
 
     private val certificateAdapter by lazy {
         Jspoon.create().adapter(CertificateResponse::class.java)
@@ -72,18 +74,23 @@ internal class LoginHelper(
                         "umt.tarnow.pl" -> {
                             sendADFSMS(getNormalizedADFSLogin(email, "EDUNET"), password)
                         }
+
                         "edu.gdansk.pl" -> {
                             sendADFSLightGeneric(email, password, ADFSLightCufs)
                         }
+
                         "eduportal.koszalin.pl" -> {
                             sendADFSMS(getNormalizedADFSLogin(email, "EDUPORTAL"), password)
                         }
+
                         "eszkola.opolskie.pl" -> {
                             sendADFSMS(getNormalizedADFSLogin(email, "EDUPORTAL"), password)
                         }
+
                         else -> sendADFSMS(it, password)
                     }
                 }
+
                 ADFSLight, ADFSLightScoped, ADFSLightCufs -> sendADFSLightGeneric(it, password, loginType)
                 ADFSCards -> sendADFSCards(it, password)
             }
@@ -110,15 +117,45 @@ internal class LoginHelper(
     }
 
     private suspend fun sendStandard(email: String, password: String): CertificateResponse {
-        return certificateAdapter.fromHtml(
+        val targetRealm = encode("$schema://uonetplus$domainSuffix.$host/$symbol/LoginEndpoint.aspx")
+        val intermediateRealmPath = buildString {
+            append("/$symbol/FS/LS")
+            append("?wa=wsignin1.0")
+            append("&wtrealm=$targetRealm")
+            append("&wctx=$targetRealm")
+        }
+        val intermediateRealm = encode("$schema://dziennik-logowanie$domainSuffix.$host$intermediateRealmPath")
+        val returnUrl = buildString {
+            append("/$symbol/FS/LS")
+            append("?wa=wsignin1.0")
+            append("&wtrealm=$intermediateRealm")
+            append("&wctx=${encode("rm=0&id=")}")
+            append("&wct=${encode(ZonedDateTime.now(ZoneId.of("UTC")).format(instantFormatter))}")
+        }
+
+        val res = certificateAdapter.fromHtml(
             api.sendCredentials(
-                returnUrl = firstStepReturnUrl,
+                returnUrl = returnUrl,
                 credentials = mapOf(
                     "LoginName" to email,
                     "Password" to password,
                 ),
             ),
         )
+        if ("dziennik-logowanie" in res.action) {
+            val response = certificateAdapter.fromHtml(
+                api.sendCertificate(
+                    url = res.action,
+                    certificate = mapOf(
+                        "wa" to res.wa,
+                        "wresult" to res.wresult,
+                        "wctx" to res.wctx,
+                    ),
+                ),
+            )
+            return response
+        }
+        return res
     }
 
     private suspend fun sendADFSLightGeneric(email: String, password: String, type: Scrapper.LoginType): CertificateResponse {
@@ -213,6 +250,9 @@ internal class LoginHelper(
     }
 
     private fun getADFSUrl(type: Scrapper.LoginType): String {
+        val firstStepReturnUrl = encode("$schema://uonetplus$domainSuffix.$host/$symbol/LoginEndpoint.aspx").let {
+            "/$symbol/FS/LS?wa=wsignin1.0&wtrealm=$it&wctx=$it"
+        }
         val id = when (type) {
             ADFS -> if (host == "eduportal.koszalin.pl") "ADFS" else "adfs"
             ADFSCards -> "eSzkola"
