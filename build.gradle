@@ -18,7 +18,7 @@ ext {
     moshi = "1.13.0"
 }
 
-version = "2.2.6"
+version = "2.2.7-SNAPSHOT"
 group = "io.github.wulkanowy"
 
 nexusPublishing {
@@ -43,7 +43,7 @@ allprojects {
 
     repositories {
         mavenCentral()
-        maven { url "https://oss.sonatype.org/content/repositories/snapshots" }
+        maven { url "https://s01.oss.sonatype.org/content/repositories/snapshots/" }
         maven { url "https://jitpack.io" }
     }
 

@@ -5,8 +5,12 @@ plugins {
     id 'jacoco'
 }
 
+repositories {
+    maven { url "https://oss.sonatype.org/content/repositories/snapshots" }
+}
+
 dependencies {
-    implementation 'com.github.wulkanowy.uonet-request-signer:hebe-jvm:5412ed8'
+    implementation 'io.github.wulkanowy.signer:hebe-jvm:0.1.0-SNAPSHOT'
 
     implementation libs.retrofit.core
     implementation libs.retrofit.scalars
