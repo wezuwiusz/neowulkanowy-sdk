@@ -16,11 +16,13 @@ import org.slf4j.LoggerFactory
 import pl.droidsonroids.jspoon.Jspoon
 import java.net.CookieManager
 import java.net.URLEncoder
+import java.time.Instant
 import java.time.LocalDateTime.now
 import java.time.ZoneId
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 import java.time.format.DateTimeFormatterBuilder
+import java.time.temporal.ChronoUnit
 import java.util.Locale
 
 internal class LoginHelper(
@@ -268,7 +270,7 @@ internal class LoginHelper(
         val firstStepReturnUrl = buildString {
             val realm = encode("$schema://uonetplus$domainSuffix.$host/$symbol/LoginEndpoint.aspx")
             val ctx = when (host) {
-                "umt.tarnow.pl" -> "auth=uonet"
+                "umt.tarnow.pl" -> encode("auth=uonet")
                 else -> realm
             }
             append("/$symbol/FS/LS?wa=wsignin1.0&wtrealm=$realm&wctx=$ctx")
@@ -281,9 +283,9 @@ internal class LoginHelper(
         }
 
         val query = "?wa=wsignin1.0" +
-            "&wtrealm=" + encode("http${if (ADFSCards != type) "s" else ""}://cufs$domainSuffix.$host/$symbol/Account/LogOn") +
+            "&wtrealm=" + encode("http${if (ADFSCards != type) "s" else ""}://cufs$domainSuffix.$host${if (schema == "https") ":443" else ""}/$symbol/Account/LogOn") +
             "&wctx=" + encode("rm=0&id=$id&ru=" + encode(firstStepReturnUrl)) +
-            "&wct=" + encode(now(ZoneId.of("UTC")).format(DateTimeFormatter.ISO_LOCAL_DATE_TIME) + "Z")
+            "&wct=" + encode(DateTimeFormatter.ISO_INSTANT.format(Instant.now().truncatedTo(ChronoUnit.SECONDS)))
 
         return when (type) {
             ADFSLight -> "$schema://adfslight.$host/LoginPage.aspx?ReturnUrl=" + encode("/$query")

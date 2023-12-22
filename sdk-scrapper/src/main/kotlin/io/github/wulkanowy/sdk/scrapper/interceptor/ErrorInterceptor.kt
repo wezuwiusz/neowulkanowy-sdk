@@ -52,8 +52,8 @@ internal class ErrorInterceptor(
             }
         }
 
-        doc.select(".ErrorMessage, #ErrorTextLabel, #loginArea #errorText").takeIf { it.isNotEmpty() }?.let {
-            val errorMessage = it.text().trimEnd('.')
+        doc.select(".ErrorMessage, #ErrorTextLabel, #loginArea #errorText").text().takeIf { it.isNotBlank() }?.let {
+            val errorMessage = it.trimEnd('.')
             when {
                 doc.select(SELECTOR_ADFS).isNotEmpty() -> when {
                     errorMessage.isNotBlank() -> throw BadCredentialsException(errorMessage)
