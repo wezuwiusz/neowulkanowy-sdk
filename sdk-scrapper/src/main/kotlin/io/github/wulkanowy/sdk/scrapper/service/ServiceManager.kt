@@ -205,8 +205,10 @@ internal class ServiceManager(
         .client(client.build())
         .addConverterFactory(ScalarsConverterFactory.create())
         .addConverterFactory(
-            if (json) this.json.asConverterFactory("application/json".toMediaType())
-            else JspoonConverterFactory.create(),
+            when {
+                json -> this.json.asConverterFactory("application/json".toMediaType())
+                else -> JspoonConverterFactory.create()
+            },
         )
         .build()
 
@@ -235,8 +237,10 @@ internal class ServiceManager(
                     if (it.first is AutoLoginInterceptor && loginIntercept) addInterceptor(it.first)
                     if (it.first is ErrorInterceptor && errIntercept) addInterceptor(it.first)
                 } else {
-                    if (it.second) addNetworkInterceptor(it.first)
-                    else addInterceptor(it.first)
+                    when {
+                        it.second -> addNetworkInterceptor(it.first)
+                        else -> addInterceptor(it.first)
+                    }
                 }
             }
         }

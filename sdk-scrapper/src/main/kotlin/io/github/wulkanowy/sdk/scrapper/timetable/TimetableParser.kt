@@ -30,8 +30,10 @@ internal class TimetableParser {
             else -> null
         }?.let {
             td.select(".uwaga-panel").getOrNull(0)?.let { warn ->
-                if (it.info.isBlank()) it.copy(info = warn.text())
-                else it.copy(info = "${it.info}: ${warn.text()}")
+                when {
+                    it.info.isBlank() -> it.copy(info = warn.text())
+                    else -> it.copy(info = "${it.info}: ${warn.text()}")
+                }
             } ?: it
         }
     }
@@ -39,7 +41,7 @@ internal class TimetableParser {
     private fun getLessonInfoForDuoDivs(lesson: Lesson, divs: Elements) = when {
         divs.has(1, CLASS_MOVED_OR_CANCELED) -> {
             when {
-                divs[1]?.selectFirst("span")?.hasClass(CLASS_PLANNED) == true -> getLessonInfo(lesson, divs[0]).run {
+                divs[1].selectFirst("span")?.hasClass(CLASS_PLANNED) == true -> getLessonInfo(lesson, divs[0]).run {
                     val old = getLessonInfo(lesson, divs[1])
                     copy(
                         changes = true,
@@ -49,9 +51,11 @@ internal class TimetableParser {
                         info = stripLessonInfo("${getFormattedLessonInfo(info)}, ${old.info}").replace("$subject ", "").capitalise(),
                     )
                 }
+
                 else -> getLessonInfo(lesson, divs[1])
             }
         }
+
         divs.has(1, CLASS_CHANGES) -> getLessonInfo(lesson, divs[1]).run {
             val old = getLessonInfo(lesson, divs[0])
             copy(
@@ -62,6 +66,7 @@ internal class TimetableParser {
                 roomOld = old.room,
             )
         }
+
         divs.has(0, CLASS_MOVED_OR_CANCELED) && divs.has(0, CLASS_PLANNED) && divs.has(1, null) -> {
             getLessonInfo(lesson, divs[1]).run {
                 val old = getLessonInfo(lesson, divs[0])
@@ -75,19 +80,23 @@ internal class TimetableParser {
                 )
             }
         }
+
         divs.has(0, CLASS_CHANGES) -> {
             val oldLesson = getLessonInfo(lesson, divs[0])
             val newLesson = getLessonInfo(lesson, divs[1])
-            val isNewLessonEmpty = divs[1]?.select("span").isNullOrEmpty()
-            if (!isNewLessonEmpty && oldLesson.teacher == newLesson.teacher) {
-                newLesson.copy(
+            val isNewLessonEmpty = divs[1].select("span").isNullOrEmpty()
+            when {
+                !isNewLessonEmpty && oldLesson.teacher == newLesson.teacher -> newLesson.copy(
                     subjectOld = oldLesson.subject,
                     roomOld = oldLesson.room,
                     teacherOld = oldLesson.teacherOld,
                     changes = true,
                 )
-            } else oldLesson
+
+                else -> oldLesson
+            }
         }
+
         else -> getLessonInfo(lesson, divs[0])
     }
 
@@ -104,6 +113,7 @@ internal class TimetableParser {
                 )
             }
         }
+
         divs.has(0, CLASS_MOVED_OR_CANCELED) && divs.has(1, CLASS_MOVED_OR_CANCELED) && divs.has(2, CLASS_CHANGES) -> {
             getLessonInfo(lesson, divs[2]).run {
                 val old = getLessonInfo(lesson, divs[0])
@@ -116,6 +126,7 @@ internal class TimetableParser {
                 )
             }
         }
+
         divs.has(0, CLASS_MOVED_OR_CANCELED) && divs.has(1, CLASS_CHANGES) && divs.has(1, CLASS_MOVED_OR_CANCELED) && divs.has(2, null) -> {
             val oldLesson = getLessonInfo(lesson, divs[0])
             getLessonInfo(lesson, divs[2]).copy(
@@ -124,11 +135,12 @@ internal class TimetableParser {
                 roomOld = oldLesson.room,
             )
         }
+
         else -> getLessonInfo(lesson, divs[1])
     }
 
     private fun Elements.has(index: Int, className: String?): Boolean {
-        return this[index]?.selectFirst("span").let {
+        return this[index].selectFirst("span").let {
             when (className) {
                 null -> it?.attr("class").isNullOrBlank()
                 else -> it?.hasClass(className) == true
@@ -145,12 +157,14 @@ internal class TimetableParser {
                 offset = 0,
                 changes = div.ownText(),
             )
+
             size == 3 && div.ownText().contains(INFO_REPLACEMENT_ROOM, true) -> getSimpleLessonWithNewReplacementRoom(
                 lesson = lesson,
                 spans = this,
                 offset = 0,
                 changes = div.ownText(),
             )
+
             size == 3 -> getSimpleLesson(lesson, this, changes = div.ownText())
             size == 4 && div.ownText().contains(INFO_REPLACEMENT_TEACHER, true) -> getSimpleLessonWithNewReplacementTeacher(
                 lesson = lesson,
@@ -158,12 +172,14 @@ internal class TimetableParser {
                 offset = 1,
                 changes = div.ownText(),
             )
+
             size == 4 && div.ownText().contains(INFO_REPLACEMENT_ROOM, true) -> getSimpleLessonWithNewReplacementRoom(
                 lesson = lesson,
                 spans = this,
                 offset = 1,
                 changes = div.ownText(),
             )
+
             size == 4 && last()?.hasClass(CLASS_REALIZED) == true -> getSimpleLesson(lesson, this, changes = div.ownText())
             size == 4 -> getGroupLesson(lesson, this, changes = div.ownText())
             size == 5 && first()?.hasClass(CLASS_CHANGES) == true && select(".$CLASS_REALIZED").size == 2 -> getSimpleLesson(
@@ -172,11 +188,13 @@ internal class TimetableParser {
                 infoExtraOffset = 1,
                 changes = div.ownText(),
             )
+
             size == 5 && last()?.hasClass(CLASS_REALIZED) == true -> getGroupLesson(
                 lesson = lesson,
                 spans = this,
                 changes = div.ownText(),
             )
+
             size == 7 -> getSimpleLessonWithReplacement(lesson, spans = this)
             size == 9 -> getGroupLessonWithReplacement(lesson, spans = this)
             else -> lesson
@@ -279,6 +297,7 @@ internal class TimetableParser {
     private fun getRoomFromInfo(info: String?) = info?.substringAfter("(zmieniono salę z ")?.substringBefore(" na").orEmpty()
 
     private fun getTeacherChangesWithoutSubstitution(changes: String?) = changes?.substringBefore("(zastępstwo: ").orEmpty()
+
     private fun getRoomChangesWithoutSubstitution(changes: String?) = changes?.substringBefore("(zmieniono salę z ").orEmpty()
 
     private fun stripLessonInfo(info: String) = info

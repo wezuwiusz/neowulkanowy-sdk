@@ -246,9 +246,12 @@ internal class RegisterRepository(
         val startPage = runCatching {
             student.getStart(url.generate(UrlGenerator.Site.STUDENT) + "App")
         }.recoverCatching {
-            if (it is ScrapperException && it.code == HttpURLConnection.HTTP_NOT_FOUND) {
-                student.getStart(url.generate(UrlGenerator.Site.STUDENT) + "Start")
-            } else throw it
+            when {
+                it is ScrapperException && it.code == HttpURLConnection.HTTP_NOT_FOUND -> {
+                    student.getStart(url.generate(UrlGenerator.Site.STUDENT) + "Start")
+                }
+                else -> throw it
+            }
         }.getOrThrow()
 
         return student.getUserCache(

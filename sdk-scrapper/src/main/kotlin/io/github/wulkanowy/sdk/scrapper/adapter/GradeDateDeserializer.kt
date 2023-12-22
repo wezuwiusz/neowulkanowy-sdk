@@ -17,9 +17,10 @@ internal object GradeDateDeserializer : KSerializer<LocalDate> {
     private val formatter = DateTimeFormatter.ofPattern("[$SERVER_FORMAT][$SERVER_FORMAT_2]")
 
     override fun deserialize(decoder: Decoder): LocalDate {
-        val date = if (decoder.decodeNotNullMark()) {
-            decoder.decodeString()
-        } else "01.01.1970"
+        val date = when {
+            decoder.decodeNotNullMark() -> decoder.decodeString()
+            else -> "01.01.1970"
+        }
 
         return LocalDate.parse(date, formatter)
     }

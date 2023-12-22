@@ -43,5 +43,6 @@ data class Homework(
     lateinit var teacherSymbol: String
 
     @Transient
+    @Suppress("PropertyName")
     var _attachments: List<Pair<String, String>> = emptyList()
 }

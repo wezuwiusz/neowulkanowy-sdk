@@ -70,9 +70,10 @@ internal class RepositoryManager(
     private fun getRetrofitBuilder(isJson: Boolean = true, signInterceptor: Boolean): Retrofit.Builder {
         return Retrofit.Builder()
             .apply {
-                if (isJson) {
-                    addConverterFactory(json.asConverterFactory("application/json".toMediaType()))
-                } else addConverterFactory(ScalarsConverterFactory.create())
+                when {
+                    isJson -> addConverterFactory(json.asConverterFactory("application/json".toMediaType()))
+                    else -> addConverterFactory(ScalarsConverterFactory.create())
+                }
             }
             .client(
                 OkHttpClient().newBuilder()
@@ -81,8 +82,10 @@ internal class RepositoryManager(
                             addInterceptor(SignInterceptor(keyId, privatePem, deviceModel))
                         }
                         interceptors.forEach {
-                            if (it.second) addNetworkInterceptor(it.first)
-                            else addInterceptor(it.first)
+                            when {
+                                it.second -> addNetworkInterceptor(it.first)
+                                else -> addInterceptor(it.first)
+                            }
                         }
                     }
                     .build(),

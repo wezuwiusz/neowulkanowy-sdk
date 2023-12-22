@@ -39,8 +39,10 @@ internal fun getGradeShortValue(value: String?): String {
 }
 
 internal fun String.getEmptyIfDash(): String {
-    return if (this == "-") ""
-    else this
+    return when {
+        this == "-" -> ""
+        else -> this
+    }
 }
 
 internal fun String.getGradePointPercent(): String {
@@ -77,7 +79,7 @@ fun String.getNormalizedSymbol(): String = this
 internal fun List<Recipient>.normalizeRecipients() = map { it.parseName() }
 
 internal fun Recipient.parseName(): Recipient {
-    val typeSeparatorPosition = fullName.indexOfAny(RecipientType.values().map { " - ${it.letter} - " })
+    val typeSeparatorPosition = fullName.indexOfAny(RecipientType.entries.map { " - ${it.letter} - " })
 
     if (typeSeparatorPosition == -1) return copy(userName = fullName)
 
@@ -88,7 +90,7 @@ internal fun Recipient.parseName(): Recipient {
     return copy(
         userName = userName,
         studentName = studentName.takeIf { it != "($schoolName)" } ?: userName,
-        type = typeLetter.let { letter -> RecipientType.values().first { it.letter == letter } },
+        type = typeLetter.let { letter -> RecipientType.entries.first { it.letter == letter } },
         schoolNameShort = schoolName,
     )
 }

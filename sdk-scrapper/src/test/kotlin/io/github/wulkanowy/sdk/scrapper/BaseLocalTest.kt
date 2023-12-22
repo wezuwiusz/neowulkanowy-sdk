@@ -77,8 +77,10 @@ abstract class BaseLocalTest : BaseTest() {
         .client(okHttp)
         .addConverterFactory(ScalarsConverterFactory.create())
         .addConverterFactory(
-            if (!html) json.asConverterFactory("application/json".toMediaType())
-            else JspoonConverterFactory.create(),
+            when {
+                !html -> json.asConverterFactory("application/json".toMediaType())
+                else -> JspoonConverterFactory.create()
+            },
         )
         .baseUrl(url)
         .build()

@@ -1,8 +1,7 @@
 package io.github.wulkanowy.sdk.scrapper.attendance
 
+import org.junit.Assert.assertEquals
 import org.junit.Test
-
-import org.junit.Assert.*
 
 class AttendanceCategoryTest {
 

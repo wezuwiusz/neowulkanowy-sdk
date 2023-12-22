@@ -2,7 +2,7 @@ plugins {
     alias(libs.plugins.kotlin) apply false
     alias(libs.plugins.ksp) apply false
     alias(libs.plugins.serialization)
-    id "org.jlleitschuh.gradle.ktlint" version "11.6.1"
+    id "org.jlleitschuh.gradle.ktlint" version "12.0.2"
     id "io.github.gradle-nexus.publish-plugin" version "1.3.0"
     id 'ru.vyarus.mkdocs' version '3.0.0'
 }
@@ -13,7 +13,7 @@ ext {
     GIT_URL = 'https://github.com/wulkanowy/sdk.git'
 
     jspoon = "1.3.2"
-    jsoup = "1.16.2"
+    jsoup = "1.17.1"
     slf4j = "2.0.9"
     moshi = "1.13.0"
 }
@@ -112,7 +112,7 @@ subprojects {
     apply plugin: 'jacoco'
 
     ktlint {
-        additionalEditorconfigFile = file(".editorconfig")
+//        additionalEditorconfigFile.set(file(".editorconfig"))
         disabledRules = [
             "no-wildcard-imports",
             "import-ordering",
@@ -134,7 +134,7 @@ subprojects {
         implementation libs.coroutines.core
 
         implementation "com.squareup.okhttp3:logging-interceptor"
-        implementation "org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.0"
+        implementation "org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.2"
 
         testImplementation "junit:junit:4.13.2"
         testImplementation "com.squareup.okhttp3:mockwebserver"

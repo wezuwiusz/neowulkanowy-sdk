@@ -1,6 +1,5 @@
 package io.github.wulkanowy.sdk.hebe
 
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import okhttp3.logging.HttpLoggingInterceptor
 import org.junit.Assert.assertTrue
@@ -10,7 +9,6 @@ import org.junit.Test
 import java.time.LocalDate
 
 @Ignore
-@OptIn(ExperimentalCoroutinesApi::class)
 class HebeRemoteTest {
 
     private val hebe = Hebe()

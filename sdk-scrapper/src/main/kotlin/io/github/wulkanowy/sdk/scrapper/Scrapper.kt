@@ -300,15 +300,17 @@ class Scrapper {
     }
 
     suspend fun getGrades(semester: Int): Grades {
-        if (diaryId == 0) return Grades(
-            details = emptyList(),
-            summary = emptyList(),
-            descriptive = emptyList(),
-            isAverage = false,
-            isPoints = false,
-            isForAdults = false,
-            type = -1,
-        )
+        if (diaryId == 0) {
+            return Grades(
+                details = emptyList(),
+                summary = emptyList(),
+                descriptive = emptyList(),
+                isAverage = false,
+                isPoints = false,
+                isForAdults = false,
+                type = -1,
+            )
+        }
 
         return student.getGrades(semester)
     }
@@ -344,11 +346,13 @@ class Scrapper {
     suspend fun getMenu(date: LocalDate): List<Menu> = student.getMenu(date)
 
     suspend fun getTimetable(startDate: LocalDate, endDate: LocalDate? = null): Timetable {
-        if (diaryId == 0) return Timetable(
-            headers = emptyList(),
-            lessons = emptyList(),
-            additional = emptyList(),
-        )
+        if (diaryId == 0) {
+            return Timetable(
+                headers = emptyList(),
+                lessons = emptyList(),
+                additional = emptyList(),
+            )
+        }
 
         return student.getTimetable(startDate, endDate)
     }

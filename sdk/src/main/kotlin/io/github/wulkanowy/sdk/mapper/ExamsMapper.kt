@@ -1,9 +1,8 @@
 package io.github.wulkanowy.sdk.mapper
 
 import io.github.wulkanowy.sdk.pojo.Exam
-import io.github.wulkanowy.sdk.toLocalDate
-import io.github.wulkanowy.sdk.scrapper.exams.Exam as ScrapperExam
 import io.github.wulkanowy.sdk.hebe.models.Exam as HebeExam
+import io.github.wulkanowy.sdk.scrapper.exams.Exam as ScrapperExam
 
 @JvmName("mapScrapperExams")
 internal fun List<ScrapperExam>.mapExams() = map {

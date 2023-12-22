@@ -54,10 +54,13 @@ internal class ErrorInterceptor(
 
         doc.select(".ErrorMessage, #ErrorTextLabel, #loginArea #errorText").takeIf { it.isNotEmpty() }?.let {
             val errorMessage = it.text().trimEnd('.')
-            if (doc.select(SELECTOR_ADFS).isNotEmpty()) {
-                if (errorMessage.isNotBlank()) throw BadCredentialsException(errorMessage)
-                else logger.warn("Unexpected login page!")
-            } else throw BadCredentialsException(errorMessage)
+            when {
+                doc.select(SELECTOR_ADFS).isNotEmpty() -> when {
+                    errorMessage.isNotBlank() -> throw BadCredentialsException(errorMessage)
+                    else -> logger.warn("Unexpected login page!")
+                }
+                else -> throw BadCredentialsException(errorMessage)
+            }
         }
 
         doc.select(".app-error-container").takeIf { it.isNotEmpty() }?.let {

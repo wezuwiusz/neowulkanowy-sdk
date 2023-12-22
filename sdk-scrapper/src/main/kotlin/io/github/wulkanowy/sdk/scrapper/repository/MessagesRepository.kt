@@ -120,18 +120,20 @@ internal class MessagesRepository(private val api: MessagesService) {
         val appGuid = getScriptParam("appGuid", startPage)
         val appVersion = getScriptParam("version", startPage)
 
-        if (!removeForever) {
-            api.moveMessageToTrash(
+        when {
+            !removeForever -> api.moveMessageToTrash(
                 token = token,
                 appGuid = appGuid,
                 appVersion = appVersion,
                 body = globalKeys,
             )
-        } else api.deleteMessage(
-            token = token,
-            appGuid = appGuid,
-            appVersion = appVersion,
-            body = globalKeys,
-        )
+
+            else -> api.deleteMessage(
+                token = token,
+                appGuid = appGuid,
+                appVersion = appVersion,
+                body = globalKeys,
+            )
+        }
     }
 }

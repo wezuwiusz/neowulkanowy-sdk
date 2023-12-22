@@ -304,9 +304,10 @@ internal class StudentRepository(
         return runCatching {
             api.getStart("App")
         }.recoverCatching {
-            if (it is ScrapperException && it.code == HTTP_NOT_FOUND) {
-                api.getStart("Start")
-            } else throw it
+            when {
+                it is ScrapperException && it.code == HTTP_NOT_FOUND -> api.getStart("Start")
+                else -> throw it
+            }
         }.getOrThrow()
     }
 }

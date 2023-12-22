@@ -20,8 +20,8 @@ import io.github.wulkanowy.sdk.scrapper.grades.GradesStatisticsRequest
 import io.github.wulkanowy.sdk.scrapper.grades.GradesStatisticsSemester
 import io.github.wulkanowy.sdk.scrapper.homework.HomeworkDay
 import io.github.wulkanowy.sdk.scrapper.homework.HomeworkRequest
-import io.github.wulkanowy.sdk.scrapper.menu.MenuRequest
 import io.github.wulkanowy.sdk.scrapper.menu.Menu
+import io.github.wulkanowy.sdk.scrapper.menu.MenuRequest
 import io.github.wulkanowy.sdk.scrapper.mobile.Device
 import io.github.wulkanowy.sdk.scrapper.mobile.TokenResponse
 import io.github.wulkanowy.sdk.scrapper.mobile.UnregisterDeviceRequest

@@ -149,7 +149,9 @@ internal class AutoLoginInterceptor(
         .body(
             body = response()?.errorBody() ?: object : ResponseBody() {
                 override fun contentLength() = 0L
+
                 override fun contentType(): MediaType? = null
+
                 override fun source(): BufferedSource = Buffer()
             },
         )
