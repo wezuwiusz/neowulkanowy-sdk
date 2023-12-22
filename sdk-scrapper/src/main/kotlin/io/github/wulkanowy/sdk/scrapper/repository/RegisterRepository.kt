@@ -244,7 +244,7 @@ internal class RegisterRepository(
 
     private suspend fun getStudentCache(): CacheResponse? {
         val startPage = runCatching {
-            student.getStart(url.generate(UrlGenerator.Site.STUDENT) + "App")
+            student.getStart(url.generate(UrlGenerator.Site.STUDENT) + "LoginEndpoint.aspx")
         }.recoverCatching {
             when {
                 it is ScrapperException && it.code == HttpURLConnection.HTTP_NOT_FOUND -> {

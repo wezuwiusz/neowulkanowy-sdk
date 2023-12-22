@@ -302,7 +302,7 @@ internal class StudentRepository(
 
     private suspend fun getStartPage(): String {
         return runCatching {
-            api.getStart("App")
+            api.getStart("LoginEndpoint.aspx")
         }.recoverCatching {
             when {
                 it is ScrapperException && it.code == HTTP_NOT_FOUND -> api.getStart("Start")
