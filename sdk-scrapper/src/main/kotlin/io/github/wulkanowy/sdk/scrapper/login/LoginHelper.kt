@@ -265,8 +265,13 @@ internal class LoginHelper(
     }
 
     private fun getADFSUrl(type: Scrapper.LoginType): String {
-        val firstStepReturnUrl = encode("$schema://uonetplus$domainSuffix.$host/$symbol/LoginEndpoint.aspx").let {
-            "/$symbol/FS/LS?wa=wsignin1.0&wtrealm=$it&wctx=$it"
+        val firstStepReturnUrl = buildString {
+            val realm = encode("$schema://uonetplus$domainSuffix.$host/$symbol/LoginEndpoint.aspx")
+            val ctx = when (host) {
+                "umt.tarnow.pl" -> "auth=uonet"
+                else -> realm
+            }
+            append("/$symbol/FS/LS?wa=wsignin1.0&wtrealm=$realm&wctx=$ctx")
         }
         val id = when (type) {
             ADFS -> if (host == "eduportal.koszalin.pl") "ADFS" else "adfs"
