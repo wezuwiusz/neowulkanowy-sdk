@@ -32,6 +32,7 @@ internal class LoginHelper(
     private val symbol: String,
     private val cookies: CookieManager,
     private val api: LoginService,
+    private val urlGenerator: UrlGenerator,
 ) {
 
     companion object {
@@ -65,7 +66,12 @@ internal class LoginHelper(
         return cert
     }
 
+    fun logout() {
+        cookies.cookieStore.removeAll()
+    }
+
     suspend fun sendCredentials(email: String, password: String): CertificateResponse {
+        cookies.cookieStore.removeAll()
         email.substringBefore("||").let {
             return when (loginType) {
                 AUTO -> throw ScrapperException("You must first specify Api.loginType before logging in")
@@ -118,6 +124,7 @@ internal class LoginHelper(
 
     @Suppress("DuplicatedCode")
     private suspend fun sendStandard(email: String, password: String): CertificateResponse {
+        val symbol = urlGenerator.symbol
         val targetRealm = encode("$schema://uonetplus$domainSuffix.$host/$symbol/LoginEndpoint.aspx")
         val intermediateRealmPath = buildString {
             append("/$symbol/FS/LS")
@@ -136,6 +143,7 @@ internal class LoginHelper(
 
         val res = certificateAdapter.fromHtml(
             api.sendCredentials(
+                symbol = symbol,
                 returnUrl = returnUrl,
                 credentials = mapOf(
                     "LoginName" to email,
@@ -265,6 +273,8 @@ internal class LoginHelper(
     }
 
     private fun getADFSUrl(type: Scrapper.LoginType): String {
+        val symbol = urlGenerator.symbol
+
         val firstStepReturnUrl = buildString {
             val realm = encode("$schema://uonetplus$domainSuffix.$host/$symbol/LoginEndpoint.aspx")
             val ctx = when (host) {
@@ -295,6 +305,8 @@ internal class LoginHelper(
 
     @Suppress("DuplicatedCode")
     private fun getADFSLightScopedUrl(): String {
+        val symbol = urlGenerator.symbol
+
         val targetRealm = encode("$schema://uonetplus$domainSuffix.$host/$symbol/LoginEndpoint.aspx")
         val intermediateRealmPath = buildString {
             append("/$symbol/FS/LS")

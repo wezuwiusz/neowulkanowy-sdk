@@ -76,7 +76,7 @@ internal class RegisterRepository(
             loginType = symbolLoginType,
             symbols = getRegisterSymbols(
                 symbols = symbols,
-                loginCert = certificateResponse,
+                startLoginCert = certificateResponse,
                 symbolLoginType = symbolLoginType,
             ),
         )
@@ -84,19 +84,20 @@ internal class RegisterRepository(
 
     private suspend fun getRegisterSymbols(
         symbols: List<String>,
-        loginCert: CertificateResponse,
+        startLoginCert: CertificateResponse,
         symbolLoginType: Scrapper.LoginType,
     ): List<RegisterSymbol> = symbols.map { symbol ->
         val homeResponse = runCatching {
+            url.symbol = symbol
+            val loginCert = when (startSymbol) {
+                symbol -> startLoginCert
+                else -> getCert(symbolLoginType)
+            }
             val res = loginHelper.sendCertificate(
                 email = email,
                 cert = loginCert,
-                url = loginCert.action.replace(
-                    oldValue = startSymbol.getNormalizedSymbol(), // improve this: for random inputs may generate random errors :)
-                    newValue = symbol,
-                ),
+                url = loginCert.action,
             )
-            url.symbol = symbol
             res
         }
 
@@ -107,6 +108,8 @@ internal class RegisterRepository(
             .toPermissions()
             .toUnitsMap()
             .getRegisterUnits(userName)
+
+        loginHelper.logout()
 
         RegisterSymbol(
             symbol = symbol,
@@ -224,6 +227,7 @@ internal class RegisterRepository(
         .apply { logger.debug("{}", this) }
         .filter { it.matches("[a-zA-Z0-9]*".toRegex()) } // early filter invalid symbols
         .filter { it != "Default" }
+        .distinct()
 
     private fun HomePageResponse?.getUserNameFromUserData(): String {
         val data = this?.userData ?: return ""
@@ -251,6 +255,7 @@ internal class RegisterRepository(
         val startPage = runCatching {
             val studentPageUrl = url.generate(UrlGenerator.Site.STUDENT) + "LoginEndpoint.aspx"
             val start = student.getStart(studentPageUrl)
+
             when {
                 "Working" in Jsoup.parse(start).title() -> {
                     val cert = certificateAdapter.fromHtml(start)

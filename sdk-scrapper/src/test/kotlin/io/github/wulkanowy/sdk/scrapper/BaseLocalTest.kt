@@ -118,6 +118,7 @@ abstract class BaseLocalTest : BaseTest() {
                     symbol = "powiatwulkanowy",
                     cookies = CookieManager(),
                     api = getService(LoginService::class.java),
+                    urlGenerator = UrlGenerator(URL("http://localhost/"), "", "lodz", ""),
                 ).login("jan", "kowalski")
             }
         }

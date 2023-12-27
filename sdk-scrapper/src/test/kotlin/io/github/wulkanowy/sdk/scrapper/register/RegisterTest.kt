@@ -13,6 +13,7 @@ import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
 import org.junit.Test
 import java.net.CookieManager
+import java.net.URL
 
 class RegisterTest : BaseLocalTest() {
 
@@ -34,6 +35,7 @@ class RegisterTest : BaseLocalTest() {
                     loginType = Scrapper.LoginType.STANDARD,
                 ),
             ),
+            urlGenerator = UrlGenerator(URL("http://localhost/"), "", "lodz", ""),
         )
     }
 
@@ -67,6 +69,7 @@ class RegisterTest : BaseLocalTest() {
     fun filterStudentsByClass() = runTest {
         with(server) {
             enqueue("LoginPage-standard.html", LoginTest::class.java)
+            enqueue("Logowanie-uonet.html", LoginTest::class.java)
             enqueue("Logowanie-uonet.html", LoginTest::class.java)
             enqueue("Login-success.html", LoginTest::class.java)
             enqueue("WitrynaUcznia.html", RegisterTest::class.java)
@@ -109,6 +112,7 @@ class RegisterTest : BaseLocalTest() {
     fun getStudents_kindergartenDiaries() = runTest {
         with(server) {
             enqueue("LoginPage-standard.html", LoginTest::class.java)
+            enqueue("Logowanie-uonet.html", LoginTest::class.java)
             enqueue("Logowanie-uonet.html", LoginTest::class.java)
             enqueue("Login-success.html", LoginTest::class.java)
 
@@ -175,6 +179,7 @@ class RegisterTest : BaseLocalTest() {
     fun getStudents_classNameOrder() = runTest {
         with(server) {
             enqueue("LoginPage-standard.html", LoginTest::class.java)
+            enqueue("Logowanie-uonet.html", LoginTest::class.java)
             enqueue("Logowanie-uonet.html", LoginTest::class.java)
             enqueue("Login-success.html", LoginTest::class.java)
             enqueue("LoginPage-standard.html", LoginTest::class.java)

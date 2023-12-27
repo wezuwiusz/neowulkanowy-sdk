@@ -12,6 +12,7 @@ import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Test
 import java.net.CookieManager
+import java.net.URL
 
 class LoginTest : BaseLocalTest() {
 
@@ -24,6 +25,7 @@ class LoginTest : BaseLocalTest() {
             symbol = "default",
             cookies = CookieManager(),
             api = getService(LoginService::class.java, "http://fakelog.localhost:3000/"),
+            urlGenerator = UrlGenerator(URL("http://localhost/"), "", "lodz", ""),
         )
     }
 
@@ -45,6 +47,7 @@ class LoginTest : BaseLocalTest() {
                     loginType = Scrapper.LoginType.ADFS,
                 ),
             ),
+            urlGenerator = UrlGenerator(URL("http://localhost/"), "", "lodz", ""),
         )
     }
 

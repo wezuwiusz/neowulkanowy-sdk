@@ -7,14 +7,15 @@ import retrofit2.http.FormUrlEncoded
 import retrofit2.http.GET
 import retrofit2.http.Header
 import retrofit2.http.POST
+import retrofit2.http.Path
 import retrofit2.http.Query
 import retrofit2.http.Url
 
 internal interface LoginService {
 
-    @POST("Account/LogOn")
+    @POST("/{symbol}/Account/LogOn")
     @FormUrlEncoded
-    suspend fun sendCredentials(@Query("ReturnUrl") returnUrl: String, @FieldMap credentials: Map<String, String>): String
+    suspend fun sendCredentials(@Path("symbol") symbol: String, @Query("ReturnUrl") returnUrl: String, @FieldMap credentials: Map<String, String>): String
 
     @POST
     @FormUrlEncoded
@@ -26,6 +27,9 @@ internal interface LoginService {
 
     @GET
     suspend fun switchLogin(@Url url: String): HomePageResponse
+
+    @GET
+    suspend fun logout(@Url url: String): String
 
     // ADFS
 

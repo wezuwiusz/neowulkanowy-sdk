@@ -2,7 +2,6 @@ package io.github.wulkanowy.sdk.scrapper
 
 import io.github.wulkanowy.sdk.scrapper.attendance.AttendanceSummaryTest
 import io.github.wulkanowy.sdk.scrapper.register.RegisterTest
-import io.github.wulkanowy.sdk.scrapper.repository.RegisterRepository
 import kotlinx.coroutines.runBlocking
 import org.junit.Test
 

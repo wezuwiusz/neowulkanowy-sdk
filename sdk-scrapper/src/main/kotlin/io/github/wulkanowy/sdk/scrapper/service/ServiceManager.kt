@@ -60,6 +60,16 @@ internal class ServiceManager(
         }
     }
 
+    val urlGenerator by lazy {
+        UrlGenerator(
+            schema = schema,
+            host = host,
+            domainSuffix = domainSuffix,
+            symbol = symbol,
+            schoolId = schoolId,
+        )
+    }
+
     private val loginHelper by lazy {
         LoginHelper(
             loginType = loginType,
@@ -69,16 +79,7 @@ internal class ServiceManager(
             symbol = symbol,
             cookies = cookies,
             api = getLoginService(),
-        )
-    }
-
-    val urlGenerator by lazy {
-        UrlGenerator(
-            schema = schema,
-            host = host,
-            domainSuffix = domainSuffix,
-            symbol = symbol,
-            schoolId = schoolId,
+            urlGenerator = urlGenerator,
         )
     }
 

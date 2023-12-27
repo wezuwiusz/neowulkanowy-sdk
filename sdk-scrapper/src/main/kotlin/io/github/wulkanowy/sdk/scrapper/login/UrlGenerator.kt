@@ -7,6 +7,7 @@ import io.github.wulkanowy.sdk.scrapper.login.UrlGenerator.Site.MESSAGES
 import io.github.wulkanowy.sdk.scrapper.login.UrlGenerator.Site.STUDENT
 import io.github.wulkanowy.sdk.scrapper.login.UrlGenerator.Site.STUDENT_PLUS
 import java.net.URL
+import java.net.URLEncoder
 
 internal class UrlGenerator(
     private val schema: String,
@@ -35,6 +36,17 @@ internal class UrlGenerator(
         if (type == BASE) return "$schema://$host"
         return "$schema://${getSubDomain(type)}$domainSuffix.$host/$symbol/${if (type.isStudent) "$schoolId/" else ""}"
     }
+
+    fun createLogoutEndpoints(): List<String> {
+        return listOf(
+            "$schema://uonetplus$domainSuffix.$host/$symbol/LoginEndpoint.aspx?logout=true",
+            "$schema://uonetplus-logowanie.$host/$symbol/Fs/Ls?wa=wsignoutcleanup1.0",
+            "$schema://cufs.$host/$symbol/Account/LogOff?wreply=${encode("$schema://uonetplus.$host/$symbol")}",
+            "$schema://uonetplus$domainSuffix.$host/$symbol/loginendpoint.aspx?wa=wsignoutcleanup1.0",
+        )
+    }
+
+    private fun encode(url: String) = URLEncoder.encode(url, "UTF-8")
 
     fun createReferer(type: Site): String {
         return when (type) {

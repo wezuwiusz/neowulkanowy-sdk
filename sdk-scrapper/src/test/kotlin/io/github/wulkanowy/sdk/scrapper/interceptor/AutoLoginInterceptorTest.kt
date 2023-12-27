@@ -4,6 +4,7 @@ import io.github.wulkanowy.sdk.scrapper.BaseLocalTest
 import io.github.wulkanowy.sdk.scrapper.Scrapper
 import io.github.wulkanowy.sdk.scrapper.login.LoginHelper
 import io.github.wulkanowy.sdk.scrapper.login.LoginTest
+import io.github.wulkanowy.sdk.scrapper.login.UrlGenerator
 import io.github.wulkanowy.sdk.scrapper.notes.NotesTest
 import io.github.wulkanowy.sdk.scrapper.register.RegisterTest
 import io.github.wulkanowy.sdk.scrapper.service.LoginService
@@ -16,6 +17,7 @@ import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Test
 import java.net.CookieManager
+import java.net.URL
 
 class AutoLoginInterceptorTest : BaseLocalTest() {
 
@@ -128,6 +130,7 @@ class AutoLoginInterceptorTest : BaseLocalTest() {
             symbol = "powiatwulkanowy",
             cookies = CookieManager(),
             api = loginService,
+            urlGenerator = UrlGenerator(URL("http://localhost/"), "", "lodz", ""),
         )
     }
 

@@ -230,6 +230,7 @@ class Scrapper {
                 symbol = normalizedSymbol,
                 cookies = serviceManager.getCookieManager(),
                 api = serviceManager.getLoginService(),
+                urlGenerator = serviceManager.urlGenerator,
             ),
             register = serviceManager.getRegisterService(),
             student = serviceManager.getStudentService(withLogin = false, studentInterceptor = false),
