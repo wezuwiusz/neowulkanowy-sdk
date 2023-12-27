@@ -33,6 +33,7 @@ import org.jsoup.nodes.Element
 import org.jsoup.parser.Parser
 import org.jsoup.select.Elements
 import org.slf4j.LoggerFactory
+import pl.droidsonroids.jspoon.Jspoon
 import java.net.HttpURLConnection
 import java.nio.charset.StandardCharsets
 import kotlin.io.encoding.Base64
@@ -53,6 +54,10 @@ internal class RegisterRepository(
     private companion object {
         @JvmStatic
         private val logger = LoggerFactory.getLogger(this::class.java)
+    }
+
+    private val certificateAdapter by lazy {
+        Jspoon.create().adapter(CertificateResponse::class.java)
     }
 
     private val json = Json {
@@ -244,12 +249,30 @@ internal class RegisterRepository(
 
     private suspend fun getStudentCache(): CacheResponse? {
         val startPage = runCatching {
-            student.getStart(url.generate(UrlGenerator.Site.STUDENT) + "LoginEndpoint.aspx")
+            val studentPageUrl = url.generate(UrlGenerator.Site.STUDENT) + "LoginEndpoint.aspx"
+            val start = student.getStart(studentPageUrl)
+            when {
+                "Working" in Jsoup.parse(start).title() -> {
+                    val cert = certificateAdapter.fromHtml(start)
+                    student.sendCertificate(
+                        referer = url.createReferer(UrlGenerator.Site.STUDENT),
+                        url = cert.action,
+                        certificate = mapOf(
+                            "wa" to cert.wa,
+                            "wresult" to cert.wresult,
+                            "wctx" to cert.wctx,
+                        ),
+                    )
+                }
+
+                else -> start
+            }
         }.recoverCatching {
             when {
                 it is ScrapperException && it.code == HttpURLConnection.HTTP_NOT_FOUND -> {
                     student.getStart(url.generate(UrlGenerator.Site.STUDENT) + "Start")
                 }
+
                 else -> throw it
             }
         }.getOrThrow()

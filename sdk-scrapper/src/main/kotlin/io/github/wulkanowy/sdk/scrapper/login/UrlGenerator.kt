@@ -1,5 +1,11 @@
 package io.github.wulkanowy.sdk.scrapper.login
 
+import io.github.wulkanowy.sdk.scrapper.login.UrlGenerator.Site.BASE
+import io.github.wulkanowy.sdk.scrapper.login.UrlGenerator.Site.HOME
+import io.github.wulkanowy.sdk.scrapper.login.UrlGenerator.Site.LOGIN
+import io.github.wulkanowy.sdk.scrapper.login.UrlGenerator.Site.MESSAGES
+import io.github.wulkanowy.sdk.scrapper.login.UrlGenerator.Site.STUDENT
+import io.github.wulkanowy.sdk.scrapper.login.UrlGenerator.Site.STUDENT_PLUS
 import java.net.URL
 
 internal class UrlGenerator(
@@ -26,17 +32,25 @@ internal class UrlGenerator(
     }
 
     fun generate(type: Site): String {
-        if (type == Site.BASE) return "$schema://$host"
+        if (type == BASE) return "$schema://$host"
         return "$schema://${getSubDomain(type)}$domainSuffix.$host/$symbol/${if (type.isStudent) "$schoolId/" else ""}"
+    }
+
+    fun createReferer(type: Site): String {
+        return when (type) {
+            LOGIN -> "$schema://cufs$domainSuffix.$host/"
+            STUDENT -> "$schema://uonetplus$domainSuffix.$host/"
+            else -> ""
+        }
     }
 
     private fun getSubDomain(type: Site): String {
         return when (type) {
-            Site.LOGIN -> "cufs"
-            Site.HOME -> "uonetplus"
-            Site.STUDENT -> "uonetplus-uczen"
-            Site.STUDENT_PLUS -> "uonetplus-uczenplus"
-            Site.MESSAGES -> "uonetplus-wiadomosciplus"
+            LOGIN -> "cufs"
+            HOME -> "uonetplus"
+            STUDENT -> "uonetplus-uczen"
+            STUDENT_PLUS -> "uonetplus-uczenplus"
+            MESSAGES -> "uonetplus-wiadomosciplus"
             else -> error("unknown")
         }
     }

@@ -252,6 +252,7 @@ class Scrapper {
         StudentRepository(
             api = serviceManager.getStudentService(),
             studentPlusService = serviceManager.getStudentPlusService(),
+            urlGenerator = serviceManager.urlGenerator,
         )
     }
 

@@ -6,6 +6,7 @@ import io.github.wulkanowy.sdk.scrapper.interceptor.AutoLoginInterceptor
 import io.github.wulkanowy.sdk.scrapper.interceptor.ErrorInterceptor
 import io.github.wulkanowy.sdk.scrapper.interceptor.HttpErrorInterceptor
 import io.github.wulkanowy.sdk.scrapper.login.LoginHelper
+import io.github.wulkanowy.sdk.scrapper.login.UrlGenerator
 import io.github.wulkanowy.sdk.scrapper.repository.StudentRepository
 import io.github.wulkanowy.sdk.scrapper.service.LoginService
 import io.github.wulkanowy.sdk.scrapper.service.StudentPlusService
@@ -24,6 +25,7 @@ import pl.droidsonroids.retrofit2.JspoonConverterFactory
 import retrofit2.Retrofit
 import retrofit2.converter.scalars.ScalarsConverterFactory
 import java.net.CookieManager
+import java.net.URL
 
 abstract class BaseLocalTest : BaseTest() {
 
@@ -53,6 +55,7 @@ abstract class BaseLocalTest : BaseTest() {
         return StudentRepository(
             api = getService(StudentService::class.java, server.url("/").toString(), false, okHttp),
             studentPlusService = getService(StudentPlusService::class.java, server.url("/").toString(), false, okHttp),
+            urlGenerator = UrlGenerator(URL("http://localhost"), "", "powiatwulkanowy", "123456"),
         )
     }
 
@@ -67,7 +70,6 @@ abstract class BaseLocalTest : BaseTest() {
         }
     }
 
-    @OptIn(ExperimentalSerializationApi::class)
     fun <T> getService(
         service: Class<T>,
         url: String = this.server.url("/").toString(),

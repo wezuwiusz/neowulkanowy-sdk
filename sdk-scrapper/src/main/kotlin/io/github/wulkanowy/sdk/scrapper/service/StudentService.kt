@@ -38,6 +38,8 @@ import io.github.wulkanowy.sdk.scrapper.timetable.CompletedLessonsRequest
 import io.github.wulkanowy.sdk.scrapper.timetable.TimetableRequest
 import io.github.wulkanowy.sdk.scrapper.timetable.TimetableResponse
 import retrofit2.http.Body
+import retrofit2.http.FieldMap
+import retrofit2.http.FormUrlEncoded
 import retrofit2.http.GET
 import retrofit2.http.Header
 import retrofit2.http.POST
@@ -47,6 +49,10 @@ internal interface StudentService {
 
     @GET
     suspend fun getStart(@Url url: String): String
+
+    @POST
+    @FormUrlEncoded
+    suspend fun sendCertificate(@Header("Referer") referer: String, @Url url: String, @FieldMap certificate: Map<String, String>): String
 
     @POST
     suspend fun getUserCache(

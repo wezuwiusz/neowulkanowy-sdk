@@ -34,6 +34,8 @@ import io.github.wulkanowy.sdk.scrapper.homework.Homework
 import io.github.wulkanowy.sdk.scrapper.homework.HomeworkRequest
 import io.github.wulkanowy.sdk.scrapper.homework.mapHomework
 import io.github.wulkanowy.sdk.scrapper.interceptor.handleErrors
+import io.github.wulkanowy.sdk.scrapper.login.CertificateResponse
+import io.github.wulkanowy.sdk.scrapper.login.UrlGenerator
 import io.github.wulkanowy.sdk.scrapper.menu.Menu
 import io.github.wulkanowy.sdk.scrapper.menu.MenuRequest
 import io.github.wulkanowy.sdk.scrapper.mobile.Device
@@ -63,7 +65,8 @@ import io.github.wulkanowy.sdk.scrapper.timetable.mapTimetableHeaders
 import io.github.wulkanowy.sdk.scrapper.timetable.mapTimetableList
 import io.github.wulkanowy.sdk.scrapper.toFormat
 import org.jsoup.Jsoup
-import java.net.HttpURLConnection.HTTP_NOT_FOUND
+import pl.droidsonroids.jspoon.Jspoon
+import java.net.HttpURLConnection
 import java.time.LocalDate
 import kotlin.io.encoding.Base64
 import kotlin.io.encoding.ExperimentalEncodingApi
@@ -71,7 +74,12 @@ import kotlin.io.encoding.ExperimentalEncodingApi
 internal class StudentRepository(
     private val api: StudentService,
     private val studentPlusService: StudentPlusService,
+    private val urlGenerator: UrlGenerator,
 ) {
+
+    private val certificateAdapter by lazy {
+        Jspoon.create().adapter(CertificateResponse::class.java)
+    }
 
     private var isEduOne: Boolean = false
 
@@ -302,10 +310,29 @@ internal class StudentRepository(
 
     private suspend fun getStartPage(): String {
         return runCatching {
-            api.getStart("LoginEndpoint.aspx")
+            val start = api.getStart("LoginEndpoint.aspx")
+            when {
+                "Working" in Jsoup.parse(start).title() -> {
+                    val cert = certificateAdapter.fromHtml(start)
+                    api.sendCertificate(
+                        referer = urlGenerator.createReferer(UrlGenerator.Site.STUDENT),
+                        url = cert.action,
+                        certificate = mapOf(
+                            "wa" to cert.wa,
+                            "wresult" to cert.wresult,
+                            "wctx" to cert.wctx,
+                        ),
+                    )
+                }
+
+                else -> start
+            }
         }.recoverCatching {
             when {
-                it is ScrapperException && it.code == HTTP_NOT_FOUND -> api.getStart("Start")
+                it is ScrapperException && it.code == HttpURLConnection.HTTP_NOT_FOUND -> {
+                    api.getStart(urlGenerator.generate(UrlGenerator.Site.STUDENT) + "Start")
+                }
+
                 else -> throw it
             }
         }.getOrThrow()

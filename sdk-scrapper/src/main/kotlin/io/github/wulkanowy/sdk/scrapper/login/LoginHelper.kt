@@ -17,7 +17,6 @@ import pl.droidsonroids.jspoon.Jspoon
 import java.net.CookieManager
 import java.net.URLEncoder
 import java.time.Instant
-import java.time.LocalDateTime.now
 import java.time.ZoneId
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
@@ -100,7 +99,6 @@ internal class LoginHelper(
     }
 
     suspend fun sendCertificate(cert: CertificateResponse, email: String, url: String = cert.action): HomePageResponse {
-        cookies.cookieStore.removeAll()
         val res = api.sendCertificate(
             referer = "$schema://cufs$domainSuffix.$host/",
             url = url,
@@ -125,9 +123,9 @@ internal class LoginHelper(
             append("/$symbol/FS/LS")
             append("?wa=wsignin1.0")
             append("&wtrealm=$targetRealm")
-            append("&wctx=$targetRealm")
+            append("&wctx=${encode("auth=uonet")}")
         }
-        val intermediateRealm = encode("$schema://dziennik-logowanie$domainSuffix.$host$intermediateRealmPath")
+        val intermediateRealm = encode("$schema://uonetplus-logowanie$domainSuffix.$host$intermediateRealmPath")
         val returnUrl = buildString {
             append("/$symbol/FS/LS")
             append("?wa=wsignin1.0")
@@ -145,7 +143,7 @@ internal class LoginHelper(
                 ),
             ),
         )
-        if ("dziennik-logowanie" in res.action) {
+        if ("uonetplus-logowanie" in res.action) {
             return certificateAdapter.fromHtml(
                 api.sendCertificate(
                     url = res.action,
