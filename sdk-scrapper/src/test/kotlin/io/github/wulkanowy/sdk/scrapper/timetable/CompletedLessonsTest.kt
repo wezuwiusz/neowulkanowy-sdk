@@ -1,31 +1,30 @@
 package io.github.wulkanowy.sdk.scrapper.timetable
 
 import io.github.wulkanowy.sdk.scrapper.BaseLocalTest
+import io.github.wulkanowy.sdk.scrapper.attendance.AttendanceTest
 import io.github.wulkanowy.sdk.scrapper.exception.FeatureDisabledException
 import io.github.wulkanowy.sdk.scrapper.exception.VulcanException
 import io.github.wulkanowy.sdk.scrapper.register.RegisterTest
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
-import org.junit.Before
 import org.junit.Test
 
 class CompletedLessonsTest : BaseLocalTest() {
 
     private val student by lazy {
         runBlocking {
-            getStudentRepo(CompletedLessonsTest::class.java, "Zrealizowane.json").getCompletedLessons(
-                getLocalDate(2018, 9, 17),
-                getLocalDate(2018, 9, 18),
-                -1,
+            val repo = getStudentRepo {
+                it.enqueue("WitrynaUcznia.html", RegisterTest::class.java)
+                it.enqueue("UczenCache.json", RegisterTest::class.java)
+                it.enqueue("Zrealizowane.json", CompletedLessonsTest::class.java)
+            }
+            repo.getCompletedLessons(
+                start = getLocalDate(2018, 9, 17),
+                endDate = getLocalDate(2018, 9, 18),
+                subjectId = -1,
             )
         }
-    }
-
-    @Before
-    fun setUp() {
-        server.enqueue("WitrynaUcznia.html", RegisterTest::class.java)
-        server.enqueue("UczenCache.json", RegisterTest::class.java)
     }
 
     @Test

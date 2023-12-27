@@ -8,16 +8,23 @@ import io.github.wulkanowy.sdk.scrapper.messages.Recipient
 import io.github.wulkanowy.sdk.scrapper.messages.SendMessageRequest
 import retrofit2.Response
 import retrofit2.http.Body
+import retrofit2.http.FieldMap
+import retrofit2.http.FormUrlEncoded
 import retrofit2.http.GET
 import retrofit2.http.Header
 import retrofit2.http.POST
 import retrofit2.http.PUT
 import retrofit2.http.Query
+import retrofit2.http.Url
 
 internal interface MessagesService {
 
-    @GET(".")
+    @GET("LoginEndpoint.aspx")
     suspend fun getStart(): String
+
+    @POST
+    @FormUrlEncoded
+    suspend fun sendCertificate(@Header("Referer") referer: String, @Url url: String, @FieldMap certificate: Map<String, String>): String
 
     @GET("api/Skrzynki")
     suspend fun getMailboxes(): List<Mailbox>

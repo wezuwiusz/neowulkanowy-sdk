@@ -257,7 +257,10 @@ class Scrapper {
     }
 
     private val messages by resettableLazy(changeManager) {
-        MessagesRepository(serviceManager.getMessagesService())
+        MessagesRepository(
+            api = serviceManager.getMessagesService(),
+            urlGenerator = serviceManager.urlGenerator,
+        )
     }
 
     private val homepage by resettableLazy(changeManager) {

@@ -7,6 +7,7 @@ import io.github.wulkanowy.sdk.scrapper.interceptor.ErrorInterceptor
 import io.github.wulkanowy.sdk.scrapper.interceptor.HttpErrorInterceptor
 import io.github.wulkanowy.sdk.scrapper.login.LoginHelper
 import io.github.wulkanowy.sdk.scrapper.login.UrlGenerator
+import io.github.wulkanowy.sdk.scrapper.register.RegisterTest
 import io.github.wulkanowy.sdk.scrapper.repository.StudentRepository
 import io.github.wulkanowy.sdk.scrapper.service.LoginService
 import io.github.wulkanowy.sdk.scrapper.service.StudentPlusService
@@ -46,7 +47,10 @@ abstract class BaseLocalTest : BaseTest() {
         loginType: Scrapper.LoginType = Scrapper.LoginType.STANDARD,
         autoLogin: Boolean = false,
     ): StudentRepository {
-        return getStudentRepo(loginType, autoLogin) { it.enqueue(fixture, testClass) }
+        return getStudentRepo(loginType, autoLogin) {
+            it.enqueue("WitrynaUcznia.html", RegisterTest::class.java) // needed because of VULCAN changes on 2023-12.26
+            it.enqueue(fixture, testClass)
+        }
     }
 
     internal fun getStudentRepo(loginType: Scrapper.LoginType = Scrapper.LoginType.STANDARD, autoLogin: Boolean = false, responses: (MockWebServer) -> Unit): StudentRepository {

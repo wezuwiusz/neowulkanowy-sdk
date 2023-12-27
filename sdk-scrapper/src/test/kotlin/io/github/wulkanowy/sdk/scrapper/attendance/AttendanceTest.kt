@@ -3,7 +3,7 @@ package io.github.wulkanowy.sdk.scrapper.attendance
 import io.github.wulkanowy.sdk.scrapper.BaseLocalTest
 import io.github.wulkanowy.sdk.scrapper.register.RegisterTest
 import kotlinx.coroutines.runBlocking
-import kotlinx.serialization.decodeFromString
+import kotlinx.coroutines.test.runTest
 import kotlinx.serialization.json.Json
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
@@ -156,13 +156,13 @@ class AttendanceTest : BaseLocalTest() {
     }
 
     @Test
-    fun getAttendance_requestDateFormat() {
+    fun getAttendance_requestDateFormat() = runTest {
         val repo = getStudentRepo {
             it.enqueue("WitrynaUcznia.html", RegisterTest::class.java)
             it.enqueue("UczenCache.json", RegisterTest::class.java)
             it.enqueue("Frekwencja.json", AttendanceTest::class.java)
         }
-        runBlocking { repo.getAttendance(getLocalDate(2018, 10, 1), null, 1, 2) }
+        repo.getAttendance(getLocalDate(2018, 10, 1), null, 1, 2)
 
         server.takeRequest()
         server.takeRequest()
@@ -175,8 +175,6 @@ class AttendanceTest : BaseLocalTest() {
 
     @Test
     fun excuseForAbsence() {
-        server.enqueue("WitrynaUcznia.html", RegisterTest::class.java)
-
         val absents = listOf(
             Absent(
                 date = LocalDateTime.of(2019, 2, 11, 15, 53, 9),

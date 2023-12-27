@@ -1,6 +1,8 @@
 package io.github.wulkanowy.sdk.scrapper
 
 import io.github.wulkanowy.sdk.scrapper.attendance.AttendanceSummaryTest
+import io.github.wulkanowy.sdk.scrapper.register.RegisterTest
+import io.github.wulkanowy.sdk.scrapper.repository.RegisterRepository
 import kotlinx.coroutines.runBlocking
 import org.junit.Test
 
@@ -9,6 +11,7 @@ class ScrapperTest : BaseLocalTest() {
     @Test
     fun changeTest() {
         with(server) {
+            enqueue("WitrynaUcznia.html", RegisterTest::class.java)
             enqueue("Przedmioty.json", AttendanceSummaryTest::class.java)
             start(3000) //
         }
