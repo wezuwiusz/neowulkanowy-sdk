@@ -312,7 +312,7 @@ internal class LoginHelper(
             append("/$symbol/FS/LS")
             append("?wa=wsignin1.0")
             append("&wtrealm=$targetRealm")
-            append("&wctx=$targetRealm")
+            append("&wctx=${encode("auth=uonet")}")
         }
         val intermediateRealm = encode("$schema://dziennik-logowanie$domainSuffix.$host$intermediateRealmPath")
         val returnUrl = buildString {
