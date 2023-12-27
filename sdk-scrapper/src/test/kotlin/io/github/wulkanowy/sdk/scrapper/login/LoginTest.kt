@@ -176,7 +176,7 @@ class LoginTest : BaseLocalTest() {
             runBlocking { adfs.login("jan@fakelog.cf", "jan1234") }
         } catch (e: Throwable) {
             assertTrue(e is AccountPermissionException)
-            assertEquals("Adres nie został zarejestrowany w dzienniku uczniowskim jako adres rodzica, bądź ucznia.", e.message)
+            assertEquals("Adres mikolajpich@gmail.com nie został zarejestrowany w dzienniku uczniowskim jako adres rodzica, bądź ucznia.", e.message)
         }
     }
 
