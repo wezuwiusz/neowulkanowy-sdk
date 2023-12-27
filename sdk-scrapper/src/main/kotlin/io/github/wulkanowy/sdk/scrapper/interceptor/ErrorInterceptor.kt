@@ -95,7 +95,7 @@ internal class ErrorInterceptor(
         when (doc.title()) {
             "Błąd" -> throw VulcanException(doc.body().text(), httpCode)
             "Błąd strony" -> throw VulcanException(doc.select(".errorMessage").text(), httpCode)
-            "Logowanie" -> throw AccountPermissionException(doc.select("div").last()?.ownText().orEmpty().split(" Jeśli")[0])
+            "Logowanie" -> throw AccountPermissionException(doc.select(".info-error-message-text").first()?.text().orEmpty())
             "Login Service" -> {
                 cookies.cookieStore.removeAll() // workaround for very strange (random) errors
                 throw ScrapperException(doc.select("#MainDiv > div").text(), httpCode)
