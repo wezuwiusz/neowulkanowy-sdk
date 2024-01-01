@@ -291,7 +291,7 @@ internal class LoginHelper(
         }
 
         val query = "?wa=wsignin1.0" +
-            "&wtrealm=" + encode("http${if (ADFSCards != type) "s" else ""}://cufs$domainSuffix.$host${if (schema == "https") ":443" else ""}/$symbol/Account/LogOn") +
+            "&wtrealm=" + encode("$schema://cufs$domainSuffix.$host${if (schema == "https") ":443" else ""}/$symbol/Account/LogOn") +
             "&wctx=" + encode("rm=0&id=$id&ru=" + encode(firstStepReturnUrl)) +
             "&wct=" + encode(DateTimeFormatter.ISO_INSTANT.format(Instant.now().truncatedTo(ChronoUnit.SECONDS)))
 
