@@ -209,9 +209,11 @@ class Scrapper {
             buildTag = buildTag,
             userAgentTemplate = userAgentTemplate,
             onLoginCompleted = {
+                if ((0 != diaryId || 0 != kindergartenDiaryId) && 0 != studentId) {
+                    studentStart.clearStartCache()
+                }
                 student.clearStartCache()
                 messages.clearStartCache()
-                studentStart.clearStartCache()
             },
         ).apply {
             appInterceptors.forEach { (interceptor, isNetwork) ->
