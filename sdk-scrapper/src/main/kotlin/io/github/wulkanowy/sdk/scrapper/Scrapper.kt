@@ -210,9 +210,9 @@ class Scrapper {
             userAgentTemplate = userAgentTemplate,
             onLoginCompleted = {
                 if ((0 != diaryId || 0 != kindergartenDiaryId) && 0 != studentId) {
-                    studentStart.clearStartCache()
+                    student.clearStartCache()
                 }
-                student.clearStartCache()
+                studentStart.clearStartCache()
                 messages.clearStartCache()
             },
         ).apply {
