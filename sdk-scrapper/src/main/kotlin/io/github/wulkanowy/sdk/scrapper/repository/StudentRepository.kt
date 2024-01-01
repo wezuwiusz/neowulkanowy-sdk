@@ -94,6 +94,10 @@ internal class StudentRepository(
 
     private fun LocalDate.toISOFormat(): String = toFormat("yyyy-MM-dd'T00:00:00'")
 
+    fun clearStartCache() {
+        cachedStart = ""
+    }
+
     private suspend fun fetchCookies() {
         if (isCookiesFetched) return
 

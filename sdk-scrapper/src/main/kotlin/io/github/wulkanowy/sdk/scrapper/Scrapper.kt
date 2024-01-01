@@ -208,6 +208,11 @@ class Scrapper {
             androidVersion = androidVersion,
             buildTag = buildTag,
             userAgentTemplate = userAgentTemplate,
+            onLoginCompleted = {
+                student.clearStartCache()
+                messages.clearStartCache()
+                studentStart.clearStartCache()
+            },
         ).apply {
             appInterceptors.forEach { (interceptor, isNetwork) ->
                 setInterceptor(interceptor, isNetwork)
@@ -238,7 +243,7 @@ class Scrapper {
         )
     }
 
-    private val studentStart by resettableLazy(changeManager) {
+    private val studentStart: StudentStartRepository by resettableLazy(changeManager) {
         if (0 == studentId) throw ScrapperException("Student id is not set")
         if (0 == classId && 0 == kindergartenDiaryId) throw ScrapperException("Class id is not set")
         StudentStartRepository(
@@ -246,10 +251,11 @@ class Scrapper {
             classId = classId,
             unitId = unitId,
             api = serviceManager.getStudentService(withLogin = true, studentInterceptor = false),
+            urlGenerator = serviceManager.urlGenerator,
         )
     }
 
-    private val student by resettableLazy(changeManager) {
+    private val student: StudentRepository by resettableLazy(changeManager) {
         StudentRepository(
             api = serviceManager.getStudentService(),
             studentPlusService = serviceManager.getStudentPlusService(),
@@ -257,7 +263,7 @@ class Scrapper {
         )
     }
 
-    private val messages by resettableLazy(changeManager) {
+    private val messages: MessagesRepository by resettableLazy(changeManager) {
         MessagesRepository(
             api = serviceManager.getMessagesService(),
             urlGenerator = serviceManager.urlGenerator,

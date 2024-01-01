@@ -42,6 +42,10 @@ internal class MessagesRepository(
         private val logger = LoggerFactory.getLogger(this::class.java)
     }
 
+    fun clearStartCache() {
+        cachedStart = ""
+    }
+
     private suspend fun fetchCookies() {
         if (isCookiesFetched) return
 

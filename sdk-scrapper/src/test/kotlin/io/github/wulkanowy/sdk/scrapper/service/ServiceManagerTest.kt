@@ -38,6 +38,7 @@ class ServiceManagerTest : BaseLocalTest() {
             androidVersion = "",
             buildTag = "",
             userAgentTemplate = "",
+            onLoginCompleted = {},
         )
         manager.setInterceptor({ throw ScrapperException("Test") })
 
@@ -70,6 +71,7 @@ class ServiceManagerTest : BaseLocalTest() {
             androidVersion = "",
             buildTag = "",
             userAgentTemplate = "",
+            onLoginCompleted = {},
         )
         manager.setInterceptor(
             {
@@ -140,6 +142,7 @@ class ServiceManagerTest : BaseLocalTest() {
             androidVersion = "",
             buildTag = "",
             userAgentTemplate = "",
+            onLoginCompleted = {},
         )
 
         val res = runCatching {
