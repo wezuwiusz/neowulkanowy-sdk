@@ -38,6 +38,8 @@ internal class AutoLoginInterceptor(
     private val jar: CookieManager,
     private val emptyCookieJarIntercept: Boolean = false,
     private val notLoggedInCallback: suspend () -> Unit,
+    private val fetchStudentCookies: suspend () -> Unit,
+    private val fetchMessagesCookies: suspend () -> Unit,
 ) : Interceptor {
 
     companion object {
@@ -50,7 +52,8 @@ internal class AutoLoginInterceptor(
     override fun intercept(chain: Interceptor.Chain): Response {
         val request: Request
         val response: Response
-        val url = chain.request().url.toString()
+        val uri = chain.request().url
+        val url = uri.toString()
 
         try {
             request = chain.request()
@@ -71,7 +74,13 @@ internal class AutoLoginInterceptor(
             if (lock.tryLock()) {
                 logger.debug("Not logged in. Login in...")
                 return try {
-                    runBlocking { notLoggedInCallback() }
+                    runBlocking {
+                        notLoggedInCallback()
+                        when {
+                            "wiadomosciplus" in uri.host -> fetchMessagesCookies()
+                            "uczen" in uri.host -> fetchStudentCookies()
+                        }
+                    }
                     chain.proceed(chain.request().newBuilder().build())
                 } catch (e: IOException) {
                     logger.debug("Error occurred on login")

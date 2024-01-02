@@ -10,7 +10,6 @@ class ScrapperTest : BaseLocalTest() {
     @Test
     fun changeTest() {
         with(server) {
-            enqueue("WitrynaUcznia.html", RegisterTest::class.java)
             enqueue("Przedmioty.json", AttendanceSummaryTest::class.java)
             start(3000) //
         }

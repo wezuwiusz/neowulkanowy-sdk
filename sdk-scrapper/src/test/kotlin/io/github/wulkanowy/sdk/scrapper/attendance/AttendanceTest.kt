@@ -175,6 +175,8 @@ class AttendanceTest : BaseLocalTest() {
 
     @Test
     fun excuseForAbsence() {
+        server.enqueue("WitrynaUcznia.html", RegisterTest::class.java)
+
         val absents = listOf(
             Absent(
                 date = LocalDateTime.of(2019, 2, 11, 15, 53, 9),

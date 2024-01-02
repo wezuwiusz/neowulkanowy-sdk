@@ -12,6 +12,7 @@ import io.github.wulkanowy.sdk.scrapper.exception.ScrapperException
 import io.github.wulkanowy.sdk.scrapper.exception.VulcanException
 import io.github.wulkanowy.sdk.scrapper.register.HomePageResponse
 import io.github.wulkanowy.sdk.scrapper.service.LoginService
+import org.jsoup.Jsoup
 import org.slf4j.LoggerFactory
 import pl.droidsonroids.jspoon.Jspoon
 import java.net.CookieManager
@@ -64,6 +65,60 @@ internal class LoginHelper(
         val cert = sendCertificate(res, email)
         logger.debug("Login completed")
         return cert
+    }
+
+    suspend fun loginStudent() {
+        val studentPageUrl = urlGenerator.generate(UrlGenerator.Site.STUDENT) + "LoginEndpoint.aspx"
+        val startHtml = api.getModuleStart(studentPageUrl)
+        val startTitle = Jsoup.parse(startHtml).title()
+
+        if ("Working" in startTitle) {
+            val cert = certificateAdapter.fromHtml(startHtml)
+            val certResponseHtml = api.sendCertificateModule(
+                referer = urlGenerator.createReferer(UrlGenerator.Site.STUDENT),
+                url = cert.action,
+                certificate = mapOf(
+                    "wa" to cert.wa,
+                    "wresult" to cert.wresult,
+                    "wctx" to cert.wctx,
+                ),
+            )
+            if ("antiForgeryToken" !in certResponseHtml) {
+                val certResponseTitle = Jsoup.parse(certResponseHtml).title()
+                error("Unknown module start page: $certResponseTitle")
+            } else {
+                logger.debug("Student cookies fetch successfully!")
+            }
+        } else {
+            logger.debug("Student cookies already fetched!")
+        }
+    }
+
+    suspend fun loginMessages() {
+        val messagesPageUrl = urlGenerator.generate(UrlGenerator.Site.MESSAGES) + "LoginEndpoint.aspx"
+        val startHtml = api.getModuleStart(messagesPageUrl)
+        val startTitle = Jsoup.parse(startHtml).title()
+
+        if ("Working" in startTitle) {
+            val cert = certificateAdapter.fromHtml(startHtml)
+            val certResponseHtml = api.sendCertificateModule(
+                referer = urlGenerator.createReferer(UrlGenerator.Site.MESSAGES),
+                url = cert.action,
+                certificate = mapOf(
+                    "wa" to cert.wa,
+                    "wresult" to cert.wresult,
+                    "wctx" to cert.wctx,
+                ),
+            )
+            if ("antiForgeryToken" !in certResponseHtml) {
+                val certResponseTitle = Jsoup.parse(certResponseHtml).title()
+                error("Unknown module start page: $certResponseTitle")
+            } else {
+                logger.debug("Student cookies fetch successfully!")
+            }
+        } else {
+            logger.debug("Student cookies already fetched!")
+        }
     }
 
     fun logout() {

@@ -47,10 +47,7 @@ abstract class BaseLocalTest : BaseTest() {
         loginType: Scrapper.LoginType = Scrapper.LoginType.STANDARD,
         autoLogin: Boolean = false,
     ): StudentRepository {
-        return getStudentRepo(loginType, autoLogin) {
-            it.enqueue("WitrynaUcznia.html", RegisterTest::class.java) // needed because of VULCAN changes on 2023-12.26
-            it.enqueue(fixture, testClass)
-        }
+        return getStudentRepo(loginType, autoLogin) { it.enqueue(fixture, testClass) }
     }
 
     internal fun getStudentRepo(loginType: Scrapper.LoginType = Scrapper.LoginType.STANDARD, autoLogin: Boolean = false, responses: (MockWebServer) -> Unit): StudentRepository {
@@ -59,7 +56,6 @@ abstract class BaseLocalTest : BaseTest() {
         return StudentRepository(
             api = getService(StudentService::class.java, server.url("/").toString(), false, okHttp),
             studentPlusService = getService(StudentPlusService::class.java, server.url("/").toString(), false, okHttp),
-            urlGenerator = UrlGenerator(URL("http://localhost"), "", "powiatwulkanowy", "123456"),
         )
     }
 
@@ -108,19 +104,25 @@ abstract class BaseLocalTest : BaseTest() {
         .build()
 
     private fun getAutoLoginInterceptor(loginType: Scrapper.LoginType, autoLogin: Boolean): AutoLoginInterceptor {
-        return AutoLoginInterceptor(loginType, CookieManager()) {
-            if (autoLogin) {
-                LoginHelper(
-                    loginType = loginType,
-                    schema = "http",
-                    host = "localhost",
-                    domainSuffix = "",
-                    symbol = "powiatwulkanowy",
-                    cookies = CookieManager(),
-                    api = getService(LoginService::class.java),
-                    urlGenerator = UrlGenerator(URL("http://localhost/"), "", "lodz", ""),
-                ).login("jan", "kowalski")
-            }
-        }
+        return AutoLoginInterceptor(
+            loginType = loginType,
+            jar = CookieManager(),
+            notLoggedInCallback = {
+                if (autoLogin) {
+                    LoginHelper(
+                        loginType = loginType,
+                        schema = "http",
+                        host = "localhost",
+                        domainSuffix = "",
+                        symbol = "powiatwulkanowy",
+                        cookies = CookieManager(),
+                        api = getService(LoginService::class.java),
+                        urlGenerator = UrlGenerator(URL("http://localhost/"), "", "lodz", ""),
+                    ).login("jan", "kowalski")
+                }
+            },
+            fetchStudentCookies = {},
+            fetchMessagesCookies = {},
+        )
     }
 }

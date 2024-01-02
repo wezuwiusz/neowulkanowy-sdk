@@ -140,6 +140,8 @@ class AutoLoginInterceptorTest : BaseLocalTest() {
             jar = CookieManager(),
             emptyCookieJarIntercept = checkJar,
             notLoggedInCallback = notLoggedInCallback,
+            fetchStudentCookies = {},
+            fetchMessagesCookies = {},
         )
         val okHttp = getOkHttp(autoLogin = true, autoLoginInterceptorOn = true, autoLoginInterceptor = interceptor)
         return getService(StudentService::class.java, html = false, okHttp = okHttp)

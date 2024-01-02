@@ -208,13 +208,6 @@ class Scrapper {
             androidVersion = androidVersion,
             buildTag = buildTag,
             userAgentTemplate = userAgentTemplate,
-            onLoginCompleted = {
-                if ((0 != diaryId || 0 != kindergartenDiaryId) && 0 != studentId) {
-                    student.clearStartCache()
-                }
-                studentStart.clearStartCache()
-                messages.clearStartCache()
-            },
         ).apply {
             appInterceptors.forEach { (interceptor, isNetwork) ->
                 setInterceptor(interceptor, isNetwork)
@@ -253,7 +246,6 @@ class Scrapper {
             classId = classId,
             unitId = unitId,
             api = serviceManager.getStudentService(withLogin = true, studentInterceptor = false),
-            urlGenerator = serviceManager.urlGenerator,
         )
     }
 
@@ -261,14 +253,12 @@ class Scrapper {
         StudentRepository(
             api = serviceManager.getStudentService(),
             studentPlusService = serviceManager.getStudentPlusService(),
-            urlGenerator = serviceManager.urlGenerator,
         )
     }
 
     private val messages: MessagesRepository by resettableLazy(changeManager) {
         MessagesRepository(
             api = serviceManager.getMessagesService(),
-            urlGenerator = serviceManager.urlGenerator,
         )
     }
 

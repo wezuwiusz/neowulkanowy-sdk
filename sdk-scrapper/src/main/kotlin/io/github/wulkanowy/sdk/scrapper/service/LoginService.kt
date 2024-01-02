@@ -26,6 +26,13 @@ internal interface LoginService {
     suspend fun sendCertificate(@Header("Referer") referer: String, @Url url: String, @FieldMap certificate: Map<String, String>): HomePageResponse
 
     @GET
+    suspend fun getModuleStart(@Url url: String): String
+
+    @POST
+    @FormUrlEncoded
+    suspend fun sendCertificateModule(@Header("Referer") referer: String, @Url url: String, @FieldMap certificate: Map<String, String>): String
+
+    @GET
     suspend fun switchLogin(@Url url: String): HomePageResponse
 
     @GET

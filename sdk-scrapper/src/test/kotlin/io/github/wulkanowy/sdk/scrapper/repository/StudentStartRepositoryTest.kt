@@ -26,7 +26,6 @@ class StudentStartRepositoryTest : BaseLocalTest() {
     @Test
     fun getSemesters() {
         with(server) {
-            enqueue("WitrynaUcznia.html", RegisterTest::class.java)
             enqueue("UczenDziennik.json", RegisterTest::class.java)
             start(3000) //
         }
@@ -51,7 +50,6 @@ class StudentStartRepositoryTest : BaseLocalTest() {
     @Test
     fun getSemesters_empty() {
         with(server) {
-            enqueue("WitrynaUcznia.html", RegisterTest::class.java)
             enqueue("UczenDziennik.json", RegisterTest::class.java)
             start(3000) //
         }
@@ -67,7 +65,6 @@ class StudentStartRepositoryTest : BaseLocalTest() {
     @Test
     fun getSemesters_studentWithMultiClasses() {
         with(server) {
-            enqueue("WitrynaUcznia.html", RegisterTest::class.java)
             enqueue("UczenDziennik-multi.json", RegisterTest::class.java)
             start(3000)
         }
@@ -86,7 +83,6 @@ class StudentStartRepositoryTest : BaseLocalTest() {
     @Test
     fun getSemesters_graduate() {
         with(server) {
-            enqueue("WitrynaUcznia.html", RegisterTest::class.java)
             enqueue("UczenDziennik.json", RegisterTest::class.java)
             start(3000) //
         }

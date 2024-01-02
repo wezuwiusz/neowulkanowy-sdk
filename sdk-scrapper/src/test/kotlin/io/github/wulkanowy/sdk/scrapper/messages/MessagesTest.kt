@@ -1,7 +1,6 @@
 package io.github.wulkanowy.sdk.scrapper.messages
 
 import io.github.wulkanowy.sdk.scrapper.BaseLocalTest
-import io.github.wulkanowy.sdk.scrapper.login.UrlGenerator
 import io.github.wulkanowy.sdk.scrapper.repository.MessagesRepository
 import io.github.wulkanowy.sdk.scrapper.service.MessagesService
 import io.mockk.every
@@ -16,7 +15,6 @@ import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
-import java.net.URL
 import java.util.UUID
 
 class MessagesTest : BaseLocalTest() {
@@ -24,13 +22,7 @@ class MessagesTest : BaseLocalTest() {
     private val api by lazy {
         MessagesRepository(
             api = getService(MessagesService::class.java, "http://fakelog.localhost:3000/", false),
-            urlGenerator = UrlGenerator(URL("https://localhost"), "", "", ""),
         )
-    }
-
-    @Before
-    fun setUp() {
-        server.enqueue("Start.html")
     }
 
     @Test
@@ -143,6 +135,7 @@ class MessagesTest : BaseLocalTest() {
     @Test
     fun sendMessageTest() = runBlocking {
         with(server) {
+            enqueue("Start.html")
             enqueue("WiadomoscNowa.json")
             start(3000)
         }
@@ -180,6 +173,7 @@ class MessagesTest : BaseLocalTest() {
     @Test
     fun deleteMessageTest() = runBlocking {
         with(server) {
+            enqueue("Start.html")
             enqueue(MockResponse()) // 204
             start(3000)
         }
