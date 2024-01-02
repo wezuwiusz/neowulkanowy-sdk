@@ -39,6 +39,7 @@ internal class StudentStartRepository(
     }
 
     fun clearStartCache() {
+        isCookiesFetched = false
         cachedStart = ""
     }
 

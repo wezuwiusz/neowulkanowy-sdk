@@ -43,6 +43,7 @@ internal class MessagesRepository(
     }
 
     fun clearStartCache() {
+        isCookiesFetched = false
         cachedStart = ""
     }
 
