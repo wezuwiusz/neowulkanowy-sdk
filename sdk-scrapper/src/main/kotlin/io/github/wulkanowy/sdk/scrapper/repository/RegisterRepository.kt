@@ -209,7 +209,7 @@ internal class RegisterRepository(
         logger.debug("Register login type: {}", symbolLoginType)
         return loginHelper
             .apply { loginType = symbolLoginType }
-            .sendCredentials(email, password)
+            .sendCredentials(email, password, clearCookies = true)
     }
 
     private fun CertificateResponse.toCertificateValues(): Triple<String, String, List<String>> {

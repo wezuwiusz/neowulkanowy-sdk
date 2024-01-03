@@ -51,7 +51,7 @@ internal class AutoLoginInterceptor(
         val uri = chain.request().url
         val url = uri.toString()
 
-        synchronized(this) {
+        synchronized(jar) {
             try {
                 request = chain.request()
                 checkRequest()
