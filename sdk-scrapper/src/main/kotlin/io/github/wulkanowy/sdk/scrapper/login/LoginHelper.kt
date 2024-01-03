@@ -68,7 +68,7 @@ internal class LoginHelper(
     }
 
     suspend fun loginStudent() {
-        val studentPageUrl = urlGenerator.generate(UrlGenerator.Site.STUDENT) + "LoginEndpoint.aspx"
+        val studentPageUrl = urlGenerator.generate(UrlGenerator.Site.STUDENT, withSchoolId = false) + "LoginEndpoint.aspx"
         val startHtml = api.getModuleStart(studentPageUrl)
         val startTitle = Jsoup.parse(startHtml).title()
 

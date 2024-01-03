@@ -32,7 +32,7 @@ import java.net.CookieManager
 import java.net.HttpURLConnection
 import java.util.concurrent.locks.ReentrantLock
 
-private val lock = ReentrantLock()
+private val lock = ReentrantLock(true)
 
 internal class AutoLoginInterceptor(
     private val loginType: LoginType,
@@ -74,9 +74,13 @@ internal class AutoLoginInterceptor(
                 logger.debug("Not logged in. Login in...")
                 try {
                     runBlocking { notLoggedInCallback() }
+                    val messages = runCatching { runBlocking { fetchMessagesCookies() } }
+                        .onFailure { it.printStackTrace() }
+                    val student = runCatching { runBlocking { fetchStudentCookies() } }
+                        .onFailure { it.printStackTrace() }
                     when {
-                        "wiadomosciplus" in uri.host -> runBlocking { fetchMessagesCookies() }
-                        "uczen" in uri.host -> runBlocking { fetchStudentCookies() }
+                        "wiadomosciplus" in uri.host -> messages.getOrThrow()
+                        "uczen" in uri.host -> student.getOrThrow()
                         else -> logger.info("Resource don't need further login")
                     }
 
@@ -94,10 +98,13 @@ internal class AutoLoginInterceptor(
                     lock.unlock()
                 }
             } else {
-                logger.debug("Wait for user to be logged in...")
-                lock.lock()
-                lock.unlock()
-                logger.debug("User logged in. Retry after login...")
+                try {
+                    logger.debug("Wait for user to be logged in...")
+                    lock.lock()
+                } finally {
+                    lock.unlock()
+                    logger.debug("User logged in. Retry after login...")
+                }
 
                 chain.proceed(chain.request().newBuilder().build())
             }
