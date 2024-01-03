@@ -75,9 +75,13 @@ internal class AutoLoginInterceptor(
                 return try {
                     runBlocking {
                         notLoggedInCallback()
+                        val messagesRes = runCatching { fetchMessagesCookies() }
+                            .onFailure { logger.error("Error in messages cookies fetch", it) }
+                        val studentRes = runCatching { fetchStudentCookies() }
+                            .onFailure { logger.error("Error in student cookies fetch", it) }
                         when {
-                            "wiadomosciplus" in uri.host -> fetchMessagesCookies()
-                            "uczen" in uri.host -> fetchStudentCookies()
+                            "wiadomosciplus" in uri.host -> messagesRes.getOrThrow()
+                            "uczen" in uri.host -> studentRes.getOrThrow()
                         }
                     }
                     chain.proceed(chain.request().newBuilder().build())
