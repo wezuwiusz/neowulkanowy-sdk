@@ -73,7 +73,7 @@ internal class AutoLoginInterceptor(
         } catch (e: NotLoggedInException) {
             logger.debug("Not logged in. Login in...")
             lock.withLock {
-                return try {
+                try {
                     runBlocking {
                         notLoggedInCallback()
                         val messagesRes = runCatching { fetchMessagesCookies() }
@@ -85,7 +85,6 @@ internal class AutoLoginInterceptor(
                             "uczen" in uri.host -> studentRes.getOrThrow()
                         }
                     }
-                    chain.proceed(chain.request().newBuilder().build())
                 } catch (e: IOException) {
                     logger.debug("Error occurred on login")
                     throw e
@@ -96,6 +95,7 @@ internal class AutoLoginInterceptor(
                     throw IOException("Unknown exception on login", e)
                 }
             }
+            return chain.proceed(chain.request().newBuilder().build())
         }
 
         return response
