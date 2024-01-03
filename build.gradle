@@ -32,7 +32,6 @@ nexusPublishing {
     }
 }
 
-
 allprojects {
     apply plugin: 'java'
     apply plugin: 'kotlin'

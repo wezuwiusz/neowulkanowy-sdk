@@ -39,8 +39,8 @@ internal class AutoLoginInterceptor(
     private val jar: CookieManager,
     private val emptyCookieJarIntercept: Boolean = false,
     private val notLoggedInCallback: suspend () -> Unit,
-    private val fetchStudentCookies: suspend () -> Unit,
-    private val fetchMessagesCookies: suspend () -> Unit,
+    private val fetchStudentCookies: () -> Unit,
+    private val fetchMessagesCookies: () -> Unit,
 ) : Interceptor {
 
     companion object {
@@ -74,9 +74,9 @@ internal class AutoLoginInterceptor(
                 logger.debug("Not logged in. Login in...")
                 try {
                     runBlocking { notLoggedInCallback() }
-                    val messages = runCatching { runBlocking { fetchMessagesCookies() } }
+                    val messages = runCatching { fetchMessagesCookies() }
                         .onFailure { it.printStackTrace() }
-                    val student = runCatching { runBlocking { fetchStudentCookies() } }
+                    val student = runCatching { fetchStudentCookies() }
                         .onFailure { it.printStackTrace() }
                     when {
                         "wiadomosciplus" in uri.host -> messages.getOrThrow()

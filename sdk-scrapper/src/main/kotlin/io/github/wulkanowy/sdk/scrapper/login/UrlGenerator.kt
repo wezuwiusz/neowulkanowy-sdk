@@ -31,9 +31,9 @@ internal class UrlGenerator(
             get() = this == STUDENT_PLUS || this == STUDENT
     }
 
-    fun generate(type: Site, withSchoolId: Boolean = true): String {
+    fun generate(type: Site): String {
         if (type == BASE) return "$schema://$host"
-        return "$schema://${getSubDomain(type)}$domainSuffix.$host/$symbol/${if (type.isStudent && withSchoolId) "$schoolId/" else ""}"
+        return "$schema://${getSubDomain(type)}$domainSuffix.$host/$symbol/${if (type.isStudent) "$schoolId/" else ""}"
     }
 
     fun createReferer(type: Site): String {

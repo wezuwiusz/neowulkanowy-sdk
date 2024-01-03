@@ -15,6 +15,8 @@ import io.github.wulkanowy.sdk.scrapper.service.LoginService
 import org.jsoup.Jsoup
 import org.slf4j.LoggerFactory
 import pl.droidsonroids.jspoon.Jspoon
+import retrofit2.HttpException
+import retrofit2.Response
 import java.net.CookieManager
 import java.net.URLEncoder
 import java.time.Instant
@@ -67,9 +69,9 @@ internal class LoginHelper(
         return cert
     }
 
-    suspend fun loginStudent() {
-        val studentPageUrl = urlGenerator.generate(UrlGenerator.Site.STUDENT, withSchoolId = false) + "LoginEndpoint.aspx"
-        val startHtml = api.getModuleStart(studentPageUrl)
+    fun loginStudent() {
+        val studentPageUrl = urlGenerator.generate(UrlGenerator.Site.STUDENT) + "LoginEndpoint.aspx"
+        val startHtml = api.getModuleStart(studentPageUrl).execute().handleErrors().body().orEmpty()
         val startTitle = Jsoup.parse(startHtml).title()
 
         if ("Working" in startTitle) {
@@ -82,7 +84,7 @@ internal class LoginHelper(
                     "wresult" to cert.wresult,
                     "wctx" to cert.wctx,
                 ),
-            )
+            ).execute().handleErrors().body().orEmpty()
             if ("antiForgeryToken" !in certResponseHtml) {
                 val certResponseTitle = Jsoup.parse(certResponseHtml).title()
                 error("Unknown module start page: $certResponseTitle")
@@ -94,9 +96,9 @@ internal class LoginHelper(
         }
     }
 
-    suspend fun loginMessages() {
+    fun loginMessages() {
         val messagesPageUrl = urlGenerator.generate(UrlGenerator.Site.MESSAGES) + "LoginEndpoint.aspx"
-        val startHtml = api.getModuleStart(messagesPageUrl)
+        val startHtml = api.getModuleStart(messagesPageUrl).execute().handleErrors().body().orEmpty()
         val startTitle = Jsoup.parse(startHtml).title()
 
         if ("Working" in startTitle) {
@@ -109,7 +111,7 @@ internal class LoginHelper(
                     "wresult" to cert.wresult,
                     "wctx" to cert.wctx,
                 ),
-            )
+            ).execute().handleErrors().body().orEmpty()
             if ("antiForgeryToken" !in certResponseHtml) {
                 val certResponseTitle = Jsoup.parse(certResponseHtml).title()
                 error("Unknown module start page: $certResponseTitle")
@@ -119,6 +121,13 @@ internal class LoginHelper(
         } else {
             logger.debug("Messages cookies already fetched!")
         }
+    }
+
+    private fun <T> Response<T>.handleErrors(): Response<T> {
+        if (!isSuccessful) {
+            throw HttpException(this)
+        }
+        return this
     }
 
     fun logout() {
