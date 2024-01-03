@@ -59,6 +59,7 @@ internal class ErrorInterceptor(
                     errorMessage.isNotBlank() -> throw BadCredentialsException(errorMessage)
                     else -> logger.warn("Unexpected login page!")
                 }
+
                 else -> throw BadCredentialsException(errorMessage)
             }
         }
@@ -95,15 +96,24 @@ internal class ErrorInterceptor(
         when (doc.title()) {
             "Błąd" -> throw VulcanException(doc.body().text(), httpCode)
             "Błąd strony" -> throw VulcanException(doc.select(".errorMessage").text(), httpCode)
-            "Logowanie" -> throw AccountPermissionException(doc.select(".info-error-message-text").first()?.text().orEmpty())
+            "Logowanie" -> throw AccountPermissionException(
+                buildString {
+                    val newMessage = doc.select(".info-error-message-text").first()?.text().orEmpty()
+                    val oldMessage = doc.select("div").last()?.ownText().orEmpty().split(" Jeśli")[0]
+                    append(newMessage.ifBlank { oldMessage })
+                },
+            )
+
             "Login Service" -> {
                 cookies.cookieStore.removeAll() // workaround for very strange (random) errors
                 throw ScrapperException(doc.select("#MainDiv > div").text(), httpCode)
             }
+
             "Połączenie zablokowane" -> throw ConnectionBlockedException(doc.body().text())
             "Just a moment..." -> if (doc.select(".footer").text().contains("Cloudflare")) {
                 throw ConnectionBlockedException(doc.select("#challenge-body-text").text())
             }
+
             "Przerwa" -> throw ServiceUnavailableException(doc.title())
             "Przerwa techniczna" -> throw ServiceUnavailableException(doc.title())
             "Strona nie została odnaleziona" -> throw ScrapperException(doc.title(), httpCode)
