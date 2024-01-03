@@ -32,8 +32,6 @@ import java.net.CookieManager
 import java.net.HttpURLConnection
 import java.util.concurrent.locks.ReentrantLock
 
-private val lock = ReentrantLock()
-
 internal class AutoLoginInterceptor(
     private val loginType: LoginType,
     private val jar: CookieManager,
@@ -47,6 +45,8 @@ internal class AutoLoginInterceptor(
         @JvmStatic
         private val logger = LoggerFactory.getLogger(this::class.java)
     }
+
+    private val lock = ReentrantLock()
 
     override fun intercept(chain: Interceptor.Chain): Response {
         val request: Request

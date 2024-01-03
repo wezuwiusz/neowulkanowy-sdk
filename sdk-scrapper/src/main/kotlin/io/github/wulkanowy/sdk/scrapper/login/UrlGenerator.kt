@@ -7,7 +7,6 @@ import io.github.wulkanowy.sdk.scrapper.login.UrlGenerator.Site.MESSAGES
 import io.github.wulkanowy.sdk.scrapper.login.UrlGenerator.Site.STUDENT
 import io.github.wulkanowy.sdk.scrapper.login.UrlGenerator.Site.STUDENT_PLUS
 import java.net.URL
-import java.net.URLEncoder
 
 internal class UrlGenerator(
     private val schema: String,
