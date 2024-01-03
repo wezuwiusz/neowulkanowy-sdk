@@ -70,20 +70,18 @@ internal class AutoLoginInterceptor(
                 checkResponse(Jsoup.parse(body, null, url), url)
             }
         } catch (e: NotLoggedInException) {
-            if (lock.tryLock()) {
+            return if (lock.tryLock()) {
                 logger.debug("Not logged in. Login in...")
-                return try {
-                    runBlocking {
-                        notLoggedInCallback()
-                        val messagesRes = runCatching { fetchMessagesCookies() }
-                            .onFailure { logger.error("Error in messages cookies fetch", it) }
-                        val studentRes = runCatching { fetchStudentCookies() }
-                            .onFailure { logger.error("Error in student cookies fetch", it) }
-                        when {
-                            "wiadomosciplus" in uri.host -> messagesRes.getOrThrow()
-                            "uczen" in uri.host -> studentRes.getOrThrow()
-                            else -> logger.info("Resource don't need further login")
-                        }
+                try {
+                    runBlocking { notLoggedInCallback() }
+                    val messagesRes = runCatching { runBlocking { fetchMessagesCookies() } }
+                        .onFailure { logger.error("Error in messages cookies fetch", it) }
+                    val studentRes = runCatching { runBlocking { fetchStudentCookies() } }
+                        .onFailure { logger.error("Error in student cookies fetch", it) }
+                    when {
+                        "wiadomosciplus" in uri.host -> messagesRes.getOrThrow()
+                        "uczen" in uri.host -> studentRes.getOrThrow()
+                        else -> logger.info("Resource don't need further login")
                     }
 
                     chain.proceed(chain.request().newBuilder().build())
@@ -105,7 +103,7 @@ internal class AutoLoginInterceptor(
                 lock.unlock()
                 logger.debug("User logged in. Retry after login...")
 
-                return chain.proceed(chain.request().newBuilder().build())
+                chain.proceed(chain.request().newBuilder().build())
             }
         }
 
