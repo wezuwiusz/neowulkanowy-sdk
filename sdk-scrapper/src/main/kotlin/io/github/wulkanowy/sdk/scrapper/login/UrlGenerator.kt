@@ -37,17 +37,6 @@ internal class UrlGenerator(
         return "$schema://${getSubDomain(type)}$domainSuffix.$host/$symbol/${if (type.isStudent) "$schoolId/" else ""}"
     }
 
-    fun createLogoutEndpoints(): List<String> {
-        return listOf(
-            "$schema://uonetplus$domainSuffix.$host/$symbol/LoginEndpoint.aspx?logout=true",
-            "$schema://uonetplus-logowanie.$host/$symbol/Fs/Ls?wa=wsignoutcleanup1.0",
-            "$schema://cufs.$host/$symbol/Account/LogOff?wreply=${encode("$schema://uonetplus.$host/$symbol")}",
-            "$schema://uonetplus$domainSuffix.$host/$symbol/loginendpoint.aspx?wa=wsignoutcleanup1.0",
-        )
-    }
-
-    private fun encode(url: String) = URLEncoder.encode(url, "UTF-8")
-
     fun createReferer(type: Site): String {
         return when (type) {
             LOGIN -> "$schema://cufs$domainSuffix.$host/"

@@ -3,6 +3,7 @@ package io.github.wulkanowy.sdk.scrapper.repository
 import io.github.wulkanowy.sdk.scrapper.BaseLocalTest
 import io.github.wulkanowy.sdk.scrapper.Scrapper
 import io.github.wulkanowy.sdk.scrapper.login.LoginTest
+import io.github.wulkanowy.sdk.scrapper.messages.MessagesTest
 import io.github.wulkanowy.sdk.scrapper.register.RegisterTest
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertEquals
@@ -106,7 +107,9 @@ class StudentStartRepositoryTest : BaseLocalTest() {
             enqueue("Logowanie-uonet.html", LoginTest::class.java)
             enqueue("Login-success.html", LoginTest::class.java)
 
+            enqueue("Start.html", MessagesTest::class.java)
             enqueue("WitrynaUcznia.html", RegisterTest::class.java)
+
             enqueue("UczenDziennik.json", RegisterTest::class.java)
             start(3000) //
         }
@@ -134,7 +137,9 @@ class StudentStartRepositoryTest : BaseLocalTest() {
             enqueue("Logowanie-uonet.html", LoginTest::class.java)
             enqueue("Login-success.html", LoginTest::class.java)
 
+            enqueue("Start.html", MessagesTest::class.java)
             enqueue("WitrynaUcznia.html", RegisterTest::class.java)
+
             enqueue("UczenDziennik.json", RegisterTest::class.java)
             start(3000) //
         }
@@ -162,7 +167,9 @@ class StudentStartRepositoryTest : BaseLocalTest() {
             enqueue("Logowanie-uonet.html", LoginTest::class.java)
             enqueue("Login-success.html", LoginTest::class.java)
 
+            enqueue("Start.html", MessagesTest::class.java)
             enqueue("WitrynaUcznia.html", RegisterTest::class.java)
+
             enqueue("UczenDziennik.json", RegisterTest::class.java)
             start(3000) //
         }
@@ -184,14 +191,16 @@ class StudentStartRepositoryTest : BaseLocalTest() {
     @Test
     fun getSemesters_ADFSCards() {
         with(server) {
-            enqueue("ADFSCards.html", LoginTest::class.java)
+            enqueue("unknown-error.txt", RegisterTest::class.java)
 
             enqueue("ADFSCards.html", LoginTest::class.java)
             enqueue("Logowanie-cufs.html", LoginTest::class.java)
             enqueue("Logowanie-uonet.html", LoginTest::class.java)
             enqueue("Login-success.html", LoginTest::class.java)
 
+            enqueue("Start.html", MessagesTest::class.java)
             enqueue("WitrynaUcznia.html", RegisterTest::class.java)
+
             enqueue("UczenDziennik.json", RegisterTest::class.java)
             start(3000) //
         }

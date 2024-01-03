@@ -22,7 +22,6 @@ import okhttp3.Response
 import okhttp3.ResponseBody
 import okio.Buffer
 import okio.BufferedSource
-import okio.withLock
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import org.jsoup.select.Elements
@@ -71,9 +70,9 @@ internal class AutoLoginInterceptor(
                 checkResponse(Jsoup.parse(body, null, url), url)
             }
         } catch (e: NotLoggedInException) {
-            logger.debug("Not logged in. Login in...")
-            lock.withLock {
-                try {
+            if (lock.tryLock()) {
+                logger.debug("Not logged in. Login in...")
+                return try {
                     runBlocking {
                         notLoggedInCallback()
                         val messagesRes = runCatching { fetchMessagesCookies() }
@@ -83,8 +82,11 @@ internal class AutoLoginInterceptor(
                         when {
                             "wiadomosciplus" in uri.host -> messagesRes.getOrThrow()
                             "uczen" in uri.host -> studentRes.getOrThrow()
+                            else -> logger.info("Resource don't need further login")
                         }
                     }
+
+                    chain.proceed(chain.request().newBuilder().build())
                 } catch (e: IOException) {
                     logger.debug("Error occurred on login")
                     throw e
@@ -93,9 +95,18 @@ internal class AutoLoginInterceptor(
                     e.toOkHttpResponse(chain.request())
                 } catch (e: Throwable) {
                     throw IOException("Unknown exception on login", e)
+                } finally {
+                    logger.debug("Login finished. Release lock")
+                    lock.unlock()
                 }
+            } else {
+                logger.debug("Wait for user to be logged in...")
+                lock.lock()
+                lock.unlock()
+                logger.debug("User logged in. Retry after login...")
+
+                return chain.proceed(chain.request().newBuilder().build())
             }
-            return chain.proceed(chain.request().newBuilder().build())
         }
 
         return response
