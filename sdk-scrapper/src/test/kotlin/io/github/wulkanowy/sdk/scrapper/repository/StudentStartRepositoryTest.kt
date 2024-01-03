@@ -107,7 +107,7 @@ class StudentStartRepositoryTest : BaseLocalTest() {
             enqueue("Logowanie-uonet.html", LoginTest::class.java)
             enqueue("Login-success.html", LoginTest::class.java)
 
-            enqueue("Start.html", MessagesTest::class.java)
+            // enqueue("Start.html", MessagesTest::class.java)
             enqueue("WitrynaUcznia.html", RegisterTest::class.java)
 
             enqueue("UczenDziennik.json", RegisterTest::class.java)
@@ -137,7 +137,7 @@ class StudentStartRepositoryTest : BaseLocalTest() {
             enqueue("Logowanie-uonet.html", LoginTest::class.java)
             enqueue("Login-success.html", LoginTest::class.java)
 
-            enqueue("Start.html", MessagesTest::class.java)
+            // enqueue("Start.html", MessagesTest::class.java)
             enqueue("WitrynaUcznia.html", RegisterTest::class.java)
 
             enqueue("UczenDziennik.json", RegisterTest::class.java)
@@ -167,7 +167,7 @@ class StudentStartRepositoryTest : BaseLocalTest() {
             enqueue("Logowanie-uonet.html", LoginTest::class.java)
             enqueue("Login-success.html", LoginTest::class.java)
 
-            enqueue("Start.html", MessagesTest::class.java)
+            // enqueue("Start.html", MessagesTest::class.java)
             enqueue("WitrynaUcznia.html", RegisterTest::class.java)
 
             enqueue("UczenDziennik.json", RegisterTest::class.java)
@@ -198,7 +198,7 @@ class StudentStartRepositoryTest : BaseLocalTest() {
             enqueue("Logowanie-uonet.html", LoginTest::class.java)
             enqueue("Login-success.html", LoginTest::class.java)
 
-            enqueue("Start.html", MessagesTest::class.java)
+            // enqueue("Start.html", MessagesTest::class.java)
             enqueue("WitrynaUcznia.html", RegisterTest::class.java)
 
             enqueue("UczenDziennik.json", RegisterTest::class.java)

@@ -114,10 +114,10 @@ internal class LoginHelper(
                 val certResponseTitle = Jsoup.parse(certResponseHtml).title()
                 error("Unknown module start page: $certResponseTitle")
             } else {
-                logger.debug("Student cookies fetch successfully!")
+                logger.debug("Messages cookies fetch successfully!")
             }
         } else {
-            logger.debug("Student cookies already fetched!")
+            logger.debug("Messages cookies already fetched!")
         }
     }
 

@@ -32,6 +32,8 @@ import java.net.CookieManager
 import java.net.HttpURLConnection
 import java.util.concurrent.locks.ReentrantLock
 
+private val lock = ReentrantLock()
+
 internal class AutoLoginInterceptor(
     private val loginType: LoginType,
     private val jar: CookieManager,
@@ -45,8 +47,6 @@ internal class AutoLoginInterceptor(
         @JvmStatic
         private val logger = LoggerFactory.getLogger(this::class.java)
     }
-
-    private val lock = ReentrantLock()
 
     override fun intercept(chain: Interceptor.Chain): Response {
         val request: Request
@@ -74,13 +74,9 @@ internal class AutoLoginInterceptor(
                 logger.debug("Not logged in. Login in...")
                 try {
                     runBlocking { notLoggedInCallback() }
-                    val messagesRes = runCatching { runBlocking { fetchMessagesCookies() } }
-                        .onFailure { logger.error("Error in messages cookies fetch", it) }
-                    val studentRes = runCatching { runBlocking { fetchStudentCookies() } }
-                        .onFailure { logger.error("Error in student cookies fetch", it) }
                     when {
-                        "wiadomosciplus" in uri.host -> messagesRes.getOrThrow()
-                        "uczen" in uri.host -> studentRes.getOrThrow()
+                        "wiadomosciplus" in uri.host -> runBlocking { fetchMessagesCookies() }
+                        "uczen" in uri.host -> runBlocking { fetchStudentCookies() }
                         else -> logger.info("Resource don't need further login")
                     }
 
