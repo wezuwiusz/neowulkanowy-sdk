@@ -71,8 +71,8 @@ internal class AutoLoginInterceptor(
                 checkResponse(Jsoup.parse(body, null, url), url)
             }
         } catch (e: NotLoggedInException) {
+            logger.debug("Not logged in. Login in...")
             lock.withLock {
-                logger.debug("Not logged in. Login in...")
                 return try {
                     runBlocking {
                         notLoggedInCallback()
