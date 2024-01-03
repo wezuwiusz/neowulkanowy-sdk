@@ -59,7 +59,7 @@ internal class LoginHelper(
         logger.info("Login ${loginType.name} started")
         when {
             res.title.startsWith("Witryna ucznia i rodzica") -> return HomePageResponse()
-            res.action.isBlank() -> throw VulcanException("Invalid certificate page: '${res.title}'. Try again")
+            res.action.isBlank() -> throw VulcanException("Invalid certificate page: '${res.title.ifBlank { res.toString().take(32) }}'. Try again")
         }
 
         val cert = sendCertificate(res, email)

@@ -1,7 +1,6 @@
 package io.github.wulkanowy.sdk.scrapper
 
 import io.github.wulkanowy.sdk.scrapper.attendance.AttendanceSummaryTest
-import io.github.wulkanowy.sdk.scrapper.register.RegisterTest
 import kotlinx.coroutines.runBlocking
 import org.junit.Test
 
@@ -39,6 +38,7 @@ class ScrapperTest : BaseLocalTest() {
         try {
             runBlocking { api.getSubjects() }
         } catch (e: Throwable) {
+            e.printStackTrace()
             assert(false) //
         }
     }

@@ -30,8 +30,6 @@ import retrofit2.HttpException
 import java.io.IOException
 import java.net.CookieManager
 import java.net.HttpURLConnection
-import java.util.concurrent.locks.Lock
-import java.util.concurrent.locks.ReentrantLock
 
 internal class AutoLoginInterceptor(
     private val loginType: LoginType,
@@ -47,31 +45,29 @@ internal class AutoLoginInterceptor(
         private val logger = LoggerFactory.getLogger(this::class.java)
     }
 
-    private val lock: Lock = ReentrantLock()
-
     override fun intercept(chain: Interceptor.Chain): Response {
         val request: Request
         val response: Response
         val uri = chain.request().url
         val url = uri.toString()
 
-        try {
-            request = chain.request()
-            checkRequest()
-            response = try {
-                chain.proceed(request)
-            } catch (e: Throwable) {
-                if (e is VulcanClientError) {
-                    checkHttpErrorResponse(e, url)
+        synchronized(this) {
+            try {
+                request = chain.request()
+                checkRequest()
+                response = try {
+                    chain.proceed(request)
+                } catch (e: Throwable) {
+                    if (e is VulcanClientError) {
+                        checkHttpErrorResponse(e, url)
+                    }
+                    throw e
                 }
-                throw e
-            }
-            if (response.body?.contentType()?.subtype != "json") {
-                val body = response.peekBody(Long.MAX_VALUE).byteStream()
-                checkResponse(Jsoup.parse(body, null, url), url)
-            }
-        } catch (e: NotLoggedInException) {
-            if (lock.tryLock()) {
+                if (response.body?.contentType()?.subtype != "json") {
+                    val body = response.peekBody(Long.MAX_VALUE).byteStream()
+                    checkResponse(Jsoup.parse(body, null, url), url)
+                }
+            } catch (e: NotLoggedInException) {
                 logger.debug("Not logged in. Login in...")
                 return try {
                     runBlocking {
@@ -92,15 +88,7 @@ internal class AutoLoginInterceptor(
                     throw IOException("Unknown exception on login", e)
                 } finally {
                     logger.debug("Login finished. Release lock")
-                    lock.unlock()
                 }
-            } else {
-                logger.debug("Wait for user to be logged in...")
-                lock.lock()
-                lock.unlock()
-                logger.debug("User logged in. Retry after login...")
-
-                return chain.proceed(chain.request().newBuilder().build())
             }
         }
 
