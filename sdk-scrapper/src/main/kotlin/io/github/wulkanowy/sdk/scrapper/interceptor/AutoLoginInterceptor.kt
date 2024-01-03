@@ -22,6 +22,7 @@ import okhttp3.Response
 import okhttp3.ResponseBody
 import okio.Buffer
 import okio.BufferedSource
+import okio.withLock
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import org.jsoup.select.Elements
@@ -30,10 +31,9 @@ import retrofit2.HttpException
 import java.io.IOException
 import java.net.CookieManager
 import java.net.HttpURLConnection
-import java.util.concurrent.locks.ReentrantReadWriteLock
-import kotlin.concurrent.withLock
+import java.util.concurrent.locks.ReentrantLock
 
-private val lock = ReentrantReadWriteLock()
+private val lock = ReentrantLock()
 
 internal class AutoLoginInterceptor(
     private val loginType: LoginType,
@@ -71,7 +71,7 @@ internal class AutoLoginInterceptor(
                 checkResponse(Jsoup.parse(body, null, url), url)
             }
         } catch (e: NotLoggedInException) {
-            if (lock.writeLock().tryLock()) {
+            lock.withLock {
                 logger.debug("Not logged in. Login in...")
                 return try {
                     runBlocking {
@@ -94,16 +94,6 @@ internal class AutoLoginInterceptor(
                     e.toOkHttpResponse(chain.request())
                 } catch (e: Throwable) {
                     throw IOException("Unknown exception on login", e)
-                } finally {
-                    logger.debug("Login finished. Release lock")
-                    lock.writeLock().unlock()
-                }
-            } else {
-                logger.debug("Wait for user to be logged in...")
-                return lock.readLock().withLock {
-                    chain.proceed(chain.request().newBuilder().build())
-                }.also {
-                    logger.debug("User logged in. Retry after login...")
                 }
             }
         }
