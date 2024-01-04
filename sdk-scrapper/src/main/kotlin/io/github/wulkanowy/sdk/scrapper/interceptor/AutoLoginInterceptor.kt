@@ -48,6 +48,9 @@ internal class AutoLoginInterceptor(
         private val logger = LoggerFactory.getLogger(this::class.java)
     }
 
+    @Volatile
+    private var lastError: Throwable? = null
+
     override fun intercept(chain: Interceptor.Chain): Response {
         val request: Request
         val response: Response
@@ -83,24 +86,29 @@ internal class AutoLoginInterceptor(
                         "uczen" in uri.host -> student.getOrThrow()
                         else -> logger.info("Resource don't need further login")
                     }
-
-                    chain.proceed(chain.request().newBuilder().build())
                 } catch (e: IOException) {
                     logger.debug("Error occurred on login")
+                    lastError = e
                     throw e
                 } catch (e: HttpException) {
                     logger.debug("Error occurred on login")
+                    lastError = e
                     e.toOkHttpResponse(chain.request())
                 } catch (e: Throwable) {
+                    lastError = e
                     throw IOException("Unknown exception on login", e)
                 } finally {
                     logger.debug("Login finished. Release lock")
                     lock.unlock()
                 }
+                chain.proceed(chain.request().newBuilder().build())
             } else {
                 try {
                     logger.debug("Wait for user to be logged in...")
                     lock.lock()
+                    lastError?.let {
+                        throw it
+                    } ?: logger.warn("There is no last exception")
                 } finally {
                     lock.unlock()
                     logger.debug("User logged in. Retry after login...")
