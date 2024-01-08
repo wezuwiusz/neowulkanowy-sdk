@@ -49,6 +49,7 @@ internal class ServiceManager(
     private val diaryId: Int,
     private val kindergartenDiaryId: Int,
     private val schoolYear: Int,
+    emptyCookieJarIntercept: Boolean,
     androidVersion: String,
     buildTag: String,
     userAgentTemplate: String,
@@ -102,6 +103,7 @@ internal class ServiceManager(
         AutoLoginInterceptor(
             loginType = loginType,
             jar = cookies,
+            emptyCookieJarIntercept = emptyCookieJarIntercept,
             notLoggedInCallback = { loginHelper.login(email, password) },
             fetchStudentCookies = { loginHelper.loginStudent() },
             fetchMessagesCookies = { loginHelper.loginMessages() },

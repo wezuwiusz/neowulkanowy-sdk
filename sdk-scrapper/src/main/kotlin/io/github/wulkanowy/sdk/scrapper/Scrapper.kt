@@ -159,6 +159,12 @@ class Scrapper {
             field = value
         }
 
+    var emptyCookieJarInterceptor: Boolean = false
+        set(value) {
+            if (field != value) changeManager.reset()
+            field = value
+        }
+
     var userAgentTemplate: String = ""
         set(value) {
             if (field != value) changeManager.reset()
@@ -207,6 +213,7 @@ class Scrapper {
             schoolYear = schoolYear,
             androidVersion = androidVersion,
             buildTag = buildTag,
+            emptyCookieJarIntercept = emptyCookieJarInterceptor,
             userAgentTemplate = userAgentTemplate,
         ).apply {
             appInterceptors.forEach { (interceptor, isNetwork) ->

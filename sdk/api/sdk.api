@@ -23,6 +23,7 @@ public final class io/github/wulkanowy/sdk/Sdk {
 	public final fun getDirectorInformation (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public final fun getDomainSuffix ()Ljava/lang/String;
 	public final fun getEmail ()Ljava/lang/String;
+	public final fun getEmptyCookieJarInterceptor ()Z
 	public final fun getExams (Ljava/time/LocalDate;Ljava/time/LocalDate;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public final fun getFreeDays (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public final fun getGrades (ILkotlin/coroutines/Continuation;)Ljava/lang/Object;
@@ -93,6 +94,7 @@ public final class io/github/wulkanowy/sdk/Sdk {
 	public final fun setDiaryId (I)V
 	public final fun setDomainSuffix (Ljava/lang/String;)V
 	public final fun setEmail (Ljava/lang/String;)V
+	public final fun setEmptyCookieJarInterceptor (Z)V
 	public final fun setKeyId (Ljava/lang/String;)V
 	public final fun setKindergartenDiaryId (I)V
 	public final fun setLogLevel (Lokhttp3/logging/HttpLoggingInterceptor$Level;)V
