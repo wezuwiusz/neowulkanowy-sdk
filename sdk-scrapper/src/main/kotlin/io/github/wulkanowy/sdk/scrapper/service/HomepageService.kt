@@ -10,7 +10,7 @@ import retrofit2.http.POST
 
 internal interface HomepageService {
 
-    @GET("Start.mvc/Index")
+    @GET("Start.mvc")
     suspend fun getStart(): String
 
     @FormUrlEncoded
