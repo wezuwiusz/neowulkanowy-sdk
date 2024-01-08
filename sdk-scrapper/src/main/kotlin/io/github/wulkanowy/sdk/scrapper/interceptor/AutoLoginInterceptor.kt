@@ -86,6 +86,7 @@ internal class AutoLoginInterceptor(
                         "uczen" in uri.host -> student.getOrThrow()
                         else -> logger.info("Resource don't need further login")
                     }
+                    chain.proceed(chain.request().newBuilder().build())
                 } catch (e: IOException) {
                     logger.debug("Error occurred on login")
                     lastError = e
@@ -101,7 +102,6 @@ internal class AutoLoginInterceptor(
                     logger.debug("Login finished. Release lock")
                     lock.unlock()
                 }
-                chain.proceed(chain.request().newBuilder().build())
             } else {
                 try {
                     logger.debug("Wait for user to be logged in...")
