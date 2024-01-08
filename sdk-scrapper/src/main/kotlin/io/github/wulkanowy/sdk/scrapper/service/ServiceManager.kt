@@ -34,6 +34,10 @@ import java.util.concurrent.TimeUnit.SECONDS
 import javax.net.ssl.TrustManagerFactory
 import javax.net.ssl.X509TrustManager
 
+private val cookies = CookieManager().apply {
+    setCookiePolicy(CookiePolicy.ACCEPT_ALL)
+}
+
 internal class ServiceManager(
     private val okHttpClientBuilderFactory: OkHttpClientBuilderFactory,
     logLevel: HttpLoggingInterceptor.Level,
@@ -54,12 +58,6 @@ internal class ServiceManager(
     buildTag: String,
     userAgentTemplate: String,
 ) {
-
-    private val cookies by lazy {
-        CookieManager().apply {
-            setCookiePolicy(CookiePolicy.ACCEPT_ALL)
-        }
-    }
 
     val urlGenerator by lazy {
         UrlGenerator(
