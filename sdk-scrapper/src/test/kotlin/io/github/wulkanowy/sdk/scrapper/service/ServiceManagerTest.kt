@@ -14,6 +14,7 @@ import okhttp3.mockwebserver.MockResponse
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Test
+import java.net.CookieManager
 import java.net.URL
 
 class ServiceManagerTest : BaseLocalTest() {
@@ -22,6 +23,7 @@ class ServiceManagerTest : BaseLocalTest() {
     fun interceptorTest() {
         val manager = ServiceManager(
             okHttpClientBuilderFactory = OkHttpClientBuilderFactory(),
+            cookies = CookieManager(),
             logLevel = HttpLoggingInterceptor.Level.NONE,
             loginType = Scrapper.LoginType.STANDARD,
             schema = "http",
@@ -55,6 +57,7 @@ class ServiceManagerTest : BaseLocalTest() {
         server.start(3000)
         val manager = ServiceManager(
             okHttpClientBuilderFactory = OkHttpClientBuilderFactory(),
+            cookies = CookieManager(),
             logLevel = HttpLoggingInterceptor.Level.NONE,
             loginType = Scrapper.LoginType.STANDARD,
             schema = "http",
@@ -126,6 +129,7 @@ class ServiceManagerTest : BaseLocalTest() {
         server.start(3000)
         val manager = ServiceManager(
             okHttpClientBuilderFactory = OkHttpClientBuilderFactory(),
+            cookies = CookieManager(),
             logLevel = HttpLoggingInterceptor.Level.NONE,
             loginType = Scrapper.LoginType.STANDARD,
             schema = "http",

@@ -27,19 +27,15 @@ import retrofit2.Retrofit
 import retrofit2.converter.scalars.ScalarsConverterFactory
 import retrofit2.create
 import java.net.CookieManager
-import java.net.CookiePolicy
 import java.security.KeyStore
 import java.time.LocalDate
 import java.util.concurrent.TimeUnit.SECONDS
 import javax.net.ssl.TrustManagerFactory
 import javax.net.ssl.X509TrustManager
 
-private val cookies = CookieManager().apply {
-    setCookiePolicy(CookiePolicy.ACCEPT_ALL)
-}
-
 internal class ServiceManager(
     private val okHttpClientBuilderFactory: OkHttpClientBuilderFactory,
+    private val cookies: CookieManager,
     logLevel: HttpLoggingInterceptor.Level,
     private val loginType: Scrapper.LoginType,
     private val schema: String,

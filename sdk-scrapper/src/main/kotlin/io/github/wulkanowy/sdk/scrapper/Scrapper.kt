@@ -44,6 +44,8 @@ import io.github.wulkanowy.sdk.scrapper.timetable.CompletedLesson
 import io.github.wulkanowy.sdk.scrapper.timetable.Timetable
 import okhttp3.Interceptor
 import okhttp3.logging.HttpLoggingInterceptor
+import java.net.CookieManager
+import java.net.CookiePolicy
 import java.net.URL
 import java.time.LocalDate
 
@@ -61,6 +63,10 @@ class Scrapper {
     }
 
     private val changeManager = resettableManager()
+
+    private val cookieManager = CookieManager().apply {
+        setCookiePolicy(CookiePolicy.ACCEPT_ALL)
+    }
 
     var logLevel: HttpLoggingInterceptor.Level = HttpLoggingInterceptor.Level.BASIC
         set(value) {
@@ -101,19 +107,28 @@ class Scrapper {
 
     var symbol: String = "Default"
         set(value) {
-            if (field != value) changeManager.reset()
+            if (field != value) {
+                changeManager.reset()
+                cookieManager.cookieStore.removeAll()
+            }
             field = value
         }
 
     var email: String = ""
         set(value) {
-            if (field != value) changeManager.reset()
+            if (field != value) {
+                changeManager.reset()
+                cookieManager.cookieStore.removeAll()
+            }
             field = value
         }
 
     var password: String = ""
         set(value) {
-            if (field != value) changeManager.reset()
+            if (field != value) {
+                changeManager.reset()
+                cookieManager.cookieStore.removeAll()
+            }
             field = value
         }
 
@@ -198,6 +213,7 @@ class Scrapper {
     private val serviceManager by resettableLazy(changeManager) {
         ServiceManager(
             okHttpClientBuilderFactory = okHttpFactory,
+            cookies = cookieManager,
             logLevel = logLevel,
             loginType = loginType,
             schema = schema,
