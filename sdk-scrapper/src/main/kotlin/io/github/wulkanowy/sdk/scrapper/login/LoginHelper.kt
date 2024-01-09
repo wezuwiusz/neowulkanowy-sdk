@@ -57,7 +57,7 @@ internal class LoginHelper(
     }
 
     suspend fun login(email: String, password: String): HomePageResponse {
-        val res = sendCredentials(email, password, clearCookies = false)
+        val res = sendCredentials(email, password)
         logger.info("Login ${loginType.name} started")
         when {
             res.title.startsWith("Witryna ucznia i rodzica") -> return HomePageResponse()
@@ -134,10 +134,9 @@ internal class LoginHelper(
         cookies.cookieStore.removeAll()
     }
 
-    suspend fun sendCredentials(email: String, password: String, clearCookies: Boolean): CertificateResponse {
-        if (clearCookies) {
-            cookies.cookieStore.removeAll()
-        }
+    suspend fun sendCredentials(email: String, password: String): CertificateResponse {
+        // always clear cookies to avoid problems with "request too large" errors
+        cookies.cookieStore.removeAll()
         email.substringBefore("||").let {
             return when (loginType) {
                 AUTO -> throw ScrapperException("You must first specify Api.loginType before logging in")
