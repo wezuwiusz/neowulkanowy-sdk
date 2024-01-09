@@ -17,6 +17,7 @@ import org.slf4j.LoggerFactory
 import pl.droidsonroids.jspoon.Jspoon
 import retrofit2.HttpException
 import retrofit2.Response
+import java.io.IOException
 import java.net.CookieManager
 import java.net.URLEncoder
 import java.time.Instant
@@ -87,7 +88,7 @@ internal class LoginHelper(
             ).execute().handleErrors().body().orEmpty()
             if ("antiForgeryToken" !in certResponseHtml) {
                 val certResponseTitle = Jsoup.parse(certResponseHtml).title()
-                error("Unknown module start page: $certResponseTitle")
+                throw IOException("Unknown module start page: $certResponseTitle")
             } else {
                 logger.debug("Student cookies fetch successfully!")
             }
@@ -114,7 +115,7 @@ internal class LoginHelper(
             ).execute().handleErrors().body().orEmpty()
             if ("antiForgeryToken" !in certResponseHtml) {
                 val certResponseTitle = Jsoup.parse(certResponseHtml).title()
-                error("Unknown module start page: $certResponseTitle")
+                throw IOException("Unknown module start page: $certResponseTitle")
             } else {
                 logger.debug("Messages cookies fetch successfully!")
             }

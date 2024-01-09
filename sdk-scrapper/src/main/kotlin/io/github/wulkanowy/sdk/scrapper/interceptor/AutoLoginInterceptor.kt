@@ -111,7 +111,10 @@ internal class AutoLoginInterceptor(
                     logger.debug("Wait for user to be logged in...")
                     lock.lock()
                     lastError?.let {
-                        throw it
+                        when (it) {
+                            is IOException -> throw it
+                            else -> throw IOException("Unknown error on login", it)
+                        }
                     } ?: logger.warn("There is no last exception")
                 } finally {
                     lock.unlock()
