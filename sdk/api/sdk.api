@@ -16,6 +16,7 @@ public final class io/github/wulkanowy/sdk/Sdk {
 	public final fun getCompletedLessons (Ljava/time/LocalDate;Ljava/time/LocalDate;ILkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public static synthetic fun getCompletedLessons$default (Lio/github/wulkanowy/sdk/Sdk;Ljava/time/LocalDate;Ljava/time/LocalDate;ILkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
 	public final fun getConferences (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public final fun getCookieManager ()Ljava/net/CookieManager;
 	public final fun getCurrentStudent (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public final fun getDeletedMessages (Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public static synthetic fun getDeletedMessages$default (Lio/github/wulkanowy/sdk/Sdk;Ljava/lang/String;Lkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;

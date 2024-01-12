@@ -64,7 +64,7 @@ class Scrapper {
 
     private val changeManager = resettableManager()
 
-    private val cookieManager = CookieManager().apply {
+    val cookieManager = CookieManager().apply {
         setCookiePolicy(CookiePolicy.ACCEPT_ALL)
     }
 

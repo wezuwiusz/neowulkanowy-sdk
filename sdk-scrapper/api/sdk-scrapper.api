@@ -17,6 +17,7 @@ public final class io/github/wulkanowy/sdk/scrapper/Scrapper {
 	public final fun getCompletedLessons (Ljava/time/LocalDate;Ljava/time/LocalDate;ILkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public static synthetic fun getCompletedLessons$default (Lio/github/wulkanowy/sdk/scrapper/Scrapper;Ljava/time/LocalDate;Ljava/time/LocalDate;ILkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
 	public final fun getConferences (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public final fun getCookieManager ()Ljava/net/CookieManager;
 	public final fun getCurrentStudent (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public final fun getDeletedMessages (Ljava/lang/String;IILkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public static synthetic fun getDeletedMessages$default (Lio/github/wulkanowy/sdk/scrapper/Scrapper;Ljava/lang/String;IILkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
@@ -369,8 +370,9 @@ public final class io/github/wulkanowy/sdk/scrapper/exception/AuthorizationRequi
 }
 
 public final class io/github/wulkanowy/sdk/scrapper/exception/CloudflareVerificationException : java/io/IOException {
-	public fun <init> (Ljava/lang/Throwable;)V
+	public fun <init> (Ljava/lang/String;Ljava/lang/Throwable;)V
 	public fun getCause ()Ljava/lang/Throwable;
+	public final fun getOriginalUrl ()Ljava/lang/String;
 }
 
 public final class io/github/wulkanowy/sdk/scrapper/exception/ConnectionBlockedException : io/github/wulkanowy/sdk/scrapper/exception/VulcanException {

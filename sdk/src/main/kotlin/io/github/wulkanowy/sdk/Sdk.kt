@@ -70,6 +70,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import okhttp3.Interceptor
 import okhttp3.logging.HttpLoggingInterceptor
+import java.net.CookieManager
 import java.time.LocalDate
 import java.time.ZoneId
 
@@ -96,6 +97,8 @@ class Sdk {
     private val hebe = Hebe()
 
     private val registerTimeZone = ZoneId.of("Europe/Warsaw")
+
+    val cookieManager: CookieManager = scrapper.cookieManager
 
     var mode = Mode.SCRAPPER
 
