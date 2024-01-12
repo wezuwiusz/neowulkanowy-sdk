@@ -368,6 +368,11 @@ public final class io/github/wulkanowy/sdk/scrapper/exception/AuthorizationRequi
 	public fun <init> (Ljava/lang/String;)V
 }
 
+public final class io/github/wulkanowy/sdk/scrapper/exception/CloudflareVerificationException : java/io/IOException {
+	public fun <init> (Ljava/lang/Throwable;)V
+	public fun getCause ()Ljava/lang/Throwable;
+}
+
 public final class io/github/wulkanowy/sdk/scrapper/exception/ConnectionBlockedException : io/github/wulkanowy/sdk/scrapper/exception/VulcanException {
 }
 

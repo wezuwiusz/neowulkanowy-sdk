@@ -1,6 +1,7 @@
 package io.github.wulkanowy.sdk.scrapper.repository
 
 import io.github.wulkanowy.sdk.scrapper.Scrapper
+import io.github.wulkanowy.sdk.scrapper.exception.CloudflareVerificationException
 import io.github.wulkanowy.sdk.scrapper.exception.ScrapperException
 import io.github.wulkanowy.sdk.scrapper.exception.StudentGraduateException
 import io.github.wulkanowy.sdk.scrapper.getNormalizedSymbol
@@ -34,6 +35,7 @@ import org.jsoup.parser.Parser
 import org.jsoup.select.Elements
 import org.slf4j.LoggerFactory
 import pl.droidsonroids.jspoon.Jspoon
+import retrofit2.HttpException
 import java.net.HttpURLConnection
 import java.nio.charset.StandardCharsets
 import kotlin.io.encoding.Base64
@@ -65,7 +67,17 @@ internal class RegisterRepository(
     }
 
     suspend fun getUserSubjects(): RegisterUser {
-        val symbolLoginType = getLoginType(startSymbol.getNormalizedSymbol())
+        val symbolLoginType = runCatching {
+            getLoginType(startSymbol.getNormalizedSymbol())
+        }.onFailure {
+            if (it is HttpException) {
+                val body = it.response()?.errorBody()?.string().orEmpty()
+                val html = Jsoup.parse(body)
+                if ("Just a moment" in html.title()) {
+                    throw CloudflareVerificationException(it)
+                }
+            }
+        }.getOrThrow()
         val certificateResponse = getCert(symbolLoginType)
         val (login, emailAddress, symbols) = certificateResponse.toCertificateValues()
 
