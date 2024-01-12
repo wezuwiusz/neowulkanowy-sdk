@@ -2,17 +2,26 @@ package io.github.wulkanowy.sdk.scrapper
 
 import java.net.CookieManager
 import java.net.CookiePolicy
+import java.net.CookieStore
 import java.net.HttpCookie
 import java.net.URI
 
 internal class CookieJarCabinet {
 
-    val userCookieManager = CookieManager().apply {
-        setCookiePolicy(CookiePolicy.ACCEPT_ALL)
+    val userCookieManager = MergeCookieManager(
+        original = CookieManager().apply {
+            setCookiePolicy(CookiePolicy.ACCEPT_ALL)
+        },
+    ) { uri, headers ->
+        additionalCookieManager?.get(uri, headers)
     }
 
-    val alternativeCookieManager = CookieManager().apply {
-        setCookiePolicy(CookiePolicy.ACCEPT_ALL)
+    val alternativeCookieManager = MergeCookieManager(
+        CookieManager().apply {
+            setCookiePolicy(CookiePolicy.ACCEPT_ALL)
+        },
+    ) { uri, headers ->
+        additionalCookieManager?.get(uri, headers)
     }
 
     private var additionalCookieManager: CookieManager? = null
@@ -39,24 +48,32 @@ internal class CookieJarCabinet {
 
     fun setAdditionalCookieManager(cookieManager: CookieManager) {
         additionalCookieManager = cookieManager
-        appendUserCookiesWithAdditionalCookies()
     }
 
     private fun clearUserCookieStore() {
         userCookieManager.cookieStore.removeAll()
-        appendUserCookiesWithAdditionalCookies()
+    }
+}
+
+internal class MergeCookieManager(
+    private val original: CookieManager,
+    private val getCookie: (URI?, Map<String, List<String>>?) -> Map<String, List<String>>?,
+) : CookieManager() {
+
+    override fun get(uri: URI?, requestHeaders: Map<String, List<String>>?): Map<String, List<String>> {
+        val additionalCookie = getCookie(uri, requestHeaders)
+        return original.get(uri, requestHeaders) + additionalCookie.orEmpty()
     }
 
-    private fun appendUserCookiesWithAdditionalCookies() {
-        val additionalJar = additionalCookieManager?.cookieStore ?: return
-        val cookiesWithUris = additionalJar.urIs.map {
-            it to additionalJar.get(it)
-        }
+    override fun put(uri: URI?, responseHeaders: Map<String, List<String>>?) {
+        original.put(uri, responseHeaders)
+    }
 
-        cookiesWithUris.forEach { (uri, cookies) ->
-            cookies.forEach {
-                userCookieManager.cookieStore.add(uri, it)
-            }
-        }
+    override fun setCookiePolicy(cookiePolicy: CookiePolicy?) {
+        original.setCookiePolicy(cookiePolicy)
+    }
+
+    override fun getCookieStore(): CookieStore {
+        return original.cookieStore
     }
 }
