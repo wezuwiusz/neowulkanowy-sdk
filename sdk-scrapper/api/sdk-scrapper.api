@@ -77,6 +77,7 @@ public final class io/github/wulkanowy/sdk/scrapper/Scrapper {
 	public static synthetic fun getTimetable$default (Lio/github/wulkanowy/sdk/scrapper/Scrapper;Ljava/time/LocalDate;Ljava/time/LocalDate;Lkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
 	public final fun getToken (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public final fun getUnitId ()I
+	public final fun getUserAgent ()Ljava/lang/String;
 	public final fun getUserAgentTemplate ()Ljava/lang/String;
 	public final fun getUserSubjects (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public final fun sendMessage (Ljava/lang/String;Ljava/lang/String;Ljava/util/List;Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
@@ -120,6 +121,10 @@ public final class io/github/wulkanowy/sdk/scrapper/Scrapper$LoginType : java/la
 
 public final class io/github/wulkanowy/sdk/scrapper/UtilsKt {
 	public static final fun getNormalizedSymbol (Ljava/lang/String;)Ljava/lang/String;
+}
+
+public synthetic class io/github/wulkanowy/sdk/scrapper/UtilsKt$EntriesMappings {
+	public static final synthetic field entries$0 Lkotlin/enums/EnumEntries;
 }
 
 public final class io/github/wulkanowy/sdk/scrapper/attendance/Absent {

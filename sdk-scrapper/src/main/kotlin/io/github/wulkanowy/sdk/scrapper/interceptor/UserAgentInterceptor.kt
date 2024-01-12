@@ -1,5 +1,7 @@
 package io.github.wulkanowy.sdk.scrapper.interceptor
 
+import io.github.wulkanowy.sdk.scrapper.defaultUserAgentTemplate
+import io.github.wulkanowy.sdk.scrapper.getFormattedString
 import okhttp3.Interceptor
 import okhttp3.Response
 
@@ -11,22 +13,21 @@ internal class UserAgentInterceptor(
     private val androidVersion: String,
     private val buildTag: String,
     private val userAgentTemplate: String,
-    private val webKitRev: String = "537.36",
-    private val chromeRev: String = "110.0.0.0",
 ) : Interceptor {
-
-    private val defaultTemplate = buildString {
-        append("Mozilla/5.0 (Linux; Android %1\$s; %2\$s) ")
-        append("AppleWebKit/%3\$s (KHTML, like Gecko) ")
-        append("Chrome/%4\$s Mobile ")
-        append("Safari/%5\$s")
-    }
 
     private val userAgent by lazy {
         try {
-            getFormattedString(userAgentTemplate.ifBlank { defaultTemplate })
+            getFormattedString(
+                template = userAgentTemplate.ifBlank { defaultUserAgentTemplate },
+                androidVersion = androidVersion,
+                buildTag = buildTag,
+            )
         } catch (e: Throwable) {
-            getFormattedString(defaultTemplate)
+            getFormattedString(
+                template = defaultUserAgentTemplate,
+                androidVersion = androidVersion,
+                buildTag = buildTag,
+            )
         }
     }
 
@@ -37,9 +38,5 @@ internal class UserAgentInterceptor(
                 .addHeader("User-Agent", formatted)
                 .build(),
         )
-    }
-
-    private fun getFormattedString(template: String): String {
-        return String.format(template, androidVersion, buildTag, webKitRev, chromeRev, webKitRev)
     }
 }

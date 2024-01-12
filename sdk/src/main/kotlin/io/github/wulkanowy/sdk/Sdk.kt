@@ -205,6 +205,9 @@ class Sdk {
             scrapper.userAgentTemplate = value
         }
 
+    val userAgent: String
+        get() = scrapper.userAgent
+
     var androidVersion = "7.0"
         set(value) {
             field = value

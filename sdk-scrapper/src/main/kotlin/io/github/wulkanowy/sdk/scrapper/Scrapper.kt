@@ -195,6 +195,15 @@ class Scrapper {
             field = value
         }
 
+    val userAgent: String
+        get() {
+            return try {
+                getFormattedString(userAgentTemplate.ifBlank { defaultUserAgentTemplate }, androidVersion, buildTag)
+            } catch (e: Throwable) {
+                getFormattedString(defaultUserAgentTemplate, androidVersion, buildTag)
+            }
+        }
+
     private val appInterceptors: MutableList<Pair<Interceptor, Boolean>> = mutableListOf()
 
     fun addInterceptor(interceptor: Interceptor, network: Boolean = false) {

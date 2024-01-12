@@ -82,6 +82,7 @@ public final class io/github/wulkanowy/sdk/Sdk {
 	public final fun getTeachers (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public final fun getTimetable (Ljava/time/LocalDate;Ljava/time/LocalDate;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public final fun getToken (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public final fun getUserAgent ()Ljava/lang/String;
 	public final fun getUserAgentTemplate ()Ljava/lang/String;
 	public final fun getUserSubjectsFromScrapper (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public final fun getUserSubjectsFromScrapper (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
