@@ -1,5 +1,6 @@
 package io.github.wulkanowy.sdk.scrapper.interceptor
 
+import io.github.wulkanowy.sdk.scrapper.CookieJarCabinet
 import io.github.wulkanowy.sdk.scrapper.exception.AccountInactiveException
 import io.github.wulkanowy.sdk.scrapper.exception.ConnectionBlockedException
 import io.github.wulkanowy.sdk.scrapper.exception.ScrapperException
@@ -15,11 +16,10 @@ import okhttp3.Response
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import org.slf4j.LoggerFactory
-import java.net.CookieManager
 import java.net.HttpURLConnection.HTTP_NOT_FOUND
 
 internal class ErrorInterceptor(
-    private val cookies: CookieManager,
+    private val cookieJarCabinet: CookieJarCabinet,
 ) : Interceptor {
 
     companion object {
@@ -105,7 +105,7 @@ internal class ErrorInterceptor(
             )
 
             "Login Service" -> {
-                cookies.cookieStore.removeAll() // workaround for very strange (random) errors
+                cookieJarCabinet.onLoginServiceError() // workaround for very strange (random) errors
                 throw ScrapperException(doc.select("#MainDiv > div").text(), httpCode)
             }
 

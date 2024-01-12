@@ -1,6 +1,7 @@
 package io.github.wulkanowy.sdk.scrapper.register
 
 import io.github.wulkanowy.sdk.scrapper.BaseLocalTest
+import io.github.wulkanowy.sdk.scrapper.CookieJarCabinet
 import io.github.wulkanowy.sdk.scrapper.Scrapper
 import io.github.wulkanowy.sdk.scrapper.login.LoginHelper
 import io.github.wulkanowy.sdk.scrapper.login.LoginTest
@@ -12,7 +13,6 @@ import io.github.wulkanowy.sdk.scrapper.service.StudentService
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
 import org.junit.Test
-import java.net.CookieManager
 import java.net.URL
 
 class RegisterTest : BaseLocalTest() {
@@ -24,7 +24,7 @@ class RegisterTest : BaseLocalTest() {
             host = "fakelog.localhost:3000",
             domainSuffix = "",
             symbol = "default",
-            cookies = CookieManager(),
+            cookieJarCabinet = CookieJarCabinet(),
             api = getService(
                 service = LoginService::class.java,
                 url = "http://fakelog.localhost:3000/",

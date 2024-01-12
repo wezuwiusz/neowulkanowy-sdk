@@ -24,7 +24,6 @@ import org.junit.After
 import pl.droidsonroids.retrofit2.JspoonConverterFactory
 import retrofit2.Retrofit
 import retrofit2.converter.scalars.ScalarsConverterFactory
-import java.net.CookieManager
 import java.net.URL
 
 abstract class BaseLocalTest : BaseTest() {
@@ -95,7 +94,7 @@ abstract class BaseLocalTest : BaseTest() {
         autoLoginInterceptor: AutoLoginInterceptor = getAutoLoginInterceptor(loginType, autoLogin),
     ): OkHttpClient = OkHttpClient.Builder()
         .apply {
-            if (errorInterceptor) addInterceptor(ErrorInterceptor(CookieManager()))
+            if (errorInterceptor) addInterceptor(ErrorInterceptor(CookieJarCabinet()))
             if (autoLoginInterceptorOn) addInterceptor(autoLoginInterceptor)
         }
         .addInterceptor(HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BASIC))
@@ -105,7 +104,7 @@ abstract class BaseLocalTest : BaseTest() {
     private fun getAutoLoginInterceptor(loginType: Scrapper.LoginType, autoLogin: Boolean): AutoLoginInterceptor {
         return AutoLoginInterceptor(
             loginType = loginType,
-            jar = CookieManager(),
+            cookieJarCabinet = CookieJarCabinet(),
             notLoggedInCallback = {
                 if (autoLogin) {
                     LoginHelper(
@@ -114,7 +113,7 @@ abstract class BaseLocalTest : BaseTest() {
                         host = "localhost",
                         domainSuffix = "",
                         symbol = "powiatwulkanowy",
-                        cookies = CookieManager(),
+                        cookieJarCabinet = CookieJarCabinet(),
                         api = getService(LoginService::class.java),
                         urlGenerator = UrlGenerator(URL("http://localhost/"), "", "lodz", ""),
                     ).login("jan", "kowalski")

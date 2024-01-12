@@ -1,5 +1,6 @@
 package io.github.wulkanowy.sdk.scrapper.interceptor
 
+import io.github.wulkanowy.sdk.scrapper.CookieJarCabinet
 import io.github.wulkanowy.sdk.scrapper.Scrapper.LoginType
 import io.github.wulkanowy.sdk.scrapper.Scrapper.LoginType.ADFS
 import io.github.wulkanowy.sdk.scrapper.Scrapper.LoginType.ADFSCards
@@ -14,9 +15,7 @@ import io.github.wulkanowy.sdk.scrapper.repository.AccountRepository.Companion.S
 import io.github.wulkanowy.sdk.scrapper.repository.AccountRepository.Companion.SELECTOR_ADFS_LIGHT
 import io.github.wulkanowy.sdk.scrapper.repository.AccountRepository.Companion.SELECTOR_STANDARD
 import kotlinx.coroutines.runBlocking
-import okhttp3.Cookie
 import okhttp3.Interceptor
-import okhttp3.JavaNetCookieJar
 import okhttp3.MediaType
 import okhttp3.Protocol
 import okhttp3.Request
@@ -30,7 +29,6 @@ import org.jsoup.select.Elements
 import org.slf4j.LoggerFactory
 import retrofit2.HttpException
 import java.io.IOException
-import java.net.CookieManager
 import java.net.HttpURLConnection
 import java.util.concurrent.locks.ReentrantLock
 
@@ -38,7 +36,7 @@ private val lock = ReentrantLock(true)
 
 internal class AutoLoginInterceptor(
     private val loginType: LoginType,
-    private val jar: CookieManager,
+    private val cookieJarCabinet: CookieJarCabinet,
     private val emptyCookieJarIntercept: Boolean = false,
     private val notLoggedInCallback: suspend () -> Unit,
     private val fetchStudentCookies: () -> Unit,
@@ -49,8 +47,6 @@ internal class AutoLoginInterceptor(
         @JvmStatic
         private val logger = LoggerFactory.getLogger(this::class.java)
     }
-
-    private val cookieJar = JavaNetCookieJar(jar)
 
     @Volatile
     private var lastError: Throwable? = null
@@ -76,6 +72,7 @@ internal class AutoLoginInterceptor(
                 val body = response.peekBody(Long.MAX_VALUE).byteStream()
                 checkResponse(Jsoup.parse(body, null, url), url)
             }
+            lastError = null
         } catch (e: NotLoggedInException) {
             return if (lock.tryLock()) {
                 logger.debug("Not logged in. Login in...")
@@ -90,7 +87,7 @@ internal class AutoLoginInterceptor(
                         "uczen" in uri.host -> student.getOrThrow()
                         else -> logger.info("Resource don't need further login")
                     }
-                    chain.retryRequest()
+                    chain.proceed(chain.request().newBuilder().build())
                 } catch (e: IOException) {
                     logger.debug("Error occurred on login")
                     lastError = e
@@ -121,36 +118,15 @@ internal class AutoLoginInterceptor(
                     logger.debug("User logged in. Retry after login...")
                 }
 
-                chain.retryRequest()
+                chain.proceed(chain.request().newBuilder().build())
             }
         }
 
         return response
     }
 
-    private fun Interceptor.Chain.retryRequest(): Response {
-        Thread.sleep(10)
-
-        val newRequest = request()
-            .newBuilder()
-            .header("Cookie", cookieJar.loadForRequest(request().url).cookieHeader())
-            .build()
-
-        return proceed(newRequest)
-    }
-
-    private fun List<Cookie>.cookieHeader(): String = buildString {
-        this@cookieHeader.forEachIndexed { index, cookie ->
-            if (index > 0) append("; ")
-            append(cookie.name).append('=').append(cookie.value)
-        }
-    }
-
-    /**
-     * @see [okhttp3.internal.http.BridgeInterceptor]
-     */
     private fun checkRequest() {
-        if (emptyCookieJarIntercept && jar.cookieStore.cookies.isEmpty()) {
+        if (emptyCookieJarIntercept && !cookieJarCabinet.isUserCookiesExist()) {
             throw NotLoggedInException("No cookie found! You are not logged in yet")
         }
     }

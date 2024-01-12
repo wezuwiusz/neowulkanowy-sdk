@@ -1,6 +1,7 @@
 package io.github.wulkanowy.sdk.scrapper.interceptor
 
 import io.github.wulkanowy.sdk.scrapper.BaseLocalTest
+import io.github.wulkanowy.sdk.scrapper.CookieJarCabinet
 import io.github.wulkanowy.sdk.scrapper.Scrapper
 import io.github.wulkanowy.sdk.scrapper.login.LoginHelper
 import io.github.wulkanowy.sdk.scrapper.login.LoginTest
@@ -16,7 +17,6 @@ import kotlinx.coroutines.supervisorScope
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Test
-import java.net.CookieManager
 import java.net.URL
 
 class AutoLoginInterceptorTest : BaseLocalTest() {
@@ -128,7 +128,7 @@ class AutoLoginInterceptorTest : BaseLocalTest() {
             host = "${server.hostName}:${server.port}",
             domainSuffix = "",
             symbol = "powiatwulkanowy",
-            cookies = CookieManager(),
+            cookieJarCabinet = CookieJarCabinet(),
             api = loginService,
             urlGenerator = UrlGenerator(URL("http://localhost/"), "", "lodz", ""),
         )
@@ -137,7 +137,7 @@ class AutoLoginInterceptorTest : BaseLocalTest() {
     private fun getService(checkJar: Boolean = false, notLoggedInCallback: suspend () -> Unit): StudentService {
         val interceptor = AutoLoginInterceptor(
             loginType = Scrapper.LoginType.STANDARD,
-            jar = CookieManager(),
+            cookieJarCabinet = CookieJarCabinet(),
             emptyCookieJarIntercept = checkJar,
             notLoggedInCallback = notLoggedInCallback,
             fetchStudentCookies = {},

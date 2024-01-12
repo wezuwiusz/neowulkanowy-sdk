@@ -1,13 +1,13 @@
 package io.github.wulkanowy.sdk.scrapper.interceptor
 
+import io.github.wulkanowy.sdk.scrapper.CookieJarCabinet
 import okhttp3.Interceptor
 import okhttp3.Response
-import java.net.CookieManager
 import java.net.HttpCookie
 import java.net.URI
 
 internal class StudentCookieInterceptor(
-    private val cookies: CookieManager,
+    private val cookieJarCabinet: CookieJarCabinet,
     private val schema: String,
     private val host: String,
     private val domainSuffix: String,
@@ -27,7 +27,7 @@ internal class StudentCookieInterceptor(
             HttpCookie(name, value.toString()).let {
                 it.path = "/"
                 it.domain = "uonetplus-uczen$domainSuffix.$host"
-                cookies.cookieStore.add(URI("$schema://${it.domain}"), it)
+                cookieJarCabinet.addStudentCookie(URI("$schema://${it.domain}"), it)
             }
         }
 

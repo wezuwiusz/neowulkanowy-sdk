@@ -1,5 +1,6 @@
 package io.github.wulkanowy.sdk.scrapper.login
 
+import io.github.wulkanowy.sdk.scrapper.CookieJarCabinet
 import io.github.wulkanowy.sdk.scrapper.Scrapper
 import io.github.wulkanowy.sdk.scrapper.Scrapper.LoginType.ADFS
 import io.github.wulkanowy.sdk.scrapper.Scrapper.LoginType.ADFSCards
@@ -19,7 +20,6 @@ import pl.droidsonroids.jspoon.Jspoon
 import retrofit2.HttpException
 import retrofit2.Response
 import java.io.IOException
-import java.net.CookieManager
 import java.net.URLEncoder
 import java.time.Instant
 import java.time.ZoneId
@@ -35,7 +35,7 @@ internal class LoginHelper(
     private val host: String,
     private val domainSuffix: String,
     private val symbol: String,
-    private val cookies: CookieManager,
+    private val cookieJarCabinet: CookieJarCabinet,
     private val api: LoginService,
     private val urlGenerator: UrlGenerator,
 ) {
@@ -145,12 +145,12 @@ internal class LoginHelper(
     }
 
     fun logout() {
-        cookies.cookieStore.removeAll()
+        cookieJarCabinet.onUserChange()
     }
 
     suspend fun sendCredentials(email: String, password: String): CertificateResponse {
         // always clear cookies to avoid problems with "request too large" errors
-        cookies.cookieStore.removeAll()
+        cookieJarCabinet.beforeUserLogIn()
         email.substringBefore("||").let {
             return when (loginType) {
                 AUTO -> throw ScrapperException("You must first specify Api.loginType before logging in")

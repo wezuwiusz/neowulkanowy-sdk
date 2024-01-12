@@ -98,10 +98,6 @@ class Sdk {
 
     private val registerTimeZone = ZoneId.of("Europe/Warsaw")
 
-    val cookieManager: CookieManager = scrapper.cookieManager
-
-    val alternativeCookieManager: CookieManager = scrapper.alternativeCookieManager
-
     var mode = Mode.SCRAPPER
 
     var mobileBaseUrl = ""
@@ -242,6 +238,10 @@ class Sdk {
         scrapper.addInterceptor(interceptor, network)
         hebe.addInterceptor(interceptor, network)
         interceptors.add(interceptor to network)
+    }
+
+    fun setAdditionalCookieManager(cookieManager: CookieManager) {
+        scrapper.setAdditionalCookieManager(cookieManager)
     }
 
     fun switchDiary(diaryId: Int, kindergartenDiaryId: Int, schoolYear: Int): Sdk {

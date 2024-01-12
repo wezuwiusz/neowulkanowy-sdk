@@ -45,7 +45,6 @@ import io.github.wulkanowy.sdk.scrapper.timetable.Timetable
 import okhttp3.Interceptor
 import okhttp3.logging.HttpLoggingInterceptor
 import java.net.CookieManager
-import java.net.CookiePolicy
 import java.net.URL
 import java.time.LocalDate
 
@@ -64,13 +63,7 @@ class Scrapper {
 
     private val changeManager = resettableManager()
 
-    val cookieManager = CookieManager().apply {
-        setCookiePolicy(CookiePolicy.ACCEPT_ALL)
-    }
-
-    val alternativeCookieManager = CookieManager().apply {
-        setCookiePolicy(CookiePolicy.ACCEPT_ALL)
-    }
+    private val cookieJarCabinet = CookieJarCabinet()
 
     var logLevel: HttpLoggingInterceptor.Level = HttpLoggingInterceptor.Level.BASIC
         set(value) {
@@ -113,7 +106,7 @@ class Scrapper {
         set(value) {
             if (field != value) {
                 changeManager.reset()
-                cookieManager.cookieStore.removeAll()
+                cookieJarCabinet.onUserChange()
             }
             field = value
         }
@@ -122,7 +115,7 @@ class Scrapper {
         set(value) {
             if (field != value) {
                 changeManager.reset()
-                cookieManager.cookieStore.removeAll()
+                cookieJarCabinet.onUserChange()
             }
             field = value
         }
@@ -131,7 +124,7 @@ class Scrapper {
         set(value) {
             if (field != value) {
                 changeManager.reset()
-                cookieManager.cookieStore.removeAll()
+                cookieJarCabinet.onUserChange()
             }
             field = value
         }
@@ -217,8 +210,7 @@ class Scrapper {
     private val serviceManager by resettableLazy(changeManager) {
         ServiceManager(
             okHttpClientBuilderFactory = okHttpFactory,
-            cookies = cookieManager,
-            alternativeCookies = alternativeCookieManager,
+            cookieJarCabinet = cookieJarCabinet,
             logLevel = logLevel,
             loginType = loginType,
             schema = schema,
@@ -256,7 +248,7 @@ class Scrapper {
                 host = host,
                 domainSuffix = domainSuffix,
                 symbol = normalizedSymbol,
-                cookies = serviceManager.getCookieManager(),
+                cookieJarCabinet = cookieJarCabinet,
                 api = serviceManager.getLoginService(),
                 urlGenerator = serviceManager.urlGenerator,
             ),
@@ -292,6 +284,10 @@ class Scrapper {
 
     private val homepage by resettableLazy(changeManager) {
         HomepageRepository(serviceManager.getHomepageService())
+    }
+
+    fun setAdditionalCookieManager(cookieManager: CookieManager) {
+        cookieJarCabinet.setAdditionalCookieManager(cookieManager)
     }
 
     suspend fun getPasswordResetCaptcha(registerBaseUrl: String, symbol: String): Pair<String, String> = account.getPasswordResetCaptcha(registerBaseUrl, domainSuffix, symbol)

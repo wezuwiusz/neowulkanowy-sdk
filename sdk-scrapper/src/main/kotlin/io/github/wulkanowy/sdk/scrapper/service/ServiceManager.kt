@@ -1,6 +1,7 @@
 package io.github.wulkanowy.sdk.scrapper.service
 
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
+import io.github.wulkanowy.sdk.scrapper.CookieJarCabinet
 import io.github.wulkanowy.sdk.scrapper.OkHttpClientBuilderFactory
 import io.github.wulkanowy.sdk.scrapper.Scrapper
 import io.github.wulkanowy.sdk.scrapper.TLSSocketFactory
@@ -26,7 +27,6 @@ import pl.droidsonroids.retrofit2.JspoonConverterFactory
 import retrofit2.Retrofit
 import retrofit2.converter.scalars.ScalarsConverterFactory
 import retrofit2.create
-import java.net.CookieManager
 import java.security.KeyStore
 import java.time.LocalDate
 import java.util.concurrent.TimeUnit.SECONDS
@@ -35,8 +35,7 @@ import javax.net.ssl.X509TrustManager
 
 internal class ServiceManager(
     private val okHttpClientBuilderFactory: OkHttpClientBuilderFactory,
-    private val cookies: CookieManager,
-    private val alternativeCookies: CookieManager,
+    private val cookieJarCabinet: CookieJarCabinet,
     logLevel: HttpLoggingInterceptor.Level,
     private val loginType: Scrapper.LoginType,
     private val schema: String,
@@ -73,7 +72,7 @@ internal class ServiceManager(
             host = host,
             domainSuffix = domainSuffix,
             symbol = symbol,
-            cookies = cookies,
+            cookieJarCabinet = cookieJarCabinet,
             api = getLoginService(),
             urlGenerator = urlGenerator,
         )
@@ -94,10 +93,10 @@ internal class ServiceManager(
 
     private val interceptors: MutableList<Pair<Interceptor, Boolean>> = mutableListOf(
         HttpLoggingInterceptor().setLevel(logLevel) to true,
-        ErrorInterceptor(cookies) to false,
+        ErrorInterceptor(cookieJarCabinet) to false,
         AutoLoginInterceptor(
             loginType = loginType,
-            jar = cookies,
+            cookieJarCabinet = cookieJarCabinet,
             emptyCookieJarIntercept = emptyCookieJarIntercept,
             notLoggedInCallback = { loginHelper.login(email, password) },
             fetchStudentCookies = { loginHelper.loginStudent() },
@@ -124,8 +123,6 @@ internal class ServiceManager(
     fun setInterceptor(interceptor: Interceptor, network: Boolean = false) {
         interceptors.add(0, interceptor to network)
     }
-
-    fun getCookieManager() = cookies
 
     fun getLoginService(): LoginService {
         if (email.isBlank() && password.isBlank()) throw ScrapperException("Email and password are not set")
@@ -175,7 +172,7 @@ internal class ServiceManager(
 
             client.addInterceptor(
                 StudentCookieInterceptor(
-                    cookies = cookies,
+                    cookieJarCabinet = cookieJarCabinet,
                     schema = schema,
                     host = host,
                     domainSuffix = domainSuffix,
@@ -234,7 +231,12 @@ internal class ServiceManager(
                 -> sslSocketFactory(TLSSocketFactory(), trustManager)
             }
         }
-        .cookieJar(if (!separateJar) JavaNetCookieJar(cookies) else JavaNetCookieJar(alternativeCookies))
+        .cookieJar(
+            when {
+                separateJar -> JavaNetCookieJar(cookieJarCabinet.alternativeCookieManager)
+                else -> JavaNetCookieJar(cookieJarCabinet.userCookieManager)
+            },
+        )
         .apply {
             interceptors.forEach {
                 if (it.first is ErrorInterceptor || it.first is AutoLoginInterceptor) {
