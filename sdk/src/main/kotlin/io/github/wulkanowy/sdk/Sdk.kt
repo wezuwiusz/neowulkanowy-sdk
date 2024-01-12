@@ -100,6 +100,8 @@ class Sdk {
 
     val cookieManager: CookieManager = scrapper.cookieManager
 
+    val alternativeCookieManager: CookieManager = scrapper.alternativeCookieManager
+
     var mode = Mode.SCRAPPER
 
     var mobileBaseUrl = ""

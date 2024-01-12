@@ -68,6 +68,10 @@ class Scrapper {
         setCookiePolicy(CookiePolicy.ACCEPT_ALL)
     }
 
+    val alternativeCookieManager = CookieManager().apply {
+        setCookiePolicy(CookiePolicy.ACCEPT_ALL)
+    }
+
     var logLevel: HttpLoggingInterceptor.Level = HttpLoggingInterceptor.Level.BASIC
         set(value) {
             if (field != value) changeManager.reset()
@@ -214,6 +218,7 @@ class Scrapper {
         ServiceManager(
             okHttpClientBuilderFactory = okHttpFactory,
             cookies = cookieManager,
+            alternativeCookies = alternativeCookieManager,
             logLevel = logLevel,
             loginType = loginType,
             schema = schema,

@@ -24,6 +24,7 @@ class ServiceManagerTest : BaseLocalTest() {
         val manager = ServiceManager(
             okHttpClientBuilderFactory = OkHttpClientBuilderFactory(),
             cookies = CookieManager(),
+            alternativeCookies = CookieManager(),
             logLevel = HttpLoggingInterceptor.Level.NONE,
             loginType = Scrapper.LoginType.STANDARD,
             schema = "http",
@@ -58,6 +59,7 @@ class ServiceManagerTest : BaseLocalTest() {
         val manager = ServiceManager(
             okHttpClientBuilderFactory = OkHttpClientBuilderFactory(),
             cookies = CookieManager(),
+            alternativeCookies = CookieManager(),
             logLevel = HttpLoggingInterceptor.Level.NONE,
             loginType = Scrapper.LoginType.STANDARD,
             schema = "http",
@@ -130,6 +132,7 @@ class ServiceManagerTest : BaseLocalTest() {
         val manager = ServiceManager(
             okHttpClientBuilderFactory = OkHttpClientBuilderFactory(),
             cookies = CookieManager(),
+            alternativeCookies = CookieManager(),
             logLevel = HttpLoggingInterceptor.Level.NONE,
             loginType = Scrapper.LoginType.STANDARD,
             schema = "http",

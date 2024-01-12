@@ -36,6 +36,7 @@ import javax.net.ssl.X509TrustManager
 internal class ServiceManager(
     private val okHttpClientBuilderFactory: OkHttpClientBuilderFactory,
     private val cookies: CookieManager,
+    private val alternativeCookies: CookieManager,
     logLevel: HttpLoggingInterceptor.Level,
     private val loginType: Scrapper.LoginType,
     private val schema: String,
@@ -233,7 +234,7 @@ internal class ServiceManager(
                 -> sslSocketFactory(TLSSocketFactory(), trustManager)
             }
         }
-        .cookieJar(if (!separateJar) JavaNetCookieJar(cookies) else JavaNetCookieJar(CookieManager()))
+        .cookieJar(if (!separateJar) JavaNetCookieJar(cookies) else JavaNetCookieJar(alternativeCookies))
         .apply {
             interceptors.forEach {
                 if (it.first is ErrorInterceptor || it.first is AutoLoginInterceptor) {
