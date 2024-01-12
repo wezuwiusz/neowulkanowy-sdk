@@ -65,7 +65,10 @@ internal class LoginHelper(
                     val body = it.response()?.errorBody()?.string().orEmpty()
                     val html = Jsoup.parse(body)
                     if ("Just a moment" in html.title()) {
-                        throw CloudflareVerificationException(it)
+                        throw CloudflareVerificationException(
+                            originalUrl = it.response()?.raw()?.request?.url?.toString(),
+                            cause = it,
+                        )
                     }
                 }
             }.getOrThrow()
