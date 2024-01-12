@@ -9,7 +9,6 @@ import io.github.wulkanowy.sdk.scrapper.Scrapper.LoginType.ADFSLightCufs
 import io.github.wulkanowy.sdk.scrapper.Scrapper.LoginType.ADFSLightScoped
 import io.github.wulkanowy.sdk.scrapper.Scrapper.LoginType.AUTO
 import io.github.wulkanowy.sdk.scrapper.Scrapper.LoginType.STANDARD
-import io.github.wulkanowy.sdk.scrapper.exception.CloudflareVerificationException
 import io.github.wulkanowy.sdk.scrapper.exception.ScrapperException
 import io.github.wulkanowy.sdk.scrapper.exception.VulcanException
 import io.github.wulkanowy.sdk.scrapper.register.HomePageResponse
@@ -59,19 +58,7 @@ internal class LoginHelper(
     }
 
     suspend fun login(email: String, password: String): HomePageResponse {
-        val res = runCatching { sendCredentials(email, password) }
-            .onFailure {
-                if (it is HttpException) {
-                    val body = it.response()?.errorBody()?.string().orEmpty()
-                    val html = Jsoup.parse(body)
-                    if ("Just a moment" in html.title()) {
-                        throw CloudflareVerificationException(
-                            originalUrl = it.response()?.raw()?.request?.url?.toString(),
-                            cause = it,
-                        )
-                    }
-                }
-            }.getOrThrow()
+        val res =  sendCredentials(email, password)
         logger.info("Login ${loginType.name} started")
         when {
             res.title.startsWith("Witryna ucznia i rodzica") -> return HomePageResponse()

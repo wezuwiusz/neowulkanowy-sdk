@@ -2,6 +2,7 @@ package io.github.wulkanowy.sdk.scrapper.interceptor
 
 import io.github.wulkanowy.sdk.scrapper.CookieJarCabinet
 import io.github.wulkanowy.sdk.scrapper.exception.AccountInactiveException
+import io.github.wulkanowy.sdk.scrapper.exception.CloudflareVerificationException
 import io.github.wulkanowy.sdk.scrapper.exception.ConnectionBlockedException
 import io.github.wulkanowy.sdk.scrapper.exception.ScrapperException
 import io.github.wulkanowy.sdk.scrapper.exception.ServiceUnavailableException
@@ -16,6 +17,7 @@ import okhttp3.Response
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import org.slf4j.LoggerFactory
+import java.net.HttpURLConnection.HTTP_FORBIDDEN
 import java.net.HttpURLConnection.HTTP_NOT_FOUND
 
 internal class ErrorInterceptor(
@@ -110,8 +112,8 @@ internal class ErrorInterceptor(
             }
 
             "Połączenie zablokowane" -> throw ConnectionBlockedException(doc.body().text())
-            "Just a moment..." -> if (doc.select(".footer").text().contains("Cloudflare")) {
-                throw ConnectionBlockedException(doc.select("#challenge-body-text").text())
+            "Just a moment..." -> if (httpCode == HTTP_FORBIDDEN) {
+                throw CloudflareVerificationException(redirectUrl)
             }
 
             "Przerwa" -> throw ServiceUnavailableException(doc.title())

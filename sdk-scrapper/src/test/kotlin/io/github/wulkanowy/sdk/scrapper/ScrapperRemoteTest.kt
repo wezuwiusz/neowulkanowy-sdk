@@ -37,6 +37,7 @@ class ScrapperRemoteTest : BaseTest() {
             classId = 1
             androidVersion = "9.0"
             buildTag = "Wulkanowy"
+            emptyCookieJarInterceptor = false
             addInterceptor(
                 interceptor = {
                     println("Request event ${it.request().url.host}")
