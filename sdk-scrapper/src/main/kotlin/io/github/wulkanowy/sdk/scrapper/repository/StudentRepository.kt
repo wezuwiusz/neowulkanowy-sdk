@@ -18,7 +18,6 @@ import io.github.wulkanowy.sdk.scrapper.exams.mapExamsList
 import io.github.wulkanowy.sdk.scrapper.exception.FeatureDisabledException
 import io.github.wulkanowy.sdk.scrapper.getSchoolYear
 import io.github.wulkanowy.sdk.scrapper.getScriptFlag
-import io.github.wulkanowy.sdk.scrapper.getScriptParam
 import io.github.wulkanowy.sdk.scrapper.grades.GradePointsSummary
 import io.github.wulkanowy.sdk.scrapper.grades.GradeRequest
 import io.github.wulkanowy.sdk.scrapper.grades.Grades
@@ -82,11 +81,7 @@ internal class StudentRepository(
         isEduOne = getScriptFlag("isEduOne", startPage)
         if (isEduOne) error("Unsupported eduOne detected!")
 
-        val res = api.getUserCache(
-            token = getScriptParam("antiForgeryToken", startPage),
-            appGuid = getScriptParam("appGuid", startPage),
-            appVersion = getScriptParam("version", startPage),
-        ).handleErrors()
+        val res = api.getUserCache().handleErrors()
 
         val data = requireNotNull(res.data) {
             "Required value was null. $res"
@@ -95,12 +90,7 @@ internal class StudentRepository(
     }
 
     suspend fun authorizePermission(pesel: String): Boolean {
-        val startPage = getStartPage()
-
         return api.authorizePermission(
-            token = getScriptParam("antiForgeryToken", startPage),
-            appGuid = getScriptParam("appGuid", startPage),
-            appVersion = getScriptParam("version", startPage),
             body = AuthorizePermissionRequest(AuthorizePermission(pesel)),
         ).handleErrors().data?.success ?: false
     }
@@ -139,12 +129,7 @@ internal class StudentRepository(
     }
 
     suspend fun excuseForAbsence(absents: List<Absent>, content: String?): Boolean {
-        val startPage = getStartPage()
-
         return api.excuseForAbsence(
-            token = getScriptParam("antiForgeryToken", startPage),
-            appGuid = getScriptParam("appGuid", startPage),
-            appVersion = getScriptParam("version", startPage),
             attendanceExcuseRequest = AttendanceExcuseRequest(
                 AttendanceExcuseRequest.Excuse(
                     absents = absents.map { absence ->
@@ -290,12 +275,7 @@ internal class StudentRepository(
     }
 
     suspend fun unregisterDevice(id: Int): Boolean {
-        val it = getStartPage()
-
         return api.unregisterDevice(
-            getScriptParam("antiForgeryToken", it),
-            getScriptParam("appGuid", it),
-            getScriptParam("version", it),
             UnregisterDeviceRequest(id),
         ).handleErrors().success
     }

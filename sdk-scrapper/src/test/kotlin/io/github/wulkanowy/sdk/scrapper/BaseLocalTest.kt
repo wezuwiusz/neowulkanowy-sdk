@@ -7,6 +7,7 @@ import io.github.wulkanowy.sdk.scrapper.interceptor.ErrorInterceptor
 import io.github.wulkanowy.sdk.scrapper.interceptor.HttpErrorInterceptor
 import io.github.wulkanowy.sdk.scrapper.login.LoginHelper
 import io.github.wulkanowy.sdk.scrapper.login.UrlGenerator
+import io.github.wulkanowy.sdk.scrapper.register.HomePageResponse
 import io.github.wulkanowy.sdk.scrapper.repository.StudentRepository
 import io.github.wulkanowy.sdk.scrapper.service.LoginService
 import io.github.wulkanowy.sdk.scrapper.service.StudentPlusService
@@ -15,11 +16,14 @@ import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.modules.SerializersModule
 import kotlinx.serialization.modules.contextual
+import okhttp3.HttpUrl
+import okhttp3.HttpUrl.Companion.toHttpUrl
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
+import org.jsoup.nodes.Document
 import org.junit.After
 import pl.droidsonroids.retrofit2.JspoonConverterFactory
 import retrofit2.Retrofit
@@ -117,10 +121,12 @@ abstract class BaseLocalTest : BaseTest() {
                         api = getService(LoginService::class.java),
                         urlGenerator = UrlGenerator(URL("http://localhost/"), "", "lodz", ""),
                     ).login("jan", "kowalski")
+                } else {
+                    HomePageResponse()
                 }
             },
-            fetchStudentCookies = {},
-            fetchMessagesCookies = {},
+            fetchStudentCookies = { "http://localhost".toHttpUrl() to Document("") },
+            fetchMessagesCookies = { "http://localhost".toHttpUrl() to Document("") },
         )
     }
 }

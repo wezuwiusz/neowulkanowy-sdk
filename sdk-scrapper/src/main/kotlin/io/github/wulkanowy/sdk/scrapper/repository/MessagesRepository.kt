@@ -1,6 +1,5 @@
 package io.github.wulkanowy.sdk.scrapper.repository
 
-import io.github.wulkanowy.sdk.scrapper.getScriptParam
 import io.github.wulkanowy.sdk.scrapper.messages.Mailbox
 import io.github.wulkanowy.sdk.scrapper.messages.MessageDetails
 import io.github.wulkanowy.sdk.scrapper.messages.MessageMeta
@@ -81,24 +80,14 @@ internal class MessagesRepository(
     suspend fun getMessageDetails(globalKey: String, markAsRead: Boolean): MessageDetails {
         val details = api.getMessageDetails(globalKey)
         if (markAsRead) {
-            runCatching {
-                val startPage = api.getStart()
-                api.markMessageAsRead(
-                    token = getScriptParam("antiForgeryToken", startPage),
-                    appGuid = getScriptParam("appGuid", startPage),
-                    appVersion = getScriptParam("version", startPage),
-                    body = mapOf("apiGlobalKey" to globalKey),
-                )
-            }.onFailure {
-                logger.error("Error occur while marking message as read", it)
-            }.getOrNull()
+            runCatching { api.markMessageAsRead(mapOf("apiGlobalKey" to globalKey)) }
+                .onFailure { logger.error("Error occur while marking message as read", it) }
+                .getOrNull()
         }
         return details
     }
 
     suspend fun sendMessage(subject: String, content: String, recipients: List<String>, senderMailboxId: String) {
-        val startPage = api.getStart()
-
         val body = SendMessageRequest(
             globalKey = UUID.randomUUID().toString(),
             threadGlobalKey = UUID.randomUUID().toString(),
@@ -110,33 +99,14 @@ internal class MessagesRepository(
         )
 
         api.sendMessage(
-            token = getScriptParam("antiForgeryToken", startPage),
-            appGuid = getScriptParam("appGuid", startPage),
-            appVersion = getScriptParam("version", startPage),
             body = body,
         )
     }
 
     suspend fun deleteMessages(globalKeys: List<String>, removeForever: Boolean) {
-        val startPage = api.getStart()
-        val token = getScriptParam("antiForgeryToken", startPage)
-        val appGuid = getScriptParam("appGuid", startPage)
-        val appVersion = getScriptParam("version", startPage)
-
         when {
-            !removeForever -> api.moveMessageToTrash(
-                token = token,
-                appGuid = appGuid,
-                appVersion = appVersion,
-                body = globalKeys,
-            )
-
-            else -> api.deleteMessage(
-                token = token,
-                appGuid = appGuid,
-                appVersion = appVersion,
-                body = globalKeys,
-            )
+            !removeForever -> api.moveMessageToTrash(globalKeys)
+            else -> api.deleteMessage(globalKeys)
         }
     }
 }

@@ -13,7 +13,10 @@ import io.github.wulkanowy.sdk.scrapper.exception.ScrapperException
 import io.github.wulkanowy.sdk.scrapper.exception.VulcanException
 import io.github.wulkanowy.sdk.scrapper.register.HomePageResponse
 import io.github.wulkanowy.sdk.scrapper.service.LoginService
+import okhttp3.HttpUrl
+import okhttp3.HttpUrl.Companion.toHttpUrl
 import org.jsoup.Jsoup
+import org.jsoup.nodes.Document
 import org.slf4j.LoggerFactory
 import pl.droidsonroids.jspoon.Jspoon
 import retrofit2.HttpException
@@ -58,7 +61,7 @@ internal class LoginHelper(
     }
 
     suspend fun login(email: String, password: String): HomePageResponse {
-        val res =  sendCredentials(email, password)
+        val res = sendCredentials(email, password)
         logger.info("Login ${loginType.name} started")
         when {
             res.title.startsWith("Witryna ucznia i rodzica") -> return HomePageResponse()
@@ -70,12 +73,12 @@ internal class LoginHelper(
         return cert
     }
 
-    fun loginStudent() {
+    fun loginStudent(): Pair<HttpUrl, Document> {
         val studentPageUrl = urlGenerator.generate(UrlGenerator.Site.STUDENT) + "LoginEndpoint.aspx"
         val startHtml = api.getModuleStart(studentPageUrl).execute().handleErrors().body().orEmpty()
-        val startTitle = Jsoup.parse(startHtml).title()
+        val startDoc = Jsoup.parse(startHtml)
 
-        if ("Working" in startTitle) {
+        if ("Working" in startDoc.title()) {
             val cert = certificateAdapter.fromHtml(startHtml)
             val certResponseHtml = api.sendCertificateModule(
                 referer = urlGenerator.createReferer(UrlGenerator.Site.STUDENT),
@@ -86,23 +89,25 @@ internal class LoginHelper(
                     "wctx" to cert.wctx,
                 ),
             ).execute().handleErrors().body().orEmpty()
+            val certResponseDoc = Jsoup.parse(certResponseHtml)
             if ("antiForgeryToken" !in certResponseHtml) {
-                val certResponseTitle = Jsoup.parse(certResponseHtml).title()
-                throw IOException("Unknown module start page: $certResponseTitle")
+                throw IOException("Unknown module start page: ${certResponseDoc.title()}")
             } else {
                 logger.debug("Student cookies fetch successfully!")
+                return studentPageUrl.toHttpUrl() to certResponseDoc
             }
         } else {
             logger.debug("Student cookies already fetched!")
+            return studentPageUrl.toHttpUrl() to startDoc
         }
     }
 
-    fun loginMessages() {
+    fun loginMessages(): Pair<HttpUrl, Document> {
         val messagesPageUrl = urlGenerator.generate(UrlGenerator.Site.MESSAGES) + "LoginEndpoint.aspx"
         val startHtml = api.getModuleStart(messagesPageUrl).execute().handleErrors().body().orEmpty()
-        val startTitle = Jsoup.parse(startHtml).title()
+        val startDoc = Jsoup.parse(startHtml)
 
-        if ("Working" in startTitle) {
+        if ("Working" in startDoc.title()) {
             val cert = certificateAdapter.fromHtml(startHtml)
             val certResponseHtml = api.sendCertificateModule(
                 referer = urlGenerator.createReferer(UrlGenerator.Site.MESSAGES),
@@ -113,14 +118,16 @@ internal class LoginHelper(
                     "wctx" to cert.wctx,
                 ),
             ).execute().handleErrors().body().orEmpty()
+            val certResponseDoc = Jsoup.parse(certResponseHtml)
             if ("antiForgeryToken" !in certResponseHtml) {
-                val certResponseTitle = Jsoup.parse(certResponseHtml).title()
-                throw IOException("Unknown module start page: $certResponseTitle")
+                throw IOException("Unknown module start page: ${certResponseDoc.title()}")
             } else {
                 logger.debug("Messages cookies fetch successfully!")
+                return messagesPageUrl.toHttpUrl() to Jsoup.parse(certResponseHtml)
             }
         } else {
             logger.debug("Messages cookies already fetched!")
+            return messagesPageUrl.toHttpUrl() to startDoc
         }
     }
 

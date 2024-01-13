@@ -175,8 +175,6 @@ class AttendanceTest : BaseLocalTest() {
 
     @Test
     fun excuseForAbsence() {
-        server.enqueue("WitrynaUcznia.html", RegisterTest::class.java)
-
         val absents = listOf(
             Absent(
                 date = LocalDateTime.of(2019, 2, 11, 15, 53, 9),
@@ -203,19 +201,18 @@ class AttendanceTest : BaseLocalTest() {
             )
         }
 
-        server.takeRequest()
-
         val request = server.takeRequest()
 
         val expected = Json.decodeFromString<AttendanceExcuseRequest>(AttendanceTest::class.java.getResource("Usprawiedliwienie.json")!!.readText())
         val actual = Json.decodeFromString<AttendanceExcuseRequest>(request.body.readUtf8())
 
         assertEquals(expected, actual)
-        assertEquals(
-            "7SaCmj247xiKA4nQcTqLJ8J56UnZpxL3zLNENZjKAdFQN3xN26EwRdhAezyo5Wx3P2iWVPLTc3fpjPCNMbEPLmxF4RrLeaAGdQevu8pgbEB2TocqfBPjWzNLyHXBcqxKM",
-            request.getHeader("X-V-RequestVerificationToken"),
-        )
-        assertEquals("2w68d2SFGnvRtVhuXoLYdxL3ue4F9yqD", request.getHeader("X-V-AppGuid"))
-        assertEquals("18.07.0003.31856", request.getHeader("X-V-AppVersion"))
+        // todo: move to login tests
+        // assertEquals(
+        //     "7SaCmj247xiKA4nQcTqLJ8J56UnZpxL3zLNENZjKAdFQN3xN26EwRdhAezyo5Wx3P2iWVPLTc3fpjPCNMbEPLmxF4RrLeaAGdQevu8pgbEB2TocqfBPjWzNLyHXBcqxKM",
+        //     request.getHeader("X-V-RequestVerificationToken"),
+        // )
+        // assertEquals("2w68d2SFGnvRtVhuXoLYdxL3ue4F9yqD", request.getHeader("X-V-AppGuid"))
+        // assertEquals("18.07.0003.31856", request.getHeader("X-V-AppVersion"))
     }
 }

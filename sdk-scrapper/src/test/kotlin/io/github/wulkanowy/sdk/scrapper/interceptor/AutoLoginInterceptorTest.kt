@@ -7,6 +7,7 @@ import io.github.wulkanowy.sdk.scrapper.login.LoginHelper
 import io.github.wulkanowy.sdk.scrapper.login.LoginTest
 import io.github.wulkanowy.sdk.scrapper.login.UrlGenerator
 import io.github.wulkanowy.sdk.scrapper.notes.NotesTest
+import io.github.wulkanowy.sdk.scrapper.register.HomePageResponse
 import io.github.wulkanowy.sdk.scrapper.register.RegisterTest
 import io.github.wulkanowy.sdk.scrapper.service.LoginService
 import io.github.wulkanowy.sdk.scrapper.service.StudentService
@@ -14,6 +15,8 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.supervisorScope
+import okhttp3.HttpUrl.Companion.toHttpUrl
+import org.jsoup.nodes.Document
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Test
@@ -134,14 +137,14 @@ class AutoLoginInterceptorTest : BaseLocalTest() {
         )
     }
 
-    private fun getService(checkJar: Boolean = false, notLoggedInCallback: suspend () -> Unit): StudentService {
+    private fun getService(checkJar: Boolean = false, notLoggedInCallback: suspend () -> HomePageResponse): StudentService {
         val interceptor = AutoLoginInterceptor(
             loginType = Scrapper.LoginType.STANDARD,
             cookieJarCabinet = CookieJarCabinet(),
             emptyCookieJarIntercept = checkJar,
             notLoggedInCallback = notLoggedInCallback,
-            fetchStudentCookies = {},
-            fetchMessagesCookies = {},
+            fetchStudentCookies = { "http://localhost".toHttpUrl() to Document("") },
+            fetchMessagesCookies = { "http://localhost".toHttpUrl() to Document("") },
         )
         val okHttp = getOkHttp(autoLogin = true, autoLoginInterceptorOn = true, autoLoginInterceptor = interceptor)
         return getService(StudentService::class.java, html = false, okHttp = okHttp)

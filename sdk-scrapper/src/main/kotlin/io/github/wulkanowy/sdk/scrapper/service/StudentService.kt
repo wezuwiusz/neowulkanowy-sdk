@@ -67,20 +67,10 @@ internal interface StudentService {
     ): ApiResponse<CacheResponse>
 
     @POST("UczenCache.mvc/Get")
-    suspend fun getUserCache(
-        @Header("X-V-RequestVerificationToken") token: String,
-        @Header("X-V-AppGuid") appGuid: String,
-        @Header("X-V-AppVersion") appVersion: String,
-        @Body body: Any = Any(),
-    ): ApiResponse<CacheResponse>
+    suspend fun getUserCache(@Body body: Any = Any()): ApiResponse<CacheResponse>
 
     @POST("Autoryzacja.mvc/Post")
-    suspend fun authorizePermission(
-        @Header("X-V-RequestVerificationToken") token: String,
-        @Header("X-V-AppGuid") appGuid: String,
-        @Header("X-V-AppVersion") appVersion: String,
-        @Body body: AuthorizePermissionRequest,
-    ): ApiResponse<AuthorizePermissionResponse>
+    suspend fun authorizePermission(@Body body: AuthorizePermissionRequest): ApiResponse<AuthorizePermissionResponse>
 
     @POST
     suspend fun getSchoolInfo(@Url url: String, @Body body: Any = Any()): ApiResponse<List<Diary>>
@@ -113,12 +103,7 @@ internal interface StudentService {
     suspend fun getAttendanceRecords(@Body attendanceRecordsRequest: AttendanceRecordsRequest): ApiResponse<List<AttendanceRecordDay>>
 
     @POST("Usprawiedliwienia.mvc/Post")
-    suspend fun excuseForAbsence(
-        @Header("X-V-RequestVerificationToken") token: String,
-        @Header("X-V-AppGuid") appGuid: String,
-        @Header("X-V-AppVersion") appVersion: String,
-        @Body attendanceExcuseRequest: AttendanceExcuseRequest,
-    ): ApiResponse<ApiResponse<String?>>
+    suspend fun excuseForAbsence(@Body attendanceExcuseRequest: AttendanceExcuseRequest): ApiResponse<ApiResponse<String?>>
 
     @POST("EgzaminyZewnetrzne.mvc/Get")
     suspend fun getExternalExaminations()
@@ -154,12 +139,7 @@ internal interface StudentService {
     suspend fun getToken(@Body body: Any = Any()): ApiResponse<TokenResponse>
 
     @POST("ZarejestrowaneUrzadzenia.mvc/Delete")
-    suspend fun unregisterDevice(
-        @Header("X-V-RequestVerificationToken") token: String,
-        @Header("X-V-AppGuid") appGuid: String,
-        @Header("X-V-AppVersion") appVersion: String,
-        @Body unregisterDeviceRequest: UnregisterDeviceRequest,
-    ): ApiResponse<Any>
+    suspend fun unregisterDevice(@Body unregisterDeviceRequest: UnregisterDeviceRequest): ApiResponse<Any>
 
     @POST("SzkolaINauczyciele.mvc/Get")
     suspend fun getSchoolAndTeachers(@Body body: Any = Any()): ApiResponse<SchoolAndTeachersResponse>

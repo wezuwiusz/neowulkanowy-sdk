@@ -9,12 +9,16 @@ import io.github.wulkanowy.sdk.scrapper.Scrapper.LoginType.ADFSLightCufs
 import io.github.wulkanowy.sdk.scrapper.Scrapper.LoginType.ADFSLightScoped
 import io.github.wulkanowy.sdk.scrapper.Scrapper.LoginType.STANDARD
 import io.github.wulkanowy.sdk.scrapper.exception.VulcanClientError
+import io.github.wulkanowy.sdk.scrapper.getScriptParam
+import io.github.wulkanowy.sdk.scrapper.login.ModuleHeaders
 import io.github.wulkanowy.sdk.scrapper.login.NotLoggedInException
+import io.github.wulkanowy.sdk.scrapper.register.HomePageResponse
 import io.github.wulkanowy.sdk.scrapper.repository.AccountRepository.Companion.SELECTOR_ADFS
 import io.github.wulkanowy.sdk.scrapper.repository.AccountRepository.Companion.SELECTOR_ADFS_CARDS
 import io.github.wulkanowy.sdk.scrapper.repository.AccountRepository.Companion.SELECTOR_ADFS_LIGHT
 import io.github.wulkanowy.sdk.scrapper.repository.AccountRepository.Companion.SELECTOR_STANDARD
 import kotlinx.coroutines.runBlocking
+import okhttp3.HttpUrl
 import okhttp3.Interceptor
 import okhttp3.MediaType
 import okhttp3.Protocol
@@ -34,13 +38,16 @@ import java.util.concurrent.locks.ReentrantLock
 
 private val lock = ReentrantLock(true)
 
+private var studentModuleHeaders: ModuleHeaders? = null
+private var messagesModuleHeaders: ModuleHeaders? = null
+
 internal class AutoLoginInterceptor(
     private val loginType: LoginType,
     private val cookieJarCabinet: CookieJarCabinet,
     private val emptyCookieJarIntercept: Boolean = false,
-    private val notLoggedInCallback: suspend () -> Unit,
-    private val fetchStudentCookies: () -> Unit,
-    private val fetchMessagesCookies: () -> Unit,
+    private val notLoggedInCallback: suspend () -> HomePageResponse,
+    private val fetchStudentCookies: () -> Pair<HttpUrl, Document>,
+    private val fetchMessagesCookies: () -> Pair<HttpUrl, Document>,
 ) : Interceptor {
 
     companion object {
@@ -61,7 +68,7 @@ internal class AutoLoginInterceptor(
             request = chain.request()
             checkRequest()
             response = try {
-                chain.proceed(request)
+                chain.proceed(request.attachModuleHeaders())
             } catch (e: Throwable) {
                 if (e is VulcanClientError) {
                     checkHttpErrorResponse(e, url)
@@ -70,24 +77,34 @@ internal class AutoLoginInterceptor(
             }
             if (response.body?.contentType()?.subtype != "json") {
                 val body = response.peekBody(Long.MAX_VALUE).byteStream()
-                checkResponse(Jsoup.parse(body, null, url), url)
+                val html = Jsoup.parse(body, null, url)
+                checkResponse(html, url)
+                saveModuleHeaders(html, uri)
             }
             lastError = null
         } catch (e: NotLoggedInException) {
             return if (lock.tryLock()) {
                 logger.debug("Not logged in. Login in...")
                 try {
-                    runBlocking { notLoggedInCallback() }
+                    val homePageResponse = runBlocking { notLoggedInCallback() }
+                    val studentModuleUrls = homePageResponse.studentSchools.map { it.attr("href") }
+
+                    logger.debug("Found student module urls: {}", studentModuleUrls)
+                    studentModuleHeaders = null
+                    messagesModuleHeaders = null
+
                     val messages = runCatching { fetchMessagesCookies() }
-                        .onFailure { it.printStackTrace() }
+                        .onFailure { logger.error("Error in messages login", it) }
+                        .onSuccess { (url, doc) -> saveModuleHeaders(doc, url) }
                     val student = runCatching { fetchStudentCookies() }
-                        .onFailure { it.printStackTrace() }
+                        .onFailure { logger.error("Error in student login", it) }
+                        .onSuccess { (url, doc) -> saveModuleHeaders(doc, url) }
                     when {
                         "wiadomosciplus" in uri.host -> messages.getOrThrow()
                         "uczen" in uri.host -> student.getOrThrow()
                         else -> logger.info("Resource don't need further login")
                     }
-                    chain.proceed(chain.request().newBuilder().build())
+                    chain.proceed(chain.request().attachModuleHeaders())
                 } catch (e: IOException) {
                     logger.debug("Error occurred on login")
                     lastError = e
@@ -118,11 +135,50 @@ internal class AutoLoginInterceptor(
                     logger.debug("User logged in. Retry after login...")
                 }
 
-                chain.proceed(chain.request().newBuilder().build())
+                chain.proceed(chain.request().attachModuleHeaders())
             }
         }
 
         return response
+    }
+
+    private fun saveModuleHeaders(doc: Document, url: HttpUrl) {
+        when {
+            "uonetplus-uczen" in url.host -> {
+                val htmlContent = doc.select("script").html()
+                studentModuleHeaders = ModuleHeaders(
+                    token = getScriptParam("antiForgeryToken", htmlContent),
+                    appGuid = getScriptParam("appGuid", htmlContent),
+                    appVersion = getScriptParam("version", htmlContent),
+                )
+            }
+
+            "uonetplus-wiadomosciplus" in url.host -> {
+                val htmlContent = doc.select("script").html()
+                messagesModuleHeaders = ModuleHeaders(
+                    token = getScriptParam("antiForgeryToken", htmlContent),
+                    appGuid = getScriptParam("appGuid", htmlContent),
+                    appVersion = getScriptParam("version", htmlContent),
+                )
+            }
+        }
+    }
+
+    private fun Request.attachModuleHeaders(): Request {
+        val headers = when {
+            "uonetplus-uczen" in url.host -> studentModuleHeaders
+            "uonetplus-wiadomosciplus" in url.host -> messagesModuleHeaders
+            else -> return this
+        }
+        return newBuilder()
+            .apply {
+                headers?.let {
+                    addHeader("X-V-RequestVerificationToken", it.token)
+                    addHeader("X-V-AppGuid", it.appGuid)
+                    addHeader("X-V-AppVersion", it.appVersion)
+                }
+            }
+            .build()
     }
 
     private fun checkRequest() {
