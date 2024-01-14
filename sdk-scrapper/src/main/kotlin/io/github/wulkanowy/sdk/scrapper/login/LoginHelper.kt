@@ -139,7 +139,7 @@ internal class LoginHelper(
     }
 
     fun logout() {
-        cookieJarCabinet.onUserChange()
+        cookieJarCabinet.onRegisterUserLogout()
     }
 
     suspend fun sendCredentials(email: String, password: String): CertificateResponse {
