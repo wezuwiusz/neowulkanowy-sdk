@@ -12,17 +12,17 @@ internal class CookieJarCabinet {
         original = CookieManager().apply {
             setCookiePolicy(CookiePolicy.ACCEPT_ALL)
         },
-    ) { uri, headers ->
-        additionalCookieManager?.get(uri, headers)
-    }
+        getCookie = { uri, headers -> additionalCookieManager?.get(uri, headers) },
+        putCookie = { uri, headers -> additionalCookieManager?.put(uri, headers) },
+    )
 
     val alternativeCookieManager = MergeCookieManager(
-        CookieManager().apply {
+        original = CookieManager().apply {
             setCookiePolicy(CookiePolicy.ACCEPT_ALL)
         },
-    ) { uri, headers ->
-        additionalCookieManager?.get(uri, headers)
-    }
+        getCookie = { uri, headers -> additionalCookieManager?.get(uri, headers) },
+        putCookie = { uri, headers -> additionalCookieManager?.put(uri, headers) },
+    )
 
     private var additionalCookieManager: CookieManager? = null
 
@@ -58,6 +58,7 @@ internal class CookieJarCabinet {
 internal class MergeCookieManager(
     private val original: CookieManager,
     private val getCookie: (URI?, Map<String, List<String>>?) -> Map<String, List<String>>?,
+    private val putCookie: (URI?, Map<String, List<String>>?) -> Unit,
 ) : CookieManager() {
 
     override fun get(uri: URI?, requestHeaders: Map<String, List<String>>?): Map<String, List<String>> {
@@ -67,13 +68,12 @@ internal class MergeCookieManager(
 
     override fun put(uri: URI?, responseHeaders: Map<String, List<String>>?) {
         original.put(uri, responseHeaders)
+        putCookie(uri, responseHeaders)
     }
 
     override fun setCookiePolicy(cookiePolicy: CookiePolicy?) {
         original.setCookiePolicy(cookiePolicy)
     }
 
-    override fun getCookieStore(): CookieStore {
-        return original.cookieStore
-    }
+    override fun getCookieStore(): CookieStore = original.cookieStore
 }
