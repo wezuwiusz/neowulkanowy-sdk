@@ -2,7 +2,6 @@ package io.github.wulkanowy.sdk.scrapper.repository
 
 import io.github.wulkanowy.sdk.scrapper.attendance.Absent
 import io.github.wulkanowy.sdk.scrapper.attendance.Attendance
-import io.github.wulkanowy.sdk.scrapper.attendance.AttendanceCategory
 import io.github.wulkanowy.sdk.scrapper.attendance.AttendanceExcuseRequest
 import io.github.wulkanowy.sdk.scrapper.attendance.AttendanceRequest
 import io.github.wulkanowy.sdk.scrapper.attendance.AttendanceSummary
@@ -17,7 +16,6 @@ import io.github.wulkanowy.sdk.scrapper.exams.ExamRequest
 import io.github.wulkanowy.sdk.scrapper.exams.mapExamsList
 import io.github.wulkanowy.sdk.scrapper.exception.FeatureDisabledException
 import io.github.wulkanowy.sdk.scrapper.getSchoolYear
-import io.github.wulkanowy.sdk.scrapper.getScriptFlag
 import io.github.wulkanowy.sdk.scrapper.grades.GradePointsSummary
 import io.github.wulkanowy.sdk.scrapper.grades.GradeRequest
 import io.github.wulkanowy.sdk.scrapper.grades.Grades
@@ -46,7 +44,6 @@ import io.github.wulkanowy.sdk.scrapper.school.School
 import io.github.wulkanowy.sdk.scrapper.school.Teacher
 import io.github.wulkanowy.sdk.scrapper.school.mapToSchool
 import io.github.wulkanowy.sdk.scrapper.school.mapToTeachers
-import io.github.wulkanowy.sdk.scrapper.service.StudentPlusService
 import io.github.wulkanowy.sdk.scrapper.service.StudentService
 import io.github.wulkanowy.sdk.scrapper.student.StudentInfo
 import io.github.wulkanowy.sdk.scrapper.student.StudentPhoto
@@ -62,31 +59,17 @@ import io.github.wulkanowy.sdk.scrapper.timetable.mapTimetableList
 import io.github.wulkanowy.sdk.scrapper.toFormat
 import org.jsoup.Jsoup
 import java.time.LocalDate
-import kotlin.io.encoding.Base64
-import kotlin.io.encoding.ExperimentalEncodingApi
 
 internal class StudentRepository(
     private val api: StudentService,
-    private val studentPlusService: StudentPlusService,
 ) {
-
-    private var isEduOne: Boolean = false
 
     private fun LocalDate.toISOFormat(): String = toFormat("yyyy-MM-dd'T00:00:00'")
 
     private suspend fun getCache(): CacheResponse {
-        if (isEduOne) error("Cache unavailable in eduOne compatibility mode")
-        val startPage = getStartPage()
-
-        isEduOne = getScriptFlag("isEduOne", startPage)
-        if (isEduOne) error("Unsupported eduOne detected!")
-
-        val res = api.getUserCache().handleErrors()
-
-        val data = requireNotNull(res.data) {
-            "Required value was null. $res"
+        return api.getUserCache().handleErrors().let {
+            requireNotNull(it.data)
         }
-        return data
     }
 
     suspend fun authorizePermission(pesel: String): Boolean {
@@ -105,18 +88,8 @@ internal class StudentRepository(
         }
     }
 
-    @OptIn(ExperimentalEncodingApi::class)
-    suspend fun getAttendance(startDate: LocalDate, endDate: LocalDate?, studentId: Int, diaryId: Int): List<Attendance> {
+    suspend fun getAttendance(startDate: LocalDate, endDate: LocalDate?): List<Attendance> {
         val lessonTimes = runCatching { getCache().times }
-        if (lessonTimes.isFailure && isEduOne) {
-            return studentPlusService.getAttendance(
-                key = Base64.encode("$studentId-$diaryId-1".toByteArray()),
-                from = startDate.toISOFormat(),
-                to = endDate?.toISOFormat() ?: startDate.plusDays(7).toISOFormat(),
-            ).onEach {
-                it.category = AttendanceCategory.getCategoryById(it.categoryId)
-            }
-        }
         return api.getAttendance(AttendanceRequest(startDate.atStartOfDay()))
             .handleErrors()
             .data?.mapAttendanceList(startDate, endDate, lessonTimes.getOrThrow()).orEmpty()
@@ -278,9 +251,5 @@ internal class StudentRepository(
         return api.unregisterDevice(
             UnregisterDeviceRequest(id),
         ).handleErrors().success
-    }
-
-    private suspend fun getStartPage(): String {
-        return api.getStart()
     }
 }

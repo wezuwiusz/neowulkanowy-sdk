@@ -10,7 +10,6 @@ import io.github.wulkanowy.sdk.scrapper.login.UrlGenerator
 import io.github.wulkanowy.sdk.scrapper.register.HomePageResponse
 import io.github.wulkanowy.sdk.scrapper.repository.StudentRepository
 import io.github.wulkanowy.sdk.scrapper.service.LoginService
-import io.github.wulkanowy.sdk.scrapper.service.StudentPlusService
 import io.github.wulkanowy.sdk.scrapper.service.StudentService
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.Json
@@ -56,7 +55,6 @@ abstract class BaseLocalTest : BaseTest() {
         val okHttp = getOkHttp(errorInterceptor = true, autoLoginInterceptorOn = true, loginType = loginType, autoLogin = autoLogin)
         return StudentRepository(
             api = getService(StudentService::class.java, server.url("/").toString(), false, okHttp),
-            studentPlusService = getService(StudentPlusService::class.java, server.url("/").toString(), false, okHttp),
         )
     }
 

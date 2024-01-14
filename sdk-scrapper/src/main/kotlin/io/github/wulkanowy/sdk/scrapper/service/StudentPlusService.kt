@@ -3,18 +3,14 @@ package io.github.wulkanowy.sdk.scrapper.service
 import io.github.wulkanowy.sdk.scrapper.attendance.Attendance
 import io.github.wulkanowy.sdk.scrapper.conferences.Conference
 import io.github.wulkanowy.sdk.scrapper.mobile.Device
-import io.github.wulkanowy.sdk.scrapper.timetable.CacheResponse
+import io.github.wulkanowy.sdk.scrapper.timetable.CacheEduOneResponse
 import retrofit2.http.GET
 import retrofit2.http.Query
-import retrofit2.http.Url
 
 internal interface StudentPlusService {
 
-    @GET
-    suspend fun getStart(@Url url: String): String
-
     @GET("api/Cache")
-    suspend fun getUserCache(): CacheResponse
+    suspend fun getUserCache(): CacheEduOneResponse
 
     @GET("api/Frekwencja")
     suspend fun getAttendance(

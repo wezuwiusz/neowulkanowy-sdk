@@ -47,9 +47,6 @@ import retrofit2.http.Url
 
 internal interface StudentService {
 
-    @GET("LoginEndpoint.aspx")
-    suspend fun getStart(): String
-
     @GET
     suspend fun getStart(@Url url: String): String
 

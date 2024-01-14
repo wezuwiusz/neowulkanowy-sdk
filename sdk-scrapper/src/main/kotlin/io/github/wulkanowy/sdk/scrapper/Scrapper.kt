@@ -16,6 +16,7 @@ import io.github.wulkanowy.sdk.scrapper.home.GovernmentUnit
 import io.github.wulkanowy.sdk.scrapper.home.LuckyNumber
 import io.github.wulkanowy.sdk.scrapper.homework.Homework
 import io.github.wulkanowy.sdk.scrapper.login.LoginHelper
+import io.github.wulkanowy.sdk.scrapper.login.UrlGenerator
 import io.github.wulkanowy.sdk.scrapper.menu.Menu
 import io.github.wulkanowy.sdk.scrapper.messages.Folder
 import io.github.wulkanowy.sdk.scrapper.messages.Mailbox
@@ -33,6 +34,7 @@ import io.github.wulkanowy.sdk.scrapper.repository.AccountRepository
 import io.github.wulkanowy.sdk.scrapper.repository.HomepageRepository
 import io.github.wulkanowy.sdk.scrapper.repository.MessagesRepository
 import io.github.wulkanowy.sdk.scrapper.repository.RegisterRepository
+import io.github.wulkanowy.sdk.scrapper.repository.StudentPlusRepository
 import io.github.wulkanowy.sdk.scrapper.repository.StudentRepository
 import io.github.wulkanowy.sdk.scrapper.repository.StudentStartRepository
 import io.github.wulkanowy.sdk.scrapper.school.School
@@ -64,6 +66,8 @@ class Scrapper {
     private val changeManager = resettableManager()
 
     private val cookieJarCabinet = CookieJarCabinet()
+
+    private var isEduOne = false
 
     var logLevel: HttpLoggingInterceptor.Level = HttpLoggingInterceptor.Level.BASIC
         set(value) {
@@ -237,10 +241,22 @@ class Scrapper {
             buildTag = buildTag,
             emptyCookieJarIntercept = emptyCookieJarInterceptor,
             userAgentTemplate = userAgentTemplate,
+            onUserLoggedIn = { studentModuleUrls ->
+                isEduOne = isCurrentLoginHasEduOne(studentModuleUrls)
+            },
         ).apply {
             appInterceptors.forEach { (interceptor, isNetwork) ->
                 setInterceptor(interceptor, isNetwork)
             }
+        }
+    }
+
+    private fun isCurrentLoginHasEduOne(studentModuleUrls: List<String>): Boolean {
+        return studentModuleUrls.any {
+            it.startsWith(
+                prefix = serviceManager.urlGenerator.generate(UrlGenerator.Site.STUDENT_PLUS),
+                ignoreCase = true,
+            )
         }
     }
 
@@ -281,7 +297,12 @@ class Scrapper {
     private val student: StudentRepository by resettableLazy(changeManager) {
         StudentRepository(
             api = serviceManager.getStudentService(),
-            studentPlusService = serviceManager.getStudentPlusService(),
+        )
+    }
+
+    private val studentPlus: StudentPlusRepository by resettableLazy(changeManager) {
+        StudentPlusRepository(
+            api = serviceManager.getStudentPlusService(),
         )
     }
 
@@ -316,7 +337,10 @@ class Scrapper {
     suspend fun getAttendance(startDate: LocalDate, endDate: LocalDate? = null): List<Attendance> {
         if (diaryId == 0) return emptyList()
 
-        return student.getAttendance(startDate, endDate, studentId, diaryId)
+        return when (isEduOne) {
+            true -> studentPlus.getAttendance(startDate, endDate, studentId, diaryId)
+            else -> student.getAttendance(startDate, endDate)
+        }
     }
 
     suspend fun getAttendanceSummary(subjectId: Int? = -1): List<AttendanceSummary> {
@@ -396,7 +420,10 @@ class Scrapper {
     suspend fun getCompletedLessons(startDate: LocalDate, endDate: LocalDate? = null, subjectId: Int = -1): List<CompletedLesson> {
         if (diaryId == 0) return emptyList()
 
-        return student.getCompletedLessons(startDate, endDate, subjectId)
+        return when (isEduOne) {
+            true -> studentPlus.getCompletedLessons()
+            else -> student.getCompletedLessons(startDate, endDate, subjectId)
+        }
     }
 
     suspend fun getRegisteredDevices(): List<Device> = student.getRegisteredDevices()

@@ -24,7 +24,6 @@ class CompletedLessonsTest : BaseLocalTest() {
 
     @Before
     fun setUp() {
-        server.enqueue("WitrynaUcznia.html", RegisterTest::class.java)
         server.enqueue("UczenCache.json", RegisterTest::class.java)
     }
 

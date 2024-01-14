@@ -48,6 +48,7 @@ internal class AutoLoginInterceptor(
     private val notLoggedInCallback: suspend () -> HomePageResponse,
     private val fetchStudentCookies: () -> Pair<HttpUrl, Document>,
     private val fetchMessagesCookies: () -> Pair<HttpUrl, Document>,
+    private val onUserLoggedIn: (studentModuleUrls: List<String>) -> Unit = {},
 ) : Interceptor {
 
     companion object {
@@ -84,8 +85,7 @@ internal class AutoLoginInterceptor(
                 try {
                     val homePageResponse = runBlocking { notLoggedInCallback() }
                     val studentModuleUrls = homePageResponse.studentSchools.map { it.attr("href") }
-
-                    logger.debug("Found student module urls: {}", studentModuleUrls)
+                    onUserLoggedIn(studentModuleUrls)
                     studentModuleHeaders = null
                     messagesModuleHeaders = null
 
