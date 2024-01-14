@@ -55,9 +55,6 @@ internal class AutoLoginInterceptor(
         private val logger = LoggerFactory.getLogger(this::class.java)
     }
 
-    @Volatile
-    private var lastError: Throwable? = null
-
     override fun intercept(chain: Interceptor.Chain): Response {
         val request: Request
         val response: Response
@@ -81,7 +78,6 @@ internal class AutoLoginInterceptor(
                 checkResponse(html, url)
                 saveModuleHeaders(html, uri)
             }
-            lastError = null
         } catch (e: NotLoggedInException) {
             return if (lock.tryLock()) {
                 logger.debug("Not logged in. Login in...")
@@ -107,14 +103,11 @@ internal class AutoLoginInterceptor(
                     chain.proceed(chain.request().attachModuleHeaders())
                 } catch (e: IOException) {
                     logger.debug("Error occurred on login")
-                    lastError = e
                     throw e
                 } catch (e: HttpException) {
                     logger.debug("Error occurred on login")
-                    lastError = e
                     e.toOkHttpResponse(chain.request())
                 } catch (e: Throwable) {
-                    lastError = e
                     throw IOException("Unknown exception on login", e)
                 } finally {
                     logger.debug("Login finished. Release lock")
@@ -124,12 +117,6 @@ internal class AutoLoginInterceptor(
                 try {
                     logger.debug("Wait for user to be logged in...")
                     lock.lock()
-                    lastError?.let {
-                        when (it) {
-                            is IOException -> throw it
-                            else -> throw IOException("Unknown error on login", it)
-                        }
-                    } ?: logger.warn("There is no last exception")
                 } finally {
                     lock.unlock()
                     logger.debug("User logged in. Retry after login...")
