@@ -411,7 +411,7 @@ class Scrapper {
         if (diaryId == 0) return emptyList()
 
         return when (isEduOne) {
-            true -> studentPlus.getCompletedLessons()
+            true -> studentPlus.getCompletedLessons(startDate, endDate, studentId, diaryId, unitId)
             else -> student.getCompletedLessons(startDate, endDate, subjectId)
         }
     }

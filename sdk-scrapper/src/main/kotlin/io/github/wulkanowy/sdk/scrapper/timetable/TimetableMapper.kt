@@ -53,15 +53,23 @@ internal fun TimetableResponse.mapTimetableAdditional(): List<LessonAdditional> 
     }
 }
 
-internal fun ApiResponse<Map<String, List<CompletedLesson>>>.mapCompletedLessonsList(start: LocalDate, endDate: LocalDate?): List<CompletedLesson> {
-    return data.orEmpty()
-        .flatMap { it.value }
-        .map {
-            it.copy(
-                teacherSymbol = it.teacher?.substringAfter(" [")?.substringBefore("]"),
-                teacher = it.teacher?.substringBefore(" ["),
-            )
-        }.sortedWith(compareBy({ it.date }, { it.number })).toList().filter {
-            it.date.toLocalDate() >= start && it.date.toLocalDate() <= (endDate ?: start.plusDays(4))
-        }
+internal fun ApiResponse<Map<String, List<CompletedLesson>>>.mapCompletedLessonsList(
+    start: LocalDate,
+    endDate: LocalDate?,
+): List<CompletedLesson> = data.orEmpty()
+    .flatMap { it.value }
+    .mapCompletedLessons(start, endDate)
+
+internal fun List<CompletedLesson>.mapCompletedLessons(
+    start: LocalDate,
+    endDate: LocalDate?,
+): List<CompletedLesson> {
+    return map {
+        it.copy(
+            teacherSymbol = it.teacher?.substringAfter(" [")?.substringBefore("]"),
+            teacher = it.teacher?.substringBefore(" ["),
+        )
+    }.sortedWith(compareBy({ it.date }, { it.number })).toList().filter {
+        it.date.toLocalDate() >= start && it.date.toLocalDate() <= (endDate ?: start.plusDays(6))
+    }
 }
