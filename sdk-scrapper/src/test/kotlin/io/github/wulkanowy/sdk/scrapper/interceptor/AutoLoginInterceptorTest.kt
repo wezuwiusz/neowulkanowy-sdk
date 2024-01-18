@@ -138,13 +138,14 @@ class AutoLoginInterceptorTest : BaseLocalTest() {
     }
 
     private fun getService(checkJar: Boolean = false, notLoggedInCallback: suspend () -> HomePageResponse): StudentService {
+        val urlGenerator = UrlGenerator(URL("http://localhost/"), "", "lodz", "")
         val interceptor = AutoLoginInterceptor(
             loginType = Scrapper.LoginType.STANDARD,
             cookieJarCabinet = CookieJarCabinet(),
             emptyCookieJarIntercept = checkJar,
             notLoggedInCallback = notLoggedInCallback,
-            fetchStudentCookies = { "http://localhost".toHttpUrl() to Document("") },
-            fetchMessagesCookies = { "http://localhost".toHttpUrl() to Document("") },
+            fetchModuleCookies = { "http://localhost".toHttpUrl() to Document("") },
+            urlGenerator = urlGenerator,
         )
         val okHttp = getOkHttp(autoLogin = true, autoLoginInterceptorOn = true, autoLoginInterceptor = interceptor)
         return getService(StudentService::class.java, html = false, okHttp = okHttp)

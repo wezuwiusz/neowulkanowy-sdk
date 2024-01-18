@@ -12,6 +12,7 @@ import io.github.wulkanowy.sdk.scrapper.exception.VulcanClientError
 import io.github.wulkanowy.sdk.scrapper.getScriptParam
 import io.github.wulkanowy.sdk.scrapper.login.ModuleHeaders
 import io.github.wulkanowy.sdk.scrapper.login.NotLoggedInException
+import io.github.wulkanowy.sdk.scrapper.login.UrlGenerator
 import io.github.wulkanowy.sdk.scrapper.register.HomePageResponse
 import io.github.wulkanowy.sdk.scrapper.repository.AccountRepository.Companion.SELECTOR_ADFS
 import io.github.wulkanowy.sdk.scrapper.repository.AccountRepository.Companion.SELECTOR_ADFS_CARDS
@@ -46,9 +47,9 @@ internal class AutoLoginInterceptor(
     private val cookieJarCabinet: CookieJarCabinet,
     private val emptyCookieJarIntercept: Boolean = false,
     private val notLoggedInCallback: suspend () -> HomePageResponse,
-    private val fetchStudentCookies: () -> Pair<HttpUrl, Document>,
-    private val fetchMessagesCookies: () -> Pair<HttpUrl, Document>,
-    private val onUserLoggedIn: (studentModuleUrls: List<String>) -> Unit = {},
+    private val fetchModuleCookies: (UrlGenerator.Site) -> Pair<HttpUrl, Document>,
+    private val isEduOneStudent: (Boolean) -> Unit = {},
+    private val urlGenerator: UrlGenerator,
 ) : Interceptor {
 
     companion object {
@@ -85,16 +86,17 @@ internal class AutoLoginInterceptor(
                 try {
                     val homePageResponse = runBlocking { notLoggedInCallback() }
                     val studentModuleUrls = homePageResponse.studentSchools.map { it.attr("href") }
-                    onUserLoggedIn(studentModuleUrls)
+                    val isEduOne = isCurrentLoginHasEduOne(studentModuleUrls)
+                    isEduOneStudent(isEduOne)
                     studentModuleHeaders = null
                     messagesModuleHeaders = null
 
-                    val messages = runCatching { fetchMessagesCookies() }
-                        .onFailure { logger.error("Error in messages login", it) }
-                        .onSuccess { (url, doc) -> saveModuleHeaders(doc, url) }
-                    val student = runCatching { fetchStudentCookies() }
-                        .onFailure { logger.error("Error in student login", it) }
-                        .onSuccess { (url, doc) -> saveModuleHeaders(doc, url) }
+                    val messages = getModuleCookies(UrlGenerator.Site.MESSAGES)
+                    val student = getModuleCookies(
+                        site = if (isEduOne) {
+                            UrlGenerator.Site.STUDENT_PLUS
+                        } else UrlGenerator.Site.STUDENT,
+                    )
                     when {
                         "wiadomosciplus" in uri.host -> messages.getOrThrow()
                         "uczen" in uri.host -> student.getOrThrow()
@@ -129,6 +131,12 @@ internal class AutoLoginInterceptor(
         return response
     }
 
+    private fun getModuleCookies(site: UrlGenerator.Site): Result<Pair<HttpUrl, Document>> {
+        return runCatching { fetchModuleCookies(site) }
+            .onFailure { logger.error("Error in $site login", it) }
+            .onSuccess { (url, doc) -> saveModuleHeaders(doc, url) }
+    }
+
     private fun saveModuleHeaders(doc: Document, url: HttpUrl) {
         when {
             "uonetplus-uczen" in url.host -> {
@@ -148,6 +156,15 @@ internal class AutoLoginInterceptor(
                     appVersion = getScriptParam("version", htmlContent),
                 )
             }
+        }
+    }
+
+    private fun isCurrentLoginHasEduOne(studentModuleUrls: List<String>): Boolean {
+        return studentModuleUrls.any {
+            it.startsWith(
+                prefix = urlGenerator.generate(UrlGenerator.Site.STUDENT_PLUS),
+                ignoreCase = true,
+            )
         }
     }
 

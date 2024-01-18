@@ -73,15 +73,15 @@ internal class LoginHelper(
         return cert
     }
 
-    fun loginStudent(): Pair<HttpUrl, Document> {
-        val studentPageUrl = urlGenerator.generate(UrlGenerator.Site.STUDENT) + "LoginEndpoint.aspx"
-        val startHtml = api.getModuleStart(studentPageUrl).execute().handleErrors().body().orEmpty()
+    fun loginModule(site: UrlGenerator.Site): Pair<HttpUrl, Document> {
+        val moduleUrl = urlGenerator.generate(site) + "LoginEndpoint.aspx"
+        val startHtml = api.getModuleStart(moduleUrl).execute().handleErrors().body().orEmpty()
         val startDoc = Jsoup.parse(startHtml)
 
         if ("Working" in startDoc.title()) {
             val cert = certificateAdapter.fromHtml(startHtml)
             val certResponseHtml = api.sendCertificateModule(
-                referer = urlGenerator.createReferer(UrlGenerator.Site.STUDENT),
+                referer = urlGenerator.createReferer(site),
                 url = cert.action,
                 certificate = mapOf(
                     "wa" to cert.wa,
@@ -93,41 +93,12 @@ internal class LoginHelper(
             if ("antiForgeryToken" !in certResponseHtml) {
                 throw IOException("Unknown module start page: ${certResponseDoc.title()}")
             } else {
-                logger.debug("Student cookies fetch successfully!")
-                return studentPageUrl.toHttpUrl() to certResponseDoc
+                logger.debug("{} cookies fetch successfully!", site)
+                return moduleUrl.toHttpUrl() to Jsoup.parse(certResponseHtml)
             }
         } else {
-            logger.debug("Student cookies already fetched!")
-            return studentPageUrl.toHttpUrl() to startDoc
-        }
-    }
-
-    fun loginMessages(): Pair<HttpUrl, Document> {
-        val messagesPageUrl = urlGenerator.generate(UrlGenerator.Site.MESSAGES) + "LoginEndpoint.aspx"
-        val startHtml = api.getModuleStart(messagesPageUrl).execute().handleErrors().body().orEmpty()
-        val startDoc = Jsoup.parse(startHtml)
-
-        if ("Working" in startDoc.title()) {
-            val cert = certificateAdapter.fromHtml(startHtml)
-            val certResponseHtml = api.sendCertificateModule(
-                referer = urlGenerator.createReferer(UrlGenerator.Site.MESSAGES),
-                url = cert.action,
-                certificate = mapOf(
-                    "wa" to cert.wa,
-                    "wresult" to cert.wresult,
-                    "wctx" to cert.wctx,
-                ),
-            ).execute().handleErrors().body().orEmpty()
-            val certResponseDoc = Jsoup.parse(certResponseHtml)
-            if ("antiForgeryToken" !in certResponseHtml) {
-                throw IOException("Unknown module start page: ${certResponseDoc.title()}")
-            } else {
-                logger.debug("Messages cookies fetch successfully!")
-                return messagesPageUrl.toHttpUrl() to Jsoup.parse(certResponseHtml)
-            }
-        } else {
-            logger.debug("Messages cookies already fetched!")
-            return messagesPageUrl.toHttpUrl() to startDoc
+            logger.debug("{} cookies already fetched!", site)
+            return moduleUrl.toHttpUrl() to startDoc
         }
     }
 

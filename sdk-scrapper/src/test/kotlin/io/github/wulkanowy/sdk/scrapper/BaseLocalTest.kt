@@ -103,6 +103,7 @@ abstract class BaseLocalTest : BaseTest() {
         .build()
 
     private fun getAutoLoginInterceptor(loginType: Scrapper.LoginType, autoLogin: Boolean): AutoLoginInterceptor {
+        val urlGenerator = UrlGenerator(URL("http://localhost/"), "", "lodz", "")
         return AutoLoginInterceptor(
             loginType = loginType,
             cookieJarCabinet = CookieJarCabinet(),
@@ -116,14 +117,14 @@ abstract class BaseLocalTest : BaseTest() {
                         symbol = "powiatwulkanowy",
                         cookieJarCabinet = CookieJarCabinet(),
                         api = getService(LoginService::class.java),
-                        urlGenerator = UrlGenerator(URL("http://localhost/"), "", "lodz", ""),
+                        urlGenerator = urlGenerator,
                     ).login("jan", "kowalski")
                 } else {
                     HomePageResponse()
                 }
             },
-            fetchStudentCookies = { "http://localhost".toHttpUrl() to Document("") },
-            fetchMessagesCookies = { "http://localhost".toHttpUrl() to Document("") },
+            fetchModuleCookies = { "http://localhost".toHttpUrl() to Document("") },
+            urlGenerator = urlGenerator,
         )
     }
 }

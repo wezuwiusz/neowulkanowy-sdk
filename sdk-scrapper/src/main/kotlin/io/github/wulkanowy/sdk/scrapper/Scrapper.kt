@@ -16,7 +16,6 @@ import io.github.wulkanowy.sdk.scrapper.home.GovernmentUnit
 import io.github.wulkanowy.sdk.scrapper.home.LuckyNumber
 import io.github.wulkanowy.sdk.scrapper.homework.Homework
 import io.github.wulkanowy.sdk.scrapper.login.LoginHelper
-import io.github.wulkanowy.sdk.scrapper.login.UrlGenerator
 import io.github.wulkanowy.sdk.scrapper.menu.Menu
 import io.github.wulkanowy.sdk.scrapper.messages.Folder
 import io.github.wulkanowy.sdk.scrapper.messages.Mailbox
@@ -241,22 +240,13 @@ class Scrapper {
             buildTag = buildTag,
             emptyCookieJarIntercept = emptyCookieJarInterceptor,
             userAgentTemplate = userAgentTemplate,
-            onUserLoggedIn = { studentModuleUrls ->
-                isEduOne = isCurrentLoginHasEduOne(studentModuleUrls)
+            isEduOneStudent = {
+                isEduOne = it
             },
         ).apply {
             appInterceptors.forEach { (interceptor, isNetwork) ->
                 setInterceptor(interceptor, isNetwork)
             }
-        }
-    }
-
-    private fun isCurrentLoginHasEduOne(studentModuleUrls: List<String>): Boolean {
-        return studentModuleUrls.any {
-            it.startsWith(
-                prefix = serviceManager.urlGenerator.generate(UrlGenerator.Site.STUDENT_PLUS),
-                ignoreCase = true,
-            )
         }
     }
 
