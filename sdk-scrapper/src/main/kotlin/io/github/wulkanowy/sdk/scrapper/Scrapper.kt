@@ -338,7 +338,7 @@ class Scrapper {
         if (diaryId == 0) return emptyList()
 
         return when (isEduOne) {
-            true -> studentPlus.getAttendance(startDate, endDate, studentId, diaryId)
+            true -> studentPlus.getAttendance(startDate, endDate, studentId, diaryId, unitId)
             else -> student.getAttendance(startDate, endDate)
         }
     }
