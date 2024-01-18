@@ -40,6 +40,7 @@ import java.util.concurrent.locks.ReentrantLock
 private val lock = ReentrantLock(true)
 
 private var studentModuleHeaders: ModuleHeaders? = null
+private var studentPlusModuleHeaders: ModuleHeaders? = null
 private var messagesModuleHeaders: ModuleHeaders? = null
 
 internal class AutoLoginInterceptor(
@@ -88,17 +89,19 @@ internal class AutoLoginInterceptor(
                     val studentModuleUrls = homePageResponse.studentSchools.map { it.attr("href") }
                     val isEduOne = isCurrentLoginHasEduOne(studentModuleUrls)
                     isEduOneStudent(isEduOne)
-                    studentModuleHeaders = null
                     messagesModuleHeaders = null
+                    studentPlusModuleHeaders = null
+                    studentModuleHeaders = null
 
                     val messages = getModuleCookies(UrlGenerator.Site.MESSAGES)
-                    val student = getModuleCookies(
-                        site = if (isEduOne) {
-                            UrlGenerator.Site.STUDENT_PLUS
-                        } else UrlGenerator.Site.STUDENT,
-                    )
+                    val student = getModuleCookies(UrlGenerator.Site.STUDENT)
+                    val studentPlus = if (isEduOne) {
+                        getModuleCookies(UrlGenerator.Site.STUDENT_PLUS)
+                    } else null
+
                     when {
                         "wiadomosciplus" in uri.host -> messages.getOrThrow()
+                        "uczenplus" in uri.host -> studentPlus?.getOrThrow()
                         "uczen" in uri.host -> student.getOrThrow()
                         else -> logger.info("Resource don't need further login")
                     }
@@ -139,18 +142,27 @@ internal class AutoLoginInterceptor(
 
     private fun saveModuleHeaders(doc: Document, url: HttpUrl) {
         when {
-            "uonetplus-uczen" in url.host -> {
+            "uonetplus-wiadomosciplus" in url.host -> {
                 val htmlContent = doc.select("script").html()
-                studentModuleHeaders = ModuleHeaders(
+                messagesModuleHeaders = ModuleHeaders(
                     token = getScriptParam("antiForgeryToken", htmlContent),
                     appGuid = getScriptParam("appGuid", htmlContent),
                     appVersion = getScriptParam("version", htmlContent),
                 )
             }
 
-            "uonetplus-wiadomosciplus" in url.host -> {
+            "uonetplus-uczenplus" in url.host -> {
                 val htmlContent = doc.select("script").html()
-                messagesModuleHeaders = ModuleHeaders(
+                studentPlusModuleHeaders = ModuleHeaders(
+                    token = getScriptParam("antiForgeryToken", htmlContent),
+                    appGuid = getScriptParam("appGuid", htmlContent),
+                    appVersion = getScriptParam("version", htmlContent),
+                )
+            }
+
+            "uonetplus-uczen" in url.host -> {
+                val htmlContent = doc.select("script").html()
+                studentModuleHeaders = ModuleHeaders(
                     token = getScriptParam("antiForgeryToken", htmlContent),
                     appGuid = getScriptParam("appGuid", htmlContent),
                     appVersion = getScriptParam("version", htmlContent),
@@ -170,8 +182,9 @@ internal class AutoLoginInterceptor(
 
     private fun Request.attachModuleHeaders(): Request {
         val headers = when {
-            "uonetplus-uczen" in url.host -> studentModuleHeaders
             "uonetplus-wiadomosciplus" in url.host -> messagesModuleHeaders
+            "uonetplus-uczenplus" in url.host -> studentPlusModuleHeaders
+            "uonetplus-uczen" in url.host -> studentModuleHeaders
             else -> return this
         }
         return newBuilder()
