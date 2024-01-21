@@ -168,6 +168,12 @@ class Sdk {
             scrapper.diaryId = value
         }
 
+    var unitId = 0
+        set(value) {
+            field = value
+            scrapper.unitId = value
+        }
+
     var kindergartenDiaryId = 0
         set(value) {
             field = value
@@ -247,11 +253,13 @@ class Sdk {
         scrapper.setAdditionalCookieManager(cookieManager)
     }
 
-    fun switchDiary(diaryId: Int, kindergartenDiaryId: Int, schoolYear: Int): Sdk {
+    @JvmOverloads
+    fun switchDiary(diaryId: Int, kindergartenDiaryId: Int, schoolYear: Int, unitId: Int = 0): Sdk {
         return also {
             it.diaryId = diaryId
             it.kindergartenDiaryId = kindergartenDiaryId
             it.schoolYear = schoolYear
+            it.unitId = unitId
         }
     }
 

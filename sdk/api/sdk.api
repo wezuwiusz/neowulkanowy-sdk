@@ -82,6 +82,7 @@ public final class io/github/wulkanowy/sdk/Sdk {
 	public final fun getTeachers (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public final fun getTimetable (Ljava/time/LocalDate;Ljava/time/LocalDate;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public final fun getToken (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public final fun getUnitId ()I
 	public final fun getUserAgent ()Ljava/lang/String;
 	public final fun getUserAgentTemplate ()Ljava/lang/String;
 	public final fun getUserSubjectsFromScrapper (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
@@ -111,8 +112,11 @@ public final class io/github/wulkanowy/sdk/Sdk {
 	public final fun setSimpleHttpLogger (Lkotlin/jvm/functions/Function1;)V
 	public final fun setStudentId (I)V
 	public final fun setSymbol (Ljava/lang/String;)V
+	public final fun setUnitId (I)V
 	public final fun setUserAgentTemplate (Ljava/lang/String;)V
 	public final fun switchDiary (III)Lio/github/wulkanowy/sdk/Sdk;
+	public final fun switchDiary (IIII)Lio/github/wulkanowy/sdk/Sdk;
+	public static synthetic fun switchDiary$default (Lio/github/wulkanowy/sdk/Sdk;IIIIILjava/lang/Object;)Lio/github/wulkanowy/sdk/Sdk;
 	public final fun unregisterDevice (ILkotlin/coroutines/Continuation;)Ljava/lang/Object;
 }
 
