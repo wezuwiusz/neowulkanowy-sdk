@@ -25,6 +25,7 @@ internal interface StudentPlusService {
     @GET("api/RealizacjaZajec")
     suspend fun getCompletedLessons(
         @Query("key") key: String,
+        @Query("status") status: Int = 1,
         @Query("dataOd") from: String,
         @Query("dataDo") to: String,
     ): List<CompletedLesson>
