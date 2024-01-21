@@ -120,9 +120,8 @@ internal class ErrorInterceptor(
             }
 
             "Połączenie zablokowane" -> throw ConnectionBlockedException(doc.body().text())
-            "Just a moment..." -> if (httpCode == HTTP_FORBIDDEN) {
-                throw CloudflareVerificationException(redirectUrl)
-            }
+            "Attention Required! | Cloudflare" -> throw ConnectionBlockedException(doc.select(".cf-error-overview").text())
+            "Just a moment..." -> if (httpCode == HTTP_FORBIDDEN) throw CloudflareVerificationException(redirectUrl)
 
             "Przerwa" -> throw ServiceUnavailableException(doc.title())
             "Przerwa techniczna" -> throw ServiceUnavailableException(doc.title())
