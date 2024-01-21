@@ -2,6 +2,7 @@ package io.github.wulkanowy.sdk.scrapper.repository
 
 import io.github.wulkanowy.sdk.scrapper.attendance.Attendance
 import io.github.wulkanowy.sdk.scrapper.attendance.AttendanceCategory
+import io.github.wulkanowy.sdk.scrapper.exception.FeatureDisabledException
 import io.github.wulkanowy.sdk.scrapper.service.StudentPlusService
 import io.github.wulkanowy.sdk.scrapper.timetable.CompletedLesson
 import io.github.wulkanowy.sdk.scrapper.timetable.mapCompletedLessons
@@ -27,8 +28,17 @@ internal class StudentPlusRepository(
     }
 
     suspend fun getCompletedLessons(startDate: LocalDate, endDate: LocalDate?, studentId: Int, diaryId: Int, unitId: Int): List<CompletedLesson> {
+        val key = getEncodedKey(studentId, diaryId, unitId)
+        val context = api.getContext()
+        val studentConfig = context.students.find { it.key == key }?.config
+
+        if (studentConfig?.showCompletedLessons != true) {
+            throw FeatureDisabledException("Widok lekcji zrealizowanych został wyłączony przez Administratora szkoły")
+        }
+
         return api.getCompletedLessons(
-            key = getEncodedKey(studentId, diaryId, unitId),
+            key = key,
+            status = 1,
             from = startDate.toISOFormat(),
             to = endDate?.toISOFormat() ?: startDate.plusDays(7).toISOFormat(),
         ).mapCompletedLessons(startDate, endDate)

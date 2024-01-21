@@ -5,10 +5,10 @@ import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertEquals
 import org.junit.Test
 
-class StudentInfoTest : BaseLocalTest() {
+class ContextStudentInfoTest : BaseLocalTest() {
 
     private val info by lazy {
-        runBlocking { getStudentRepo(StudentInfoTest::class.java, "Uczen.json").getStudentInfo() }
+        runBlocking { getStudentRepo(ContextStudentInfoTest::class.java, "Uczen.json").getStudentInfo() }
     }
 
     @Test

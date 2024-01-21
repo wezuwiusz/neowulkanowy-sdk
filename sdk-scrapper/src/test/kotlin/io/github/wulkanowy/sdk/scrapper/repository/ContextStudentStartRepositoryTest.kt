@@ -9,7 +9,7 @@ import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertEquals
 import org.junit.Test
 
-class StudentStartRepositoryTest : BaseLocalTest() {
+class ContextStudentStartRepositoryTest : BaseLocalTest() {
 
     private val api by lazy {
         Scrapper().apply {

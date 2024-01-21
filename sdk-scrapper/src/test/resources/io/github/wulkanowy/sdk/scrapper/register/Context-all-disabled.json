@@ -1,0 +1,49 @@
+{
+  "uczniowie": [
+    {
+      "idDziennik": 123,
+      "rodzajDziennika": 1,
+      "dziennikDataOd": "2023-09-01T00:00:00+02:00",
+      "dziennikDataDo": "2024-08-31T00:00:00+02:00",
+      "isUczen": true,
+      "isPrzedszkolak": false,
+      "isWychowanek": false,
+      "key": "MS0yLTEtMw==",
+      "uczen": "Jan Kowalski",
+      "oddzial": "7a",
+      "jednostka": "Szkoła Wulkanowa im. Świętego Wulkanowego",
+      "jednostkaGodzinaOd": null,
+      "jednostkaGodzinaDo": null,
+      "isDorosli": false,
+      "isPolicealna": false,
+      "is13": false,
+      "isArtystyczna": false,
+      "isArtystyczna13": false,
+      "isSpecjalna": false,
+      "pelnoletniUczen": false,
+      "opiekunUcznia": false,
+      "wymagaAutoryzacji": false,
+      "posiadaPesel": true,
+      "globalKeySkrzynka": "70a7293d-ef1e-441e-acef-0151343ec49f",
+      "config": {
+        "isOplaty": false,
+        "isPlatnosci": false,
+        "isZaplac": false,
+        "isScalanieKont": false,
+        "isJadlospis": false,
+        "isOffice365": false,
+        "isSynchronizacjaEsb": false,
+        "isDydaktyka": false,
+        "isNadzorPedagogiczny": false,
+        "isZmianaZdjecia": false,
+        "isZglaszanieNieobecnosci": false,
+        "isLekcjeZrealizowane": false,
+        "isLekcjeZaplanowane": false,
+        "isPodreczniki": false,
+        "oneDriveClientId": "b820a97d-ffc7-4ac7-b505-e1483b3ea9c4",
+        "projectClient": null,
+        "payByNetUrlForPayment": "https://pbn-test.paybynet.com.pl/PayByNet/trans.do"
+      }
+    }
+  ]
+}
