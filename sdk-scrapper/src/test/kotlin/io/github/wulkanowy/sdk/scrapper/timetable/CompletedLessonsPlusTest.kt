@@ -6,7 +6,6 @@ import io.github.wulkanowy.sdk.scrapper.register.RegisterTest
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
-import org.junit.Before
 import org.junit.Test
 
 class CompletedLessonsPlusTest : BaseLocalTest() {
