@@ -95,15 +95,16 @@ internal class AutoLoginInterceptor(
 
                     val messages = getModuleCookies(UrlGenerator.Site.MESSAGES)
                     val student = getModuleCookies(UrlGenerator.Site.STUDENT)
-                    val studentPlus = if (isEduOne) {
-                        getModuleCookies(UrlGenerator.Site.STUDENT_PLUS)
-                    } else null
+                    val studentPlus = when {
+                        isEduOne -> getModuleCookies(UrlGenerator.Site.STUDENT_PLUS)
+                        else -> null
+                    }
 
                     when {
                         "wiadomosciplus" in uri.host -> messages.getOrThrow()
                         "uczenplus" in uri.host -> studentPlus?.getOrThrow()
                         "uczen" in uri.host -> student.getOrThrow()
-                        else -> logger.info("Resource don't need further login")
+                        else -> logger.info("Resource don't need further login anyway")
                     }
                     chain.proceed(chain.request().attachModuleHeaders())
                 } catch (e: IOException) {

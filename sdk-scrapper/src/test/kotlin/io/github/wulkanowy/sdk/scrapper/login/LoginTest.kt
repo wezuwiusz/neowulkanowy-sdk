@@ -8,6 +8,7 @@ import io.github.wulkanowy.sdk.scrapper.exception.VulcanException
 import io.github.wulkanowy.sdk.scrapper.interceptor.ErrorInterceptorTest
 import io.github.wulkanowy.sdk.scrapper.service.LoginService
 import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
@@ -120,19 +121,31 @@ class LoginTest : BaseLocalTest() {
     }
 
     @Test
-    fun accessAccountInactiveException() {
+    fun accessAccountInactiveException() = runTest {
         with(server) {
             enqueue("Logowanie-uonet.html")
             enqueue("Logowanie-nieaktywne.html")
             start(3000)
         }
 
-        try {
-            runBlocking { normal.login("jan@fakelog.cf", "jan1234") }
-        } catch (e: Throwable) {
-            assertEquals(AccountInactiveException::class, e::class)
-            assertEquals("Login i hasło użytkownika są poprawne, ale konto nie jest aktywne w żadnej jednostce sprawozdawczej", e.message)
+        val result = runCatching { normal.login("jan@fakelog.cf", "jan1234") }
+        val error = result.exceptionOrNull()!!
+        assertEquals(AccountInactiveException::class, error::class)
+        assertEquals("Login i hasło użytkownika są poprawne, ale konto nie jest aktywne w żadnej jednostce sprawozdawczej", error.message)
+    }
+
+    @Test
+    fun accessAccountInactiveNewException() = runTest {
+        with(server) {
+            enqueue("Logowanie-uonet.html")
+            enqueue("Logowanie-nieaktywne2.html")
+            start(3000)
         }
+
+        val result = runCatching { normal.login("jan@fakelog.cf", "jan1234") }
+        val error = result.exceptionOrNull()!!
+        assertEquals(AccountInactiveException::class, error::class)
+        assertEquals("Nie masz wystarczających uprawnień, by używać aplikacji", error.message)
     }
 
     @Test
@@ -165,10 +178,24 @@ class LoginTest : BaseLocalTest() {
     }
 
     @Test
-    fun accessPermissionException() {
+    fun accessPermissionException() = runTest {
         with(server) {
             enqueue("Logowanie-uonet.html")
             enqueue("Logowanie-brak-dostepu.html")
+            start(3000)
+        }
+
+        val result = runCatching { adfs.login("jan@fakelog.cf", "jan1234") }
+        val exception = result.exceptionOrNull()!!
+        assertEquals(AccountPermissionException::class, exception::class)
+        assertEquals("Adres nie został zarejestrowany w dzienniku uczniowskim jako adres rodzica, bądź ucznia.", exception.message)
+    }
+
+    @Test
+    fun accessPermissionNewException() {
+        with(server) {
+            enqueue("Logowanie-uonet.html")
+            enqueue("Logowanie-brak-dostepu2.html")
             start(3000)
         }
 
@@ -176,7 +203,7 @@ class LoginTest : BaseLocalTest() {
             runBlocking { adfs.login("jan@fakelog.cf", "jan1234") }
         } catch (e: Throwable) {
             assertTrue(e is AccountPermissionException)
-            assertEquals("Adres mikolajpich@gmail.com nie został zarejestrowany w dzienniku uczniowskim jako adres rodzica, bądź ucznia.", e.message)
+            assertEquals("Login nie został zarejestrowany w bazie szkoły, do której się logujesz.", e.message)
         }
     }
 

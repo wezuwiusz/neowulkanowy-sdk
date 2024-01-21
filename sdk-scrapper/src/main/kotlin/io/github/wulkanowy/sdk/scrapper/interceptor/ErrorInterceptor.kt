@@ -81,6 +81,9 @@ internal class ErrorInterceptor(
         doc.select("h2.error").let {
             if (it.isNotEmpty()) throw AccountPermissionException(it.text())
         }
+        doc.select("h2").text().let {
+            if (it == "Strona nie znaleziona") throw ScrapperException(it, httpCode)
+        }
 
         doc.selectFirst("form")?.attr("action")?.let {
             if ("SetNewPassword" in it) {
@@ -94,13 +97,18 @@ internal class ErrorInterceptor(
                 throw AccountInactiveException(it.select(".additionalText").text())
             }
         }
+        doc.select(".info-error-message-text").let {
+            if ("Nie masz wystarczających uprawnień" in it.text()) {
+                throw AccountInactiveException(it.text())
+            }
+        }
 
         when (doc.title()) {
             "Błąd" -> throw VulcanException(doc.body().text(), httpCode)
             "Błąd strony" -> throw VulcanException(doc.select(".errorMessage").text(), httpCode)
             "Logowanie" -> throw AccountPermissionException(
                 buildString {
-                    val newMessage = doc.select(".info-error-message-text").first()?.text().orEmpty()
+                    val newMessage = doc.select(".info-error-message-text").first()?.ownText().orEmpty()
                     val oldMessage = doc.select("div").last()?.ownText().orEmpty().split(" Jeśli")[0]
                     append(newMessage.ifBlank { oldMessage })
                 },
@@ -120,9 +128,6 @@ internal class ErrorInterceptor(
             "Przerwa techniczna" -> throw ServiceUnavailableException(doc.title())
             "Strona nie została odnaleziona" -> throw ScrapperException(doc.title(), httpCode)
             "Strona nie znaleziona" -> throw ScrapperException(doc.selectFirst("div div")?.text().orEmpty(), httpCode)
-        }
-        doc.select("h2").text().let {
-            if (it == "Strona nie znaleziona") throw ScrapperException(it, httpCode)
         }
         if (isBobCmn(doc, redirectUrl)) {
             throw ConnectionBlockedException("Połączenie zablokowane przez system antybotowy. Spróbuj ponownie za chwilę")
