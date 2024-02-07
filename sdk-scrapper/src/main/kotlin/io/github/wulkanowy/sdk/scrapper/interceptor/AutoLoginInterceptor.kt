@@ -142,33 +142,22 @@ internal class AutoLoginInterceptor(
     }
 
     private fun saveModuleHeaders(doc: Document, url: HttpUrl) {
+        val htmlContent = doc.select("script").html()
+        val moduleHeaders = ModuleHeaders(
+            token = getScriptParam("antiForgeryToken", htmlContent),
+            appGuid = getScriptParam("appGuid", htmlContent),
+            appVersion = getScriptParam("version", htmlContent),
+        )
+
+        if (moduleHeaders.token.isNotBlank()) {
+            logger.info("There is no token found on $url")
+            return
+        }
+
         when {
-            "uonetplus-wiadomosciplus" in url.host -> {
-                val htmlContent = doc.select("script").html()
-                messagesModuleHeaders = ModuleHeaders(
-                    token = getScriptParam("antiForgeryToken", htmlContent),
-                    appGuid = getScriptParam("appGuid", htmlContent),
-                    appVersion = getScriptParam("version", htmlContent),
-                )
-            }
-
-            "uonetplus-uczenplus" in url.host -> {
-                val htmlContent = doc.select("script").html()
-                studentPlusModuleHeaders = ModuleHeaders(
-                    token = getScriptParam("antiForgeryToken", htmlContent),
-                    appGuid = getScriptParam("appGuid", htmlContent),
-                    appVersion = getScriptParam("version", htmlContent),
-                )
-            }
-
-            "uonetplus-uczen" in url.host -> {
-                val htmlContent = doc.select("script").html()
-                studentModuleHeaders = ModuleHeaders(
-                    token = getScriptParam("antiForgeryToken", htmlContent),
-                    appGuid = getScriptParam("appGuid", htmlContent),
-                    appVersion = getScriptParam("version", htmlContent),
-                )
-            }
+            "uonetplus-wiadomosciplus" in url.host -> messagesModuleHeaders = moduleHeaders
+            "uonetplus-uczenplus" in url.host -> studentPlusModuleHeaders = moduleHeaders
+            "uonetplus-uczen" in url.host -> studentModuleHeaders = moduleHeaders
         }
     }
 
