@@ -131,6 +131,7 @@ private fun List<StudentInfo>.mapUnit(): List<RegisterUnit> {
                                 start = period.start.timestamp.toLocalDate(),
                                 end = period.end.timestamp.toLocalDate(),
                                 classId = -1, // todo
+                                className = student.classDisplay,
                                 unitId = student.unit.id, // todo: is needed?
                             )
                         },

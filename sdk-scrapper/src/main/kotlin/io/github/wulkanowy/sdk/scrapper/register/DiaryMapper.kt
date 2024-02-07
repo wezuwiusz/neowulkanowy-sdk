@@ -21,6 +21,7 @@ internal fun List<Diary>.toSemesters(studentId: Int, classId: Int, unitId: Int):
                     start = diary.start.toLocalDate(),
                     end = diary.end.toLocalDate(),
                     classId = classId,
+                    className = diary.symbol,
                     unitId = unitId,
                 ),
             )
@@ -35,6 +36,7 @@ internal fun List<Diary>.toSemesters(studentId: Int, classId: Int, unitId: Int):
                     start = it.start.toLocalDate(),
                     end = it.end.toLocalDate(),
                     classId = it.classId,
+                    className = diary.symbol,
                     unitId = it.unitId,
                 )
             }

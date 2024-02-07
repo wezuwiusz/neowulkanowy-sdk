@@ -9,7 +9,7 @@ internal fun getStudentsFromDiaries(
 ): List<RegisterStudent> = diaries
     .filter { it.semesters.orEmpty().isNotEmpty() || it.kindergartenDiaryId != 0 }
     .sortedByDescending { it.level }
-    .distinctBy { listOf(it.studentId, it.semesters?.firstOrNull()?.classId ?: 0) }
+    .distinctBy { listOf(it.studentId, it.semesters?.firstOrNull()?.classId ?: it.symbol) }
     .map { diary ->
         val classId = diary.semesters?.firstOrNull()?.classId ?: 0
         RegisterStudent(

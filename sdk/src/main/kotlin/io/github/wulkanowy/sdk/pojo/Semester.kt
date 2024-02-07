@@ -12,5 +12,6 @@ data class Semester(
     val start: LocalDate,
     val end: LocalDate,
     val classId: Int,
+    val className: String?,
     val unitId: Int,
 )

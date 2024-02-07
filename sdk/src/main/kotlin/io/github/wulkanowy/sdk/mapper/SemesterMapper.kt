@@ -15,6 +15,7 @@ internal fun List<ScrapperSemester>.mapSemesters() = map {
         start = it.start,
         end = it.end,
         classId = it.classId,
+        className = it.className,
         unitId = it.unitId,
     )
 }

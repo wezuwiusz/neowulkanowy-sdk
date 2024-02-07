@@ -1048,9 +1048,10 @@ public final class io/github/wulkanowy/sdk/pojo/School {
 }
 
 public final class io/github/wulkanowy/sdk/pojo/Semester {
-	public fun <init> (IILjava/lang/String;IIILjava/time/LocalDate;Ljava/time/LocalDate;II)V
+	public fun <init> (IILjava/lang/String;IIILjava/time/LocalDate;Ljava/time/LocalDate;ILjava/lang/String;I)V
 	public final fun component1 ()I
-	public final fun component10 ()I
+	public final fun component10 ()Ljava/lang/String;
+	public final fun component11 ()I
 	public final fun component2 ()I
 	public final fun component3 ()Ljava/lang/String;
 	public final fun component4 ()I
@@ -1059,10 +1060,11 @@ public final class io/github/wulkanowy/sdk/pojo/Semester {
 	public final fun component7 ()Ljava/time/LocalDate;
 	public final fun component8 ()Ljava/time/LocalDate;
 	public final fun component9 ()I
-	public final fun copy (IILjava/lang/String;IIILjava/time/LocalDate;Ljava/time/LocalDate;II)Lio/github/wulkanowy/sdk/pojo/Semester;
-	public static synthetic fun copy$default (Lio/github/wulkanowy/sdk/pojo/Semester;IILjava/lang/String;IIILjava/time/LocalDate;Ljava/time/LocalDate;IIILjava/lang/Object;)Lio/github/wulkanowy/sdk/pojo/Semester;
+	public final fun copy (IILjava/lang/String;IIILjava/time/LocalDate;Ljava/time/LocalDate;ILjava/lang/String;I)Lio/github/wulkanowy/sdk/pojo/Semester;
+	public static synthetic fun copy$default (Lio/github/wulkanowy/sdk/pojo/Semester;IILjava/lang/String;IIILjava/time/LocalDate;Ljava/time/LocalDate;ILjava/lang/String;IILjava/lang/Object;)Lio/github/wulkanowy/sdk/pojo/Semester;
 	public fun equals (Ljava/lang/Object;)Z
 	public final fun getClassId ()I
+	public final fun getClassName ()Ljava/lang/String;
 	public final fun getDiaryId ()I
 	public final fun getDiaryName ()Ljava/lang/String;
 	public final fun getEnd ()Ljava/time/LocalDate;
