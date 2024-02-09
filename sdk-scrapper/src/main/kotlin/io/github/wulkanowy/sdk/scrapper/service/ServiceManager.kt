@@ -126,6 +126,14 @@ internal class ServiceManager(
         interceptors.add(0, interceptor to network)
     }
 
+    fun getSymbolService(): SymbolService {
+        return getRetrofit(
+            client = getClientBuilder(errIntercept = true, loginIntercept = false, separateJar = true),
+            baseUrl = urlGenerator.generateBase(UrlGenerator.Site.HOME),
+            json = false,
+        ).create()
+    }
+
     fun getLoginService(): LoginService {
         if (email.isBlank() && password.isBlank()) throw ScrapperException("Email and password are not set")
         if (email.isBlank()) throw ScrapperException("Email is not set")

@@ -80,6 +80,7 @@ public final class io/github/wulkanowy/sdk/scrapper/Scrapper {
 	public final fun getUserAgent ()Ljava/lang/String;
 	public final fun getUserAgentTemplate ()Ljava/lang/String;
 	public final fun getUserSubjects (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public final fun isSymbolNotExist (Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public final fun sendMessage (Ljava/lang/String;Ljava/lang/String;Ljava/util/List;Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public final fun sendPasswordResetRequest (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public final fun setAdditionalCookieManager (Ljava/net/CookieManager;)V

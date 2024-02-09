@@ -10,6 +10,7 @@ import io.github.wulkanowy.sdk.scrapper.exception.TemporarilyDisabledException
 import io.github.wulkanowy.sdk.scrapper.exception.VulcanException
 import io.github.wulkanowy.sdk.scrapper.login.AccountPermissionException
 import io.github.wulkanowy.sdk.scrapper.login.BadCredentialsException
+import io.github.wulkanowy.sdk.scrapper.login.InvalidSymbolException
 import io.github.wulkanowy.sdk.scrapper.login.PasswordChangeRequiredException
 import io.github.wulkanowy.sdk.scrapper.repository.AccountRepository.Companion.SELECTOR_ADFS
 import okhttp3.Interceptor
@@ -100,6 +101,11 @@ internal class ErrorInterceptor(
         doc.select(".info-error-message-text").let {
             if ("Nie masz wystarczających uprawnień" in it.text()) {
                 throw AccountInactiveException(it.text())
+            }
+        }
+        doc.select("#page-error .error__box").let {
+            if ("musi mieć następujący format" in it.text()) {
+                throw InvalidSymbolException(it.text())
             }
         }
 

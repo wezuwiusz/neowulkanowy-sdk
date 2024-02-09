@@ -36,6 +36,7 @@ import io.github.wulkanowy.sdk.scrapper.repository.RegisterRepository
 import io.github.wulkanowy.sdk.scrapper.repository.StudentPlusRepository
 import io.github.wulkanowy.sdk.scrapper.repository.StudentRepository
 import io.github.wulkanowy.sdk.scrapper.repository.StudentStartRepository
+import io.github.wulkanowy.sdk.scrapper.repository.SymbolRepository
 import io.github.wulkanowy.sdk.scrapper.school.School
 import io.github.wulkanowy.sdk.scrapper.school.Teacher
 import io.github.wulkanowy.sdk.scrapper.service.ServiceManager
@@ -250,6 +251,8 @@ class Scrapper {
         }
     }
 
+    private val symbolRepository by lazy { SymbolRepository(serviceManager.getSymbolService()) }
+
     private val account by lazy { AccountRepository(serviceManager.getAccountService()) }
 
     private val register by resettableLazy(changeManager) {
@@ -309,6 +312,8 @@ class Scrapper {
     fun setAdditionalCookieManager(cookieManager: CookieManager) {
         cookieJarCabinet.setAdditionalCookieManager(cookieManager)
     }
+
+    suspend fun isSymbolNotExist(symbol: String): Boolean = symbolRepository.isSymbolNotExist(symbol)
 
     suspend fun getPasswordResetCaptcha(registerBaseUrl: String, symbol: String): Pair<String, String> = account.getPasswordResetCaptcha(registerBaseUrl, domainSuffix, symbol)
 

@@ -263,6 +263,10 @@ class Sdk {
         }
     }
 
+    suspend fun isSymbolNotExist(symbol: String): Boolean = withContext(Dispatchers.IO) {
+        scrapper.isSymbolNotExist(symbol)
+    }
+
     suspend fun getPasswordResetCaptchaCode(registerBaseUrl: String, symbol: String) = withContext(Dispatchers.IO) {
         scrapper.getPasswordResetCaptcha(registerBaseUrl, symbol)
     }

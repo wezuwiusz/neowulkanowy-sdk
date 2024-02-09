@@ -33,7 +33,11 @@ internal class UrlGenerator(
 
     fun generate(type: Site): String {
         if (type == BASE) return "$schema://$host"
-        return "$schema://${getSubDomain(type)}$domainSuffix.$host/$symbol/${if (type.isStudent) "$schoolId/" else ""}"
+        return "${generateBase(type).removeSuffix("/")}/$symbol/${if (type.isStudent) "$schoolId/" else ""}"
+    }
+
+    fun generateBase(type: Site): String {
+        return "$schema://${getSubDomain(type)}$domainSuffix.$host/"
     }
 
     fun createReferer(type: Site): String {
