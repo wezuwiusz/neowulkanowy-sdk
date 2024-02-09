@@ -54,15 +54,12 @@ internal interface StudentService {
     suspend fun getModuleStart(): String
 
     @POST
-    suspend fun sendCertificateModule(
+    @FormUrlEncoded
+    suspend fun sendModuleCertificate(
         @Header("Referer") referer: String,
         @Url url: String,
         @FieldMap certificate: Map<String, String>,
     ): String
-
-    @POST
-    @FormUrlEncoded
-    suspend fun sendCertificate(@Header("Referer") referer: String, @Url url: String, @FieldMap certificate: Map<String, String>): String
 
     @POST
     suspend fun getUserCache(

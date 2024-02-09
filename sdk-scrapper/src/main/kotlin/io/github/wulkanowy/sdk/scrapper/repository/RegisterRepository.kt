@@ -257,7 +257,7 @@ internal class RegisterRepository(
         val startPage = when {
             "Working" in Jsoup.parse(start).title() -> {
                 val cert = certificateAdapter.fromHtml(start)
-                student.sendCertificate(
+                student.sendModuleCertificate(
                     referer = url.createReferer(UrlGenerator.Site.STUDENT),
                     url = cert.action,
                     certificate = mapOf(

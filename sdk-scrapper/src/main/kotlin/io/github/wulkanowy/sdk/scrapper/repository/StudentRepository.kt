@@ -277,7 +277,7 @@ internal class StudentRepository(
 
         if ("Working" in startDoc.title()) {
             val cert = certificateAdapter.fromHtml(startHtml)
-            val certResponseHtml = api.sendCertificateModule(
+            val certResponseHtml = api.sendModuleCertificate(
                 referer = urlGenerator.createReferer(site),
                 url = cert.action,
                 certificate = mapOf(
