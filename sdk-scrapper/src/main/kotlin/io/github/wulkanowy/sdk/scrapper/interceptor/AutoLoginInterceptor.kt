@@ -146,10 +146,12 @@ internal class AutoLoginInterceptor(
         val moduleHeaders = ModuleHeaders(
             token = getScriptParam("antiForgeryToken", htmlContent),
             appGuid = getScriptParam("appGuid", htmlContent),
-            appVersion = getScriptParam("version", htmlContent),
+            appVersion = getScriptParam("version", htmlContent).ifBlank {
+                getScriptParam("appVersion", htmlContent)
+            },
         )
 
-        if (moduleHeaders.token.isNotBlank()) {
+        if (moduleHeaders.token.isBlank()) {
             logger.info("There is no token found on $url")
             return
         }

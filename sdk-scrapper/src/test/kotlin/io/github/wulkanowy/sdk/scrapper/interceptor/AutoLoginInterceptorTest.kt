@@ -6,6 +6,7 @@ import io.github.wulkanowy.sdk.scrapper.Scrapper
 import io.github.wulkanowy.sdk.scrapper.login.LoginHelper
 import io.github.wulkanowy.sdk.scrapper.login.LoginTest
 import io.github.wulkanowy.sdk.scrapper.login.UrlGenerator
+import io.github.wulkanowy.sdk.scrapper.messages.MessagesTest
 import io.github.wulkanowy.sdk.scrapper.notes.NotesTest
 import io.github.wulkanowy.sdk.scrapper.register.HomePageResponse
 import io.github.wulkanowy.sdk.scrapper.register.RegisterTest
@@ -15,7 +16,10 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.supervisorScope
+import kotlinx.coroutines.test.runTest
+import okhttp3.HttpUrl
 import okhttp3.HttpUrl.Companion.toHttpUrl
+import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
@@ -123,6 +127,47 @@ class AutoLoginInterceptorTest : BaseLocalTest() {
         }
     }
 
+    @Test
+    fun checkAppendedModuleHeaders() = runTest {
+        with(server) {
+            enqueue("unknown-error.txt", RegisterTest::class.java)
+            enqueue("Logowanie-uonet.html", LoginTest::class.java)
+            enqueue("Login-success.html", LoginTest::class.java)
+            // enqueue("Start.html", MessagesTest::class.java)
+            // enqueue("WitrynaUcznia.html", RegisterTest::class.java)
+            enqueue("UczenCache.json", RegisterTest::class.java)
+            start(3000)
+        }
+        init()
+
+        val studentService = getService(
+            fetchModuleCookies = { site ->
+                val html = when (site) {
+                    UrlGenerator.Site.STUDENT -> RegisterTest::class.java.getResource("WitrynaUcznia.html")!!.readText()
+                    UrlGenerator.Site.MESSAGES -> MessagesTest::class.java.getResource("Start.html")!!.readText()
+                    else -> error("Not supported here")
+                }
+                val subdomain = when (site) {
+                    UrlGenerator.Site.STUDENT -> "uczen"
+                    UrlGenerator.Site.MESSAGES -> "wiadomosciplus"
+                    else -> error("Not supported here")
+                }
+                "https://uonetplus-${subdomain}.localhost".toHttpUrl() to Jsoup.parse(html)
+            },
+            notLoggedInCallback = { loginHelper.login("", "") },
+        )
+        studentService.getUserCache()
+
+        repeat(3) { server.takeRequest() }
+        val retriedRequest = server.takeRequest()
+        assertEquals(
+            "7SaCmj247xiKA4nQcTqLJ8J56UnZpxL3zLNENZjKAdFQN3xN26EwRdhAezyo5Wx3P2iWVPLTc3fpjPCNMbEPLmxF4RrLeaAGdQevu8pgbEB2TocqfBPjWzNLyHXBcqxKM",
+            retriedRequest.getHeader("X-V-RequestVerificationToken"),
+        )
+        assertEquals("2w68d2SFGnvRtVhuXoLYdxL3ue4F9yqD", retriedRequest.getHeader("X-V-AppGuid"))
+        assertEquals("18.07.0003.31856", retriedRequest.getHeader("X-V-AppVersion"))
+    }
+
     private fun init() {
         loginService = getService(LoginService::class.java)
         loginHelper = LoginHelper(
@@ -133,21 +178,32 @@ class AutoLoginInterceptorTest : BaseLocalTest() {
             symbol = "powiatwulkanowy",
             cookieJarCabinet = CookieJarCabinet(),
             api = loginService,
-            urlGenerator = UrlGenerator(URL("http://localhost/"), "", "lodz", ""),
+            urlGenerator = UrlGenerator(URL("http://localhost/"), "", "lodz", "test"),
         )
     }
 
-    private fun getService(checkJar: Boolean = false, notLoggedInCallback: suspend () -> HomePageResponse): StudentService {
-        val urlGenerator = UrlGenerator(URL("http://localhost/"), "", "lodz", "")
+    private fun getService(
+        checkJar: Boolean = false,
+        fetchModuleCookies: (UrlGenerator.Site) -> Pair<HttpUrl, Document> = { "http://localhost".toHttpUrl() to Document("") },
+        notLoggedInCallback: suspend () -> HomePageResponse,
+    ): StudentService {
+        val urlGenerator = UrlGenerator(URL("http://uonetplus-uczen.localhost/"), "", "lodz", "")
         val interceptor = AutoLoginInterceptor(
             loginType = Scrapper.LoginType.STANDARD,
             cookieJarCabinet = CookieJarCabinet(),
             emptyCookieJarIntercept = checkJar,
             notLoggedInCallback = notLoggedInCallback,
-            fetchModuleCookies = { "http://localhost".toHttpUrl() to Document("") },
+            fetchModuleCookies = fetchModuleCookies,
             urlGenerator = urlGenerator,
         )
         val okHttp = getOkHttp(autoLogin = true, autoLoginInterceptorOn = true, autoLoginInterceptor = interceptor)
-        return getService(StudentService::class.java, html = false, okHttp = okHttp)
+        return getService(
+            service = StudentService::class.java,
+            url = server.url("/").newBuilder()
+                .host("uonetplus-uczen.fakelog.localhost")
+                .build().toString(),
+            html = false,
+            okHttp = okHttp,
+        )
     }
 }
