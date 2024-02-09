@@ -30,6 +30,8 @@ import io.github.wulkanowy.sdk.scrapper.homework.Homework
 import io.github.wulkanowy.sdk.scrapper.homework.HomeworkRequest
 import io.github.wulkanowy.sdk.scrapper.homework.mapHomework
 import io.github.wulkanowy.sdk.scrapper.interceptor.handleErrors
+import io.github.wulkanowy.sdk.scrapper.login.CertificateResponse
+import io.github.wulkanowy.sdk.scrapper.login.UrlGenerator
 import io.github.wulkanowy.sdk.scrapper.menu.Menu
 import io.github.wulkanowy.sdk.scrapper.menu.MenuRequest
 import io.github.wulkanowy.sdk.scrapper.mobile.Device
@@ -58,15 +60,29 @@ import io.github.wulkanowy.sdk.scrapper.timetable.mapTimetableHeaders
 import io.github.wulkanowy.sdk.scrapper.timetable.mapTimetableList
 import io.github.wulkanowy.sdk.scrapper.toFormat
 import org.jsoup.Jsoup
+import org.slf4j.LoggerFactory
+import pl.droidsonroids.jspoon.Jspoon
+import java.io.IOException
 import java.time.LocalDate
 
 internal class StudentRepository(
     private val api: StudentService,
+    private val urlGenerator: UrlGenerator,
 ) {
+
+    private val certificateAdapter by lazy {
+        Jspoon.create().adapter(CertificateResponse::class.java)
+    }
+
+    companion object {
+        @JvmStatic
+        private val logger = LoggerFactory.getLogger(this::class.java)
+    }
 
     private fun LocalDate.toISOFormat(): String = toFormat("yyyy-MM-dd'T00:00:00'")
 
     private suspend fun getCache(): CacheResponse {
+        loginModule()
         return api.getUserCache().handleErrors().let {
             requireNotNull(it.data)
         }
@@ -89,10 +105,10 @@ internal class StudentRepository(
     }
 
     suspend fun getAttendance(startDate: LocalDate, endDate: LocalDate?): List<Attendance> {
-        val lessonTimes = runCatching { getCache().times }
+        val lessonTimes = getCache().times
         return api.getAttendance(AttendanceRequest(startDate.atStartOfDay()))
             .handleErrors()
-            .data?.mapAttendanceList(startDate, endDate, lessonTimes.getOrThrow()).orEmpty()
+            .data?.mapAttendanceList(startDate, endDate, lessonTimes).orEmpty()
     }
 
     suspend fun getAttendanceSummary(subjectId: Int?): List<AttendanceSummary> {
@@ -102,6 +118,7 @@ internal class StudentRepository(
     }
 
     suspend fun excuseForAbsence(absents: List<Absent>, content: String?): Boolean {
+        loginModule()
         return api.excuseForAbsence(
             attendanceExcuseRequest = AttendanceExcuseRequest(
                 AttendanceExcuseRequest.Excuse(
@@ -251,5 +268,32 @@ internal class StudentRepository(
         return api.unregisterDevice(
             UnregisterDeviceRequest(id),
         ).handleErrors().success
+    }
+
+    private suspend fun loginModule() {
+        val site = UrlGenerator.Site.STUDENT
+        val startHtml = api.getModuleStart()
+        val startDoc = Jsoup.parse(startHtml)
+
+        if ("Working" in startDoc.title()) {
+            val cert = certificateAdapter.fromHtml(startHtml)
+            val certResponseHtml = api.sendCertificateModule(
+                referer = urlGenerator.createReferer(site),
+                url = cert.action,
+                certificate = mapOf(
+                    "wa" to cert.wa,
+                    "wresult" to cert.wresult,
+                    "wctx" to cert.wctx,
+                ),
+            )
+            val certResponseDoc = Jsoup.parse(certResponseHtml)
+            if ("antiForgeryToken" !in certResponseHtml) {
+                throw IOException("Unknown module start page: ${certResponseDoc.title()}")
+            } else {
+                logger.debug("{} cookies fetch successfully!", site)
+            }
+        } else {
+            logger.debug("{} cookies already fetched!", site)
+        }
     }
 }

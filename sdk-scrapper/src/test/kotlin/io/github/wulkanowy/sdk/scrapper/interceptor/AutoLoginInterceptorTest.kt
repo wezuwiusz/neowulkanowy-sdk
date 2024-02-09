@@ -152,7 +152,7 @@ class AutoLoginInterceptorTest : BaseLocalTest() {
                     UrlGenerator.Site.MESSAGES -> "wiadomosciplus"
                     else -> error("Not supported here")
                 }
-                "https://uonetplus-${subdomain}.localhost".toHttpUrl() to Jsoup.parse(html)
+                "https://uonetplus-$subdomain.localhost".toHttpUrl() to Jsoup.parse(html)
             },
             notLoggedInCallback = { loginHelper.login("", "") },
         )
@@ -160,6 +160,7 @@ class AutoLoginInterceptorTest : BaseLocalTest() {
 
         repeat(3) { server.takeRequest() }
         val retriedRequest = server.takeRequest()
+        println(retriedRequest.headers)
         assertEquals(
             "7SaCmj247xiKA4nQcTqLJ8J56UnZpxL3zLNENZjKAdFQN3xN26EwRdhAezyo5Wx3P2iWVPLTc3fpjPCNMbEPLmxF4RrLeaAGdQevu8pgbEB2TocqfBPjWzNLyHXBcqxKM",
             retriedRequest.getHeader("X-V-RequestVerificationToken"),

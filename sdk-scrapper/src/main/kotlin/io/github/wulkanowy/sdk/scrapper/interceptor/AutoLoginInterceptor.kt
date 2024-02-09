@@ -179,6 +179,7 @@ internal class AutoLoginInterceptor(
             "uonetplus-uczen" in url.host -> studentModuleHeaders
             else -> return this
         }
+        logger.info("X-V-AppVersion: ${headers?.appVersion}")
         return newBuilder()
             .apply {
                 headers?.let {

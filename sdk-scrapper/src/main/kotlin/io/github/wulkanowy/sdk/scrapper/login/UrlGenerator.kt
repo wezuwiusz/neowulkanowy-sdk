@@ -31,6 +31,10 @@ internal class UrlGenerator(
             get() = this == STUDENT_PLUS || this == STUDENT
     }
 
+    companion object {
+        val EMPTY = UrlGenerator("https", "fakelog.cf", "", "powiatwulkanowy", "")
+    }
+
     fun generate(type: Site): String {
         if (type == BASE) return "$schema://$host"
         return "${generateBase(type).removeSuffix("/")}/$symbol/${if (type.isStudent) "$schoolId/" else ""}"

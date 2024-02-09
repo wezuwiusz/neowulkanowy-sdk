@@ -290,6 +290,7 @@ class Scrapper {
     private val student: StudentRepository by resettableLazy(changeManager) {
         StudentRepository(
             api = serviceManager.getStudentService(),
+            urlGenerator = serviceManager.urlGenerator,
         )
     }
 
@@ -302,6 +303,7 @@ class Scrapper {
     private val messages: MessagesRepository by resettableLazy(changeManager) {
         MessagesRepository(
             api = serviceManager.getMessagesService(),
+            urlGenerator = serviceManager.urlGenerator,
         )
     }
 

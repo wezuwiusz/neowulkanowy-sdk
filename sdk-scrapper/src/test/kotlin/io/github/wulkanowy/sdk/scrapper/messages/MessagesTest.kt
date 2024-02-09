@@ -1,6 +1,7 @@
 package io.github.wulkanowy.sdk.scrapper.messages
 
 import io.github.wulkanowy.sdk.scrapper.BaseLocalTest
+import io.github.wulkanowy.sdk.scrapper.login.UrlGenerator
 import io.github.wulkanowy.sdk.scrapper.repository.MessagesRepository
 import io.github.wulkanowy.sdk.scrapper.service.MessagesService
 import io.mockk.every
@@ -21,6 +22,7 @@ class MessagesTest : BaseLocalTest() {
     private val api by lazy {
         MessagesRepository(
             api = getService(MessagesService::class.java, "http://fakelog.localhost:3000/", false),
+            urlGenerator = UrlGenerator.EMPTY,
         )
     }
 
@@ -134,6 +136,7 @@ class MessagesTest : BaseLocalTest() {
     @Test
     fun sendMessageTest() = runBlocking {
         with(server) {
+            enqueue("Start.html")
             enqueue("WiadomoscNowa.json")
             start(3000)
         }
@@ -154,6 +157,7 @@ class MessagesTest : BaseLocalTest() {
         )
 
         val expected = Json.decodeFromString<SendMessageRequest>(MessagesTest::class.java.getResource("WiadomoscNowa.json")!!.readText())
+        server.takeRequest()
         val request = server.takeRequest()
         val actual = Json.decodeFromString<SendMessageRequest>(request.body.readUtf8())
 
@@ -170,6 +174,7 @@ class MessagesTest : BaseLocalTest() {
     @Test
     fun deleteMessageTest() = runBlocking {
         with(server) {
+            enqueue("Start.html")
             enqueue(MockResponse()) // 204
             start(3000)
         }
@@ -181,6 +186,7 @@ class MessagesTest : BaseLocalTest() {
         api.deleteMessages(messagesIds, false)
 
         val expected = Json.decodeFromString<List<String>>(MessagesTest::class.java.getResource("MoveTrash.json")!!.readText())
+        server.takeRequest()
         val request = server.takeRequest()
         val actual = Json.decodeFromString<List<String>>(request.body.readUtf8())
 
