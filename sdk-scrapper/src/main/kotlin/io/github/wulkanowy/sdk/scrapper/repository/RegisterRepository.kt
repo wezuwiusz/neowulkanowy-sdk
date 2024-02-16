@@ -89,6 +89,11 @@ internal class RegisterRepository(
         symbolLoginType: Scrapper.LoginType,
     ): List<RegisterSymbol> = symbols.map { symbol ->
         val homeResponse = runCatching {
+            if (symbols.size > 5) {
+                runCatching { symbolService.getSymbolPage(symbol) }
+                    .onFailure { if (it is InvalidSymbolException) throw it }
+            }
+
             url.symbol = symbol
             val loginCert = when (startSymbol) {
                 symbol -> startLoginCert
