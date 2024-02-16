@@ -26,6 +26,7 @@ import io.github.wulkanowy.sdk.scrapper.repository.AccountRepository.Companion.S
 import io.github.wulkanowy.sdk.scrapper.repository.AccountRepository.Companion.SELECTOR_STANDARD
 import io.github.wulkanowy.sdk.scrapper.service.RegisterService
 import io.github.wulkanowy.sdk.scrapper.service.StudentService
+import io.github.wulkanowy.sdk.scrapper.service.SymbolService
 import io.github.wulkanowy.sdk.scrapper.timetable.CacheResponse
 import kotlinx.serialization.json.Json
 import org.jsoup.Jsoup
@@ -47,6 +48,7 @@ internal class RegisterRepository(
     private val loginHelper: LoginHelper,
     private val register: RegisterService,
     private val student: StudentService,
+    private val symbolService: SymbolService,
     private val url: UrlGenerator,
 ) {
 
@@ -177,6 +179,9 @@ internal class RegisterRepository(
     }
 
     private suspend fun getLoginType(symbol: String): Scrapper.LoginType {
+        runCatching { symbolService.getSymbolPage(symbol) }
+            .onFailure { if (it is InvalidSymbolException) throw it }
+
         val urlGenerator = url.also { it.symbol = symbol }
         val page = register.getFormType(urlGenerator.generate(UrlGenerator.Site.LOGIN) + "Account/LogOn").page
         return when {

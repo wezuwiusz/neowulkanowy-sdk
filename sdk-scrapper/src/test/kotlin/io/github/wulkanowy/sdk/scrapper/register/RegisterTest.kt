@@ -10,6 +10,7 @@ import io.github.wulkanowy.sdk.scrapper.repository.RegisterRepository
 import io.github.wulkanowy.sdk.scrapper.service.LoginService
 import io.github.wulkanowy.sdk.scrapper.service.RegisterService
 import io.github.wulkanowy.sdk.scrapper.service.StudentService
+import io.github.wulkanowy.sdk.scrapper.service.SymbolService
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
 import org.junit.Test
@@ -55,6 +56,15 @@ class RegisterTest : BaseLocalTest() {
                 ),
             ),
             student = getService(StudentService::class.java, "http://fakelog.localhost:3000", false),
+            symbolService = getService(
+                service = SymbolService::class.java,
+                url = "http://fakelog.localhost:3000",
+                html = true,
+                okHttp = getOkHttp(
+                    errorInterceptor = true,
+                    autoLoginInterceptorOn = false,
+                ),
+            ),
             url = UrlGenerator(
                 schema = "http",
                 host = "fakelog.localhost:3000",
@@ -68,6 +78,7 @@ class RegisterTest : BaseLocalTest() {
     @Test
     fun filterStudentsByClass() = runTest {
         with(server) {
+            enqueue("Logowanie-standard.html", LoginTest::class.java)
             enqueue("LoginPage-standard.html", LoginTest::class.java)
             enqueue("Logowanie-uonet.html", LoginTest::class.java)
             enqueue("Logowanie-uonet.html", LoginTest::class.java)
@@ -111,6 +122,7 @@ class RegisterTest : BaseLocalTest() {
     @Test
     fun getStudents_kindergartenDiaries() = runTest {
         with(server) {
+            enqueue("Logowanie-standard.html", LoginTest::class.java)
             enqueue("LoginPage-standard.html", LoginTest::class.java)
             enqueue("Logowanie-uonet.html", LoginTest::class.java)
             enqueue("Logowanie-uonet.html", LoginTest::class.java)
@@ -152,6 +164,7 @@ class RegisterTest : BaseLocalTest() {
     @Test
     fun getStudents_filterNoDiares() = runTest {
         with(server) {
+            enqueue("Logowanie-standard.html", LoginTest::class.java)
             enqueue("LoginPage-standard.html", LoginTest::class.java)
             enqueue("Logowanie-uonet.html", LoginTest::class.java)
             enqueue("Login-success.html", LoginTest::class.java)
@@ -178,6 +191,7 @@ class RegisterTest : BaseLocalTest() {
     @Test
     fun getStudents_classNameOrder() = runTest {
         with(server) {
+            enqueue("Logowanie-standard.html", LoginTest::class.java)
             enqueue("LoginPage-standard.html", LoginTest::class.java)
             enqueue("Logowanie-uonet.html", LoginTest::class.java)
             enqueue("Logowanie-uonet.html", LoginTest::class.java)

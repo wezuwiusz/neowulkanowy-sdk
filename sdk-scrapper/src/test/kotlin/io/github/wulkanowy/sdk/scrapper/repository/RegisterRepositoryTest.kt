@@ -13,6 +13,7 @@ import io.github.wulkanowy.sdk.scrapper.register.RegisterTest
 import io.github.wulkanowy.sdk.scrapper.service.LoginService
 import io.github.wulkanowy.sdk.scrapper.service.RegisterService
 import io.github.wulkanowy.sdk.scrapper.service.StudentService
+import io.github.wulkanowy.sdk.scrapper.service.SymbolService
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
@@ -44,6 +45,15 @@ class RegisterRepositoryTest : BaseLocalTest() {
                 okHttp = getOkHttp(errorInterceptor = false, autoLoginInterceptorOn = false),
             ),
             student = getService(service = StudentService::class.java, html = false),
+            symbolService = getService(
+                service = SymbolService::class.java,
+                url = "http://fakelog.localhost:3000",
+                html = true,
+                okHttp = getOkHttp(
+                    errorInterceptor = true,
+                    autoLoginInterceptorOn = false,
+                ),
+            ),
             url = UrlGenerator(
                 schema = "http",
                 host = "fakelog.localhost:3000",
@@ -57,6 +67,7 @@ class RegisterRepositoryTest : BaseLocalTest() {
     @Test
     fun normalLogin_one() = runTest {
         with(server) {
+            enqueue("Logowanie-standard.html", LoginTest::class.java)
             enqueue("LoginPage-standard.html", LoginTest::class.java)
             enqueue("Logowanie-uonet.html", LoginTest::class.java)
             enqueue("Logowanie-uonet.html", LoginTest::class.java)
@@ -90,6 +101,7 @@ class RegisterRepositoryTest : BaseLocalTest() {
     @Test
     fun normalLogin_semesters() = runTest {
         with(server) {
+            enqueue("Logowanie-standard.html", LoginTest::class.java)
             enqueue("LoginPage-standard.html", LoginTest::class.java)
             enqueue("Logowanie-uonet.html", LoginTest::class.java)
             enqueue("Logowanie-uonet.html", LoginTest::class.java)
@@ -124,6 +136,7 @@ class RegisterRepositoryTest : BaseLocalTest() {
     @Test
     fun normalLogin_triple() = runTest {
         with(server) {
+            enqueue("Logowanie-standard.html", LoginTest::class.java)
             enqueue("LoginPage-standard.html", LoginTest::class.java)
             enqueue("Logowanie-uonet.html", LoginTest::class.java)
             enqueue("Logowanie-uonet.html", LoginTest::class.java)
@@ -165,6 +178,8 @@ class RegisterRepositoryTest : BaseLocalTest() {
     @Test
     fun normalLogin_temporarilyOff() = runTest {
         with(server) {
+            enqueue("Logowanie-standard.html", LoginTest::class.java)
+            enqueue("Logowanie-standard.html", LoginTest::class.java)
             enqueue("LoginPage-standard.html", LoginTest::class.java)
             enqueue("Logowanie-uonet.html", LoginTest::class.java)
             enqueue("Logowanie-uonet.html", LoginTest::class.java)
@@ -197,6 +212,7 @@ class RegisterRepositoryTest : BaseLocalTest() {
     @Test
     fun normalVulcanException() = runTest {
         with(server) {
+            enqueue("Logowanie-standard.html", LoginTest::class.java)
             enqueue("LoginPage-standard.html", LoginTest::class.java)
             enqueue("Logowanie-uonet.html", LoginTest::class.java)
 
@@ -220,6 +236,7 @@ class RegisterRepositoryTest : BaseLocalTest() {
     @Test
     fun filterSymbolsWithSpaces() = runTest {
         with(server) {
+            enqueue("Logowanie-standard.html", LoginTest::class.java)
             enqueue("LoginPage-standard.html", LoginTest::class.java)
             enqueue("Logowanie-uonet.html", LoginTest::class.java)
             enqueue("Logowanie-uonet.html", LoginTest::class.java)
@@ -243,6 +260,7 @@ class RegisterRepositoryTest : BaseLocalTest() {
     @Test
     fun normalizeInvalidSymbol_default() = runTest {
         with(server) {
+            enqueue("Logowanie-standard.html", LoginTest::class.java)
             enqueue("LoginPage-standard.html", LoginTest::class.java)
             enqueue("Logowanie-uonet.html", LoginTest::class.java)
 
@@ -262,12 +280,14 @@ class RegisterRepositoryTest : BaseLocalTest() {
             res.symbols[1].error?.message,
         )
         assertTrue(res.symbols[1].error is VulcanException)
+        server.takeRequest() // Logowanie-standard.html
         assertEquals("/Default/Account/LogOn", server.takeRequest().path)
     }
 
     @Test
     fun normalizeInvalidSymbol_custom() = runTest {
         with(server) {
+            enqueue("Logowanie-standard.html", LoginTest::class.java)
             enqueue("LoginPage-standard.html", LoginTest::class.java)
             enqueue("Logowanie-uonet.html", LoginTest::class.java)
             enqueue("Logowanie-uonet.html", LoginTest::class.java)
@@ -288,12 +308,14 @@ class RegisterRepositoryTest : BaseLocalTest() {
             "Wystąpił nieoczekiwany błąd. Wystąpił błąd aplikacji. Prosimy zalogować się ponownie. Jeśli problem będzie się powtarzał, prosimy o kontakt z serwisem.",
             res.symbols[1].error?.message,
         )
+        server.takeRequest() // Logowanie-standard.html
         assertEquals("/rzeszow/Account/LogOn", server.takeRequest().path)
     }
 
     @Test
     fun normalizeInvalidSymbol_trimMultipleSpaces() = runTest {
         with(server) {
+            enqueue("Logowanie-standard.html", LoginTest::class.java)
             enqueue("LoginPage-standard.html", LoginTest::class.java)
             enqueue("Logowanie-uonet.html", LoginTest::class.java)
             enqueue("Logowanie-uonet.html", LoginTest::class.java)
@@ -314,12 +336,14 @@ class RegisterRepositoryTest : BaseLocalTest() {
             res.symbols[1].error?.message,
         )
 
+        server.takeRequest() // Logowanie-standard.html
         assertEquals("/niepoprawnysymbolnoale/Account/LogOn", server.takeRequest().path)
     }
 
     @Test
     fun normalizeInvalidSymbol_emptyFallback() = runTest {
         with(server) {
+            enqueue("Logowanie-standard.html", LoginTest::class.java)
             enqueue("LoginPage-standard.html", LoginTest::class.java)
             enqueue("Logowanie-uonet.html", LoginTest::class.java)
             enqueue("Logowanie-uonet.html", LoginTest::class.java)
@@ -340,12 +364,14 @@ class RegisterRepositoryTest : BaseLocalTest() {
             "Wystąpił nieoczekiwany błąd. Wystąpił błąd aplikacji. Prosimy zalogować się ponownie. Jeśli problem będzie się powtarzał, prosimy o kontakt z serwisem.",
             res.symbols[1].error?.message,
         )
+        server.takeRequest() // Logowanie-standard.html
         assertEquals("/Default/Account/LogOn", server.takeRequest().path)
     }
 
     @Test
     fun normalizeInvalidSymbol_digits() = runTest {
         with(server) {
+            enqueue("Logowanie-standard.html", LoginTest::class.java)
             enqueue("LoginPage-standard.html", LoginTest::class.java)
 
             enqueue("Logowanie-uonet.html", LoginTest::class.java)
@@ -367,6 +393,7 @@ class RegisterRepositoryTest : BaseLocalTest() {
 
         val res = getRegisterRepository("powiatwulkanowy").getUserSubjects()
         assertEquals(5, res.symbols.size)
+        server.takeRequest() // Logowanie-standard.html
         assertEquals("/powiatwulkanowy/Account/LogOn", server.takeRequest().path)
 
         val url = server.takeRequest().path
