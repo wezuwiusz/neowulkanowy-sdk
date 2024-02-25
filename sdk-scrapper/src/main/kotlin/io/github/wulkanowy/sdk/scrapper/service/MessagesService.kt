@@ -90,6 +90,9 @@ internal interface MessagesService {
     @POST("api/MoveTrash")
     suspend fun moveMessageToTrash(@Body body: List<String>): Response<Unit>
 
+    @POST("api/RestoreTrash")
+    suspend fun restoreFromTrash(@Body body: List<String>): Response<Unit>
+
     @POST("api/Delete")
     suspend fun deleteMessage(@Body body: List<String>): Response<Unit>
 }

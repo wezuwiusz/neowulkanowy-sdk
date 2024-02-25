@@ -4,7 +4,6 @@ import io.github.wulkanowy.sdk.scrapper.attendance.Attendance
 import io.github.wulkanowy.sdk.scrapper.attendance.AttendanceCategory
 import io.github.wulkanowy.sdk.scrapper.exception.FeatureDisabledException
 import io.github.wulkanowy.sdk.scrapper.exception.VulcanClientError
-import io.github.wulkanowy.sdk.scrapper.handleErrors
 import io.github.wulkanowy.sdk.scrapper.register.AuthorizePermissionPlusRequest
 import io.github.wulkanowy.sdk.scrapper.register.RegisterStudent
 import io.github.wulkanowy.sdk.scrapper.service.StudentPlusService
