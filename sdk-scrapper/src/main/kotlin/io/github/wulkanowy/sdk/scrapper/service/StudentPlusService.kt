@@ -1,6 +1,8 @@
 package io.github.wulkanowy.sdk.scrapper.service
 
 import io.github.wulkanowy.sdk.scrapper.attendance.Attendance
+import io.github.wulkanowy.sdk.scrapper.attendance.AttendanceExcusePlusRequest
+import io.github.wulkanowy.sdk.scrapper.attendance.AttendanceExcusesPlusResponse
 import io.github.wulkanowy.sdk.scrapper.conferences.Conference
 import io.github.wulkanowy.sdk.scrapper.mobile.Device
 import io.github.wulkanowy.sdk.scrapper.register.AuthorizePermissionPlusRequest
@@ -26,6 +28,16 @@ internal interface StudentPlusService {
         @Query("dataOd") from: String,
         @Query("dataDo") to: String,
     ): List<Attendance>
+
+    @GET("api/Usprawiedliwienia")
+    suspend fun getExcuses(
+        @Query("key") key: String,
+        @Query("dataOd") from: String,
+        @Query("dataDo") to: String,
+    ): AttendanceExcusesPlusResponse
+
+    @POST("api/Usprawiedliwienia")
+    suspend fun excuseForAbsence(@Body body: AttendanceExcusePlusRequest): Response<Unit>
 
     @GET("api/ZarejestrowaneUrzadzenia")
     suspend fun getRegisteredDevices(): List<Device>

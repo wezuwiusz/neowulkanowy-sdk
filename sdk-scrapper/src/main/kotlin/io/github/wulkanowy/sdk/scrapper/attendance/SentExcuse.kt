@@ -26,6 +26,6 @@ enum class SentExcuseStatus(val id: Int) {
     ;
 
     companion object {
-        fun getByValue(value: Int) = values().firstOrNull { it.id == value }
+        fun getByValue(value: Int) = entries.firstOrNull { it.id == value }
     }
 }

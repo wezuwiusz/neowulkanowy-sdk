@@ -357,7 +357,12 @@ class Scrapper {
         return student.getAttendanceSummary(subjectId)
     }
 
-    suspend fun excuseForAbsence(absents: List<Absent>, content: String? = null): Boolean = student.excuseForAbsence(absents, content)
+    suspend fun excuseForAbsence(absents: List<Absent>, content: String? = null): Boolean {
+        return when (isEduOne) {
+            true -> studentPlus.excuseForAbsence(absents, content, studentId, diaryId, unitId)
+            else -> student.excuseForAbsence(absents, content)
+        }
+    }
 
     suspend fun getSubjects(): List<Subject> = student.getSubjects()
 

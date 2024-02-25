@@ -1,0 +1,24 @@
+[
+  {
+    "kategoriaFrekwencji": 2,
+    "data": "2024-02-25T00:00:00+01:00",
+    "godzinaOd": "2024-02-25T13:20:00+01:00",
+    "godzinaDo": "2024-02-25T14:05:00+01:00",
+    "idPoraLekcji": 17,
+    "idLekcjaOddzial": 10,
+    "numerLekcji": 7,
+    "opisZajec": "Matematyka",
+    "nauczyciel": "Jan Kowalski"
+  },
+  {
+    "kategoriaFrekwencji": 2,
+    "data": "2024-02-25T00:00:00+01:00",
+    "godzinaOd": "2024-02-25T14:10:00+01:00",
+    "godzinaDo": "2024-02-25T14:55:00+01:00",
+    "idPoraLekcji": 18,
+    "idLekcjaOddzial": 10,
+    "numerLekcji": 8,
+    "opisZajec": "Technika",
+    "nauczyciel": "Jan Kowalski"
+  }
+]

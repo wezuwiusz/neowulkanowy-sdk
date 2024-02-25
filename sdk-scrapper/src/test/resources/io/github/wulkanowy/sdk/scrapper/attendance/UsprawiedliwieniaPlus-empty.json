@@ -1,0 +1,10 @@
+{
+  "usprawiedliwieniaAktywne": false,
+  "usprawiedliwienia": [],
+  "usprawiedliwieniaBlokada": {
+    "dataOd": null,
+    "dataDo": null,
+    "obowiazujeDo": null,
+    "oddzialy": {}
+  }
+}
