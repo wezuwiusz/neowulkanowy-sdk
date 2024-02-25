@@ -20,3 +20,9 @@ internal data class AuthorizePermissionResponse(
     @SerialName("success")
     val success: Boolean,
 )
+
+@Serializable
+internal data class AuthorizePermissionPlusRequest(
+    val key: String,
+    val pesel: String,
+)

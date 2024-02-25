@@ -326,11 +326,21 @@ class Scrapper {
 
     suspend fun getUserSubjects(): RegisterUser = register.getUserSubjects()
 
-    suspend fun authorizePermission(pesel: String) = student.authorizePermission(pesel)
+    suspend fun authorizePermission(pesel: String): Boolean {
+        return when (isEduOne) {
+            true -> studentPlus.authorizePermission(pesel, studentId, diaryId, unitId)
+            else -> student.authorizePermission(pesel)
+        }
+    }
 
     suspend fun getSemesters(): List<Semester> = studentStart.getSemesters()
 
-    suspend fun getCurrentStudent(): RegisterStudent? = student.getStudent(studentId, unitId)
+    suspend fun getCurrentStudent(): RegisterStudent? {
+        return when (isEduOne) {
+            true -> studentPlus.getStudent(studentId, diaryId, unitId)
+            else -> student.getStudent(studentId, unitId)
+        }
+    }
 
     suspend fun getAttendance(startDate: LocalDate, endDate: LocalDate? = null): List<Attendance> {
         if (diaryId == 0) return emptyList()

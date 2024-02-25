@@ -3,15 +3,22 @@ package io.github.wulkanowy.sdk.scrapper.service
 import io.github.wulkanowy.sdk.scrapper.attendance.Attendance
 import io.github.wulkanowy.sdk.scrapper.conferences.Conference
 import io.github.wulkanowy.sdk.scrapper.mobile.Device
+import io.github.wulkanowy.sdk.scrapper.register.AuthorizePermissionPlusRequest
 import io.github.wulkanowy.sdk.scrapper.register.ContextResponse
 import io.github.wulkanowy.sdk.scrapper.timetable.CompletedLesson
+import retrofit2.Response
+import retrofit2.http.Body
 import retrofit2.http.GET
+import retrofit2.http.POST
 import retrofit2.http.Query
 
 internal interface StudentPlusService {
 
     @GET("api/Context")
     suspend fun getContext(): ContextResponse
+
+    @POST("api/AutoryzacjaPesel")
+    suspend fun authorize(@Body body: AuthorizePermissionPlusRequest): Response<Unit>
 
     @GET("api/Frekwencja")
     suspend fun getAttendance(

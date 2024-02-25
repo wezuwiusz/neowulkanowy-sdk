@@ -4,6 +4,8 @@ import io.github.wulkanowy.sdk.scrapper.messages.Mailbox
 import io.github.wulkanowy.sdk.scrapper.messages.Recipient
 import io.github.wulkanowy.sdk.scrapper.messages.RecipientType
 import org.jsoup.Jsoup
+import retrofit2.HttpException
+import retrofit2.Response
 import java.text.Normalizer
 import java.text.SimpleDateFormat
 import java.time.Instant.ofEpochMilli
@@ -131,4 +133,11 @@ internal fun getFormattedString(
     chromeRev: String = "120.0.0.0",
 ): String {
     return String.format(template, androidVersion, buildTag, webKitRev, chromeRev, webKitRev)
+}
+
+internal fun <T> Response<T>.handleErrors(): Response<T> {
+    if (!isSuccessful) {
+        throw HttpException(this)
+    }
+    return this
 }

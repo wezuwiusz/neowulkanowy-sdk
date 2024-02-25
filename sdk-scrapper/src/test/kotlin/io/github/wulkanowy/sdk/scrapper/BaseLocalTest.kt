@@ -34,8 +34,12 @@ abstract class BaseLocalTest : BaseTest() {
 
     val server = MockWebServer()
 
-    fun MockWebServer.enqueue(fileName: String, clazz: Class<*> = this@BaseLocalTest::class.java) {
-        enqueue(MockResponse().setBody(clazz.getResource(fileName)!!.readText()))
+    fun MockWebServer.enqueue(fileName: String, clazz: Class<*> = this@BaseLocalTest::class.java, responseCode: Int = 200) {
+        enqueue(
+            MockResponse()
+                .setBody(clazz.getResource(fileName)!!.readText())
+                .setResponseCode(responseCode),
+        )
     }
 
     @After

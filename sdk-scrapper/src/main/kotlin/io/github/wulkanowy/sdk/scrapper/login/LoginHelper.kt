@@ -11,6 +11,7 @@ import io.github.wulkanowy.sdk.scrapper.Scrapper.LoginType.AUTO
 import io.github.wulkanowy.sdk.scrapper.Scrapper.LoginType.STANDARD
 import io.github.wulkanowy.sdk.scrapper.exception.ScrapperException
 import io.github.wulkanowy.sdk.scrapper.exception.VulcanException
+import io.github.wulkanowy.sdk.scrapper.handleErrors
 import io.github.wulkanowy.sdk.scrapper.register.HomePageResponse
 import io.github.wulkanowy.sdk.scrapper.service.LoginService
 import okhttp3.HttpUrl
@@ -19,8 +20,6 @@ import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import org.slf4j.LoggerFactory
 import pl.droidsonroids.jspoon.Jspoon
-import retrofit2.HttpException
-import retrofit2.Response
 import java.io.IOException
 import java.net.URLEncoder
 import java.time.Instant
@@ -100,13 +99,6 @@ internal class LoginHelper(
             logger.debug("{} cookies already fetched!", site)
             return moduleUrl.toHttpUrl() to startDoc
         }
-    }
-
-    private fun <T> Response<T>.handleErrors(): Response<T> {
-        if (!isSuccessful) {
-            throw HttpException(this)
-        }
-        return this
     }
 
     fun logout() {
