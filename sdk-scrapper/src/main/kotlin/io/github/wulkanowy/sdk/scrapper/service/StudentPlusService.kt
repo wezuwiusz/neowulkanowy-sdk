@@ -5,6 +5,7 @@ import io.github.wulkanowy.sdk.scrapper.attendance.AttendanceExcusePlusRequest
 import io.github.wulkanowy.sdk.scrapper.attendance.AttendanceExcusesPlusResponse
 import io.github.wulkanowy.sdk.scrapper.conferences.Conference
 import io.github.wulkanowy.sdk.scrapper.mobile.Device
+import io.github.wulkanowy.sdk.scrapper.mobile.TokenResponse
 import io.github.wulkanowy.sdk.scrapper.register.AuthorizePermissionPlusRequest
 import io.github.wulkanowy.sdk.scrapper.register.ContextResponse
 import io.github.wulkanowy.sdk.scrapper.timetable.CompletedLesson
@@ -41,6 +42,9 @@ internal interface StudentPlusService {
 
     @GET("api/ZarejestrowaneUrzadzenia")
     suspend fun getRegisteredDevices(): List<Device>
+
+    @GET("api/RejestracjaUrzadzeniaToken")
+    suspend fun getDeviceRegistrationToken(): TokenResponse
 
     @GET("api/Zebrania")
     suspend fun getConferences(): List<Conference>

@@ -11,12 +11,14 @@ import io.github.wulkanowy.sdk.scrapper.attendance.SentExcuseStatus
 import io.github.wulkanowy.sdk.scrapper.exception.FeatureDisabledException
 import io.github.wulkanowy.sdk.scrapper.exception.VulcanClientError
 import io.github.wulkanowy.sdk.scrapper.handleErrors
+import io.github.wulkanowy.sdk.scrapper.mobile.TokenResponse
 import io.github.wulkanowy.sdk.scrapper.register.AuthorizePermissionPlusRequest
 import io.github.wulkanowy.sdk.scrapper.register.RegisterStudent
 import io.github.wulkanowy.sdk.scrapper.service.StudentPlusService
 import io.github.wulkanowy.sdk.scrapper.timetable.CompletedLesson
 import io.github.wulkanowy.sdk.scrapper.timetable.mapCompletedLessons
 import io.github.wulkanowy.sdk.scrapper.toFormat
+import org.jsoup.Jsoup
 import java.net.HttpURLConnection
 import java.time.LocalDate
 import kotlin.io.encoding.Base64
@@ -128,6 +130,16 @@ internal class StudentPlusRepository(
             from = startDate.toISOFormat(),
             to = endDate?.toISOFormat() ?: startDate.plusDays(7).toISOFormat(),
         ).mapCompletedLessons(startDate, endDate)
+    }
+
+    suspend fun getToken(): TokenResponse {
+        val res = api.getDeviceRegistrationToken()
+        return res.copy(
+            qrCodeImage = Jsoup.parse(res.qrCodeImage)
+                .select("img")
+                .attr("src")
+                .split("data:image/png;base64,")[1],
+        )
     }
 
     @OptIn(ExperimentalEncodingApi::class)
