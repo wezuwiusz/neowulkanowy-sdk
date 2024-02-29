@@ -6,7 +6,6 @@ import io.github.wulkanowy.sdk.scrapper.messages.MessageMeta
 import io.github.wulkanowy.sdk.scrapper.messages.MessageReplayDetails
 import io.github.wulkanowy.sdk.scrapper.messages.Recipient
 import io.github.wulkanowy.sdk.scrapper.messages.SendMessageRequest
-import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.FieldMap
 import retrofit2.http.FormUrlEncoded
@@ -85,14 +84,14 @@ internal interface MessagesService {
     suspend fun getMessageReplayDetails(@Query("apiGlobalKey") globalKey: String): MessageReplayDetails
 
     @POST("api/WiadomoscNowa")
-    suspend fun sendMessage(@Body body: SendMessageRequest): Response<Unit>
+    suspend fun sendMessage(@Body body: SendMessageRequest)
 
     @POST("api/MoveTrash")
-    suspend fun moveMessageToTrash(@Body body: List<String>): Response<Unit>
+    suspend fun moveMessageToTrash(@Body body: List<String>)
 
     @POST("api/RestoreTrash")
-    suspend fun restoreFromTrash(@Body body: List<String>): Response<Unit>
+    suspend fun restoreFromTrash(@Body body: List<String>)
 
     @POST("api/Delete")
-    suspend fun deleteMessage(@Body body: List<String>): Response<Unit>
+    suspend fun deleteMessage(@Body body: List<String>)
 }

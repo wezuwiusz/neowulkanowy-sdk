@@ -1,6 +1,5 @@
 package io.github.wulkanowy.sdk.scrapper.repository
 
-import io.github.wulkanowy.sdk.scrapper.handleErrors
 import io.github.wulkanowy.sdk.scrapper.login.CertificateResponse
 import io.github.wulkanowy.sdk.scrapper.login.UrlGenerator
 import io.github.wulkanowy.sdk.scrapper.messages.Mailbox
@@ -127,7 +126,7 @@ internal class MessagesRepository(
     }
 
     suspend fun restoreFromTrash(globalKeys: List<String>) {
-        api.restoreFromTrash(globalKeys).handleErrors()
+        api.restoreFromTrash(globalKeys)
     }
 
     private suspend fun loginModule() {
