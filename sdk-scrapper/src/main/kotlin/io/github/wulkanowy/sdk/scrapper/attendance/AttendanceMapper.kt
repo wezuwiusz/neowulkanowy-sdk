@@ -3,7 +3,6 @@ package io.github.wulkanowy.sdk.scrapper.attendance
 import io.github.wulkanowy.sdk.scrapper.attendance.AttendanceCategory.ABSENCE_UNEXCUSED
 import io.github.wulkanowy.sdk.scrapper.attendance.AttendanceCategory.UNEXCUSED_LATENESS
 import io.github.wulkanowy.sdk.scrapper.timetable.CacheResponse.Time
-import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import java.time.LocalDate
@@ -12,7 +11,9 @@ import java.time.Month
 internal fun AttendanceResponse.mapAttendanceList(start: LocalDate, end: LocalDate?, times: List<Time>): List<Attendance> {
     val endDate = end ?: start.plusDays(4)
     return lessons.map {
-        val sentExcuse = sentExcuses.firstOrNull { excuse -> excuse.date == it.date && excuse.timeId == it.timeId }
+        val sentExcuse = sentExcuses.firstOrNull { excuse ->
+            excuse.date == it.date && (excuse.timeId == it.timeId || excuse.timeId == null)
+        }
         it.copy(
             number = times.single { time -> time.id == it.timeId }.number,
         ).apply {
