@@ -18,6 +18,10 @@ internal interface HomepageService {
     suspend fun getDirectorInformation(@Field("permissions") token: String): ApiResponse<List<HomepageTileResponse>>
 
     @FormUrlEncoded
+    @POST("Start.mvc/GetLastAnnouncements")
+    suspend fun getLastAnnouncements(@Field("permissions") token: String): ApiResponse<List<HomepageTileResponse>>
+
+    @FormUrlEncoded
     @POST("Start.mvc/GetSelfGovernments")
     suspend fun getSelfGovernments(@Field("permissions") token: String): ApiResponse<List<GovernmentUnit>>
 

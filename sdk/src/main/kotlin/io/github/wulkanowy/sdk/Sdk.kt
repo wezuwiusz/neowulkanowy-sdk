@@ -14,6 +14,7 @@ import io.github.wulkanowy.sdk.mapper.mapGrades
 import io.github.wulkanowy.sdk.mapper.mapGradesSemesterStatistics
 import io.github.wulkanowy.sdk.mapper.mapHebeUser
 import io.github.wulkanowy.sdk.mapper.mapHomework
+import io.github.wulkanowy.sdk.mapper.mapLastAnnouncements
 import io.github.wulkanowy.sdk.mapper.mapLuckyNumbers
 import io.github.wulkanowy.sdk.mapper.mapMailboxes
 import io.github.wulkanowy.sdk.mapper.mapMenu
@@ -47,6 +48,7 @@ import io.github.wulkanowy.sdk.pojo.GradeStatisticsSemester
 import io.github.wulkanowy.sdk.pojo.GradeStatisticsSubject
 import io.github.wulkanowy.sdk.pojo.Grades
 import io.github.wulkanowy.sdk.pojo.Homework
+import io.github.wulkanowy.sdk.pojo.LastAnnouncement
 import io.github.wulkanowy.sdk.pojo.LuckyNumber
 import io.github.wulkanowy.sdk.pojo.Mailbox
 import io.github.wulkanowy.sdk.pojo.Menu
@@ -645,6 +647,13 @@ class Sdk {
     suspend fun getDirectorInformation(): List<DirectorInformation> = withContext(Dispatchers.IO) {
         when (mode) {
             Mode.HYBRID, Mode.SCRAPPER -> scrapper.getDirectorInformation().mapDirectorInformation()
+            Mode.HEBE -> throw NotImplementedError("Not available in HEBE mode")
+        }
+    }
+
+    suspend fun getLastAnnouncements(): List<LastAnnouncement> = withContext(Dispatchers.IO) {
+        when (mode) {
+            Mode.HYBRID, Mode.SCRAPPER -> scrapper.getLastAnnouncements().mapLastAnnouncements()
             Mode.HEBE -> throw NotImplementedError("Not available in HEBE mode")
         }
     }

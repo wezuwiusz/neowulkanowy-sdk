@@ -3,11 +3,12 @@ package io.github.wulkanowy.sdk.scrapper.repository
 import io.github.wulkanowy.sdk.scrapper.getScriptParam
 import io.github.wulkanowy.sdk.scrapper.home.DirectorInformation
 import io.github.wulkanowy.sdk.scrapper.home.GovernmentUnit
+import io.github.wulkanowy.sdk.scrapper.home.LastAnnouncement
 import io.github.wulkanowy.sdk.scrapper.home.LuckyNumber
 import io.github.wulkanowy.sdk.scrapper.interceptor.handleErrors
 import io.github.wulkanowy.sdk.scrapper.service.HomepageService
-import io.github.wulkanowy.sdk.scrapper.toDate
 import io.github.wulkanowy.sdk.scrapper.toLocalDate
+import java.time.LocalDate
 
 internal class HomepageRepository(private val api: HomepageService) {
 
@@ -27,12 +28,26 @@ internal class HomepageRepository(private val api: HomepageService) {
         return requireNotNull(res).flatMap { wrapper ->
             wrapper.content.map {
                 DirectorInformation(
-                    date = it.name.substringBefore(" ").toDate("dd.MM.yyyy").toLocalDate(),
+                    date = it.name.substringBefore(" ").toLocalDate("dd.MM.yyyy"),
                     subject = it.name.substringAfter(" "),
                     content = it.data.orEmpty(),
                 )
             }
         }.sortedBy { it.date }
+    }
+
+    suspend fun getLastAnnouncements(): List<LastAnnouncement> {
+        val res = api.getLastAnnouncements(getToken()).handleErrors().data
+        return requireNotNull(res).flatMap { wrapper ->
+            wrapper.content.map {
+                LastAnnouncement(
+                    subject = it.name.trim(),
+                    date = it.symbol?.substringBefore(", ")?.toLocalDate("dd.MM.yyyy") ?: LocalDate.EPOCH,
+                    author = it.symbol?.substringAfter(", ").orEmpty(),
+                    content = it.data.orEmpty(),
+                )
+            }
+        }
     }
 
     suspend fun getSelfGovernments(): List<GovernmentUnit> {

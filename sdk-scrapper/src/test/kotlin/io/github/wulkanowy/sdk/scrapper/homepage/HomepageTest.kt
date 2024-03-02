@@ -5,6 +5,7 @@ import io.github.wulkanowy.sdk.scrapper.home.LuckyNumber
 import io.github.wulkanowy.sdk.scrapper.repository.HomepageRepository
 import io.github.wulkanowy.sdk.scrapper.service.HomepageService
 import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Test
@@ -37,6 +38,32 @@ class HomepageTest : BaseLocalTest() {
             assertEquals(of(2020, 11, 2), date)
             assertEquals("Dzień wolny od zajęć dydaktycznych", subject)
             assertEquals("Dzień wolny od zajęć dydaktycznych<br />02.11.2020 – poniedziałek", content)
+        }
+    }
+
+    @Test
+    fun getLastAnnouncements() = runTest {
+        with(server) {
+            enqueue("Index.html")
+            enqueue("GetLastAnnouncements.json")
+            start(3000)
+        }
+
+        val infos = repo.getLastAnnouncements()
+        assertEquals(2, infos.size)
+
+        with(infos[0]) {
+            assertEquals(of(2024, 2, 27), date)
+            assertEquals("Wydarzenia", subject)
+            assertEquals("Jan kowalski", author)
+            assertEquals("<p>W dniu 29 lutego 2024 r. uczniowie klasy 3d biorą udział w wyjściu na strzelnicę.</p>", content)
+        }
+
+        with(infos[1]) {
+            assertEquals(of(2023, 12, 5), date)
+            assertEquals("Platformy", subject)
+            assertEquals("Malwina Czerwieńska", author)
+            assertEquals("<p>Platformy do wykorzystania dla uczniów w zakresie kompetencji cyfrowych:</p>", content)
         }
     }
 

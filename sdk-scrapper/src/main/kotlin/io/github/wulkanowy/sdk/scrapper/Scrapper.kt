@@ -13,6 +13,7 @@ import io.github.wulkanowy.sdk.scrapper.grades.GradesStatisticsPartial
 import io.github.wulkanowy.sdk.scrapper.grades.GradesStatisticsSemester
 import io.github.wulkanowy.sdk.scrapper.home.DirectorInformation
 import io.github.wulkanowy.sdk.scrapper.home.GovernmentUnit
+import io.github.wulkanowy.sdk.scrapper.home.LastAnnouncement
 import io.github.wulkanowy.sdk.scrapper.home.LuckyNumber
 import io.github.wulkanowy.sdk.scrapper.homework.Homework
 import io.github.wulkanowy.sdk.scrapper.login.LoginHelper
@@ -494,6 +495,8 @@ class Scrapper {
     suspend fun deleteMessages(messagesToDelete: List<String>, removeForever: Boolean) = messages.deleteMessages(messagesToDelete, removeForever)
 
     suspend fun getDirectorInformation(): List<DirectorInformation> = homepage.getDirectorInformation()
+
+    suspend fun getLastAnnouncements(): List<LastAnnouncement> = homepage.getLastAnnouncements()
 
     suspend fun getSelfGovernments(): List<GovernmentUnit> = homepage.getSelfGovernments()
 

@@ -1,0 +1,41 @@
+{
+  "data": [
+    {
+      "IkonkaNazwa": null,
+      "Num": null,
+      "Zawartosc": [
+        {
+          "IkonkaNazwa": null,
+          "Num": null,
+          "Zawartosc": [],
+          "Rozszerzenie": false,
+          "Nazwa": "Wydarzenia ",
+          "Url": null,
+          "Dane": "<p>W dniu 29 lutego 2024 r. uczniowie klasy 3d biorą udział w wyjściu na strzelnicę.</p>",
+          "Symbol": "27.02.2024, Jan kowalski",
+          "Nieaktywny": false
+        },
+        {
+          "IkonkaNazwa": null,
+          "Num": null,
+          "Zawartosc": [],
+          "Rozszerzenie": false,
+          "Nazwa": "Platformy",
+          "Url": null,
+          "Dane": "<p>Platformy do wykorzystania dla uczniów w zakresie kompetencji cyfrowych:</p>",
+          "Symbol": "05.12.2023, Malwina Czerwieńska",
+          "Nieaktywny": false
+        }
+      ],
+      "Rozszerzenie": false,
+      "Nazwa": "",
+      "Url": null,
+      "Dane": null,
+      "Symbol": null,
+      "Nieaktywny": false
+    }
+  ],
+  "success": true,
+  "errorMessage": null,
+  "feedback": null
+}
