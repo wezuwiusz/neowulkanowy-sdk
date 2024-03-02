@@ -72,7 +72,7 @@ internal class LoginHelper(
         return cert
     }
 
-    fun loginModule(site: UrlGenerator.Site): Pair<HttpUrl, Document> {
+    fun loginModule(site: UrlGenerator.Site, isSuccessRequired: Boolean): Pair<HttpUrl, Document> {
         val moduleUrl = urlGenerator.generate(site) + "LoginEndpoint.aspx"
         val startHtml = api.getModuleStart(moduleUrl).execute().handleErrors().body().orEmpty()
         val startDoc = Jsoup.parse(startHtml)
@@ -89,7 +89,7 @@ internal class LoginHelper(
                 ),
             ).execute().handleErrors().body().orEmpty()
             val certResponseDoc = Jsoup.parse(certResponseHtml)
-            if ("antiForgeryToken" !in certResponseHtml) {
+            if ("antiForgeryToken" !in certResponseHtml && isSuccessRequired) {
                 throw IOException("Unknown module start page: ${certResponseDoc.title()}")
             } else {
                 logger.debug("{} cookies fetch successfully!", site)

@@ -141,7 +141,7 @@ class AutoLoginInterceptorTest : BaseLocalTest() {
         init()
 
         val studentService = getService(
-            fetchModuleCookies = { site ->
+            fetchModuleCookies = { site, _ ->
                 val html = when (site) {
                     UrlGenerator.Site.STUDENT -> RegisterTest::class.java.getResource("WitrynaUcznia.html")!!.readText()
                     UrlGenerator.Site.MESSAGES -> MessagesTest::class.java.getResource("Start.html")!!.readText()
@@ -185,7 +185,7 @@ class AutoLoginInterceptorTest : BaseLocalTest() {
 
     private fun getService(
         checkJar: Boolean = false,
-        fetchModuleCookies: (UrlGenerator.Site) -> Pair<HttpUrl, Document> = { "http://localhost".toHttpUrl() to Document("") },
+        fetchModuleCookies: (UrlGenerator.Site, Boolean) -> Pair<HttpUrl, Document> = { _, _ -> "http://localhost".toHttpUrl() to Document("") },
         notLoggedInCallback: suspend () -> HomePageResponse,
     ): StudentService {
         val urlGenerator = UrlGenerator(URL("http://uonetplus-uczen.localhost/"), "", "lodz", "")

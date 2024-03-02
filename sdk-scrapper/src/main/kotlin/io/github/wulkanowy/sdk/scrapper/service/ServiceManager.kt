@@ -100,7 +100,7 @@ internal class ServiceManager(
             cookieJarCabinet = cookieJarCabinet,
             emptyCookieJarIntercept = emptyCookieJarIntercept,
             notLoggedInCallback = { loginHelper.login(email, password) },
-            fetchModuleCookies = { loginHelper.loginModule(it) },
+            fetchModuleCookies = { site, isSuccessRequired -> loginHelper.loginModule(site, isSuccessRequired) },
             isEduOneStudent = isEduOneStudent,
             urlGenerator = urlGenerator,
         ) to false,

@@ -22,8 +22,10 @@ internal class HomepageRepository(private val api: HomepageService) {
     private suspend fun getToken(): String {
         val token = lock.withLock {
             val previousToken = cachedToken?.let {
-                if (Instant.now().isBefore(it.first.plusSeconds(5))) it.second
-                else null
+                when {
+                    Instant.now().isBefore(it.first.plusSeconds(5)) -> it.second
+                    else -> null
+                }
             }
             when {
                 previousToken != null -> previousToken

@@ -260,6 +260,8 @@ internal class RegisterRepository(
         }.orEmpty()
     }
 
+    // used only for check is student from parent account
+    // todo: handle eduOne case
     private suspend fun getStudentCache(): CacheResponse? {
         val studentPageUrl = url.generate(UrlGenerator.Site.STUDENT) + "LoginEndpoint.aspx"
         val start = student.getStart(studentPageUrl)
