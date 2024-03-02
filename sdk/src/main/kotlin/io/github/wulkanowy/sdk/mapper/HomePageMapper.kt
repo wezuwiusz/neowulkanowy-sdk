@@ -15,8 +15,9 @@ internal fun List<ScrapperDirectorInformation>.mapDirectorInformation() = map {
 
 internal fun List<ScrapperLastAnnouncement>.mapLastAnnouncements() = map {
     LastAnnouncement(
-        date = it.date,
         author = it.author,
+        date = it.date,
+        subject = it.subject,
         content = it.content,
     )
 }
