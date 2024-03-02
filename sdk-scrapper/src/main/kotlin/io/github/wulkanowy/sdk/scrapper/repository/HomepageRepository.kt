@@ -8,19 +8,33 @@ import io.github.wulkanowy.sdk.scrapper.home.LuckyNumber
 import io.github.wulkanowy.sdk.scrapper.interceptor.handleErrors
 import io.github.wulkanowy.sdk.scrapper.service.HomepageService
 import io.github.wulkanowy.sdk.scrapper.toLocalDate
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
+import java.time.Instant
 import java.time.LocalDate
 
 internal class HomepageRepository(private val api: HomepageService) {
 
-    private lateinit var token: String
+    private val lock = Mutex()
+
+    private var cachedToken: Pair<Instant, String>? = null
 
     private suspend fun getToken(): String {
-        if (::token.isInitialized) return token
-
-        val page = api.getStart()
-        val permissions = getScriptParam("permissions", page)
-        token = permissions
-        return permissions
+        val token = lock.withLock {
+            val previousToken = cachedToken?.let {
+                if (Instant.now().isBefore(it.first.plusSeconds(5))) it.second
+                else null
+            }
+            when {
+                previousToken != null -> previousToken
+                else -> {
+                    val permissions = getScriptParam("permissions", api.getStart())
+                    cachedToken = Instant.now() to permissions
+                    permissions
+                }
+            }
+        }
+        return token
     }
 
     suspend fun getDirectorInformation(): List<DirectorInformation> {
