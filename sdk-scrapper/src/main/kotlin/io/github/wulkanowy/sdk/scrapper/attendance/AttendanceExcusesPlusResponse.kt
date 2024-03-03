@@ -12,7 +12,7 @@ internal data class AttendanceExcusesPlusResponse(
     @SerialName("usprawiedliwienia")
     val excuses: List<AttendanceExcusePlusResponseItem>,
     @SerialName("usprawiedliwieniaBlokada")
-    val excusesBlocked: UsprawiedliwieniaBlokada,
+    val excusesBlocked: UsprawiedliwieniaBlokada?,
 )
 
 @Serializable
