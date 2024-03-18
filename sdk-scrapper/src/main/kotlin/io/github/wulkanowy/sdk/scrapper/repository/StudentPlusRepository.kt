@@ -10,6 +10,7 @@ import io.github.wulkanowy.sdk.scrapper.attendance.AttendanceExcusesPlusResponse
 import io.github.wulkanowy.sdk.scrapper.attendance.SentExcuseStatus
 import io.github.wulkanowy.sdk.scrapper.exception.FeatureDisabledException
 import io.github.wulkanowy.sdk.scrapper.exception.VulcanClientError
+import io.github.wulkanowy.sdk.scrapper.getEncodedKey
 import io.github.wulkanowy.sdk.scrapper.handleErrors
 import io.github.wulkanowy.sdk.scrapper.mobile.TokenResponse
 import io.github.wulkanowy.sdk.scrapper.register.AuthorizePermissionPlusRequest
@@ -21,8 +22,6 @@ import io.github.wulkanowy.sdk.scrapper.toFormat
 import org.jsoup.Jsoup
 import java.net.HttpURLConnection
 import java.time.LocalDate
-import kotlin.io.encoding.Base64
-import kotlin.io.encoding.ExperimentalEncodingApi
 
 internal class StudentPlusRepository(
     private val api: StudentPlusService,
@@ -140,10 +139,5 @@ internal class StudentPlusRepository(
                 .attr("src")
                 .split("data:image/png;base64,")[1],
         )
-    }
-
-    @OptIn(ExperimentalEncodingApi::class)
-    private fun getEncodedKey(studentId: Int, diaryId: Int, unitId: Int): String {
-        return Base64.encode("$studentId-$diaryId-1-$unitId".toByteArray())
     }
 }

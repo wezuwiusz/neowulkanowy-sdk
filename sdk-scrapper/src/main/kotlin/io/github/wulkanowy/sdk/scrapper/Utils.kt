@@ -1,5 +1,6 @@
 package io.github.wulkanowy.sdk.scrapper
 
+import io.github.wulkanowy.sdk.scrapper.login.UrlGenerator
 import io.github.wulkanowy.sdk.scrapper.messages.Mailbox
 import io.github.wulkanowy.sdk.scrapper.messages.Recipient
 import io.github.wulkanowy.sdk.scrapper.messages.RecipientType
@@ -14,6 +15,8 @@ import java.time.LocalDateTime
 import java.time.ZoneId.systemDefault
 import java.time.format.DateTimeFormatter.ofPattern
 import java.util.Date
+import kotlin.io.encoding.Base64
+import kotlin.io.encoding.ExperimentalEncodingApi
 import kotlin.math.roundToInt
 
 internal fun String.toDate(format: String): Date = SimpleDateFormat(format).parse(this)
@@ -134,6 +137,39 @@ internal fun getFormattedString(
 ): String {
     return String.format(template, androidVersion, buildTag, webKitRev, chromeRev, webKitRev)
 }
+
+internal fun isCurrentLoginHasEduOne(studentModuleUrls: List<String>, urlGenerator: UrlGenerator): Boolean {
+    return studentModuleUrls.any {
+        it.startsWith(
+            prefix = urlGenerator.generate(UrlGenerator.Site.STUDENT_PLUS),
+            ignoreCase = true,
+        )
+    }
+}
+
+@OptIn(ExperimentalEncodingApi::class)
+internal fun getEncodedKey(studentId: Int, diaryId: Int, unitId: Int): String {
+    return Base64.encode("$studentId-$diaryId-1-$unitId".toByteArray())
+}
+
+@OptIn(ExperimentalEncodingApi::class)
+internal fun getDecodedKey(key: String): StudentKey {
+    val parts = Base64.decode(key).decodeToString()
+        .split("-").map { it.toInt() }
+    return StudentKey(
+        studentId = parts[0],
+        diaryId = parts[1],
+        unknown = parts[2],
+        unitId = parts[3],
+    )
+}
+
+internal data class StudentKey(
+    val studentId: Int,
+    val diaryId: Int,
+    val unknown: Int,
+    val unitId: Int,
+)
 
 internal fun <T> Response<T>.handleErrors(): Response<T> {
     if (!isSuccessful) {

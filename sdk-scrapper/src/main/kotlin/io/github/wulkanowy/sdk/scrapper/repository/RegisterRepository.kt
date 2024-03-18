@@ -3,15 +3,18 @@ package io.github.wulkanowy.sdk.scrapper.repository
 import io.github.wulkanowy.sdk.scrapper.Scrapper
 import io.github.wulkanowy.sdk.scrapper.exception.ScrapperException
 import io.github.wulkanowy.sdk.scrapper.exception.StudentGraduateException
+import io.github.wulkanowy.sdk.scrapper.getDecodedKey
 import io.github.wulkanowy.sdk.scrapper.getNormalizedSymbol
 import io.github.wulkanowy.sdk.scrapper.getScriptParam
 import io.github.wulkanowy.sdk.scrapper.interceptor.handleErrors
+import io.github.wulkanowy.sdk.scrapper.isCurrentLoginHasEduOne
 import io.github.wulkanowy.sdk.scrapper.login.CertificateResponse
 import io.github.wulkanowy.sdk.scrapper.login.InvalidSymbolException
 import io.github.wulkanowy.sdk.scrapper.login.LoginHelper
 import io.github.wulkanowy.sdk.scrapper.login.NotLoggedInException
 import io.github.wulkanowy.sdk.scrapper.login.UrlGenerator
 import io.github.wulkanowy.sdk.scrapper.register.AuthInfo
+import io.github.wulkanowy.sdk.scrapper.register.Diary
 import io.github.wulkanowy.sdk.scrapper.register.HomePageResponse
 import io.github.wulkanowy.sdk.scrapper.register.PermissionUnit
 import io.github.wulkanowy.sdk.scrapper.register.Permissions
@@ -25,9 +28,9 @@ import io.github.wulkanowy.sdk.scrapper.repository.AccountRepository.Companion.S
 import io.github.wulkanowy.sdk.scrapper.repository.AccountRepository.Companion.SELECTOR_ADFS_LIGHT
 import io.github.wulkanowy.sdk.scrapper.repository.AccountRepository.Companion.SELECTOR_STANDARD
 import io.github.wulkanowy.sdk.scrapper.service.RegisterService
+import io.github.wulkanowy.sdk.scrapper.service.StudentPlusService
 import io.github.wulkanowy.sdk.scrapper.service.StudentService
 import io.github.wulkanowy.sdk.scrapper.service.SymbolService
-import io.github.wulkanowy.sdk.scrapper.timetable.CacheResponse
 import kotlinx.serialization.json.Json
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Element
@@ -48,6 +51,7 @@ internal class RegisterRepository(
     private val loginHelper: LoginHelper,
     private val register: RegisterService,
     private val student: StudentService,
+    private val studentPlus: StudentPlusService,
     private val symbolService: SymbolService,
     private val url: UrlGenerator,
 ) {
@@ -109,11 +113,14 @@ internal class RegisterRepository(
 
         val errors = checkForErrors(symbolLoginType, homeResponse.getOrNull()?.document)
 
+        val studentModuleUrls = homeResponse.getOrNull()?.studentSchools.orEmpty()
+            .map { it.attr("href") }
+
         val userName = homeResponse.getOrNull().getUserNameFromUserData()
         val schools = homeResponse.getOrNull()
             .toPermissions()
             .toUnitsMap()
-            .getRegisterUnits(userName)
+            .getRegisterUnits(userName, studentModuleUrls)
 
         loginHelper.logout()
 
@@ -147,15 +154,19 @@ internal class RegisterRepository(
         }
     }
 
-    private suspend fun Map<PermissionUnit, AuthInfo?>.getRegisterUnits(userName: String): List<RegisterUnit> {
+    private suspend fun Map<PermissionUnit, AuthInfo?>.getRegisterUnits(userName: String, studentModuleUrls: List<String>): List<RegisterUnit> {
         return map { (unit, authInfo) ->
             url.schoolId = unit.symbol
 
+            val isEduOne = isCurrentLoginHasEduOne(studentModuleUrls, url)
             val cacheAndDiaries = runCatching {
                 if (authInfo?.parentIds.isNullOrEmpty() && authInfo?.studentIds.isNullOrEmpty()) {
                     null to emptyList()
                 } else {
-                    getStudentCache() to getStudentDiaries()
+                    when {
+                        isEduOne -> null to getEduOneDiaries()
+                        else -> getStudentCache() to getStudentDiaries()
+                    }
                 }
             }
 
@@ -261,8 +272,7 @@ internal class RegisterRepository(
     }
 
     // used only for check is student from parent account
-    // todo: handle eduOne case
-    private suspend fun getStudentCache(): CacheResponse? {
+    private suspend fun getStudentCache(): Boolean? {
         val studentPageUrl = url.generate(UrlGenerator.Site.STUDENT) + "LoginEndpoint.aspx"
         val start = student.getStart(studentPageUrl)
 
@@ -283,16 +293,97 @@ internal class RegisterRepository(
             else -> start
         }
 
-        return student.getUserCache(
+        val userCache = student.getUserCache(
             url = url.generate(UrlGenerator.Site.STUDENT) + "UczenCache.mvc/Get",
             token = getScriptParam("antiForgeryToken", startPage),
             appGuid = getScriptParam("appGuid", startPage),
             appVersion = getScriptParam("version", startPage),
         ).data
+
+        return userCache?.isParent
     }
 
-    private suspend fun getStudentDiaries() = student
+    private suspend fun getStudentDiaries(): List<Diary> = student
         .getSchoolInfo(url.generate(UrlGenerator.Site.STUDENT) + "UczenDziennik.mvc/Get")
         .handleErrors()
         .data.orEmpty()
+
+    private suspend fun getEduOneDiaries(): List<Diary> {
+        val studentPageUrl = url.generate(UrlGenerator.Site.STUDENT_PLUS) + "LoginEndpoint.aspx"
+        val start = student.getStart(studentPageUrl)
+
+        if ("Working" in Jsoup.parse(start).title()) {
+            val cert = certificateAdapter.fromHtml(start)
+            student.sendModuleCertificate(
+                referer = url.createReferer(UrlGenerator.Site.STUDENT_PLUS),
+                url = cert.action,
+                certificate = mapOf(
+                    "wa" to cert.wa,
+                    "wresult" to cert.wresult,
+                    "wctx" to cert.wctx,
+                ),
+            )
+        }
+
+        return studentPlus
+            .getContext().students
+            .map { diary ->
+                val key = getDecodedKey(diary.key)
+                val semesters = studentPlus.getSemesters(
+                    key = diary.key,
+                    diaryId = diary.registerId,
+                ).map { semester ->
+                    Diary.Semester(
+                        number = semester.numerOkresu,
+                        start = semester.dataOd,
+                        end = semester.dataDo,
+                        unitId = key.unitId,
+                        id = semester.id,
+                        // todo
+                        isLast = false,
+                        level = 0,
+                        classId = 0,
+                    )
+                }
+                Diary(
+                    id = diary.registerId,
+                    studentId = key.studentId,
+                    studentName = diary.studentName.substringBefore(" ", ""),
+                    studentSecondName = diary.studentName.substringAfter(" ", "").substringBefore(" ", ""),
+                    studentSurname = diary.studentName.substringAfterLast(" ", ""),
+                    studentNick = "",
+                    isDiary = true,
+                    diaryId = key.diaryId,
+                    kindergartenDiaryId = key.diaryId,
+                    fosterDiaryId = key.diaryId,
+                    level = diary.className.takeWhile { it.isDigit() }.toInt(), // todo
+                    symbol = diary.className.takeWhile { it.isLetter() }, // todo
+                    name = diary.className,
+                    year = diary.registerDateFrom.year,
+                    semesters = semesters,
+                    start = diary.registerDateFrom,
+                    end = diary.registerDateTo,
+                    componentUnitId = key.unitId,
+                    sioTypeId = null,
+                    isAdults = diary.isAdults,
+                    isPostSecondary = diary.isPolicealna,
+                    is13 = diary.is13,
+                    isArtistic = diary.isArtystyczna,
+                    isArtistic13 = diary.isArtystyczna13,
+                    isSpecial = diary.isSpecjalna,
+                    isKindergarten = diary.isPrzedszkolak,
+                    isFoster = null,
+                    isArchived = null,
+                    isCharges = diary.config.isPlatnosci,
+                    isPayments = diary.config.isOplaty,
+                    isPayButtonOn = null,
+                    canMergeAccounts = diary.config.isScalanieKont,
+                    fullName = diary.studentName,
+                    o365PassType = null,
+                    isAdult = null,
+                    isAuthorized = !diary.isAuthorizationRequired,
+                    citizenship = null,
+                )
+            }
+    }
 }

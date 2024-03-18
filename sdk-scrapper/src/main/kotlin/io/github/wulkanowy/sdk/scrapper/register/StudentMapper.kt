@@ -1,10 +1,8 @@
 package io.github.wulkanowy.sdk.scrapper.register
 
-import io.github.wulkanowy.sdk.scrapper.timetable.CacheResponse
-
 internal fun getStudentsFromDiaries(
     diaries: List<Diary>,
-    cache: CacheResponse?,
+    isParent: Boolean?,
     unitId: Int,
 ): List<RegisterStudent> = diaries
     .filter { it.semesters.orEmpty().isNotEmpty() || it.kindergartenDiaryId != 0 }
@@ -19,7 +17,7 @@ internal fun getStudentsFromDiaries(
             studentSurname = diary.studentSurname,
             className = diary.symbol.orEmpty(),
             classId = classId,
-            isParent = cache?.isParent == true,
+            isParent = isParent == true,
             isAuthorized = diary.isAuthorized == true,
             semesters = diaries.toSemesters(
                 studentId = diary.studentId,

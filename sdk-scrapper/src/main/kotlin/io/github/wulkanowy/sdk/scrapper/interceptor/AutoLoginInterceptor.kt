@@ -10,6 +10,7 @@ import io.github.wulkanowy.sdk.scrapper.Scrapper.LoginType.ADFSLightScoped
 import io.github.wulkanowy.sdk.scrapper.Scrapper.LoginType.STANDARD
 import io.github.wulkanowy.sdk.scrapper.exception.VulcanClientError
 import io.github.wulkanowy.sdk.scrapper.getScriptParam
+import io.github.wulkanowy.sdk.scrapper.isCurrentLoginHasEduOne
 import io.github.wulkanowy.sdk.scrapper.login.ModuleHeaders
 import io.github.wulkanowy.sdk.scrapper.login.NotLoggedInException
 import io.github.wulkanowy.sdk.scrapper.login.UrlGenerator
@@ -90,7 +91,7 @@ internal class AutoLoginInterceptor(
                 try {
                     val homePageResponse = runBlocking { notLoggedInCallback() }
                     val studentModuleUrls = homePageResponse.studentSchools.map { it.attr("href") }
-                    val isEduOne = isCurrentLoginHasEduOne(studentModuleUrls)
+                    val isEduOne = isCurrentLoginHasEduOne(studentModuleUrls, urlGenerator)
                     isEduOneStudent(isEduOne)
                     messagesModuleHeaders = null
                     studentPlusModuleHeaders = null
@@ -172,15 +173,6 @@ internal class AutoLoginInterceptor(
             "uonetplus-wiadomosciplus" in url.host -> messagesModuleHeaders = moduleHeaders
             "uonetplus-uczenplus" in url.host -> studentPlusModuleHeaders = moduleHeaders
             "uonetplus-uczen" in url.host -> studentModuleHeaders = moduleHeaders
-        }
-    }
-
-    private fun isCurrentLoginHasEduOne(studentModuleUrls: List<String>): Boolean {
-        return studentModuleUrls.any {
-            it.startsWith(
-                prefix = urlGenerator.generate(UrlGenerator.Site.STUDENT_PLUS),
-                ignoreCase = true,
-            )
         }
     }
 

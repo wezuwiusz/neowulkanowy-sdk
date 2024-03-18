@@ -1,7 +1,9 @@
 package io.github.wulkanowy.sdk.scrapper.register
 
+import io.github.wulkanowy.sdk.scrapper.adapter.CustomDateAdapter
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+import java.time.LocalDateTime
 
 @Serializable
 internal data class ContextResponse(
@@ -13,10 +15,12 @@ internal data class ContextResponse(
 internal data class ContextStudent(
     @SerialName("config")
     val config: ContextConfig,
+    @Serializable(with = CustomDateAdapter::class)
     @SerialName("dziennikDataOd")
-    val registerDateFrom: String,
+    val registerDateFrom: LocalDateTime,
+    @Serializable(with = CustomDateAdapter::class)
     @SerialName("dziennikDataDo")
-    val registerDateTo: String,
+    val registerDateTo: LocalDateTime,
     @SerialName("globalKeySkrzynka")
     val globalKeyMailbox: String,
     @SerialName("idDziennik")

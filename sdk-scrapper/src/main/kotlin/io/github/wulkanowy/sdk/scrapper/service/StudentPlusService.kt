@@ -4,6 +4,7 @@ import io.github.wulkanowy.sdk.scrapper.attendance.Attendance
 import io.github.wulkanowy.sdk.scrapper.attendance.AttendanceExcusePlusRequest
 import io.github.wulkanowy.sdk.scrapper.attendance.AttendanceExcusesPlusResponse
 import io.github.wulkanowy.sdk.scrapper.conferences.Conference
+import io.github.wulkanowy.sdk.scrapper.grades.GradeSemester
 import io.github.wulkanowy.sdk.scrapper.mobile.Device
 import io.github.wulkanowy.sdk.scrapper.mobile.TokenResponse
 import io.github.wulkanowy.sdk.scrapper.register.AuthorizePermissionPlusRequest
@@ -19,6 +20,12 @@ internal interface StudentPlusService {
 
     @GET("api/Context")
     suspend fun getContext(): ContextResponse
+
+    @GET("api/OkresyKlasyfikacyjne")
+    suspend fun getSemesters(
+        @Query("key") key: String,
+        @Query("idDziennik") diaryId: Int,
+    ): List<GradeSemester>
 
     @POST("api/AutoryzacjaPesel")
     suspend fun authorize(@Body body: AuthorizePermissionPlusRequest): Response<Unit>

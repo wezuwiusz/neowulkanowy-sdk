@@ -96,7 +96,7 @@ internal class StudentRepository(
 
     suspend fun getStudent(studentId: Int, unitId: Int): RegisterStudent? {
         return getStudentsFromDiaries(
-            cache = getCache(),
+            isParent = getCache().isParent,
             diaries = api.getDiaries().handleErrors().data.orEmpty(),
             unitId = unitId,
         ).find {
