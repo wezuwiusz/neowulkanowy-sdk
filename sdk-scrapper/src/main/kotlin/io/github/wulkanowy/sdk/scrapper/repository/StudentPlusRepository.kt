@@ -160,27 +160,32 @@ internal class StudentPlusRepository(
         )
     }
 
-    suspend fun getExams(startDate: LocalDate, endDate: LocalDate): List<Exam> {
+    suspend fun getExams(startDate: LocalDate, endDate: LocalDate?, studentId: Int, diaryId: Int, unitId: Int): List<Exam> {
         val key = getEncodedKey(studentId, diaryId, unitId)
-        val examsHomeworkRes = api.getExamsAndHomework(key, startDate, endDate)
+        val examsHomeworkRes = api.getExamsAndHomework(
+            key = key,
+            from = startDate.toISOFormat(),
+            to = endDate?.toISOFormat(),
+        )
 
-        examsHomeworkRes.filter { it.type != 4 }.map { exam ->
+        return examsHomeworkRes.filter { it.type != 4 }.map { exam ->
             val examDetailsRes = api.getExamDetails(key, exam.id)
             val teacherAndSymbol = examDetailsRes.teacher.split(" [")
-            return Exam(
-                entryDate = null,
+            Exam(
+                entryDate = exam.date,
                 subject = exam.subject,
                 type = exam.type,
                 description = examDetailsRes.description,
                 teacher = teacherAndSymbol.first(),
+            ).apply {
                 typeName = when (exam.type) {
                     1 -> "Sprawdzian"
                     2 -> "Kartkówka"
                     else -> "Praca klasowa"
-                },
-                date = exam.date,
-                teacherSymbol = teacherAndSymbol.last().removeSuffix("]"),
-            )
+                }
+                date = exam.date
+                teacherSymbol = teacherAndSymbol.last().removeSuffix("]")
+            }
         }
     }
 }

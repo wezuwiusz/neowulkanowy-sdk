@@ -4,8 +4,10 @@ import io.github.wulkanowy.sdk.scrapper.attendance.Attendance
 import io.github.wulkanowy.sdk.scrapper.attendance.AttendanceExcusePlusRequest
 import io.github.wulkanowy.sdk.scrapper.attendance.AttendanceExcusesPlusResponse
 import io.github.wulkanowy.sdk.scrapper.conferences.Conference
+import io.github.wulkanowy.sdk.scrapper.exams.ExamDetailsPlus
 import io.github.wulkanowy.sdk.scrapper.grades.GradeSemester
 import io.github.wulkanowy.sdk.scrapper.grades.GradesResponse
+import io.github.wulkanowy.sdk.scrapper.homework.ExamHomeworkPlus
 import io.github.wulkanowy.sdk.scrapper.mobile.Device
 import io.github.wulkanowy.sdk.scrapper.mobile.TokenResponse
 import io.github.wulkanowy.sdk.scrapper.register.AuthorizePermissionPlusRequest
@@ -75,12 +77,12 @@ internal interface StudentPlusService {
     suspend fun getExamsAndHomework(
         @Query("key") key: String,
         @Query("dataOd") from: String,
-        @Query("dataDo") to: String,
+        @Query("dataDo") to: String?,
     ): List<ExamHomeworkPlus>
 
     @GET("api/SprawdzianSzczegoly")
     suspend fun getExamDetails(
         @Query("key") key: String,
-        @Query("id") id: Int
+        @Query("id") id: Int,
     ): ExamDetailsPlus
 }
