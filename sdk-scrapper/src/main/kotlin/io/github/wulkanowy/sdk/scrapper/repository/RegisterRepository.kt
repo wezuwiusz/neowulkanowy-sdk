@@ -347,6 +347,7 @@ internal class RegisterRepository(
                         classId = 0,
                     )
                 }
+                val level = diary.className.takeWhile { it.isDigit() }
                 Diary(
                     id = diary.registerId,
                     studentId = key.studentId,
@@ -356,10 +357,10 @@ internal class RegisterRepository(
                     studentNick = "",
                     isDiary = true,
                     diaryId = key.diaryId,
-                    kindergartenDiaryId = key.diaryId,
-                    fosterDiaryId = key.diaryId,
-                    level = diary.className.takeWhile { it.isDigit() }.toInt(), // todo
-                    symbol = diary.className.takeWhile { it.isLetter() }, // todo
+                    kindergartenDiaryId = 0,
+                    fosterDiaryId = 0,
+                    level = level.toInt(), // todo
+                    symbol = diary.className.replace(level, ""), // todo
                     name = diary.className,
                     year = diary.registerDateFrom.year,
                     semesters = semesters,
