@@ -370,8 +370,10 @@ class Scrapper {
 
     suspend fun getExams(startDate: LocalDate, endDate: LocalDate? = null): List<Exam> {
         if (diaryId == 0) return emptyList()
-
-        return student.getExams(startDate, endDate)
+        return when (isEduOne) {
+            true -> studentPlus.getExams(startDate, endDate, studentId, diaryId, unitId)
+            else -> student.getExams(startDate, endDate)
+        }
     }
 
     suspend fun getGrades(semester: Int): Grades {
@@ -386,8 +388,10 @@ class Scrapper {
                 type = -1,
             )
         }
-
-        return student.getGrades(semester)
+        return when (isEduOne) {
+            true -> studentPlus.getGrades(semester, studentId, diaryId, unitId)
+            else -> student.getGrades(semester)
+        }
     }
 
     suspend fun getGradesPartialStatistics(semesterId: Int): List<GradesStatisticsPartial> {

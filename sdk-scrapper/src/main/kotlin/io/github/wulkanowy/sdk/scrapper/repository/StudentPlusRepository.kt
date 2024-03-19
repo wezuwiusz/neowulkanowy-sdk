@@ -8,9 +8,13 @@ import io.github.wulkanowy.sdk.scrapper.attendance.AttendanceExcusePlusRequestIt
 import io.github.wulkanowy.sdk.scrapper.attendance.AttendanceExcusePlusResponseItem
 import io.github.wulkanowy.sdk.scrapper.attendance.AttendanceExcusesPlusResponse
 import io.github.wulkanowy.sdk.scrapper.attendance.SentExcuseStatus
+import io.github.wulkanowy.sdk.scrapper.exams.Exam
 import io.github.wulkanowy.sdk.scrapper.exception.FeatureDisabledException
 import io.github.wulkanowy.sdk.scrapper.exception.VulcanClientError
 import io.github.wulkanowy.sdk.scrapper.getEncodedKey
+import io.github.wulkanowy.sdk.scrapper.grades.Grades
+import io.github.wulkanowy.sdk.scrapper.grades.mapGradesList
+import io.github.wulkanowy.sdk.scrapper.grades.mapGradesSummary
 import io.github.wulkanowy.sdk.scrapper.handleErrors
 import io.github.wulkanowy.sdk.scrapper.mobile.TokenResponse
 import io.github.wulkanowy.sdk.scrapper.register.AuthorizePermissionPlusRequest
@@ -139,5 +143,48 @@ internal class StudentPlusRepository(
                 .attr("src")
                 .split("data:image/png;base64,")[1],
         )
+    }
+
+    suspend fun getGrades(semesterId: Int, studentId: Int, diaryId: Int, unitId: Int): Grades {
+        val key = getEncodedKey(studentId, diaryId, unitId)
+        val res = api.getGrades(key, semesterId)
+
+        return Grades(
+            details = res.mapGradesList(),
+            summary = res.mapGradesSummary(),
+            descriptive = res.gradesDescriptive,
+            isAverage = res.isAverage,
+            isPoints = res.isPoints,
+            isForAdults = res.isForAdults,
+            type = res.type,
+        )
+    }
+
+    suspend fun getExams(startDate: LocalDate, endDate: LocalDate?, studentId: Int, diaryId: Int, unitId: Int): List<Exam> {
+        val key = getEncodedKey(studentId, diaryId, unitId)
+        val examsHomeworkRes = api.getExamsAndHomework(
+            key = key,
+            from = startDate.toISOFormat(),
+            to = endDate?.toISOFormat(),
+        )
+
+        return examsHomeworkRes.filter { it.type != 4 }.map { exam ->
+            val examDetailsRes = api.getExamDetails(key, exam.id)
+            Exam(
+                entryDate = exam.date,
+                subject = exam.subject,
+                type = exam.type,
+                description = examDetailsRes.description,
+                teacher = examDetailsRes.teacher.substringBefore(" ["),
+            ).apply {
+                typeName = when (exam.type) {
+                    1 -> "Sprawdzian"
+                    2 -> "Kartkówka"
+                    else -> "Praca klasowa"
+                }
+                date = exam.date
+                teacherSymbol = examDetailsRes.teacher.substringAfter(" [", "").substringBefore("]")
+            }
+        }
     }
 }

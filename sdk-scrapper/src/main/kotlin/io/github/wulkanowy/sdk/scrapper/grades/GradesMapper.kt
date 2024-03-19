@@ -9,7 +9,7 @@ private val pointGradeRegex = "\\d+\\.?\\d+/\\d+".toRegex()
 private fun String.isEntryContainsCommentWithGrade() = isGradeValid(removeSurrounding("(", ")"))
 
 internal fun GradesResponse.mapGradesList() = gradesWithSubjects.map { gradesSubject ->
-    gradesSubject.grades.map { grade ->
+    gradesSubject.grades.orEmpty().map { grade ->
         val (gradeValue, gradeModifier) = getGradeValueWithModifier(grade.entry)
         val gradeEntryWithoutComment = grade.entry.substringBefore(" (")
 

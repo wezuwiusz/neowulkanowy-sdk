@@ -1,0 +1,85 @@
+{
+  "ocenyPrzedmioty": [
+    {
+      "przedmiotNazwa": "Zachowanie",
+      "pozycja": 0,
+      "nauczyciele": [],
+      "ocenyCzastkowe": [],
+      "egzaminFormaPraktyczna": null,
+      "egzaminFormaUstna": null,
+      "egzaminOcenaProponowana": null,
+      "egzaminOcenaLaczna": null,
+      "sumaPunktow": null,
+      "srednia": 0.0,
+      "proponowanaOcenaOkresowa": " ",
+      "proponowanaOcenaOkresowaPunkty": null,
+      "ocenaOkresowa": " ",
+      "ocenaOkresowaPunkty": null,
+      "podsumowanieOcen": ""
+    },
+    {
+      "przedmiotNazwa": "Zajęcia artystyczne",
+      "pozycja": 13,
+      "nauczyciele": [
+        "Jan Kowalski [JK]"
+      ],
+      "ocenyCzastkowe": [
+        {
+          "wpis": "6",
+          "dataOceny": "19.03.2024",
+          "kategoriaKolumny": "Bieżące",
+          "nazwaKolumny": "",
+          "waga": 0.00,
+          "kolorOceny": 0,
+          "nauczyciel": "Jan Kowalski [JK]",
+          "zmienionaOdOstatniegoLogowania": true
+        },
+        {
+          "wpis": "1 (bez możliwości poprawy)",
+          "dataOceny": "19.03.2024",
+          "kategoriaKolumny": "Odpowiedź ustna",
+          "nazwaKolumny": "Opis",
+          "waga": 100.00,
+          "kolorOceny": 15748172,
+          "nauczyciel": "Joanna Kowalska [JK]",
+          "zmienionaOdOstatniegoLogowania": true
+        }
+      ],
+      "egzaminFormaPraktyczna": null,
+      "egzaminFormaUstna": null,
+      "egzaminOcenaProponowana": null,
+      "egzaminOcenaLaczna": null,
+      "sumaPunktow": "",
+      "srednia": 0.0,
+      "proponowanaOcenaOkresowa": null,
+      "proponowanaOcenaOkresowaPunkty": null,
+      "ocenaOkresowa": null,
+      "ocenaOkresowaPunkty": null,
+      "podsumowanieOcen": null
+    },
+    {
+      "przedmiotNazwa": "Zajęcia dodatkowe",
+      "pozycja": 0,
+      "nauczyciele": null,
+      "ocenyCzastkowe": null,
+      "egzaminFormaPraktyczna": null,
+      "egzaminFormaUstna": null,
+      "egzaminOcenaProponowana": null,
+      "egzaminOcenaLaczna": null,
+      "sumaPunktow": null,
+      "srednia": 0.0,
+      "proponowanaOcenaOkresowa": null,
+      "proponowanaOcenaOkresowaPunkty": null,
+      "ocenaOkresowa": null,
+      "ocenaOkresowaPunkty": null,
+      "podsumowanieOcen": ""
+    }
+  ],
+  "ustawienia": {
+    "isPunkty": false,
+    "isSrednia": false,
+    "isDorosli": false,
+    "isOcenaOpisowa": true,
+    "isOstatniOkresKlasyfikacyjny": true
+  }
+}

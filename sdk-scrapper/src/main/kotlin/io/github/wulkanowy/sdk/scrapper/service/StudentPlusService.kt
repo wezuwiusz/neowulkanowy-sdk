@@ -4,7 +4,10 @@ import io.github.wulkanowy.sdk.scrapper.attendance.Attendance
 import io.github.wulkanowy.sdk.scrapper.attendance.AttendanceExcusePlusRequest
 import io.github.wulkanowy.sdk.scrapper.attendance.AttendanceExcusesPlusResponse
 import io.github.wulkanowy.sdk.scrapper.conferences.Conference
+import io.github.wulkanowy.sdk.scrapper.exams.ExamDetailsPlus
 import io.github.wulkanowy.sdk.scrapper.grades.GradeSemester
+import io.github.wulkanowy.sdk.scrapper.grades.GradesResponse
+import io.github.wulkanowy.sdk.scrapper.homework.ExamHomeworkPlus
 import io.github.wulkanowy.sdk.scrapper.mobile.Device
 import io.github.wulkanowy.sdk.scrapper.mobile.TokenResponse
 import io.github.wulkanowy.sdk.scrapper.register.AuthorizePermissionPlusRequest
@@ -63,4 +66,23 @@ internal interface StudentPlusService {
         @Query("dataOd") from: String,
         @Query("dataDo") to: String,
     ): List<CompletedLesson>
+
+    @GET("api/Oceny")
+    suspend fun getGrades(
+        @Query("key") key: String,
+        @Query("idOkresKlasyfikacyjny") semesterId: Int,
+    ): GradesResponse
+
+    @GET("api/SprawdzianyZadaniaDomowe")
+    suspend fun getExamsAndHomework(
+        @Query("key") key: String,
+        @Query("dataOd") from: String,
+        @Query("dataDo") to: String?,
+    ): List<ExamHomeworkPlus>
+
+    @GET("api/SprawdzianSzczegoly")
+    suspend fun getExamDetails(
+        @Query("key") key: String,
+        @Query("id") id: Int,
+    ): ExamDetailsPlus
 }
