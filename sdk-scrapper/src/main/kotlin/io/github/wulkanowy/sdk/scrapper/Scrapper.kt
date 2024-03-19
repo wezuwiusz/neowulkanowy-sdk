@@ -415,7 +415,10 @@ class Scrapper {
     suspend fun getHomework(startDate: LocalDate, endDate: LocalDate? = null): List<Homework> {
         if (diaryId == 0) return emptyList()
 
-        return student.getHomework(startDate, endDate)
+        return when (isEduOne) {
+            true -> studentPlus.getHomework(startDate, endDate, studentId, diaryId, unitId)
+            else -> student.getHomework(startDate, endDate)
+        }
     }
 
     suspend fun getNotes(): List<Note> = student.getNotes()

@@ -8,6 +8,7 @@ import io.github.wulkanowy.sdk.scrapper.exams.ExamDetailsPlus
 import io.github.wulkanowy.sdk.scrapper.grades.GradeSemester
 import io.github.wulkanowy.sdk.scrapper.grades.GradesResponse
 import io.github.wulkanowy.sdk.scrapper.homework.ExamHomeworkPlus
+import io.github.wulkanowy.sdk.scrapper.homework.HomeworkDetailsPlus
 import io.github.wulkanowy.sdk.scrapper.mobile.Device
 import io.github.wulkanowy.sdk.scrapper.mobile.TokenResponse
 import io.github.wulkanowy.sdk.scrapper.register.AuthorizePermissionPlusRequest
@@ -85,4 +86,10 @@ internal interface StudentPlusService {
         @Query("key") key: String,
         @Query("id") id: Int,
     ): ExamDetailsPlus
+
+    @GET("api/ZadanieDomoweSzczegoly")
+    suspend fun getHomeworkDetails(
+        @Query("key") key: String,
+        @Query("id") id: Int,
+    ): HomeworkDetailsPlus
 }
