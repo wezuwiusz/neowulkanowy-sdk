@@ -356,7 +356,10 @@ class Scrapper {
     suspend fun getAttendanceSummary(subjectId: Int? = -1): List<AttendanceSummary> {
         if (diaryId == 0) return emptyList()
 
-        return student.getAttendanceSummary(subjectId)
+        return when (isEduOne) {
+            true -> studentPlus.getAttendanceSummary(studentId, diaryId, unitId)
+            else -> student.getAttendanceSummary(subjectId)
+        }
     }
 
     suspend fun excuseForAbsence(absents: List<Absent>, content: String? = null): Boolean {

@@ -49,7 +49,7 @@ internal class AutoLoginInterceptor(
     private val cookieJarCabinet: CookieJarCabinet,
     private val emptyCookieJarIntercept: Boolean = false,
     private val notLoggedInCallback: suspend () -> HomePageResponse,
-    private val fetchModuleCookies: (UrlGenerator.Site, isSuccessRequired: Boolean) -> Pair<HttpUrl, Document>,
+    private val fetchModuleCookies: (UrlGenerator.Site) -> Pair<HttpUrl, Document>,
     private val isEduOneStudent: (Boolean) -> Unit = {},
     private val urlGenerator: UrlGenerator,
 ) : Interceptor {
@@ -97,16 +97,15 @@ internal class AutoLoginInterceptor(
                     studentPlusModuleHeaders = null
                     studentModuleHeaders = null
 
-                    val messages = getModuleCookies(UrlGenerator.Site.MESSAGES, true)
-                    val student = getModuleCookies(UrlGenerator.Site.STUDENT, !isEduOne)
-                    val studentPlus = when {
-                        isEduOne -> getModuleCookies(UrlGenerator.Site.STUDENT_PLUS, true)
-                        else -> null
+                    val messages = getModuleCookies(UrlGenerator.Site.MESSAGES)
+                    val student = when (isEduOne) {
+                        true -> getModuleCookies(UrlGenerator.Site.STUDENT_PLUS)
+                        else -> getModuleCookies(UrlGenerator.Site.STUDENT)
                     }
 
                     when {
                         "wiadomosciplus" in uri.host -> messages.getOrThrow()
-                        "uczenplus" in uri.host -> studentPlus?.getOrThrow()
+                        "uczenplus" in uri.host -> student.getOrThrow()
                         "uczen" in uri.host -> student.getOrThrow()
                         else -> logger.info("Resource don't need further login anyway")
                     }
@@ -148,8 +147,8 @@ internal class AutoLoginInterceptor(
         return response
     }
 
-    private fun getModuleCookies(site: UrlGenerator.Site, isSuccessRequired: Boolean): Result<Pair<HttpUrl, Document>> {
-        return runCatching { fetchModuleCookies(site, isSuccessRequired) }
+    private fun getModuleCookies(site: UrlGenerator.Site): Result<Pair<HttpUrl, Document>> {
+        return runCatching { fetchModuleCookies(site) }
             .onFailure { logger.error("Error in $site login", it) }
             .onSuccess { (url, doc) -> saveModuleHeaders(doc, url) }
     }
