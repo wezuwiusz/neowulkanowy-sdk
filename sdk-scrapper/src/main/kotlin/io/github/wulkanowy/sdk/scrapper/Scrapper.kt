@@ -406,19 +406,28 @@ class Scrapper {
     suspend fun getGradesPartialStatistics(semesterId: Int): List<GradesStatisticsPartial> {
         if (diaryId == 0) return emptyList()
 
-        return student.getGradesPartialStatistics(semesterId)
+        return when (isEduOne) {
+            true -> error("Tej funkcji już nie ma w dzienniku VULCANa")
+            else -> student.getGradesPartialStatistics(semesterId)
+        }
     }
 
     suspend fun getGradesPointsStatistics(semesterId: Int): List<GradePointsSummary> {
         if (diaryId == 0) return emptyList()
 
-        return student.getGradesPointsStatistics(semesterId)
+        return when (isEduOne) {
+            true -> error("Tej funkcji już nie ma w dzienniku VULCANa")
+            else -> student.getGradesPointsStatistics(semesterId)
+        }
     }
 
     suspend fun getGradesSemesterStatistics(semesterId: Int): List<GradesStatisticsSemester> {
         if (diaryId == 0) return emptyList()
 
-        return student.getGradesAnnualStatistics(semesterId)
+        return when (isEduOne) {
+            true -> error("Tej funkcji już nie ma w dzienniku VULCANa")
+            else -> student.getGradesAnnualStatistics(semesterId)
+        }
     }
 
     suspend fun getHomework(startDate: LocalDate, endDate: LocalDate? = null): List<Homework> {
