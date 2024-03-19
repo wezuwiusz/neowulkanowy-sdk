@@ -7,6 +7,7 @@ import io.github.wulkanowy.sdk.scrapper.attendance.AttendanceExcusePlusRequest
 import io.github.wulkanowy.sdk.scrapper.attendance.AttendanceExcusePlusRequestItem
 import io.github.wulkanowy.sdk.scrapper.attendance.AttendanceExcusePlusResponseItem
 import io.github.wulkanowy.sdk.scrapper.attendance.AttendanceExcusesPlusResponse
+import io.github.wulkanowy.sdk.scrapper.attendance.AttendanceSummary
 import io.github.wulkanowy.sdk.scrapper.attendance.SentExcuseStatus
 import io.github.wulkanowy.sdk.scrapper.exams.Exam
 import io.github.wulkanowy.sdk.scrapper.exception.FeatureDisabledException
@@ -26,6 +27,7 @@ import io.github.wulkanowy.sdk.scrapper.toFormat
 import org.jsoup.Jsoup
 import java.net.HttpURLConnection
 import java.time.LocalDate
+import java.time.Month
 
 internal class StudentPlusRepository(
     private val api: StudentPlusService,
@@ -84,6 +86,36 @@ internal class StudentPlusRepository(
 
             it.excusable = it.isExcusable(sentExcuses.isExcusesActive, sentExcuse)
             if (sentExcuse != null) it.excuseStatus = SentExcuseStatus.getByValue(sentExcuse.status)
+        }
+    }
+
+    suspend fun getAttendanceSummary(studentId: Int, diaryId: Int, unitId: Int): List<AttendanceSummary> {
+        val summaries = api.getAttendanceSummary(getEncodedKey(studentId, diaryId, unitId))
+
+        val stats = summaries.items.associate { it.id to it.months }
+        val getMonthValue = fun(type: Int, month: Int): Int {
+            return stats[type]?.find { it.month == month }?.value ?: 0
+        }
+
+        return (1..12).map {
+            AttendanceSummary(
+                month = Month.of(it),
+                presence = getMonthValue(AttendanceCategory.PRESENCE.id, it),
+                absence = getMonthValue(AttendanceCategory.ABSENCE_UNEXCUSED.id, it),
+                absenceExcused = getMonthValue(AttendanceCategory.ABSENCE_EXCUSED.id, it),
+                absenceForSchoolReasons = getMonthValue(AttendanceCategory.ABSENCE_FOR_SCHOOL_REASONS.id, it),
+                lateness = getMonthValue(AttendanceCategory.UNEXCUSED_LATENESS.id, it),
+                latenessExcused = getMonthValue(AttendanceCategory.EXCUSED_LATENESS.id, it),
+                exemption = getMonthValue(AttendanceCategory.EXEMPTION.id, it),
+            )
+        }.filterNot { summary ->
+            summary.absence == 0 &&
+                summary.absenceExcused == 0 &&
+                summary.absenceForSchoolReasons == 0 &&
+                summary.exemption == 0 &&
+                summary.lateness == 0 &&
+                summary.latenessExcused == 0 &&
+                summary.presence == 0
         }
     }
 
