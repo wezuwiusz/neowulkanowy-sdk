@@ -335,7 +335,10 @@ class Scrapper {
         }
     }
 
-    suspend fun getSemesters(): List<Semester> = studentStart.getSemesters()
+    suspend fun getSemesters(): List<Semester> = when (isEduOne) {
+        true -> studentPlus.getSemesters(studentId, diaryId, unitId)
+        else -> studentStart.getSemesters()
+    }
 
     suspend fun getCurrentStudent(): RegisterStudent? {
         return when (isEduOne) {
