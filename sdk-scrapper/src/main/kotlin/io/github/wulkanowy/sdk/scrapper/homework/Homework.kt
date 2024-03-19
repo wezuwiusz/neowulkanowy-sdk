@@ -27,7 +27,7 @@ data class Homework(
 
     @SerialName("ModificationDate")
     @Serializable(with = CustomDateAdapter::class)
-    val entryDate: LocalDateTime? = null,
+    val entryDate: LocalDateTime,
 
     @SerialName("Status")
     val status: Int,
@@ -40,7 +40,7 @@ data class Homework(
 ) {
 
     @Transient
-    lateinit var teacherSymbol: String?
+    lateinit var teacherSymbol: String
 
     @Transient
     @Suppress("PropertyName")

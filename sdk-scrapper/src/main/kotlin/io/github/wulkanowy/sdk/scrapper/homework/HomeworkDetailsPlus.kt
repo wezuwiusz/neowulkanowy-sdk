@@ -5,18 +5,18 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 internal data class HomeworkDetailsPlus(
-    
+
     @SerialName("nauczycielImieNazwisko")
-    val teahcer: String,
-    
+    val teacher: String,
+
     @SerialName("opis")
     val description: String,
-    
+
     @SerialName("status")
     val status: Int,
-    
+
     @SerialName("odpowiedzWymagana")
     val isAnswerRequired: Boolean,
-    
+
     // TODO: Attachments
 )

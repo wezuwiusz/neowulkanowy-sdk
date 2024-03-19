@@ -33,5 +33,5 @@ data class Exam(
     lateinit var date: LocalDateTime
 
     @Transient
-    lateinit var teacherSymbol: String?
+    lateinit var teacherSymbol: String
 }

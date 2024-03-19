@@ -873,6 +873,7 @@ public final class io/github/wulkanowy/sdk/scrapper/homework/Homework {
 	public static final field Companion Lio/github/wulkanowy/sdk/scrapper/homework/Homework$Companion;
 	public field teacherSymbol Ljava/lang/String;
 	public fun <init> (ILjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/time/LocalDateTime;Ljava/time/LocalDateTime;IZLjava/util/List;)V
+	public synthetic fun <init> (ILjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/time/LocalDateTime;Ljava/time/LocalDateTime;IZLjava/util/List;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public final fun component1 ()I
 	public final fun component2 ()Ljava/lang/String;
 	public final fun component3 ()Ljava/lang/String;

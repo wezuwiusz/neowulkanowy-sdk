@@ -216,7 +216,7 @@ internal class StudentPlusRepository(
                     else -> "Praca klasowa"
                 }
                 date = exam.date
-                teacherSymbol = null
+                teacherSymbol = ""
             }
         }
     }
@@ -231,16 +231,17 @@ internal class StudentPlusRepository(
 
         return examsHomeworkRes.filter { it.type == 4 }.map { homework ->
             val homeworkDetailsRes = api.getHomeworkDetails(key, homework.id)
-            return Homework(
+            Homework(
                 homeworkId = homework.id,
                 subject = homework.subject,
                 teacher = homeworkDetailsRes.teacher,
-                description = homeworkDetailsRes.description,
+                content = homeworkDetailsRes.description,
                 date = homework.date,
+                entryDate = homework.date,
                 status = homeworkDetailsRes.status,
                 isAnswerRequired = homeworkDetailsRes.isAnswerRequired,
             ).apply {
-                teacherSymbol = null
+                teacherSymbol = ""
             }
         }
     }
