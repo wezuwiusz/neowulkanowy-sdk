@@ -19,6 +19,7 @@ internal fun getStudentsFromDiaries(
             classId = classId,
             isParent = isParent == true,
             isAuthorized = diary.isAuthorized == true,
+            isEduOne = false,
             semesters = diaries.toSemesters(
                 studentId = diary.studentId,
                 classId = classId,

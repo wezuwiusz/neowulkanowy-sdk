@@ -81,6 +81,7 @@ public final class io/github/wulkanowy/sdk/scrapper/Scrapper {
 	public final fun getUserAgent ()Ljava/lang/String;
 	public final fun getUserAgentTemplate ()Ljava/lang/String;
 	public final fun getUserSubjects (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public final fun isEduOne ()Z
 	public final fun isSymbolNotExist (Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public final fun restoreMessages (Ljava/util/List;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public final fun sendMessage (Ljava/lang/String;Ljava/lang/String;Ljava/util/List;Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
@@ -92,6 +93,7 @@ public final class io/github/wulkanowy/sdk/scrapper/Scrapper {
 	public final fun setClassId (I)V
 	public final fun setDiaryId (I)V
 	public final fun setDomainSuffix (Ljava/lang/String;)V
+	public final fun setEduOne (Z)V
 	public final fun setEmail (Ljava/lang/String;)V
 	public final fun setEmptyCookieJarInterceptor (Z)V
 	public final fun setHost (Ljava/lang/String;)V
@@ -1540,8 +1542,9 @@ public final class io/github/wulkanowy/sdk/scrapper/register/RegisterEmployee : 
 }
 
 public final class io/github/wulkanowy/sdk/scrapper/register/RegisterStudent : io/github/wulkanowy/sdk/scrapper/register/RegisterSubject {
-	public fun <init> (ILjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;IZLjava/util/List;Z)V
+	public fun <init> (ILjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;IZLjava/util/List;ZZ)V
 	public final fun component1 ()I
+	public final fun component10 ()Z
 	public final fun component2 ()Ljava/lang/String;
 	public final fun component3 ()Ljava/lang/String;
 	public final fun component4 ()Ljava/lang/String;
@@ -1550,8 +1553,8 @@ public final class io/github/wulkanowy/sdk/scrapper/register/RegisterStudent : i
 	public final fun component7 ()Z
 	public final fun component8 ()Ljava/util/List;
 	public final fun component9 ()Z
-	public final fun copy (ILjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;IZLjava/util/List;Z)Lio/github/wulkanowy/sdk/scrapper/register/RegisterStudent;
-	public static synthetic fun copy$default (Lio/github/wulkanowy/sdk/scrapper/register/RegisterStudent;ILjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;IZLjava/util/List;ZILjava/lang/Object;)Lio/github/wulkanowy/sdk/scrapper/register/RegisterStudent;
+	public final fun copy (ILjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;IZLjava/util/List;ZZ)Lio/github/wulkanowy/sdk/scrapper/register/RegisterStudent;
+	public static synthetic fun copy$default (Lio/github/wulkanowy/sdk/scrapper/register/RegisterStudent;ILjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;IZLjava/util/List;ZZILjava/lang/Object;)Lio/github/wulkanowy/sdk/scrapper/register/RegisterStudent;
 	public fun equals (Ljava/lang/Object;)Z
 	public final fun getClassId ()I
 	public final fun getClassName ()Ljava/lang/String;
@@ -1562,6 +1565,7 @@ public final class io/github/wulkanowy/sdk/scrapper/register/RegisterStudent : i
 	public final fun getStudentSurname ()Ljava/lang/String;
 	public fun hashCode ()I
 	public final fun isAuthorized ()Z
+	public final fun isEduOne ()Z
 	public final fun isParent ()Z
 	public fun toString ()Ljava/lang/String;
 }

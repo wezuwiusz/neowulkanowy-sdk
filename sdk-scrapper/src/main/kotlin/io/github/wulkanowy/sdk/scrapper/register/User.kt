@@ -49,4 +49,5 @@ data class RegisterStudent(
     val isParent: Boolean,
     val semesters: List<Semester>,
     val isAuthorized: Boolean,
+    val isEduOne: Boolean,
 ) : RegisterSubject

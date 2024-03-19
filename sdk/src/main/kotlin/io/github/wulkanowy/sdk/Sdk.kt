@@ -132,6 +132,12 @@ class Sdk {
             scrapper.domainSuffix = value
         }
 
+    var isEduOne = false
+        set(value) {
+            field = value
+            scrapper.isEduOne = value
+        }
+
     var email = ""
         set(value) {
             field = value

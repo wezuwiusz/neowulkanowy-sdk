@@ -73,6 +73,7 @@ internal class StudentPlusRepository(
                 isParent = it.opiekunUcznia,
                 semesters = listOf(), //
                 isAuthorized = !it.isAuthorizationRequired,
+                isEduOne = true,
             )
         }
     }

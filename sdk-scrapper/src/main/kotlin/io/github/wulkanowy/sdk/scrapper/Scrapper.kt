@@ -68,7 +68,7 @@ class Scrapper {
 
     private val cookieJarCabinet = CookieJarCabinet()
 
-    private var isEduOne = false
+    var isEduOne = false
 
     var logLevel: HttpLoggingInterceptor.Level = HttpLoggingInterceptor.Level.BASIC
         set(value) {

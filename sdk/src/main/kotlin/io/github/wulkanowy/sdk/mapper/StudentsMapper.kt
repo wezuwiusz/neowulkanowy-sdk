@@ -71,6 +71,7 @@ internal fun ScrapperRegisterStudent.mapStudent(): RegisterStudent = RegisterStu
     isParent = isParent,
     semesters = semesters.mapSemesters(),
     isAuthorized = isAuthorized,
+    isEduOne = isEduOne,
 )
 
 fun List<StudentInfo>.mapHebeUser(
@@ -120,6 +121,7 @@ private fun List<StudentInfo>.mapUnit(): List<RegisterUnit> {
                         classId = -1, // todo
                         isParent = student.login.loginRole != "Uczen",
                         isAuthorized = true,
+                        isEduOne = false,
                         semesters = student.periods.map { period ->
                             Semester(
                                 diaryId = student.journal.id,
