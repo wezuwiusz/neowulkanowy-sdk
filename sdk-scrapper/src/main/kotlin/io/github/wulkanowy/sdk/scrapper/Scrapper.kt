@@ -369,7 +369,10 @@ class Scrapper {
         }
     }
 
-    suspend fun getSubjects(): List<Subject> = student.getSubjects()
+    suspend fun getSubjects(): List<Subject> = when (isEduOne) {
+        true -> listOf(Subject())
+        else -> student.getSubjects()
+    }
 
     suspend fun getExams(startDate: LocalDate, endDate: LocalDate? = null): List<Exam> {
         if (diaryId == 0) return emptyList()

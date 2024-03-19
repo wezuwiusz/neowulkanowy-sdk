@@ -52,7 +52,7 @@ internal interface StudentPlusService {
     @POST("api/Usprawiedliwienia")
     suspend fun excuseForAbsence(@Body body: AttendanceExcusePlusRequest): Response<Unit>
 
-    @POST("api/FrekwencjaStatystyki")
+    @GET("api/FrekwencjaStatystyki")
     suspend fun getAttendanceSummary(
         @Query("key") key: String,
     ): AttendanceSummaryResponse
