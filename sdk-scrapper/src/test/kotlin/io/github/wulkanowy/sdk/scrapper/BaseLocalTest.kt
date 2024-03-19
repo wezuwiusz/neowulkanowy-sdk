@@ -1,6 +1,5 @@
 package io.github.wulkanowy.sdk.scrapper
 
-import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import io.github.wulkanowy.sdk.scrapper.adapter.ObjectSerializer
 import io.github.wulkanowy.sdk.scrapper.interceptor.AutoLoginInterceptor
 import io.github.wulkanowy.sdk.scrapper.interceptor.ErrorInterceptor
@@ -27,6 +26,7 @@ import org.jsoup.nodes.Document
 import org.junit.After
 import pl.droidsonroids.retrofit2.JspoonConverterFactory
 import retrofit2.Retrofit
+import retrofit2.converter.kotlinx.serialization.asConverterFactory
 import retrofit2.converter.scalars.ScalarsConverterFactory
 import java.net.URL
 
