@@ -8,6 +8,6 @@ enum class NoteCategory(val id: Int) {
     ;
 
     companion object {
-        fun getByValue(value: Int) = values().singleOrNull { it.id == value } ?: UNKNOWN
+        fun getByValue(value: Int) = entries.singleOrNull { it.id == value } ?: UNKNOWN
     }
 }

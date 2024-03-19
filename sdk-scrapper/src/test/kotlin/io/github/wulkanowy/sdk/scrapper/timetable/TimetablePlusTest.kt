@@ -167,7 +167,10 @@ class TimetablePlusTest : BaseLocalTest() {
             assertEquals("", roomOld)
 
             assertEquals("", group)
-            assertEquals("Zajęcia są przeniesione z dnia 2024-03-20 w godzinach 12:30-13:15. Nieobecny nauczyciel. Zaplanowane jest zastępstwo za nauczyciela: Kowalski Jan", info)
+            assertEquals(
+                "Zajęcia są przeniesione z dnia 2024-03-20 w godzinach 12:30-13:15. Nieobecny nauczyciel. Zaplanowane jest zastępstwo za nauczyciela: Kowalski Jan",
+                info,
+            )
             assertEquals(false, canceled)
             assertEquals(true, changes)
         }

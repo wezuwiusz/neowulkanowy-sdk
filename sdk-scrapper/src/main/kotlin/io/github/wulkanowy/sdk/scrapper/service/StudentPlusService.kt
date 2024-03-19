@@ -12,6 +12,7 @@ import io.github.wulkanowy.sdk.scrapper.homework.ExamHomeworkPlus
 import io.github.wulkanowy.sdk.scrapper.homework.HomeworkDetailsPlus
 import io.github.wulkanowy.sdk.scrapper.mobile.Device
 import io.github.wulkanowy.sdk.scrapper.mobile.TokenResponse
+import io.github.wulkanowy.sdk.scrapper.notes.Note
 import io.github.wulkanowy.sdk.scrapper.register.AuthorizePermissionPlusRequest
 import io.github.wulkanowy.sdk.scrapper.register.ContextResponse
 import io.github.wulkanowy.sdk.scrapper.timetable.CompletedLesson
@@ -107,4 +108,7 @@ internal interface StudentPlusService {
         @Query("dataDo") to: String?,
         @Query("zakresDanych") data: Int = 2,
     ): List<LessonPlus>
+
+    @GET("api/Uwagi")
+    suspend fun getNotes(@Query("key") key: String): List<Note>
 }

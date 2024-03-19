@@ -19,6 +19,8 @@ import io.github.wulkanowy.sdk.scrapper.grades.mapGradesSummary
 import io.github.wulkanowy.sdk.scrapper.handleErrors
 import io.github.wulkanowy.sdk.scrapper.homework.Homework
 import io.github.wulkanowy.sdk.scrapper.mobile.TokenResponse
+import io.github.wulkanowy.sdk.scrapper.notes.Note
+import io.github.wulkanowy.sdk.scrapper.notes.NoteCategory
 import io.github.wulkanowy.sdk.scrapper.register.AuthorizePermissionPlusRequest
 import io.github.wulkanowy.sdk.scrapper.register.RegisterStudent
 import io.github.wulkanowy.sdk.scrapper.service.StudentPlusService
@@ -332,5 +334,19 @@ internal class StudentPlusRepository(
         const val REPLACEMENT = 1
         const val RELOCATION = 2
         const val CANCELLATION = 3
+    }
+
+    suspend fun getNotes(studentId: Int, diaryId: Int, unitId: Int): List<Note> {
+        val key = getEncodedKey(studentId, diaryId, unitId)
+        return api.getNotes(key)
+            .map {
+                it.copy(
+                    category = it.category.orEmpty(),
+                    categoryType = NoteCategory.UNKNOWN.id,
+                ).apply {
+                    teacherSymbol = ""
+                }
+            }
+            .sortedWith(compareBy({ it.date }, { it.category }))
     }
 }

@@ -1,25 +1,32 @@
 package io.github.wulkanowy.sdk.scrapper.notes
 
 import io.github.wulkanowy.sdk.scrapper.adapter.CustomDateAdapter
+import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
+import kotlinx.serialization.json.JsonNames
 import java.time.LocalDateTime
 
 @Serializable
+@OptIn(ExperimentalSerializationApi::class)
 data class Note(
 
     @SerialName("DataWpisu")
+    @JsonNames("data")
     @Serializable(with = CustomDateAdapter::class)
     val date: LocalDateTime,
 
     @SerialName("Nauczyciel")
+    @JsonNames("autor")
     val teacher: String,
 
     @SerialName("Kategoria")
-    val category: String,
+    @JsonNames("kategoria")
+    val category: String? = null,
 
     @SerialName("TrescUwagi")
+    @JsonNames("tresc")
     val content: String,
 
     @SerialName("Punkty")
@@ -29,7 +36,8 @@ data class Note(
     val showPoints: Boolean = false,
 
     @SerialName("KategoriaTyp")
-    val categoryType: Int = 0,
+    @JsonNames("typ")
+    val categoryType: Int? = 0,
 ) {
 
     @Transient

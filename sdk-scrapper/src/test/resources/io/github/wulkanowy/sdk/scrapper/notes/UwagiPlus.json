@@ -1,0 +1,18 @@
+[
+  {
+    "data": "2024-03-19T22:47:20.0+01:00",
+    "kategoria": "Kultura osobista",
+    "typ": 0,
+    "autor": "Jan Kowalski",
+    "tresc": "to jest treść uwagi",
+    "id": 16
+  },
+  {
+    "data": "2024-03-19T22:52:21.0+01:00",
+    "kategoria": null,
+    "typ": null,
+    "autor": "Jan Kowalski",
+    "tresc": "treść kolejnej uwagi",
+    "id": 17
+  }
+]
