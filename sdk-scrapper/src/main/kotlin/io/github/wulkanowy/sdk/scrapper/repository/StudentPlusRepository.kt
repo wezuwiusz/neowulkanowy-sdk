@@ -17,6 +17,7 @@ import io.github.wulkanowy.sdk.scrapper.grades.Grades
 import io.github.wulkanowy.sdk.scrapper.grades.mapGradesList
 import io.github.wulkanowy.sdk.scrapper.grades.mapGradesSummary
 import io.github.wulkanowy.sdk.scrapper.handleErrors
+import io.github.wulkanowy.sdk.scrapper.homework.Homework
 import io.github.wulkanowy.sdk.scrapper.mobile.TokenResponse
 import io.github.wulkanowy.sdk.scrapper.register.AuthorizePermissionPlusRequest
 import io.github.wulkanowy.sdk.scrapper.register.RegisterStudent
@@ -207,7 +208,7 @@ internal class StudentPlusRepository(
                 subject = exam.subject,
                 type = exam.type,
                 description = examDetailsRes.description,
-                teacher = examDetailsRes.teacher.substringBefore(" ["),
+                teacher = examDetailsRes.teacher,
             ).apply {
                 typeName = when (exam.type) {
                     1 -> "Sprawdzian"
@@ -215,7 +216,32 @@ internal class StudentPlusRepository(
                     else -> "Praca klasowa"
                 }
                 date = exam.date
-                teacherSymbol = examDetailsRes.teacher.substringAfter(" [", "").substringBefore("]")
+                teacherSymbol = ""
+            }
+        }
+    }
+
+    suspend fun getHomework(startDate: LocalDate, endDate: LocalDate?, studentId: Int, diaryId: Int, unitId: Int): List<Homework> {
+        val key = getEncodedKey(studentId, diaryId, unitId)
+        val examsHomeworkRes = api.getExamsAndHomework(
+            key = key,
+            from = startDate.toISOFormat(),
+            to = endDate?.toISOFormat(),
+        )
+
+        return examsHomeworkRes.filter { it.type == 4 }.map { homework ->
+            val homeworkDetailsRes = api.getHomeworkDetails(key, homework.id)
+            Homework(
+                homeworkId = homework.id,
+                subject = homework.subject,
+                teacher = homeworkDetailsRes.teacher,
+                content = homeworkDetailsRes.description,
+                date = homework.date,
+                entryDate = homework.date,
+                status = homeworkDetailsRes.status,
+                isAnswerRequired = homeworkDetailsRes.isAnswerRequired,
+            ).apply {
+                teacherSymbol = ""
             }
         }
     }

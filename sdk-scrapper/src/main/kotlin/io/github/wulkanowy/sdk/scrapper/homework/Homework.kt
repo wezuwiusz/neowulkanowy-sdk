@@ -36,7 +36,7 @@ data class Homework(
     val isAnswerRequired: Boolean,
 
     @SerialName("Attachments")
-    val attachments: List<HomeworkAttachment>,
+    val attachments: List<HomeworkAttachment> = emptyList(),
 ) {
 
     @Transient
