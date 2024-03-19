@@ -120,5 +120,65 @@
     "adnotacja": 1,
     "dodatkowe": false,
     "zrealizowane": false
+  },
+  {
+    "data": "2024-03-20T00:00:00+01:00",
+    "godzinaOd": "2024-03-20T11:30:00+01:00",
+    "godzinaDo": "2024-03-20T12:15:00+01:00",
+    "prowadzacy": "Jan Kowalski",
+    "prowadzacyWspomagajacy1": "",
+    "prowadzacyWspomagajacy2": "",
+    "przedmiot": "Edukacja muzyczna",
+    "podzial": "|CH",
+    "sala": "10",
+    "pseudonim": null,
+    "zmiany": [
+      {
+        "zmiana": 5,
+        "typProwadzacego": 0,
+        "dzien": "2024-03-21T00:00:00+01:00",
+        "nrLekcji": 8,
+        "godzinaOd": "2024-03-20T14:10:00+01:00",
+        "godzinaDo": "2024-03-20T14:55:00+01:00",
+        "grupa": null,
+        "zajecia": "Edukacja muzyczna",
+        "sala": "19",
+        "prowadzacy": null,
+        "informacjeNieobecnosc": null
+      }
+    ],
+    "adnotacja": 3,
+    "dodatkowe": false,
+    "zrealizowane": false
+  },
+  {
+    "data": "2024-03-21T00:00:00+01:00",
+    "godzinaOd": "2024-03-20T14:10:00+01:00",
+    "godzinaDo": "2024-03-20T14:55:00+01:00",
+    "prowadzacy": "Jan Kowalski",
+    "prowadzacyWspomagajacy1": "",
+    "prowadzacyWspomagajacy2": "",
+    "przedmiot": "Edukacja muzyczna",
+    "podzial": "|CH",
+    "sala": "19",
+    "pseudonim": null,
+    "zmiany": [
+      {
+        "zmiana": 6,
+        "typProwadzacego": 0,
+        "dzien": "2024-03-20T00:00:00+01:00",
+        "nrLekcji": 5,
+        "godzinaOd": "2024-03-21T11:30:00+01:00",
+        "godzinaDo": "2024-03-21T12:15:00+01:00",
+        "grupa": null,
+        "zajecia": "Edukacja muzyczna",
+        "sala": "10",
+        "prowadzacy": null,
+        "informacjeNieobecnosc": null
+      }
+    ],
+    "adnotacja": 2,
+    "dodatkowe": false,
+    "zrealizowane": false
   }
 ]

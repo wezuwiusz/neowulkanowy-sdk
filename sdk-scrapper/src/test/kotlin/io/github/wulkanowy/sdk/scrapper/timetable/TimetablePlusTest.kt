@@ -23,7 +23,7 @@ class TimetablePlusTest : BaseLocalTest() {
 
     @Test
     fun getAllTest() {
-        assertEquals(5, timetable.size)
+        assertEquals(7, timetable.size)
     }
 
     @Test
@@ -126,6 +126,48 @@ class TimetablePlusTest : BaseLocalTest() {
 
             assertEquals("", group)
             assertEquals("Nieobecny nauczyciel. Zaplanowane jest zastępstwo za nauczyciela: Nauczyciel Stary", info)
+            assertEquals(false, canceled)
+            assertEquals(true, changes)
+        }
+    }
+
+    @Test
+    fun getMovedLessonFrom() {
+        with(timetable[5]) {
+            assertEquals(0, number)
+            assertEquals(getLocalDateTime(2024, 3, 20, 11, 30, 0), start)
+            assertEquals(getLocalDateTime(2024, 3, 20, 12, 15, 0), end)
+
+            assertEquals("Edukacja muzyczna", subject)
+            assertEquals("Jan Kowalski", teacher)
+            assertEquals("10", room)
+            assertEquals("", subjectOld)
+            assertEquals("", teacherOld)
+            assertEquals("", roomOld)
+
+            assertEquals("|CH", group)
+            assertEquals("Oddział nieobecny. Zajęcia są przeniesione na: 2024-03-21 w godzinach 14:10-14:55", info)
+            assertEquals(true, canceled)
+            assertEquals(true, changes)
+        }
+    }
+
+    @Test
+    fun getMovedLessonTo() {
+        with(timetable[6]) {
+            assertEquals(0, number)
+            assertEquals(getLocalDateTime(2024, 3, 20, 14, 10, 0), start)
+            assertEquals(getLocalDateTime(2024, 3, 20, 14, 55, 0), end)
+
+            assertEquals("Edukacja muzyczna", subject)
+            assertEquals("Jan Kowalski", teacher)
+            assertEquals("19", room)
+            assertEquals("", subjectOld)
+            assertEquals("", teacherOld)
+            assertEquals("", roomOld)
+
+            assertEquals("|CH", group)
+            assertEquals("Zajęcia są przeniesione z dnia 2024-03-20 w godzinach 11:30-12:15", info)
             assertEquals(false, canceled)
             assertEquals(true, changes)
         }

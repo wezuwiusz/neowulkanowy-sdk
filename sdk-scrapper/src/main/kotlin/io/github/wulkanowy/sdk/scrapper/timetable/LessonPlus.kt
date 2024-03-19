@@ -41,12 +41,15 @@ internal data class LessonPlus(
 
 @Serializable
 internal data class LessonPlusChange(
-    // @SerialName("dzien")
-    // val dzien: Any?,
-    // @SerialName("godzinaDo")
-    // val godzinaDo: Any?,
-    // @SerialName("godzinaOd")
-    // val godzinaOd: Any?,
+    @SerialName("dzien")
+    @Serializable(with = CustomDateAdapter::class)
+    val dzien: LocalDateTime?,
+    @SerialName("godzinaDo")
+    @Serializable(with = CustomDateAdapter::class)
+    val godzinaDo: LocalDateTime?,
+    @SerialName("godzinaOd")
+    @Serializable(with = CustomDateAdapter::class)
+    val godzinaOd: LocalDateTime?,
     // @SerialName("grupa")
     // val grupa: Any?,
     @SerialName("informacjeNieobecnosc")
@@ -55,8 +58,8 @@ internal data class LessonPlusChange(
     // val nrLekcji: Any?,
     @SerialName("prowadzacy")
     val prowadzacy: String?,
-    // @SerialName("sala")
-    // val sala: Any?,
+    @SerialName("sala")
+    val sala: String?,
     @SerialName("typProwadzacego")
     val typProwadzacego: Int,
     // @SerialName("zajecia")

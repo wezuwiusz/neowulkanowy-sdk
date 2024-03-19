@@ -271,19 +271,42 @@ internal class StudentPlusRepository(
                 info = buildString {
                     lesson.zmiany.forEach {
                         when (it.typProwadzacego) {
-                            0 -> append("Oddział nieobecny. ")
+                            0 -> {
+                                if (it.zmiana != 6) {
+                                    append("Oddział nieobecny. ")
+                                }
+                            }
+
                             1 -> append("Nieobecny nauczyciel. ")
                         }
 
                         when (it.zmiana) {
                             1 -> append("Skutek nieobecności: ${it.informacjeNieobecnosc}")
                             4 -> append("Powód nieobecności: ${it.informacjeNieobecnosc}")
+                            5 -> {
+                                append("Zajęcia są przeniesione na: ")
+                                append(it.dzien?.toLocalDate())
+                                append(" w godzinach ")
+                                append(it.godzinaOd?.toLocalTime())
+                                append("-")
+                                append(it.godzinaDo?.toLocalTime())
+                            }
+
+                            6 -> {
+                                append("Zajęcia są przeniesione z dnia ")
+                                append(it.dzien?.toLocalDate())
+                                append(" w godzinach ")
+                                append(it.godzinaOd?.toLocalTime())
+                                append("-")
+                                append(it.godzinaDo?.toLocalTime())
+                            }
+
                             7 -> append("Zaplanowane jest zastępstwo za nauczyciela: ${it.prowadzacy}")
                         }
                     }
                 },
                 changes = lesson.zmiany.isNotEmpty(),
-                canceled = lesson.zmiany.any { it.zmiana == 4 || it.zmiana == 1 },
+                canceled = lesson.zmiany.any { it.zmiana == 4 || it.zmiana == 1 || it.zmiana == 5 },
             )
         }.sortedBy { it.start }
 
