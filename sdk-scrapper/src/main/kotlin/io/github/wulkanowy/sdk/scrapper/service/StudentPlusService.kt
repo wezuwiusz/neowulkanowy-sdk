@@ -63,4 +63,10 @@ internal interface StudentPlusService {
         @Query("dataOd") from: String,
         @Query("dataDo") to: String,
     ): List<CompletedLesson>
+
+    @GET("api/Oceny")
+    suspend fun getGrades(
+        @Query("key") key: String,
+        @Query("idOkresKlasyfikacyjny") semesterId: Int,
+    ): GradesResponse
 }
