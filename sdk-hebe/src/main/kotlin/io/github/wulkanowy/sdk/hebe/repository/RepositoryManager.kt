@@ -1,6 +1,5 @@
 package io.github.wulkanowy.sdk.hebe.repository
 
-import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import io.github.wulkanowy.sdk.hebe.interceptor.ErrorInterceptor
 import io.github.wulkanowy.sdk.hebe.interceptor.SignInterceptor
 import kotlinx.serialization.ExperimentalSerializationApi
@@ -10,6 +9,7 @@ import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
+import retrofit2.converter.kotlinx.serialization.asConverterFactory
 import retrofit2.converter.scalars.ScalarsConverterFactory
 import retrofit2.create
 
