@@ -135,7 +135,9 @@ class Sdk {
     var isEduOne = false
         set(value) {
             field = value
-            scrapper.isEduOne = value
+            if (value) {
+                scrapper.isEduOne = true
+            }
         }
 
     var email = ""

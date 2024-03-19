@@ -3,6 +3,7 @@ package io.github.wulkanowy.sdk.scrapper.register
 internal fun getStudentsFromDiaries(
     diaries: List<Diary>,
     isParent: Boolean?,
+    isEduOne: Boolean,
     unitId: Int,
 ): List<RegisterStudent> = diaries
     .filter { it.semesters.orEmpty().isNotEmpty() || it.kindergartenDiaryId != 0 }
@@ -19,7 +20,7 @@ internal fun getStudentsFromDiaries(
             classId = classId,
             isParent = isParent == true,
             isAuthorized = diary.isAuthorized == true,
-            isEduOne = false,
+            isEduOne = isEduOne,
             semesters = diaries.toSemesters(
                 studentId = diary.studentId,
                 classId = classId,

@@ -177,7 +177,12 @@ internal class RegisterRepository(
                 )
             }
             val students = cacheAndDiaries.getOrNull()?.let { (cache, diaries) ->
-                getStudentsFromDiaries(diaries, cache, unit.id)
+                getStudentsFromDiaries(
+                    diaries = diaries,
+                    isParent = cache,
+                    isEduOne = isEduOne,
+                    unitId = unit.id,
+                )
             }
 
             RegisterUnit(

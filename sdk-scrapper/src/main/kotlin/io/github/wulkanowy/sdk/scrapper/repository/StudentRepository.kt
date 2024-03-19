@@ -99,6 +99,7 @@ internal class StudentRepository(
             isParent = getCache().isParent,
             diaries = api.getDiaries().handleErrors().data.orEmpty(),
             unitId = unitId,
+            isEduOne = false,
         ).find {
             it.studentId == studentId
         }
