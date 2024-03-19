@@ -386,8 +386,10 @@ class Scrapper {
                 type = -1,
             )
         }
-
-        return student.getGrades(semester)
+        return when (isEduOne) {
+            true -> studentPlus.getGrades(semester)
+            else -> student.getGrades(semester)
+        }
     }
 
     suspend fun getGradesPartialStatistics(semesterId: Int): List<GradesStatisticsPartial> {

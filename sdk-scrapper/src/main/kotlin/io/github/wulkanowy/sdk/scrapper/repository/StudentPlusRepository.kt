@@ -11,6 +11,9 @@ import io.github.wulkanowy.sdk.scrapper.attendance.SentExcuseStatus
 import io.github.wulkanowy.sdk.scrapper.exception.FeatureDisabledException
 import io.github.wulkanowy.sdk.scrapper.exception.VulcanClientError
 import io.github.wulkanowy.sdk.scrapper.getEncodedKey
+import io.github.wulkanowy.sdk.scrapper.grades.Grades
+import io.github.wulkanowy.sdk.scrapper.grades.mapGradesList
+import io.github.wulkanowy.sdk.scrapper.grades.mapGradesSummary
 import io.github.wulkanowy.sdk.scrapper.handleErrors
 import io.github.wulkanowy.sdk.scrapper.mobile.TokenResponse
 import io.github.wulkanowy.sdk.scrapper.register.AuthorizePermissionPlusRequest
@@ -138,6 +141,21 @@ internal class StudentPlusRepository(
                 .select("img")
                 .attr("src")
                 .split("data:image/png;base64,")[1],
+        )
+    }
+
+    suspend fun getGrades(semesterId: Int): Grades {
+        val key = getEncodedKey(studentId, diaryId, unitId)
+        val res = api.getGrades(key, semesterId)
+
+        return Grades(
+            details = res.mapGradesList(),
+            summary = res.mapGradesSummary(),
+            descriptive = res.gradesDescriptive,
+            isAverage = res.isAverage,
+            isPoints = res.isPoints,
+            isForAdults = res.isForAdults,
+            type = res.type,
         )
     }
 }

@@ -5,6 +5,7 @@ import io.github.wulkanowy.sdk.scrapper.attendance.AttendanceExcusePlusRequest
 import io.github.wulkanowy.sdk.scrapper.attendance.AttendanceExcusesPlusResponse
 import io.github.wulkanowy.sdk.scrapper.conferences.Conference
 import io.github.wulkanowy.sdk.scrapper.grades.GradeSemester
+import io.github.wulkanowy.sdk.scrapper.grades.GradesResponse
 import io.github.wulkanowy.sdk.scrapper.mobile.Device
 import io.github.wulkanowy.sdk.scrapper.mobile.TokenResponse
 import io.github.wulkanowy.sdk.scrapper.register.AuthorizePermissionPlusRequest
