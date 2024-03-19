@@ -40,7 +40,7 @@ internal data class LessonPlus(
 )
 
 @Serializable
-data class LessonPlusChange(
+internal data class LessonPlusChange(
     // @SerialName("dzien")
     // val dzien: Any?,
     // @SerialName("godzinaDo")

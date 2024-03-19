@@ -229,7 +229,9 @@ internal class AutoLoginInterceptor(
     }
 
     private fun checkHttpErrorResponse(error: VulcanClientError, url: String) {
-        if (error.httpCode == HttpURLConnection.HTTP_CONFLICT && "uonetplus-wiadomosciplus" in url) {
+        val isCodeMatch = error.httpCode == HttpURLConnection.HTTP_CONFLICT
+        val isSubdomainMatch = "uonetplus-wiadomosciplus" in url || "uonetplus-uczenplus" in url
+        if (isCodeMatch && isSubdomainMatch) {
             throw NotLoggedInException(error.message.orEmpty())
         }
     }
