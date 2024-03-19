@@ -145,7 +145,7 @@ internal class StudentPlusRepository(
         )
     }
 
-    suspend fun getGrades(semesterId: Int): Grades {
+    suspend fun getGrades(semesterId: Int, studentId: Int, diaryId: Int, unitId: Int): Grades {
         val key = getEncodedKey(studentId, diaryId, unitId)
         val res = api.getGrades(key, semesterId)
 

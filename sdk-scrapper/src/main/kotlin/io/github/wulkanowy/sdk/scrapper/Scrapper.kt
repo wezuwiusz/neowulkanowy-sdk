@@ -389,7 +389,7 @@ class Scrapper {
             )
         }
         return when (isEduOne) {
-            true -> studentPlus.getGrades(semester)
+            true -> studentPlus.getGrades(semester, studentId, diaryId, unitId)
             else -> student.getGrades(semester)
         }
     }

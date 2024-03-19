@@ -5,18 +5,17 @@ include 'sdk'
 dependencyResolutionManagement {
     versionCatalogs {
         libs {
-            def kotlin = '1.9.21'
+            def kotlin = '1.9.23'
 
             version('kotlin', kotlin)
-            version('coroutines', '1.7.3')
-            version('retrofit', '2.10.0-SNAPSHOT')
-            version('retrofit-kotlinx-serialization', '1.0.0')
-            version('ksp', "${kotlin}-1.0.15")
+            version('coroutines', '1.8.0')
+            version('retrofit', '2.10.0')
+            version('ksp', "${kotlin}-1.0.19")
 
             plugin('kotlin', 'org.jetbrains.kotlin.jvm').versionRef('kotlin')
             plugin('ksp', 'com.google.devtools.ksp').versionRef('ksp')
             plugin('serialization', 'org.jetbrains.kotlin.plugin.serialization').versionRef('kotlin')
-            plugin('validator', 'org.jetbrains.kotlinx.binary-compatibility-validator').version('0.13.2')
+            plugin('validator', 'org.jetbrains.kotlinx.binary-compatibility-validator').version('0.14.0')
 
             library('coroutines-core', 'org.jetbrains.kotlinx', 'kotlinx-coroutines-core').versionRef('coroutines')
             library('coroutines-test', 'org.jetbrains.kotlinx', 'kotlinx-coroutines-test').versionRef('coroutines')
@@ -25,7 +24,7 @@ dependencyResolutionManagement {
             library('retrofit-scalars', 'com.squareup.retrofit2', 'converter-scalars').versionRef('retrofit')
             library('retrofit-moshi', 'com.squareup.retrofit2', 'converter-moshi').versionRef('retrofit')
             library('retrofit-mock', 'com.squareup.retrofit2', 'retrofit-mock').versionRef('retrofit')
-            library('retrofit-serialization', 'com.jakewharton.retrofit', 'retrofit2-kotlinx-serialization-converter').versionRef('retrofit-kotlinx-serialization')
+            library('retrofit-serialization', 'com.squareup.retrofit2', 'converter-kotlinx-serialization').versionRef('retrofit')
 
             library('okhttp-bom', 'com.squareup.okhttp3:okhttp-bom:4.12.0')
         }
