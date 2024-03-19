@@ -442,7 +442,10 @@ class Scrapper {
             )
         }
 
-        return student.getTimetable(startDate, endDate)
+        return when (isEduOne) {
+            true -> studentPlus.getTimetable(startDate, endDate, studentId, diaryId, unitId)
+            else -> student.getTimetable(startDate, endDate)
+        }
     }
 
     suspend fun getCompletedLessons(startDate: LocalDate, endDate: LocalDate? = null, subjectId: Int = -1): List<CompletedLesson> {

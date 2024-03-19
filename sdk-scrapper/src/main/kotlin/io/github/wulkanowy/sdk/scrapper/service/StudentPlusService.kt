@@ -15,6 +15,7 @@ import io.github.wulkanowy.sdk.scrapper.mobile.TokenResponse
 import io.github.wulkanowy.sdk.scrapper.register.AuthorizePermissionPlusRequest
 import io.github.wulkanowy.sdk.scrapper.register.ContextResponse
 import io.github.wulkanowy.sdk.scrapper.timetable.CompletedLesson
+import io.github.wulkanowy.sdk.scrapper.timetable.LessonPlus
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET
@@ -98,4 +99,12 @@ internal interface StudentPlusService {
         @Query("key") key: String,
         @Query("id") id: Int,
     ): HomeworkDetailsPlus
+
+    @GET("api/PlanZajec")
+    suspend fun getTimetable(
+        @Query("key") key: String,
+        @Query("dataOd") from: String,
+        @Query("dataDo") to: String?,
+        @Query("zakresDanych") data: Int = 2,
+    ): List<LessonPlus>
 }

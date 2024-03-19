@@ -23,6 +23,8 @@ import io.github.wulkanowy.sdk.scrapper.register.AuthorizePermissionPlusRequest
 import io.github.wulkanowy.sdk.scrapper.register.RegisterStudent
 import io.github.wulkanowy.sdk.scrapper.service.StudentPlusService
 import io.github.wulkanowy.sdk.scrapper.timetable.CompletedLesson
+import io.github.wulkanowy.sdk.scrapper.timetable.Lesson
+import io.github.wulkanowy.sdk.scrapper.timetable.Timetable
 import io.github.wulkanowy.sdk.scrapper.timetable.mapCompletedLessons
 import io.github.wulkanowy.sdk.scrapper.toFormat
 import org.jsoup.Jsoup
@@ -244,5 +246,50 @@ internal class StudentPlusRepository(
                 teacherSymbol = ""
             }
         }
+    }
+
+    suspend fun getTimetable(startDate: LocalDate, endDate: LocalDate?, studentId: Int, diaryId: Int, unitId: Int): Timetable {
+        val key = getEncodedKey(studentId, diaryId, unitId)
+        val lessons = api.getTimetable(
+            key = key,
+            from = startDate.toISOFormat(),
+            to = endDate?.toISOFormat(),
+        ).map { lesson ->
+            Lesson(
+                number = 0,
+                start = lesson.godzinaOd,
+                end = lesson.godzinaDo,
+                date = lesson.godzinaOd.toLocalDate(),
+                subject = lesson.przedmiot,
+                subjectOld = "",
+                group = lesson.podzial.orEmpty(),
+                room = lesson.sala,
+                roomOld = "",
+                teacher = lesson.prowadzacy,
+                teacherOld = "",
+                info = buildString {
+                    lesson.zmiany.forEach {
+                        when (it.typProwadzacego) {
+                            0 -> append("Oddział nieobecny. ")
+                            1 -> append("Nieobecny nauczyciel. ")
+                        }
+
+                        when (it.zmiana) {
+                            1 -> append("Skutek nieobecności: ${it.informacjeNieobecnosc}")
+                            4 -> append("Powód nieobecności: ${it.informacjeNieobecnosc}")
+                        }
+                    }
+                },
+                changes = lesson.zmiany.isNotEmpty(),
+                canceled = lesson.zmiany.any { it.zmiana == 4 || it.zmiana == 1 },
+            )
+        }.sortedBy { it.start }
+
+        return Timetable(
+            lessons = lessons,
+            // todo
+            additional = emptyList(),
+            headers = emptyList(),
+        )
     }
 }
