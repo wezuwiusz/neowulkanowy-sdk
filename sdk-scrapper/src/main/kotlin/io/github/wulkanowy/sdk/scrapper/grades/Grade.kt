@@ -9,6 +9,7 @@ import kotlinx.serialization.json.JsonNames
 import java.time.LocalDate
 
 @Serializable
+@OptIn(ExperimentalSerializationApi::class)
 data class Grade(
 
     @SerialName("Wpis")
