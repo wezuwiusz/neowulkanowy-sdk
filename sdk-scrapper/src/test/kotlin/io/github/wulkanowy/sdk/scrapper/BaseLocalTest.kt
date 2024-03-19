@@ -151,7 +151,7 @@ abstract class BaseLocalTest : BaseTest() {
                     HomePageResponse()
                 }
             },
-            fetchModuleCookies = { _, _ -> "http://localhost".toHttpUrl() to Document("") },
+            fetchModuleCookies = { _ -> "http://localhost".toHttpUrl() to Document("") },
             urlGenerator = urlGenerator,
         )
     }
