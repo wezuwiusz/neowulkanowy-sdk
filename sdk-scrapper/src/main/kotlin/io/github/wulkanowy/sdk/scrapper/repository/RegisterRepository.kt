@@ -309,7 +309,8 @@ internal class RegisterRepository(
         .data.orEmpty()
 
     private suspend fun getEduOneDiaries(): List<Diary> {
-        val studentPageUrl = url.generate(UrlGenerator.Site.STUDENT_PLUS) + "LoginEndpoint.aspx"
+        val baseStudentPlus = url.generate(UrlGenerator.Site.STUDENT_PLUS)
+        val studentPageUrl = baseStudentPlus + "LoginEndpoint.aspx"
         val start = student.getStart(studentPageUrl)
 
         if ("Working" in Jsoup.parse(start).title()) {
@@ -326,10 +327,11 @@ internal class RegisterRepository(
         }
 
         return studentPlus
-            .getContext().students
+            .getContext(url = baseStudentPlus + "api/Context").students
             .map { diary ->
                 val key = getDecodedKey(diary.key)
                 val semesters = studentPlus.getSemesters(
+                    url = baseStudentPlus + "api/OkresyKlasyfikacyjne",
                     key = diary.key,
                     diaryId = diary.registerId,
                 ).map { semester ->

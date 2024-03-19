@@ -22,8 +22,23 @@ import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.Query
+import retrofit2.http.Url
 
 internal interface StudentPlusService {
+
+    // for register
+
+    @GET
+    suspend fun getContext(@Url url: String): ContextResponse
+
+    @GET
+    suspend fun getSemesters(
+        @Url url: String,
+        @Query("key") key: String,
+        @Query("idDziennik") diaryId: Int,
+    ): List<GradeSemester>
+
+    //
 
     @GET("api/Context")
     suspend fun getContext(): ContextResponse
