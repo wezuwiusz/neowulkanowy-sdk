@@ -8,6 +8,7 @@ import io.github.wulkanowy.sdk.scrapper.attendance.AttendanceExcusePlusRequestIt
 import io.github.wulkanowy.sdk.scrapper.attendance.AttendanceExcusePlusResponseItem
 import io.github.wulkanowy.sdk.scrapper.attendance.AttendanceExcusesPlusResponse
 import io.github.wulkanowy.sdk.scrapper.attendance.SentExcuseStatus
+import io.github.wulkanowy.sdk.scrapper.exams.Exam
 import io.github.wulkanowy.sdk.scrapper.exception.FeatureDisabledException
 import io.github.wulkanowy.sdk.scrapper.exception.VulcanClientError
 import io.github.wulkanowy.sdk.scrapper.getEncodedKey
@@ -157,5 +158,29 @@ internal class StudentPlusRepository(
             isForAdults = res.isForAdults,
             type = res.type,
         )
+    }
+
+    suspend fun getExams(startDate: LocalDate, endDate: LocalDate): List<Exam> {
+        val key = getEncodedKey(studentId, diaryId, unitId)
+        val examsHomeworkRes = api.getExamsAndHomework(key, startDate, endDate)
+
+        examsHomeworkRes.filter { it.type != 4 }.map { exam ->
+            val examDetailsRes = api.getExamDetails(key, exam.id)
+            val teacherAndSymbol = examDetailsRes.teacher.split(" [")
+            return Exam(
+                entryDate = null,
+                subject = exam.subject,
+                type = exam.type,
+                description = examDetailsRes.description,
+                teacher = teacherAndSymbol.first(),
+                typeName = when (exam.type) {
+                    1 -> "Sprawdzian"
+                    2 -> "Kartkówka"
+                    else -> "Praca klasowa"
+                },
+                date = exam.date,
+                teacherSymbol = teacherAndSymbol.last().removeSuffix("]"),
+            )
+        }
     }
 }

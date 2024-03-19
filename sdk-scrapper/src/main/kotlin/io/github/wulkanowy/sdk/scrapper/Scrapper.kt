@@ -370,8 +370,10 @@ class Scrapper {
 
     suspend fun getExams(startDate: LocalDate, endDate: LocalDate? = null): List<Exam> {
         if (diaryId == 0) return emptyList()
-
-        return student.getExams(startDate, endDate)
+        return when (isEduOne) {
+            true -> studentPlus.getExams(startDate, endDate)
+            else -> student.getExams(startDate, endDate)
+        }
     }
 
     suspend fun getGrades(semester: Int): Grades {

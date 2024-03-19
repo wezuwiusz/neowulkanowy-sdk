@@ -70,4 +70,17 @@ internal interface StudentPlusService {
         @Query("key") key: String,
         @Query("idOkresKlasyfikacyjny") semesterId: Int,
     ): GradesResponse
+
+    @GET("api/SprawdzianyZadaniaDomowe")
+    suspend fun getExamsAndHomework(
+        @Query("key") key: String,
+        @Query("dataOd") from: String,
+        @Query("dataDo") to: String,
+    ): List<ExamHomeworkPlus>
+
+    @GET("api/SprawdzianSzczegoly")
+    suspend fun getExamDetails(
+        @Query("key") key: String,
+        @Query("id") id: Int
+    ): ExamDetailsPlus
 }
