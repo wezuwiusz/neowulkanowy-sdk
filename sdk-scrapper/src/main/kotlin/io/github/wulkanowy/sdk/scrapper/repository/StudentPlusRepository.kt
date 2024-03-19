@@ -170,13 +170,12 @@ internal class StudentPlusRepository(
 
         return examsHomeworkRes.filter { it.type != 4 }.map { exam ->
             val examDetailsRes = api.getExamDetails(key, exam.id)
-            val teacherAndSymbol = examDetailsRes.teacher.split(" [")
             Exam(
                 entryDate = exam.date,
                 subject = exam.subject,
                 type = exam.type,
                 description = examDetailsRes.description,
-                teacher = teacherAndSymbol.first(),
+                teacher = examDetailsRes.teacher.substringBefore(" ["),
             ).apply {
                 typeName = when (exam.type) {
                     1 -> "Sprawdzian"
@@ -184,7 +183,7 @@ internal class StudentPlusRepository(
                     else -> "Praca klasowa"
                 }
                 date = exam.date
-                teacherSymbol = teacherAndSymbol.last().removeSuffix("]")
+                teacherSymbol = examDetailsRes.teacher.substringAfter(" [", "").substringBefore("]")
             }
         }
     }

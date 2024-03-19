@@ -1,0 +1,24 @@
+{
+  "typ": 4,
+  "data": "2024-03-19T00:00:00+01:00",
+  "terminOdpowiedzi": "2024-03-19T00:00:00+01:00",
+  "przedmiotNazwa": "Zajęcia artystyczne",
+  "nauczycielImieNazwisko": "Jan Kowalski",
+  "opis": "opis zadania",
+  "zalaczniki": [],
+  "linki": [],
+  "status": 0,
+  "odpowiedzWymagana": false,
+  "zadanieModulDydaktyczny": false,
+  "odpowiedz": {
+    "id": 3210,
+    "status": 1,
+    "odpowiedz": null,
+    "komentarzNauczyciela": null,
+    "linkiUcznia": [],
+    "zalaczniki": [],
+    "data": null,
+    "zadanieModulDydaktyczny": false
+  },
+  "id": 124
+}
