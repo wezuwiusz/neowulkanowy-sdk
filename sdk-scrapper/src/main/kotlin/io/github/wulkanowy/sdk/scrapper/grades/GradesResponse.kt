@@ -9,17 +9,14 @@ import kotlinx.serialization.json.JsonNames
 @OptIn(ExperimentalSerializationApi::class)
 internal data class GradesResponse(
 
-    @SerialName("ustawienia")
-    val settings: GradesSettings? = null,
-
     @SerialName("IsSrednia")
-    val isAverage: Boolean,
+    val isAverage: Boolean = false,
 
     @SerialName("IsPunkty")
-    val isPoints: Boolean,
+    val isPoints: Boolean = false,
 
     @SerialName("IsDlaDoroslych")
-    val isForAdults: Boolean,
+    val isForAdults: Boolean = false,
 
     @SerialName("TypOcen")
     val type: Int = 1,
@@ -30,6 +27,9 @@ internal data class GradesResponse(
 
     @SerialName("OcenyOpisowe")
     val gradesDescriptive: List<GradeDescriptive> = emptyList(),
+
+    @SerialName("ustawienia")
+    val settings: GradesSettings? = null,
 )
 
 @Serializable
@@ -41,7 +41,7 @@ internal data class GradesSettings(
     @SerialName("isPunkty")
     val isPoints: Boolean,
 
-    @SerialName("isDlaDoroslych")
+    @SerialName("isDorosli")
     val isForAdults: Boolean,
 )
 
@@ -86,7 +86,7 @@ internal data class GradeSubject(
 
     @SerialName("OcenyCzastkowe")
     @JsonNames("ocenyCzastkowe")
-    val grades: List<Grade> = emptyList(),
+    val grades: List<Grade>? = emptyList(),
 )
 
 @Serializable
