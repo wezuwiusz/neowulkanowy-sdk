@@ -66,7 +66,9 @@ internal interface StudentPlusService {
     suspend fun getDeviceRegistrationToken(): TokenResponse
 
     @GET("api/Zebrania")
-    suspend fun getConferences(): List<Conference>
+    suspend fun getConferences(
+        @Query("key") key: String,
+    ): List<Conference>
 
     @GET("api/RealizacjaZajec")
     suspend fun getCompletedLessons(

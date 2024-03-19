@@ -1,5 +1,6 @@
 package io.github.wulkanowy.sdk.scrapper.conferences
 
+import io.github.wulkanowy.sdk.scrapper.adapter.CustomDateAdapter
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
@@ -16,11 +17,11 @@ data class Conference(
     val place: String,
 
     @SerialName("TematZebrania")
+    @JsonNames("opis")
     val topic: String,
 
     @SerialName("Agenda")
-    @JsonNames("opis")
-    val agenda: String,
+    val agenda: String = "",
 
     @SerialName("ObecniNaZebraniu")
     @JsonNames("obecniNaZebraniu")
@@ -34,6 +35,7 @@ data class Conference(
     @JsonNames("id")
     val id: Int,
 
-    @Transient
+    @JsonNames("dataCzas")
+    @Serializable(with = CustomDateAdapter::class)
     val date: LocalDateTime = LocalDateTime.now(),
 )

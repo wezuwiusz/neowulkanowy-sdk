@@ -1,0 +1,18 @@
+[
+  {
+    "dataCzas": "2024-03-20T23:05:00+01:00",
+    "sala": "Miejsce",
+    "opis": "Temat",
+    "zebranieOnline": null,
+    "obecniNaZebraniu": "",
+    "id": 2
+  },
+  {
+    "dataCzas": "2024-03-19T23:05:00+01:00",
+    "sala": "",
+    "opis": "Temat",
+    "zebranieOnline": "",
+    "obecniNaZebraniu": "Jan Kowalski",
+    "id": 1
+  }
+]

@@ -432,7 +432,10 @@ class Scrapper {
         else -> student.getNotes()
     }
 
-    suspend fun getConferences(): List<Conference> = student.getConferences()
+    suspend fun getConferences(): List<Conference> = when (isEduOne) {
+        true -> studentPlus.getConferences(studentId, diaryId, unitId)
+        else -> student.getConferences()
+    }
 
     suspend fun getMenu(date: LocalDate): List<Menu> = student.getMenu(date)
 

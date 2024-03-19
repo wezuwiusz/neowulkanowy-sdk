@@ -9,6 +9,7 @@ import io.github.wulkanowy.sdk.scrapper.attendance.AttendanceExcusePlusResponseI
 import io.github.wulkanowy.sdk.scrapper.attendance.AttendanceExcusesPlusResponse
 import io.github.wulkanowy.sdk.scrapper.attendance.AttendanceSummary
 import io.github.wulkanowy.sdk.scrapper.attendance.SentExcuseStatus
+import io.github.wulkanowy.sdk.scrapper.conferences.Conference
 import io.github.wulkanowy.sdk.scrapper.exams.Exam
 import io.github.wulkanowy.sdk.scrapper.exception.FeatureDisabledException
 import io.github.wulkanowy.sdk.scrapper.exception.VulcanClientError
@@ -348,5 +349,10 @@ internal class StudentPlusRepository(
                 }
             }
             .sortedWith(compareBy({ it.date }, { it.category }))
+    }
+
+    suspend fun getConferences(studentId: Int, diaryId: Int, unitId: Int): List<Conference> {
+        val key = getEncodedKey(studentId, diaryId, unitId)
+        return api.getConferences(key)
     }
 }
