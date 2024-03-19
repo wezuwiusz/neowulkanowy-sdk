@@ -90,5 +90,35 @@
     "adnotacja": 0,
     "dodatkowe": false,
     "zrealizowane": false
+  },
+  {
+    "data": "2024-03-20T00:00:00+01:00",
+    "godzinaOd": "2024-03-20T10:30:00+01:00",
+    "godzinaDo": "2024-03-20T11:15:00+01:00",
+    "prowadzacy": "Nowy Nauczyciel",
+    "prowadzacyWspomagajacy1": "",
+    "prowadzacyWspomagajacy2": "",
+    "przedmiot": "Język angielski",
+    "podzial": "",
+    "sala": "13",
+    "pseudonim": null,
+    "zmiany": [
+      {
+        "zmiana": 7,
+        "typProwadzacego": 1,
+        "dzien": null,
+        "nrLekcji": null,
+        "godzinaOd": null,
+        "godzinaDo": null,
+        "grupa": null,
+        "zajecia": null,
+        "sala": "",
+        "prowadzacy": "Nauczyciel Stary",
+        "informacjeNieobecnosc": null
+      }
+    ],
+    "adnotacja": 1,
+    "dodatkowe": false,
+    "zrealizowane": false
   }
 ]

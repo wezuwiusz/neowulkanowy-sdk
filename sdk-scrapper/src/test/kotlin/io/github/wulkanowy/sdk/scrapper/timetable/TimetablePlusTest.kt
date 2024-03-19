@@ -23,7 +23,7 @@ class TimetablePlusTest : BaseLocalTest() {
 
     @Test
     fun getAllTest() {
-        assertEquals(4, timetable.size)
+        assertEquals(5, timetable.size)
     }
 
     @Test
@@ -106,6 +106,27 @@ class TimetablePlusTest : BaseLocalTest() {
             assertEquals("", group)
             assertEquals("Oddział nieobecny. Powód nieobecności: powód nieobecności", info)
             assertEquals(true, canceled)
+            assertEquals(true, changes)
+        }
+    }
+
+    @Test
+    fun getExchangeLesson() {
+        with(timetable[4]) {
+            assertEquals(0, number)
+            assertEquals(getLocalDateTime(2024, 3, 20, 10, 30, 0), start)
+            assertEquals(getLocalDateTime(2024, 3, 20, 11, 15, 0), end)
+
+            assertEquals("Język angielski", subject)
+            assertEquals("Nowy Nauczyciel", teacher)
+            assertEquals("13", room)
+            assertEquals("", subjectOld)
+            assertEquals("Nauczyciel Stary", teacherOld)
+            assertEquals("", roomOld)
+
+            assertEquals("", group)
+            assertEquals("Nieobecny nauczyciel. Zaplanowane jest zastępstwo za nauczyciela: Nauczyciel Stary", info)
+            assertEquals(false, canceled)
             assertEquals(true, changes)
         }
     }

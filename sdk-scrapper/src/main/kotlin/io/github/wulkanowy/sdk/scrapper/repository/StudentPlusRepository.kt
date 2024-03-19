@@ -24,6 +24,7 @@ import io.github.wulkanowy.sdk.scrapper.register.RegisterStudent
 import io.github.wulkanowy.sdk.scrapper.service.StudentPlusService
 import io.github.wulkanowy.sdk.scrapper.timetable.CompletedLesson
 import io.github.wulkanowy.sdk.scrapper.timetable.Lesson
+import io.github.wulkanowy.sdk.scrapper.timetable.LessonPlusChange
 import io.github.wulkanowy.sdk.scrapper.timetable.Timetable
 import io.github.wulkanowy.sdk.scrapper.timetable.mapCompletedLessons
 import io.github.wulkanowy.sdk.scrapper.toFormat
@@ -266,7 +267,7 @@ internal class StudentPlusRepository(
                 room = lesson.sala,
                 roomOld = "",
                 teacher = lesson.prowadzacy,
-                teacherOld = "",
+                teacherOld = lesson.zmiany.getFirstNothingOrThrow()?.prowadzacy.orEmpty(),
                 info = buildString {
                     lesson.zmiany.forEach {
                         when (it.typProwadzacego) {
@@ -277,6 +278,7 @@ internal class StudentPlusRepository(
                         when (it.zmiana) {
                             1 -> append("Skutek nieobecności: ${it.informacjeNieobecnosc}")
                             4 -> append("Powód nieobecności: ${it.informacjeNieobecnosc}")
+                            7 -> append("Zaplanowane jest zastępstwo za nauczyciela: ${it.prowadzacy}")
                         }
                     }
                 },
@@ -291,5 +293,12 @@ internal class StudentPlusRepository(
             additional = emptyList(),
             headers = emptyList(),
         )
+    }
+
+    private fun List<LessonPlusChange>.getFirstNothingOrThrow(): LessonPlusChange? {
+        return when {
+            isEmpty() -> null
+            else -> single()
+        }
     }
 }

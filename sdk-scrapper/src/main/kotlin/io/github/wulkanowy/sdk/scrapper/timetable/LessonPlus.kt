@@ -50,11 +50,11 @@ internal data class LessonPlusChange(
     // @SerialName("grupa")
     // val grupa: Any?,
     @SerialName("informacjeNieobecnosc")
-    val informacjeNieobecnosc: String,
+    val informacjeNieobecnosc: String?,
     // @SerialName("nrLekcji")
     // val nrLekcji: Any?,
-    // @SerialName("prowadzacy")
-    // val prowadzacy: Any?,
+    @SerialName("prowadzacy")
+    val prowadzacy: String?,
     // @SerialName("sala")
     // val sala: Any?,
     @SerialName("typProwadzacego")
