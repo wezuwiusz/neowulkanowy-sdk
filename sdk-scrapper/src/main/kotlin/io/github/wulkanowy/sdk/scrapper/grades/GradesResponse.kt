@@ -46,6 +46,7 @@ internal data class GradesSettings(
 )
 
 @Serializable
+@OptIn(ExperimentalSerializationApi::class)
 internal data class GradeSubject(
 
     @SerialName("WidocznyPrzedmiot")
