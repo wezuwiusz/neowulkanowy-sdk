@@ -285,6 +285,8 @@ internal class StudentPlusRepository(
 
                         when (it.zmiana) {
                             1 -> append("Skutek nieobecności: ${it.informacjeNieobecnosc}")
+                            2 -> append(it.informacjeNieobecnosc) // todo
+                            3 -> append(it.informacjeNieobecnosc) // todo
                             4 -> append("Powód nieobecności: ${it.informacjeNieobecnosc}")
 
                             // przeniesienie z dnia
@@ -313,8 +315,8 @@ internal class StudentPlusRepository(
                         append(". ")
                     }
                 }.trim().trim('.'),
-                changes = lesson.zmiany.isNotEmpty(),
-                canceled = lesson.zmiany.any { it.zmiana == 4 || it.zmiana == 1 || it.zmiana == 5 },
+                changes = lesson.adnotacja == REPLACEMENT || lesson.adnotacja == RELOCATION || lesson.zmiany.isNotEmpty(),
+                canceled = lesson.adnotacja == CANCELLATION || lesson.zmiany.any { it.zmiana == 1 || it.zmiana == 4 || it.zmiana == 5 },
             )
         }.sortedBy { it.start }
 
@@ -324,5 +326,11 @@ internal class StudentPlusRepository(
             additional = emptyList(),
             headers = emptyList(),
         )
+    }
+
+    companion object {
+        const val REPLACEMENT = 1
+        const val RELOCATION = 2
+        const val CANCELLATION = 3
     }
 }

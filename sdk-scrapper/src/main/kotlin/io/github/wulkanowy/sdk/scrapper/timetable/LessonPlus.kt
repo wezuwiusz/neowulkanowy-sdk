@@ -10,7 +10,7 @@ internal data class LessonPlus(
     @SerialName("adnotacja")
     val adnotacja: Int,
     @SerialName("data")
-    val `data`: String,
+    val date: String,
     @SerialName("dodatkowe")
     val dodatkowe: Boolean,
     @SerialName("godzinaDo")
