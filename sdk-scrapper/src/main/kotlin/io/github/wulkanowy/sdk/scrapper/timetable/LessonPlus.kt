@@ -50,8 +50,8 @@ internal data class LessonPlusChange(
     @SerialName("godzinaOd")
     @Serializable(with = CustomDateAdapter::class)
     val godzinaOd: LocalDateTime?,
-    // @SerialName("grupa")
-    // val grupa: Any?,
+    @SerialName("grupa")
+    val grupa: String?,
     @SerialName("informacjeNieobecnosc")
     val informacjeNieobecnosc: String?,
     // @SerialName("nrLekcji")
@@ -62,8 +62,8 @@ internal data class LessonPlusChange(
     val sala: String?,
     @SerialName("typProwadzacego")
     val typProwadzacego: Int,
-    // @SerialName("zajecia")
-    // val zajecia: Any?,
+    @SerialName("zajecia")
+    val zajecia: String?,
     @SerialName("zmiana")
     val zmiana: Int,
 )

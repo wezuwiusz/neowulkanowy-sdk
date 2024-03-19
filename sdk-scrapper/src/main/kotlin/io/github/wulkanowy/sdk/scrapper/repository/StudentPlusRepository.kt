@@ -24,7 +24,6 @@ import io.github.wulkanowy.sdk.scrapper.register.RegisterStudent
 import io.github.wulkanowy.sdk.scrapper.service.StudentPlusService
 import io.github.wulkanowy.sdk.scrapper.timetable.CompletedLesson
 import io.github.wulkanowy.sdk.scrapper.timetable.Lesson
-import io.github.wulkanowy.sdk.scrapper.timetable.LessonPlusChange
 import io.github.wulkanowy.sdk.scrapper.timetable.Timetable
 import io.github.wulkanowy.sdk.scrapper.timetable.mapCompletedLessons
 import io.github.wulkanowy.sdk.scrapper.toFormat
@@ -262,12 +261,12 @@ internal class StudentPlusRepository(
                 end = lesson.godzinaDo,
                 date = lesson.godzinaOd.toLocalDate(),
                 subject = lesson.przedmiot,
-                subjectOld = "",
+                subjectOld = lesson.zmiany.find { !it.zajecia.isNullOrBlank() }?.zajecia.orEmpty(),
                 group = lesson.podzial.orEmpty(),
                 room = lesson.sala,
-                roomOld = "",
+                roomOld = lesson.zmiany.find { !it.sala.isNullOrBlank() }?.sala.orEmpty(),
                 teacher = lesson.prowadzacy,
-                teacherOld = lesson.zmiany.getFirstNothingOrThrow()?.prowadzacy.orEmpty(),
+                teacherOld = lesson.zmiany.find { !it.prowadzacy.isNullOrBlank() }?.prowadzacy.orEmpty(),
                 info = buildString {
                     lesson.zmiany.forEach {
                         when (it.typProwadzacego) {
@@ -277,12 +276,18 @@ internal class StudentPlusRepository(
                                 }
                             }
 
-                            1 -> append("Nieobecny nauczyciel. ")
+                            1 -> {
+                                if (it.zmiana != 6) {
+                                    append("Nieobecny nauczyciel. ")
+                                }
+                            }
                         }
 
                         when (it.zmiana) {
                             1 -> append("Skutek nieobecności: ${it.informacjeNieobecnosc}")
                             4 -> append("Powód nieobecności: ${it.informacjeNieobecnosc}")
+
+                            // przeniesienie z dnia
                             5 -> {
                                 append("Zajęcia są przeniesione na: ")
                                 append(it.dzien?.toLocalDate())
@@ -292,6 +297,7 @@ internal class StudentPlusRepository(
                                 append(it.godzinaDo?.toLocalTime())
                             }
 
+                            // przeniesienie na dzień
                             6 -> {
                                 append("Zajęcia są przeniesione z dnia ")
                                 append(it.dzien?.toLocalDate())
@@ -301,10 +307,12 @@ internal class StudentPlusRepository(
                                 append(it.godzinaDo?.toLocalTime())
                             }
 
+                            // zastępstwo nauczyciela
                             7 -> append("Zaplanowane jest zastępstwo za nauczyciela: ${it.prowadzacy}")
                         }
+                        append(". ")
                     }
-                },
+                }.trim().trim('.'),
                 changes = lesson.zmiany.isNotEmpty(),
                 canceled = lesson.zmiany.any { it.zmiana == 4 || it.zmiana == 1 || it.zmiana == 5 },
             )
@@ -316,12 +324,5 @@ internal class StudentPlusRepository(
             additional = emptyList(),
             headers = emptyList(),
         )
-    }
-
-    private fun List<LessonPlusChange>.getFirstNothingOrThrow(): LessonPlusChange? {
-        return when {
-            isEmpty() -> null
-            else -> single()
-        }
     }
 }

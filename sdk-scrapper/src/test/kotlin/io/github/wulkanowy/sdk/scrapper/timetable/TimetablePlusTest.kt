@@ -23,7 +23,7 @@ class TimetablePlusTest : BaseLocalTest() {
 
     @Test
     fun getAllTest() {
-        assertEquals(7, timetable.size)
+        assertEquals(9, timetable.size)
     }
 
     @Test
@@ -112,7 +112,7 @@ class TimetablePlusTest : BaseLocalTest() {
 
     @Test
     fun getExchangeLesson() {
-        with(timetable[4]) {
+        with(timetable[5]) {
             assertEquals(0, number)
             assertEquals(getLocalDateTime(2024, 3, 20, 10, 30, 0), start)
             assertEquals(getLocalDateTime(2024, 3, 20, 11, 15, 0), end)
@@ -133,7 +133,7 @@ class TimetablePlusTest : BaseLocalTest() {
 
     @Test
     fun getMovedLessonFrom() {
-        with(timetable[5]) {
+        with(timetable[6]) {
             assertEquals(0, number)
             assertEquals(getLocalDateTime(2024, 3, 20, 11, 30, 0), start)
             assertEquals(getLocalDateTime(2024, 3, 20, 12, 15, 0), end)
@@ -141,9 +141,9 @@ class TimetablePlusTest : BaseLocalTest() {
             assertEquals("Edukacja muzyczna", subject)
             assertEquals("Jan Kowalski", teacher)
             assertEquals("10", room)
-            assertEquals("", subjectOld)
+            assertEquals("Edukacja muzyczna", subjectOld)
             assertEquals("", teacherOld)
-            assertEquals("", roomOld)
+            assertEquals("19", roomOld)
 
             assertEquals("|CH", group)
             assertEquals("Oddział nieobecny. Zajęcia są przeniesione na: 2024-03-21 w godzinach 14:10-14:55", info)
@@ -153,8 +153,50 @@ class TimetablePlusTest : BaseLocalTest() {
     }
 
     @Test
+    fun getLessonMovedWithReplacementToTest() {
+        with(timetable[4]) {
+            assertEquals(0, number)
+            assertEquals(getLocalDateTime(2024, 3, 20, 9, 40, 0), start)
+            assertEquals(getLocalDateTime(2024, 3, 20, 10, 25, 0), end)
+
+            assertEquals("Edukacja informatyczna", subject)
+            assertEquals("Bober Zbigniew", teacher)
+            assertEquals("17", room)
+            assertEquals("Edukacja informatyczna", subjectOld)
+            assertEquals("Kowalski Jan", teacherOld)
+            assertEquals("", roomOld)
+
+            assertEquals("", group)
+            assertEquals("Zajęcia są przeniesione z dnia 2024-03-20 w godzinach 12:30-13:15. Nieobecny nauczyciel. Zaplanowane jest zastępstwo za nauczyciela: Kowalski Jan", info)
+            assertEquals(false, canceled)
+            assertEquals(true, changes)
+        }
+    }
+
+    @Test
+    fun getLessonMovedWithReplacementFromTest() {
+        with(timetable[7]) {
+            assertEquals(0, number)
+            assertEquals(getLocalDateTime(2024, 3, 20, 12, 30, 0), start)
+            assertEquals(getLocalDateTime(2024, 3, 20, 13, 15, 0), end)
+
+            assertEquals("Edukacja informatyczna", subject)
+            assertEquals("Jan Kowalski", teacher)
+            assertEquals("", room)
+            assertEquals("Edukacja informatyczna", subjectOld)
+            assertEquals("", teacherOld)
+            assertEquals("17", roomOld)
+
+            assertEquals("", group)
+            assertEquals("Oddział nieobecny. Zajęcia są przeniesione na: 2024-03-20 w godzinach 09:40-10:25", info)
+            assertEquals(true, canceled)
+            assertEquals(true, changes)
+        }
+    }
+
+    @Test
     fun getMovedLessonTo() {
-        with(timetable[6]) {
+        with(timetable[8]) {
             assertEquals(0, number)
             assertEquals(getLocalDateTime(2024, 3, 20, 14, 10, 0), start)
             assertEquals(getLocalDateTime(2024, 3, 20, 14, 55, 0), end)
@@ -162,9 +204,9 @@ class TimetablePlusTest : BaseLocalTest() {
             assertEquals("Edukacja muzyczna", subject)
             assertEquals("Jan Kowalski", teacher)
             assertEquals("19", room)
-            assertEquals("", subjectOld)
+            assertEquals("Edukacja muzyczna", subjectOld)
             assertEquals("", teacherOld)
-            assertEquals("", roomOld)
+            assertEquals("10", roomOld)
 
             assertEquals("|CH", group)
             assertEquals("Zajęcia są przeniesione z dnia 2024-03-20 w godzinach 11:30-12:15", info)

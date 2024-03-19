@@ -180,5 +180,78 @@
     "adnotacja": 2,
     "dodatkowe": false,
     "zrealizowane": false
+  },
+  {
+    "data": "2024-03-20T00:00:00+01:00",
+    "godzinaOd": "2024-03-20T09:40:00+01:00",
+    "godzinaDo": "2024-03-20T10:25:00+01:00",
+    "prowadzacy": "Bober Zbigniew",
+    "prowadzacyWspomagajacy1": "",
+    "prowadzacyWspomagajacy2": "",
+    "przedmiot": "Edukacja informatyczna",
+    "podzial": "",
+    "sala": "17",
+    "pseudonim": null,
+    "zmiany": [
+      {
+        "zmiana": 6,
+        "typProwadzacego": 0,
+        "dzien": "2024-03-20T00:00:00+01:00",
+        "nrLekcji": 6,
+        "godzinaOd": "2024-03-20T12:30:00+01:00",
+        "godzinaDo": "2024-03-20T13:15:00+01:00",
+        "grupa": null,
+        "zajecia": "Edukacja informatyczna",
+        "sala": null,
+        "prowadzacy": null,
+        "informacjeNieobecnosc": null
+      },
+      {
+        "zmiana": 7,
+        "typProwadzacego": 1,
+        "dzien": null,
+        "nrLekcji": null,
+        "godzinaOd": null,
+        "godzinaDo": null,
+        "grupa": null,
+        "zajecia": null,
+        "sala": "",
+        "prowadzacy": "Kowalski Jan",
+        "informacjeNieobecnosc": null
+      }
+    ],
+    "adnotacja": 1,
+    "dodatkowe": false,
+    "zrealizowane": false
+  },
+  {
+    "data": "2024-03-20T00:00:00+01:00",
+    "godzinaOd": "2024-03-20T12:30:00+01:00",
+    "godzinaDo": "2024-03-20T13:15:00+01:00",
+    "prowadzacy": "Jan Kowalski",
+    "prowadzacyWspomagajacy1": "",
+    "prowadzacyWspomagajacy2": "",
+    "przedmiot": "Edukacja informatyczna",
+    "podzial": "",
+    "sala": "",
+    "pseudonim": null,
+    "zmiany": [
+      {
+        "zmiana": 5,
+        "typProwadzacego": 0,
+        "dzien": "2024-03-20T00:00:00+01:00",
+        "nrLekcji": 3,
+        "godzinaOd": "2024-03-20T09:40:00+01:00",
+        "godzinaDo": "2024-03-20T10:25:00+01:00",
+        "grupa": null,
+        "zajecia": "Edukacja informatyczna",
+        "sala": "17",
+        "prowadzacy": null,
+        "informacjeNieobecnosc": null
+      }
+    ],
+    "adnotacja": 3,
+    "dodatkowe": false,
+    "zrealizowane": false
   }
 ]
