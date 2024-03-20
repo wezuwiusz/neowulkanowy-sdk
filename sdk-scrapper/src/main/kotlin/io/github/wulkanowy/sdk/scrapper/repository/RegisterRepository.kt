@@ -335,11 +335,15 @@ internal class RegisterRepository(
             .getContext(url = baseStudentPlus + "api/Context").students
             .map { diary ->
                 val key = getDecodedKey(diary.key)
-                val semesters = studentPlus.getSemesters(
-                    url = baseStudentPlus + "api/OkresyKlasyfikacyjne",
-                    key = diary.key,
-                    diaryId = diary.registerId,
-                ).map { semester ->
+                val semesters = kotlin.runCatching {
+                    studentPlus.getSemesters(
+                        url = baseStudentPlus + "api/OkresyKlasyfikacyjne",
+                        key = diary.key,
+                        diaryId = diary.registerId,
+                    )
+                }.onFailure {
+                    logger.error("Can't fetch semesters", it)
+                }.getOrNull().orEmpty().map { semester ->
                     Diary.Semester(
                         number = semester.numerOkresu,
                         start = semester.dataOd,

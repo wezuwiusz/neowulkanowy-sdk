@@ -6,7 +6,9 @@ internal fun getStudentsFromDiaries(
     isEduOne: Boolean,
     unitId: Int,
 ): List<RegisterStudent> = diaries
-    .filter { it.semesters.orEmpty().isNotEmpty() || it.kindergartenDiaryId != 0 }
+    .filter {
+        it.semesters.orEmpty().isNotEmpty() || it.kindergartenDiaryId != 0 || it.isAuthorized == false
+    }
     .sortedByDescending { it.level }
     .distinctBy { listOf(it.studentId, it.semesters?.firstOrNull()?.classId ?: it.symbol) }
     .map { diary ->
