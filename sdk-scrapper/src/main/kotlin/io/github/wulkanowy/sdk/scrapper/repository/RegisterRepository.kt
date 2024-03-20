@@ -163,9 +163,10 @@ internal class RegisterRepository(
                 if (authInfo?.parentIds.isNullOrEmpty() && authInfo?.studentIds.isNullOrEmpty()) {
                     null to emptyList()
                 } else {
+                    val eduOneDiaries = getEduOneDiaries()
                     when {
-                        isEduOne -> null to getEduOneDiaries()
-                        else -> getStudentCache() to getStudentDiaries()
+                        isEduOne -> eduOneDiaries.any { it.first } to eduOneDiaries.map { it.second }
+                        else -> isStudentFromParentAccount() to getStudentDiaries()
                     }
                 }
             }
@@ -277,7 +278,7 @@ internal class RegisterRepository(
     }
 
     // used only for check is student from parent account
-    private suspend fun getStudentCache(): Boolean? {
+    private suspend fun isStudentFromParentAccount(): Boolean? {
         val studentPageUrl = url.generate(UrlGenerator.Site.STUDENT) + "LoginEndpoint.aspx"
         val start = student.getStart(studentPageUrl)
 
@@ -313,7 +314,7 @@ internal class RegisterRepository(
         .handleErrors()
         .data.orEmpty()
 
-    private suspend fun getEduOneDiaries(): List<Diary> {
+    private suspend fun getEduOneDiaries(): List<Pair<Boolean, Diary>> {
         val baseStudentPlus = url.generate(UrlGenerator.Site.STUDENT_PLUS)
         val studentPageUrl = baseStudentPlus + "LoginEndpoint.aspx"
         val start = student.getStart(studentPageUrl)
@@ -333,13 +334,13 @@ internal class RegisterRepository(
 
         return studentPlus
             .getContext(url = baseStudentPlus + "api/Context").students
-            .map { diary ->
-                val key = getDecodedKey(diary.key)
+            .map { context ->
+                val key = getDecodedKey(context.key)
                 val semesters = kotlin.runCatching {
                     studentPlus.getSemesters(
                         url = baseStudentPlus + "api/OkresyKlasyfikacyjne",
-                        key = diary.key,
-                        diaryId = diary.registerId,
+                        key = context.key,
+                        diaryId = context.registerId,
                     )
                 }.onFailure {
                     logger.error("Can't fetch semesters", it)
@@ -356,44 +357,44 @@ internal class RegisterRepository(
                         classId = 0,
                     )
                 }
-                val level = diary.className.takeWhile { it.isDigit() }
-                Diary(
-                    id = diary.registerId,
+                val level = context.className.takeWhile { it.isDigit() }
+                context.opiekunUcznia to Diary(
+                    id = context.registerId,
                     studentId = key.studentId,
-                    studentName = diary.studentName.substringBefore(" ", ""),
-                    studentSecondName = diary.studentName.substringAfter(" ", "").substringBefore(" ", ""),
-                    studentSurname = diary.studentName.substringAfterLast(" ", ""),
+                    studentName = context.studentName.substringBefore(" ", ""),
+                    studentSecondName = context.studentName.substringAfter(" ", "").substringBefore(" ", ""),
+                    studentSurname = context.studentName.substringAfterLast(" ", ""),
                     studentNick = "",
                     isDiary = true,
                     diaryId = key.diaryId,
                     kindergartenDiaryId = 0,
                     fosterDiaryId = 0,
                     level = level.toInt(), // todo
-                    symbol = diary.className.replace(level, ""), // todo
-                    name = diary.className,
-                    year = diary.registerDateFrom.year,
+                    symbol = context.className.replace(level, ""), // todo
+                    name = context.className,
+                    year = context.registerDateFrom.year,
                     semesters = semesters,
-                    start = diary.registerDateFrom,
-                    end = diary.registerDateTo,
+                    start = context.registerDateFrom,
+                    end = context.registerDateTo,
                     componentUnitId = key.unitId,
                     sioTypeId = null,
-                    isAdults = diary.isAdults,
-                    isPostSecondary = diary.isPolicealna,
-                    is13 = diary.is13,
-                    isArtistic = diary.isArtystyczna,
-                    isArtistic13 = diary.isArtystyczna13,
-                    isSpecial = diary.isSpecjalna,
-                    isKindergarten = diary.isPrzedszkolak,
+                    isAdults = context.isAdults,
+                    isPostSecondary = context.isPolicealna,
+                    is13 = context.is13,
+                    isArtistic = context.isArtystyczna,
+                    isArtistic13 = context.isArtystyczna13,
+                    isSpecial = context.isSpecjalna,
+                    isKindergarten = context.isPrzedszkolak,
                     isFoster = null,
                     isArchived = null,
-                    isCharges = diary.config.isPlatnosci,
-                    isPayments = diary.config.isOplaty,
+                    isCharges = context.config.isPlatnosci,
+                    isPayments = context.config.isOplaty,
                     isPayButtonOn = null,
-                    canMergeAccounts = diary.config.isScalanieKont,
-                    fullName = diary.studentName,
+                    canMergeAccounts = context.config.isScalanieKont,
+                    fullName = context.studentName,
                     o365PassType = null,
                     isAdult = null,
-                    isAuthorized = !diary.isAuthorizationRequired,
+                    isAuthorized = !context.isAuthorizationRequired,
                     citizenship = null,
                 )
             }
