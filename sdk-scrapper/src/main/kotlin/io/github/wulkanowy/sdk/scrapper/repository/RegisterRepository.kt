@@ -163,9 +163,11 @@ internal class RegisterRepository(
                 if (authInfo?.parentIds.isNullOrEmpty() && authInfo?.studentIds.isNullOrEmpty()) {
                     null to emptyList()
                 } else {
-                    val eduOneDiaries = getEduOneDiaries()
                     when {
-                        isEduOne -> eduOneDiaries.any { it.first } to eduOneDiaries.map { it.second }
+                        isEduOne -> getEduOneDiaries().let { isParentAndDiaries ->
+                            isParentAndDiaries.any { it.first } to isParentAndDiaries.map { it.second }
+                        }
+
                         else -> isStudentFromParentAccount() to getStudentDiaries()
                     }
                 }

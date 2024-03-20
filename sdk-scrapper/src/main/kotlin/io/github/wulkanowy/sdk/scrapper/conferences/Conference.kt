@@ -4,7 +4,6 @@ import io.github.wulkanowy.sdk.scrapper.adapter.CustomDateAdapter
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.Transient
 import kotlinx.serialization.json.JsonNames
 import java.time.LocalDateTime
 

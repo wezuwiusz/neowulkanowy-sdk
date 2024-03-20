@@ -14,14 +14,15 @@ internal class HttpErrorInterceptor : Interceptor {
 
         if (response.isSuccessful || response.isRedirect) return response
 
-        val message = if (response.body?.contentType()?.subtype == "json") {
-            response.body?.string().orEmpty()
-        } else response.message
+        val message = when (response.body?.contentType()?.subtype) {
+            "json" -> response.body?.string().orEmpty()
+            else -> response.message
+        }
 
         return when (response.code) {
             429 -> throw NotLoggedInException(message)
             404 -> throw ScrapperException(response.code.toString() + ": " + message, response.code)
-            in 400..402 -> throw VulcanClientError(response.code.toString() + ": " + message, response.code)
+            in 400..402 -> throw VulcanClientError(response.code.toString() + ": " + response.body?.string(), response.code)
             403 -> {
                 if (response.body?.contentType()?.subtype == "json") {
                     throw VulcanClientError(response.code.toString() + ": " + message, response.code)
