@@ -340,12 +340,10 @@ internal class StudentPlusRepository(
             val rangeMatch = headers.find {
                 processedDate in it.dataOd.toLocalDate()..it.dataDo.toLocalDate()
             }
-            (exactMatch ?: rangeMatch)?.let {
-                TimetableDayHeader(
-                    date = processedDate,
-                    content = it.nazwa,
-                )
-            }
+            TimetableDayHeader(
+                date = processedDate,
+                content = (exactMatch ?: rangeMatch)?.nazwa.orEmpty(),
+            )
         }
 
         return Timetable(

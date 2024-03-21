@@ -29,14 +29,14 @@ class TimetablePlusTest : BaseLocalTest() {
     @Test
     fun getAllTest() {
         assertEquals(9, lessons.size)
-        assertEquals(5, headers.size)
+        assertEquals(8, headers.size)
     }
 
     @Test
     fun getTimetableHeaderRange() {
-        listOf(0, 1, 2).forEach {
+        listOf(3, 4, 5).forEach {
             with(headers[it]) {
-                assertEquals(getLocalDate(2024, 3, 21 + it), date)
+                assertEquals(getLocalDate(2024, 3, 18 + it), date)
                 assertEquals("Wiosenna przerwa świąteczna", content)
             }
         }
@@ -44,11 +44,11 @@ class TimetablePlusTest : BaseLocalTest() {
 
     @Test
     fun getTimetableHeaderDay() {
-        with(headers[3]) {
+        with(headers[6]) {
             assertEquals(getLocalDate(2024, 3, 24), date)
             assertEquals("Wielkanoc", content)
         }
-        with(headers[4]) {
+        with(headers[7]) {
             assertEquals(getLocalDate(2024, 3, 25), date)
             assertEquals("Poniedziałek Wielkanocny", content)
         }
