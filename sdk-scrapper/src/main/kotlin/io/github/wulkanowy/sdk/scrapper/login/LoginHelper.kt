@@ -12,6 +12,7 @@ import io.github.wulkanowy.sdk.scrapper.Scrapper.LoginType.STANDARD
 import io.github.wulkanowy.sdk.scrapper.exception.ScrapperException
 import io.github.wulkanowy.sdk.scrapper.exception.VulcanException
 import io.github.wulkanowy.sdk.scrapper.handleErrors
+import io.github.wulkanowy.sdk.scrapper.isCurrentLoginHasEduOne
 import io.github.wulkanowy.sdk.scrapper.register.HomePageResponse
 import io.github.wulkanowy.sdk.scrapper.service.LoginService
 import okhttp3.HttpUrl
@@ -59,17 +60,25 @@ internal class LoginHelper(
         Jspoon.create().adapter(CertificateResponse::class.java)
     }
 
-    suspend fun login(email: String, password: String): HomePageResponse {
+    suspend fun login(email: String, password: String): LoginResult {
         val res = sendCredentials(email, password)
         logger.info("Login ${loginType.name} started")
-        when {
-            res.title.startsWith("Witryna ucznia i rodzica") -> return HomePageResponse()
-            res.action.isBlank() -> throw VulcanException("Invalid certificate page: '${res.title.ifBlank { res.toString().take(32) }}'. Try again")
+        if (res.action.isBlank()) {
+            throw VulcanException("Invalid certificate page: '${res.title.ifBlank { res.toString().take(32) }}'. Try again")
         }
 
-        val cert = sendCertificate(res, email)
+        val homePageResponse = sendCertificate(res, email)
         logger.debug("Login completed")
-        return cert
+
+        val studentModuleUrls = homePageResponse.studentSchools.map { it.attr("href") }
+        val isEduOne = isCurrentLoginHasEduOne(studentModuleUrls, urlGenerator)
+
+        logger.debug("Is school use eduOne: $isEduOne")
+
+        return LoginResult(
+            isStudentSchoolUseEduOne = isEduOne,
+            studentSchools = studentModuleUrls,
+        )
     }
 
     fun loginModule(site: UrlGenerator.Site): Pair<HttpUrl, Document> {

@@ -37,9 +37,9 @@ class ServiceManagerTest : BaseLocalTest() {
             diaryId = 101,
             kindergartenDiaryId = 0,
             schoolYear = 2019,
+            emptyCookieJarIntercept = false,
             androidVersion = "",
             buildTag = "",
-            emptyCookieJarIntercept = false,
             userAgentTemplate = "",
         )
         manager.setInterceptor({ throw ScrapperException("Test") })
@@ -71,9 +71,9 @@ class ServiceManagerTest : BaseLocalTest() {
             diaryId = 101,
             kindergartenDiaryId = 0,
             schoolYear = 2019,
+            emptyCookieJarIntercept = false,
             androidVersion = "",
             buildTag = "",
-            emptyCookieJarIntercept = false,
             userAgentTemplate = "",
         )
         manager.setInterceptor(
@@ -143,9 +143,9 @@ class ServiceManagerTest : BaseLocalTest() {
             diaryId = 101,
             kindergartenDiaryId = 0,
             schoolYear = 2019,
+            emptyCookieJarIntercept = false,
             androidVersion = "",
             buildTag = "",
-            emptyCookieJarIntercept = false,
             userAgentTemplate = "",
         )
 

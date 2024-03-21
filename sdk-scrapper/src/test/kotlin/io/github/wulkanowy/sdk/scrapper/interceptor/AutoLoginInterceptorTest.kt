@@ -4,11 +4,11 @@ import io.github.wulkanowy.sdk.scrapper.BaseLocalTest
 import io.github.wulkanowy.sdk.scrapper.CookieJarCabinet
 import io.github.wulkanowy.sdk.scrapper.Scrapper
 import io.github.wulkanowy.sdk.scrapper.login.LoginHelper
+import io.github.wulkanowy.sdk.scrapper.login.LoginResult
 import io.github.wulkanowy.sdk.scrapper.login.LoginTest
 import io.github.wulkanowy.sdk.scrapper.login.UrlGenerator
 import io.github.wulkanowy.sdk.scrapper.messages.MessagesTest
 import io.github.wulkanowy.sdk.scrapper.notes.NotesTest
-import io.github.wulkanowy.sdk.scrapper.register.HomePageResponse
 import io.github.wulkanowy.sdk.scrapper.register.RegisterTest
 import io.github.wulkanowy.sdk.scrapper.service.LoginService
 import io.github.wulkanowy.sdk.scrapper.service.StudentService
@@ -43,7 +43,7 @@ class AutoLoginInterceptorTest : BaseLocalTest() {
         }
         init()
 
-        val service = getService { loginHelper.login("", "") }
+        val service = getService()
         val notes = service.getNotes()
 
         assertEquals(3, notes.data?.notes?.size)
@@ -60,7 +60,7 @@ class AutoLoginInterceptorTest : BaseLocalTest() {
         }
         init()
 
-        val service = getService { loginHelper.login("", "") }
+        val service = getService()
         val result = runCatching { service.getNotes() }
 
         assertEquals(true, result.isFailure)
@@ -85,7 +85,7 @@ class AutoLoginInterceptorTest : BaseLocalTest() {
         }
 
         init()
-        val service = getService { loginHelper.login("", "") }
+        val service = getService()
 
         val notes1 = async { service.getNotes() }
         val notes2 = async { service.getNotes() }
@@ -115,7 +115,7 @@ class AutoLoginInterceptorTest : BaseLocalTest() {
 
         init()
 
-        val service = getService { loginHelper.login("", "") }
+        val service = getService()
         supervisorScope {
             val notes1 = async { service.getNotes() }
             val notes2 = async { service.getNotes() }
@@ -154,7 +154,6 @@ class AutoLoginInterceptorTest : BaseLocalTest() {
                 }
                 "https://uonetplus-$subdomain.localhost".toHttpUrl() to Jsoup.parse(html)
             },
-            notLoggedInCallback = { loginHelper.login("", "") },
         )
         studentService.getUserCache()
 
@@ -186,16 +185,14 @@ class AutoLoginInterceptorTest : BaseLocalTest() {
     private fun getService(
         checkJar: Boolean = false,
         fetchModuleCookies: (UrlGenerator.Site) -> Pair<HttpUrl, Document> = { _ -> "http://localhost".toHttpUrl() to Document("") },
-        notLoggedInCallback: suspend () -> HomePageResponse,
+        notLoggedInCallback: suspend () -> LoginResult = { loginHelper.login("", "") },
     ): StudentService {
-        val urlGenerator = UrlGenerator(URL("http://uonetplus-uczen.localhost/"), "", "lodz", "")
         val interceptor = AutoLoginInterceptor(
             loginType = Scrapper.LoginType.STANDARD,
             cookieJarCabinet = CookieJarCabinet(),
             emptyCookieJarIntercept = checkJar,
             notLoggedInCallback = notLoggedInCallback,
             fetchModuleCookies = fetchModuleCookies,
-            urlGenerator = urlGenerator,
         )
         val okHttp = getOkHttp(autoLogin = true, autoLoginInterceptorOn = true, autoLoginInterceptor = interceptor)
         return getService(

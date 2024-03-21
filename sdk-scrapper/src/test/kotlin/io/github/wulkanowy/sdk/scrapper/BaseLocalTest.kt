@@ -5,8 +5,8 @@ import io.github.wulkanowy.sdk.scrapper.interceptor.AutoLoginInterceptor
 import io.github.wulkanowy.sdk.scrapper.interceptor.ErrorInterceptor
 import io.github.wulkanowy.sdk.scrapper.interceptor.HttpErrorInterceptor
 import io.github.wulkanowy.sdk.scrapper.login.LoginHelper
+import io.github.wulkanowy.sdk.scrapper.login.LoginResult
 import io.github.wulkanowy.sdk.scrapper.login.UrlGenerator
-import io.github.wulkanowy.sdk.scrapper.register.HomePageResponse
 import io.github.wulkanowy.sdk.scrapper.repository.StudentPlusRepository
 import io.github.wulkanowy.sdk.scrapper.repository.StudentRepository
 import io.github.wulkanowy.sdk.scrapper.service.LoginService
@@ -136,8 +136,13 @@ abstract class BaseLocalTest : BaseTest() {
             loginType = loginType,
             cookieJarCabinet = CookieJarCabinet(),
             notLoggedInCallback = {
-                if (autoLogin) {
-                    LoginHelper(
+                when {
+                    !autoLogin -> LoginResult(
+                        isStudentSchoolUseEduOne = false,
+                        studentSchools = emptyList(),
+                    )
+
+                    else -> LoginHelper(
                         loginType = loginType,
                         schema = "http",
                         host = "localhost",
@@ -146,13 +151,10 @@ abstract class BaseLocalTest : BaseTest() {
                         cookieJarCabinet = CookieJarCabinet(),
                         api = getService(LoginService::class.java),
                         urlGenerator = urlGenerator,
-                    ).login("jan", "kowalski")
-                } else {
-                    HomePageResponse()
+                    ).login("jan@fakelog.cf", "jan123")
                 }
             },
             fetchModuleCookies = { _ -> "http://localhost".toHttpUrl() to Document("") },
-            urlGenerator = urlGenerator,
         )
     }
 }

@@ -12,6 +12,7 @@ import io.github.wulkanowy.sdk.scrapper.interceptor.HttpErrorInterceptor
 import io.github.wulkanowy.sdk.scrapper.interceptor.StudentCookieInterceptor
 import io.github.wulkanowy.sdk.scrapper.interceptor.UserAgentInterceptor
 import io.github.wulkanowy.sdk.scrapper.login.LoginHelper
+import io.github.wulkanowy.sdk.scrapper.login.LoginResult
 import io.github.wulkanowy.sdk.scrapper.login.UrlGenerator
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.Json
@@ -49,7 +50,6 @@ internal class ServiceManager(
     private val diaryId: Int,
     private val kindergartenDiaryId: Int,
     private val schoolYear: Int,
-    isEduOneStudent: (Boolean) -> Unit = {},
     emptyCookieJarIntercept: Boolean,
     androidVersion: String,
     buildTag: String,
@@ -92,6 +92,10 @@ internal class ServiceManager(
         }
     }
 
+    suspend fun userLogin(): LoginResult {
+        return loginHelper.login(email, password)
+    }
+
     private val interceptors: MutableList<Pair<Interceptor, Boolean>> = mutableListOf(
         HttpLoggingInterceptor().setLevel(logLevel) to true,
         ErrorInterceptor(cookieJarCabinet) to false,
@@ -99,10 +103,8 @@ internal class ServiceManager(
             loginType = loginType,
             cookieJarCabinet = cookieJarCabinet,
             emptyCookieJarIntercept = emptyCookieJarIntercept,
-            notLoggedInCallback = { loginHelper.login(email, password) },
+            notLoggedInCallback = ::userLogin,
             fetchModuleCookies = { site -> loginHelper.loginModule(site) },
-            isEduOneStudent = isEduOneStudent,
-            urlGenerator = urlGenerator,
         ) to false,
         UserAgentInterceptor(androidVersion, buildTag, userAgentTemplate) to false,
         HttpErrorInterceptor() to false,

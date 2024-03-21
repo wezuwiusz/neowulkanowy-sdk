@@ -10,11 +10,10 @@ import io.github.wulkanowy.sdk.scrapper.Scrapper.LoginType.ADFSLightScoped
 import io.github.wulkanowy.sdk.scrapper.Scrapper.LoginType.STANDARD
 import io.github.wulkanowy.sdk.scrapper.exception.VulcanClientError
 import io.github.wulkanowy.sdk.scrapper.getScriptParam
-import io.github.wulkanowy.sdk.scrapper.isCurrentLoginHasEduOne
+import io.github.wulkanowy.sdk.scrapper.login.LoginResult
 import io.github.wulkanowy.sdk.scrapper.login.ModuleHeaders
 import io.github.wulkanowy.sdk.scrapper.login.NotLoggedInException
 import io.github.wulkanowy.sdk.scrapper.login.UrlGenerator
-import io.github.wulkanowy.sdk.scrapper.register.HomePageResponse
 import io.github.wulkanowy.sdk.scrapper.repository.AccountRepository.Companion.SELECTOR_ADFS
 import io.github.wulkanowy.sdk.scrapper.repository.AccountRepository.Companion.SELECTOR_ADFS_CARDS
 import io.github.wulkanowy.sdk.scrapper.repository.AccountRepository.Companion.SELECTOR_ADFS_LIGHT
@@ -48,10 +47,8 @@ internal class AutoLoginInterceptor(
     private val loginType: LoginType,
     private val cookieJarCabinet: CookieJarCabinet,
     private val emptyCookieJarIntercept: Boolean = false,
-    private val notLoggedInCallback: suspend () -> HomePageResponse,
+    private val notLoggedInCallback: suspend () -> LoginResult,
     private val fetchModuleCookies: (UrlGenerator.Site) -> Pair<HttpUrl, Document>,
-    private val isEduOneStudent: (Boolean) -> Unit = {},
-    private val urlGenerator: UrlGenerator,
 ) : Interceptor {
 
     companion object {
@@ -89,16 +86,13 @@ internal class AutoLoginInterceptor(
             return if (lock.tryLock()) {
                 logger.debug("Not logged in. Login in...")
                 try {
-                    val homePageResponse = runBlocking { notLoggedInCallback() }
-                    val studentModuleUrls = homePageResponse.studentSchools.map { it.attr("href") }
-                    val isEduOne = isCurrentLoginHasEduOne(studentModuleUrls, urlGenerator)
-                    isEduOneStudent(isEduOne)
+                    val loginResult = runBlocking { notLoggedInCallback() }
                     messagesModuleHeaders = null
                     studentPlusModuleHeaders = null
                     studentModuleHeaders = null
 
                     val messages = getModuleCookies(UrlGenerator.Site.MESSAGES)
-                    val student = when (isEduOne) {
+                    val student = when (loginResult.isStudentSchoolUseEduOne) {
                         true -> getModuleCookies(UrlGenerator.Site.STUDENT_PLUS)
                         else -> getModuleCookies(UrlGenerator.Site.STUDENT)
                     }

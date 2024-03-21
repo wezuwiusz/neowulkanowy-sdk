@@ -333,7 +333,7 @@ internal class StudentPlusRepository(
             to = endDate?.toISOFormat(),
         )
         val days = (startDate.toEpochDay()..defaultEndDate.toEpochDay()).map(LocalDate::ofEpochDay)
-        val processedHeaders = days.mapNotNull { processedDate ->
+        val processedHeaders = days.map { processedDate ->
             val exactMatch = headers.find {
                 it.dataOd.toLocalDate() == processedDate && it.dataDo.toLocalDate() == processedDate
             }

@@ -238,13 +238,10 @@ class Scrapper {
             diaryId = diaryId,
             kindergartenDiaryId = kindergartenDiaryId,
             schoolYear = schoolYear,
+            emptyCookieJarIntercept = emptyCookieJarInterceptor,
             androidVersion = androidVersion,
             buildTag = buildTag,
-            emptyCookieJarIntercept = emptyCookieJarInterceptor,
             userAgentTemplate = userAgentTemplate,
-            isEduOneStudent = {
-                isEduOne = it
-            },
         ).apply {
             appInterceptors.forEach { (interceptor, isNetwork) ->
                 setInterceptor(interceptor, isNetwork)
@@ -341,7 +338,8 @@ class Scrapper {
     }
 
     suspend fun getCurrentStudent(): RegisterStudent? {
-        return when (isEduOne) {
+        val loginResult = serviceManager.userLogin()
+        return when (loginResult.isStudentSchoolUseEduOne) {
             true -> studentPlus.getStudent(studentId, diaryId, unitId)
             else -> student.getStudent(studentId, unitId)
         }
