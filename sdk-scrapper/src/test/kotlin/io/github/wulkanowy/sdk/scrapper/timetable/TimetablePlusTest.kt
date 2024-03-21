@@ -7,9 +7,12 @@ import org.junit.Test
 
 class TimetablePlusTest : BaseLocalTest() {
 
-    private val timetable by lazy {
+    private val timetableFull by lazy {
         runBlocking {
-            getStudentPlusRepo(TimetablePlusTest::class.java, "PlanZajec.json")
+            getStudentPlusRepo {
+                it.enqueue("PlanZajec.json", TimetablePlusTest::class.java)
+                it.enqueue("DniWolne.json", TimetablePlusTest::class.java)
+            }
                 .getTimetable(
                     startDate = getLocalDate(2024, 3, 18),
                     endDate = getLocalDate(2024, 3, 25),
@@ -17,18 +20,43 @@ class TimetablePlusTest : BaseLocalTest() {
                     diaryId = 2,
                     unitId = 3,
                 )
-                .lessons
+        }
+    }
+
+    private val lessons = timetableFull.lessons
+    private val headers = timetableFull.headers
+
+    @Test
+    fun getAllTest() {
+        assertEquals(9, lessons.size)
+        assertEquals(5, headers.size)
+    }
+
+    @Test
+    fun getTimetableHeaderRange() {
+        listOf(0, 1, 2).forEach {
+            with(headers[it]) {
+                assertEquals(getLocalDate(2024, 3, 21 + it), date)
+                assertEquals("Wiosenna przerwa świąteczna", content)
+            }
         }
     }
 
     @Test
-    fun getAllTest() {
-        assertEquals(9, timetable.size)
+    fun getTimetableHeaderDay() {
+        with(headers[3]) {
+            assertEquals(getLocalDate(2024, 3, 24), date)
+            assertEquals("Wielkanoc", content)
+        }
+        with(headers[4]) {
+            assertEquals(getLocalDate(2024, 3, 25), date)
+            assertEquals("Poniedziałek Wielkanocny", content)
+        }
     }
 
     @Test
     fun getSimpleLesson() {
-        with(timetable[0]) {
+        with(lessons[0]) {
             assertEquals(0, number)
             assertEquals(getLocalDateTime(2024, 3, 18, 8, 0, 0), start)
             assertEquals(getLocalDateTime(2024, 3, 18, 8, 45, 0), end)
@@ -49,7 +77,7 @@ class TimetablePlusTest : BaseLocalTest() {
 
     @Test
     fun getLessonWithGroup() {
-        with(timetable[1]) {
+        with(lessons[1]) {
             assertEquals(0, number)
             assertEquals(getLocalDateTime(2024, 3, 20, 8, 0, 0), start)
             assertEquals(getLocalDateTime(2024, 3, 20, 8, 45, 0), end)
@@ -70,7 +98,7 @@ class TimetablePlusTest : BaseLocalTest() {
 
     @Test
     fun getLessonWhenTeacherAbsent() {
-        with(timetable[2]) {
+        with(lessons[2]) {
             assertEquals(0, number)
             assertEquals(getLocalDateTime(2024, 3, 20, 8, 50, 0), start)
             assertEquals(getLocalDateTime(2024, 3, 20, 9, 35, 0), end)
@@ -91,7 +119,7 @@ class TimetablePlusTest : BaseLocalTest() {
 
     @Test
     fun getCancelledLesson() {
-        with(timetable[3]) {
+        with(lessons[3]) {
             assertEquals(0, number)
             assertEquals(getLocalDateTime(2024, 3, 20, 9, 40, 0), start)
             assertEquals(getLocalDateTime(2024, 3, 20, 10, 25, 0), end)
@@ -112,7 +140,7 @@ class TimetablePlusTest : BaseLocalTest() {
 
     @Test
     fun getExchangeLesson() {
-        with(timetable[5]) {
+        with(lessons[5]) {
             assertEquals(0, number)
             assertEquals(getLocalDateTime(2024, 3, 20, 10, 30, 0), start)
             assertEquals(getLocalDateTime(2024, 3, 20, 11, 15, 0), end)
@@ -133,7 +161,7 @@ class TimetablePlusTest : BaseLocalTest() {
 
     @Test
     fun getMovedLessonFrom() {
-        with(timetable[6]) {
+        with(lessons[6]) {
             assertEquals(0, number)
             assertEquals(getLocalDateTime(2024, 3, 20, 11, 30, 0), start)
             assertEquals(getLocalDateTime(2024, 3, 20, 12, 15, 0), end)
@@ -154,7 +182,7 @@ class TimetablePlusTest : BaseLocalTest() {
 
     @Test
     fun getLessonMovedWithReplacementToTest() {
-        with(timetable[4]) {
+        with(lessons[4]) {
             assertEquals(0, number)
             assertEquals(getLocalDateTime(2024, 3, 20, 9, 40, 0), start)
             assertEquals(getLocalDateTime(2024, 3, 20, 10, 25, 0), end)
@@ -178,7 +206,7 @@ class TimetablePlusTest : BaseLocalTest() {
 
     @Test
     fun getLessonMovedWithReplacementFromTest() {
-        with(timetable[7]) {
+        with(lessons[7]) {
             assertEquals(0, number)
             assertEquals(getLocalDateTime(2024, 3, 20, 12, 30, 0), start)
             assertEquals(getLocalDateTime(2024, 3, 20, 13, 15, 0), end)
@@ -199,7 +227,7 @@ class TimetablePlusTest : BaseLocalTest() {
 
     @Test
     fun getMovedLessonTo() {
-        with(timetable[8]) {
+        with(lessons[8]) {
             assertEquals(0, number)
             assertEquals(getLocalDateTime(2024, 3, 20, 14, 10, 0), start)
             assertEquals(getLocalDateTime(2024, 3, 20, 14, 55, 0), end)

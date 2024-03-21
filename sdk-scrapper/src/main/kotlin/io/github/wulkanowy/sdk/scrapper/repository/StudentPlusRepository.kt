@@ -29,6 +29,7 @@ import io.github.wulkanowy.sdk.scrapper.service.StudentPlusService
 import io.github.wulkanowy.sdk.scrapper.timetable.CompletedLesson
 import io.github.wulkanowy.sdk.scrapper.timetable.Lesson
 import io.github.wulkanowy.sdk.scrapper.timetable.Timetable
+import io.github.wulkanowy.sdk.scrapper.timetable.TimetableDayHeader
 import io.github.wulkanowy.sdk.scrapper.timetable.mapCompletedLessons
 import io.github.wulkanowy.sdk.scrapper.toFormat
 import org.jsoup.Jsoup
@@ -255,10 +256,11 @@ internal class StudentPlusRepository(
 
     suspend fun getTimetable(startDate: LocalDate, endDate: LocalDate?, studentId: Int, diaryId: Int, unitId: Int): Timetable {
         val key = getEncodedKey(studentId, diaryId, unitId)
+        val defaultEndDate = (endDate ?: startDate.plusDays(7))
         val lessons = api.getTimetable(
             key = key,
             from = startDate.toISOFormat(),
-            to = endDate?.toISOFormat(),
+            to = defaultEndDate?.toISOFormat(),
         ).map { lesson ->
             Lesson(
                 number = 0,
@@ -325,11 +327,32 @@ internal class StudentPlusRepository(
             )
         }.sortedBy { it.start }
 
+        val headers = api.getTimetableFreeDays(
+            key = key,
+            from = startDate.toISOFormat(),
+            to = endDate?.toISOFormat(),
+        )
+        val days = (startDate.toEpochDay()..defaultEndDate.toEpochDay()).map(LocalDate::ofEpochDay)
+        val processedHeaders = days.mapNotNull { processedDate ->
+            val exactMatch = headers.find {
+                it.dataOd.toLocalDate() == processedDate && it.dataDo.toLocalDate() == processedDate
+            }
+            val rangeMatch = headers.find {
+                processedDate in it.dataOd.toLocalDate()..it.dataDo.toLocalDate()
+            }
+            (exactMatch ?: rangeMatch)?.let {
+                TimetableDayHeader(
+                    date = processedDate,
+                    content = it.nazwa,
+                )
+            }
+        }
+
         return Timetable(
             lessons = lessons,
+            headers = processedHeaders,
             // todo
             additional = emptyList(),
-            headers = emptyList(),
         )
     }
 
