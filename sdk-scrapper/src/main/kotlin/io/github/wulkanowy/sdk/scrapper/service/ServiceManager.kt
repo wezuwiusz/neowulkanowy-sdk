@@ -159,21 +159,21 @@ internal class ServiceManager(
 
     fun getStudentService(withLogin: Boolean = true, studentInterceptor: Boolean = true): StudentService {
         return getRetrofit(
-            client = prepareStudentService(withLogin, studentInterceptor),
+            client = prepareStudentHttpClient(withLogin, studentInterceptor),
             baseUrl = urlGenerator.generate(UrlGenerator.Site.STUDENT),
             json = true,
         ).create()
     }
 
-    fun getStudentPlusService(withLogin: Boolean = true, studentInterceptor: Boolean = true): StudentPlusService {
+    fun getStudentPlusService(withLogin: Boolean = true): StudentPlusService {
         return getRetrofit(
-            client = prepareStudentService(withLogin, studentInterceptor),
+            client = getClientBuilder(loginIntercept = withLogin),
             baseUrl = urlGenerator.generate(UrlGenerator.Site.STUDENT_PLUS),
             json = true,
         ).create()
     }
 
-    private fun prepareStudentService(withLogin: Boolean, studentInterceptor: Boolean): OkHttpClient.Builder {
+    private fun prepareStudentHttpClient(withLogin: Boolean, studentInterceptor: Boolean): OkHttpClient.Builder {
         if (withLogin && schoolId.isBlank()) throw ScrapperException("School id is not set")
 
         val client = getClientBuilder(loginIntercept = withLogin)
