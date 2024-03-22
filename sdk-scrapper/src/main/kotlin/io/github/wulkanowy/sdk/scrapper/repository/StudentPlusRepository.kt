@@ -19,6 +19,7 @@ import io.github.wulkanowy.sdk.scrapper.grades.mapGradesList
 import io.github.wulkanowy.sdk.scrapper.grades.mapGradesSummary
 import io.github.wulkanowy.sdk.scrapper.handleErrors
 import io.github.wulkanowy.sdk.scrapper.homework.Homework
+import io.github.wulkanowy.sdk.scrapper.mobile.Device
 import io.github.wulkanowy.sdk.scrapper.mobile.TokenResponse
 import io.github.wulkanowy.sdk.scrapper.notes.Note
 import io.github.wulkanowy.sdk.scrapper.notes.NoteCategory
@@ -177,6 +178,8 @@ internal class StudentPlusRepository(
             to = endDate?.toISOFormat() ?: startDate.plusDays(7).toISOFormat(),
         ).mapCompletedLessons(startDate, endDate)
     }
+
+    suspend fun getRegisteredDevices(): List<Device> = api.getRegisteredDevices()
 
     suspend fun getToken(): TokenResponse {
         val res = api.getDeviceRegistrationToken()
