@@ -1,0 +1,18 @@
+{
+  "nazwa": "Publiczna szkoła",
+  "imienia": "Świętego Wulkana",
+  "numer": "1",
+  "miejscowosc": "Wulkanowo",
+  "ulica": "Św. Wulkana",
+  "kodPocztowy": "00-000",
+  "nrDomu": "1",
+  "nrMieszkania": "",
+  "dyrektorzy": [
+    "Stanisław Konarowski"
+  ],
+  "stronaWwwUrl": "fakelog.cf",
+  "mail": "sekretariat@fakelog.cf",
+  "telSluzbowy": "123",
+  "telKomorkowy": "",
+  "telDomowy": "*********"
+}

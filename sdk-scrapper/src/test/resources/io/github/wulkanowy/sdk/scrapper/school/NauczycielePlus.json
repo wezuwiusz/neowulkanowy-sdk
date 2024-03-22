@@ -1,0 +1,67 @@
+{
+  "nauczyciele": [
+    {
+      "przedmiot": "",
+      "imie": "Joanna",
+      "nazwisko": "Budna",
+      "wychowawca": false,
+      "globalKeySkrzynka": null
+    },
+    {
+      "przedmiot": "Informatyka",
+      "imie": "",
+      "nazwisko": "",
+      "wychowawca": false,
+      "globalKeySkrzynka": null
+    },
+    {
+      "przedmiot": "Biologia",
+      "imie": "Maja",
+      "nazwisko": "Dudkowska",
+      "wychowawca": false,
+      "globalKeySkrzynka": null
+    },
+    {
+      "przedmiot": "Geografia",
+      "imie": "Michał",
+      "nazwisko": "Bodnar",
+      "wychowawca": false,
+      "globalKeySkrzynka": null
+    },
+    {
+      "przedmiot": "Wychowanie fizyczne",
+      "imie": "Elżbieta",
+      "nazwisko": "Nowak",
+      "wychowawca": false,
+      "globalKeySkrzynka": null
+    },
+    {
+      "przedmiot": "Informatyka",
+      "imie": "Anna",
+      "nazwisko": "Dobrowolska",
+      "wychowawca": false,
+      "globalKeySkrzynka": null
+    },
+    {
+      "przedmiot": "Matematyka",
+      "imie": "Dorota",
+      "nazwisko": "Kowalczyk",
+      "wychowawca": false,
+      "globalKeySkrzynka": null
+    },
+    {
+      "przedmiot": "Język angielski",
+      "imie": "Aleksandra",
+      "nazwisko": "Rupińska",
+      "wychowawca": false,
+      "globalKeySkrzynka": null
+    },
+    {
+      "przedmiot": "Język polski",
+      "imie": "Wojciech",
+      "nazwisko": "Dudkowski",
+      "wychowawca": true,
+      "globalKeySkrzynka": "c38fc935-ece6-4c7b-aa6a-b593533579d4"
+    }
+  ]
+}

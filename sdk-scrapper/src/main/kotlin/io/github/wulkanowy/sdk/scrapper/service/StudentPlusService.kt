@@ -15,6 +15,8 @@ import io.github.wulkanowy.sdk.scrapper.mobile.TokenResponse
 import io.github.wulkanowy.sdk.scrapper.notes.Note
 import io.github.wulkanowy.sdk.scrapper.register.AuthorizePermissionPlusRequest
 import io.github.wulkanowy.sdk.scrapper.register.ContextResponse
+import io.github.wulkanowy.sdk.scrapper.school.SchoolPlus
+import io.github.wulkanowy.sdk.scrapper.school.TeacherPlusResponse
 import io.github.wulkanowy.sdk.scrapper.timetable.CompletedLesson
 import io.github.wulkanowy.sdk.scrapper.timetable.LessonPlus
 import io.github.wulkanowy.sdk.scrapper.timetable.TimetablePlusHeader
@@ -136,4 +138,10 @@ internal interface StudentPlusService {
 
     @GET("api/Uwagi")
     suspend fun getNotes(@Query("key") key: String): List<Note>
+
+    @GET("api/Nauczyciele")
+    suspend fun getTeachers(): TeacherPlusResponse
+
+    @GET("api/Informacje")
+    suspend fun getSchool(): SchoolPlus
 }

@@ -25,6 +25,8 @@ import io.github.wulkanowy.sdk.scrapper.notes.NoteCategory
 import io.github.wulkanowy.sdk.scrapper.register.AuthorizePermissionPlusRequest
 import io.github.wulkanowy.sdk.scrapper.register.RegisterStudent
 import io.github.wulkanowy.sdk.scrapper.register.Semester
+import io.github.wulkanowy.sdk.scrapper.school.School
+import io.github.wulkanowy.sdk.scrapper.school.Teacher
 import io.github.wulkanowy.sdk.scrapper.service.StudentPlusService
 import io.github.wulkanowy.sdk.scrapper.timetable.CompletedLesson
 import io.github.wulkanowy.sdk.scrapper.timetable.Lesson
@@ -399,5 +401,35 @@ internal class StudentPlusRepository(
                 kindergartenDiaryId = 0,
             )
         }
+    }
+
+    suspend fun getTeachers(): List<Teacher> = api.getTeachers().teachers.map {
+        Teacher(
+            name = "${it.firstName} ${it.lastName}".trim(),
+            subject = it.subject,
+        )
+    }
+
+    suspend fun getSchool(): School = api.getSchool().let {
+        val streetNumber = it.buildingNumber + it.apartmentNumber.takeIf(String::isNotEmpty)?.let { "/$it" }.orEmpty()
+        val name = buildString {
+            append(it.name)
+            if (it.number.isNotEmpty()) {
+                append(" nr ${it.number}")
+            }
+            if (it.patron.isNotEmpty()) {
+                append(" im. ${it.patron}")
+            }
+            if (it.town.isNotEmpty()) {
+                append(" w ${it.town}")
+            }
+        }
+        School(
+            name = name,
+            address = "${it.street} $streetNumber, ${it.postcode} ${it.town}",
+            contact = it.workPhone,
+            headmaster = it.headmasters.firstOrNull().orEmpty(),
+            pedagogue = "",
+        )
     }
 }
