@@ -48,7 +48,7 @@ class GradesPlusTest : BaseLocalTest() {
             assertEquals(.0, modifier, .0)
             assertEquals("F04C4C", colorHex)
             assertEquals("", symbol)
-            assertEquals("", description)
+            assertEquals("Opis", description)
             assertEquals("100,00", weight)
             assertEquals(100.0, weightValue, .0)
             assertEquals(getLocalDate(2024, 3, 19), date)

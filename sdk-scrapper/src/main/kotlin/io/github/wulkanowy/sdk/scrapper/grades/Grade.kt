@@ -24,7 +24,7 @@ data class Grade(
     val symbol: String? = "",
 
     @SerialName("NazwaKolumny")
-    @JsonNames("nazwaKolumn")
+    @JsonNames("nazwaKolumny")
     val description: String? = "",
 
     @SerialName("Waga")
