@@ -78,7 +78,9 @@ internal interface StudentPlusService {
     ): AttendanceSummaryResponse
 
     @GET("api/ZarejestrowaneUrzadzenia")
-    suspend fun getRegisteredDevices(): List<Device>
+    suspend fun getRegisteredDevices(
+        @Query("key") key: String,
+    ): List<Device>
 
     @GET("api/RejestracjaUrzadzeniaToken")
     suspend fun getDeviceRegistrationToken(): TokenResponse
@@ -140,8 +142,12 @@ internal interface StudentPlusService {
     suspend fun getNotes(@Query("key") key: String): List<Note>
 
     @GET("api/Nauczyciele")
-    suspend fun getTeachers(): TeacherPlusResponse
+    suspend fun getTeachers(
+        @Query("key") key: String,
+    ): TeacherPlusResponse
 
     @GET("api/Informacje")
-    suspend fun getSchool(): SchoolPlus
+    suspend fun getSchool(
+        @Query("key") key: String,
+    ): SchoolPlus
 }

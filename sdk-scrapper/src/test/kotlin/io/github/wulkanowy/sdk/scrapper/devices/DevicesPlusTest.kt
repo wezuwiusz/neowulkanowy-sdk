@@ -11,7 +11,7 @@ class DevicesPlusTest : BaseLocalTest() {
     private val devices by lazy {
         runBlocking {
             getStudentPlusRepo(DevicesPlusTest::class.java, "UrzadzeniaPlus.json")
-                .getRegisteredDevices()
+                .getRegisteredDevices(1, 2, 3)
         }
     }
 

@@ -179,7 +179,10 @@ internal class StudentPlusRepository(
         ).mapCompletedLessons(startDate, endDate)
     }
 
-    suspend fun getRegisteredDevices(): List<Device> = api.getRegisteredDevices()
+    suspend fun getRegisteredDevices(studentId: Int, diaryId: Int, unitId: Int): List<Device> {
+        val key = getEncodedKey(studentId, diaryId, unitId)
+        return api.getRegisteredDevices(key)
+    }
 
     suspend fun getToken(): TokenResponse {
         val res = api.getDeviceRegistrationToken()
@@ -406,33 +409,39 @@ internal class StudentPlusRepository(
         }
     }
 
-    suspend fun getTeachers(): List<Teacher> = api.getTeachers().teachers.map {
-        Teacher(
-            name = "${it.firstName} ${it.lastName}".trim(),
-            subject = it.subject,
-        )
+    suspend fun getTeachers(studentId: Int, diaryId: Int, unitId: Int): List<Teacher> {
+        val key = getEncodedKey(studentId, diaryId, unitId)
+        return api.getTeachers(key).teachers.map {
+            Teacher(
+                name = "${it.firstName} ${it.lastName}".trim(),
+                subject = it.subject,
+            )
+        }
     }
 
-    suspend fun getSchool(): School = api.getSchool().let {
-        val streetNumber = it.buildingNumber + it.apartmentNumber.takeIf(String::isNotEmpty)?.let { "/$it" }.orEmpty()
-        val name = buildString {
-            append(it.name)
-            if (it.number.isNotEmpty()) {
-                append(" nr ${it.number}")
+    suspend fun getSchool(studentId: Int, diaryId: Int, unitId: Int): School {
+        val key = getEncodedKey(studentId, diaryId, unitId)
+        return api.getSchool(key).let {
+            val streetNumber = it.buildingNumber + it.apartmentNumber.takeIf(String::isNotEmpty)?.let { "/$it" }.orEmpty()
+            val name = buildString {
+                append(it.name)
+                if (it.number.isNotEmpty()) {
+                    append(" nr ${it.number}")
+                }
+                if (it.patron.isNotEmpty()) {
+                    append(" im. ${it.patron}")
+                }
+                if (it.town.isNotEmpty()) {
+                    append(" w ${it.town}")
+                }
             }
-            if (it.patron.isNotEmpty()) {
-                append(" im. ${it.patron}")
-            }
-            if (it.town.isNotEmpty()) {
-                append(" w ${it.town}")
-            }
+            School(
+                name = name,
+                address = "${it.street} $streetNumber, ${it.postcode} ${it.town}",
+                contact = it.workPhone,
+                headmaster = it.headmasters.firstOrNull().orEmpty(),
+                pedagogue = "",
+            )
         }
-        School(
-            name = name,
-            address = "${it.street} $streetNumber, ${it.postcode} ${it.town}",
-            contact = it.workPhone,
-            headmaster = it.headmasters.firstOrNull().orEmpty(),
-            pedagogue = "",
-        )
     }
 }

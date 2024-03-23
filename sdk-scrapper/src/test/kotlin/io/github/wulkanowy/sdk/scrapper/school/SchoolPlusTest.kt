@@ -8,7 +8,8 @@ import org.junit.Test
 class SchoolPlusTest : BaseLocalTest() {
 
     private val school by lazy {
-        runBlocking { getStudentPlusRepo(SchoolPlusTest::class.java, "SzkolaPlus.json").getSchool() }
+        runBlocking { getStudentPlusRepo(SchoolPlusTest::class.java, "SzkolaPlus.json")
+            .getSchool(1, 2, 3) }
     }
 
     @Test

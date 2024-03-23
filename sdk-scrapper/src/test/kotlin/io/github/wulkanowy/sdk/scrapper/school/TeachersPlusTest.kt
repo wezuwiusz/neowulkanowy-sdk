@@ -7,7 +7,10 @@ import org.junit.Test
 
 class TeachersPlusTest : BaseLocalTest() {
     private val teachers by lazy {
-        runBlocking { getStudentPlusRepo(TeachersPlusTest::class.java, "NauczycielePlus.json").getTeachers() }
+        runBlocking {
+            getStudentPlusRepo(TeachersPlusTest::class.java, "NauczycielePlus.json")
+                .getTeachers(1, 2, 3)
+        }
     }
 
     @Test
