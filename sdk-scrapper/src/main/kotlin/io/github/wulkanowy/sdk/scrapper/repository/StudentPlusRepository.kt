@@ -439,7 +439,7 @@ internal class StudentPlusRepository(
                 name = name,
                 address = "${it.street} $streetNumber, ${it.postcode} ${it.town}",
                 contact = it.workPhone,
-                headmaster = it.headmasters.firstOrNull().orEmpty(),
+                headmaster = it.headmasters?.firstOrNull().orEmpty(),
                 pedagogue = "",
             )
         }

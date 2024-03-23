@@ -13,7 +13,7 @@ internal data class SchoolPlus(
     @SerialName("kodPocztowy") val postcode: String,
     @SerialName("nrDomu") val buildingNumber: String,
     @SerialName("nrMieszkania") val apartmentNumber: String,
-    @SerialName("dyrektorzy") val headmasters: List<String>,
+    @SerialName("dyrektorzy") val headmasters: List<String>?,
     @SerialName("stronaWwwUrl") val website: String,
     @SerialName("mail") val email: String,
     @SerialName("telSluzbowy") val workPhone: String,
