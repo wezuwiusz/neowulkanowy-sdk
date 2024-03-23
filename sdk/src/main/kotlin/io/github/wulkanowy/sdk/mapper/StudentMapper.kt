@@ -4,14 +4,15 @@ import io.github.wulkanowy.sdk.pojo.StudentGender
 import io.github.wulkanowy.sdk.pojo.StudentGuardian
 import io.github.wulkanowy.sdk.pojo.StudentInfo
 import io.github.wulkanowy.sdk.pojo.StudentPhoto
+import java.time.LocalDate
 import io.github.wulkanowy.sdk.scrapper.student.StudentGuardian as ScrapperStudentGuardian
 import io.github.wulkanowy.sdk.scrapper.student.StudentInfo as ScrapperStudentInfo
 import io.github.wulkanowy.sdk.scrapper.student.StudentPhoto as ScrapperStudentPhoto
 
 internal fun ScrapperStudentInfo.mapStudent() = StudentInfo(
-    fullName = fullName,
+    fullName = fullName.orEmpty(),
     address = address,
-    birthDate = birthDate.toLocalDate(),
+    birthDate = birthDate?.toLocalDate() ?: LocalDate.EPOCH,
     birthPlace = birthPlace.orEmpty(),
     cellPhoneNumber = cellPhone.orEmpty(),
     correspondenceAddress = correspondenceAddress,

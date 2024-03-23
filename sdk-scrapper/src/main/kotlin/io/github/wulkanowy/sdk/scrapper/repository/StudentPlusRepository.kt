@@ -29,6 +29,8 @@ import io.github.wulkanowy.sdk.scrapper.register.Semester
 import io.github.wulkanowy.sdk.scrapper.school.School
 import io.github.wulkanowy.sdk.scrapper.school.Teacher
 import io.github.wulkanowy.sdk.scrapper.service.StudentPlusService
+import io.github.wulkanowy.sdk.scrapper.student.StudentInfo
+import io.github.wulkanowy.sdk.scrapper.student.StudentPhoto
 import io.github.wulkanowy.sdk.scrapper.timetable.CompletedLesson
 import io.github.wulkanowy.sdk.scrapper.timetable.Lesson
 import io.github.wulkanowy.sdk.scrapper.timetable.Timetable
@@ -445,5 +447,23 @@ internal class StudentPlusRepository(
                 pedagogue = "",
             )
         }
+    }
+
+    suspend fun getStudentInfo(studentId: Int, diaryId: Int, unitId: Int): StudentInfo {
+        val key = getEncodedKey(studentId, diaryId, unitId)
+        val studentInfo = api.getStudentInfo(key)
+        return studentInfo.copy(
+            birthDate = studentInfo.birthDateEduOne?.atStartOfDay(),
+            guardianFirst = studentInfo.guardianFirst?.let {
+                it.copy(
+                    fullName = "${it.name} ${it.lastName}",
+                )
+            },
+        )
+    }
+
+    suspend fun getStudentPhoto(studentId: Int, diaryId: Int, unitId: Int): StudentPhoto {
+        val key = getEncodedKey(studentId, diaryId, unitId)
+        return api.getStudentPhoto(key) ?: StudentPhoto(photoBase64 = null)
     }
 }

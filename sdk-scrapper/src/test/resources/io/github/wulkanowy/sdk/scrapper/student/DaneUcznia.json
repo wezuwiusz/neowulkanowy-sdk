@@ -1,0 +1,32 @@
+{
+  "imie": "Jan",
+  "imie2": "",
+  "numerDokumentu": null,
+  "nazwisko": "Kowalski",
+  "dataUrodzenia": "12.03.2017",
+  "miejsceUrodzenia": "Wulkanowy",
+  "nazwiskoRodowe": "",
+  "obywatelstwoPolskie": 1,
+  "imieMatki": "",
+  "imieOjca": "",
+  "plec": true,
+  "adresZamieszkania": "",
+  "adresZameldowania": "ul. Piekielna 69, 42-000 Wulkanowo, Polska",
+  "adresKorespondencji": "",
+  "telDomowy": null,
+  "telKomorkowy": null,
+  "email": null,
+  "opiekun1": {
+    "imie": "Maciej",
+    "nazwisko": "Kowalski",
+    "stPokrewienstwa": "babcia",
+    "adres": "",
+    "adresUcznia": true,
+    "telDomowy": "",
+    "telKomorkowy": "",
+    "telSluzbowy": "",
+    "email": "jan@kowalski.pl"
+  },
+  "opiekun2": null,
+  "ukryteDaneAdresowe": false
+}

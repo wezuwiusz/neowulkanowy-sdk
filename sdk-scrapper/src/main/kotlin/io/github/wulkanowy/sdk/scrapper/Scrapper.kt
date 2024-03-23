@@ -497,9 +497,15 @@ class Scrapper {
         else -> student.getSchool()
     }
 
-    suspend fun getStudentInfo(): StudentInfo = student.getStudentInfo()
+    suspend fun getStudentInfo(): StudentInfo = when (isEduOne) {
+        true -> studentPlus.getStudentInfo(studentId, diaryId, unitId)
+        else -> student.getStudentInfo()
+    }
 
-    suspend fun getStudentPhoto(): StudentPhoto = student.getStudentPhoto()
+    suspend fun getStudentPhoto(): StudentPhoto = when (isEduOne) {
+        true -> studentPlus.getStudentPhoto(studentId, diaryId, unitId)
+        else -> student.getStudentPhoto()
+    }
 
     suspend fun getMailboxes(): List<Mailbox> = messages.getMailboxes()
 
