@@ -184,8 +184,10 @@ internal class StudentPlusRepository(
         return api.getRegisteredDevices(key)
     }
 
-    suspend fun getToken(): TokenResponse {
-        val res = api.getDeviceRegistrationToken()
+    suspend fun getToken(studentId: Int, diaryId: Int, unitId: Int): TokenResponse {
+        val key = getEncodedKey(studentId, diaryId, unitId)
+        api.createDeviceRegistrationToken(mapOf("key" to key))
+        val res = api.getDeviceRegistrationToken(key)
         return res.copy(
             qrCodeImage = Jsoup.parse(res.qrCodeImage)
                 .select("img")

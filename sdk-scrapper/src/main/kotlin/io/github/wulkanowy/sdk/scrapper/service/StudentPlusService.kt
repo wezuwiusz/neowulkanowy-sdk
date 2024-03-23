@@ -82,8 +82,15 @@ internal interface StudentPlusService {
         @Query("key") key: String,
     ): List<Device>
 
+    @POST("api/RejestracjaUrzadzeniaToken")
+    suspend fun createDeviceRegistrationToken(
+        @Body body: Map<String, String>,
+    )
+
     @GET("api/RejestracjaUrzadzeniaToken")
-    suspend fun getDeviceRegistrationToken(): TokenResponse
+    suspend fun getDeviceRegistrationToken(
+        @Query("key") key: String,
+    ): TokenResponse
 
     @GET("api/Zebrania")
     suspend fun getConferences(

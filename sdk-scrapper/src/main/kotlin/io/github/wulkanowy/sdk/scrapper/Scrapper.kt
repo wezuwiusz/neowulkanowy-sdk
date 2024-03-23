@@ -480,7 +480,7 @@ class Scrapper {
 
     suspend fun getToken(): TokenResponse {
         return when (isEduOne) {
-            true -> studentPlus.getToken()
+            true -> studentPlus.getToken(studentId, diaryId, unitId)
             else -> student.getToken()
         }
     }
