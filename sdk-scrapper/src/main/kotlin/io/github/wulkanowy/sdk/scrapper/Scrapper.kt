@@ -6,6 +6,7 @@ import io.github.wulkanowy.sdk.scrapper.attendance.AttendanceSummary
 import io.github.wulkanowy.sdk.scrapper.attendance.Subject
 import io.github.wulkanowy.sdk.scrapper.conferences.Conference
 import io.github.wulkanowy.sdk.scrapper.exams.Exam
+import io.github.wulkanowy.sdk.scrapper.exception.FeatureUnavailableException
 import io.github.wulkanowy.sdk.scrapper.exception.ScrapperException
 import io.github.wulkanowy.sdk.scrapper.grades.GradePointsSummary
 import io.github.wulkanowy.sdk.scrapper.grades.Grades
@@ -315,6 +316,8 @@ class Scrapper {
         cookieJarCabinet.setAdditionalCookieManager(cookieManager)
     }
 
+    // Unauthorized
+
     suspend fun isSymbolNotExist(symbol: String): Boolean = symbolRepository.isSymbolNotExist(symbol)
 
     suspend fun getPasswordResetCaptcha(registerBaseUrl: String, symbol: String): Pair<String, String> = account.getPasswordResetCaptcha(registerBaseUrl, domainSuffix, symbol)
@@ -325,17 +328,7 @@ class Scrapper {
 
     suspend fun getUserSubjects(): RegisterUser = register.getUserSubjects()
 
-    suspend fun authorizePermission(pesel: String): Boolean {
-        return when (isEduOne) {
-            true -> studentPlus.authorizePermission(pesel, studentId, diaryId, unitId)
-            else -> student.authorizePermission(pesel)
-        }
-    }
-
-    suspend fun getSemesters(): List<Semester> = when (isEduOne) {
-        true -> studentPlus.getSemesters(studentId, diaryId, unitId)
-        else -> studentStart.getSemesters()
-    }
+    // AUTHORIZED - student
 
     suspend fun getCurrentStudent(): RegisterStudent? {
         val loginResult = serviceManager.userLogin()
@@ -343,6 +336,16 @@ class Scrapper {
             true -> studentPlus.getStudent(studentId, diaryId, unitId)
             else -> student.getStudent(studentId, unitId)
         }
+    }
+
+    suspend fun authorizePermission(pesel: String): Boolean = when (isEduOne) {
+        true -> studentPlus.authorizePermission(pesel, studentId, diaryId, unitId)
+        else -> student.authorizePermission(pesel)
+    }
+
+    suspend fun getSemesters(): List<Semester> = when (isEduOne) {
+        true -> studentPlus.getSemesters(studentId, diaryId, unitId)
+        else -> studentStart.getSemesters()
     }
 
     suspend fun getAttendance(startDate: LocalDate, endDate: LocalDate? = null): List<Attendance> {
@@ -405,7 +408,7 @@ class Scrapper {
         if (diaryId == 0) return emptyList()
 
         return when (isEduOne) {
-            true -> error("Tej funkcji już nie ma w dzienniku VULCANa")
+            true -> throw FeatureUnavailableException()
             else -> student.getGradesPartialStatistics(semesterId)
         }
     }
@@ -414,7 +417,7 @@ class Scrapper {
         if (diaryId == 0) return emptyList()
 
         return when (isEduOne) {
-            true -> error("Tej funkcji już nie ma w dzienniku VULCANa")
+            true -> throw FeatureUnavailableException()
             else -> student.getGradesPointsStatistics(semesterId)
         }
     }
@@ -423,7 +426,7 @@ class Scrapper {
         if (diaryId == 0) return emptyList()
 
         return when (isEduOne) {
-            true -> error("Tej funkcji już nie ma w dzienniku VULCANa")
+            true -> throw FeatureUnavailableException()
             else -> student.getGradesAnnualStatistics(semesterId)
         }
     }
@@ -447,7 +450,10 @@ class Scrapper {
         else -> student.getConferences()
     }
 
-    suspend fun getMenu(date: LocalDate): List<Menu> = student.getMenu(date)
+    suspend fun getMenu(date: LocalDate): List<Menu> = when (isEduOne) {
+        true -> TODO()
+        else -> student.getMenu(date)
+    }
 
     suspend fun getTimetable(startDate: LocalDate, endDate: LocalDate? = null): Timetable {
         if (diaryId == 0) {
@@ -485,7 +491,10 @@ class Scrapper {
         }
     }
 
-    suspend fun unregisterDevice(id: Int): Boolean = student.unregisterDevice(id)
+    suspend fun unregisterDevice(id: Int): Boolean = when (isEduOne) {
+        true -> TODO()
+        else -> student.unregisterDevice(id)
+    }
 
     suspend fun getTeachers(): List<Teacher> = when (isEduOne) {
         true -> studentPlus.getTeachers(studentId, diaryId, unitId)
@@ -506,6 +515,8 @@ class Scrapper {
         true -> studentPlus.getStudentPhoto(studentId, diaryId, unitId)
         else -> student.getStudentPhoto()
     }
+
+    // MESSAGES
 
     suspend fun getMailboxes(): List<Mailbox> = messages.getMailboxes()
 
@@ -541,6 +552,8 @@ class Scrapper {
     suspend fun restoreMessages(messagesToRestore: List<String>) = messages.restoreFromTrash(messagesToRestore)
 
     suspend fun deleteMessages(messagesToDelete: List<String>, removeForever: Boolean) = messages.deleteMessages(messagesToDelete, removeForever)
+
+    // Homepage
 
     suspend fun getDirectorInformation(): List<DirectorInformation> = homepage.getDirectorInformation()
 
