@@ -13,6 +13,7 @@ import io.github.wulkanowy.sdk.scrapper.conferences.Conference
 import io.github.wulkanowy.sdk.scrapper.exams.Exam
 import io.github.wulkanowy.sdk.scrapper.exception.FeatureDisabledException
 import io.github.wulkanowy.sdk.scrapper.exception.VulcanClientError
+import io.github.wulkanowy.sdk.scrapper.getDecodedKey
 import io.github.wulkanowy.sdk.scrapper.getEncodedKey
 import io.github.wulkanowy.sdk.scrapper.grades.Grades
 import io.github.wulkanowy.sdk.scrapper.grades.mapGradesList
@@ -66,9 +67,10 @@ internal class StudentPlusRepository(
         return true
     }
 
-    suspend fun getStudent(studentId: Int, diaryId: Int, unitId: Int): RegisterStudent? {
+    suspend fun getStudent(studentId: Int, unitId: Int): RegisterStudent? {
         return api.getContext().students.find {
-            it.key == getEncodedKey(studentId, diaryId, unitId)
+            val key = getDecodedKey(it.key)
+            key.studentId == studentId && key.unitId == unitId
         }?.let {
             RegisterStudent(
                 studentId = studentId,
