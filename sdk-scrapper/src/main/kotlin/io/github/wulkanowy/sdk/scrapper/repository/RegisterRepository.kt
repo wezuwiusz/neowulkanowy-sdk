@@ -5,6 +5,7 @@ import io.github.wulkanowy.sdk.scrapper.exception.ScrapperException
 import io.github.wulkanowy.sdk.scrapper.exception.StudentGraduateException
 import io.github.wulkanowy.sdk.scrapper.getNormalizedSymbol
 import io.github.wulkanowy.sdk.scrapper.getScriptParam
+import io.github.wulkanowy.sdk.scrapper.grades.GradeSemester
 import io.github.wulkanowy.sdk.scrapper.interceptor.handleErrors
 import io.github.wulkanowy.sdk.scrapper.isCurrentLoginHasEduOne
 import io.github.wulkanowy.sdk.scrapper.login.CertificateResponse
@@ -336,18 +337,30 @@ internal class RegisterRepository(
 
         return studentPlus
             .getContext(url = baseStudentPlus + "api/Context").students
-            .map { context ->
+            .map { contextStudent ->
                 val semesters = kotlin.runCatching {
-                    studentPlus.getSemesters(
-                        url = baseStudentPlus + "api/OkresyKlasyfikacyjne",
-                        key = context.key,
-                        diaryId = context.registerId,
-                    )
+                    when {
+                        contextStudent.isAuthorizationRequired -> emptyList()
+                        else -> studentPlus.getSemesters(
+                            url = baseStudentPlus + "api/OkresyKlasyfikacyjne",
+                            key = contextStudent.key,
+                            diaryId = contextStudent.registerId,
+                        )
+                    }
                 }.onFailure {
                     logger.error("Can't fetch semesters", it)
-                }.getOrNull().orEmpty()
+                }.getOrNull().orEmpty().ifEmpty {
+                    listOf(
+                        GradeSemester(
+                            dataOd = contextStudent.registerDateFrom,
+                            dataDo = contextStudent.registerDateTo,
+                            id = -1, //
+                            numerOkresu = 0, //
+                        ),
+                    )
+                }
 
-                context.mapToDiary(semesters)
+                contextStudent.mapToDiary(semesters)
             }
     }
 }

@@ -24,8 +24,12 @@ class StudentPlusTest : BaseLocalTest() {
             assertEquals("7a", className)
             assertEquals(0, classId)
             assertFalse(isParent)
-            assertEquals(emptyList<Semester>(), semesters)
+            assertEquals(1, semesters.size)
             assertTrue(isAuthorized)
+
+            with(semesters[0]) {
+                assertEquals(-1, semesterId)
+            }
         }
     }
 }

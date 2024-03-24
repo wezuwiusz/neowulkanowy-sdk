@@ -15,6 +15,7 @@ import io.github.wulkanowy.sdk.scrapper.exception.FeatureDisabledException
 import io.github.wulkanowy.sdk.scrapper.exception.VulcanClientError
 import io.github.wulkanowy.sdk.scrapper.getDecodedKey
 import io.github.wulkanowy.sdk.scrapper.getEncodedKey
+import io.github.wulkanowy.sdk.scrapper.grades.GradeSemester
 import io.github.wulkanowy.sdk.scrapper.grades.Grades
 import io.github.wulkanowy.sdk.scrapper.grades.mapGradesList
 import io.github.wulkanowy.sdk.scrapper.grades.mapGradesSummary
@@ -84,13 +85,25 @@ internal class StudentPlusRepository(
             key.studentId == studentId
         }?.let { contextStudent ->
             val semesters = runCatching {
-                api.getSemesters(
-                    key = contextStudent.key,
-                    diaryId = contextStudent.registerId,
-                )
+                when {
+                    contextStudent.isAuthorizationRequired -> emptyList()
+                    else -> api.getSemesters(
+                        key = contextStudent.key,
+                        diaryId = contextStudent.registerId,
+                    )
+                }
             }.onFailure {
                 logger.error("Can't fetch semesters", it)
-            }.getOrNull().orEmpty()
+            }.getOrNull().orEmpty().ifEmpty {
+                listOf(
+                    GradeSemester(
+                        dataOd = contextStudent.registerDateFrom,
+                        dataDo = contextStudent.registerDateTo,
+                        id = -1, //
+                        numerOkresu = 0, //
+                    ),
+                )
+            }
 
             RegisterStudent(
                 studentId = studentId,
