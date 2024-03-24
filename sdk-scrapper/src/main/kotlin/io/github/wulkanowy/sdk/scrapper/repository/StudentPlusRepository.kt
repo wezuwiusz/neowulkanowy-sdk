@@ -87,6 +87,29 @@ internal class StudentPlusRepository(
         }
     }
 
+    suspend fun getSemesters(studentId: Int, diaryId: Int, unitId: Int): List<Semester> {
+        val student = api.getContext().students.find {
+            val key = getDecodedKey(it.key)
+            key.studentId == studentId && key.diaryId == diaryId && key.unitId == unitId
+        } ?: return emptyList()
+        val level = student.className.takeWhile { it.isDigit() }
+        return api.getSemesters(student.key, diaryId).map {
+            Semester(
+                diaryId = diaryId,
+                diaryName = student.className,
+                className = student.className.replace(level, ""),
+                schoolYear = it.dataOd.toLocalDate().year,
+                semesterId = it.id,
+                semesterNumber = it.numerOkresu,
+                start = it.dataOd.toLocalDate(),
+                end = it.dataDo.toLocalDate(),
+                unitId = unitId,
+                classId = 0,
+                kindergartenDiaryId = 0,
+            )
+        }
+    }
+
     suspend fun getAttendance(startDate: LocalDate, endDate: LocalDate?, studentId: Int, diaryId: Int, unitId: Int): List<Attendance> {
         val key = getEncodedKey(studentId, diaryId, unitId)
         val from = startDate.toISOFormat()
@@ -391,28 +414,6 @@ internal class StudentPlusRepository(
     suspend fun getConferences(studentId: Int, diaryId: Int, unitId: Int): List<Conference> {
         val key = getEncodedKey(studentId, diaryId, unitId)
         return api.getConferences(key)
-    }
-
-    suspend fun getSemesters(studentId: Int, diaryId: Int, unitId: Int): List<Semester> {
-        val key = getEncodedKey(studentId, diaryId, unitId)
-        val context = api.getContext()
-        val student = context.students.find { it.key == key }
-        val level = student?.className.orEmpty().takeWhile { it.isDigit() }
-        return api.getSemesters(key, diaryId).map {
-            Semester(
-                diaryId = diaryId,
-                diaryName = student?.className.orEmpty(),
-                className = student?.className?.replace(level, ""),
-                schoolYear = it.dataOd.toLocalDate().year,
-                semesterId = it.id,
-                semesterNumber = it.numerOkresu,
-                start = it.dataOd.toLocalDate(),
-                end = it.dataDo.toLocalDate(),
-                unitId = unitId,
-                classId = 0,
-                kindergartenDiaryId = 0,
-            )
-        }
     }
 
     suspend fun getTeachers(studentId: Int, diaryId: Int, unitId: Int): List<Teacher> {
