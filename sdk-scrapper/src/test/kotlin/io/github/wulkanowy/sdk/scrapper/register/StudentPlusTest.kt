@@ -14,7 +14,7 @@ class StudentPlusTest : BaseLocalTest() {
         val repo = getStudentPlusRepo {
             it.enqueue("Context-all-enabled.json")
         }
-        val student = repo.getStudent(1, 3)
+        val student = repo.getStudent(1)
         with(requireNotNull(student)) {
             assertEquals(1, studentId)
             assertEquals("Jan", studentName)

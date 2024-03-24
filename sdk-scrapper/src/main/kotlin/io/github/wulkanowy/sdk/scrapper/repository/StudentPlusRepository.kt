@@ -67,10 +67,10 @@ internal class StudentPlusRepository(
         return true
     }
 
-    suspend fun getStudent(studentId: Int, unitId: Int): RegisterStudent? {
+    suspend fun getStudent(studentId: Int): RegisterStudent? {
         return api.getContext().students.find {
             val key = getDecodedKey(it.key)
-            key.studentId == studentId && key.unitId == unitId
+            key.studentId == studentId
         }?.let {
             RegisterStudent(
                 studentId = studentId,

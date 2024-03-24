@@ -334,7 +334,7 @@ class Scrapper {
     suspend fun getCurrentStudent(): RegisterStudent? {
         val loginResult = serviceManager.userLogin()
         return when (loginResult.isStudentSchoolUseEduOne) {
-            true -> studentPlus.getStudent(studentId, unitId)
+            true -> studentPlus.getStudent(studentId)
             else -> studentStart.getStudent(studentId, unitId)
         }
     }
