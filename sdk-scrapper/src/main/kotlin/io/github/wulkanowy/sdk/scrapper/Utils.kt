@@ -160,7 +160,9 @@ internal fun getDecodedKey(key: String): StudentKey {
     val decoded = Base64.decode(key).decodeToString()
     val parts = decoded.split("-").map { it.toIntOrNull() }
 
-    logger.debug("Decoded student key: $decoded")
+    if (parts.any { it == null }) {
+        logger.error("Decoded student key: $decoded")
+    }
 
     return StudentKey(
         studentId = parts[0] ?: -1,
