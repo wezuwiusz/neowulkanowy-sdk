@@ -3,7 +3,6 @@ package io.github.wulkanowy.sdk.scrapper.repository
 import io.github.wulkanowy.sdk.scrapper.Scrapper
 import io.github.wulkanowy.sdk.scrapper.exception.ScrapperException
 import io.github.wulkanowy.sdk.scrapper.exception.StudentGraduateException
-import io.github.wulkanowy.sdk.scrapper.getDecodedKey
 import io.github.wulkanowy.sdk.scrapper.getNormalizedSymbol
 import io.github.wulkanowy.sdk.scrapper.getScriptParam
 import io.github.wulkanowy.sdk.scrapper.interceptor.handleErrors
@@ -23,6 +22,7 @@ import io.github.wulkanowy.sdk.scrapper.register.RegisterSymbol
 import io.github.wulkanowy.sdk.scrapper.register.RegisterUnit
 import io.github.wulkanowy.sdk.scrapper.register.RegisterUser
 import io.github.wulkanowy.sdk.scrapper.register.getStudentsFromDiaries
+import io.github.wulkanowy.sdk.scrapper.register.mapToDiary
 import io.github.wulkanowy.sdk.scrapper.repository.AccountRepository.Companion.SELECTOR_ADFS
 import io.github.wulkanowy.sdk.scrapper.repository.AccountRepository.Companion.SELECTOR_ADFS_CARDS
 import io.github.wulkanowy.sdk.scrapper.repository.AccountRepository.Companion.SELECTOR_ADFS_LIGHT
@@ -337,7 +337,6 @@ internal class RegisterRepository(
         return studentPlus
             .getContext(url = baseStudentPlus + "api/Context").students
             .map { context ->
-                val key = getDecodedKey(context.key)
                 val semesters = kotlin.runCatching {
                     studentPlus.getSemesters(
                         url = baseStudentPlus + "api/OkresyKlasyfikacyjne",
@@ -346,59 +345,9 @@ internal class RegisterRepository(
                     )
                 }.onFailure {
                     logger.error("Can't fetch semesters", it)
-                }.getOrNull().orEmpty().map { semester ->
-                    Diary.Semester(
-                        number = semester.numerOkresu,
-                        start = semester.dataOd,
-                        end = semester.dataDo,
-                        unitId = key.unitId,
-                        id = semester.id,
-                        // todo
-                        isLast = false,
-                        level = 0,
-                        classId = 0,
-                    )
-                }
-                val level = context.className.takeWhile { it.isDigit() }
-                context.opiekunUcznia to Diary(
-                    id = context.registerId,
-                    studentId = key.studentId,
-                    studentName = context.studentName.substringBefore(" ", ""),
-                    studentSecondName = context.studentName.substringAfter(" ", "").substringBefore(" ", ""),
-                    studentSurname = context.studentName.substringAfterLast(" ", ""),
-                    studentNick = "",
-                    isDiary = true,
-                    diaryId = key.diaryId,
-                    kindergartenDiaryId = 0,
-                    fosterDiaryId = 0,
-                    level = level.toInt(), // todo
-                    symbol = context.className.replace(level, ""), // todo
-                    name = context.className,
-                    year = context.registerDateFrom.year,
-                    semesters = semesters,
-                    start = context.registerDateFrom,
-                    end = context.registerDateTo,
-                    componentUnitId = key.unitId,
-                    sioTypeId = null,
-                    isAdults = context.isAdults,
-                    isPostSecondary = context.isPolicealna,
-                    is13 = context.is13,
-                    isArtistic = context.isArtystyczna,
-                    isArtistic13 = context.isArtystyczna13,
-                    isSpecial = context.isSpecjalna,
-                    isKindergarten = context.isPrzedszkolak,
-                    isFoster = null,
-                    isArchived = null,
-                    isCharges = context.config.isPlatnosci,
-                    isPayments = context.config.isOplaty,
-                    isPayButtonOn = null,
-                    canMergeAccounts = context.config.isScalanieKont,
-                    fullName = context.studentName,
-                    o365PassType = null,
-                    isAdult = null,
-                    isAuthorized = !context.isAuthorizationRequired,
-                    citizenship = null,
-                )
+                }.getOrNull().orEmpty()
+
+                context.mapToDiary(semesters)
             }
     }
 }
