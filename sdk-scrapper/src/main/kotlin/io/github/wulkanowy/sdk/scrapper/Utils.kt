@@ -5,6 +5,7 @@ import io.github.wulkanowy.sdk.scrapper.messages.Mailbox
 import io.github.wulkanowy.sdk.scrapper.messages.Recipient
 import io.github.wulkanowy.sdk.scrapper.messages.RecipientType
 import org.jsoup.Jsoup
+import org.slf4j.LoggerFactory
 import retrofit2.HttpException
 import retrofit2.Response
 import java.text.Normalizer
@@ -18,6 +19,8 @@ import java.util.Date
 import kotlin.io.encoding.Base64
 import kotlin.io.encoding.ExperimentalEncodingApi
 import kotlin.math.roundToInt
+
+private val logger = LoggerFactory.getLogger("Utils")
 
 internal fun String.toDate(format: String): Date = SimpleDateFormat(format).parse(this)
 
@@ -154,13 +157,16 @@ internal fun getEncodedKey(studentId: Int, diaryId: Int, unitId: Int): String {
 
 @OptIn(ExperimentalEncodingApi::class)
 internal fun getDecodedKey(key: String): StudentKey {
-    val parts = Base64.decode(key).decodeToString()
-        .split("-").map { it.toInt() }
+    val decoded = Base64.decode(key).decodeToString()
+    val parts = decoded.split("-").map { it.toIntOrNull() }
+
+    logger.debug("Decoded student key: $decoded")
+
     return StudentKey(
-        studentId = parts[0],
-        diaryId = parts[1],
-        unknown = parts[2],
-        unitId = parts[3],
+        studentId = parts[0] ?: -1,
+        diaryId = parts[1] ?: -2,
+        unknown = parts[2] ?: -3,
+        unitId = parts[3] ?: -4,
     )
 }
 
