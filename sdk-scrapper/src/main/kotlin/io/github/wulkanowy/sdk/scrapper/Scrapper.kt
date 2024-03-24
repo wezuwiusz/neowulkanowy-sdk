@@ -285,6 +285,7 @@ class Scrapper {
             classId = classId,
             unitId = unitId,
             api = serviceManager.getStudentService(withLogin = true, studentInterceptor = false),
+            urlGenerator = serviceManager.urlGenerator,
         )
     }
 
@@ -334,7 +335,7 @@ class Scrapper {
         val loginResult = serviceManager.userLogin()
         return when (loginResult.isStudentSchoolUseEduOne) {
             true -> studentPlus.getStudent(studentId, diaryId, unitId)
-            else -> student.getStudent(studentId, unitId)
+            else -> studentStart.getStudent(studentId, unitId)
         }
     }
 
