@@ -27,6 +27,7 @@ import io.github.wulkanowy.sdk.scrapper.notes.NoteCategory
 import io.github.wulkanowy.sdk.scrapper.register.AuthorizePermissionPlusRequest
 import io.github.wulkanowy.sdk.scrapper.register.RegisterStudent
 import io.github.wulkanowy.sdk.scrapper.register.Semester
+import io.github.wulkanowy.sdk.scrapper.register.mapToSemester
 import io.github.wulkanowy.sdk.scrapper.school.School
 import io.github.wulkanowy.sdk.scrapper.school.Teacher
 import io.github.wulkanowy.sdk.scrapper.service.StudentPlusService
@@ -39,6 +40,7 @@ import io.github.wulkanowy.sdk.scrapper.timetable.TimetableDayHeader
 import io.github.wulkanowy.sdk.scrapper.timetable.mapCompletedLessons
 import io.github.wulkanowy.sdk.scrapper.toFormat
 import org.jsoup.Jsoup
+import org.slf4j.LoggerFactory
 import java.net.HttpURLConnection
 import java.time.LocalDate
 import java.time.Month
@@ -46,6 +48,15 @@ import java.time.Month
 internal class StudentPlusRepository(
     private val api: StudentPlusService,
 ) {
+
+    private companion object {
+        @JvmStatic
+        private val logger = LoggerFactory.getLogger(this::class.java)
+
+        const val REPLACEMENT = 1
+        const val RELOCATION = 2
+        const val CANCELLATION = 3
+    }
 
     private fun LocalDate.toISOFormat(): String = toFormat("yyyy-MM-dd'T00:00:00'")
 
@@ -68,21 +79,30 @@ internal class StudentPlusRepository(
     }
 
     suspend fun getStudent(studentId: Int): RegisterStudent? {
-        return api.getContext().students.find {
-            val key = getDecodedKey(it.key)
+        return api.getContext().students.find { contextStudent ->
+            val key = getDecodedKey(contextStudent.key)
             key.studentId == studentId
-        }?.let {
+        }?.let { contextStudent ->
+            val semesters = runCatching {
+                api.getSemesters(
+                    key = contextStudent.key,
+                    diaryId = contextStudent.registerId,
+                )
+            }.onFailure {
+                logger.error("Can't fetch semesters", it)
+            }.getOrNull().orEmpty()
+
             RegisterStudent(
                 studentId = studentId,
-                studentName = it.studentName.substringBefore(" "),
-                studentSecondName = "", //
-                studentSurname = it.studentName.substringAfterLast(" "),
-                className = it.className,
-                classId = 0, //
-                isParent = it.opiekunUcznia,
-                semesters = listOf(), //
-                isAuthorized = !it.isAuthorizationRequired,
+                studentName = contextStudent.studentName.substringBefore(" "),
+                studentSurname = contextStudent.studentName.substringAfterLast(" "),
+                className = contextStudent.className,
+                isParent = contextStudent.opiekunUcznia,
+                semesters = semesters.mapToSemester(contextStudent),
+                isAuthorized = !contextStudent.isAuthorizationRequired,
                 isEduOne = true,
+                studentSecondName = "", //
+                classId = 0, //
             )
         }
     }
@@ -389,12 +409,6 @@ internal class StudentPlusRepository(
             // todo
             additional = emptyList(),
         )
-    }
-
-    companion object {
-        const val REPLACEMENT = 1
-        const val RELOCATION = 2
-        const val CANCELLATION = 3
     }
 
     suspend fun getNotes(studentId: Int, diaryId: Int, unitId: Int): List<Note> {

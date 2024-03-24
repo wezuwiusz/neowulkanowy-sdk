@@ -1,12 +1,30 @@
 package io.github.wulkanowy.sdk.scrapper.register
 
+import io.github.wulkanowy.sdk.scrapper.StudentKey
 import io.github.wulkanowy.sdk.scrapper.getDecodedKey
 import io.github.wulkanowy.sdk.scrapper.grades.GradeSemester
 
-internal fun ContextStudent.mapToDiary(semesters: List<GradeSemester>): Pair<Boolean, Diary> {
-    val context = this
-    val key = getDecodedKey(context.key)
-    val diarySemesters = semesters.map { semester ->
+internal fun List<GradeSemester>.mapToSemester(contextStudent: ContextStudent): List<Semester> {
+    val key = getDecodedKey(contextStudent.key)
+    return map { semester ->
+        Semester(
+            diaryId = contextStudent.registerId,
+            diaryName = contextStudent.className,
+            schoolYear = contextStudent.registerDateFrom.year,
+            semesterId = semester.id,
+            semesterNumber = semester.numerOkresu,
+            start = semester.dataOd.toLocalDate(),
+            end = semester.dataOd.toLocalDate(),
+            className = contextStudent.className,
+            unitId = key.unitId,
+            classId = 0, // not available
+            kindergartenDiaryId = 0, // not available?
+        )
+    }
+}
+
+internal fun List<GradeSemester>.mapToDiarySemester(key: StudentKey): List<Diary.Semester> {
+    return map { semester ->
         Diary.Semester(
             number = semester.numerOkresu,
             start = semester.dataOd,
@@ -19,6 +37,12 @@ internal fun ContextStudent.mapToDiary(semesters: List<GradeSemester>): Pair<Boo
             classId = 0,
         )
     }
+}
+
+internal fun ContextStudent.mapToDiary(semesters: List<GradeSemester>): Pair<Boolean, Diary> {
+    val context = this
+    val key = getDecodedKey(context.key)
+    val diarySemesters = semesters.mapToDiarySemester(key)
     val level = context.className.takeWhile { it.isDigit() }
     return context.opiekunUcznia to Diary(
         id = context.registerId,

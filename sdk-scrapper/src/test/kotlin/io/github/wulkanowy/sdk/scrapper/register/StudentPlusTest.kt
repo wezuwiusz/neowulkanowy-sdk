@@ -13,6 +13,7 @@ class StudentPlusTest : BaseLocalTest() {
     fun `get current student info without error`() = runTest {
         val repo = getStudentPlusRepo {
             it.enqueue("Context-all-enabled.json")
+            it.enqueue("OkresyKlasyfikacyjne.json")
         }
         val student = repo.getStudent(1)
         with(requireNotNull(student)) {
