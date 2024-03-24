@@ -75,7 +75,7 @@ internal interface MessagesService {
     ): List<MessageMeta>
 
     @GET("api/WiadomoscSzczegoly")
-    suspend fun getMessageDetails(@Query("apiGlobalKey") globalKey: String): MessageDetails
+    suspend fun getMessageDetails(@Query("apiGlobalKey") globalKey: String): MessageDetails?
 
     @PUT("api/WiadomoscSzczegoly")
     suspend fun markMessageAsRead(@Body body: Map<String, String>)

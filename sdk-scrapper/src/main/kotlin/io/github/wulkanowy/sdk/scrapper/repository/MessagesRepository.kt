@@ -88,7 +88,7 @@ internal class MessagesRepository(
     }
 
     suspend fun getMessageDetails(globalKey: String, markAsRead: Boolean): MessageDetails {
-        val details = api.getMessageDetails(globalKey)
+        val details = api.getMessageDetails(globalKey) ?: error("Message not exist")
         if (markAsRead) {
             runCatching {
                 loginModule()
