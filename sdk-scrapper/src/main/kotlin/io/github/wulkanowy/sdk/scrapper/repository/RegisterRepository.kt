@@ -5,7 +5,6 @@ import io.github.wulkanowy.sdk.scrapper.exception.ScrapperException
 import io.github.wulkanowy.sdk.scrapper.exception.StudentGraduateException
 import io.github.wulkanowy.sdk.scrapper.getNormalizedSymbol
 import io.github.wulkanowy.sdk.scrapper.getScriptParam
-import io.github.wulkanowy.sdk.scrapper.grades.GradeSemester
 import io.github.wulkanowy.sdk.scrapper.interceptor.handleErrors
 import io.github.wulkanowy.sdk.scrapper.isCurrentLoginHasEduOne
 import io.github.wulkanowy.sdk.scrapper.login.CertificateResponse
@@ -19,11 +18,12 @@ import io.github.wulkanowy.sdk.scrapper.register.HomePageResponse
 import io.github.wulkanowy.sdk.scrapper.register.PermissionUnit
 import io.github.wulkanowy.sdk.scrapper.register.Permissions
 import io.github.wulkanowy.sdk.scrapper.register.RegisterEmployee
+import io.github.wulkanowy.sdk.scrapper.register.RegisterStudent
 import io.github.wulkanowy.sdk.scrapper.register.RegisterSymbol
 import io.github.wulkanowy.sdk.scrapper.register.RegisterUnit
 import io.github.wulkanowy.sdk.scrapper.register.RegisterUser
 import io.github.wulkanowy.sdk.scrapper.register.getStudentsFromDiaries
-import io.github.wulkanowy.sdk.scrapper.register.mapToDiary
+import io.github.wulkanowy.sdk.scrapper.register.mapToRegisterStudent
 import io.github.wulkanowy.sdk.scrapper.repository.AccountRepository.Companion.SELECTOR_ADFS
 import io.github.wulkanowy.sdk.scrapper.repository.AccountRepository.Companion.SELECTOR_ADFS_CARDS
 import io.github.wulkanowy.sdk.scrapper.repository.AccountRepository.Companion.SELECTOR_ADFS_LIGHT
@@ -160,16 +160,19 @@ internal class RegisterRepository(
             url.schoolId = unit.symbol
 
             val isEduOne = isCurrentLoginHasEduOne(studentModuleUrls, url)
-            val cacheAndDiaries = runCatching {
-                if (authInfo?.parentIds.isNullOrEmpty() && authInfo?.studentIds.isNullOrEmpty()) {
-                    null to emptyList()
-                } else {
-                    when {
-                        isEduOne -> getEduOneDiaries().let { isParentAndDiaries ->
-                            isParentAndDiaries.any { it.first } to isParentAndDiaries.map { it.second }
-                        }
 
-                        else -> isStudentFromParentAccount() to getStudentDiaries()
+            val registerStudents = runCatching {
+                if (authInfo?.parentIds.isNullOrEmpty() && authInfo?.studentIds.isNullOrEmpty()) {
+                    emptyList()
+                } else when {
+                    isEduOne -> getEduOneDiaries()
+                    else -> {
+                        val isParent = isStudentFromParentAccount()
+                        getStudentDiaries().getStudentsFromDiaries(
+                            isParent = isParent,
+                            isEduOne = false,
+                            unitId = unit.id,
+                        )
                     }
                 }
             }
@@ -180,24 +183,17 @@ internal class RegisterRepository(
                     employeeName = userName,
                 )
             }
-            val students = cacheAndDiaries.getOrNull()?.let { (cache, diaries) ->
-                diaries.getStudentsFromDiaries(
-                    isParent = cache,
-                    isEduOne = isEduOne,
-                    unitId = unit.id,
-                )
-            }
 
             RegisterUnit(
                 userLoginId = requireNotNull(authInfo?.loginId),
                 schoolId = unit.symbol,
                 schoolName = unit.name,
                 schoolShortName = unit.short,
-                error = cacheAndDiaries.exceptionOrNull(),
+                error = registerStudents.exceptionOrNull(),
                 employeeIds = authInfo?.employeeIds.orEmpty(),
                 studentIds = authInfo?.studentIds.orEmpty(),
                 parentIds = authInfo?.parentIds.orEmpty(),
-                subjects = employees.orEmpty() + students.orEmpty(),
+                subjects = employees.orEmpty() + registerStudents.getOrDefault(emptyList()),
             )
         }
     }
@@ -316,7 +312,7 @@ internal class RegisterRepository(
         .handleErrors()
         .data.orEmpty()
 
-    private suspend fun getEduOneDiaries(): List<Pair<Boolean, Diary>> {
+    private suspend fun getEduOneDiaries(): List<RegisterStudent> {
         val baseStudentPlus = url.generate(UrlGenerator.Site.STUDENT_PLUS)
         val studentPageUrl = baseStudentPlus + "LoginEndpoint.aspx"
         val start = student.getStart(studentPageUrl)
@@ -337,7 +333,7 @@ internal class RegisterRepository(
         return studentPlus
             .getContext(url = baseStudentPlus + "api/Context").students
             .map { contextStudent ->
-                val semesters = kotlin.runCatching {
+                val semesters = runCatching {
                     when {
                         contextStudent.isAuthorizationRequired -> emptyList()
                         else -> studentPlus.getSemesters(
@@ -348,18 +344,9 @@ internal class RegisterRepository(
                     }
                 }.onFailure {
                     logger.error("Can't fetch semesters", it)
-                }.getOrNull().orEmpty().ifEmpty {
-                    listOf(
-                        GradeSemester(
-                            dataOd = contextStudent.registerDateFrom,
-                            dataDo = contextStudent.registerDateTo,
-                            id = -1, //
-                            numerOkresu = 0, //
-                        ),
-                    )
-                }
+                }.getOrNull().orEmpty()
 
-                contextStudent.mapToDiary(semesters)
+                contextStudent.mapToRegisterStudent(semesters)
             }
     }
 }
