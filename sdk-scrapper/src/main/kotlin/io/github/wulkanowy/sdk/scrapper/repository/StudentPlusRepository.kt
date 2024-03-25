@@ -123,8 +123,8 @@ internal class StudentPlusRepository(
     suspend fun getSemesters(studentId: Int, diaryId: Int, unitId: Int): List<Semester> {
         val student = api.getContext().students.find {
             val key = getDecodedKey(it.key)
-            key.studentId == studentId && key.diaryId == diaryId && key.unitId == unitId
-        } ?: return emptyList()
+            key.studentId == studentId
+        } ?: throw NoSuchElementException()
         val level = student.className.takeWhile { it.isDigit() }
         return api.getSemesters(student.key, diaryId).map {
             Semester(
