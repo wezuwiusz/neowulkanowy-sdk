@@ -42,12 +42,12 @@ internal class StudentStartRepository(
     }
 
     suspend fun getStudent(studentId: Int, unitId: Int): RegisterStudent {
-        return getStudentsFromDiaries(
-            isParent = getCache().isParent,
-            diaries = api.getDiaries().handleErrors().data.orEmpty(),
-            unitId = unitId,
-            isEduOne = false,
-        ).find { it.studentId == studentId }
+        return api.getDiaries().handleErrors().data.orEmpty()
+            .getStudentsFromDiaries(
+                isParent = getCache().isParent,
+                isEduOne = false,
+                unitId = unitId,
+            ).find { it.studentId == studentId }
             ?: throw NoSuchElementException()
     }
 
