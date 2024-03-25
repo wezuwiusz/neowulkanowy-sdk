@@ -78,36 +78,36 @@ internal class StudentPlusRepository(
         return true
     }
 
-    suspend fun getStudent(studentId: Int): RegisterStudent? {
-        return api.getContext().students.find { contextStudent ->
+    suspend fun getStudent(studentId: Int): RegisterStudent {
+        val contextStudent = api.getContext().students.find { contextStudent ->
             val key = getDecodedKey(contextStudent.key)
             key.studentId == studentId
-        }?.let { contextStudent ->
-            val semesters = runCatching {
-                when {
-                    contextStudent.isAuthorizationRequired -> emptyList()
-                    else -> api.getSemesters(
-                        key = contextStudent.key,
-                        diaryId = contextStudent.registerId,
-                    )
-                }
-            }.onFailure {
-                logger.error("Can't fetch semesters", it)
-            }.getOrNull().orEmpty()
+        } ?: throw NoSuchElementException()
 
-            RegisterStudent(
-                studentId = studentId,
-                studentName = contextStudent.studentName.substringBefore(" "),
-                studentSurname = contextStudent.studentName.substringAfterLast(" "),
-                className = contextStudent.className,
-                isParent = contextStudent.opiekunUcznia,
-                semesters = semesters.mapToSemester(contextStudent),
-                isAuthorized = !contextStudent.isAuthorizationRequired,
-                isEduOne = true,
-                studentSecondName = "", //
-                classId = 0, //
-            )
-        }
+        val semesters = runCatching {
+            when {
+                contextStudent.isAuthorizationRequired -> emptyList()
+                else -> api.getSemesters(
+                    key = contextStudent.key,
+                    diaryId = contextStudent.registerId,
+                )
+            }
+        }.onFailure {
+            logger.error("Can't fetch semesters", it)
+        }.getOrNull().orEmpty()
+
+        return RegisterStudent(
+            studentId = studentId,
+            studentName = contextStudent.studentName.substringBefore(" "),
+            studentSurname = contextStudent.studentName.substringAfterLast(" "),
+            className = contextStudent.className,
+            isParent = contextStudent.opiekunUcznia,
+            semesters = semesters.mapToSemester(contextStudent),
+            isAuthorized = !contextStudent.isAuthorizationRequired,
+            isEduOne = true, // we already in eduOne context here
+            studentSecondName = "", //
+            classId = 0, //
+        )
     }
 
     suspend fun getSemesters(studentId: Int, diaryId: Int): List<Semester> {

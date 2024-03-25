@@ -41,15 +41,14 @@ internal class StudentStartRepository(
             }
     }
 
-    suspend fun getStudent(studentId: Int, unitId: Int): RegisterStudent? {
+    suspend fun getStudent(studentId: Int, unitId: Int): RegisterStudent {
         return getStudentsFromDiaries(
             isParent = getCache().isParent,
             diaries = api.getDiaries().handleErrors().data.orEmpty(),
             unitId = unitId,
             isEduOne = false,
-        ).find {
-            it.studentId == studentId
-        }
+        ).find { it.studentId == studentId }
+            ?: throw NoSuchElementException()
     }
 
     private suspend fun getCache(): CacheResponse {

@@ -9,6 +9,14 @@ import org.junit.Test
 
 class StudentPlusTest : BaseLocalTest() {
 
+    @Test(expected = NoSuchElementException::class)
+    fun `get current student when there is no matching student`() = runTest {
+        val repo = getStudentPlusRepo {
+            it.enqueue("Context-all-enabled.json")
+        }
+        repo.getStudent(2)
+    }
+
     @Test
     fun `get current student info without error but with empty real semesters`() = runTest {
         val repo = getStudentPlusRepo {
@@ -16,7 +24,7 @@ class StudentPlusTest : BaseLocalTest() {
             it.enqueueContent("[]")
         }
         val student = repo.getStudent(1)
-        with(requireNotNull(student)) {
+        with(student) {
             assertEquals(1, studentId)
             assertEquals("Jan", studentName)
             assertEquals("", studentSecondName)
@@ -24,12 +32,10 @@ class StudentPlusTest : BaseLocalTest() {
             assertEquals("7a", className)
             assertEquals(0, classId)
             assertFalse(isParent)
-            assertEquals(1, semesters.size)
             assertTrue(isAuthorized)
 
-            with(semesters[0]) {
-                assertEquals(-1, semesterId)
-            }
+            assertEquals(1, semesters.size)
+            assertEquals(-1, semesters[0].semesterId)
         }
     }
 
@@ -40,7 +46,7 @@ class StudentPlusTest : BaseLocalTest() {
             it.enqueue("OkresyKlasyfikacyjne.json", RegisterTest::class.java)
         }
         val student = repo.getStudent(1)
-        with(requireNotNull(student)) {
+        with(student) {
             assertEquals(1, studentId)
             assertEquals("Jan", studentName)
             assertEquals("", studentSecondName)
@@ -48,9 +54,9 @@ class StudentPlusTest : BaseLocalTest() {
             assertEquals("7a", className)
             assertEquals(0, classId)
             assertFalse(isParent)
-            assertEquals(2, semesters.size)
             assertTrue(isAuthorized)
 
+            assertEquals(2, semesters.size)
             assertEquals(12, semesters[0].semesterId)
             assertEquals(13, semesters[1].semesterId)
         }
