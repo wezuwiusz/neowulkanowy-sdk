@@ -345,7 +345,7 @@ class Scrapper {
     }
 
     suspend fun getSemesters(): List<Semester> = when (isEduOne) {
-        true -> studentPlus.getSemesters(studentId, diaryId, unitId)
+        true -> studentPlus.getSemesters(studentId, diaryId)
         else -> studentStart.getSemesters()
     }
 

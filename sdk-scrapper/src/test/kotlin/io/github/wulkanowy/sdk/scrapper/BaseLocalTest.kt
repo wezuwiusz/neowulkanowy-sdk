@@ -42,7 +42,7 @@ abstract class BaseLocalTest : BaseTest() {
         )
     }
 
-    fun MockWebServer.enqueue(content: String, responseCode: Int = 200) {
+    fun MockWebServer.enqueueContent(content: String, responseCode: Int = 200) {
         enqueue(MockResponse().setBody(content).setResponseCode(responseCode))
     }
 

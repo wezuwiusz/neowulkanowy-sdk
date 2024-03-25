@@ -15,7 +15,6 @@ import io.github.wulkanowy.sdk.scrapper.exception.FeatureDisabledException
 import io.github.wulkanowy.sdk.scrapper.exception.VulcanClientError
 import io.github.wulkanowy.sdk.scrapper.getDecodedKey
 import io.github.wulkanowy.sdk.scrapper.getEncodedKey
-import io.github.wulkanowy.sdk.scrapper.grades.GradeSemester
 import io.github.wulkanowy.sdk.scrapper.grades.Grades
 import io.github.wulkanowy.sdk.scrapper.grades.mapGradesList
 import io.github.wulkanowy.sdk.scrapper.grades.mapGradesSummary
@@ -94,16 +93,7 @@ internal class StudentPlusRepository(
                 }
             }.onFailure {
                 logger.error("Can't fetch semesters", it)
-            }.getOrNull().orEmpty().ifEmpty {
-                listOf(
-                    GradeSemester(
-                        dataOd = contextStudent.registerDateFrom,
-                        dataDo = contextStudent.registerDateTo,
-                        id = -1, //
-                        numerOkresu = 0, //
-                    ),
-                )
-            }
+            }.getOrNull().orEmpty()
 
             RegisterStudent(
                 studentId = studentId,
@@ -120,27 +110,14 @@ internal class StudentPlusRepository(
         }
     }
 
-    suspend fun getSemesters(studentId: Int, diaryId: Int, unitId: Int): List<Semester> {
+    suspend fun getSemesters(studentId: Int, diaryId: Int): List<Semester> {
         val student = api.getContext().students.find {
             val key = getDecodedKey(it.key)
             key.studentId == studentId
         } ?: throw NoSuchElementException()
-        val level = student.className.takeWhile { it.isDigit() }
-        return api.getSemesters(student.key, diaryId).map {
-            Semester(
-                diaryId = diaryId,
-                diaryName = student.className,
-                className = student.className.replace(level, ""),
-                schoolYear = it.dataOd.toLocalDate().year,
-                semesterId = it.id,
-                semesterNumber = it.numerOkresu,
-                start = it.dataOd.toLocalDate(),
-                end = it.dataDo.toLocalDate(),
-                unitId = unitId,
-                classId = 0,
-                kindergartenDiaryId = 0,
-            )
-        }
+
+        return api.getSemesters(student.key, diaryId)
+            .mapToSemester(student)
     }
 
     suspend fun getAttendance(startDate: LocalDate, endDate: LocalDate?, studentId: Int, diaryId: Int, unitId: Int): List<Attendance> {

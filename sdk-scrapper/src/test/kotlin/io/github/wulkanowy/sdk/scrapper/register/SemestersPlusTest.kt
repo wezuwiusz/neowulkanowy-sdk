@@ -4,6 +4,7 @@ import io.github.wulkanowy.sdk.scrapper.BaseLocalTest
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
 import org.junit.Test
+import java.time.LocalDate
 
 class SemestersPlusTest : BaseLocalTest() {
 
@@ -15,7 +16,7 @@ class SemestersPlusTest : BaseLocalTest() {
             it.enqueue("Context-all-disabled.json", RegisterTest::class.java)
             it.enqueue("OkresyKlasyfikacyjne.json", RegisterTest::class.java)
         }
-        val semesters = repo.getSemesters(1, 0, 0)
+        val semesters = repo.getSemesters(1, 0)
 
         assertEquals(2, semesters.size)
     }
@@ -27,17 +28,19 @@ class SemestersPlusTest : BaseLocalTest() {
             // 1-2-1-3
             it.enqueue("Context-all-disabled.json", RegisterTest::class.java)
         }
-        repo.getSemesters(2, 0, 0)
+        repo.getSemesters(2, 0)
     }
 
     @Test
     fun `get semesters when there is empty semesters list`() = runTest {
         val repo = getStudentPlusRepo {
             it.enqueue("Context-all-disabled.json", RegisterTest::class.java)
-            it.enqueue("[]")
+            it.enqueueContent("[]")
         }
-        val semesters = repo.getSemesters(1, 0, 0)
+        val semesters = repo.getSemesters(1, 0)
 
-        assertEquals(0, semesters.size)
+        assertEquals(1, semesters.size)
+        assertEquals(LocalDate.of(2023, 9, 1), semesters.single().start)
+        assertEquals(LocalDate.of(2024, 8, 31), semesters.single().end)
     }
 }

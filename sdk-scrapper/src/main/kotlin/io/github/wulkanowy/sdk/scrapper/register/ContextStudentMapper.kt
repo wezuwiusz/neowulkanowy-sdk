@@ -6,7 +6,16 @@ import io.github.wulkanowy.sdk.scrapper.grades.GradeSemester
 
 internal fun List<GradeSemester>.mapToSemester(contextStudent: ContextStudent): List<Semester> {
     val key = getDecodedKey(contextStudent.key)
-    return map { semester ->
+    return ifEmpty {
+        listOf(
+            GradeSemester(
+                dataOd = contextStudent.registerDateFrom,
+                dataDo = contextStudent.registerDateTo,
+                id = -1, //
+                numerOkresu = 0, //
+            ),
+        )
+    }.map { semester ->
         Semester(
             diaryId = contextStudent.registerId,
             diaryName = contextStudent.className,
@@ -14,7 +23,7 @@ internal fun List<GradeSemester>.mapToSemester(contextStudent: ContextStudent): 
             semesterId = semester.id,
             semesterNumber = semester.numerOkresu,
             start = semester.dataOd.toLocalDate(),
-            end = semester.dataOd.toLocalDate(),
+            end = semester.dataDo.toLocalDate(),
             className = contextStudent.className,
             unitId = key.unitId,
             classId = 0, // not available
