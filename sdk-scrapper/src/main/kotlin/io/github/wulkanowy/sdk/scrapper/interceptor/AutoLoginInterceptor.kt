@@ -204,19 +204,19 @@ internal class AutoLoginInterceptor(
             throw NotLoggedInException("User not logged in")
         }
 
-        // old style
+        // old error style
         val bodyContent = doc.body().text()
         if ("The custom error module" in bodyContent) {
             throw NotLoggedInException(bodyContent)
         }
 
-        // new style
+        // new error style
         val isCodeMatch = response.code == HttpURLConnection.HTTP_OK
         val isJsonContent = bodyContent.startsWith("{")
         val isSubdomainMatch = "uonetplus-uczen" in url
         if (isCodeMatch && isJsonContent && isSubdomainMatch) {
             runCatching { json.decodeFromString<ApiResponse<Unit?>>(bodyContent) }
-                .onFailure { logger.error("Can't deserialize content body", it) }
+                .onFailure { logger.error("AutoLoginInterceptor: Can't deserialize new style error content body", it) }
                 .onSuccess {
                     it.feedback?.message?.let { errorMessage ->
                         if ("Brak uprawnień" in errorMessage) {
