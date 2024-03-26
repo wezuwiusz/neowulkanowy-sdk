@@ -110,13 +110,13 @@ internal class StudentPlusRepository(
         )
     }
 
-    suspend fun getSemesters(studentId: Int, diaryId: Int): List<Semester> {
+    suspend fun getSemesters(studentId: Int): List<Semester> {
         val student = api.getContext().students.find {
             val key = getDecodedKey(it.key)
             key.studentId == studentId
         } ?: throw NoSuchElementException()
 
-        return api.getSemesters(student.key, diaryId)
+        return api.getSemesters(student.key, student.registerId)
             .mapToSemester(student)
     }
 
