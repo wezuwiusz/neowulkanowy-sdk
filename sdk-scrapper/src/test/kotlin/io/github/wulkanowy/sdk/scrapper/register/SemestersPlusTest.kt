@@ -16,7 +16,7 @@ class SemestersPlusTest : BaseLocalTest() {
             it.enqueue("Context-all-disabled.json", RegisterTest::class.java)
             it.enqueue("OkresyKlasyfikacyjne.json", RegisterTest::class.java)
         }
-        val semesters = repo.getSemesters(1, 0)
+        val semesters = repo.getSemesters(1)
 
         assertEquals(2, semesters.size)
     }
@@ -28,7 +28,7 @@ class SemestersPlusTest : BaseLocalTest() {
             // 1-2-1-3
             it.enqueue("Context-all-disabled.json", RegisterTest::class.java)
         }
-        repo.getSemesters(2, 0)
+        repo.getSemesters(2)
     }
 
     @Test
@@ -37,7 +37,7 @@ class SemestersPlusTest : BaseLocalTest() {
             it.enqueue("Context-all-disabled.json", RegisterTest::class.java)
             it.enqueueContent("[]")
         }
-        val semesters = repo.getSemesters(1, 0)
+        val semesters = repo.getSemesters(1)
 
         assertEquals(1, semesters.size)
         assertEquals(LocalDate.of(2023, 9, 1), semesters.single().start)
