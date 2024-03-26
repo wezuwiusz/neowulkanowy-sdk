@@ -162,17 +162,21 @@ internal class RegisterRepository(
             val isEduOne = isCurrentLoginHasEduOne(studentModuleUrls, url)
 
             val registerStudents = runCatching {
-                if (authInfo?.parentIds.isNullOrEmpty() && authInfo?.studentIds.isNullOrEmpty()) {
-                    emptyList()
-                } else when {
-                    isEduOne -> getEduOneDiaries()
-                    else -> {
-                        val isParent = isStudentFromParentAccount()
-                        getStudentDiaries().getStudentsFromDiaries(
-                            isParent = isParent,
-                            isEduOne = false,
-                            unitId = unit.id,
-                        )
+                when {
+                    authInfo?.parentIds.isNullOrEmpty() && authInfo?.studentIds.isNullOrEmpty() -> {
+                        emptyList()
+                    }
+
+                    else -> when {
+                        isEduOne -> getEduOneDiaries()
+                        else -> {
+                            val isParent = isStudentFromParentAccount()
+                            getStudentDiaries().getStudentsFromDiaries(
+                                isParent = isParent,
+                                isEduOne = false,
+                                unitId = unit.id,
+                            )
+                        }
                     }
                 }
             }
