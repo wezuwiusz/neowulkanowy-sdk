@@ -91,7 +91,7 @@ abstract class BaseLocalTest : BaseTest() {
     }
 
     @OptIn(ExperimentalSerializationApi::class)
-    private val json = Json {
+    val json = Json {
         explicitNulls = false
         ignoreUnknownKeys = true
         encodeDefaults = true
@@ -159,6 +159,7 @@ abstract class BaseLocalTest : BaseTest() {
                 }
             },
             fetchModuleCookies = { _ -> "http://localhost".toHttpUrl() to Document("") },
+            json = json,
         )
     }
 }

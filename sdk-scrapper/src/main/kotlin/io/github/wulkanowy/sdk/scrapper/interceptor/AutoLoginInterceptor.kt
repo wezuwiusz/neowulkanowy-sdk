@@ -1,5 +1,6 @@
 package io.github.wulkanowy.sdk.scrapper.interceptor
 
+import io.github.wulkanowy.sdk.scrapper.ApiResponse
 import io.github.wulkanowy.sdk.scrapper.CookieJarCabinet
 import io.github.wulkanowy.sdk.scrapper.Scrapper.LoginType
 import io.github.wulkanowy.sdk.scrapper.Scrapper.LoginType.ADFS
@@ -19,6 +20,7 @@ import io.github.wulkanowy.sdk.scrapper.repository.AccountRepository.Companion.S
 import io.github.wulkanowy.sdk.scrapper.repository.AccountRepository.Companion.SELECTOR_ADFS_LIGHT
 import io.github.wulkanowy.sdk.scrapper.repository.AccountRepository.Companion.SELECTOR_STANDARD
 import kotlinx.coroutines.runBlocking
+import kotlinx.serialization.json.Json
 import okhttp3.HttpUrl
 import okhttp3.Interceptor
 import okhttp3.MediaType
@@ -49,6 +51,7 @@ internal class AutoLoginInterceptor(
     private val emptyCookieJarIntercept: Boolean = false,
     private val notLoggedInCallback: suspend () -> LoginResult,
     private val fetchModuleCookies: (UrlGenerator.Site) -> Pair<HttpUrl, Document>,
+    private val json: Json,
 ) : Interceptor {
 
     companion object {
@@ -76,7 +79,7 @@ internal class AutoLoginInterceptor(
             if (response.body?.contentType()?.subtype != "json") {
                 val body = response.peekBody(Long.MAX_VALUE).byteStream()
                 val html = Jsoup.parse(body, null, url)
-                checkResponse(html, url)
+                checkResponse(html, url, response)
                 saveModuleHeaders(html, uri)
             }
         } catch (e: NotLoggedInException) {
@@ -182,7 +185,7 @@ internal class AutoLoginInterceptor(
         }
     }
 
-    private fun checkResponse(doc: Document, url: String) {
+    private fun checkResponse(doc: Document, url: String, response: Response) {
         // if (chain.request().url().toString().contains("/Start.mvc/Get")) {
         if (url.contains("/Start.mvc/")) { // /Index return error too in 19.09.0000.34977
             doc.select(".errorBlock").let {
@@ -201,12 +204,26 @@ internal class AutoLoginInterceptor(
             throw NotLoggedInException("User not logged in")
         }
 
+        // old style
         val bodyContent = doc.body().text()
-        when {
-            // uonetplus-uczen
-            "The custom error module" in bodyContent -> {
-                throw NotLoggedInException(bodyContent)
-            }
+        if ("The custom error module" in bodyContent) {
+            throw NotLoggedInException(bodyContent)
+        }
+
+        // new style
+        val isCodeMatch = response.code == HttpURLConnection.HTTP_OK
+        val isJsonContent = bodyContent.startsWith("{")
+        val isSubdomainMatch = "uonetplus-uczen" in url
+        if (isCodeMatch && isJsonContent && isSubdomainMatch) {
+            runCatching { json.decodeFromString<ApiResponse<Unit?>>(bodyContent) }
+                .onFailure { logger.error("Can't deserialize content body", it) }
+                .onSuccess {
+                    it.feedback?.message?.let { errorMessage ->
+                        if ("Brak uprawnień" in errorMessage) {
+                            throw NotLoggedInException(errorMessage)
+                        }
+                    }
+                }
         }
     }
 

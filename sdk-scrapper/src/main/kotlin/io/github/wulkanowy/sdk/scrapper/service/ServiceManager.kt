@@ -104,6 +104,7 @@ internal class ServiceManager(
             cookieJarCabinet = cookieJarCabinet,
             emptyCookieJarIntercept = emptyCookieJarIntercept,
             notLoggedInCallback = ::userLogin,
+            json = json,
             fetchModuleCookies = { site -> loginHelper.loginModule(site) },
         ) to false,
         UserAgentInterceptor(androidVersion, buildTag, userAgentTemplate) to false,

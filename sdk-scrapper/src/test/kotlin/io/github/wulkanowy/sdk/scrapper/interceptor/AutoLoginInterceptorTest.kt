@@ -193,6 +193,7 @@ class AutoLoginInterceptorTest : BaseLocalTest() {
             emptyCookieJarIntercept = checkJar,
             notLoggedInCallback = notLoggedInCallback,
             fetchModuleCookies = fetchModuleCookies,
+            json = json,
         )
         val okHttp = getOkHttp(autoLogin = true, autoLoginInterceptorOn = true, autoLoginInterceptor = interceptor)
         return getService(
