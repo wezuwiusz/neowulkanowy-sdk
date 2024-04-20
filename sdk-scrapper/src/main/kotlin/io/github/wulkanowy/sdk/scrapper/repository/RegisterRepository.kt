@@ -33,6 +33,7 @@ import io.github.wulkanowy.sdk.scrapper.service.StudentPlusService
 import io.github.wulkanowy.sdk.scrapper.service.StudentService
 import io.github.wulkanowy.sdk.scrapper.service.SymbolService
 import kotlinx.serialization.json.Json
+import okhttp3.HttpUrl.Companion.toHttpUrl
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Element
 import org.jsoup.parser.Parser
@@ -150,8 +151,8 @@ internal class RegisterRepository(
     }
 
     private suspend fun getRegisterUnits(homeResponse: HomePageResponse?): List<RegisterUnit> {
-        val studentModuleUrls = homeResponse?.studentSchools.orEmpty()
-            .map { it.attr("href") }
+        val studentModules = homeResponse?.studentSchools.orEmpty()
+            .map { it.text() to it.attr("href") }
 
         val permissions = homeResponse.toPermissions()
 
@@ -159,8 +160,13 @@ internal class RegisterRepository(
             val version = getScriptParam("appVersion", homeResponse?.document.toString()).substringBefore("|")
             logger.warn("Can't find permissions on homepage version $version")
 
-
-            return emptyList() // todo
+            return studentModules.map { (name, url) ->
+                getRegisterUnit(
+                    originalName = name,
+                    studentModuleUrl = url,
+                    studentModuleUrls = studentModules.map { it.second },
+                )
+            }
         }
 
         return permissions
@@ -168,11 +174,61 @@ internal class RegisterRepository(
             .map { (unit, authInfo) ->
                 getRegisterUnit(
                     userName = homeResponse.getUserNameFromUserData(),
-                    studentModuleUrls = studentModuleUrls,
+                    studentModuleUrls = studentModules.map { it.second },
                     unit = unit,
                     authInfo = authInfo,
                 )
             }
+    }
+
+    private suspend fun getRegisterUnit(
+        originalName: String,
+        studentModuleUrl: String,
+        studentModuleUrls: List<String>,
+    ): RegisterUnit {
+        val extractedSchoolId = studentModuleUrl.toHttpUrl().pathSegments[1]
+        url.schoolId = extractedSchoolId
+        val isEduOne = isCurrentLoginHasEduOne(studentModuleUrls, url)
+
+        val originalSchoolShortName = when {
+            isEduOne -> originalName.takeIf { it != "Uczeń Plus" }
+            else -> originalName.takeIf { it != "Uczeń" }
+        } ?: "Nieznana nazwa szkoły"
+        val registerStudents = runCatching {
+            when {
+                isEduOne -> {
+                    // todo: fetch school name from cache
+                    getEduOneDiaries()
+                }
+                else -> {
+                    val (_, startPage) = loginModule(UrlGenerator.Site.STUDENT)
+                    // todo: get school name
+                    val isParent = isStudentFromParentAccount(startPage)
+                    val diaries = getStudentDiaries()
+                    diaries.getStudentsFromDiaries(
+                        isParent = isParent,
+                        isEduOne = false,
+                        unitId = diaries.firstOrNull()?.componentUnitId
+                            ?: error("Can't find componentUnitId in student diaries"),
+                    )
+                }
+            }
+        }
+
+        val firstStudentFromUnit = registerStudents.getOrNull()?.firstOrNull()
+
+        return RegisterUnit(
+            userLoginId = -1,
+            schoolId = extractedSchoolId,
+            schoolName = firstStudentFromUnit?.className.orEmpty(), // todo: schoolName
+            schoolShortName = firstStudentFromUnit?.className // todo: schoolStartName
+                ?: originalSchoolShortName,
+            error = registerStudents.exceptionOrNull(),
+            employeeIds = emptyList(),
+            studentIds = emptyList(),
+            parentIds = emptyList(),
+            subjects = registerStudents.getOrDefault(emptyList()),
+        )
     }
 
     private suspend fun getRegisterUnit(
@@ -194,7 +250,8 @@ internal class RegisterRepository(
                 else -> when {
                     isEduOne -> getEduOneDiaries()
                     else -> {
-                        val isParent = isStudentFromParentAccount()
+                        val (_, startPage) = loginModule(UrlGenerator.Site.STUDENT)
+                        val isParent = isStudentFromParentAccount(startPage)
                         getStudentDiaries()
                             .getStudentsFromDiaries(
                                 isParent = isParent,
@@ -309,9 +366,7 @@ internal class RegisterRepository(
     }
 
     // used only for check is student from parent account
-    private suspend fun isStudentFromParentAccount(): Boolean? {
-        val (_, startPage) = loginModule(UrlGenerator.Site.STUDENT)
-
+    private suspend fun isStudentFromParentAccount(startPage: String): Boolean? {
         val userCache = student.getUserCache(
             url = url.generate(UrlGenerator.Site.STUDENT) + "UczenCache.mvc/Get",
             token = getScriptParam("antiForgeryToken", startPage),
