@@ -114,14 +114,8 @@ internal class RegisterRepository(
 
         val errors = checkForErrors(symbolLoginType, homeResponse.getOrNull()?.document)
 
-        val studentModuleUrls = homeResponse.getOrNull()?.studentSchools.orEmpty()
-            .map { it.attr("href") }
-
         val userName = homeResponse.getOrNull().getUserNameFromUserData()
-        val schools = homeResponse.getOrNull()
-            .toPermissions()
-            .toUnitsMap()
-            .getRegisterUnits(userName, studentModuleUrls)
+        val schools = getRegisterUnits(homeResponse.getOrNull())
 
         loginHelper.logout()
 
@@ -155,52 +149,87 @@ internal class RegisterRepository(
         }
     }
 
-    private suspend fun Map<PermissionUnit, AuthInfo?>.getRegisterUnits(userName: String, studentModuleUrls: List<String>): List<RegisterUnit> {
-        return map { (unit, authInfo) ->
-            url.schoolId = unit.symbol
+    private suspend fun getRegisterUnits(homeResponse: HomePageResponse?): List<RegisterUnit> {
+        val studentModuleUrls = homeResponse?.studentSchools.orEmpty()
+            .map { it.attr("href") }
 
-            val isEduOne = isCurrentLoginHasEduOne(studentModuleUrls, url)
+        val permissions = homeResponse.toPermissions()
 
-            val registerStudents = runCatching {
-                when {
-                    authInfo?.parentIds.isNullOrEmpty() && authInfo?.studentIds.isNullOrEmpty() -> {
-                        emptyList()
-                    }
+        if (permissions == null) {
+            val version = getScriptParam("appVersion", homeResponse?.document.toString()).substringBefore("|")
+            logger.warn("Can't find permissions on homepage version $version")
 
-                    else -> when {
-                        isEduOne -> getEduOneDiaries()
-                        else -> {
-                            val isParent = isStudentFromParentAccount()
-                            getStudentDiaries().getStudentsFromDiaries(
+
+            return emptyList() // todo
+        }
+
+        return permissions
+            .toUnitsMap()
+            .map { (unit, authInfo) ->
+                getRegisterUnit(
+                    userName = homeResponse.getUserNameFromUserData(),
+                    studentModuleUrls = studentModuleUrls,
+                    unit = unit,
+                    authInfo = authInfo,
+                )
+            }
+    }
+
+    private suspend fun getRegisterUnit(
+        userName: String,
+        studentModuleUrls: List<String>,
+        unit: PermissionUnit,
+        authInfo: AuthInfo?,
+    ): RegisterUnit {
+        url.schoolId = unit.symbol
+
+        val isEduOne = isCurrentLoginHasEduOne(studentModuleUrls, url)
+
+        val registerStudents = runCatching {
+            when {
+                authInfo?.parentIds.isNullOrEmpty() && authInfo?.studentIds.isNullOrEmpty() -> {
+                    emptyList()
+                }
+
+                else -> when {
+                    isEduOne -> getEduOneDiaries()
+                    else -> {
+                        val isParent = isStudentFromParentAccount()
+                        getStudentDiaries()
+                            .getStudentsFromDiaries(
                                 isParent = isParent,
                                 isEduOne = false,
                                 unitId = unit.id,
                             )
-                        }
                     }
                 }
             }
+        }
 
-            val employees = authInfo?.employeeIds?.map { employeeId ->
-                RegisterEmployee(
-                    employeeId = employeeId,
-                    employeeName = userName,
-                )
-            }
-
-            RegisterUnit(
-                userLoginId = requireNotNull(authInfo?.loginId),
-                schoolId = unit.symbol,
-                schoolName = unit.name,
-                schoolShortName = unit.short,
-                error = registerStudents.exceptionOrNull(),
-                employeeIds = authInfo?.employeeIds.orEmpty(),
-                studentIds = authInfo?.studentIds.orEmpty(),
-                parentIds = authInfo?.parentIds.orEmpty(),
-                subjects = employees.orEmpty() + registerStudents.getOrDefault(emptyList()),
+        val employees = authInfo?.employeeIds?.map { employeeId ->
+            RegisterEmployee(
+                employeeId = employeeId,
+                employeeName = userName,
             )
         }
+
+        return RegisterUnit(
+            userLoginId = requireNotNull(authInfo?.loginId),
+            schoolId = unit.symbol,
+            schoolName = unit.name,
+            schoolShortName = unit.short,
+            error = registerStudents.exceptionOrNull(),
+            employeeIds = authInfo?.employeeIds.orEmpty(),
+            studentIds = authInfo?.studentIds.orEmpty(),
+            parentIds = authInfo?.parentIds.orEmpty(),
+            subjects = employees.orEmpty() + registerStudents.getOrDefault(emptyList()),
+        )
     }
+
+    private suspend fun getStudentDiaries(): List<Diary> = student
+        .getSchoolInfo(url.generate(UrlGenerator.Site.STUDENT) + "UczenDziennik.mvc/Get")
+        .handleErrors()
+        .data.orEmpty()
 
     private suspend fun getLoginType(symbol: String): Scrapper.LoginType {
         runCatching { symbolService.getSymbolPage(symbol) }
@@ -281,25 +310,7 @@ internal class RegisterRepository(
 
     // used only for check is student from parent account
     private suspend fun isStudentFromParentAccount(): Boolean? {
-        val studentPageUrl = url.generate(UrlGenerator.Site.STUDENT) + "LoginEndpoint.aspx"
-        val start = student.getStart(studentPageUrl)
-
-        val startPage = when {
-            "Working" in Jsoup.parse(start).title() -> {
-                val cert = certificateAdapter.fromHtml(start)
-                student.sendModuleCertificate(
-                    referer = url.createReferer(UrlGenerator.Site.STUDENT),
-                    url = cert.action,
-                    certificate = mapOf(
-                        "wa" to cert.wa,
-                        "wresult" to cert.wresult,
-                        "wctx" to cert.wctx,
-                    ),
-                )
-            }
-
-            else -> start
-        }
+        val (_, startPage) = loginModule(UrlGenerator.Site.STUDENT)
 
         val userCache = student.getUserCache(
             url = url.generate(UrlGenerator.Site.STUDENT) + "UczenCache.mvc/Get",
@@ -311,28 +322,8 @@ internal class RegisterRepository(
         return userCache?.isParent
     }
 
-    private suspend fun getStudentDiaries(): List<Diary> = student
-        .getSchoolInfo(url.generate(UrlGenerator.Site.STUDENT) + "UczenDziennik.mvc/Get")
-        .handleErrors()
-        .data.orEmpty()
-
     private suspend fun getEduOneDiaries(): List<RegisterStudent> {
-        val baseStudentPlus = url.generate(UrlGenerator.Site.STUDENT_PLUS)
-        val studentPageUrl = baseStudentPlus + "LoginEndpoint.aspx"
-        val start = student.getStart(studentPageUrl)
-
-        if ("Working" in Jsoup.parse(start).title()) {
-            val cert = certificateAdapter.fromHtml(start)
-            student.sendModuleCertificate(
-                referer = url.createReferer(UrlGenerator.Site.STUDENT_PLUS),
-                url = cert.action,
-                certificate = mapOf(
-                    "wa" to cert.wa,
-                    "wresult" to cert.wresult,
-                    "wctx" to cert.wctx,
-                ),
-            )
-        }
+        val (baseStudentPlus) = loginModule(UrlGenerator.Site.STUDENT_PLUS)
 
         return studentPlus
             .getContext(url = baseStudentPlus + "api/Context").students
@@ -352,5 +343,26 @@ internal class RegisterRepository(
 
                 contextStudent.mapToRegisterStudent(semesters)
             }
+    }
+
+    private suspend fun loginModule(site: UrlGenerator.Site): Pair<String, String> {
+        val baseStudentPlus = url.generate(site)
+        val studentPageUrl = baseStudentPlus + "LoginEndpoint.aspx"
+        val start = student.getStart(studentPageUrl)
+
+        return if ("Working" in Jsoup.parse(start).title()) {
+            val cert = certificateAdapter.fromHtml(start)
+            baseStudentPlus to student.sendModuleCertificate(
+                referer = url.createReferer(site),
+                url = cert.action,
+                certificate = mapOf(
+                    "wa" to cert.wa,
+                    "wresult" to cert.wresult,
+                    "wctx" to cert.wctx,
+                ),
+            )
+        } else {
+            baseStudentPlus to start
+        }
     }
 }
