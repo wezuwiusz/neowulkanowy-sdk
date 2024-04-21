@@ -14,13 +14,22 @@ import org.junit.Test
 
 class ErrorInterceptorTest : BaseLocalTest() {
 
-    @Test
-    fun offline_databaseUpdate() {
-        try {
-            runBlocking { getStudentRepo(ErrorInterceptorTest::class.java, "AktualizacjaBazyDanych.html", Scrapper.LoginType.STANDARD).getNotes() }
-        } catch (e: Throwable) {
-            assertTrue(e is ServiceUnavailableException)
-        }
+    @Test(expected = ServiceUnavailableException::class)
+    fun offline_databaseUpdate() = runTest {
+        getStudentRepo(
+            testClass = ErrorInterceptorTest::class.java,
+            fixture = "AktualizacjaBazyDanych.html",
+            loginType = Scrapper.LoginType.STANDARD,
+        ).getNotes()
+    }
+
+    @Test(expected = ServiceUnavailableException::class)
+    fun offline_databaseUpdatePlus() = runTest {
+        getStudentRepo(
+            testClass = ErrorInterceptorTest::class.java,
+            fixture = "AktualizacjaBazyDanychPlus.html",
+            loginType = Scrapper.LoginType.STANDARD,
+        ).getNotes()
     }
 
     @Test

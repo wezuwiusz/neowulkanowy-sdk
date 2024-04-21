@@ -102,6 +102,9 @@ internal class ErrorInterceptor(
             if ("Nie masz wystarczających uprawnień" in it.text()) {
                 throw AccountInactiveException(it.text())
             }
+            if ("aktualizacja bazy" in it.text()) {
+                throw ServiceUnavailableException(it.text())
+            }
         }
         doc.select("#page-error .error__box").let {
             if ("musi mieć następujący format" in it.text()) {
