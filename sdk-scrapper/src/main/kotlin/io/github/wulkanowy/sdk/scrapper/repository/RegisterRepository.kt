@@ -160,7 +160,7 @@ internal class RegisterRepository(
             val version = getScriptParam("appVersion", homeResponse?.document.toString()).substringBefore("|")
             logger.warn("Can't find permissions on homepage version $version")
 
-            return studentModules.map { (name, url) ->
+            return studentModules.flatMap { (name, url) ->
                 getRegisterUnit(
                     originalName = name,
                     studentModuleUrl = url,
@@ -185,7 +185,7 @@ internal class RegisterRepository(
         originalName: String,
         studentModuleUrl: String,
         studentModuleUrls: List<String>,
-    ): RegisterUnit {
+    ): List<RegisterUnit> {
         val extractedSchoolId = studentModuleUrl.toHttpUrl().pathSegments[1]
         url.schoolId = extractedSchoolId
         val isEduOne = isCurrentLoginHasEduOne(studentModuleUrls, url)
@@ -193,42 +193,60 @@ internal class RegisterRepository(
         val originalSchoolShortName = when {
             isEduOne -> originalName.takeIf { it != "Uczeń Plus" }
             else -> originalName.takeIf { it != "Uczeń" }
-        } ?: "Nieznana nazwa szkoły"
+        }
+
+        val loginResult = runCatching {
+            val site = when {
+                isEduOne -> UrlGenerator.Site.STUDENT_PLUS
+                else -> UrlGenerator.Site.STUDENT
+            }
+            loginModule(site)
+        }
+
         val registerStudents = runCatching {
             when {
                 isEduOne -> {
-                    // todo: fetch school name from cache
-                    getEduOneDiaries()
+                    val (baseStudentPlus, _) = loginResult.getOrThrow()
+                    getEduOneDiaries(baseStudentPlus)
                 }
-                else -> {
-                    val (_, startPage) = loginModule(UrlGenerator.Site.STUDENT)
-                    // todo: get school name
-                    val isParent = isStudentFromParentAccount(startPage)
-                    val diaries = getStudentDiaries()
-                    diaries.getStudentsFromDiaries(
-                        isParent = isParent,
-                        isEduOne = false,
-                        unitId = diaries.firstOrNull()?.componentUnitId
-                            ?: error("Can't find componentUnitId in student diaries"),
-                    )
-                }
+
+                else -> getStudentsFromOldModule(
+                    loginResult = loginResult.getOrThrow(),
+                    unitId = null, // will be extracted from diary
+                )
             }
         }
 
-        val firstStudentFromUnit = registerStudents.getOrNull()?.firstOrNull()
+        val students = registerStudents.getOrNull().orEmpty()
 
-        return RegisterUnit(
-            userLoginId = -1,
-            schoolId = extractedSchoolId,
-            schoolName = firstStudentFromUnit?.className.orEmpty(), // todo: schoolName
-            schoolShortName = firstStudentFromUnit?.className // todo: schoolStartName
-                ?: originalSchoolShortName,
-            error = registerStudents.exceptionOrNull(),
-            employeeIds = emptyList(),
-            studentIds = emptyList(),
-            parentIds = emptyList(),
-            subjects = registerStudents.getOrDefault(emptyList()),
-        )
+        return students.groupBy { it.unitId }.map { (_, students) ->
+            val firstStudentFromUnit = students.firstOrNull()
+            RegisterUnit(
+                userLoginId = -1,
+                schoolId = extractedSchoolId,
+                schoolName = firstStudentFromUnit?.schoolName ?: "Nieznana pełna nazwa szkoły",
+                schoolShortName = firstStudentFromUnit?.schoolNameShort ?: originalSchoolShortName.orEmpty(),
+                error = registerStudents.exceptionOrNull(),
+                employeeIds = emptyList(),
+                studentIds = emptyList(),
+                parentIds = emptyList(),
+                subjects = students,
+            )
+        }.ifEmpty {
+            listOf(
+                RegisterUnit(
+                    userLoginId = -1,
+                    schoolId = extractedSchoolId,
+                    schoolName = "Nieznana pełna nazwa szkoły",
+                    schoolShortName = originalSchoolShortName.orEmpty(),
+                    error = registerStudents.exceptionOrNull(),
+                    employeeIds = emptyList(),
+                    studentIds = emptyList(),
+                    parentIds = emptyList(),
+                    subjects = registerStudents.getOrDefault(emptyList()),
+                ),
+            )
+        }
     }
 
     private suspend fun getRegisterUnit(
@@ -241,6 +259,14 @@ internal class RegisterRepository(
 
         val isEduOne = isCurrentLoginHasEduOne(studentModuleUrls, url)
 
+        val loginResult = runCatching {
+            val site = when {
+                isEduOne -> UrlGenerator.Site.STUDENT_PLUS
+                else -> UrlGenerator.Site.STUDENT
+            }
+            loginModule(site)
+        }
+
         val registerStudents = runCatching {
             when {
                 authInfo?.parentIds.isNullOrEmpty() && authInfo?.studentIds.isNullOrEmpty() -> {
@@ -248,17 +274,15 @@ internal class RegisterRepository(
                 }
 
                 else -> when {
-                    isEduOne -> getEduOneDiaries()
-                    else -> {
-                        val (_, startPage) = loginModule(UrlGenerator.Site.STUDENT)
-                        val isParent = isStudentFromParentAccount(startPage)
-                        getStudentDiaries()
-                            .getStudentsFromDiaries(
-                                isParent = isParent,
-                                isEduOne = false,
-                                unitId = unit.id,
-                            )
+                    isEduOne -> {
+                        val (baseStudentPlus, _) = loginResult.getOrThrow()
+                        getEduOneDiaries(baseStudentPlus)
                     }
+
+                    else -> getStudentsFromOldModule(
+                        loginResult = loginResult.getOrThrow(),
+                        unitId = unit.id,
+                    )
                 }
             }
         }
@@ -281,6 +305,26 @@ internal class RegisterRepository(
             parentIds = authInfo?.parentIds.orEmpty(),
             subjects = employees.orEmpty() + registerStudents.getOrDefault(emptyList()),
         )
+    }
+
+    private suspend fun getStudentsFromOldModule(
+        loginResult: Pair<String, String>,
+        unitId: Int?,
+    ): List<RegisterStudent> {
+        val (_, startPage) = loginResult
+        val isParent = isStudentFromParentAccount(startPage)
+        val diaries = getStudentDiaries()
+        return diaries.getStudentsFromDiaries(
+            isParent = isParent,
+            isEduOne = false,
+            unitId = unitId
+                ?: diaries.firstOrNull()?.componentUnitId
+                ?: error("Can't find componentUnitId in student diaries"),
+        ).map {
+            it.copy(
+                schoolName = getScriptParam("organizationName", startPage),
+            )
+        }
     }
 
     private suspend fun getStudentDiaries(): List<Diary> = student
@@ -377,9 +421,7 @@ internal class RegisterRepository(
         return userCache?.isParent
     }
 
-    private suspend fun getEduOneDiaries(): List<RegisterStudent> {
-        val (baseStudentPlus) = loginModule(UrlGenerator.Site.STUDENT_PLUS)
-
+    private suspend fun getEduOneDiaries(baseStudentPlus: String): List<RegisterStudent> {
         return studentPlus
             .getContext(url = baseStudentPlus + "api/Context").students
             .map { contextStudent ->

@@ -39,6 +39,9 @@ internal fun ContextStudent.mapToRegisterStudent(semesters: List<GradeSemester>)
         studentSurname = studentName.substringAfterLast(" "),
         className = className,
         isParent = opiekunUcznia,
+        unitId = key.unitId,
+        schoolName = schoolName,
+        schoolNameShort = null,
         semesters = semesters.mapToSemester(this),
         isAuthorized = !isAuthorizationRequired,
         isEduOne = true, // we already in eduOne context here

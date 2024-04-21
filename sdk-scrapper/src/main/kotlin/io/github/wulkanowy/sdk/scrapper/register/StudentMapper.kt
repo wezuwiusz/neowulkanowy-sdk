@@ -20,6 +20,9 @@ internal fun List<Diary>.getStudentsFromDiaries(
             isParent = isParent == true,
             isAuthorized = diary.isAuthorized == true,
             isEduOne = isEduOne,
+            unitId = unitId,
+            schoolName = "",
+            schoolNameShort = null,
             semesters = toSemesters(
                 studentId = diary.studentId,
                 classId = classId,

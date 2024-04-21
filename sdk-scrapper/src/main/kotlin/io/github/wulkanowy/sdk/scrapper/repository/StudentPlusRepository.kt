@@ -106,7 +106,10 @@ internal class StudentPlusRepository(
             isAuthorized = !contextStudent.isAuthorizationRequired,
             isEduOne = true, // we already in eduOne context here
             studentSecondName = "", //
-            classId = 0, //
+            classId = 0,
+            schoolName = "",
+            schoolNameShort = null,
+            unitId = getDecodedKey(contextStudent.key).unitId,
         )
     }
 
