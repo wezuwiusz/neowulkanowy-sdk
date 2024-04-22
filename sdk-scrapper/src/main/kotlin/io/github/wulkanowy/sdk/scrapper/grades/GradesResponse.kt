@@ -80,6 +80,10 @@ internal data class GradeSubject(
     @JsonNames("sumaPunktow")
     val pointsSum: String? = "",
 
+    @SerialName("SumaPunktowWszystkieSemestry")
+    @JsonNames("SumaPunktowWszystkieSemestry")
+    val pointsSumAllYear: String? = "",
+
     @SerialName("ProponowanaOcenaRocznaPunkty")
     @JsonNames("proponowanaOcenaOkresowaPunkty")
     val proposedPoints: String? = "",

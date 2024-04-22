@@ -38,6 +38,7 @@ data class GradeSummary(
     val predicted: String,
     val final: String,
     val pointsSum: String,
+    val pointsSumAllYear: String? = null,
     val proposedPoints: String,
     val finalPoints: String,
 )
