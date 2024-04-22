@@ -64,6 +64,10 @@ internal data class GradeSubject(
     @JsonNames("srednia")
     val average: Double = .0,
 
+    @SerialName("SredniaWszystkieSemestry")
+    @JsonNames("sredniaWszystkieSemestry")
+    val averageAllYear: Double? = null,
+
     @SerialName("ProponowanaOcenaRoczna")
     @JsonNames("proponowanaOcenaOkresowa")
     val proposed: String? = "",

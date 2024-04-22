@@ -30,8 +30,10 @@
         "OcenaRoczna": " ",
         "ProponowanaOcenaRocznaPunkty": null,
         "OcenaRocznaPunkty": null,
-        "Srednia": 0,
+        "Srednia": 4,
+        "SredniaWszystkieSemestry": 3,
         "SumaPunktow": null,
+        "SumaPunktowWszystkieSemestry": null,
         "WidocznyPrzedmiot": false
       },
       {

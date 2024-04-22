@@ -38,6 +38,7 @@ internal fun List<ScrapperGradeSummary>.mapGradesSummary() = map {
         proposedPoints = it.proposedPoints,
         pointsSum = it.pointsSum,
         average = it.average,
+        averageAllYear = it.averageAllYear,
         final = it.final,
         predicted = it.predicted,
     )

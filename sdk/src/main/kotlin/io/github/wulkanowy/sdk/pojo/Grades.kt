@@ -34,6 +34,7 @@ data class Grade(
 data class GradeSummary(
     val name: String,
     val average: Double = .0,
+    val averageAllYear: Double? = null,
     val predicted: String,
     val final: String,
     val pointsSum: String,

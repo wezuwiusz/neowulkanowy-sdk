@@ -51,6 +51,7 @@ internal fun GradesResponse.mapGradesSummary() = gradesWithSubjects.map { subjec
         order = subject.order,
         name = subject.name.trim(),
         average = subject.average,
+        averageAllYear = subject.averageAllYear,
         predicted = getGradeShortValue(subject.proposed),
         final = getGradeShortValue(subject.annual),
         pointsSum = subject.pointsSum.takeIf { it != "-" }.orEmpty().trim(),
