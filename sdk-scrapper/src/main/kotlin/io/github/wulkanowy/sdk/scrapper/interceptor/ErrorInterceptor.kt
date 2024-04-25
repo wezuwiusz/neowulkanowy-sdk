@@ -49,8 +49,8 @@ internal class ErrorInterceptor(
         doc.select(".errorBlock").let {
             if (it.isNotEmpty()) {
                 when (val title = it.select(".errorTitle").text()) {
-                    "HTTP Error 404" -> throw ScrapperException(title, HTTP_NOT_FOUND)
-                    else -> throw VulcanException("$title. ${it.select(".errorMessage").text()}", httpCode)
+                    // "HTTP Error 404" -> throw ScrapperException(title, HTTP_NOT_FOUND)
+                    // else -> throw VulcanException("$title. ${it.select(".errorMessage").text()}", httpCode)
                 }
             }
         }
