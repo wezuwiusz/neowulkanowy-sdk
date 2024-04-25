@@ -93,7 +93,7 @@ internal class ErrorInterceptor(
             }
         }
 
-        doc.select(".panel.wychowawstwo.pracownik.klient").let {
+        doc.select(".panel.wychowawstwo.pracownik.klient:not([style])").let {
             if ("Brak uprawnień" in it.select(".name").text()) {
                 throw AccountInactiveException(it.select(".additionalText").text())
             }
