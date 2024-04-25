@@ -59,8 +59,8 @@ internal class ErrorInterceptor(
             val errorMessage = it.trimEnd('.')
             when {
                 doc.select(SELECTOR_ADFS).isNotEmpty() -> when {
-                    errorMessage.isNotBlank() -> throw BadCredentialsException(errorMessage)
-                    else -> logger.warn("Unexpected login page!")
+                    // errorMessage.isNotBlank() -> throw BadCredentialsException(errorMessage)
+                    // else -> logger.warn("Unexpected login page!")
                 }
 
                 else -> throw BadCredentialsException(errorMessage)
@@ -95,19 +95,19 @@ internal class ErrorInterceptor(
 
         doc.select(".panel.wychowawstwo.pracownik.klient:not([style])").let {
             if ("Brak uprawnień" in it.select(".name").text()) {
-                throw AccountInactiveException(it.select(".additionalText").text())
+                // throw AccountInactiveException(it.select(".additionalText").text())
             }
         }
         doc.select(".info-error-message-text").let {
             if ("Nie masz wystarczających uprawnień" in it.text()) {
-                throw AccountInactiveException(it.text())
+                // throw AccountInactiveException(it.text())
             }
             if ("aktualizacja bazy" in it.text()) {
                 throw ServiceUnavailableException(it.text())
             }
         }
         doc.select("#page-error .error__box").let {
-            if ("musi mieć następujący format" in it.text()) {
+            if ("ciągiem znaków wykorzystywanym przez placówki w konkretnym mieście" in it.text()) {
                 throw InvalidSymbolException(it.text())
             }
         }
