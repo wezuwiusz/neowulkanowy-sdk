@@ -69,21 +69,21 @@ internal class ErrorInterceptor(
 
         doc.select(".app-error-container").takeIf { it.isNotEmpty() }?.let {
             if (it.select("h2").text() == "Informacja") {
-                throw ServiceUnavailableException(it.select("span").firstOrNull()?.text().orEmpty())
+                // throw ServiceUnavailableException(it.select("span").firstOrNull()?.text().orEmpty())
             }
         }
 
         doc.select("#MainPage_ErrorDiv div").let {
-            if (it.text().contains("Trwa aktualizacja bazy danych")) throw ServiceUnavailableException(it.last()?.ownText().orEmpty())
-            if (it.last()?.ownText()?.contains("czasowo wyłączona") == true) throw TemporarilyDisabledException(it.last()?.ownText().orEmpty())
-            if (it.isNotEmpty()) throw VulcanException(it[0].ownText(), httpCode)
+            // if (it.text().contains("Trwa aktualizacja bazy danych")) throw ServiceUnavailableException(it.last()?.ownText().orEmpty())
+            // if (it.last()?.ownText()?.contains("czasowo wyłączona") == true) throw TemporarilyDisabledException(it.last()?.ownText().orEmpty())
+            // if (it.isNotEmpty()) throw VulcanException(it[0].ownText(), httpCode)
         }
 
         doc.select("h2.error").let {
-            if (it.isNotEmpty()) throw AccountPermissionException(it.text())
+            // if (it.isNotEmpty()) throw AccountPermissionException(it.text())
         }
         doc.select("h2").text().let {
-            if (it == "Strona nie znaleziona") throw ScrapperException(it, httpCode)
+            // if (it == "Strona nie znaleziona") throw ScrapperException(it, httpCode)
         }
 
         doc.selectFirst("form")?.attr("action")?.let {
@@ -103,7 +103,7 @@ internal class ErrorInterceptor(
                 // throw AccountInactiveException(it.text())
             }
             if ("aktualizacja bazy" in it.text()) {
-                throw ServiceUnavailableException(it.text())
+                // throw ServiceUnavailableException(it.text())
             }
         }
         doc.select("#page-error .error__box").let {
