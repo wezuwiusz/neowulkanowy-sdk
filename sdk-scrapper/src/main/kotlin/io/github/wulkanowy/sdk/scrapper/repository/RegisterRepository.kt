@@ -158,7 +158,7 @@ internal class RegisterRepository(
 
         if (permissions == null) {
             val version = getScriptParam("appVersion", homeResponse?.document.toString()).substringBefore("|")
-            logger.warn("Can't find permissions on homepage version $version")
+            logger.info("Can't find permissions on homepage version $version")
 
             return studentModules.flatMap { (name, url) ->
                 getRegisterUnit(
