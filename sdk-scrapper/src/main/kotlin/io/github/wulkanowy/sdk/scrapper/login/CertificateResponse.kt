@@ -1,5 +1,6 @@
 package io.github.wulkanowy.sdk.scrapper.login
 
+import org.jsoup.nodes.Element
 import pl.droidsonroids.jspoon.annotation.Selector
 
 class CertificateResponse {
@@ -18,4 +19,7 @@ class CertificateResponse {
 
     @Selector("input[name=wctx]", attr = "value", defValue = "")
     var wctx: String = ""
+
+    @Selector("html")
+    internal lateinit var document: Element
 }

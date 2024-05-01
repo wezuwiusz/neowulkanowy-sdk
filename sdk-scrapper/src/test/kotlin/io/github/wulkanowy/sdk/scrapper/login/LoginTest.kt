@@ -148,18 +148,14 @@ class LoginTest : BaseLocalTest() {
         assertEquals("Nie masz wystarczających uprawnień, by używać aplikacji", error.message)
     }
 
-    @Test
-    fun adfsBadCredentialsException() {
+    @Test(expected = BadCredentialsException::class)
+    fun adfsBadCredentialsException() = runTest {
         with(server) {
             enqueue("Logowanie-adfs-zle-haslo.html")
             start(3000)
         }
 
-        try {
-            runBlocking { adfs.login("jan@fakelog.cf", "jan1234") }
-        } catch (e: Throwable) {
-            assertTrue(e is BadCredentialsException)
-        }
+        adfs.login("jan@fakelog.cf", "jan1234")
     }
 
     @Test

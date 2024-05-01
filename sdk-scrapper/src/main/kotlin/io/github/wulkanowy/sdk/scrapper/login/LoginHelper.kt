@@ -14,11 +14,13 @@ import io.github.wulkanowy.sdk.scrapper.exception.VulcanException
 import io.github.wulkanowy.sdk.scrapper.handleErrors
 import io.github.wulkanowy.sdk.scrapper.isCurrentLoginHasEduOne
 import io.github.wulkanowy.sdk.scrapper.register.HomePageResponse
+import io.github.wulkanowy.sdk.scrapper.repository.AccountRepository.Companion.SELECTOR_ADFS
 import io.github.wulkanowy.sdk.scrapper.service.LoginService
 import okhttp3.HttpUrl
 import okhttp3.HttpUrl.Companion.toHttpUrl
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
+import org.jsoup.nodes.Element
 import org.slf4j.LoggerFactory
 import pl.droidsonroids.jspoon.Jspoon
 import java.io.IOException
@@ -79,6 +81,20 @@ internal class LoginHelper(
             isStudentSchoolUseEduOne = isEduOne,
             studentSchools = studentModuleUrls,
         )
+    }
+
+    private fun checkInvalidPasswordException(doc: Element) {
+        doc.select(".ErrorMessage, #ErrorTextLabel, #loginArea #errorText").text().takeIf { it.isNotBlank() }?.let {
+            val errorMessage = it.trimEnd('.')
+            when {
+                doc.select(SELECTOR_ADFS).isNotEmpty() -> when {
+                    errorMessage.isNotBlank() -> throw BadCredentialsException(errorMessage)
+                    else -> logger.warn("Unexpected login page!")
+                }
+
+                else -> throw BadCredentialsException(errorMessage)
+            }
+        }
     }
 
     fun loginModule(site: UrlGenerator.Site): Pair<HttpUrl, Document> {
@@ -196,6 +212,7 @@ internal class LoginHelper(
                 ),
             ),
         )
+        checkInvalidPasswordException(res.document)
         if ("uonetplus-logowanie" in res.action) {
             return certificateAdapter.fromHtml(
                 api.sendCertificate(
@@ -224,6 +241,7 @@ internal class LoginHelper(
                 ),
             ),
         )
+        checkInvalidPasswordException(res.document)
 
         logger.debug("Page title after credentials sent: ${res.title}, action: ${res.action} wresult: ${res.wresult.length}, wctx: ${res.wctx}")
 
@@ -264,6 +282,7 @@ internal class LoginHelper(
         )
 
         val form = certificateAdapter.fromHtml(res)
+        checkInvalidPasswordException(form.document)
 
         return certificateAdapter.fromHtml(
             api.sendADFSForm(
@@ -296,6 +315,7 @@ internal class LoginHelper(
                 ),
             ),
         )
+        checkInvalidPasswordException(form.document)
 
         return certificateAdapter.fromHtml(
             api.sendADFSForm(

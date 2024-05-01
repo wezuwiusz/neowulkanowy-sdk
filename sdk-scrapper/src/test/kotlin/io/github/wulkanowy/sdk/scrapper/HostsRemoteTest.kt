@@ -1,7 +1,7 @@
 package io.github.wulkanowy.sdk.scrapper
 
 import io.github.wulkanowy.sdk.scrapper.login.BadCredentialsException
-import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.test.runTest
 import okhttp3.logging.HttpLoggingInterceptor
 import org.junit.Ignore
 import org.junit.Test
@@ -10,7 +10,7 @@ import org.junit.Test
 class HostsRemoteTest : BaseTest() {
 
     private val knownHosts = listOf(
-        "vulcan.net.pl" to "Default",
+        "vulcan.net.pl" to "warszawa",
         "eszkola.opolskie.pl" to "opole",
         "edu.gdansk.pl" to "gdansk",
         // "edu.lublin.eu" to "lublin", // they are blocking us :///
@@ -32,11 +32,11 @@ class HostsRemoteTest : BaseTest() {
     )
 
     @Test
-    fun loginTest() = runBlocking {
+    fun loginTest() = runTest {
         knownHosts.forEach { (host, symbol) ->
             println("$host/$symbol")
             val res = runCatching { getScrapper(host, symbol).getUserSubjects() }
-            requireNotNull(res.exceptionOrNull()).cause!!.printStackTrace()
+            requireNotNull(res.exceptionOrNull()).printStackTrace()
             assert(res.exceptionOrNull() is BadCredentialsException)
             println()
         }

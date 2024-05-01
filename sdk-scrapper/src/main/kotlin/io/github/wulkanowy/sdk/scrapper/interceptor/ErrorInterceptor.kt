@@ -55,18 +55,6 @@ internal class ErrorInterceptor(
             }
         }
 
-        doc.select(".ErrorMessage, #ErrorTextLabel, #loginArea #errorText").text().takeIf { it.isNotBlank() }?.let {
-            val errorMessage = it.trimEnd('.')
-            when {
-                doc.select(SELECTOR_ADFS).isNotEmpty() -> when {
-                    errorMessage.isNotBlank() -> logger.error("BadCredentialsException", BadCredentialsException(errorMessage))
-                    else -> logger.warn("Unexpected login page!")
-                }
-
-                else -> throw BadCredentialsException(errorMessage)
-            }
-        }
-
         doc.select(".app-error-container").takeIf { it.isNotEmpty() }?.let {
             if (it.select("h2").text() == "Informacja") {
                 logger.error("ServiceUnavailableException", ServiceUnavailableException(it.select("span").firstOrNull()?.text().orEmpty()))
