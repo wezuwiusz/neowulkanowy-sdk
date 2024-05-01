@@ -1,7 +1,6 @@
 package io.github.wulkanowy.sdk.scrapper.interceptor
 
 import io.github.wulkanowy.sdk.scrapper.CookieJarCabinet
-import io.github.wulkanowy.sdk.scrapper.exception.AccountInactiveException
 import io.github.wulkanowy.sdk.scrapper.exception.CloudflareVerificationException
 import io.github.wulkanowy.sdk.scrapper.exception.ConnectionBlockedException
 import io.github.wulkanowy.sdk.scrapper.exception.ScrapperException
@@ -85,19 +84,6 @@ internal class ErrorInterceptor(
             }
         }
 
-        doc.select(".panel.wychowawstwo.pracownik.klient:not([style])").let {
-            if ("Brak uprawnień" in it.select(".name").text()) {
-                logger.error("AccountInactiveException", AccountInactiveException(it.select(".additionalText").text()))
-            }
-        }
-        doc.select(".info-error-message-text").let {
-            if ("Nie masz wystarczających uprawnień" in it.text()) {
-                logger.error("AccountInactiveException", AccountInactiveException(it.text()))
-            }
-            if ("aktualizacja bazy" in it.text()) {
-                logger.error("ServiceUnavailableException", ServiceUnavailableException(it.text()))
-            }
-        }
         doc.select("#page-error .error__box").let {
             if ("ciągiem znaków wykorzystywanym przez placówki w konkretnym mieście" in it.text()) {
                 throw InvalidSymbolException(it.text())

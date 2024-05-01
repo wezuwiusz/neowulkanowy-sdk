@@ -9,7 +9,9 @@ import io.github.wulkanowy.sdk.scrapper.Scrapper.LoginType.ADFSLightCufs
 import io.github.wulkanowy.sdk.scrapper.Scrapper.LoginType.ADFSLightScoped
 import io.github.wulkanowy.sdk.scrapper.Scrapper.LoginType.AUTO
 import io.github.wulkanowy.sdk.scrapper.Scrapper.LoginType.STANDARD
+import io.github.wulkanowy.sdk.scrapper.exception.AccountInactiveException
 import io.github.wulkanowy.sdk.scrapper.exception.ScrapperException
+import io.github.wulkanowy.sdk.scrapper.exception.ServiceUnavailableException
 import io.github.wulkanowy.sdk.scrapper.exception.VulcanException
 import io.github.wulkanowy.sdk.scrapper.handleErrors
 import io.github.wulkanowy.sdk.scrapper.isCurrentLoginHasEduOne
@@ -77,6 +79,8 @@ internal class LoginHelper(
 
         logger.debug("Is school use eduOne: $isEduOne")
 
+        checkHomepageErrors(homePageResponse)
+
         return LoginResult(
             isStudentSchoolUseEduOne = isEduOne,
             studentSchools = studentModuleUrls,
@@ -93,6 +97,24 @@ internal class LoginHelper(
                 }
 
                 else -> throw BadCredentialsException(errorMessage)
+            }
+        }
+    }
+
+    private fun checkHomepageErrors(response: HomePageResponse) {
+        if (response.studentSchools.isNotEmpty()) return
+
+        response.document.select(".panel.wychowawstwo.pracownik.klient:not([style])").let {
+            if ("Brak uprawnień" in it.select(".name").text()) {
+                throw AccountInactiveException(it.select(".additionalText").text())
+            }
+        }
+        response.document.select(".info-error-message-text").let {
+            if ("Nie masz wystarczających uprawnień" in it.text()) {
+                throw AccountInactiveException(it.text())
+            }
+            if ("aktualizacja bazy" in it.text()) {
+                throw ServiceUnavailableException(it.text())
             }
         }
     }
