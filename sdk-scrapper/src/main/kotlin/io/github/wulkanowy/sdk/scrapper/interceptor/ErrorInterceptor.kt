@@ -49,8 +49,8 @@ internal class ErrorInterceptor(
         doc.select(".errorBlock").let {
             if (it.isNotEmpty()) {
                 when (val title = it.select(".errorTitle").text()) {
-                    // "HTTP Error 404" -> throw ScrapperException(title, HTTP_NOT_FOUND)
-                    // else -> throw VulcanException("$title. ${it.select(".errorMessage").text()}", httpCode)
+                    "HTTP Error 404" -> logger.error("ScrapperException", ScrapperException(title, HTTP_NOT_FOUND))
+                    else -> logger.error("VulcanException", VulcanException("$title. ${it.select(".errorMessage").text()}", httpCode))
                 }
             }
         }
@@ -59,8 +59,8 @@ internal class ErrorInterceptor(
             val errorMessage = it.trimEnd('.')
             when {
                 doc.select(SELECTOR_ADFS).isNotEmpty() -> when {
-                    // errorMessage.isNotBlank() -> throw BadCredentialsException(errorMessage)
-                    // else -> logger.warn("Unexpected login page!")
+                    errorMessage.isNotBlank() -> logger.error("BadCredentialsException", BadCredentialsException(errorMessage))
+                    else -> logger.warn("Unexpected login page!")
                 }
 
                 else -> throw BadCredentialsException(errorMessage)
@@ -69,21 +69,27 @@ internal class ErrorInterceptor(
 
         doc.select(".app-error-container").takeIf { it.isNotEmpty() }?.let {
             if (it.select("h2").text() == "Informacja") {
-                // throw ServiceUnavailableException(it.select("span").firstOrNull()?.text().orEmpty())
+                logger.error("ServiceUnavailableException", ServiceUnavailableException(it.select("span").firstOrNull()?.text().orEmpty()))
             }
         }
 
         doc.select("#MainPage_ErrorDiv div").let {
-            // if (it.text().contains("Trwa aktualizacja bazy danych")) throw ServiceUnavailableException(it.last()?.ownText().orEmpty())
-            // if (it.last()?.ownText()?.contains("czasowo wyłączona") == true) throw TemporarilyDisabledException(it.last()?.ownText().orEmpty())
-            // if (it.isNotEmpty()) throw VulcanException(it[0].ownText(), httpCode)
+            if (it.text().contains("Trwa aktualizacja bazy danych")) {
+                logger.error("ServiceUnavailableException", ServiceUnavailableException(it.last()?.ownText().orEmpty()))
+            }
+            if (it.last()?.ownText()?.contains("czasowo wyłączona") == true) {
+                logger.error("TemporarilyDisabledException", TemporarilyDisabledException(it.last()?.ownText().orEmpty()))
+            }
+            if (it.isNotEmpty()) {
+                logger.error("VulcanException", VulcanException(it[0].ownText(), httpCode))
+            }
         }
 
         doc.select("h2.error").let {
-            // if (it.isNotEmpty()) throw AccountPermissionException(it.text())
+            if (it.isNotEmpty()) logger.error("AccountPermissionException", AccountPermissionException(it.text()))
         }
         doc.select("h2").text().let {
-            // if (it == "Strona nie znaleziona") throw ScrapperException(it, httpCode)
+            if (it == "Strona nie znaleziona") logger.error("ScrapperException", ScrapperException(it, httpCode))
         }
 
         doc.selectFirst("form")?.attr("action")?.let {
@@ -95,15 +101,15 @@ internal class ErrorInterceptor(
 
         doc.select(".panel.wychowawstwo.pracownik.klient:not([style])").let {
             if ("Brak uprawnień" in it.select(".name").text()) {
-                // throw AccountInactiveException(it.select(".additionalText").text())
+                logger.error("AccountInactiveException", AccountInactiveException(it.select(".additionalText").text()))
             }
         }
         doc.select(".info-error-message-text").let {
             if ("Nie masz wystarczających uprawnień" in it.text()) {
-                // throw AccountInactiveException(it.text())
+                logger.error("AccountInactiveException", AccountInactiveException(it.text()))
             }
             if ("aktualizacja bazy" in it.text()) {
-                // throw ServiceUnavailableException(it.text())
+                logger.error("ServiceUnavailableException", ServiceUnavailableException(it.text()))
             }
         }
         doc.select("#page-error .error__box").let {
