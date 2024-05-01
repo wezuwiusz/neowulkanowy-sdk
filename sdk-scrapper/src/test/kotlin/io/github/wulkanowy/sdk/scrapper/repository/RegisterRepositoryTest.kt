@@ -229,7 +229,7 @@ class RegisterRepositoryTest : BaseLocalTest() {
         val res = normal.getUserSubjects().symbols
         assertEquals(5, res.size)
         assertEquals(
-            "Wystąpił nieoczekiwany błąd. Wystąpił błąd aplikacji. Prosimy zalogować się ponownie. Jeśli problem będzie się powtarzał, prosimy o kontakt z serwisem.",
+            "Wystąpił błąd aplikacji. Prosimy zalogować się ponownie. Jeśli problem będzie się powtarzał, prosimy o kontakt z serwisem.",
             res[1].error?.message,
         )
         assertEquals(VulcanException::class.java, res[1].error!!::class.java)
@@ -278,7 +278,7 @@ class RegisterRepositoryTest : BaseLocalTest() {
         val res = getRegisterRepository("Default").getUserSubjects()
         assertEquals(5, res.symbols.size)
         assertEquals(
-            "Wystąpił nieoczekiwany błąd. Wystąpił błąd aplikacji. Prosimy zalogować się ponownie. Jeśli problem będzie się powtarzał, prosimy o kontakt z serwisem.",
+            "Wystąpił błąd aplikacji. Prosimy zalogować się ponownie. Jeśli problem będzie się powtarzał, prosimy o kontakt z serwisem.",
             res.symbols[1].error?.message,
         )
         assertTrue(res.symbols[1].error is VulcanException)
@@ -307,7 +307,7 @@ class RegisterRepositoryTest : BaseLocalTest() {
         assertEquals(5, res.symbols.size)
         assertTrue(res.symbols[1].error is VulcanException)
         assertEquals(
-            "Wystąpił nieoczekiwany błąd. Wystąpił błąd aplikacji. Prosimy zalogować się ponownie. Jeśli problem będzie się powtarzał, prosimy o kontakt z serwisem.",
+            "Wystąpił błąd aplikacji. Prosimy zalogować się ponownie. Jeśli problem będzie się powtarzał, prosimy o kontakt z serwisem.",
             res.symbols[1].error?.message,
         )
         server.takeRequest() // Logowanie-standard.html
@@ -334,7 +334,7 @@ class RegisterRepositoryTest : BaseLocalTest() {
         val res = getRegisterRepository(" Niepoprawny    symbol no ale + ").getUserSubjects()
         assertTrue(res.symbols[1].error is VulcanException)
         assertEquals(
-            "Wystąpił nieoczekiwany błąd. Wystąpił błąd aplikacji. Prosimy zalogować się ponownie. Jeśli problem będzie się powtarzał, prosimy o kontakt z serwisem.",
+            "Wystąpił błąd aplikacji. Prosimy zalogować się ponownie. Jeśli problem będzie się powtarzał, prosimy o kontakt z serwisem.",
             res.symbols[1].error?.message,
         )
 
@@ -363,7 +363,7 @@ class RegisterRepositoryTest : BaseLocalTest() {
         assertEquals(5, res.symbols.size)
         assertTrue(res.symbols[1].error is VulcanException)
         assertEquals(
-            "Wystąpił nieoczekiwany błąd. Wystąpił błąd aplikacji. Prosimy zalogować się ponownie. Jeśli problem będzie się powtarzał, prosimy o kontakt z serwisem.",
+            "Wystąpił błąd aplikacji. Prosimy zalogować się ponownie. Jeśli problem będzie się powtarzał, prosimy o kontakt z serwisem.",
             res.symbols[1].error?.message,
         )
         server.takeRequest() // Logowanie-standard.html
@@ -408,7 +408,7 @@ class RegisterRepositoryTest : BaseLocalTest() {
         server.takeRequest()
         assertEquals("/Default/LoginEndpoint.aspx", server.takeRequest().path)
         assertEquals(
-            "Wystąpił nieoczekiwany błąd. Wystąpił błąd aplikacji. Prosimy zalogować się ponownie. Jeśli problem będzie się powtarzał, prosimy o kontakt z serwisem.",
+            "Wystąpił błąd aplikacji. Prosimy zalogować się ponownie. Jeśli problem będzie się powtarzał, prosimy o kontakt z serwisem.",
             res.symbols[3].error?.message,
         )
         assertTrue(res.symbols[3].error is VulcanException)

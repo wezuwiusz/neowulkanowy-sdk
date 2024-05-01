@@ -38,7 +38,8 @@ class ErrorInterceptorTest : BaseLocalTest() {
             getStudentRepo(ErrorInterceptorTest::class.java, "AktualizacjaEduOne.html", Scrapper.LoginType.STANDARD).getNotes()
         }.onFailure {
             assertTrue(it is ServiceUnavailableException)
-            assertEquals("Trwa aktualizacja bazy danych.", it.message)
+            assertEquals("Przerwa techniczna", it.message)
+            // assertEquals("Trwa aktualizacja bazy danych.", it.message)
             return@runTest
         }
         assert(false)

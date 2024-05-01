@@ -158,19 +158,14 @@ class LoginTest : BaseLocalTest() {
         adfs.login("jan@fakelog.cf", "jan1234")
     }
 
-    @Test
-    fun normalBadCredentialsException() {
+    @Test(expected = BadCredentialsException::class)
+    fun normalBadCredentialsException() = runTest {
         with(server) {
-            enqueue("Logowanie-uonet.html")
             enqueue("Logowanie-normal-zle-haslo.html")
             start(3000)
         }
-
-        try {
-            runBlocking { adfs.login("jan@fakelog.cf", "jan1234") }
-        } catch (e: Throwable) {
-            assertTrue(e is BadCredentialsException)
-        }
+        // warning: we use here adfs-configured login helper and check for STANDARD login errors
+        adfs.login("jan@fakelog.cf", "jan1234")
     }
 
     @Test
