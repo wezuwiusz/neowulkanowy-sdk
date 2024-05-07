@@ -1,5 +1,6 @@
 package io.github.wulkanowy.sdk.scrapper.interceptor
 
+import io.github.wulkanowy.sdk.scrapper.ApiEndpoints
 import io.github.wulkanowy.sdk.scrapper.ApiResponse
 import io.github.wulkanowy.sdk.scrapper.CookieJarCabinet
 import io.github.wulkanowy.sdk.scrapper.Scrapper.LoginType
@@ -151,6 +152,10 @@ internal class AutoLoginInterceptor(
         if (moduleHeaders.token.isBlank()) {
             logger.info("There is no token found on $url")
             return
+        }
+
+        moduleHeaders.appVersion.substringAfterLast(".").toIntOrNull()?.let {
+            ApiEndpoints.currentVersion = it
         }
 
         when {
