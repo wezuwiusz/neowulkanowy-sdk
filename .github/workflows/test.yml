@@ -35,7 +35,7 @@ jobs:
               ./gradlew :sdk:apiCheck --stacktrace
               ./gradlew :sdk-hebe:apiCheck --stacktrace
               ./gradlew :sdk-scrapper:apiCheck --stacktrace
-        - uses: codecov/codecov-action@v1
+#        - uses: codecov/codecov-action@v1
 
   lint:
       name: Lint check
@@ -56,4 +56,4 @@ jobs:
         - name: Lint
           run: |
             ./gradlew ktlintCheck --stacktrace
-        - uses: codecov/codecov-action@v1
+#        - uses: codecov/codecov-action@v1
