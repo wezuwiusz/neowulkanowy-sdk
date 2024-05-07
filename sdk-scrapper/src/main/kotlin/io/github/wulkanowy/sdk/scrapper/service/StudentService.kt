@@ -44,6 +44,7 @@ import retrofit2.http.FormUrlEncoded
 import retrofit2.http.GET
 import retrofit2.http.Header
 import retrofit2.http.POST
+import retrofit2.http.Path
 import retrofit2.http.Url
 
 internal interface StudentService {
@@ -71,87 +72,164 @@ internal interface StudentService {
         @Body body: Any = Any(),
     ): ApiResponse<CacheResponse>
 
-    @POST("${ApiEndpoints.UczenCache}.mvc/Get")
-    suspend fun getUserCache(@Body body: Any = Any()): ApiResponse<CacheResponse>
+    @POST("{path}.mvc/Get")
+    suspend fun getUserCache(
+        @Body body: Any = Any(),
+        @Path("path") path: String = ApiEndpoints.UczenCache,
+    ): ApiResponse<CacheResponse>
 
-    @POST("${ApiEndpoints.Autoryzacja}.mvc/Post")
-    suspend fun authorizePermission(@Body body: AuthorizePermissionRequest): ApiResponse<AuthorizePermissionResponse>
+    @POST("{path}.mvc/Post")
+    suspend fun authorizePermission(
+        @Body body: AuthorizePermissionRequest,
+        @Path("path") path: String = ApiEndpoints.Autoryzacja,
+    ): ApiResponse<AuthorizePermissionResponse>
 
     @POST
     suspend fun getSchoolInfo(@Url url: String, @Body body: Any = Any()): ApiResponse<List<Diary>>
 
-    @POST("${ApiEndpoints.UczenDziennik}.mvc/Get")
-    suspend fun getDiaries(@Body body: Any = Any()): ApiResponse<List<Diary>>
+    @POST("{path}.mvc/Get")
+    suspend fun getDiaries(
+        @Body body: Any = Any(),
+        @Path("path") path: String = ApiEndpoints.UczenDziennik,
+    ): ApiResponse<List<Diary>>
 
-    @POST("${ApiEndpoints.Oceny}.mvc/Get")
-    suspend fun getGrades(@Body gradeRequest: GradeRequest): ApiResponse<GradesResponse>
+    @POST("{path}.mvc/Get")
+    suspend fun getGrades(
+        @Body gradeRequest: GradeRequest,
+        @Path("path") path: String = ApiEndpoints.Oceny,
+    ): ApiResponse<GradesResponse>
 
-    @POST("${ApiEndpoints.Statystyki}.mvc/GetOcenyCzastkowe")
-    suspend fun getGradesPartialStatistics(@Body gradesStatisticsRequest: GradesStatisticsRequest): ApiResponse<List<GradesStatisticsPartial>>
+    @POST("{path}.mvc/GetOcenyCzastkowe")
+    suspend fun getGradesPartialStatistics(
+        @Body gradesStatisticsRequest: GradesStatisticsRequest,
+        @Path("path") path: String = ApiEndpoints.Statystyki,
+    ): ApiResponse<List<GradesStatisticsPartial>>
 
-    @POST("${ApiEndpoints.Statystyki}.mvc/GetPunkty")
-    suspend fun getGradesPointsStatistics(@Body gradesStatisticsRequest: GradesStatisticsRequest): ApiResponse<GradePointsSummaryResponse>
+    @POST("{path}.mvc/GetPunkty")
+    suspend fun getGradesPointsStatistics(
+        @Body gradesStatisticsRequest: GradesStatisticsRequest,
+        @Path("path") path: String = ApiEndpoints.Statystyki,
+    ): ApiResponse<GradePointsSummaryResponse>
 
-    @POST("${ApiEndpoints.Statystyki}.mvc/GetOcenyRoczne")
-    suspend fun getGradesAnnualStatistics(@Body gradesStatisticsRequest: GradesStatisticsRequest): ApiResponse<List<GradesStatisticsSemester>>
+    @POST("{path}.mvc/GetOcenyRoczne")
+    suspend fun getGradesAnnualStatistics(
+        @Body gradesStatisticsRequest: GradesStatisticsRequest,
+        @Path("path") path: String = ApiEndpoints.Statystyki,
+    ): ApiResponse<List<GradesStatisticsSemester>>
 
-    @POST("${ApiEndpoints.Frekwencja}.mvc/Get")
-    suspend fun getAttendance(@Body attendanceRequest: AttendanceRequest): ApiResponse<AttendanceResponse>
+    @POST("{path}.mvc/Get")
+    suspend fun getAttendance(
+        @Body attendanceRequest: AttendanceRequest,
+        @Path("path") path: String = ApiEndpoints.Frekwencja,
+    ): ApiResponse<AttendanceResponse>
 
-    @POST("${ApiEndpoints.FrekwencjaStatystyki}.mvc/Get")
-    suspend fun getAttendanceStatistics(@Body attendanceSummaryRequest: AttendanceSummaryRequest): ApiResponse<AttendanceSummaryResponse>
+    @POST("{path}.mvc/Get")
+    suspend fun getAttendanceStatistics(
+        @Body attendanceSummaryRequest: AttendanceSummaryRequest,
+        @Path("path") path: String = ApiEndpoints.FrekwencjaStatystyki,
+    ): ApiResponse<AttendanceSummaryResponse>
 
-    @POST("${ApiEndpoints.FrekwencjaStatystykiPrzedmioty}.mvc/Get")
-    suspend fun getAttendanceSubjects(@Body body: Any = Any()): ApiResponse<List<Subject>>
+    @POST("{path}.mvc/Get")
+    suspend fun getAttendanceSubjects(
+        @Body body: Any = Any(),
+        @Path("path") path: String = ApiEndpoints.FrekwencjaStatystykiPrzedmioty,
+    ): ApiResponse<List<Subject>>
 
-    @POST("${ApiEndpoints.EwidencjaObecnosci}.mvc/Get")
-    suspend fun getAttendanceRecords(@Body attendanceRecordsRequest: AttendanceRecordsRequest): ApiResponse<List<AttendanceRecordDay>>
+    @POST("{path}.mvc/Get")
+    suspend fun getAttendanceRecords(
+        @Body attendanceRecordsRequest: AttendanceRecordsRequest,
+        @Path("path") path: String = ApiEndpoints.EwidencjaObecnosci,
+    ): ApiResponse<List<AttendanceRecordDay>>
 
-    @POST("${ApiEndpoints.Usprawiedliwienia}.mvc/Post")
-    suspend fun excuseForAbsence(@Body attendanceExcuseRequest: AttendanceExcuseRequest): ApiResponse<ApiResponse<String?>>
+    @POST("{path}.mvc/Post")
+    suspend fun excuseForAbsence(
+        @Body attendanceExcuseRequest: AttendanceExcuseRequest,
+        @Path("path") path: String = ApiEndpoints.Usprawiedliwienia,
+    ): ApiResponse<ApiResponse<String?>>
 
-    @POST("${ApiEndpoints.EgzaminyZewnetrzne}.mvc/Get")
-    suspend fun getExternalExaminations()
+    @POST("{path}.mvc/Get")
+    suspend fun getExternalExaminations(
+        @Path("path") path: String = ApiEndpoints.EgzaminyZewnetrzne,
+    )
 
-    @POST("${ApiEndpoints.Sprawdziany}.mvc/Get")
-    suspend fun getExams(@Body examRequest: ExamRequest): ApiResponse<List<ExamResponse>>
+    @POST("{path}.mvc/Get")
+    suspend fun getExams(
+        @Body examRequest: ExamRequest,
+        @Path("path") path: String = ApiEndpoints.Sprawdziany,
+    ): ApiResponse<List<ExamResponse>>
 
-    @POST("${ApiEndpoints.Homework}.mvc/Get")
-    suspend fun getHomework(@Body homeworkRequest: HomeworkRequest): ApiResponse<List<HomeworkDay>>
+    @POST("{path}.mvc/Get")
+    suspend fun getHomework(
+        @Body homeworkRequest: HomeworkRequest,
+        @Path("path") path: String = ApiEndpoints.Homework,
+    ): ApiResponse<List<HomeworkDay>>
 
-    @POST("${ApiEndpoints.PlanZajec}.mvc/Get")
-    suspend fun getTimetable(@Body timetableRequest: TimetableRequest): ApiResponse<TimetableResponse>
+    @POST("{path}.mvc/Get")
+    suspend fun getTimetable(
+        @Body timetableRequest: TimetableRequest,
+        @Path("path") path: String = ApiEndpoints.PlanZajec,
+    ): ApiResponse<TimetableResponse>
 
-    @POST("${ApiEndpoints.LekcjeZrealizowane}.mvc/GetPrzedmioty")
-    suspend fun getRealizedSubjects(@Body body: Any = Any())
+    @POST("{path}.mvc/GetPrzedmioty")
+    suspend fun getRealizedSubjects(
+        @Body body: Any = Any(),
+        @Path("path") path: String = ApiEndpoints.LekcjeZrealizowane,
+    )
 
-    @POST("${ApiEndpoints.LekcjeZrealizowane}.mvc/GetZrealizowane")
-    suspend fun getCompletedLessons(@Body completedLessonsRequest: CompletedLessonsRequest): ApiResponse<Map<String, List<CompletedLesson>>>
+    @POST("{path}.mvc/GetZrealizowane")
+    suspend fun getCompletedLessons(
+        @Body completedLessonsRequest: CompletedLessonsRequest,
+        @Path("path") path: String = ApiEndpoints.LekcjeZrealizowane,
+    ): ApiResponse<Map<String, List<CompletedLesson>>>
 
-    @POST("${ApiEndpoints.UwagiIOsiagniecia}.mvc/Get")
-    suspend fun getNotes(@Body body: Any = Any()): ApiResponse<NotesResponse>
+    @POST("{path}.mvc/Get")
+    suspend fun getNotes(
+        @Body body: Any = Any(),
+        @Path("path") path: String = ApiEndpoints.UwagiIOsiagniecia,
+    ): ApiResponse<NotesResponse>
 
-    @POST("${ApiEndpoints.Zebrania}.mvc/Get")
-    suspend fun getConferences(): ApiResponse<List<Conference>>
+    @POST("{path}.mvc/Get")
+    suspend fun getConferences(
+        @Path("path") path: String = ApiEndpoints.Zebrania,
+    ): ApiResponse<List<Conference>>
 
-    @POST("${ApiEndpoints.Jadlospis}.mvc/Get")
-    suspend fun getMenu(@Body menuRequest: MenuRequest): ApiResponse<List<Menu>>
+    @POST("{path}.mvc/Get")
+    suspend fun getMenu(
+        @Body menuRequest: MenuRequest,
+        @Path("path") path: String = ApiEndpoints.Jadlospis,
+    ): ApiResponse<List<Menu>>
 
-    @POST("${ApiEndpoints.ZarejestrowaneUrzadzenia}.mvc/Get")
-    suspend fun getRegisteredDevices(@Body body: Any = Any()): ApiResponse<List<Device>>
+    @POST("{path}.mvc/Get")
+    suspend fun getRegisteredDevices(
+        @Body body: Any = Any(),
+        @Path("path") path: String = ApiEndpoints.ZarejestrowaneUrzadzenia,
+    ): ApiResponse<List<Device>>
 
-    @POST("${ApiEndpoints.RejestracjaUrzadzeniaToken}.mvc/Get")
-    suspend fun getToken(@Body body: Any = Any()): ApiResponse<TokenResponse>
+    @POST("{path}.mvc/Get")
+    suspend fun getToken(
+        @Body body: Any = Any(),
+        @Path("path") path: String = ApiEndpoints.ZarejestrowaneUrzadzenia,
+    ): ApiResponse<TokenResponse>
 
-    @POST("${ApiEndpoints.ZarejestrowaneUrzadzenia}.mvc/Delete")
-    suspend fun unregisterDevice(@Body unregisterDeviceRequest: UnregisterDeviceRequest): ApiResponse<Any>
+    @POST("{path}.mvc/Delete")
+    suspend fun unregisterDevice(
+        @Body unregisterDeviceRequest: UnregisterDeviceRequest,
+        @Path("path") path: String = ApiEndpoints.ZarejestrowaneUrzadzenia,
+    ): ApiResponse<Any>
 
-    @POST("${ApiEndpoints.SzkolaINauczyciele}.mvc/Get")
-    suspend fun getSchoolAndTeachers(@Body body: Any = Any()): ApiResponse<SchoolAndTeachersResponse>
+    @POST("{path}.mvc/Get")
+    suspend fun getSchoolAndTeachers(
+        @Body body: Any = Any(),
+        @Path("path") path: String = ApiEndpoints.SzkolaINauczyciele,
+    ): ApiResponse<SchoolAndTeachersResponse>
 
-    @POST("${ApiEndpoints.Uczen}.mvc/Get")
-    suspend fun getStudentInfo(): ApiResponse<StudentInfo>
+    @POST("{path}.mvc/Get")
+    suspend fun getStudentInfo(
+        @Path("path") path: String = ApiEndpoints.Uczen,
+    ): ApiResponse<StudentInfo>
 
-    @POST("${ApiEndpoints.UczenZdjecie}.mvc/Get")
-    suspend fun getStudentPhoto(): ApiResponse<StudentPhoto>
+    @POST("{path}.mvc/Get")
+    suspend fun getStudentPhoto(
+        @Path("path") path: String = ApiEndpoints.UczenZdjecie,
+    ): ApiResponse<StudentPhoto>
 }

@@ -47,8 +47,12 @@ internal class MessagesRepository(
 
     suspend fun getReceivedMessages(mailboxKey: String?, lastMessageKey: Int = 0, pageSize: Int = 50): List<MessageMeta> {
         val messages = when (mailboxKey) {
-            null -> api.getReceived(lastMessageKey, pageSize)
-            else -> api.getReceivedMailbox(mailboxKey, lastMessageKey, pageSize)
+            null -> api.getReceived(lastMessageKey = lastMessageKey, pageSize = pageSize)
+            else -> api.getReceivedMailbox(
+                mailboxKey = mailboxKey,
+                lastMessageKey = lastMessageKey,
+                pageSize = pageSize,
+            )
         }
 
         return messages
@@ -58,8 +62,8 @@ internal class MessagesRepository(
 
     suspend fun getSentMessages(mailboxKey: String?, lastMessageKey: Int = 0, pageSize: Int = 50): List<MessageMeta> {
         val messages = when (mailboxKey) {
-            null -> api.getSent(lastMessageKey, pageSize)
-            else -> api.getSentMailbox(mailboxKey, lastMessageKey, pageSize)
+            null -> api.getSent(lastMessageKey = lastMessageKey, pageSize = pageSize)
+            else -> api.getSentMailbox(mailboxKey = mailboxKey, lastMessageKey = lastMessageKey, pageSize = pageSize)
         }
         return messages
             .sortedBy { it.date }
@@ -68,8 +72,12 @@ internal class MessagesRepository(
 
     suspend fun getDeletedMessages(mailboxKey: String?, lastMessageKey: Int = 0, pageSize: Int = 50): List<MessageMeta> {
         val messages = when (mailboxKey) {
-            null -> api.getDeleted(lastMessageKey, pageSize)
-            else -> api.getDeletedMailbox(mailboxKey, lastMessageKey, pageSize)
+            null -> api.getDeleted(lastMessageKey = lastMessageKey, pageSize = pageSize)
+            else -> api.getDeletedMailbox(
+                mailboxKey = mailboxKey,
+                lastMessageKey = lastMessageKey,
+                pageSize = pageSize,
+            )
         }
         return messages
             .sortedBy { it.date }
@@ -77,7 +85,7 @@ internal class MessagesRepository(
     }
 
     suspend fun getMessageReplayDetails(globalKey: String): MessageReplayDetails {
-        return api.getMessageReplayDetails(globalKey).let {
+        return api.getMessageReplayDetails(globalKey = globalKey).let {
             it.apply {
                 sender = Recipient(
                     mailboxGlobalKey = it.senderMailboxId,
