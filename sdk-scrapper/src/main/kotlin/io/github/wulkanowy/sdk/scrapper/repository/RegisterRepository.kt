@@ -1,5 +1,6 @@
 package io.github.wulkanowy.sdk.scrapper.repository
 
+import io.github.wulkanowy.sdk.scrapper.ApiEndpoints
 import io.github.wulkanowy.sdk.scrapper.Scrapper
 import io.github.wulkanowy.sdk.scrapper.exception.ScrapperException
 import io.github.wulkanowy.sdk.scrapper.exception.StudentGraduateException
@@ -12,12 +13,8 @@ import io.github.wulkanowy.sdk.scrapper.login.InvalidSymbolException
 import io.github.wulkanowy.sdk.scrapper.login.LoginHelper
 import io.github.wulkanowy.sdk.scrapper.login.NotLoggedInException
 import io.github.wulkanowy.sdk.scrapper.login.UrlGenerator
-import io.github.wulkanowy.sdk.scrapper.register.AuthInfo
 import io.github.wulkanowy.sdk.scrapper.register.Diary
 import io.github.wulkanowy.sdk.scrapper.register.HomePageResponse
-import io.github.wulkanowy.sdk.scrapper.register.PermissionUnit
-import io.github.wulkanowy.sdk.scrapper.register.Permissions
-import io.github.wulkanowy.sdk.scrapper.register.RegisterEmployee
 import io.github.wulkanowy.sdk.scrapper.register.RegisterStudent
 import io.github.wulkanowy.sdk.scrapper.register.RegisterSymbol
 import io.github.wulkanowy.sdk.scrapper.register.RegisterUnit
@@ -32,7 +29,6 @@ import io.github.wulkanowy.sdk.scrapper.service.RegisterService
 import io.github.wulkanowy.sdk.scrapper.service.StudentPlusService
 import io.github.wulkanowy.sdk.scrapper.service.StudentService
 import io.github.wulkanowy.sdk.scrapper.service.SymbolService
-import kotlinx.serialization.json.Json
 import okhttp3.HttpUrl.Companion.toHttpUrl
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Element
@@ -40,8 +36,6 @@ import org.jsoup.parser.Parser
 import org.jsoup.select.Elements
 import org.slf4j.LoggerFactory
 import pl.droidsonroids.jspoon.Jspoon
-import java.nio.charset.StandardCharsets
-import kotlin.io.encoding.Base64
 import kotlin.io.encoding.ExperimentalEncodingApi
 
 @Suppress("UnnecessaryOptInAnnotation")
@@ -65,10 +59,6 @@ internal class RegisterRepository(
 
     private val certificateAdapter by lazy {
         Jspoon.create().adapter(CertificateResponse::class.java)
-    }
-
-    private val json = Json {
-        ignoreUnknownKeys = true
     }
 
     suspend fun getUserSubjects(): RegisterUser {
@@ -144,7 +134,7 @@ internal class RegisterRepository(
 
         return when {
             "Twoje konto jest nieaktywne" in graduateMessage -> StudentGraduateException(graduateMessage)
-            "musi mieć następujący format" in invalidSymbolMessage -> InvalidSymbolException(invalidSymbolMessage)
+            "jedyne źródło pozyskania prawidłowego adresu" in invalidSymbolMessage -> InvalidSymbolException(invalidSymbolMessage)
             loginSelectors.isNotEmpty() -> NotLoggedInException("Nie udało się zalogować")
             else -> null
         }
@@ -154,31 +144,13 @@ internal class RegisterRepository(
         val studentModules = homeResponse?.studentSchools.orEmpty()
             .map { it.text() to it.attr("href") }
 
-        val permissions = homeResponse.toPermissions()
-
-        if (permissions == null) {
-            val version = getScriptParam("appVersion", homeResponse?.document.toString()).substringBefore("|")
-            logger.info("Can't find permissions on homepage version $version")
-
-            return studentModules.flatMap { (name, url) ->
-                getRegisterUnit(
-                    originalName = name,
-                    studentModuleUrl = url,
-                    studentModuleUrls = studentModules.map { it.second },
-                )
-            }
+        return studentModules.flatMap { (name, url) ->
+            getRegisterUnit(
+                originalName = name,
+                studentModuleUrl = url,
+                studentModuleUrls = studentModules.map { it.second },
+            )
         }
-
-        return permissions
-            .toUnitsMap()
-            .map { (unit, authInfo) ->
-                getRegisterUnit(
-                    userName = homeResponse.getUserNameFromUserData(),
-                    studentModuleUrls = studentModules.map { it.second },
-                    unit = unit,
-                    authInfo = authInfo,
-                )
-            }
     }
 
     private suspend fun getRegisterUnit(
@@ -249,64 +221,6 @@ internal class RegisterRepository(
         }
     }
 
-    private suspend fun getRegisterUnit(
-        userName: String,
-        studentModuleUrls: List<String>,
-        unit: PermissionUnit,
-        authInfo: AuthInfo?,
-    ): RegisterUnit {
-        url.schoolId = unit.symbol
-
-        val isEduOne = isCurrentLoginHasEduOne(studentModuleUrls, url)
-
-        val loginResult = runCatching {
-            val site = when {
-                isEduOne -> UrlGenerator.Site.STUDENT_PLUS
-                else -> UrlGenerator.Site.STUDENT
-            }
-            loginModule(site)
-        }
-
-        val registerStudents = runCatching {
-            when {
-                authInfo?.parentIds.isNullOrEmpty() && authInfo?.studentIds.isNullOrEmpty() -> {
-                    emptyList()
-                }
-
-                else -> when {
-                    isEduOne -> {
-                        val (baseStudentPlus, _) = loginResult.getOrThrow()
-                        getEduOneDiaries(baseStudentPlus)
-                    }
-
-                    else -> getStudentsFromOldModule(
-                        loginResult = loginResult.getOrThrow(),
-                        unitId = unit.id,
-                    )
-                }
-            }
-        }
-
-        val employees = authInfo?.employeeIds?.map { employeeId ->
-            RegisterEmployee(
-                employeeId = employeeId,
-                employeeName = userName,
-            )
-        }
-
-        return RegisterUnit(
-            userLoginId = requireNotNull(authInfo?.loginId),
-            schoolId = unit.symbol,
-            schoolName = unit.name,
-            schoolShortName = unit.short,
-            error = registerStudents.exceptionOrNull(),
-            employeeIds = authInfo?.employeeIds.orEmpty(),
-            studentIds = authInfo?.studentIds.orEmpty(),
-            parentIds = authInfo?.parentIds.orEmpty(),
-            subjects = employees.orEmpty() + registerStudents.getOrDefault(emptyList()),
-        )
-    }
-
     private suspend fun getStudentsFromOldModule(
         loginResult: Pair<String, String>,
         unitId: Int?,
@@ -328,7 +242,7 @@ internal class RegisterRepository(
     }
 
     private suspend fun getStudentDiaries(): List<Diary> = student
-        .getSchoolInfo(url.generate(UrlGenerator.Site.STUDENT) + "UczenDziennik.mvc/Get")
+        .getSchoolInfo(url.generate(UrlGenerator.Site.STUDENT) + "${ApiEndpoints.UczenDziennik}.mvc/Get")
         .handleErrors()
         .data.orEmpty()
 
@@ -396,23 +310,10 @@ internal class RegisterRepository(
         return standardName.takeIf { it.isNotBlank() }.orEmpty()
     }
 
-    private fun HomePageResponse?.toPermissions(): Permissions? {
-        val base64 = getScriptParam("permissions", this?.document.toString()).substringBefore("|")
-        return Base64.decode(base64).toString(StandardCharsets.UTF_8).takeIf { it.isNotBlank() }?.let {
-            json.decodeFromString<Permissions>(it)
-        }
-    }
-
-    private fun Permissions?.toUnitsMap(): Map<PermissionUnit, AuthInfo?> {
-        return this?.units?.associateWith { unit ->
-            authInfos.find { it.unitId == unit.id }
-        }.orEmpty()
-    }
-
     // used only for check is student from parent account
     private suspend fun isStudentFromParentAccount(startPage: String): Boolean? {
         val userCache = student.getUserCache(
-            url = url.generate(UrlGenerator.Site.STUDENT) + "UczenCache.mvc/Get",
+            url = url.generate(UrlGenerator.Site.STUDENT) + "${ApiEndpoints.UczenCache}mvc/Get",
             token = getScriptParam("antiForgeryToken", startPage),
             appGuid = getScriptParam("appGuid", startPage),
             appVersion = getScriptParam("version", startPage),
@@ -443,6 +344,8 @@ internal class RegisterRepository(
     }
 
     private suspend fun loginModule(site: UrlGenerator.Site): Pair<String, String> {
+        loginHelper.loginModule(site)
+
         val baseStudentPlus = url.generate(site)
         val studentPageUrl = baseStudentPlus + "LoginEndpoint.aspx"
         val start = student.getStart(studentPageUrl)

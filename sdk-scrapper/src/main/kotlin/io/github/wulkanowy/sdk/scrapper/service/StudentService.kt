@@ -1,5 +1,6 @@
 package io.github.wulkanowy.sdk.scrapper.service
 
+import io.github.wulkanowy.sdk.scrapper.ApiEndpoints
 import io.github.wulkanowy.sdk.scrapper.ApiResponse
 import io.github.wulkanowy.sdk.scrapper.attendance.AttendanceExcuseRequest
 import io.github.wulkanowy.sdk.scrapper.attendance.AttendanceRecordDay
@@ -70,87 +71,87 @@ internal interface StudentService {
         @Body body: Any = Any(),
     ): ApiResponse<CacheResponse>
 
-    @POST("UczenCache.mvc/Get")
+    @POST("${ApiEndpoints.UczenCache}.mvc/Get")
     suspend fun getUserCache(@Body body: Any = Any()): ApiResponse<CacheResponse>
 
-    @POST("Autoryzacja.mvc/Post")
+    @POST("${ApiEndpoints.Autoryzacja}.mvc/Post")
     suspend fun authorizePermission(@Body body: AuthorizePermissionRequest): ApiResponse<AuthorizePermissionResponse>
 
     @POST
     suspend fun getSchoolInfo(@Url url: String, @Body body: Any = Any()): ApiResponse<List<Diary>>
 
-    @POST("UczenDziennik.mvc/Get")
+    @POST("${ApiEndpoints.UczenDziennik}.mvc/Get")
     suspend fun getDiaries(@Body body: Any = Any()): ApiResponse<List<Diary>>
 
-    @POST("Oceny.mvc/Get")
+    @POST("${ApiEndpoints.Oceny}.mvc/Get")
     suspend fun getGrades(@Body gradeRequest: GradeRequest): ApiResponse<GradesResponse>
 
-    @POST("Statystyki.mvc/GetOcenyCzastkowe")
+    @POST("${ApiEndpoints.Statystyki}.mvc/GetOcenyCzastkowe")
     suspend fun getGradesPartialStatistics(@Body gradesStatisticsRequest: GradesStatisticsRequest): ApiResponse<List<GradesStatisticsPartial>>
 
-    @POST("Statystyki.mvc/GetPunkty")
+    @POST("${ApiEndpoints.Statystyki}.mvc/GetPunkty")
     suspend fun getGradesPointsStatistics(@Body gradesStatisticsRequest: GradesStatisticsRequest): ApiResponse<GradePointsSummaryResponse>
 
-    @POST("Statystyki.mvc/GetOcenyRoczne")
+    @POST("${ApiEndpoints.Statystyki}.mvc/GetOcenyRoczne")
     suspend fun getGradesAnnualStatistics(@Body gradesStatisticsRequest: GradesStatisticsRequest): ApiResponse<List<GradesStatisticsSemester>>
 
-    @POST("Frekwencja.mvc/Get")
+    @POST("${ApiEndpoints.Frekwencja}.mvc/Get")
     suspend fun getAttendance(@Body attendanceRequest: AttendanceRequest): ApiResponse<AttendanceResponse>
 
-    @POST("FrekwencjaStatystyki.mvc/Get")
+    @POST("${ApiEndpoints.FrekwencjaStatystyki}.mvc/Get")
     suspend fun getAttendanceStatistics(@Body attendanceSummaryRequest: AttendanceSummaryRequest): ApiResponse<AttendanceSummaryResponse>
 
-    @POST("FrekwencjaStatystykiPrzedmioty.mvc/Get")
+    @POST("${ApiEndpoints.FrekwencjaStatystykiPrzedmioty}.mvc/Get")
     suspend fun getAttendanceSubjects(@Body body: Any = Any()): ApiResponse<List<Subject>>
 
-    @POST("EwidencjaObecnosci.mvc/Get")
+    @POST("${ApiEndpoints.EwidencjaObecnosci}.mvc/Get")
     suspend fun getAttendanceRecords(@Body attendanceRecordsRequest: AttendanceRecordsRequest): ApiResponse<List<AttendanceRecordDay>>
 
-    @POST("Usprawiedliwienia.mvc/Post")
+    @POST("${ApiEndpoints.Usprawiedliwienia}.mvc/Post")
     suspend fun excuseForAbsence(@Body attendanceExcuseRequest: AttendanceExcuseRequest): ApiResponse<ApiResponse<String?>>
 
-    @POST("EgzaminyZewnetrzne.mvc/Get")
+    @POST("${ApiEndpoints.EgzaminyZewnetrzne}.mvc/Get")
     suspend fun getExternalExaminations()
 
-    @POST("Sprawdziany.mvc/Get")
+    @POST("${ApiEndpoints.Sprawdziany}.mvc/Get")
     suspend fun getExams(@Body examRequest: ExamRequest): ApiResponse<List<ExamResponse>>
 
-    @POST("Homework.mvc/Get")
+    @POST("${ApiEndpoints.Homework}.mvc/Get")
     suspend fun getHomework(@Body homeworkRequest: HomeworkRequest): ApiResponse<List<HomeworkDay>>
 
-    @POST("PlanZajec.mvc/Get")
+    @POST("${ApiEndpoints.PlanZajec}.mvc/Get")
     suspend fun getTimetable(@Body timetableRequest: TimetableRequest): ApiResponse<TimetableResponse>
 
-    @POST("LekcjeZrealizowane.mvc/GetPrzedmioty")
+    @POST("${ApiEndpoints.LekcjeZrealizowane}.mvc/GetPrzedmioty")
     suspend fun getRealizedSubjects(@Body body: Any = Any())
 
-    @POST("LekcjeZrealizowane.mvc/GetZrealizowane")
+    @POST("${ApiEndpoints.LekcjeZrealizowane}.mvc/GetZrealizowane")
     suspend fun getCompletedLessons(@Body completedLessonsRequest: CompletedLessonsRequest): ApiResponse<Map<String, List<CompletedLesson>>>
 
-    @POST("UwagiIOsiagniecia.mvc/Get")
+    @POST("${ApiEndpoints.UwagiIOsiagniecia}.mvc/Get")
     suspend fun getNotes(@Body body: Any = Any()): ApiResponse<NotesResponse>
 
-    @POST("Zebrania.mvc/Get")
+    @POST("${ApiEndpoints.Zebrania}.mvc/Get")
     suspend fun getConferences(): ApiResponse<List<Conference>>
 
-    @POST("Jadlospis.mvc/Get")
+    @POST("${ApiEndpoints.Jadlospis}.mvc/Get")
     suspend fun getMenu(@Body menuRequest: MenuRequest): ApiResponse<List<Menu>>
 
-    @POST("ZarejestrowaneUrzadzenia.mvc/Get")
+    @POST("${ApiEndpoints.ZarejestrowaneUrzadzenia}.mvc/Get")
     suspend fun getRegisteredDevices(@Body body: Any = Any()): ApiResponse<List<Device>>
 
-    @POST("RejestracjaUrzadzeniaToken.mvc/Get")
+    @POST("${ApiEndpoints.RejestracjaUrzadzeniaToken}.mvc/Get")
     suspend fun getToken(@Body body: Any = Any()): ApiResponse<TokenResponse>
 
-    @POST("ZarejestrowaneUrzadzenia.mvc/Delete")
+    @POST("${ApiEndpoints.ZarejestrowaneUrzadzenia}.mvc/Delete")
     suspend fun unregisterDevice(@Body unregisterDeviceRequest: UnregisterDeviceRequest): ApiResponse<Any>
 
-    @POST("SzkolaINauczyciele.mvc/Get")
+    @POST("${ApiEndpoints.SzkolaINauczyciele}.mvc/Get")
     suspend fun getSchoolAndTeachers(@Body body: Any = Any()): ApiResponse<SchoolAndTeachersResponse>
 
-    @POST("Uczen.mvc/Get")
+    @POST("${ApiEndpoints.Uczen}.mvc/Get")
     suspend fun getStudentInfo(): ApiResponse<StudentInfo>
 
-    @POST("UczenZdjecie.mvc/Get")
+    @POST("${ApiEndpoints.UczenZdjecie}.mvc/Get")
     suspend fun getStudentPhoto(): ApiResponse<StudentPhoto>
 }

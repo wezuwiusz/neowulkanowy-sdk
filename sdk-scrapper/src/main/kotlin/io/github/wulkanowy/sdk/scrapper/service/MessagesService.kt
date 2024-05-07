@@ -1,5 +1,6 @@
 package io.github.wulkanowy.sdk.scrapper.service
 
+import io.github.wulkanowy.sdk.scrapper.ApiEndpoints
 import io.github.wulkanowy.sdk.scrapper.messages.Mailbox
 import io.github.wulkanowy.sdk.scrapper.messages.MessageDetails
 import io.github.wulkanowy.sdk.scrapper.messages.MessageMeta
@@ -29,45 +30,45 @@ internal interface MessagesService {
         @FieldMap certificate: Map<String, String>,
     ): String
 
-    @GET("api/Skrzynki")
+    @GET("api/${ApiEndpoints.Skrzynki}")
     suspend fun getMailboxes(): List<Mailbox>
 
     @GET("api/Pracownicy")
     suspend fun getRecipients(@Query("globalKeySkrzynka") mailboxKey: String): List<Recipient>
 
-    @GET("api/Odebrane")
+    @GET("api/${ApiEndpoints.Odebrane}")
     suspend fun getReceived(
         @Query("idLastWiadomosc") lastMessageKey: Int = 0,
         @Query("pageSize") pageSize: Int = 50,
     ): List<MessageMeta>
 
-    @GET("api/OdebraneSkrzynka")
+    @GET("api/${ApiEndpoints.OdebraneSkrzynka}")
     suspend fun getReceivedMailbox(
         @Query("globalKeySkrzynka") mailboxKey: String,
         @Query("idLastWiadomosc") lastMessageKey: Int = 0,
         @Query("pageSize") pageSize: Int = 50,
     ): List<MessageMeta>
 
-    @GET("api/Wyslane")
+    @GET("api/${ApiEndpoints.Wyslane}")
     suspend fun getSent(
         @Query("idLastWiadomosc") lastMessageKey: Int = 0,
         @Query("pageSize") pageSize: Int = 50,
     ): List<MessageMeta>
 
-    @GET("api/WyslaneSkrzynka")
+    @GET("api/${ApiEndpoints.WyslaneSkrzynka}")
     suspend fun getSentMailbox(
         @Query("globalKeySkrzynka") mailboxKey: String,
         @Query("idLastWiadomosc") lastMessageKey: Int = 0,
         @Query("pageSize") pageSize: Int = 50,
     ): List<MessageMeta>
 
-    @GET("api/Usuniete")
+    @GET("api/${ApiEndpoints.Usuniete}")
     suspend fun getDeleted(
         @Query("idLastWiadomosc") lastMessageKey: Int = 0,
         @Query("pageSize") pageSize: Int = 50,
     ): List<MessageMeta>
 
-    @GET("api/UsunieteSkrzynka")
+    @GET("api/${ApiEndpoints.UsunieteSkrzynka}")
     suspend fun getDeletedMailbox(
         @Query("globalKeySkrzynka") mailboxKey: String,
         @Query("idLastWiadomosc") lastMessageKey: Int = 0,
@@ -80,16 +81,16 @@ internal interface MessagesService {
     @PUT("api/WiadomoscSzczegoly")
     suspend fun markMessageAsRead(@Body body: Map<String, String>)
 
-    @GET("api/WiadomoscOdpowiedzPrzekaz")
+    @GET("api/${ApiEndpoints.WiadomoscOdpowiedzPrzekaz}")
     suspend fun getMessageReplayDetails(@Query("apiGlobalKey") globalKey: String): MessageReplayDetails
 
     @POST("api/WiadomoscNowa")
     suspend fun sendMessage(@Body body: SendMessageRequest)
 
-    @POST("api/MoveTrash")
+    @POST("api/${ApiEndpoints.MoveTrash}")
     suspend fun moveMessageToTrash(@Body body: List<String>)
 
-    @POST("api/RestoreTrash")
+    @POST("api/${ApiEndpoints.RestoreTrash}")
     suspend fun restoreFromTrash(@Body body: List<String>)
 
     @POST("api/Delete")

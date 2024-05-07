@@ -23,3 +23,4 @@ ktlint_standard_no-blank-line-in-list=disabled
 ktlint_standard_parameter-list-wrapping=disabled
 ktlint_standard_discouraged-comment-location=disabled
 ktlint_standard_if-else-wrapping=disabled
+ktlint_standard_property-naming=disabled

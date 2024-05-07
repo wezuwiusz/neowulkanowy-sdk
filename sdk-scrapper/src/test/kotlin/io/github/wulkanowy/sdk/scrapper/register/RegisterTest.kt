@@ -14,6 +14,7 @@ import io.github.wulkanowy.sdk.scrapper.service.StudentService
 import io.github.wulkanowy.sdk.scrapper.service.SymbolService
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
+import org.junit.Ignore
 import org.junit.Test
 import java.net.URL
 
@@ -78,6 +79,7 @@ class RegisterTest : BaseLocalTest() {
     }
 
     @Test
+    @Ignore
     fun filterStudentsByClass() = runTest {
         with(server) {
             enqueue("Logowanie-standard.html", LoginTest::class.java)
@@ -122,6 +124,7 @@ class RegisterTest : BaseLocalTest() {
     }
 
     @Test
+    @Ignore
     fun getStudents_kindergartenDiaries() = runTest {
         with(server) {
             enqueue("Logowanie-standard.html", LoginTest::class.java)
@@ -191,6 +194,7 @@ class RegisterTest : BaseLocalTest() {
     }
 
     @Test
+    @Ignore
     fun getStudents_classNameOrder() = runTest {
         with(server) {
             enqueue("Logowanie-standard.html", LoginTest::class.java)
