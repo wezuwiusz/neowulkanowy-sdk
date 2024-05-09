@@ -313,7 +313,7 @@ internal class RegisterRepository(
     // used only for check is student from parent account
     private suspend fun isStudentFromParentAccount(startPage: String): Boolean? {
         val userCache = student.getUserCache(
-            url = url.generate(UrlGenerator.Site.STUDENT) + "${ApiEndpoints.UczenCache}mvc/Get",
+            url = url.generate(UrlGenerator.Site.STUDENT) + "${ApiEndpoints.UczenCache}.mvc/Get",
             token = getScriptParam("antiForgeryToken", startPage),
             appGuid = getScriptParam("appGuid", startPage),
             appVersion = getScriptParam("version", startPage),
@@ -350,9 +350,9 @@ internal class RegisterRepository(
         val studentPageUrl = baseStudentPlus + "LoginEndpoint.aspx"
         val start = student.getStart(studentPageUrl)
 
-        return if ("Working" in Jsoup.parse(start).title()) {
+        val homepage = if ("Working" in Jsoup.parse(start).title()) {
             val cert = certificateAdapter.fromHtml(start)
-            baseStudentPlus to student.sendModuleCertificate(
+            student.sendModuleCertificate(
                 referer = url.createReferer(site),
                 url = cert.action,
                 certificate = mapOf(
@@ -362,7 +362,16 @@ internal class RegisterRepository(
                 ),
             )
         } else {
-            baseStudentPlus to start
+            start
         }
+
+        val appVersion = getScriptParam("version", homepage).ifBlank {
+            getScriptParam("appVersion", homepage)
+        }
+        appVersion.substringAfterLast(".").toIntOrNull()?.let {
+            ApiEndpoints.currentVersion = it
+        }
+
+        return baseStudentPlus to homepage
     }
 }

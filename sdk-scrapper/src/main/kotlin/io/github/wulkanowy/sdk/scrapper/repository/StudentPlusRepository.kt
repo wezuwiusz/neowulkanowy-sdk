@@ -493,7 +493,7 @@ internal class StudentPlusRepository(
         return when (students.size) {
             0 -> null
             1 -> students.single()
-            else -> error("VULCAN okropnie utrudnił Wulkanowemu dopasowanie ucznia zapisanego na urządzeniu z tym na stronie i dlatego dane w apce nie chcą się załadować. Podziękuj... wiesz komu")
+            else -> error("VULCAN okropnie utrudnił Wulkanowemu dopasowanie ucznia zapisanego na urządzeniu z tym na stronie i dlatego dane w apce nie chcą się załadować")
         }
     }
 

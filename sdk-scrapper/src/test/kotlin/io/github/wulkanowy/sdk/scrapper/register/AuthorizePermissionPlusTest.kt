@@ -4,7 +4,6 @@ import io.github.wulkanowy.sdk.scrapper.BaseLocalTest
 import io.github.wulkanowy.sdk.scrapper.exception.ScrapperException
 import io.github.wulkanowy.sdk.scrapper.exception.VulcanClientError
 import kotlinx.coroutines.test.runTest
-import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import okhttp3.mockwebserver.MockResponse
 import org.junit.Assert.assertEquals
@@ -13,10 +12,7 @@ import org.junit.Assert.assertTrue
 import org.junit.Test
 import java.net.HttpURLConnection
 import java.nio.charset.Charset
-import kotlin.io.encoding.Base64
-import kotlin.io.encoding.ExperimentalEncodingApi
 
-@OptIn(ExperimentalEncodingApi::class)
 class AuthorizePermissionPlusTest : BaseLocalTest() {
 
     @Test
@@ -59,7 +55,7 @@ class AuthorizePermissionPlusTest : BaseLocalTest() {
         assertTrue(repo.authorizePermission("82121889474", 12, 23, 34))
         server.takeRequest()
         val request = Json.decodeFromString<AuthorizePermissionPlusRequest>(
-            server.takeRequest().body.readString(Charset.defaultCharset())
+            server.takeRequest().body.readString(Charset.defaultCharset()),
         )
         assertEquals("82121889474", request.pesel)
     }
