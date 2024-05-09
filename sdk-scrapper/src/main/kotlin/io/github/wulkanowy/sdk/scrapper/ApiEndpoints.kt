@@ -53,6 +53,29 @@ internal object ApiEndpoints : IApiEndpoints {
     override val ZebraniaObecnosc get() = endpoints.ZebraniaObecnosc
     override val ZgloszoneNieobecnosci get() = endpoints.ZgloszoneNieobecnosci
 
+    // uczenplus
+    override val PlusContext get() = endpoints.PlusContext
+    override val PlusAutoryzacjaPesel get() = endpoints.PlusAutoryzacjaPesel
+    override val PlusFrekwencja get() = endpoints.PlusFrekwencja
+    override val PlusUsprawiedliwienia get() = endpoints.PlusUsprawiedliwienia
+    override val PlusFrekwencjaStatystyki get() = endpoints.PlusFrekwencjaStatystyki
+    override val PlusZarejestrowaneUrzadzenia get() = endpoints.PlusZarejestrowaneUrzadzenia
+    override val PlusRejestracjaUrzadzeniaToken get() = endpoints.PlusRejestracjaUrzadzeniaToken
+    override val PlusZebrania get() = endpoints.PlusZebrania
+    override val PlusRealizacjaZajec get() = endpoints.PlusRealizacjaZajec
+    override val PlusSprawdzianyZadaniaDomowe get() = endpoints.PlusSprawdzianyZadaniaDomowe
+    override val PlusSprawdzianSzczegoly get() = endpoints.PlusSprawdzianSzczegoly
+    override val PlusZadanieDomoweSzczegoly get() = endpoints.PlusZadanieDomoweSzczegoly
+    override val PlusPlanZajec get() = endpoints.PlusPlanZajec
+    override val PlusDniWolne get() = endpoints.PlusDniWolne
+    override val PlusUwagi get() = endpoints.PlusUwagi
+    override val PlusNauczyciele get() = endpoints.PlusNauczyciele
+    override val PlusInformacje get() = endpoints.PlusInformacje
+    override val PlusDaneUcznia get() = endpoints.PlusDaneUcznia
+    override val PlusUczenZdjecie get() = endpoints.PlusUczenZdjecie
+    override val PlusOkresyKlasyfikacyjne get() = endpoints.PlusOkresyKlasyfikacyjne
+    override val PlusOceny get() = endpoints.PlusOceny
+
     // wiadomosciplus
     override val Skrzynki get() = endpoints.Skrzynki
     override val Odebrane get() = endpoints.Odebrane
@@ -62,7 +85,9 @@ internal object ApiEndpoints : IApiEndpoints {
     override val Usuniete get() = endpoints.Usuniete
     override val UsunieteSkrzynka get() = endpoints.UsunieteSkrzynka
     override val WiadomoscOdpowiedzPrzekaz get() = endpoints.WiadomoscOdpowiedzPrzekaz
+    override val WiadomoscNowa get() = endpoints.WiadomoscNowa
     override val MoveTrash get() = endpoints.MoveTrash
+    override val Delete get() = endpoints.Delete
     override val RestoreTrash get() = endpoints.RestoreTrash
 }
 
@@ -110,6 +135,28 @@ internal interface IApiEndpoints {
     val ZebraniaObecnosc: String
     val ZgloszoneNieobecnosci: String
 
+    val PlusContext: String
+    val PlusAutoryzacjaPesel: String
+    val PlusFrekwencja: String
+    val PlusUsprawiedliwienia: String
+    val PlusFrekwencjaStatystyki: String
+    val PlusZarejestrowaneUrzadzenia: String
+    val PlusRejestracjaUrzadzeniaToken: String
+    val PlusZebrania: String
+    val PlusRealizacjaZajec: String
+    val PlusSprawdzianyZadaniaDomowe: String
+    val PlusSprawdzianSzczegoly: String
+    val PlusZadanieDomoweSzczegoly: String
+    val PlusPlanZajec: String
+    val PlusDniWolne: String
+    val PlusUwagi: String
+    val PlusNauczyciele: String
+    val PlusInformacje: String
+    val PlusDaneUcznia: String
+    val PlusUczenZdjecie: String
+    val PlusOkresyKlasyfikacyjne: String
+    val PlusOceny: String
+
     // wiadomosciplus
     val Skrzynki: String
     val Odebrane: String
@@ -119,7 +166,9 @@ internal interface IApiEndpoints {
     val Usuniete: String
     val UsunieteSkrzynka: String
     val WiadomoscOdpowiedzPrzekaz: String
+    val WiadomoscNowa: String
     val MoveTrash: String
+    val Delete: String
     val RestoreTrash: String
 }
 
@@ -167,6 +216,29 @@ internal object ApiEndpoints_24_4_1_58566 : IApiEndpoints {
     override val ZebraniaObecnosc = "ZebraniaObecnosc"
     override val ZgloszoneNieobecnosci = "ZgloszoneNieobecnosci"
 
+    // uczenplus
+    override val PlusContext = "Context"
+    override val PlusAutoryzacjaPesel = "AutoryzacjaPesel"
+    override val PlusFrekwencja = "Frekwencja"
+    override val PlusUsprawiedliwienia = "PlusUsprawiedliwienia"
+    override val PlusFrekwencjaStatystyki = "PlusFrekwencjaStatystyki"
+    override val PlusZarejestrowaneUrzadzenia = "PlusZarejestrowaneUrzadzenia"
+    override val PlusRejestracjaUrzadzeniaToken = "PlusRejestracjaUrzadzeniaToken"
+    override val PlusZebrania = "PlusZebrania"
+    override val PlusRealizacjaZajec = "PlusRealizacjaZajec"
+    override val PlusSprawdzianyZadaniaDomowe = "PlusSprawdzianyZadaniaDomowe"
+    override val PlusSprawdzianSzczegoly = "PlusSprawdzianSzczegoly"
+    override val PlusZadanieDomoweSzczegoly = "PlusZadanieDomoweSzczegoly"
+    override val PlusPlanZajec = "PlusPlanZajec"
+    override val PlusDniWolne = "PlusDniWolne"
+    override val PlusUwagi = "PlusUwagi"
+    override val PlusNauczyciele = "PlusNauczyciele"
+    override val PlusInformacje = "PlusInformacje"
+    override val PlusDaneUcznia = "PlusDaneUcznia"
+    override val PlusUczenZdjecie = "PlusUczenZdjecie"
+    override val PlusOkresyKlasyfikacyjne = "OkresyKlasyfikacyjne"
+    override val PlusOceny = "Oceny"
+
     // wiadomosciplus
     override val Skrzynki = "Skrzynki"
     override val Odebrane = "Odebrane"
@@ -176,7 +248,9 @@ internal object ApiEndpoints_24_4_1_58566 : IApiEndpoints {
     override val Usuniete = "Usuniete"
     override val UsunieteSkrzynka = "UsunieteSkrzynka"
     override val WiadomoscOdpowiedzPrzekaz = "WiadomoscOdpowiedzPrzekaz"
+    override val WiadomoscNowa = "WiadomoscNowa"
     override val MoveTrash = "MoveTrash"
+    override val Delete = "Delete"
     override val RestoreTrash = "RestoreTrash"
 }
 
@@ -224,6 +298,29 @@ internal object ApiEndpoints_24_4_2_58666 : IApiEndpoints {
     override val ZebraniaObecnosc = "6ef8e1de-1234-4f39-9cd4-f68dabb8a440"
     override val ZgloszoneNieobecnosci = "80fe9dc2-8c36-41ea-8009-82503ff3c810"
 
+    // uczenplus
+    override val PlusContext = "7fbcc3fc-1021-444e-86ec-506683e02337"
+    override val PlusAutoryzacjaPesel = "PlusAutoryzacjaPesel"
+    override val PlusFrekwencja = "c1fc4853-7216-4fd1-9957-4426278bb0bc"
+    override val PlusUsprawiedliwienia = "e3ae5a25-40ba-46f6-8e3f-fa325c68a300"
+    override val PlusFrekwencjaStatystyki = "85ec4b45-092b-49ff-a280-89c8439d2e09"
+    override val PlusZarejestrowaneUrzadzenia = "eca2a314-4aa1-4242-a032-82915863b00e"
+    override val PlusRejestracjaUrzadzeniaToken = "PlusRejestracjaUrzadzeniaToken"
+    override val PlusZebrania = "358477c6-2917-4a11-9208-8abdcde4d05c"
+    override val PlusRealizacjaZajec = "25c2155a-ee89-4f0b-b1e2-000f7eebbf06"
+    override val PlusSprawdzianyZadaniaDomowe = "65b13621-cafd-4e86-b7a2-093acc60f618"
+    override val PlusSprawdzianSzczegoly = "81ee73f9-9b4f-415f-aa6a-2cb7edaae3cd"
+    override val PlusZadanieDomoweSzczegoly = "fd6a4f90-5cb2-44f1-991b-fc4fbba8acbe"
+    override val PlusPlanZajec = "b08b6215-ebac-481d-81b9-14807a098731"
+    override val PlusDniWolne = "457deb32-212c-4564-8c2b-7941a1f091c9"
+    override val PlusUwagi = "f0dcdc6d-cccf-42b9-86e3-02e7e9c5bb8d"
+    override val PlusNauczyciele = "4e68fe23-18d2-42ef-94c4-27acbd4ab16c"
+    override val PlusInformacje = "dcae87e5-17a7-40d5-b362-f6caa9162715"
+    override val PlusDaneUcznia = "d7ff4abc-3a93-45d3-b28d-f4fb82fcd565"
+    override val PlusUczenZdjecie = "86e7b08f-de0c-4cc7-8042-e3a3796f7090"
+    override val PlusOkresyKlasyfikacyjne = "0669f1fd-e6f0-4007-ba4a-1d99c9107bb4"
+    override val PlusOceny = "587b18fa-0cdd-4db9-9bc8-e2d67094b385"
+
     // wiadomosciplus
     override val Skrzynki = "787817a4-bfa8-472c-b1ce-bbe324b308cf"
     override val Odebrane = "fa8d0cb9-742e-4f9f-b3e2-65b7d5cd7aa6"
@@ -233,6 +330,8 @@ internal object ApiEndpoints_24_4_2_58666 : IApiEndpoints {
     override val Usuniete = "94c2e642-b8e3-41f7-8428-27c3f213cb5d"
     override val UsunieteSkrzynka = "bae7f54c-f18e-4553-92d6-9a5f93392b39"
     override val WiadomoscOdpowiedzPrzekaz = "44444524-ba04-4259-8853-88343cf294be"
+    override val WiadomoscNowa = "4f02e91e-b9ad-4da1-b4d9-84f258ad1d12"
     override val MoveTrash = "b2131c71-8d76-4d93-9274-1d5b4f30c915"
+    override val Delete = "cd379bae-9700-48b4-a0d0-9eca08ee908f"
     override val RestoreTrash = "e6de58f9-4db1-4cd2-afdf-ac9fcca37e43"
 }

@@ -324,13 +324,13 @@ internal class RegisterRepository(
 
     private suspend fun getEduOneDiaries(baseStudentPlus: String): List<RegisterStudent> {
         return studentPlus
-            .getContext(url = baseStudentPlus + "api/Context").students
+            .getContextByUrl(url = baseStudentPlus + "api/${ApiEndpoints.PlusContext}").students
             .map { contextStudent ->
                 val semesters = runCatching {
                     when {
                         contextStudent.isAuthorizationRequired -> emptyList()
-                        else -> studentPlus.getSemesters(
-                            url = baseStudentPlus + "api/OkresyKlasyfikacyjne",
+                        else -> studentPlus.getSemestersByUrl(
+                            url = baseStudentPlus + "api/${ApiEndpoints.PlusOkresyKlasyfikacyjne}",
                             key = contextStudent.key,
                             diaryId = contextStudent.registerId,
                         )

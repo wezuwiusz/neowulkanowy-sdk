@@ -63,7 +63,7 @@ internal class StudentPlusRepository(
     suspend fun authorizePermission(pesel: String, studentId: Int, diaryId: Int, unitId: Int): Boolean {
         runCatching {
             api.authorize(
-                AuthorizePermissionPlusRequest(
+                body = AuthorizePermissionPlusRequest(
                     key = getEncodedKey(studentId, diaryId, unitId),
                     pesel = pesel,
                 ),
@@ -119,8 +119,10 @@ internal class StudentPlusRepository(
             key.studentId == studentId
         } ?: throw NoSuchElementException()
 
-        return api.getSemesters(student.key, student.registerId)
-            .mapToSemester(student)
+        return api.getSemesters(
+            key = student.key,
+            diaryId = student.registerId,
+        ).mapToSemester(student)
     }
 
     suspend fun getAttendance(startDate: LocalDate, endDate: LocalDate?, studentId: Int, diaryId: Int, unitId: Int): List<Attendance> {
@@ -142,7 +144,7 @@ internal class StudentPlusRepository(
     }
 
     suspend fun getAttendanceSummary(studentId: Int, diaryId: Int, unitId: Int): List<AttendanceSummary> {
-        val summaries = api.getAttendanceSummary(getEncodedKey(studentId, diaryId, unitId))
+        val summaries = api.getAttendanceSummary(key = getEncodedKey(studentId, diaryId, unitId))
 
         val stats = summaries.items.associate { it.id to it.months }
         val getMonthValue = fun(type: Int, month: Int): Int {
@@ -221,13 +223,13 @@ internal class StudentPlusRepository(
 
     suspend fun getRegisteredDevices(studentId: Int, diaryId: Int, unitId: Int): List<Device> {
         val key = getEncodedKey(studentId, diaryId, unitId)
-        return api.getRegisteredDevices(key)
+        return api.getRegisteredDevices(key = key)
     }
 
     suspend fun getToken(studentId: Int, diaryId: Int, unitId: Int): TokenResponse {
         val key = getEncodedKey(studentId, diaryId, unitId)
-        api.createDeviceRegistrationToken(mapOf("key" to key))
-        val res = api.getDeviceRegistrationToken(key)
+        api.createDeviceRegistrationToken(body = mapOf("key" to key))
+        val res = api.getDeviceRegistrationToken(key = key)
         return res.copy(
             qrCodeImage = Jsoup.parse(res.qrCodeImage)
                 .select("img")
@@ -238,7 +240,10 @@ internal class StudentPlusRepository(
 
     suspend fun getGrades(semesterId: Int, studentId: Int, diaryId: Int, unitId: Int): Grades {
         val key = getEncodedKey(studentId, diaryId, unitId)
-        val res = api.getGrades(key, semesterId)
+        val res = api.getGrades(
+            key = key,
+            semesterId = semesterId,
+        )
 
         return Grades(
             details = res.mapGradesList(),
@@ -260,7 +265,7 @@ internal class StudentPlusRepository(
         )
 
         return examsHomeworkRes.filter { it.type != 4 }.map { exam ->
-            val examDetailsRes = api.getExamDetails(key, exam.id)
+            val examDetailsRes = api.getExamDetails(key = key, id = exam.id)
             Exam(
                 entryDate = exam.date,
                 subject = exam.subject,
@@ -288,7 +293,7 @@ internal class StudentPlusRepository(
         )
 
         return examsHomeworkRes.filter { it.type == 4 }.map { homework ->
-            val homeworkDetailsRes = api.getHomeworkDetails(key, homework.id)
+            val homeworkDetailsRes = api.getHomeworkDetails(key = key, id = homework.id)
             Homework(
                 homeworkId = homework.id,
                 subject = homework.subject,
@@ -406,7 +411,7 @@ internal class StudentPlusRepository(
 
     suspend fun getNotes(studentId: Int, diaryId: Int, unitId: Int): List<Note> {
         val key = getEncodedKey(studentId, diaryId, unitId)
-        return api.getNotes(key)
+        return api.getNotes(key = key)
             .map {
                 it.copy(
                     category = it.category.orEmpty(),
@@ -420,12 +425,12 @@ internal class StudentPlusRepository(
 
     suspend fun getConferences(studentId: Int, diaryId: Int, unitId: Int): List<Conference> {
         val key = getEncodedKey(studentId, diaryId, unitId)
-        return api.getConferences(key)
+        return api.getConferences(key = key)
     }
 
     suspend fun getTeachers(studentId: Int, diaryId: Int, unitId: Int): List<Teacher> {
         val key = getEncodedKey(studentId, diaryId, unitId)
-        return api.getTeachers(key).teachers.map {
+        return api.getTeachers(key = key).teachers.map {
             Teacher(
                 name = "${it.firstName} ${it.lastName}".trim(),
                 subject = it.subject,
@@ -435,7 +440,7 @@ internal class StudentPlusRepository(
 
     suspend fun getSchool(studentId: Int, diaryId: Int, unitId: Int): School {
         val key = getEncodedKey(studentId, diaryId, unitId)
-        return api.getSchool(key).let {
+        return api.getSchool(key = key).let {
             val streetNumber = it.buildingNumber + it.apartmentNumber.takeIf(String::isNotEmpty)?.let { "/$it" }.orEmpty()
             val name = buildString {
                 append(it.name)
@@ -461,7 +466,7 @@ internal class StudentPlusRepository(
 
     suspend fun getStudentInfo(studentId: Int, diaryId: Int, unitId: Int): StudentInfo {
         val key = getEncodedKey(studentId, diaryId, unitId)
-        val studentInfo = api.getStudentInfo(key)
+        val studentInfo = api.getStudentInfo(key = key)
         return studentInfo.copy(
             birthDate = studentInfo.birthDateEduOne?.atStartOfDay(),
             guardianFirst = studentInfo.guardianFirst?.let {
@@ -474,6 +479,6 @@ internal class StudentPlusRepository(
 
     suspend fun getStudentPhoto(studentId: Int, diaryId: Int, unitId: Int): StudentPhoto {
         val key = getEncodedKey(studentId, diaryId, unitId)
-        return api.getStudentPhoto(key) ?: StudentPhoto(photoBase64 = null)
+        return api.getStudentPhoto(key = key) ?: StudentPhoto(photoBase64 = null)
     }
 }

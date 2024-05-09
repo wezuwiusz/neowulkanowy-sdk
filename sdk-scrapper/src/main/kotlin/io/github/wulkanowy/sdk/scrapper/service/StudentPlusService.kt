@@ -1,5 +1,6 @@
 package io.github.wulkanowy.sdk.scrapper.service
 
+import io.github.wulkanowy.sdk.scrapper.ApiEndpoints
 import io.github.wulkanowy.sdk.scrapper.attendance.Attendance
 import io.github.wulkanowy.sdk.scrapper.attendance.AttendanceExcusePlusRequest
 import io.github.wulkanowy.sdk.scrapper.attendance.AttendanceExcusesPlusResponse
@@ -26,6 +27,7 @@ import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
+import retrofit2.http.Path
 import retrofit2.http.Query
 import retrofit2.http.Url
 
@@ -34,10 +36,10 @@ internal interface StudentPlusService {
     // for register
 
     @GET
-    suspend fun getContext(@Url url: String): ContextResponse
+    suspend fun getContextByUrl(@Url url: String): ContextResponse
 
     @GET
-    suspend fun getSemesters(
+    suspend fun getSemestersByUrl(
         @Url url: String,
         @Query("key") key: String,
         @Query("idDziennik") diaryId: Int,
@@ -45,128 +47,156 @@ internal interface StudentPlusService {
 
     //
 
-    @GET("api/Context")
-    suspend fun getContext(): ContextResponse
+    @GET("api/{path}")
+    suspend fun getContext(@Path("path") path: String = ApiEndpoints.PlusContext): ContextResponse
 
-    @GET("api/OkresyKlasyfikacyjne")
+    @GET("api/{path}")
     suspend fun getSemesters(
+        @Path("path") path: String = ApiEndpoints.PlusOkresyKlasyfikacyjne,
         @Query("key") key: String,
         @Query("idDziennik") diaryId: Int,
     ): List<GradeSemester>
 
-    @POST("api/AutoryzacjaPesel")
-    suspend fun authorize(@Body body: AuthorizePermissionPlusRequest): Response<Unit>
+    @POST("api/{path}")
+    suspend fun authorize(
+        @Path("path") path: String = ApiEndpoints.PlusAutoryzacjaPesel,
+        @Body body: AuthorizePermissionPlusRequest,
+    ): Response<Unit>
 
-    @GET("api/Frekwencja")
+    @GET("api/{path}")
     suspend fun getAttendance(
+        @Path("path") path: String = ApiEndpoints.PlusFrekwencja,
         @Query("key") key: String,
         @Query("dataOd") from: String,
         @Query("dataDo") to: String,
     ): List<Attendance>
 
-    @GET("api/Usprawiedliwienia")
+    @GET("api/{path}")
     suspend fun getExcuses(
+        @Path("path") path: String = ApiEndpoints.PlusUsprawiedliwienia,
         @Query("key") key: String,
         @Query("dataOd") from: String,
         @Query("dataDo") to: String,
     ): AttendanceExcusesPlusResponse
 
-    @POST("api/Usprawiedliwienia")
-    suspend fun excuseForAbsence(@Body body: AttendanceExcusePlusRequest): Response<Unit>
+    @POST("api/{path}")
+    suspend fun excuseForAbsence(
+        @Path("path") path: String = ApiEndpoints.PlusUsprawiedliwienia,
+        @Body body: AttendanceExcusePlusRequest,
+    ): Response<Unit>
 
-    @GET("api/FrekwencjaStatystyki")
+    @GET("api/{path}")
     suspend fun getAttendanceSummary(
+        @Path("path") path: String = ApiEndpoints.PlusFrekwencjaStatystyki,
         @Query("key") key: String,
     ): AttendanceSummaryResponse
 
-    @GET("api/ZarejestrowaneUrzadzenia")
+    @GET("api/{path}")
     suspend fun getRegisteredDevices(
+        @Path("path") path: String = ApiEndpoints.PlusZarejestrowaneUrzadzenia,
         @Query("key") key: String,
     ): List<Device>
 
-    @POST("api/RejestracjaUrzadzeniaToken")
+    @POST("api/{path}")
     suspend fun createDeviceRegistrationToken(
+        @Path("path") path: String = ApiEndpoints.PlusRejestracjaUrzadzeniaToken,
         @Body body: Map<String, String>,
     )
 
-    @GET("api/RejestracjaUrzadzeniaToken")
+    @GET("api/{path}")
     suspend fun getDeviceRegistrationToken(
+        @Path("path") path: String = ApiEndpoints.PlusRejestracjaUrzadzeniaToken,
         @Query("key") key: String,
     ): TokenResponse
 
-    @GET("api/Zebrania")
+    @GET("api/{path}")
     suspend fun getConferences(
+        @Path("path") path: String = ApiEndpoints.PlusZebrania,
         @Query("key") key: String,
     ): List<Conference>
 
-    @GET("api/RealizacjaZajec")
+    @GET("api/{path}")
     suspend fun getCompletedLessons(
+        @Path("path") path: String = ApiEndpoints.PlusRealizacjaZajec,
         @Query("key") key: String,
         @Query("status") status: Int,
         @Query("dataOd") from: String,
         @Query("dataDo") to: String,
     ): List<CompletedLesson>
 
-    @GET("api/Oceny")
+    @GET("api/{path}")
     suspend fun getGrades(
+        @Path("path") path: String = ApiEndpoints.PlusOceny,
         @Query("key") key: String,
         @Query("idOkresKlasyfikacyjny") semesterId: Int,
     ): GradesResponse
 
-    @GET("api/SprawdzianyZadaniaDomowe")
+    @GET("api/{path}")
     suspend fun getExamsAndHomework(
+        @Path("path") path: String = ApiEndpoints.PlusSprawdzianyZadaniaDomowe,
         @Query("key") key: String,
         @Query("dataOd") from: String,
         @Query("dataDo") to: String?,
     ): List<ExamHomeworkPlus>
 
-    @GET("api/SprawdzianSzczegoly")
+    @GET("api/{path}")
     suspend fun getExamDetails(
+        @Path("path") path: String = ApiEndpoints.PlusSprawdzianSzczegoly,
         @Query("key") key: String,
         @Query("id") id: Int,
     ): ExamDetailsPlus
 
-    @GET("api/ZadanieDomoweSzczegoly")
+    @GET("api/{path}")
     suspend fun getHomeworkDetails(
+        @Path("path") path: String = ApiEndpoints.PlusZadanieDomoweSzczegoly,
         @Query("key") key: String,
         @Query("id") id: Int,
     ): HomeworkDetailsPlus
 
-    @GET("api/PlanZajec")
+    @GET("api/{path}")
     suspend fun getTimetable(
+        @Path("path") path: String = ApiEndpoints.PlusPlanZajec,
         @Query("key") key: String,
         @Query("dataOd") from: String,
         @Query("dataDo") to: String?,
         @Query("zakresDanych") data: Int = 2,
     ): List<LessonPlus>
 
-    @GET("api/DniWolne")
+    @GET("api/{path}")
     suspend fun getTimetableFreeDays(
+        @Path("path") path: String = ApiEndpoints.PlusDniWolne,
         @Query("key") key: String,
         @Query("dataOd") from: String,
         @Query("dataDo") to: String?,
     ): List<TimetablePlusHeader>
 
-    @GET("api/Uwagi")
-    suspend fun getNotes(@Query("key") key: String): List<Note>
+    @GET("api/{path}")
+    suspend fun getNotes(
+        @Path("path") path: String = ApiEndpoints.PlusUwagi,
+        @Query("key") key: String,
+    ): List<Note>
 
-    @GET("api/Nauczyciele")
+    @GET("api/{path}")
     suspend fun getTeachers(
+        @Path("path") path: String = ApiEndpoints.PlusNauczyciele,
         @Query("key") key: String,
     ): TeacherPlusResponse
 
-    @GET("api/Informacje")
+    @GET("api/{path}")
     suspend fun getSchool(
+        @Path("path") path: String = ApiEndpoints.PlusInformacje,
         @Query("key") key: String,
     ): SchoolPlus
 
-    @GET("api/DaneUcznia")
+    @GET("api/{path}")
     suspend fun getStudentInfo(
+        @Path("path") path: String = ApiEndpoints.PlusDaneUcznia,
         @Query("key") key: String,
     ): StudentInfo
 
-    @GET("api/UczenZdjecie")
+    @GET("api/{path}")
     suspend fun getStudentPhoto(
+        @Path("path") path: String = ApiEndpoints.PlusUczenZdjecie,
         @Query("key") key: String,
     ): StudentPhoto?
 }

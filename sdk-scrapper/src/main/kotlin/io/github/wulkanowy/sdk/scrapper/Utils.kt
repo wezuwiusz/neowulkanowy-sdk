@@ -19,6 +19,7 @@ import java.util.Date
 import kotlin.io.encoding.Base64
 import kotlin.io.encoding.ExperimentalEncodingApi
 import kotlin.math.roundToInt
+import kotlin.random.Random
 
 private val logger = LoggerFactory.getLogger("Utils")
 
@@ -165,10 +166,10 @@ internal fun getDecodedKey(key: String): StudentKey {
     }
 
     return StudentKey(
-        studentId = parts[0] ?: -1,
-        diaryId = parts[1] ?: -2,
-        unknown = parts[2] ?: -3,
-        unitId = parts[3] ?: -4,
+        studentId = parts.getOrNull(0) ?: Random.nextInt(),
+        diaryId = parts.getOrNull(1) ?: Random.nextInt(),
+        unknown = parts.getOrNull(2) ?: Random.nextInt(),
+        unitId = parts.getOrNull(3) ?: Random.nextInt(),
     )
 }
 

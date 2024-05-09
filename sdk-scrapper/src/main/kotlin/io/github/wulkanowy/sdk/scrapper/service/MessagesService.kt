@@ -94,8 +94,11 @@ internal interface MessagesService {
         @Query("apiGlobalKey") globalKey: String,
     ): MessageReplayDetails
 
-    @POST("api/WiadomoscNowa")
-    suspend fun sendMessage(@Body body: SendMessageRequest)
+    @POST("api/{path}")
+    suspend fun sendMessage(
+        @Path("path") path: String = ApiEndpoints.WiadomoscNowa,
+        @Body body: SendMessageRequest,
+    )
 
     @POST("api/{path}")
     suspend fun moveMessageToTrash(
