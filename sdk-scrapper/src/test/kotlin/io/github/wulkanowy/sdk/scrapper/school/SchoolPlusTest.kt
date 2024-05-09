@@ -1,6 +1,7 @@
 package io.github.wulkanowy.sdk.scrapper.school
 
 import io.github.wulkanowy.sdk.scrapper.BaseLocalTest
+import io.github.wulkanowy.sdk.scrapper.register.RegisterTest
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert
 import org.junit.Test
@@ -9,8 +10,10 @@ class SchoolPlusTest : BaseLocalTest() {
 
     private val school by lazy {
         runBlocking {
-            getStudentPlusRepo(SchoolPlusTest::class.java, "SzkolaPlus.json")
-                .getSchool(1, 2, 3)
+            getStudentPlusRepo {
+                it.enqueue("Context-all-enabled.json", RegisterTest::class.java)
+                it.enqueue("SzkolaPlus.json")
+            }.getSchool(1, 2, 3)
         }
     }
 

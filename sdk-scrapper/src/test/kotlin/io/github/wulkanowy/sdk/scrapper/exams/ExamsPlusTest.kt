@@ -2,6 +2,7 @@ package io.github.wulkanowy.sdk.scrapper.exams
 
 import io.github.wulkanowy.sdk.scrapper.BaseLocalTest
 import io.github.wulkanowy.sdk.scrapper.homework.HomeworkTest
+import io.github.wulkanowy.sdk.scrapper.register.RegisterTest
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertEquals
 import org.junit.Test
@@ -11,6 +12,7 @@ class ExamsPlusTest : BaseLocalTest() {
     private val exams: List<Exam> by lazy {
         runBlocking {
             getStudentPlusRepo {
+                it.enqueue("Context-all-enabled.json", RegisterTest::class.java)
                 it.enqueue("SprawdzianyZadaniaDomowe.json", HomeworkTest::class.java)
                 it.enqueue("SprawdzianSzczegoly.json", ExamsPlusTest::class.java)
                 it.enqueue("ZadanieDomoweSzczegoly.json", HomeworkTest::class.java)

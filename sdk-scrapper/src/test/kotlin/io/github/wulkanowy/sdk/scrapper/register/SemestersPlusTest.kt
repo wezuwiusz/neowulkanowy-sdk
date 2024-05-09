@@ -3,6 +3,7 @@ package io.github.wulkanowy.sdk.scrapper.register
 import io.github.wulkanowy.sdk.scrapper.BaseLocalTest
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
+import org.junit.Ignore
 import org.junit.Test
 import java.time.LocalDate
 
@@ -21,6 +22,7 @@ class SemestersPlusTest : BaseLocalTest() {
         assertEquals(2, semesters.size)
     }
 
+    @Ignore("thanks to VULCAN")
     @Test(expected = NoSuchElementException::class)
     fun `get semesters when there is no matching student list`() = runTest {
         val repo = getStudentPlusRepo {

@@ -25,6 +25,7 @@ import io.github.wulkanowy.sdk.scrapper.mobile.TokenResponse
 import io.github.wulkanowy.sdk.scrapper.notes.Note
 import io.github.wulkanowy.sdk.scrapper.notes.NoteCategory
 import io.github.wulkanowy.sdk.scrapper.register.AuthorizePermissionPlusRequest
+import io.github.wulkanowy.sdk.scrapper.register.ContextStudent
 import io.github.wulkanowy.sdk.scrapper.register.RegisterStudent
 import io.github.wulkanowy.sdk.scrapper.register.Semester
 import io.github.wulkanowy.sdk.scrapper.register.mapToSemester
@@ -64,7 +65,7 @@ internal class StudentPlusRepository(
         runCatching {
             api.authorize(
                 body = AuthorizePermissionPlusRequest(
-                    key = getEncodedKey(studentId, diaryId, unitId),
+                    key = getKey(studentId, diaryId, unitId),
                     pesel = pesel,
                 ),
             )
@@ -79,10 +80,8 @@ internal class StudentPlusRepository(
     }
 
     suspend fun getStudent(studentId: Int): RegisterStudent {
-        val contextStudent = api.getContext().students.find { contextStudent ->
-            val key = getDecodedKey(contextStudent.key)
-            key.studentId == studentId
-        } ?: throw NoSuchElementException()
+        val contextStudent = getMatchingStudent(studentId, null, null)
+            ?: throw NoSuchElementException()
 
         val semesters = runCatching {
             when {
@@ -114,10 +113,8 @@ internal class StudentPlusRepository(
     }
 
     suspend fun getSemesters(studentId: Int): List<Semester> {
-        val student = api.getContext().students.find {
-            val key = getDecodedKey(it.key)
-            key.studentId == studentId
-        } ?: throw NoSuchElementException()
+        val student = getMatchingStudent(studentId, null, null)
+            ?: throw NoSuchElementException()
 
         return api.getSemesters(
             key = student.key,
@@ -126,7 +123,7 @@ internal class StudentPlusRepository(
     }
 
     suspend fun getAttendance(startDate: LocalDate, endDate: LocalDate?, studentId: Int, diaryId: Int, unitId: Int): List<Attendance> {
-        val key = getEncodedKey(studentId, diaryId, unitId)
+        val key = getKey(studentId, diaryId, unitId)
         val from = startDate.toISOFormat()
         val to = endDate?.toISOFormat() ?: startDate.plusDays(7).toISOFormat()
 
@@ -144,7 +141,7 @@ internal class StudentPlusRepository(
     }
 
     suspend fun getAttendanceSummary(studentId: Int, diaryId: Int, unitId: Int): List<AttendanceSummary> {
-        val summaries = api.getAttendanceSummary(key = getEncodedKey(studentId, diaryId, unitId))
+        val summaries = api.getAttendanceSummary(key = getKey(studentId, diaryId, unitId))
 
         val stats = summaries.items.associate { it.id to it.months }
         val getMonthValue = fun(type: Int, month: Int): Int {
@@ -190,7 +187,7 @@ internal class StudentPlusRepository(
     suspend fun excuseForAbsence(absents: List<Absent>, content: String?, studentId: Int, diaryId: Int, unitId: Int): Boolean {
         api.excuseForAbsence(
             body = AttendanceExcusePlusRequest(
-                key = getEncodedKey(studentId, diaryId, unitId),
+                key = getKey(studentId, diaryId, unitId),
                 content = content.orEmpty(),
                 excuses = absents.map {
                     AttendanceExcusePlusRequestItem(
@@ -205,9 +202,8 @@ internal class StudentPlusRepository(
     }
 
     suspend fun getCompletedLessons(startDate: LocalDate, endDate: LocalDate?, studentId: Int, diaryId: Int, unitId: Int): List<CompletedLesson> {
-        val key = getEncodedKey(studentId, diaryId, unitId)
-        val context = api.getContext()
-        val studentConfig = context.students.find { it.key == key }?.config
+        val key = getKey(studentId, diaryId, unitId)
+        val studentConfig = getMatchingStudent(studentId, diaryId, unitId)?.config
 
         if (studentConfig?.showCompletedLessons != true) {
             throw FeatureDisabledException("Widok lekcji zrealizowanych został wyłączony przez Administratora szkoły")
@@ -222,12 +218,12 @@ internal class StudentPlusRepository(
     }
 
     suspend fun getRegisteredDevices(studentId: Int, diaryId: Int, unitId: Int): List<Device> {
-        val key = getEncodedKey(studentId, diaryId, unitId)
+        val key = getKey(studentId, diaryId, unitId)
         return api.getRegisteredDevices(key = key)
     }
 
     suspend fun getToken(studentId: Int, diaryId: Int, unitId: Int): TokenResponse {
-        val key = getEncodedKey(studentId, diaryId, unitId)
+        val key = getKey(studentId, diaryId, unitId)
         api.createDeviceRegistrationToken(body = mapOf("key" to key))
         val res = api.getDeviceRegistrationToken(key = key)
         return res.copy(
@@ -239,7 +235,7 @@ internal class StudentPlusRepository(
     }
 
     suspend fun getGrades(semesterId: Int, studentId: Int, diaryId: Int, unitId: Int): Grades {
-        val key = getEncodedKey(studentId, diaryId, unitId)
+        val key = getKey(studentId, diaryId, unitId)
         val res = api.getGrades(
             key = key,
             semesterId = semesterId,
@@ -257,7 +253,7 @@ internal class StudentPlusRepository(
     }
 
     suspend fun getExams(startDate: LocalDate, endDate: LocalDate?, studentId: Int, diaryId: Int, unitId: Int): List<Exam> {
-        val key = getEncodedKey(studentId, diaryId, unitId)
+        val key = getKey(studentId, diaryId, unitId)
         val examsHomeworkRes = api.getExamsAndHomework(
             key = key,
             from = startDate.toISOFormat(),
@@ -285,7 +281,7 @@ internal class StudentPlusRepository(
     }
 
     suspend fun getHomework(startDate: LocalDate, endDate: LocalDate?, studentId: Int, diaryId: Int, unitId: Int): List<Homework> {
-        val key = getEncodedKey(studentId, diaryId, unitId)
+        val key = getKey(studentId, diaryId, unitId)
         val examsHomeworkRes = api.getExamsAndHomework(
             key = key,
             from = startDate.toISOFormat(),
@@ -310,7 +306,7 @@ internal class StudentPlusRepository(
     }
 
     suspend fun getTimetable(startDate: LocalDate, endDate: LocalDate?, studentId: Int, diaryId: Int, unitId: Int): Timetable {
-        val key = getEncodedKey(studentId, diaryId, unitId)
+        val key = getKey(studentId, diaryId, unitId)
         val defaultEndDate = (endDate ?: startDate.plusDays(7))
         val lessons = api.getTimetable(
             key = key,
@@ -410,7 +406,7 @@ internal class StudentPlusRepository(
     }
 
     suspend fun getNotes(studentId: Int, diaryId: Int, unitId: Int): List<Note> {
-        val key = getEncodedKey(studentId, diaryId, unitId)
+        val key = getKey(studentId, diaryId, unitId)
         return api.getNotes(key = key)
             .map {
                 it.copy(
@@ -424,12 +420,12 @@ internal class StudentPlusRepository(
     }
 
     suspend fun getConferences(studentId: Int, diaryId: Int, unitId: Int): List<Conference> {
-        val key = getEncodedKey(studentId, diaryId, unitId)
+        val key = getKey(studentId, diaryId, unitId)
         return api.getConferences(key = key)
     }
 
     suspend fun getTeachers(studentId: Int, diaryId: Int, unitId: Int): List<Teacher> {
-        val key = getEncodedKey(studentId, diaryId, unitId)
+        val key = getKey(studentId, diaryId, unitId)
         return api.getTeachers(key = key).teachers.map {
             Teacher(
                 name = "${it.firstName} ${it.lastName}".trim(),
@@ -439,7 +435,7 @@ internal class StudentPlusRepository(
     }
 
     suspend fun getSchool(studentId: Int, diaryId: Int, unitId: Int): School {
-        val key = getEncodedKey(studentId, diaryId, unitId)
+        val key = getKey(studentId, diaryId, unitId)
         return api.getSchool(key = key).let {
             val streetNumber = it.buildingNumber + it.apartmentNumber.takeIf(String::isNotEmpty)?.let { "/$it" }.orEmpty()
             val name = buildString {
@@ -465,7 +461,7 @@ internal class StudentPlusRepository(
     }
 
     suspend fun getStudentInfo(studentId: Int, diaryId: Int, unitId: Int): StudentInfo {
-        val key = getEncodedKey(studentId, diaryId, unitId)
+        val key = getKey(studentId, diaryId, unitId)
         val studentInfo = api.getStudentInfo(key = key)
         return studentInfo.copy(
             birthDate = studentInfo.birthDateEduOne?.atStartOfDay(),
@@ -478,7 +474,30 @@ internal class StudentPlusRepository(
     }
 
     suspend fun getStudentPhoto(studentId: Int, diaryId: Int, unitId: Int): StudentPhoto {
-        val key = getEncodedKey(studentId, diaryId, unitId)
+        val key = getKey(studentId, diaryId, unitId)
         return api.getStudentPhoto(key = key) ?: StudentPhoto(photoBase64 = null)
+    }
+
+    private suspend fun getMatchingStudent(studentId: Int, diaryId: Int?, unitId: Int?): ContextStudent? {
+        val students = api.getContext().students
+        val exactMatch = students.find {
+            if (diaryId != null && unitId != null) {
+                it.key == getEncodedKey(studentId, diaryId, unitId)
+            } else {
+                getDecodedKey(it.key).studentId == studentId
+            }
+        }
+        if (exactMatch != null) return exactMatch
+
+        // todo: match based on student name?
+        return when (students.size) {
+            0 -> null
+            1 -> students.single()
+            else -> error("VULCAN okropnie utrudnił Wulkanowemu dopasowanie ucznia zapisanego na urządzeniu z tym na stronie i dlatego dane w apce nie chcą się załadować. Podziękuj... wiesz komu")
+        }
+    }
+
+    private suspend fun getKey(studentId: Int, diaryId: Int, unitId: Int): String {
+        return requireNotNull(getMatchingStudent(studentId, diaryId, unitId)?.key)
     }
 }

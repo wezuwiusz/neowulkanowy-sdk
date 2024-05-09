@@ -13,6 +13,7 @@ class CompletedLessonsPlusTest : BaseLocalTest() {
     private val studentPlus by lazy {
         runBlocking {
             getStudentPlusRepo {
+                it.enqueue("Context-all-enabled.json", RegisterTest::class.java)
                 server.enqueue("Context-all-enabled.json", RegisterTest::class.java)
                 server.enqueue("RealizacjaZajec.json", TimetableTest::class.java)
             }.getCompletedLessons(
@@ -32,13 +33,17 @@ class CompletedLessonsPlusTest : BaseLocalTest() {
 
     @Test(expected = FeatureDisabledException::class)
     fun getRealized_disabled() = runTest {
-        getStudentPlusRepo(RegisterTest::class.java, "Context-all-disabled.json").getCompletedLessons(
-            getLocalDate(2024, 1, 15),
-            getLocalDate(2024, 1, 21),
-            studentId = 1,
-            diaryId = 2,
-            unitId = 3,
-        )
+        getStudentPlusRepo {
+            it.enqueue("Context-all-enabled.json", RegisterTest::class.java)
+            it.enqueue("Context-all-disabled.json", RegisterTest::class.java)
+        }
+            .getCompletedLessons(
+                startDate = getLocalDate(2024, 1, 15),
+                endDate = getLocalDate(2024, 1, 21),
+                studentId = 1,
+                diaryId = 2,
+                unitId = 3,
+            )
     }
 
     @Test

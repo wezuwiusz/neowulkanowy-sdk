@@ -1,6 +1,7 @@
 package io.github.wulkanowy.sdk.scrapper.devices
 
 import io.github.wulkanowy.sdk.scrapper.BaseLocalTest
+import io.github.wulkanowy.sdk.scrapper.register.RegisterTest
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertEquals
 import org.junit.Test
@@ -10,8 +11,10 @@ import java.time.ZoneOffset
 class DevicesPlusTest : BaseLocalTest() {
     private val devices by lazy {
         runBlocking {
-            getStudentPlusRepo(DevicesPlusTest::class.java, "UrzadzeniaPlus.json")
-                .getRegisteredDevices(1, 2, 3)
+            getStudentPlusRepo {
+                it.enqueue("Context-all-enabled.json", RegisterTest::class.java)
+                it.enqueue("UrzadzeniaPlus.json")
+            }.getRegisteredDevices(1, 2, 3)
         }
     }
 

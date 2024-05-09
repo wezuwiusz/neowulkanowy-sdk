@@ -1,6 +1,7 @@
 package io.github.wulkanowy.sdk.scrapper.attendance
 
 import io.github.wulkanowy.sdk.scrapper.BaseLocalTest
+import io.github.wulkanowy.sdk.scrapper.register.RegisterTest
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertEquals
 import org.junit.Test
@@ -10,8 +11,10 @@ class AttendanceSummaryPlusTest : BaseLocalTest() {
 
     private val attendance by lazy {
         runBlocking {
-            getStudentPlusRepo(AttendanceSummaryPlusTest::class.java, "FrekwencjaStatystyki.json")
-                .getAttendanceSummary(1, 2, 3)
+            getStudentPlusRepo {
+                it.enqueue("Context-all-enabled.json", RegisterTest::class.java)
+                it.enqueue("FrekwencjaStatystyki.json")
+            }.getAttendanceSummary(1, 2, 3)
         }
     }
 

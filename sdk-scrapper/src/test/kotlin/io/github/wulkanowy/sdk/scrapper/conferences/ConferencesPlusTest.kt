@@ -1,6 +1,7 @@
 package io.github.wulkanowy.sdk.scrapper.conferences
 
 import io.github.wulkanowy.sdk.scrapper.BaseLocalTest
+import io.github.wulkanowy.sdk.scrapper.register.RegisterTest
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertEquals
 import org.junit.Test
@@ -9,7 +10,10 @@ class ConferencesPlusTest : BaseLocalTest() {
 
     private val conferences by lazy {
         runBlocking {
-            getStudentPlusRepo(ConferencesPlusTest::class.java, "ZebraniaPlus.json").getConferences(1, 2, 3)
+            getStudentPlusRepo {
+                it.enqueue("Context-all-enabled.json", RegisterTest::class.java)
+                it.enqueue("ZebraniaPlus.json")
+            }.getConferences(1, 2, 3)
         }
     }
 

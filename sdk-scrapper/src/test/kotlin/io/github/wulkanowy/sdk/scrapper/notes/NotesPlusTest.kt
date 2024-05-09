@@ -1,6 +1,7 @@
 package io.github.wulkanowy.sdk.scrapper.notes
 
 import io.github.wulkanowy.sdk.scrapper.BaseLocalTest
+import io.github.wulkanowy.sdk.scrapper.register.RegisterTest
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertEquals
 import org.junit.Test
@@ -9,8 +10,10 @@ class NotesPlusTest : BaseLocalTest() {
 
     private val notes by lazy {
         runBlocking {
-            getStudentPlusRepo(NotesPlusTest::class.java, "UwagiPlus.json")
-                .getNotes(1, 2, 3)
+            getStudentPlusRepo {
+                it.enqueue("Context-all-enabled.json", RegisterTest::class.java)
+                it.enqueue("UwagiPlus.json")
+            }.getNotes(1, 2, 3)
         }
     }
 

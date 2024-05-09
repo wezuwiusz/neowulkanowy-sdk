@@ -22,18 +22,15 @@ class AuthorizePermissionPlusTest : BaseLocalTest() {
     @Test
     fun `authorize with invalid data`() = runTest {
         val repo = getStudentPlusRepo {
+            it.enqueue("Context-all-enabled.json", RegisterTest::class.java)
             it.enqueue("AuthorizeError.json", responseCode = HttpURLConnection.HTTP_BAD_REQUEST)
         }
         assertFalse(repo.authorizePermission("1234", 111, 222, 333))
-        assertEquals(
-            Json.encodeToString(
-                AuthorizePermissionPlusRequest(
-                    key = Base64.encode("111-222-1-333".toByteArray()),
-                    pesel = "1234",
-                ),
-            ),
+        server.takeRequest()
+        val request = Json.decodeFromString<AuthorizePermissionPlusRequest>(
             server.takeRequest().body.readString(Charset.defaultCharset()),
         )
+        assertEquals("1234", request.pesel)
     }
 
     @Test(expected = ScrapperException::class)
@@ -56,17 +53,14 @@ class AuthorizePermissionPlusTest : BaseLocalTest() {
     @Test
     fun `authorize with valid data`() = runTest {
         val repo = getStudentPlusRepo {
+            it.enqueue("Context-all-enabled.json", RegisterTest::class.java)
             it.enqueue(MockResponse().setResponseCode(HttpURLConnection.HTTP_NO_CONTENT))
         }
         assertTrue(repo.authorizePermission("82121889474", 12, 23, 34))
-        assertEquals(
-            Json.encodeToString(
-                AuthorizePermissionPlusRequest(
-                    key = Base64.encode("12-23-1-34".toByteArray()),
-                    pesel = "82121889474",
-                ),
-            ),
-            server.takeRequest().body.readString(Charset.defaultCharset()),
+        server.takeRequest()
+        val request = Json.decodeFromString<AuthorizePermissionPlusRequest>(
+            server.takeRequest().body.readString(Charset.defaultCharset())
         )
+        assertEquals("82121889474", request.pesel)
     }
 }

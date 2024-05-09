@@ -1,6 +1,7 @@
 package io.github.wulkanowy.sdk.scrapper.timetable
 
 import io.github.wulkanowy.sdk.scrapper.BaseLocalTest
+import io.github.wulkanowy.sdk.scrapper.register.RegisterTest
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertEquals
 import org.junit.Test
@@ -10,6 +11,7 @@ class TimetablePlusTest : BaseLocalTest() {
     private val timetableFull by lazy {
         runBlocking {
             getStudentPlusRepo {
+                it.enqueue("Context-all-enabled.json", RegisterTest::class.java)
                 it.enqueue("PlanZajec.json", TimetablePlusTest::class.java)
                 it.enqueue("DniWolne.json", TimetablePlusTest::class.java)
             }

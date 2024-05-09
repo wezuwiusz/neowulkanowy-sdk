@@ -1,6 +1,7 @@
 package io.github.wulkanowy.sdk.scrapper.homework
 
 import io.github.wulkanowy.sdk.scrapper.BaseLocalTest
+import io.github.wulkanowy.sdk.scrapper.register.RegisterTest
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert
 import org.junit.Test
@@ -10,6 +11,7 @@ class HomeworkPlusTest : BaseLocalTest() {
     private val homework by lazy {
         runBlocking {
             getStudentPlusRepo {
+                it.enqueue("Context-all-enabled.json", RegisterTest::class.java)
                 it.enqueue("SprawdzianyZadaniaDomowe.json", HomeworkPlusTest::class.java)
                 it.enqueue("ZadanieDomoweSzczegoly.json", HomeworkPlusTest::class.java)
             }.getHomework(

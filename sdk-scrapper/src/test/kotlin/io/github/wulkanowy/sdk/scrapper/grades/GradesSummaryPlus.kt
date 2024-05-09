@@ -1,6 +1,7 @@
 package io.github.wulkanowy.sdk.scrapper.grades
 
 import io.github.wulkanowy.sdk.scrapper.BaseLocalTest
+import io.github.wulkanowy.sdk.scrapper.register.RegisterTest
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertEquals
 import org.junit.Test
@@ -9,7 +10,10 @@ class GradesSummaryPlus : BaseLocalTest() {
 
     private val grades by lazy {
         runBlocking {
-            getStudentPlusRepo(GradesTest::class.java, "OcenyPlus.json")
+            getStudentPlusRepo {
+                it.enqueue("Context-all-enabled.json", RegisterTest::class.java)
+                it.enqueue("OcenyPlus.json")
+            }
                 .getGrades(0, 1, 2, 3)
                 .summary
         }

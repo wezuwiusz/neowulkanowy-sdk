@@ -1,6 +1,7 @@
 package io.github.wulkanowy.sdk.scrapper.attendance
 
 import io.github.wulkanowy.sdk.scrapper.BaseLocalTest
+import io.github.wulkanowy.sdk.scrapper.register.RegisterTest
 import io.github.wulkanowy.sdk.scrapper.toFormat
 import kotlinx.coroutines.test.runTest
 import kotlinx.serialization.json.Json
@@ -22,6 +23,7 @@ class AttendancePlusTest : BaseLocalTest() {
     @Test
     fun `get simple attendance list without exemptions`() = runTest {
         val repo = getStudentPlusRepo {
+            it.enqueue("Context-all-enabled.json", RegisterTest::class.java)
             it.enqueue("FrekwencjaPlus.json")
             it.enqueue("UsprawiedliwieniaPlus-empty.json")
         }
@@ -53,6 +55,7 @@ class AttendancePlusTest : BaseLocalTest() {
     @Test
     fun `get simple attendance list with one lesson exemption`() = runTest {
         val repo = getStudentPlusRepo {
+            it.enqueue("Context-all-enabled.json", RegisterTest::class.java)
             it.enqueue("FrekwencjaPlus.json")
             it.enqueue("UsprawiedliwieniaPlus-lesson.json")
         }
@@ -76,6 +79,7 @@ class AttendancePlusTest : BaseLocalTest() {
     @Test
     fun `get simple attendance list with day exemption`() = runTest {
         val repo = getStudentPlusRepo {
+            it.enqueue("Context-all-enabled.json", RegisterTest::class.java)
             it.enqueue("FrekwencjaPlus.json")
             it.enqueue("UsprawiedliwieniaPlus-day.json")
         }
@@ -99,6 +103,7 @@ class AttendancePlusTest : BaseLocalTest() {
     @Test
     fun `excuse for absence`() = runTest {
         val repo = getStudentPlusRepo {
+            it.enqueue("Context-all-enabled.json", RegisterTest::class.java)
             it.enqueue(MockResponse().setResponseCode(HttpURLConnection.HTTP_NO_CONTENT))
         }
 
@@ -115,10 +120,11 @@ class AttendancePlusTest : BaseLocalTest() {
         )
         assertTrue(result)
 
+        server.takeRequest()
         val request = server.takeRequest()
         val payload = Json.decodeFromString<AttendanceExcusePlusRequest>(request.body.readUtf8())
         assertEquals("", payload.content)
-        assertEquals(Base64.encode("12-23-1-34".toByteArray()), payload.key)
+        Base64.decode(payload.key)
         assertEquals(1, payload.excuses.size)
         assertEquals(requestDate.toFormat("yyyy-MM-dd'T'HH:mm:ss"), payload.excuses.single().date)
         assertEquals(1, payload.excuses.single().lessonHourId)
