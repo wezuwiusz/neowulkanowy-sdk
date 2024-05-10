@@ -16,6 +16,8 @@ import io.github.wulkanowy.sdk.scrapper.login.LoginResult
 import io.github.wulkanowy.sdk.scrapper.login.ModuleHeaders
 import io.github.wulkanowy.sdk.scrapper.login.NotLoggedInException
 import io.github.wulkanowy.sdk.scrapper.login.UrlGenerator
+import io.github.wulkanowy.sdk.scrapper.md5
+import io.github.wulkanowy.sdk.scrapper.messages.VTokenMapping
 import io.github.wulkanowy.sdk.scrapper.repository.AccountRepository.Companion.SELECTOR_ADFS
 import io.github.wulkanowy.sdk.scrapper.repository.AccountRepository.Companion.SELECTOR_ADFS_CARDS
 import io.github.wulkanowy.sdk.scrapper.repository.AccountRepository.Companion.SELECTOR_ADFS_LIGHT
@@ -147,6 +149,8 @@ internal class AutoLoginInterceptor(
             appVersion = getScriptParam("version", htmlContent).ifBlank {
                 getScriptParam("appVersion", htmlContent)
             },
+            email = getScriptParam("name", htmlContent),
+            symbol = getScriptParam("appCustomerDb", htmlContent),
         )
 
         if (moduleHeaders.token.isBlank()) {
@@ -156,10 +160,19 @@ internal class AutoLoginInterceptor(
 
         moduleHeaders.appVersion.substringAfterLast(".").toIntOrNull()?.let {
             ApiEndpoints.currentVersion = it
+            VTokenMapping.currentVersion = it
         }
 
         when {
-            "uonetplus-wiadomosciplus" in url.host -> messagesModuleHeaders = moduleHeaders
+            "uonetplus-wiadomosciplus" in url.host -> {
+                messagesModuleHeaders = moduleHeaders
+
+                with(VTokenMapping) {
+                    email = moduleHeaders.email
+                    symbol = moduleHeaders.symbol
+                    appVersion = moduleHeaders.appVersion
+                }
+            }
             "uonetplus-uczenplus" in url.host -> studentPlusModuleHeaders = moduleHeaders
             "uonetplus-uczen" in url.host -> studentModuleHeaders = moduleHeaders
         }

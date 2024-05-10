@@ -100,7 +100,7 @@ internal class MessagesRepository(
         if (markAsRead) {
             runCatching {
                 loginModule()
-                api.markMessageAsRead(mapOf("apiGlobalKey" to globalKey))
+                api.markMessageAsRead(body = mapOf("apiGlobalKey" to globalKey))
             }
                 .onFailure { logger.error("Error occur while marking message as read", it) }
                 .getOrNull()
@@ -128,13 +128,13 @@ internal class MessagesRepository(
     suspend fun deleteMessages(globalKeys: List<String>, removeForever: Boolean) {
         loginModule()
         when {
-            !removeForever -> api.moveMessageToTrash(globalKeys)
-            else -> api.deleteMessage(globalKeys)
+            !removeForever -> api.moveMessageToTrash(body = globalKeys)
+            else -> api.deleteMessage(body = globalKeys)
         }
     }
 
     suspend fun restoreFromTrash(globalKeys: List<String>) {
-        api.restoreFromTrash(globalKeys)
+        api.restoreFromTrash(body = globalKeys)
     }
 
     private suspend fun loginModule() {
