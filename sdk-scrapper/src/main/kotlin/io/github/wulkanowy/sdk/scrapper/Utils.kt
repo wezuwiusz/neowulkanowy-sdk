@@ -4,7 +4,6 @@ import io.github.wulkanowy.sdk.scrapper.login.UrlGenerator
 import io.github.wulkanowy.sdk.scrapper.messages.Mailbox
 import io.github.wulkanowy.sdk.scrapper.messages.Recipient
 import io.github.wulkanowy.sdk.scrapper.messages.RecipientType
-import io.github.wulkanowy.sdk.scrapper.messages.VTokenMapping
 import org.jsoup.Jsoup
 import org.slf4j.LoggerFactory
 import retrofit2.HttpException
@@ -194,18 +193,4 @@ internal fun String.md5(): String {
     val md = MessageDigest.getInstance("MD5")
     val digest = md.digest(this.toByteArray())
     return digest.toHexString()
-}
-
-internal fun getVToken(uuid: String): String? {
-    if (uuid.isBlank()) return null
-
-    return buildString {
-        append(uuid)
-        append("-")
-        append(VTokenMapping.email)
-        append("-")
-        append(VTokenMapping.symbol)
-        append("-")
-        append(VTokenMapping.appVersion)
-    }.md5()
 }
