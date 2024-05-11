@@ -235,6 +235,18 @@ class Sdk {
             scrapper.buildTag = value
         }
 
+    var endpointsMapping
+        get() = scrapper.endpointsMapping
+        set(value) {
+            scrapper.endpointsMapping = value
+        }
+
+    var vTokenMapping
+        get() = scrapper.vTokenMapping
+        set(value) {
+            scrapper.vTokenMapping = value
+        }
+
     var emptyCookieJarInterceptor: Boolean = false
         set(value) {
             field = value

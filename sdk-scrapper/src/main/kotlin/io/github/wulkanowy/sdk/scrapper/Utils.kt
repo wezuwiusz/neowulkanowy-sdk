@@ -204,7 +204,7 @@ internal fun String.md5(): String {
 internal fun HttpUrl.mapModuleUrls(moduleHost: String, appVersion: String?): HttpUrl {
     val pathSegmentIndex = getPathIndexByModuleHost(moduleHost)
     val pathKey = pathSegments.getOrNull(pathSegmentIndex)
-    val mappedPath = ApiEndpointsMap[appVersion]
+    val mappedPath = Scrapper.endpointsMap[appVersion]
         ?.get(moduleHost)
         ?.get(pathKey?.substringBefore(".mvc"))
 
@@ -216,7 +216,9 @@ internal fun HttpUrl.mapModuleUrls(moduleHost: String, appVersion: String?): Htt
                 else -> mappedPath
             },
         ).build()
-    } else this
+    } else {
+        this
+    }
 }
 
 internal fun getPathIndexByModuleHost(moduleHost: String): Int = when (moduleHost) {
@@ -228,7 +230,7 @@ internal fun getPathIndexByModuleHost(moduleHost: String): Int = when (moduleHos
 internal fun Request.Builder.attachVToken(moduleHost: String, url: HttpUrl, headers: ModuleHeaders?): Request.Builder {
     val pathSegmentIndex = getPathIndexByModuleHost(moduleHost)
     val pathKey = url.pathSegments.getOrNull(pathSegmentIndex)
-    val mappedUuid = ApiEndpointsVTokenMap[headers?.appVersion]
+    val mappedUuid = Scrapper.vTokenMap[headers?.appVersion]
         ?.get(moduleHost)
         ?.get(pathKey)
         ?: return this
