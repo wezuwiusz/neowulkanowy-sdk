@@ -1,6 +1,5 @@
 package io.github.wulkanowy.sdk.scrapper.interceptor
 
-import io.github.wulkanowy.sdk.scrapper.ApiEndpoints
 import io.github.wulkanowy.sdk.scrapper.ApiResponse
 import io.github.wulkanowy.sdk.scrapper.CookieJarCabinet
 import io.github.wulkanowy.sdk.scrapper.Scrapper.LoginType
@@ -156,10 +155,6 @@ internal class AutoLoginInterceptor(
             return
         }
 
-        moduleHeaders.appVersion.substringAfterLast(".").toIntOrNull()?.let {
-            ApiEndpoints.currentVersion = it
-        }
-
         when {
             MessagesModuleHost in url.host -> headersByHost[MessagesModuleHost] = moduleHeaders
             StudentPlusModuleHost in url.host -> headersByHost[StudentPlusModuleHost] = moduleHeaders
@@ -177,9 +172,9 @@ internal class AutoLoginInterceptor(
         logger.info("X-V-AppVersion: ${headers?.appVersion}")
 
         val mappedUrl = when {
-            MessagesModuleHost in url.host -> url.mapModuleUrls(MessagesModuleHost, url, headers?.appVersion)
-            StudentPlusModuleHost in url.host -> url.mapModuleUrls(StudentPlusModuleHost, url, headers?.appVersion)
-            StudentModuleHost in url.host -> url.mapModuleUrls(StudentModuleHost, url, headers?.appVersion)
+            MessagesModuleHost in url.host -> url.mapModuleUrls(MessagesModuleHost, headers?.appVersion)
+            StudentPlusModuleHost in url.host -> url.mapModuleUrls(StudentPlusModuleHost, headers?.appVersion)
+            StudentModuleHost in url.host -> url.mapModuleUrls(StudentModuleHost, headers?.appVersion)
             else -> url
         }
 

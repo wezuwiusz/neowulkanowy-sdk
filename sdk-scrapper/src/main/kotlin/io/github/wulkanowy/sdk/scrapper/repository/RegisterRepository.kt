@@ -1,11 +1,12 @@
 package io.github.wulkanowy.sdk.scrapper.repository
 
-import io.github.wulkanowy.sdk.scrapper.ApiEndpoints
 import io.github.wulkanowy.sdk.scrapper.Scrapper
 import io.github.wulkanowy.sdk.scrapper.exception.ScrapperException
 import io.github.wulkanowy.sdk.scrapper.exception.StudentGraduateException
 import io.github.wulkanowy.sdk.scrapper.getNormalizedSymbol
 import io.github.wulkanowy.sdk.scrapper.getScriptParam
+import io.github.wulkanowy.sdk.scrapper.interceptor.StudentModuleHost
+import io.github.wulkanowy.sdk.scrapper.interceptor.StudentPlusModuleHost
 import io.github.wulkanowy.sdk.scrapper.interceptor.handleErrors
 import io.github.wulkanowy.sdk.scrapper.isCurrentLoginHasEduOne
 import io.github.wulkanowy.sdk.scrapper.login.CertificateResponse
@@ -13,6 +14,7 @@ import io.github.wulkanowy.sdk.scrapper.login.InvalidSymbolException
 import io.github.wulkanowy.sdk.scrapper.login.LoginHelper
 import io.github.wulkanowy.sdk.scrapper.login.NotLoggedInException
 import io.github.wulkanowy.sdk.scrapper.login.UrlGenerator
+import io.github.wulkanowy.sdk.scrapper.mapModuleUrls
 import io.github.wulkanowy.sdk.scrapper.register.Diary
 import io.github.wulkanowy.sdk.scrapper.register.HomePageResponse
 import io.github.wulkanowy.sdk.scrapper.register.RegisterStudent
@@ -178,8 +180,8 @@ internal class RegisterRepository(
         val registerStudents = runCatching {
             when {
                 isEduOne -> {
-                    val (baseStudentPlus, _) = loginResult.getOrThrow()
-                    getEduOneDiaries(baseStudentPlus)
+                    val (baseStudentPlus, homepage) = loginResult.getOrThrow()
+                    getEduOneDiaries(baseStudentPlus = baseStudentPlus, homepage = homepage)
                 }
 
                 else -> getStudentsFromOldModule(
@@ -227,7 +229,7 @@ internal class RegisterRepository(
     ): List<RegisterStudent> {
         val (_, startPage) = loginResult
         val isParent = isStudentFromParentAccount(startPage)
-        val diaries = getStudentDiaries()
+        val diaries = getStudentDiaries(startPage)
         return diaries.getStudentsFromDiaries(
             isParent = isParent,
             isEduOne = false,
@@ -241,10 +243,19 @@ internal class RegisterRepository(
         }
     }
 
-    private suspend fun getStudentDiaries(): List<Diary> = student
-        .getSchoolInfo(url.generate(UrlGenerator.Site.STUDENT) + "${ApiEndpoints.UczenDziennik}.mvc/Get")
-        .handleErrors()
-        .data.orEmpty()
+    private suspend fun getStudentDiaries(startPage: String): List<Diary> {
+        val appVersion = getScriptParam("version", startPage).ifBlank {
+            getScriptParam("appVersion", startPage)
+        }
+        val diaryUrl = (url.generate(UrlGenerator.Site.STUDENT) + "UczenDziennik.mvc/Get")
+            .toHttpUrl()
+            .mapModuleUrls(StudentModuleHost, appVersion)
+
+        return student
+            .getSchoolInfo(url = diaryUrl.toString())
+            .handleErrors()
+            .data.orEmpty()
+    }
 
     private suspend fun getLoginType(symbol: String): Scrapper.LoginType {
         runCatching { symbolService.getSymbolPage(symbol) }
@@ -312,8 +323,15 @@ internal class RegisterRepository(
 
     // used only for check is student from parent account
     private suspend fun isStudentFromParentAccount(startPage: String): Boolean? {
+        val appVersion = getScriptParam("version", startPage).ifBlank {
+            getScriptParam("appVersion", startPage)
+        }
+        val cacheUrl = (url.generate(UrlGenerator.Site.STUDENT) + "UczenCache.mvc/Get")
+            .toHttpUrl()
+            .mapModuleUrls(StudentModuleHost, appVersion)
+
         val userCache = student.getUserCache(
-            url = url.generate(UrlGenerator.Site.STUDENT) + "${ApiEndpoints.UczenCache}.mvc/Get",
+            url = cacheUrl.toString(),
             token = getScriptParam("antiForgeryToken", startPage),
             appGuid = getScriptParam("appGuid", startPage),
             appVersion = getScriptParam("version", startPage),
@@ -322,15 +340,25 @@ internal class RegisterRepository(
         return userCache?.isParent
     }
 
-    private suspend fun getEduOneDiaries(baseStudentPlus: String): List<RegisterStudent> {
+    private suspend fun getEduOneDiaries(baseStudentPlus: String, homepage: String): List<RegisterStudent> {
+        val appVersion = getScriptParam("version", homepage).ifBlank {
+            getScriptParam("appVersion", homepage)
+        }
+        val contextUrl = (baseStudentPlus + "api/Context")
+            .toHttpUrl()
+            .mapModuleUrls(StudentPlusModuleHost, appVersion)
+        val semestersUrl = (baseStudentPlus + "api/OkresyKlasyfikacyjne")
+            .toHttpUrl()
+            .mapModuleUrls(StudentModuleHost, appVersion)
+
         return studentPlus
-            .getContextByUrl(url = baseStudentPlus + "api/${ApiEndpoints.PlusContext}").students
+            .getContextByUrl(url = contextUrl.toString()).students
             .map { contextStudent ->
                 val semesters = runCatching {
                     when {
                         contextStudent.isAuthorizationRequired -> emptyList()
                         else -> studentPlus.getSemestersByUrl(
-                            url = baseStudentPlus + "api/${ApiEndpoints.PlusOkresyKlasyfikacyjne}",
+                            url = semestersUrl.toString(),
                             key = contextStudent.key,
                             diaryId = contextStudent.registerId,
                         )
@@ -364,14 +392,6 @@ internal class RegisterRepository(
         } else {
             start
         }
-
-        val appVersion = getScriptParam("version", homepage).ifBlank {
-            getScriptParam("appVersion", homepage)
-        }
-        appVersion.substringAfterLast(".").toIntOrNull()?.let {
-            ApiEndpoints.currentVersion = it
-        }
-
         return baseStudentPlus to homepage
     }
 }

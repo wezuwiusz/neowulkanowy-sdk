@@ -201,13 +201,13 @@ internal fun String.md5(): String {
     return digest.toHexString()
 }
 
-internal fun HttpUrl.mapModuleUrls(moduleHost: String, url: HttpUrl, appVersion: String?): HttpUrl {
+internal fun HttpUrl.mapModuleUrls(moduleHost: String, appVersion: String?): HttpUrl {
     val pathSegmentIndex = when (moduleHost) {
         StudentPlusModuleHost -> 3
         StudentModuleHost, MessagesModuleHost -> 2
         else -> error("Not supported!")
     }
-    val pathKey = url.pathSegments.getOrNull(pathSegmentIndex)
+    val pathKey = pathSegments.getOrNull(pathSegmentIndex)
     val mappedPath = ApiEndpointsMap[appVersion]
         ?.get(moduleHost)
         ?.get(pathKey?.substringBefore(".mvc"))
