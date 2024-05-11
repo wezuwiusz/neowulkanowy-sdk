@@ -1,9 +1,15 @@
 package io.github.wulkanowy.sdk.scrapper
 
+import io.github.wulkanowy.sdk.scrapper.interceptor.MessagesModuleHost
+import io.github.wulkanowy.sdk.scrapper.interceptor.StudentModuleHost
+import io.github.wulkanowy.sdk.scrapper.interceptor.StudentPlusModuleHost
+import io.github.wulkanowy.sdk.scrapper.login.ModuleHeaders
 import io.github.wulkanowy.sdk.scrapper.login.UrlGenerator
 import io.github.wulkanowy.sdk.scrapper.messages.Mailbox
 import io.github.wulkanowy.sdk.scrapper.messages.Recipient
 import io.github.wulkanowy.sdk.scrapper.messages.RecipientType
+import okhttp3.HttpUrl
+import okhttp3.Request
 import org.jsoup.Jsoup
 import org.slf4j.LoggerFactory
 import retrofit2.HttpException
@@ -193,4 +199,52 @@ internal fun String.md5(): String {
     val md = MessageDigest.getInstance("MD5")
     val digest = md.digest(this.toByteArray())
     return digest.toHexString()
+}
+
+internal fun HttpUrl.mapModuleUrls(moduleHost: String, url: HttpUrl, appVersion: String?): HttpUrl {
+    val pathSegmentIndex = when (moduleHost) {
+        StudentPlusModuleHost -> 3
+        StudentModuleHost, MessagesModuleHost -> 2
+        else -> error("Not supported!")
+    }
+    val pathKey = url.pathSegments.getOrNull(pathSegmentIndex)
+    val mappedPath = ApiEndpointsMap[appVersion]
+        ?.get(moduleHost)
+        ?.get(pathKey?.substringBefore(".mvc"))
+
+    return if (mappedPath != null) {
+        newBuilder().setPathSegment(
+            index = pathSegmentIndex,
+            pathSegment = when {
+                ".mvc" in pathKey.orEmpty() -> "$mappedPath.mvc"
+                else -> mappedPath
+            },
+        ).build()
+    } else this
+}
+
+internal fun Request.Builder.attachVToken(url: HttpUrl, headers: ModuleHeaders?): Request.Builder {
+    val pathKey = url.pathSegments.getOrNull(2)
+    val mappedUuid = ApiEndpointsVTokenMap[headers?.appVersion]
+        ?.get(MessagesModuleHost)
+        ?.get(pathKey)
+        ?: return this
+
+    val vToken = getVToken(mappedUuid, headers) ?: return this
+    addHeader("V-Token", vToken)
+    return this
+}
+
+private fun getVToken(uuid: String, headers: ModuleHeaders?): String? {
+    if (uuid.isBlank()) return null
+
+    return buildString {
+        append(uuid)
+        append("-")
+        append(headers?.email)
+        append("-")
+        append(headers?.symbol)
+        append("-")
+        append(headers?.appVersion)
+    }.md5()
 }

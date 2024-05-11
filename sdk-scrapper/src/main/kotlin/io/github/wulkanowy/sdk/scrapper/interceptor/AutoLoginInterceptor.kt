@@ -1,8 +1,6 @@
 package io.github.wulkanowy.sdk.scrapper.interceptor
 
 import io.github.wulkanowy.sdk.scrapper.ApiEndpoints
-import io.github.wulkanowy.sdk.scrapper.ApiEndpointsMap
-import io.github.wulkanowy.sdk.scrapper.ApiEndpointsVTokenMap
 import io.github.wulkanowy.sdk.scrapper.ApiResponse
 import io.github.wulkanowy.sdk.scrapper.CookieJarCabinet
 import io.github.wulkanowy.sdk.scrapper.Scrapper.LoginType
@@ -12,13 +10,14 @@ import io.github.wulkanowy.sdk.scrapper.Scrapper.LoginType.ADFSLight
 import io.github.wulkanowy.sdk.scrapper.Scrapper.LoginType.ADFSLightCufs
 import io.github.wulkanowy.sdk.scrapper.Scrapper.LoginType.ADFSLightScoped
 import io.github.wulkanowy.sdk.scrapper.Scrapper.LoginType.STANDARD
+import io.github.wulkanowy.sdk.scrapper.attachVToken
 import io.github.wulkanowy.sdk.scrapper.exception.VulcanClientError
 import io.github.wulkanowy.sdk.scrapper.getScriptParam
 import io.github.wulkanowy.sdk.scrapper.login.LoginResult
 import io.github.wulkanowy.sdk.scrapper.login.ModuleHeaders
 import io.github.wulkanowy.sdk.scrapper.login.NotLoggedInException
 import io.github.wulkanowy.sdk.scrapper.login.UrlGenerator
-import io.github.wulkanowy.sdk.scrapper.md5
+import io.github.wulkanowy.sdk.scrapper.mapModuleUrls
 import io.github.wulkanowy.sdk.scrapper.repository.AccountRepository.Companion.SELECTOR_ADFS
 import io.github.wulkanowy.sdk.scrapper.repository.AccountRepository.Companion.SELECTOR_ADFS_CARDS
 import io.github.wulkanowy.sdk.scrapper.repository.AccountRepository.Companion.SELECTOR_ADFS_LIGHT
@@ -43,9 +42,9 @@ import java.io.IOException
 import java.net.HttpURLConnection
 import java.util.concurrent.locks.ReentrantLock
 
-private const val MessagesModuleHost = "uonetplus-wiadomosciplus"
-private const val StudentPlusModuleHost = "uonetplus-uczenplus"
-private const val StudentModuleHost = "uonetplus-uczen"
+internal const val MessagesModuleHost = "uonetplus-wiadomosciplus"
+internal const val StudentPlusModuleHost = "uonetplus-uczenplus"
+internal const val StudentModuleHost = "uonetplus-uczen"
 
 internal class AutoLoginInterceptor(
     private val loginType: LoginType,
@@ -177,16 +176,12 @@ internal class AutoLoginInterceptor(
         }
         logger.info("X-V-AppVersion: ${headers?.appVersion}")
 
-        val mappedUrl = url.newBuilder()
-            .let {
-                when {
-                    MessagesModuleHost in url.host -> it.mapMessagesModuleUrls(url, headers)
-                    StudentPlusModuleHost in url.host -> it.mapStudentPlusModuleUrls(url, headers)
-                    StudentModuleHost in url.host -> it.mapStudentModuleUrls(url, headers)
-                    else -> it
-                }
-            }
-            .build()
+        val mappedUrl = when {
+            MessagesModuleHost in url.host -> url.mapModuleUrls(MessagesModuleHost, url, headers?.appVersion)
+            StudentPlusModuleHost in url.host -> url.mapModuleUrls(StudentPlusModuleHost, url, headers?.appVersion)
+            StudentModuleHost in url.host -> url.mapModuleUrls(StudentModuleHost, url, headers?.appVersion)
+            else -> url
+        }
 
         return newBuilder()
             .apply {
@@ -247,71 +242,6 @@ internal class AutoLoginInterceptor(
                     }
                 }
         }
-    }
-
-    private fun HttpUrl.Builder.mapStudentModuleUrls(url: HttpUrl, headers: ModuleHeaders?): HttpUrl.Builder {
-        val pathKey = url.pathSegments.getOrNull(2)?.substringBefore(".mvc")
-        val mappedPath = ApiEndpointsMap[headers?.appVersion]
-            ?.get(StudentModuleHost)
-            ?.get(pathKey)
-
-        if (mappedPath != null) {
-            setPathSegment(2, "$mappedPath.mvc")
-        }
-
-        return this
-    }
-
-    private fun HttpUrl.Builder.mapStudentPlusModuleUrls(url: HttpUrl, headers: ModuleHeaders?): HttpUrl.Builder {
-        val pathKey = url.pathSegments.getOrNull(3)
-        val mappedPath = ApiEndpointsMap[headers?.appVersion]
-            ?.get(StudentPlusModuleHost)
-            ?.get(pathKey)
-
-        if (mappedPath != null) {
-            setPathSegment(3, mappedPath)
-        }
-
-        return this
-    }
-
-    private fun HttpUrl.Builder.mapMessagesModuleUrls(url: HttpUrl, headers: ModuleHeaders?): HttpUrl.Builder {
-        val pathKey = url.pathSegments.getOrNull(2)
-        val mappedPath = ApiEndpointsMap[headers?.appVersion]
-            ?.get(MessagesModuleHost)
-            ?.get(pathKey)
-
-        if (mappedPath != null) {
-            setPathSegment(2, mappedPath)
-        }
-
-        return this
-    }
-
-    private fun Request.Builder.attachVToken(url: HttpUrl, headers: ModuleHeaders?): Request.Builder {
-        val pathKey = url.pathSegments.getOrNull(2)
-        val mappedUuid = ApiEndpointsVTokenMap[headers?.appVersion]
-            ?.get(MessagesModuleHost)
-            ?.get(pathKey)
-            ?: return this
-
-        val vToken = getVToken(mappedUuid, headers) ?: return this
-        addHeader("V-Token", vToken)
-        return this
-    }
-
-    private fun getVToken(uuid: String, headers: ModuleHeaders?): String? {
-        if (uuid.isBlank()) return null
-
-        return buildString {
-            append(uuid)
-            append("-")
-            append(headers?.email)
-            append("-")
-            append(headers?.symbol)
-            append("-")
-            append(headers?.appVersion)
-        }.md5()
     }
 
     private fun checkHttpErrorResponse(error: VulcanClientError, url: String) {
