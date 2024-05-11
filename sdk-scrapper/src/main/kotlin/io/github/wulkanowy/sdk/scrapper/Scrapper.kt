@@ -18,6 +18,7 @@ import io.github.wulkanowy.sdk.scrapper.home.LastAnnouncement
 import io.github.wulkanowy.sdk.scrapper.home.LuckyNumber
 import io.github.wulkanowy.sdk.scrapper.homework.Homework
 import io.github.wulkanowy.sdk.scrapper.login.LoginHelper
+import io.github.wulkanowy.sdk.scrapper.login.ModuleHeaders
 import io.github.wulkanowy.sdk.scrapper.menu.Menu
 import io.github.wulkanowy.sdk.scrapper.messages.Folder
 import io.github.wulkanowy.sdk.scrapper.messages.Mailbox
@@ -51,6 +52,7 @@ import okhttp3.logging.HttpLoggingInterceptor
 import java.net.CookieManager
 import java.net.URL
 import java.time.LocalDate
+import java.util.concurrent.locks.ReentrantLock
 
 class Scrapper {
 
@@ -222,6 +224,9 @@ class Scrapper {
 
     private val okHttpFactory by lazy { OkHttpClientBuilderFactory() }
 
+    private val headersByHost: MutableMap<String, ModuleHeaders?> = mutableMapOf()
+    private val loginLock = ReentrantLock(true)
+
     private val serviceManager by resettableLazy(changeManager) {
         ServiceManager(
             okHttpClientBuilderFactory = okHttpFactory,
@@ -243,6 +248,8 @@ class Scrapper {
             androidVersion = androidVersion,
             buildTag = buildTag,
             userAgentTemplate = userAgentTemplate,
+            loginLock = loginLock,
+            headersByHost = headersByHost,
         ).apply {
             appInterceptors.forEach { (interceptor, isNetwork) ->
                 setInterceptor(interceptor, isNetwork)

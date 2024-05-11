@@ -43,15 +43,9 @@ import java.io.IOException
 import java.net.HttpURLConnection
 import java.util.concurrent.locks.ReentrantLock
 
-private val lock = ReentrantLock(true)
-
 private const val MessagesModuleHost = "uonetplus-wiadomosciplus"
 private const val StudentPlusModuleHost = "uonetplus-uczenplus"
 private const val StudentModuleHost = "uonetplus-uczen"
-
-private var studentModuleHeaders: ModuleHeaders? = null
-private var studentPlusModuleHeaders: ModuleHeaders? = null
-private var messagesModuleHeaders: ModuleHeaders? = null
 
 internal class AutoLoginInterceptor(
     private val loginType: LoginType,
@@ -60,6 +54,8 @@ internal class AutoLoginInterceptor(
     private val notLoggedInCallback: suspend () -> LoginResult,
     private val fetchModuleCookies: (UrlGenerator.Site) -> Pair<HttpUrl, Document>,
     private val json: Json,
+    private val headersByHost: MutableMap<String, ModuleHeaders?> = mutableMapOf(),
+    private val loginLock: ReentrantLock = ReentrantLock(true),
 ) : Interceptor {
 
     companion object {
@@ -68,15 +64,13 @@ internal class AutoLoginInterceptor(
     }
 
     override fun intercept(chain: Interceptor.Chain): Response {
-        val request: Request
-        val response: Response
         val uri = chain.request().url
         val url = uri.toString()
 
-        try {
-            request = chain.request()
+        return try {
+            val request = chain.request()
             checkRequest()
-            response = try {
+            val response = try {
                 chain.proceed(request.attachModuleHeaders())
             } catch (e: Throwable) {
                 if (e is VulcanClientError) {
@@ -90,14 +84,16 @@ internal class AutoLoginInterceptor(
                 checkResponse(html, url, response)
                 saveModuleHeaders(html, uri)
             }
+            response
         } catch (e: NotLoggedInException) {
-            return if (lock.tryLock()) {
+            if (loginLock.tryLock()) {
                 logger.debug("Not logged in. Login in...")
                 try {
                     val loginResult = runBlocking { notLoggedInCallback() }
-                    messagesModuleHeaders = null
-                    studentPlusModuleHeaders = null
-                    studentModuleHeaders = null
+
+                    headersByHost[MessagesModuleHost] = null
+                    headersByHost[StudentPlusModuleHost] = null
+                    headersByHost[StudentModuleHost] = null
 
                     val messages = getModuleCookies(UrlGenerator.Site.MESSAGES)
                     val student = when (loginResult.isStudentSchoolUseEduOne) {
@@ -122,22 +118,20 @@ internal class AutoLoginInterceptor(
                     throw IOException("Unknown exception on login", e)
                 } finally {
                     logger.debug("Login finished. Release lock")
-                    lock.unlock()
+                    loginLock.unlock()
                 }
             } else {
                 try {
                     logger.debug("Wait for user to be logged in...")
-                    lock.lock()
+                    loginLock.lock()
                 } finally {
-                    lock.unlock()
+                    loginLock.unlock()
                     logger.debug("User logged in. Retry after login...")
                 }
 
                 chain.proceed(chain.request().attachModuleHeaders())
             }
         }
-
-        return response
     }
 
     private fun getModuleCookies(site: UrlGenerator.Site): Result<Pair<HttpUrl, Document>> {
@@ -168,17 +162,17 @@ internal class AutoLoginInterceptor(
         }
 
         when {
-            MessagesModuleHost in url.host -> messagesModuleHeaders = moduleHeaders
-            StudentPlusModuleHost in url.host -> studentPlusModuleHeaders = moduleHeaders
-            StudentModuleHost in url.host -> studentModuleHeaders = moduleHeaders
+            MessagesModuleHost in url.host -> headersByHost[MessagesModuleHost] = moduleHeaders
+            StudentPlusModuleHost in url.host -> headersByHost[StudentPlusModuleHost] = moduleHeaders
+            StudentModuleHost in url.host -> headersByHost[StudentModuleHost] = moduleHeaders
         }
     }
 
     private fun Request.attachModuleHeaders(): Request {
         val headers = when {
-            MessagesModuleHost in url.host -> messagesModuleHeaders
-            StudentPlusModuleHost in url.host -> studentPlusModuleHeaders
-            StudentModuleHost in url.host -> studentModuleHeaders
+            MessagesModuleHost in url.host -> headersByHost[MessagesModuleHost]
+            StudentPlusModuleHost in url.host -> headersByHost[StudentPlusModuleHost]
+            StudentModuleHost in url.host -> headersByHost[StudentModuleHost]
             else -> return this
         }
         logger.info("X-V-AppVersion: ${headers?.appVersion}")

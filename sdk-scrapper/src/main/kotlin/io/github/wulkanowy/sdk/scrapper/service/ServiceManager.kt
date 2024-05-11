@@ -13,6 +13,7 @@ import io.github.wulkanowy.sdk.scrapper.interceptor.StudentCookieInterceptor
 import io.github.wulkanowy.sdk.scrapper.interceptor.UserAgentInterceptor
 import io.github.wulkanowy.sdk.scrapper.login.LoginHelper
 import io.github.wulkanowy.sdk.scrapper.login.LoginResult
+import io.github.wulkanowy.sdk.scrapper.login.ModuleHeaders
 import io.github.wulkanowy.sdk.scrapper.login.UrlGenerator
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.Json
@@ -31,6 +32,7 @@ import retrofit2.create
 import java.security.KeyStore
 import java.time.LocalDate
 import java.util.concurrent.TimeUnit.SECONDS
+import java.util.concurrent.locks.ReentrantLock
 import javax.net.ssl.TrustManagerFactory
 import javax.net.ssl.X509TrustManager
 
@@ -54,6 +56,8 @@ internal class ServiceManager(
     androidVersion: String,
     buildTag: String,
     userAgentTemplate: String,
+    loginLock: ReentrantLock,
+    headersByHost: MutableMap<String, ModuleHeaders?>,
 ) {
 
     val urlGenerator by lazy {
@@ -106,6 +110,8 @@ internal class ServiceManager(
             notLoggedInCallback = ::userLogin,
             json = json,
             fetchModuleCookies = { site -> loginHelper.loginModule(site) },
+            headersByHost = headersByHost,
+            loginLock = loginLock,
         ) to false,
         UserAgentInterceptor(androidVersion, buildTag, userAgentTemplate) to false,
         HttpErrorInterceptor() to false,

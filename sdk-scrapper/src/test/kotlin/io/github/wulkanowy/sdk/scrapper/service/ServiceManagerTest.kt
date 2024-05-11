@@ -16,6 +16,7 @@ import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Test
 import java.net.URL
+import java.util.concurrent.locks.ReentrantLock
 
 class ServiceManagerTest : BaseLocalTest() {
 
@@ -41,6 +42,8 @@ class ServiceManagerTest : BaseLocalTest() {
             androidVersion = "",
             buildTag = "",
             userAgentTemplate = "",
+            loginLock = ReentrantLock(true),
+            headersByHost = mutableMapOf(),
         )
         manager.setInterceptor({ throw ScrapperException("Test") })
 
@@ -75,6 +78,8 @@ class ServiceManagerTest : BaseLocalTest() {
             androidVersion = "",
             buildTag = "",
             userAgentTemplate = "",
+            loginLock = ReentrantLock(true),
+            headersByHost = mutableMapOf(),
         )
         manager.setInterceptor(
             {
@@ -147,6 +152,8 @@ class ServiceManagerTest : BaseLocalTest() {
             androidVersion = "",
             buildTag = "",
             userAgentTemplate = "",
+            loginLock = ReentrantLock(true),
+            headersByHost = mutableMapOf(),
         )
 
         val res = runCatching {
