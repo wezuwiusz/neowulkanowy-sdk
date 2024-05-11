@@ -163,20 +163,17 @@ internal class AutoLoginInterceptor(
     }
 
     private fun Request.attachModuleHeaders(): Request {
-        val headers = when {
-            MessagesModuleHost in url.host -> headersByHost[MessagesModuleHost]
-            StudentPlusModuleHost in url.host -> headersByHost[StudentPlusModuleHost]
-            StudentModuleHost in url.host -> headersByHost[StudentModuleHost]
-            else -> return this
+        val moduleHost = when {
+            MessagesModuleHost in url.host -> MessagesModuleHost
+            StudentPlusModuleHost in url.host -> StudentPlusModuleHost
+            StudentModuleHost in url.host -> StudentModuleHost
+            else -> ""
         }
-        logger.info("X-V-AppVersion: ${headers?.appVersion}")
 
-        val mappedUrl = when {
-            MessagesModuleHost in url.host -> url.mapModuleUrls(MessagesModuleHost, headers?.appVersion)
-            StudentPlusModuleHost in url.host -> url.mapModuleUrls(StudentPlusModuleHost, headers?.appVersion)
-            StudentModuleHost in url.host -> url.mapModuleUrls(StudentModuleHost, headers?.appVersion)
-            else -> url
-        }
+        val headers = headersByHost[moduleHost]
+        val mappedUrl = url.mapModuleUrls(moduleHost, headers?.appVersion)
+
+        logger.info("X-V-AppVersion: ${headers?.appVersion}")
 
         return newBuilder()
             .apply {
@@ -184,7 +181,7 @@ internal class AutoLoginInterceptor(
                     addHeader("X-V-RequestVerificationToken", it.token)
                     addHeader("X-V-AppGuid", it.appGuid)
                     addHeader("X-V-AppVersion", it.appVersion)
-                    attachVToken(url, headers)
+                    attachVToken(moduleHost, url, headers)
                 }
             }
             .url(mappedUrl)

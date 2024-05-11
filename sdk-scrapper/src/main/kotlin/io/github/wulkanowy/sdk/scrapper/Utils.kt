@@ -202,11 +202,7 @@ internal fun String.md5(): String {
 }
 
 internal fun HttpUrl.mapModuleUrls(moduleHost: String, appVersion: String?): HttpUrl {
-    val pathSegmentIndex = when (moduleHost) {
-        StudentPlusModuleHost -> 3
-        StudentModuleHost, MessagesModuleHost -> 2
-        else -> error("Not supported!")
-    }
+    val pathSegmentIndex = getPathIndexByModuleHost(moduleHost)
     val pathKey = pathSegments.getOrNull(pathSegmentIndex)
     val mappedPath = ApiEndpointsMap[appVersion]
         ?.get(moduleHost)
@@ -223,10 +219,17 @@ internal fun HttpUrl.mapModuleUrls(moduleHost: String, appVersion: String?): Htt
     } else this
 }
 
-internal fun Request.Builder.attachVToken(url: HttpUrl, headers: ModuleHeaders?): Request.Builder {
-    val pathKey = url.pathSegments.getOrNull(2)
+internal fun getPathIndexByModuleHost(moduleHost: String): Int = when (moduleHost) {
+    StudentPlusModuleHost -> 3
+    StudentModuleHost, MessagesModuleHost -> 2
+    else -> -1
+}
+
+internal fun Request.Builder.attachVToken(moduleHost: String, url: HttpUrl, headers: ModuleHeaders?): Request.Builder {
+    val pathSegmentIndex = getPathIndexByModuleHost(moduleHost)
+    val pathKey = url.pathSegments.getOrNull(pathSegmentIndex)
     val mappedUuid = ApiEndpointsVTokenMap[headers?.appVersion]
-        ?.get(MessagesModuleHost)
+        ?.get(moduleHost)
         ?.get(pathKey)
         ?: return this
 
