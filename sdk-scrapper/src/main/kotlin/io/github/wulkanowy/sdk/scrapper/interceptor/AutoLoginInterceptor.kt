@@ -1,6 +1,7 @@
 package io.github.wulkanowy.sdk.scrapper.interceptor
 
 import io.github.wulkanowy.sdk.scrapper.ApiEndpoints
+import io.github.wulkanowy.sdk.scrapper.ApiEndpointsMap
 import io.github.wulkanowy.sdk.scrapper.ApiResponse
 import io.github.wulkanowy.sdk.scrapper.CookieJarCabinet
 import io.github.wulkanowy.sdk.scrapper.Scrapper.LoginType
@@ -42,6 +43,10 @@ import java.net.HttpURLConnection
 import java.util.concurrent.locks.ReentrantLock
 
 private val lock = ReentrantLock(true)
+
+private const val MessagesModuleHost = "uonetplus-wiadomosciplus"
+private const val StudentPlusModuleHost = "uonetplus-uczenplus"
+private const val StudentModuleHost = "uonetplus-uczen"
 
 private var studentModuleHeaders: ModuleHeaders? = null
 private var studentPlusModuleHeaders: ModuleHeaders? = null
@@ -100,17 +105,17 @@ internal class AutoLoginInterceptor(
                     }
 
                     when {
-                        "wiadomosciplus" in uri.host -> messages.getOrThrow()
-                        "uczenplus" in uri.host -> student.getOrThrow()
-                        "uczen" in uri.host -> student.getOrThrow()
+                        MessagesModuleHost in uri.host -> messages.getOrThrow()
+                        StudentPlusModuleHost in uri.host -> student.getOrThrow()
+                        StudentModuleHost in uri.host -> student.getOrThrow()
                         else -> logger.info("Resource don't need further login anyway")
                     }
                     chain.proceed(chain.request().attachModuleHeaders())
                 } catch (e: IOException) {
-                    logger.debug("Error occurred on login")
+                    logger.debug("IO Error occurred on login")
                     throw e
                 } catch (e: HttpException) {
-                    logger.debug("Error occurred on login")
+                    logger.debug("HTTP Error occurred on login")
                     e.toOkHttpResponse(chain.request())
                 } catch (e: Throwable) {
                     throw IOException("Unknown exception on login", e)
@@ -163,7 +168,7 @@ internal class AutoLoginInterceptor(
         }
 
         when {
-            "uonetplus-wiadomosciplus" in url.host -> {
+            MessagesModuleHost in url.host -> {
                 messagesModuleHeaders = moduleHeaders
 
                 with(VTokenMapping) {
@@ -172,20 +177,34 @@ internal class AutoLoginInterceptor(
                     appVersion = moduleHeaders.appVersion
                 }
             }
-            "uonetplus-uczenplus" in url.host -> studentPlusModuleHeaders = moduleHeaders
-            "uonetplus-uczen" in url.host -> studentModuleHeaders = moduleHeaders
+
+            StudentPlusModuleHost in url.host -> studentPlusModuleHeaders = moduleHeaders
+            StudentModuleHost in url.host -> studentModuleHeaders = moduleHeaders
         }
     }
 
     private fun Request.attachModuleHeaders(): Request {
         val headers = when {
-            "uonetplus-wiadomosciplus" in url.host -> messagesModuleHeaders
-            "uonetplus-uczenplus" in url.host -> studentPlusModuleHeaders
-            "uonetplus-uczen" in url.host -> studentModuleHeaders
+            MessagesModuleHost in url.host -> messagesModuleHeaders
+            StudentPlusModuleHost in url.host -> studentPlusModuleHeaders
+            StudentModuleHost in url.host -> studentModuleHeaders
             else -> return this
         }
         logger.info("X-V-AppVersion: ${headers?.appVersion}")
+
+        val mappedUrl = url.newBuilder()
+            .let {
+                when {
+                    MessagesModuleHost in url.host -> it.mapMessagesModuleUrls()
+                    StudentPlusModuleHost in url.host -> it.mapStudentPlusModuleUrls()
+                    StudentModuleHost in url.host -> it.mapStudentModuleUrls(url, headers)
+                    else -> it
+                }
+            }
+            .build()
+
         return newBuilder()
+            .url(mappedUrl)
             .apply {
                 headers?.let {
                     addHeader("X-V-RequestVerificationToken", it.token)
@@ -244,9 +263,30 @@ internal class AutoLoginInterceptor(
         }
     }
 
+    private fun HttpUrl.Builder.mapStudentModuleUrls(url: HttpUrl, headers: ModuleHeaders?): HttpUrl.Builder {
+        val pathKey = url.pathSegments.getOrNull(2)?.substringBefore(".mvc")
+        val mappedPath = ApiEndpointsMap[headers?.appVersion]
+            ?.get(StudentModuleHost)
+            ?.get(pathKey)
+
+        if (mappedPath != null) {
+            setPathSegment(2, "$mappedPath.mvc")
+        }
+
+        return this
+    }
+
+    private fun HttpUrl.Builder.mapStudentPlusModuleUrls(): HttpUrl.Builder {
+        return this
+    }
+
+    private fun HttpUrl.Builder.mapMessagesModuleUrls(): HttpUrl.Builder {
+        return this
+    }
+
     private fun checkHttpErrorResponse(error: VulcanClientError, url: String) {
         val isCodeMatch = error.httpCode == HttpURLConnection.HTTP_CONFLICT
-        val isSubdomainMatch = "uonetplus-wiadomosciplus" in url || "uonetplus-uczenplus" in url
+        val isSubdomainMatch = MessagesModuleHost in url || StudentPlusModuleHost in url
         if (isCodeMatch && isSubdomainMatch) {
             throw NotLoggedInException(error.message.orEmpty())
         }

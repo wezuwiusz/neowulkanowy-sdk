@@ -6,7 +6,7 @@ internal object ApiEndpoints : IApiEndpoints {
 
     private val endpoints
         get() = when (currentVersion) {
-            58698 -> ApiEndpoints_24_04_0003_58698
+            58698 -> ApiEndpoints_24_4_3_58698
             in 58666..58697 -> ApiEndpoints_24_4_2_58666
             else -> ApiEndpoints_24_4_1_58566
         }
@@ -337,7 +337,7 @@ internal object ApiEndpoints_24_4_2_58666 : IApiEndpoints {
     override val RestoreTrash = "e6de58f9-4db1-4cd2-afdf-ac9fcca37e43"
 }
 
-internal object ApiEndpoints_24_04_0003_58698 : IApiEndpoints {
+internal object ApiEndpoints_24_4_3_58698 : IApiEndpoints {
     override val Autoryzacja = "b82c987d-8e94-4ed3-b46e-2d1818f2e0f8"
     override val DostepOffice = "9d9b5874-68f4-4f1e-bef5-372f1cb11d29"
     override val EgzaminySemestralne = "99b62670-2adc-4c17-9abc-6e3d42eec773"
