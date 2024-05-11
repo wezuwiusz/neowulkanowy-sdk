@@ -1,6 +1,6 @@
 package io.github.wulkanowy.sdk.scrapper.messages
 
-object VTokenMapping {
+internal object VTokenMapping {
 
     var currentVersion = 58698
     var email: String? = null

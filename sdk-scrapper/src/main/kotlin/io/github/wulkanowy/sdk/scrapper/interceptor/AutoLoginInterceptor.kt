@@ -16,7 +16,6 @@ import io.github.wulkanowy.sdk.scrapper.login.LoginResult
 import io.github.wulkanowy.sdk.scrapper.login.ModuleHeaders
 import io.github.wulkanowy.sdk.scrapper.login.NotLoggedInException
 import io.github.wulkanowy.sdk.scrapper.login.UrlGenerator
-import io.github.wulkanowy.sdk.scrapper.md5
 import io.github.wulkanowy.sdk.scrapper.messages.VTokenMapping
 import io.github.wulkanowy.sdk.scrapper.repository.AccountRepository.Companion.SELECTOR_ADFS
 import io.github.wulkanowy.sdk.scrapper.repository.AccountRepository.Companion.SELECTOR_ADFS_CARDS
