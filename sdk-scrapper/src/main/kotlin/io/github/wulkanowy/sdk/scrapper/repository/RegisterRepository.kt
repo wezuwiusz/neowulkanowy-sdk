@@ -3,6 +3,8 @@ package io.github.wulkanowy.sdk.scrapper.repository
 import io.github.wulkanowy.sdk.scrapper.Scrapper
 import io.github.wulkanowy.sdk.scrapper.exception.ScrapperException
 import io.github.wulkanowy.sdk.scrapper.exception.StudentGraduateException
+import io.github.wulkanowy.sdk.scrapper.getMatchedVToken
+import io.github.wulkanowy.sdk.scrapper.getModuleHeadersFromDocument
 import io.github.wulkanowy.sdk.scrapper.getNormalizedSymbol
 import io.github.wulkanowy.sdk.scrapper.getScriptParam
 import io.github.wulkanowy.sdk.scrapper.interceptor.StudentModuleHost
@@ -341,23 +343,26 @@ internal class RegisterRepository(
     }
 
     private suspend fun getEduOneDiaries(baseStudentPlus: String, homepage: String): List<RegisterStudent> {
-        val appVersion = getScriptParam("version", homepage).ifBlank {
-            getScriptParam("appVersion", homepage)
-        }
+        val moduleHeaders = getModuleHeadersFromDocument(homepage)
+
         val contextUrl = (baseStudentPlus + "api/Context")
             .toHttpUrl()
-            .mapModuleUrls(StudentPlusModuleHost, appVersion)
+            .mapModuleUrls(StudentPlusModuleHost, moduleHeaders.appVersion)
+        val contextVToken = contextUrl.getMatchedVToken(StudentPlusModuleHost, moduleHeaders)
+
         val semestersUrl = (baseStudentPlus + "api/OkresyKlasyfikacyjne")
             .toHttpUrl()
-            .mapModuleUrls(StudentModuleHost, appVersion)
+            .mapModuleUrls(StudentPlusModuleHost, moduleHeaders.appVersion)
+        val semestersVToken = semestersUrl.getMatchedVToken(StudentPlusModuleHost, moduleHeaders)
 
         return studentPlus
-            .getContextByUrl(url = contextUrl.toString()).students
+            .getContextByUrl(vToken = contextVToken, url = contextUrl.toString()).students
             .map { contextStudent ->
                 val semesters = runCatching {
                     when {
                         contextStudent.isAuthorizationRequired -> emptyList()
                         else -> studentPlus.getSemestersByUrl(
+                            vToken = semestersVToken,
                             url = semestersUrl.toString(),
                             key = contextStudent.key,
                             diaryId = contextStudent.registerId,

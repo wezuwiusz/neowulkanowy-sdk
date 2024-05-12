@@ -128,7 +128,7 @@ internal val ApiEndpointsMap = mapOf(
             "ZgloszoneNieobecnosci" to "5c63a985-2149-4e7b-a30f-3692b16b69e3",
         ),
         "uonetplus-uczenplus" to mapOf(
-            "Context" to "Context",
+            "Context" to "308f5f36-16cb-45c8-8a43-1e038de2b30a",
             "AutoryzacjaPesel" to "AutoryzacjaPesel",
             "Frekwencja" to "Frekwencja",
             "Usprawiedliwienia" to "Usprawiedliwienia",
@@ -147,7 +147,7 @@ internal val ApiEndpointsMap = mapOf(
             "Informacje" to "Informacje",
             "DaneUcznia" to "DaneUcznia",
             "UczenZdjecie" to "UczenZdjecie",
-            "OkresyKlasyfikacyjne" to "OkresyKlasyfikacyjne",
+            "OkresyKlasyfikacyjne" to "c4ef1a36-b928-428f-8a9e-184ea0185c2f",
             "Oceny" to "Oceny",
         ),
         "uonetplus-wiadomosciplus" to mapOf(
@@ -169,6 +169,10 @@ internal val ApiEndpointsMap = mapOf(
 
 internal val ApiEndpointsVTokenMap = mapOf(
     "24.04.0003.58698" to mapOf(
+        "uonetplus-uczenplus" to mapOf(
+            "Context" to "e89f6a8e-bc6b-403b-a23d-2a807512d3bd",
+            "OkresyKlasyfikacyjne" to "1ff9466c-2ebb-4649-9563-b005aab2a92a",
+        ),
         "uonetplus-wiadomosciplus" to mapOf(
             "Skrzynki" to "7d4b1844-d114-40e3-a565-696564703b38",
             "Odebrane" to "a94f324b-0ab8-43eb-830e-814d4a0b4aca",

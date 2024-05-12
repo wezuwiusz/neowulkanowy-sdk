@@ -227,17 +227,33 @@ internal fun getPathIndexByModuleHost(moduleHost: String): Int = when (moduleHos
     else -> -1
 }
 
+internal fun getModuleHeadersFromDocument(htmlContent: String): ModuleHeaders {
+    return ModuleHeaders(
+        token = getScriptParam("antiForgeryToken", htmlContent),
+        appGuid = getScriptParam("appGuid", htmlContent),
+        appVersion = getScriptParam("version", htmlContent).ifBlank {
+            getScriptParam("appVersion", htmlContent)
+        },
+        email = getScriptParam("name", htmlContent),
+        symbol = getScriptParam("appCustomerDb", htmlContent),
+    )
+}
+
 internal fun Request.Builder.attachVToken(moduleHost: String, url: HttpUrl, headers: ModuleHeaders?): Request.Builder {
+    val vToken = url.getMatchedVToken(moduleHost, headers) ?: return this
+    addHeader("V-Token", vToken)
+    return this
+}
+
+internal fun HttpUrl.getMatchedVToken(moduleHost: String, headers: ModuleHeaders?): String? {
     val pathSegmentIndex = getPathIndexByModuleHost(moduleHost)
-    val pathKey = url.pathSegments.getOrNull(pathSegmentIndex)
+    val pathKey = pathSegments.getOrNull(pathSegmentIndex)
     val mappedUuid = Scrapper.vTokenMap[headers?.appVersion]
         ?.get(moduleHost)
         ?.get(pathKey)
-        ?: return this
+        ?: return null
 
-    val vToken = getVToken(mappedUuid, headers) ?: return this
-    addHeader("V-Token", vToken)
-    return this
+    return getVToken(mappedUuid, headers)
 }
 
 private fun getVToken(uuid: String, headers: ModuleHeaders?): String? {

@@ -11,7 +11,7 @@ import io.github.wulkanowy.sdk.scrapper.Scrapper.LoginType.ADFSLightScoped
 import io.github.wulkanowy.sdk.scrapper.Scrapper.LoginType.STANDARD
 import io.github.wulkanowy.sdk.scrapper.attachVToken
 import io.github.wulkanowy.sdk.scrapper.exception.VulcanClientError
-import io.github.wulkanowy.sdk.scrapper.getScriptParam
+import io.github.wulkanowy.sdk.scrapper.getModuleHeadersFromDocument
 import io.github.wulkanowy.sdk.scrapper.login.LoginResult
 import io.github.wulkanowy.sdk.scrapper.login.ModuleHeaders
 import io.github.wulkanowy.sdk.scrapper.login.NotLoggedInException
@@ -140,15 +140,7 @@ internal class AutoLoginInterceptor(
 
     private fun saveModuleHeaders(doc: Document, url: HttpUrl) {
         val htmlContent = doc.select("script").html()
-        val moduleHeaders = ModuleHeaders(
-            token = getScriptParam("antiForgeryToken", htmlContent),
-            appGuid = getScriptParam("appGuid", htmlContent),
-            appVersion = getScriptParam("version", htmlContent).ifBlank {
-                getScriptParam("appVersion", htmlContent)
-            },
-            email = getScriptParam("name", htmlContent),
-            symbol = getScriptParam("appCustomerDb", htmlContent),
-        )
+        val moduleHeaders = getModuleHeadersFromDocument(htmlContent)
 
         if (moduleHeaders.token.isBlank()) {
             logger.info("There is no token found on $url")

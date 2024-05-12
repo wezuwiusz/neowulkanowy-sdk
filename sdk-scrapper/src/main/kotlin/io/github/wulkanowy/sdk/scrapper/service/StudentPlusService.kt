@@ -25,6 +25,7 @@ import io.github.wulkanowy.sdk.scrapper.timetable.TimetablePlusHeader
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET
+import retrofit2.http.Header
 import retrofit2.http.POST
 import retrofit2.http.Query
 import retrofit2.http.Url
@@ -34,10 +35,14 @@ internal interface StudentPlusService {
     // for register
 
     @GET
-    suspend fun getContextByUrl(@Url url: String): ContextResponse
+    suspend fun getContextByUrl(
+        @Header("V-Token") vToken: String?,
+        @Url url: String,
+    ): ContextResponse
 
     @GET
     suspend fun getSemestersByUrl(
+        @Header("V-Token") vToken: String?,
         @Url url: String,
         @Query("key") key: String,
         @Query("idDziennik") diaryId: Int,
