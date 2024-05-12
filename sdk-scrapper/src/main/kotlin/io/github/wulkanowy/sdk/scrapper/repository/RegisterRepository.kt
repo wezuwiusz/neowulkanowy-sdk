@@ -345,25 +345,23 @@ internal class RegisterRepository(
     private suspend fun getEduOneDiaries(baseStudentPlus: String, homepage: String): List<RegisterStudent> {
         val moduleHeaders = getModuleHeadersFromDocument(homepage)
 
-        val contextUrl = (baseStudentPlus + "api/Context")
-            .toHttpUrl()
-            .mapModuleUrls(StudentPlusModuleHost, moduleHeaders.appVersion)
+        val contextUrl = (baseStudentPlus + "api/Context").toHttpUrl()
         val contextVToken = contextUrl.getMatchedVToken(StudentPlusModuleHost, moduleHeaders)
+        val mappedContextUrl = contextUrl.mapModuleUrls(StudentPlusModuleHost, moduleHeaders.appVersion)
 
-        val semestersUrl = (baseStudentPlus + "api/OkresyKlasyfikacyjne")
-            .toHttpUrl()
-            .mapModuleUrls(StudentPlusModuleHost, moduleHeaders.appVersion)
+        val semestersUrl = (baseStudentPlus + "api/OkresyKlasyfikacyjne").toHttpUrl()
         val semestersVToken = semestersUrl.getMatchedVToken(StudentPlusModuleHost, moduleHeaders)
+        val mappedSemestersUrl = semestersUrl.mapModuleUrls(StudentPlusModuleHost, moduleHeaders.appVersion)
 
         return studentPlus
-            .getContextByUrl(vToken = contextVToken, url = contextUrl.toString()).students
+            .getContextByUrl(vToken = contextVToken, url = mappedContextUrl.toString()).students
             .map { contextStudent ->
                 val semesters = runCatching {
                     when {
                         contextStudent.isAuthorizationRequired -> emptyList()
                         else -> studentPlus.getSemestersByUrl(
                             vToken = semestersVToken,
-                            url = semestersUrl.toString(),
+                            url = mappedSemestersUrl.toString(),
                             key = contextStudent.key,
                             diaryId = contextStudent.registerId,
                         )
