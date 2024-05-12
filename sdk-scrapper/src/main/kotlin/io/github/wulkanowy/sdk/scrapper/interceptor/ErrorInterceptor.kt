@@ -7,6 +7,7 @@ import io.github.wulkanowy.sdk.scrapper.exception.ScrapperException
 import io.github.wulkanowy.sdk.scrapper.exception.ServiceUnavailableException
 import io.github.wulkanowy.sdk.scrapper.exception.TemporarilyDisabledException
 import io.github.wulkanowy.sdk.scrapper.exception.VulcanException
+import io.github.wulkanowy.sdk.scrapper.exception.VulcanServerError
 import io.github.wulkanowy.sdk.scrapper.login.AccountPermissionException
 import io.github.wulkanowy.sdk.scrapper.login.InvalidSymbolException
 import io.github.wulkanowy.sdk.scrapper.login.PasswordChangeRequiredException
@@ -91,7 +92,7 @@ internal class ErrorInterceptor(
         }
 
         when (doc.title()) {
-            "Błąd" -> throw VulcanException(doc.body().text(), httpCode)
+            "Błąd" -> throw VulcanServerError(doc.body().text(), doc, httpCode)
             "Błąd strony" -> throw VulcanException(doc.select(".errorMessage").text(), httpCode)
             "Logowanie" -> throw AccountPermissionException(
                 buildString {

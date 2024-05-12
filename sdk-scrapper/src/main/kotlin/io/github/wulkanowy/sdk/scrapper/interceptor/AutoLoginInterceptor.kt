@@ -11,12 +11,14 @@ import io.github.wulkanowy.sdk.scrapper.Scrapper.LoginType.ADFSLightScoped
 import io.github.wulkanowy.sdk.scrapper.Scrapper.LoginType.STANDARD
 import io.github.wulkanowy.sdk.scrapper.attachVToken
 import io.github.wulkanowy.sdk.scrapper.exception.VulcanClientError
+import io.github.wulkanowy.sdk.scrapper.exception.VulcanServerError
 import io.github.wulkanowy.sdk.scrapper.getModuleHeadersFromDocument
+import io.github.wulkanowy.sdk.scrapper.isAnyMappingAvailable
 import io.github.wulkanowy.sdk.scrapper.login.LoginResult
 import io.github.wulkanowy.sdk.scrapper.login.ModuleHeaders
 import io.github.wulkanowy.sdk.scrapper.login.NotLoggedInException
 import io.github.wulkanowy.sdk.scrapper.login.UrlGenerator
-import io.github.wulkanowy.sdk.scrapper.mapModuleUrls
+import io.github.wulkanowy.sdk.scrapper.mapModuleUrl
 import io.github.wulkanowy.sdk.scrapper.repository.AccountRepository.Companion.SELECTOR_ADFS
 import io.github.wulkanowy.sdk.scrapper.repository.AccountRepository.Companion.SELECTOR_ADFS_CARDS
 import io.github.wulkanowy.sdk.scrapper.repository.AccountRepository.Companion.SELECTOR_ADFS_LIGHT
@@ -71,8 +73,9 @@ internal class AutoLoginInterceptor(
             val response = try {
                 chain.proceed(request.attachModuleHeaders())
             } catch (e: Throwable) {
-                if (e is VulcanClientError) {
-                    checkHttpErrorResponse(e, url)
+                when (e) {
+                    is VulcanClientError -> checkHttpErrorResponse(e, url)
+                    is VulcanServerError -> checkServerError(e, url)
                 }
                 throw e
             }
@@ -163,7 +166,7 @@ internal class AutoLoginInterceptor(
         }
 
         val headers = headersByHost[moduleHost]
-        val mappedUrl = url.mapModuleUrls(moduleHost, headers?.appVersion)
+        val mappedUrl = url.mapModuleUrl(moduleHost, headers?.appVersion)
 
         logger.info("X-V-AppVersion: ${headers?.appVersion}")
 
@@ -214,24 +217,44 @@ internal class AutoLoginInterceptor(
         // new error style
         val isCodeMatch = response.code == HttpURLConnection.HTTP_OK
         val isJsonContent = bodyContent.startsWith("{")
-        val isSubdomainMatch = "uonetplus-uczen" in url
-        if (isCodeMatch && isJsonContent && isSubdomainMatch) {
-            runCatching { json.decodeFromString<ApiResponse<Unit?>>(bodyContent) }
-                .onFailure { logger.error("AutoLoginInterceptor: Can't deserialize new style error content body", it) }
-                .onSuccess {
-                    it.feedback?.message?.let { errorMessage ->
-                        if ("Brak uprawnień" in errorMessage) {
-                            throw NotLoggedInException(errorMessage)
-                        }
+        val isStudentModuleSubdomain = StudentModuleHost in url
+        if (isCodeMatch && isJsonContent && isStudentModuleSubdomain) {
+            checkResponseStudentModule(bodyContent)
+        }
+    }
+
+    private fun checkResponseStudentModule(bodyContent: String) {
+        runCatching { json.decodeFromString<ApiResponse<Unit?>>(bodyContent) }
+            .onFailure { logger.error("AutoLoginInterceptor: Can't deserialize new style error content body", it) }
+            .onSuccess {
+                it.feedback?.message?.let { errorMessage ->
+                    if ("Brak uprawnień" in errorMessage) {
+                        throw NotLoggedInException(errorMessage)
+                    }
+
+                    // workaround - access resource before request mapping
+                    if ("was not found on controller" in errorMessage && headersByHost[StudentModuleHost] == null) {
+                        throw NotLoggedInException(errorMessage)
                     }
                 }
-        }
+            }
     }
 
     private fun checkHttpErrorResponse(error: VulcanClientError, url: String) {
         val isCodeMatch = error.httpCode == HttpURLConnection.HTTP_CONFLICT
         val isSubdomainMatch = MessagesModuleHost in url || StudentPlusModuleHost in url
         if (isCodeMatch && isSubdomainMatch) {
+            throw NotLoggedInException(error.message.orEmpty())
+        }
+    }
+
+    private fun checkServerError(error: VulcanServerError, url: String) {
+        val isCodeMatch = error.httpCode == HttpURLConnection.HTTP_OK
+        val isSubdomainMatch = MessagesModuleHost in url || StudentModuleHost in url
+        val isMappable = isAnyMappingAvailable(url)
+
+        // workaround - access resource before request mapping
+        if (isCodeMatch && isSubdomainMatch && isMappable) {
             throw NotLoggedInException(error.message.orEmpty())
         }
     }

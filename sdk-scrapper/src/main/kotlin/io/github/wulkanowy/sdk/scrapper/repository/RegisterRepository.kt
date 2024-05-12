@@ -16,7 +16,7 @@ import io.github.wulkanowy.sdk.scrapper.login.InvalidSymbolException
 import io.github.wulkanowy.sdk.scrapper.login.LoginHelper
 import io.github.wulkanowy.sdk.scrapper.login.NotLoggedInException
 import io.github.wulkanowy.sdk.scrapper.login.UrlGenerator
-import io.github.wulkanowy.sdk.scrapper.mapModuleUrls
+import io.github.wulkanowy.sdk.scrapper.mapModuleUrl
 import io.github.wulkanowy.sdk.scrapper.register.Diary
 import io.github.wulkanowy.sdk.scrapper.register.HomePageResponse
 import io.github.wulkanowy.sdk.scrapper.register.RegisterStudent
@@ -251,7 +251,7 @@ internal class RegisterRepository(
         }
         val diaryUrl = (url.generate(UrlGenerator.Site.STUDENT) + "UczenDziennik.mvc/Get")
             .toHttpUrl()
-            .mapModuleUrls(StudentModuleHost, appVersion)
+            .mapModuleUrl(StudentModuleHost, appVersion)
 
         return student
             .getSchoolInfo(url = diaryUrl.toString())
@@ -330,7 +330,7 @@ internal class RegisterRepository(
         }
         val cacheUrl = (url.generate(UrlGenerator.Site.STUDENT) + "UczenCache.mvc/Get")
             .toHttpUrl()
-            .mapModuleUrls(StudentModuleHost, appVersion)
+            .mapModuleUrl(StudentModuleHost, appVersion)
 
         val userCache = student.getUserCache(
             url = cacheUrl.toString(),
@@ -347,11 +347,11 @@ internal class RegisterRepository(
 
         val contextUrl = (baseStudentPlus + "api/Context").toHttpUrl()
         val contextVToken = contextUrl.getMatchedVToken(StudentPlusModuleHost, moduleHeaders)
-        val mappedContextUrl = contextUrl.mapModuleUrls(StudentPlusModuleHost, moduleHeaders.appVersion)
+        val mappedContextUrl = contextUrl.mapModuleUrl(StudentPlusModuleHost, moduleHeaders.appVersion)
 
         val semestersUrl = (baseStudentPlus + "api/OkresyKlasyfikacyjne").toHttpUrl()
         val semestersVToken = semestersUrl.getMatchedVToken(StudentPlusModuleHost, moduleHeaders)
-        val mappedSemestersUrl = semestersUrl.mapModuleUrls(StudentPlusModuleHost, moduleHeaders.appVersion)
+        val mappedSemestersUrl = semestersUrl.mapModuleUrl(StudentPlusModuleHost, moduleHeaders.appVersion)
 
         return studentPlus
             .getContextByUrl(vToken = contextVToken, url = mappedContextUrl.toString()).students

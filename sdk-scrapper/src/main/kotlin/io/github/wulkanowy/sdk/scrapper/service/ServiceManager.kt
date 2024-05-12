@@ -102,7 +102,6 @@ internal class ServiceManager(
 
     private val interceptors: MutableList<Pair<Interceptor, Boolean>> = mutableListOf(
         HttpLoggingInterceptor().setLevel(logLevel) to true,
-        ErrorInterceptor(cookieJarCabinet) to false,
         AutoLoginInterceptor(
             loginType = loginType,
             cookieJarCabinet = cookieJarCabinet,
@@ -113,6 +112,7 @@ internal class ServiceManager(
             headersByHost = headersByHost,
             loginLock = loginLock,
         ) to false,
+        ErrorInterceptor(cookieJarCabinet) to false,
         UserAgentInterceptor(androidVersion, buildTag, userAgentTemplate) to false,
         HttpErrorInterceptor() to false,
     )

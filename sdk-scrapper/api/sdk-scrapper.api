@@ -439,6 +439,11 @@ public final class io/github/wulkanowy/sdk/scrapper/exception/VulcanClientError 
 public class io/github/wulkanowy/sdk/scrapper/exception/VulcanException : io/github/wulkanowy/sdk/scrapper/exception/ScrapperException {
 }
 
+public final class io/github/wulkanowy/sdk/scrapper/exception/VulcanServerError : io/github/wulkanowy/sdk/scrapper/exception/VulcanException {
+	public final fun getDoc ()Lorg/jsoup/nodes/Document;
+	public final fun getHttpCode ()I
+}
+
 public final class io/github/wulkanowy/sdk/scrapper/grades/Grade {
 	public static final field Companion Lio/github/wulkanowy/sdk/scrapper/grades/Grade$Companion;
 	public field date Ljava/time/LocalDate;

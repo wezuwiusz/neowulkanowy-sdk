@@ -9,6 +9,7 @@ import io.github.wulkanowy.sdk.scrapper.messages.Mailbox
 import io.github.wulkanowy.sdk.scrapper.messages.Recipient
 import io.github.wulkanowy.sdk.scrapper.messages.RecipientType
 import okhttp3.HttpUrl
+import okhttp3.HttpUrl.Companion.toHttpUrl
 import okhttp3.Request
 import org.jsoup.Jsoup
 import org.slf4j.LoggerFactory
@@ -201,7 +202,7 @@ internal fun String.md5(): String {
     return digest.toHexString()
 }
 
-internal fun HttpUrl.mapModuleUrls(moduleHost: String, appVersion: String?): HttpUrl {
+internal fun HttpUrl.mapModuleUrl(moduleHost: String, appVersion: String?): HttpUrl {
     val pathSegmentIndex = getPathIndexByModuleHost(moduleHost)
     val pathKey = pathSegments.getOrNull(pathSegmentIndex)
     val mappedPath = Scrapper.endpointsMap[appVersion]
@@ -218,6 +219,20 @@ internal fun HttpUrl.mapModuleUrls(moduleHost: String, appVersion: String?): Htt
         ).build()
     } else {
         this
+    }
+}
+
+internal fun isAnyMappingAvailable(url: String): Boolean {
+    val host = url.toHttpUrl().host
+    val module = when {
+        MessagesModuleHost in host -> MessagesModuleHost
+        StudentPlusModuleHost in host -> StudentPlusModuleHost
+        StudentModuleHost in host -> StudentModuleHost
+        else -> null
+    } ?: return false
+
+    return Scrapper.endpointsMap.keys.any { appVersion ->
+        url.toHttpUrl().mapModuleUrl(module, appVersion).toString() !== url
     }
 }
 
