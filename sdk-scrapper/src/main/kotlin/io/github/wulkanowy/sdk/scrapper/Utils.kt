@@ -301,7 +301,7 @@ private fun getVToken(uuid: String, headers: ModuleHeaders?, moduleHost: String)
     }.getOrDefault(
         schemeToSubstitute
             .replace("{appCustomerDb}", headers?.symbol.orEmpty())
-            .replace("{appVersion}", headers?.appVersion.orEmpty())
+            .replace("{appVersion}", headers?.appVersion.orEmpty()),
     )
 
     return vTokenEncoded.md5()
