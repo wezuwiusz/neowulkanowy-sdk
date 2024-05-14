@@ -277,8 +277,6 @@ private fun getVToken(uuid: String, headers: ModuleHeaders?): String? {
     return buildString {
         append(uuid)
         append("-")
-        append(headers?.email)
-        append("-")
         append(headers?.symbol)
         append("-")
         append(headers?.appVersion)
