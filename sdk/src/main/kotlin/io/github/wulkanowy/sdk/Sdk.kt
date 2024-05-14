@@ -247,6 +247,12 @@ class Sdk {
             scrapper.vTokenMapping = value
         }
 
+    var vTokenSchemeMapping
+        get() = scrapper.vTokenSchemeMapping
+        set(value) {
+            scrapper.vTokenSchemeMapping = value
+        }
+
     var emptyCookieJarInterceptor: Boolean = false
         set(value) {
             field = value

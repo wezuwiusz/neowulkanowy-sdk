@@ -224,9 +224,16 @@ class Scrapper {
             vTokenMap = value
         }
 
+    var vTokenSchemeMapping: Map<String, Map<String, String>>
+        get() = vTokenSchemeMap
+        set(value) {
+            vTokenSchemeMap = value
+        }
+
     internal companion object {
         var endpointsMap: Map<String, Map<String, Map<String, String>>> = ApiEndpointsMap
         var vTokenMap: Map<String, Map<String, Map<String, String>>> = ApiEndpointsVTokenMap
+        var vTokenSchemeMap: Map<String, Map<String, String>> = ApiEndpointsVTokenSchemeMap
     }
 
     private val appInterceptors: MutableList<Pair<Interceptor, Boolean>> = mutableListOf()

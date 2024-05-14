@@ -91,6 +91,7 @@ public final class io/github/wulkanowy/sdk/Sdk {
 	public final fun getUserSubjectsFromScrapper (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public static synthetic fun getUserSubjectsFromScrapper$default (Lio/github/wulkanowy/sdk/Sdk;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
 	public final fun getVTokenMapping ()Ljava/util/Map;
+	public final fun getVTokenSchemeMapping ()Ljava/util/Map;
 	public final fun isEduOne ()Z
 	public final fun isSymbolNotExist (Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public final fun restoreMessages (Ljava/util/List;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
@@ -123,6 +124,7 @@ public final class io/github/wulkanowy/sdk/Sdk {
 	public final fun setUnitId (I)V
 	public final fun setUserAgentTemplate (Ljava/lang/String;)V
 	public final fun setVTokenMapping (Ljava/util/Map;)V
+	public final fun setVTokenSchemeMapping (Ljava/util/Map;)V
 	public final fun switchDiary (III)Lio/github/wulkanowy/sdk/Sdk;
 	public final fun switchDiary (IIII)Lio/github/wulkanowy/sdk/Sdk;
 	public static synthetic fun switchDiary$default (Lio/github/wulkanowy/sdk/Sdk;IIIIILjava/lang/Object;)Lio/github/wulkanowy/sdk/Sdk;

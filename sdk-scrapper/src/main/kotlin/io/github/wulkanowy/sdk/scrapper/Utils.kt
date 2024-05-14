@@ -242,7 +242,10 @@ internal fun getPathIndexByModuleHost(moduleHost: String): Int = when (moduleHos
     else -> -1
 }
 
+private val vParamsRegex = "([a-zA-Z]+)\\s*:\\s*'([^']*)'".toRegex()
+
 internal fun getModuleHeadersFromDocument(htmlContent: String): ModuleHeaders {
+    val matches = vParamsRegex.findAll(htmlContent)
     return ModuleHeaders(
         token = getScriptParam("antiForgeryToken", htmlContent),
         appGuid = getScriptParam("appGuid", htmlContent),
@@ -251,6 +254,13 @@ internal fun getModuleHeadersFromDocument(htmlContent: String): ModuleHeaders {
         },
         email = getScriptParam("name", htmlContent),
         symbol = getScriptParam("appCustomerDb", htmlContent),
+        vParams = matches.toList().associate { match ->
+            if (match.groupValues.size == 3) {
+                match.groupValues[1] to match.groupValues[2]
+            } else {
+                null to null
+            }
+        },
     )
 }
 
@@ -268,17 +278,31 @@ internal fun HttpUrl.getMatchedVToken(moduleHost: String, headers: ModuleHeaders
         ?.get(pathKey)
         ?: return null
 
-    return getVToken(mappedUuid, headers)
+    return getVToken(mappedUuid, headers, moduleHost)
 }
 
-private fun getVToken(uuid: String, headers: ModuleHeaders?): String? {
+private val vTokenSchemeKeysRegex = "\\{([^{}]+)\\}".toRegex()
+
+private fun getVToken(uuid: String, headers: ModuleHeaders?, moduleHost: String): String? {
     if (uuid.isBlank()) return null
 
-    return buildString {
-        append(uuid)
-        append("-")
-        append(headers?.symbol)
-        append("-")
-        append(headers?.appVersion)
-    }.md5()
+    val scheme = Scrapper.vTokenSchemeMap[headers?.appVersion]
+        ?.get(moduleHost)
+        ?: "{UUID}-{appCustomerDb}-{appVersion}"
+    val schemeToSubstitute = scheme.replace("{UUID}", uuid)
+
+    val vTokenEncoded = runCatching {
+        vTokenSchemeKeysRegex.replace(schemeToSubstitute) {
+            val key = it.groupValues[1]
+            headers?.vParams.orEmpty()[key] ?: key
+        }
+    }.onFailure {
+        logger.error("Error preparing vtoken!", it)
+    }.getOrDefault(
+        schemeToSubstitute
+            .replace("{appCustomerDb}", headers?.symbol.orEmpty())
+            .replace("{appVersion}", headers?.appVersion.orEmpty())
+    )
+
+    return vTokenEncoded.md5()
 }

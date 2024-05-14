@@ -6,4 +6,5 @@ internal data class ModuleHeaders(
     val appVersion: String,
     val symbol: String? = null,
     val email: String? = null,
+    val vParams: Map<String?, String?> = emptyMap(),
 )
