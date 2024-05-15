@@ -142,8 +142,7 @@ internal class AutoLoginInterceptor(
     }
 
     private fun saveModuleHeaders(doc: Document, url: HttpUrl) {
-        val htmlContent = doc.select("script").html()
-        val moduleHeaders = getModuleHeadersFromDocument(htmlContent)
+        val moduleHeaders = getModuleHeadersFromDocument(doc)
 
         if (moduleHeaders.token.isBlank()) {
             logger.info("There is no token found on $url")

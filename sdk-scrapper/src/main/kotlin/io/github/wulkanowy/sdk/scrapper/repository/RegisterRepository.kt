@@ -343,7 +343,7 @@ internal class RegisterRepository(
     }
 
     private suspend fun getEduOneDiaries(baseStudentPlus: String, homepage: String): List<RegisterStudent> {
-        val moduleHeaders = getModuleHeadersFromDocument(homepage)
+        val moduleHeaders = getModuleHeadersFromDocument(Jsoup.parse(homepage))
 
         val contextUrl = (baseStudentPlus + "api/Context").toHttpUrl()
         val contextVToken = contextUrl.getMatchedVToken(StudentPlusModuleHost, moduleHeaders)

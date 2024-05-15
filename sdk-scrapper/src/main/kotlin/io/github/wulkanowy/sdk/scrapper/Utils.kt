@@ -12,6 +12,7 @@ import okhttp3.HttpUrl
 import okhttp3.HttpUrl.Companion.toHttpUrl
 import okhttp3.Request
 import org.jsoup.Jsoup
+import org.jsoup.nodes.Document
 import org.slf4j.LoggerFactory
 import retrofit2.HttpException
 import retrofit2.Response
@@ -72,6 +73,22 @@ internal fun String.getGradePointPercent(): String {
 internal fun getScriptParam(name: String, content: String, fallback: String = ""): String {
     return "$name: '(.)*'".toRegex().find(content).let { result ->
         if (null !== result) Jsoup.parse(result.groupValues[0].substringAfter("'").substringBefore("'")).text() else fallback
+    }
+}
+
+internal fun getApiKey(document: Document, fallback: String = ""): String {
+    val script = document.getElementsByTag("script").toList()
+        .map { element -> element.html() }
+        .filter { text -> text.length < 500 }
+        .filter { text -> text.contains("VParam") && text.contains("apiKey") }
+        .firstOrNull()
+
+    if (script == null) {
+        return fallback
+    }
+
+    return "(\\d{5,8})".toRegex().find(script).let { result ->
+        if (null !== result) result.groupValues[1] else fallback
     }
 }
 
@@ -244,7 +261,8 @@ internal fun getPathIndexByModuleHost(moduleHost: String): Int = when (moduleHos
 
 private val vParamsRegex = "([a-zA-Z]+)\\s*:\\s*'([^']*)'".toRegex()
 
-internal fun getModuleHeadersFromDocument(htmlContent: String): ModuleHeaders {
+internal fun getModuleHeadersFromDocument(document: Document): ModuleHeaders {
+    val htmlContent = document.select("script").html()
     val matches = vParamsRegex.findAll(htmlContent)
     return ModuleHeaders(
         token = getScriptParam("antiForgeryToken", htmlContent),
@@ -252,6 +270,7 @@ internal fun getModuleHeadersFromDocument(htmlContent: String): ModuleHeaders {
         appVersion = getScriptParam("version", htmlContent).ifBlank {
             getScriptParam("appVersion", htmlContent)
         },
+        apiKey = getApiKey(document),
         email = getScriptParam("name", htmlContent),
         symbol = getScriptParam("appCustomerDb", htmlContent),
         vParams = matches.toList().associate { match ->
@@ -289,12 +308,14 @@ private fun getVToken(uuid: String, headers: ModuleHeaders?, moduleHost: String)
     val scheme = Scrapper.vTokenSchemeMap[headers?.appVersion]
         ?.get(moduleHost)
         ?: "{UUID}-{appCustomerDb}-{appVersion}"
-    val schemeToSubstitute = scheme.replace("{UUID}", uuid)
+    val schemeToSubstitute = scheme
+        .replace("{UUID}", uuid)
 
     val vTokenEncoded = runCatching {
         vTokenSchemeKeysRegex.replace(schemeToSubstitute) {
             val key = it.groupValues[1]
-            headers?.vParams.orEmpty()[key] ?: key
+            val fallback = if (key == "apiKey") headers?.apiKey.orEmpty() else key
+            headers?.vParams.orEmpty()[key] ?: fallback
         }
     }.onFailure {
         logger.error("Error preparing vtoken!", it)
