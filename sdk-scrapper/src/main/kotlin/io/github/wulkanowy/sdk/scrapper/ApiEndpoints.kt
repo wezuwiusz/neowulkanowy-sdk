@@ -224,6 +224,22 @@ internal val ApiEndpointsMap = mapOf(
             "RestoreTrash" to "e47d302c-035d-4bbe-bdb7-ae1b7658c549",
         ),
     ),
+    "24.04.0005.58736" to mapOf(
+        "uonetplus-uczen" to mapOf(
+            "Frekwencja" to "1cd6bc7d-09f0-4b6c-8fd8-71fff48ad3d1",
+            "FrekwencjaStatystyki" to "4f679063-5def-46eb-bac1-1f213f98ea07",
+            "FrekwencjaStatystykiPrzedmioty" to "71091f89-ddb7-42e1-9cfd-c319a69dd1e6",
+            "Homework" to "48b1f501-c2c5-42db-8793-821bf9300bdd",
+            "Oceny" to "e01e5662-4782-4dc2-8bbd-2952ca08d840",
+            "PlanZajec" to "a7fa98b8-8318-4df5-b995-519f25f152ce",
+            "Sprawdziany" to "df2fb170-e19d-4be5-8a29-7b600d22b735",
+            "Statystyki" to "48b1f501-c2c5-42db-8793-821bf9300bdd",
+            "SzkolaINauczyciele" to "068211e7-a796-469f-bf34-ccbe47078387",
+            "Uczen" to "6b6c9a6f-3221-4a99-a313-d9fe093d77cb",
+            "UczenCache" to "c6bfe6c4-24ef-43eb-86ca-63474d99b3d8",
+            "UczenDziennik" to "ced49ad0-a0ce-427e-bb09-ead7388801d0",
+        ),
+    ),
 )
 
 internal val ApiEndpointsVTokenMap = mapOf(
