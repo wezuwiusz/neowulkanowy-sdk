@@ -442,7 +442,6 @@ public class io/github/wulkanowy/sdk/scrapper/exception/VulcanException : io/git
 }
 
 public final class io/github/wulkanowy/sdk/scrapper/exception/VulcanServerError : io/github/wulkanowy/sdk/scrapper/exception/VulcanException {
-	public final fun getDoc ()Lorg/jsoup/nodes/Document;
 	public final fun getHttpCode ()I
 }
 

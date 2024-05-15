@@ -92,7 +92,7 @@ internal class ErrorInterceptor(
         }
 
         when (doc.title()) {
-            "Błąd" -> throw VulcanServerError(doc.body().text(), doc, httpCode)
+            "Błąd" -> throw VulcanServerError(doc.body().text(), httpCode)
             "Błąd strony" -> throw VulcanException(doc.select(".errorMessage").text(), httpCode)
             "Logowanie" -> throw AccountPermissionException(
                 buildString {
