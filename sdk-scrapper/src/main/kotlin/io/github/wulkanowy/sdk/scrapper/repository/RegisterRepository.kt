@@ -14,6 +14,7 @@ import io.github.wulkanowy.sdk.scrapper.isCurrentLoginHasEduOne
 import io.github.wulkanowy.sdk.scrapper.login.CertificateResponse
 import io.github.wulkanowy.sdk.scrapper.login.InvalidSymbolException
 import io.github.wulkanowy.sdk.scrapper.login.LoginHelper
+import io.github.wulkanowy.sdk.scrapper.login.LoginModuleResult
 import io.github.wulkanowy.sdk.scrapper.login.NotLoggedInException
 import io.github.wulkanowy.sdk.scrapper.login.UrlGenerator
 import io.github.wulkanowy.sdk.scrapper.mapModuleUrl
@@ -35,6 +36,7 @@ import io.github.wulkanowy.sdk.scrapper.service.StudentService
 import io.github.wulkanowy.sdk.scrapper.service.SymbolService
 import okhttp3.HttpUrl.Companion.toHttpUrl
 import org.jsoup.Jsoup
+import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
 import org.jsoup.parser.Parser
 import org.jsoup.select.Elements
@@ -176,14 +178,17 @@ internal class RegisterRepository(
                 isEduOne -> UrlGenerator.Site.STUDENT_PLUS
                 else -> UrlGenerator.Site.STUDENT
             }
-            loginModule(site)
+            loginHelper.loginModule(site)
         }
 
         val registerStudents = runCatching {
             when {
                 isEduOne -> {
                     val (baseStudentPlus, homepage) = loginResult.getOrThrow()
-                    getEduOneDiaries(baseStudentPlus = baseStudentPlus, homepage = homepage)
+                    getEduOneDiaries(
+                        baseStudentPlus = baseStudentPlus.toString(),
+                        homepage = homepage,
+                    )
                 }
 
                 else -> getStudentsFromOldModule(
@@ -226,12 +231,12 @@ internal class RegisterRepository(
     }
 
     private suspend fun getStudentsFromOldModule(
-        loginResult: Pair<String, String>,
+        loginResult: LoginModuleResult,
         unitId: Int?,
     ): List<RegisterStudent> {
         val (_, startPage) = loginResult
-        val isParent = isStudentFromParentAccount(startPage)
-        val diaries = getStudentDiaries(startPage)
+        val isParent = isStudentFromParentAccount(startPage.toString())
+        val diaries = getStudentDiaries(startPage.toString())
         return diaries.getStudentsFromDiaries(
             isParent = isParent,
             isEduOne = false,
@@ -240,7 +245,7 @@ internal class RegisterRepository(
                 ?: error("Can't find componentUnitId in student diaries"),
         ).map {
             it.copy(
-                schoolName = getScriptParam("organizationName", startPage),
+                schoolName = getScriptParam("organizationName", startPage.toString()),
             )
         }
     }
@@ -342,8 +347,8 @@ internal class RegisterRepository(
         return userCache?.isParent
     }
 
-    private suspend fun getEduOneDiaries(baseStudentPlus: String, homepage: String): List<RegisterStudent> {
-        val moduleHeaders = getModuleHeadersFromDocument(Jsoup.parse(homepage))
+    private suspend fun getEduOneDiaries(baseStudentPlus: String, homepage: Document): List<RegisterStudent> {
+        val moduleHeaders = getModuleHeadersFromDocument(homepage)
 
         val contextUrl = (baseStudentPlus + "api/Context").toHttpUrl()
         val contextVToken = contextUrl.getMatchedVToken(StudentPlusModuleHost, moduleHeaders)

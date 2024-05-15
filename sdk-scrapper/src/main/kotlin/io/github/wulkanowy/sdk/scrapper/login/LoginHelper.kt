@@ -18,10 +18,8 @@ import io.github.wulkanowy.sdk.scrapper.isCurrentLoginHasEduOne
 import io.github.wulkanowy.sdk.scrapper.register.HomePageResponse
 import io.github.wulkanowy.sdk.scrapper.repository.AccountRepository.Companion.SELECTOR_ADFS
 import io.github.wulkanowy.sdk.scrapper.service.LoginService
-import okhttp3.HttpUrl
 import okhttp3.HttpUrl.Companion.toHttpUrl
 import org.jsoup.Jsoup
-import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
 import org.slf4j.LoggerFactory
 import pl.droidsonroids.jspoon.Jspoon
@@ -119,7 +117,7 @@ internal class LoginHelper(
         }
     }
 
-    fun loginModule(site: UrlGenerator.Site): Pair<HttpUrl, Document> {
+    fun loginModule(site: UrlGenerator.Site): LoginModuleResult {
         val moduleUrl = urlGenerator.generate(site) + "LoginEndpoint.aspx"
         val startHtml = api.getModuleStart(moduleUrl).execute().handleErrors().body().orEmpty()
         val startDoc = Jsoup.parse(startHtml)
@@ -140,11 +138,17 @@ internal class LoginHelper(
                 throw IOException("Unknown module start page: ${certResponseDoc.title()}")
             } else {
                 logger.debug("{} cookies fetch successfully!", site)
-                return moduleUrl.toHttpUrl() to Jsoup.parse(certResponseHtml)
+                return LoginModuleResult(
+                    moduleUrl = moduleUrl.toHttpUrl(),
+                    document = Jsoup.parse(certResponseHtml),
+                )
             }
         } else {
             logger.debug("{} cookies already fetched!", site)
-            return moduleUrl.toHttpUrl() to startDoc
+            return LoginModuleResult(
+                moduleUrl = moduleUrl.toHttpUrl(),
+                document = startDoc,
+            )
         }
     }
 

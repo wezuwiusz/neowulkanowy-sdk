@@ -5,6 +5,7 @@ import io.github.wulkanowy.sdk.scrapper.interceptor.AutoLoginInterceptor
 import io.github.wulkanowy.sdk.scrapper.interceptor.ErrorInterceptor
 import io.github.wulkanowy.sdk.scrapper.interceptor.HttpErrorInterceptor
 import io.github.wulkanowy.sdk.scrapper.login.LoginHelper
+import io.github.wulkanowy.sdk.scrapper.login.LoginModuleResult
 import io.github.wulkanowy.sdk.scrapper.login.LoginResult
 import io.github.wulkanowy.sdk.scrapper.login.UrlGenerator
 import io.github.wulkanowy.sdk.scrapper.repository.StudentPlusRepository
@@ -158,7 +159,7 @@ abstract class BaseLocalTest : BaseTest() {
                     ).login("jan@fakelog.cf", "jan123")
                 }
             },
-            fetchModuleCookies = { _ -> "http://localhost".toHttpUrl() to Document("") },
+            fetchModuleCookies = { _ -> LoginModuleResult("http://localhost".toHttpUrl(), Document("")) },
             json = json,
         )
     }

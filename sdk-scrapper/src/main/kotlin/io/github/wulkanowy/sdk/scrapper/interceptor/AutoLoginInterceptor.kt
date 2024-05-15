@@ -14,6 +14,7 @@ import io.github.wulkanowy.sdk.scrapper.exception.VulcanClientError
 import io.github.wulkanowy.sdk.scrapper.exception.VulcanServerError
 import io.github.wulkanowy.sdk.scrapper.getModuleHeadersFromDocument
 import io.github.wulkanowy.sdk.scrapper.isAnyMappingAvailable
+import io.github.wulkanowy.sdk.scrapper.login.LoginModuleResult
 import io.github.wulkanowy.sdk.scrapper.login.LoginResult
 import io.github.wulkanowy.sdk.scrapper.login.ModuleHeaders
 import io.github.wulkanowy.sdk.scrapper.login.NotLoggedInException
@@ -52,7 +53,7 @@ internal class AutoLoginInterceptor(
     private val cookieJarCabinet: CookieJarCabinet,
     private val emptyCookieJarIntercept: Boolean = false,
     private val notLoggedInCallback: suspend () -> LoginResult,
-    private val fetchModuleCookies: (UrlGenerator.Site) -> Pair<HttpUrl, Document>,
+    private val fetchModuleCookies: (UrlGenerator.Site) -> LoginModuleResult,
     private val json: Json,
     private val headersByHost: MutableMap<String, ModuleHeaders?> = mutableMapOf(),
     private val loginLock: ReentrantLock = ReentrantLock(true),
@@ -135,7 +136,7 @@ internal class AutoLoginInterceptor(
         }
     }
 
-    private fun getModuleCookies(site: UrlGenerator.Site): Result<Pair<HttpUrl, Document>> {
+    private fun getModuleCookies(site: UrlGenerator.Site): Result<LoginModuleResult> {
         return runCatching { fetchModuleCookies(site) }
             .onFailure { logger.error("Error in $site login", it) }
             .onSuccess { (url, doc) -> saveModuleHeaders(doc, url) }

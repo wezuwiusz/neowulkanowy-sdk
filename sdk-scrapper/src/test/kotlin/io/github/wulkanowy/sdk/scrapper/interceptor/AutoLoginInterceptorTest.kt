@@ -4,6 +4,7 @@ import io.github.wulkanowy.sdk.scrapper.BaseLocalTest
 import io.github.wulkanowy.sdk.scrapper.CookieJarCabinet
 import io.github.wulkanowy.sdk.scrapper.Scrapper
 import io.github.wulkanowy.sdk.scrapper.login.LoginHelper
+import io.github.wulkanowy.sdk.scrapper.login.LoginModuleResult
 import io.github.wulkanowy.sdk.scrapper.login.LoginResult
 import io.github.wulkanowy.sdk.scrapper.login.LoginTest
 import io.github.wulkanowy.sdk.scrapper.login.UrlGenerator
@@ -17,7 +18,6 @@ import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.supervisorScope
 import kotlinx.coroutines.test.runTest
-import okhttp3.HttpUrl
 import okhttp3.HttpUrl.Companion.toHttpUrl
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
@@ -152,7 +152,10 @@ class AutoLoginInterceptorTest : BaseLocalTest() {
                     UrlGenerator.Site.MESSAGES -> "wiadomosciplus"
                     else -> error("Not supported here")
                 }
-                "https://uonetplus-$subdomain.localhost".toHttpUrl() to Jsoup.parse(html)
+                LoginModuleResult(
+                    moduleUrl = "https://uonetplus-$subdomain.localhost".toHttpUrl(),
+                    document = Jsoup.parse(html),
+                )
             },
         )
         studentService.getUserCache()
@@ -184,7 +187,7 @@ class AutoLoginInterceptorTest : BaseLocalTest() {
 
     private fun getService(
         checkJar: Boolean = false,
-        fetchModuleCookies: (UrlGenerator.Site) -> Pair<HttpUrl, Document> = { _ -> "http://localhost".toHttpUrl() to Document("") },
+        fetchModuleCookies: (UrlGenerator.Site) -> LoginModuleResult = { _ -> LoginModuleResult("http://localhost".toHttpUrl(), Document("")) },
         notLoggedInCallback: suspend () -> LoginResult = { loginHelper.login("", "") },
     ): StudentService {
         val interceptor = AutoLoginInterceptor(
