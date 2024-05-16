@@ -77,17 +77,14 @@ internal fun getScriptParam(name: String, content: String, fallback: String = ""
 }
 
 internal fun getApiKey(document: Document, fallback: String = ""): String {
-    val script = document.getElementsByTag("script").toList()
-        .map { element -> element.html() }
-        .filter { text -> text.length < 500 }
-        .filter { text -> text.contains("VParam") && text.contains("apiKey") }
-        .firstOrNull()
+    val scripts = document.getElementsByTag("script").toList().map { it.html() }
+    val script = scripts.lastOrNull { "VParam" in it }
 
     if (script == null) {
         return fallback
     }
 
-    return "(\\d{5,8})".toRegex().find(script).let { result ->
+    return "(\\d{7})".toRegex().findAll(script).lastOrNull().let { result ->
         if (null !== result) result.groupValues[1] else fallback
     }
 }
@@ -307,15 +304,19 @@ private fun getVToken(uuid: String, headers: ModuleHeaders?, moduleHost: String)
 
     val scheme = Scrapper.vTokenSchemeMap[headers?.appVersion]
         ?.get(moduleHost)
-        ?: "{UUID}-{appCustomerDb}-{appVersion}"
+        ?: "{UUID}-{appCustomerDb}-{appVersion}-{apiKey}"
     val schemeToSubstitute = scheme
         .replace("{UUID}", uuid)
+        .let { updatedScheme ->
+            headers?.apiKey?.takeIf { it.isNotBlank() }?.let {
+                updatedScheme.replace("{apiKey}", it)
+            } ?: updatedScheme
+        }
 
     val vTokenEncoded = runCatching {
         vTokenSchemeKeysRegex.replace(schemeToSubstitute) {
             val key = it.groupValues[1]
-            val fallback = if (key == "apiKey") headers?.apiKey.orEmpty() else key
-            headers?.vParams.orEmpty()[key] ?: fallback
+            headers?.vParams.orEmpty()[key] ?: key
         }
     }.onFailure {
         logger.error("Error preparing vtoken!", it)

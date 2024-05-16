@@ -339,7 +339,7 @@ internal val ApiEndpointsMap = mapOf(
             "WiadomoscNowa" to "67601f5e-c268-43d6-8083-09c4dc3381e6",
             "Pracownicy" to "8c104c09-55b2-44b8-9b6a-22bd5cb86f39",
             "MoveTrash" to "51a490c5-a6dc-4cff-9216-b2dadb0707df",
-            "RestoreTrash" to "",
+            "RestoreTrash" to "c9848486-e687-4179-a73e-55b1781f3e19",
         ),
     ),
 )
@@ -420,6 +420,9 @@ internal val ApiEndpointsVTokenSchemeMap = mapOf(
         "uonetplus-wiadomosciplus" to "{UUID}-{appCustomerDb}-{appVersion}",
     ),
     "24.04.0005.58736" to mapOf(
+        "uonetplus-wiadomosciplus" to "{UUID}-{appCustomerDb}-{appVersion}-{apiKey}",
+    ),
+    "24.04.0006.58753" to mapOf(
         "uonetplus-wiadomosciplus" to "{UUID}-{appCustomerDb}-{appVersion}-{apiKey}",
     ),
 )
