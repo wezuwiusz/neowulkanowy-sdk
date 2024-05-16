@@ -179,7 +179,7 @@ internal interface StudentService {
         @Body body: Any = Any(),
     ): ApiResponse<List<Device>>
 
-    @POST("ZarejestrowaneUrzadzenia.mvc/Get")
+    @POST("RejestracjaUrzadzeniaToken.mvc/Get")
     suspend fun getToken(
         @Body body: Any = Any(),
     ): ApiResponse<TokenResponse>
