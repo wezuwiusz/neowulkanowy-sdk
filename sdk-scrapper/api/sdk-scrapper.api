@@ -1,3 +1,13 @@
+public abstract interface class io/github/wulkanowy/sdk/scrapper/EvaluateHandler : java/io/Closeable {
+	public abstract fun close ()V
+	public abstract fun evaluate (Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+}
+
+public final class io/github/wulkanowy/sdk/scrapper/EvaluateHandler$DefaultImpls {
+	public static fun close (Lio/github/wulkanowy/sdk/scrapper/EvaluateHandler;)V
+	public static fun evaluate (Lio/github/wulkanowy/sdk/scrapper/EvaluateHandler;Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+}
+
 public final class io/github/wulkanowy/sdk/scrapper/Scrapper {
 	public fun <init> ()V
 	public final fun addInterceptor (Lokhttp3/Interceptor;Z)V
@@ -82,6 +92,7 @@ public final class io/github/wulkanowy/sdk/scrapper/Scrapper {
 	public final fun getUserAgent ()Ljava/lang/String;
 	public final fun getUserAgentTemplate ()Ljava/lang/String;
 	public final fun getUserSubjects (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public final fun getVParamsEvaluation ()Lkotlin/jvm/functions/Function1;
 	public final fun getVTokenMapping ()Ljava/util/Map;
 	public final fun getVTokenSchemeMapping ()Ljava/util/Map;
 	public final fun isEduOne ()Z
@@ -112,6 +123,7 @@ public final class io/github/wulkanowy/sdk/scrapper/Scrapper {
 	public final fun setSymbol (Ljava/lang/String;)V
 	public final fun setUnitId (I)V
 	public final fun setUserAgentTemplate (Ljava/lang/String;)V
+	public final fun setVParamsEvaluation (Lkotlin/jvm/functions/Function1;)V
 	public final fun setVTokenMapping (Ljava/util/Map;)V
 	public final fun setVTokenSchemeMapping (Ljava/util/Map;)V
 	public final fun unregisterDevice (ILkotlin/coroutines/Continuation;)Ljava/lang/Object;

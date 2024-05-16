@@ -8,6 +8,11 @@ import io.github.wulkanowy.sdk.scrapper.login.UrlGenerator
 import io.github.wulkanowy.sdk.scrapper.messages.Mailbox
 import io.github.wulkanowy.sdk.scrapper.messages.Recipient
 import io.github.wulkanowy.sdk.scrapper.messages.RecipientType
+import kotlinx.coroutines.runBlocking
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.JsonPrimitive
+import kotlinx.serialization.json.jsonObject
+import kotlinx.serialization.json.jsonPrimitive
 import okhttp3.HttpUrl
 import okhttp3.HttpUrl.Companion.toHttpUrl
 import okhttp3.Request
@@ -258,25 +263,47 @@ internal fun getPathIndexByModuleHost(moduleHost: String): Int = when (moduleHos
 
 private val vParamsRegex = "([a-zA-Z]+)\\s*:\\s*'([^']*)'".toRegex()
 
-internal fun getModuleHeadersFromDocument(document: Document): ModuleHeaders {
+internal suspend fun getModuleHeadersFromDocument(document: Document): ModuleHeaders {
     val htmlContent = document.select("script").html()
     val matches = vParamsRegex.findAll(htmlContent)
+
+    val scripts = document.select("script").toList()
+        .filter { it.attr("src").isNullOrBlank() }
+        .map { it.html() }
+
+    val evaluatedJs = runBlocking {
+        Scrapper.vParamsRun().use { handler ->
+            scripts.map {
+                runCatching {
+                    val result = handler.evaluate("var window = this; $it; JSON.stringify(VParam)")
+                    result?.let { Json.parseToJsonElement(it) }?.jsonObject?.toMap().orEmpty()
+                }.getOrDefault(emptyMap())
+            }
+        }
+    }.flatMap { it.toList() }.toMap()
+        .mapValues {
+            when (it.value) {
+                is JsonPrimitive -> it.value.jsonPrimitive.content
+                else -> it.value.toString()
+            }
+        }
+
     return ModuleHeaders(
         token = getScriptParam("antiForgeryToken", htmlContent),
         appGuid = getScriptParam("appGuid", htmlContent),
         appVersion = getScriptParam("version", htmlContent).ifBlank {
             getScriptParam("appVersion", htmlContent)
         },
-        apiKey = getApiKey(document),
         email = getScriptParam("name", htmlContent),
         symbol = getScriptParam("appCustomerDb", htmlContent),
-        vParams = matches.toList().associate { match ->
+        vParamsRaw = matches.toList().associate { match ->
             if (match.groupValues.size == 3) {
                 match.groupValues[1] to match.groupValues[2]
             } else {
                 null to null
             }
-        },
+        } + mapOf("apiKey" to getApiKey(document)),
+        vParamsEvaluated = evaluatedJs,
     )
 }
 
@@ -302,29 +329,25 @@ private val vTokenSchemeKeysRegex = "\\{([^{}]+)\\}".toRegex()
 private fun getVToken(uuid: String, headers: ModuleHeaders?, moduleHost: String): String? {
     if (uuid.isBlank()) return null
 
-    val scheme = Scrapper.vTokenSchemeMap[headers?.appVersion]
+    val schemeToSubstitute = Scrapper.vTokenSchemeMap[headers?.appVersion]
         ?.get(moduleHost)
         ?: "{UUID}-{appCustomerDb}-{appVersion}-{apiKey}"
-    val schemeToSubstitute = scheme
-        .replace("{UUID}", uuid)
-        .let { updatedScheme ->
-            headers?.apiKey?.takeIf { it.isNotBlank() }?.let {
-                updatedScheme.replace("{apiKey}", it)
-            } ?: updatedScheme
-        }
 
     val vTokenEncoded = runCatching {
         vTokenSchemeKeysRegex.replace(schemeToSubstitute) {
             val key = it.groupValues[1]
-            headers?.vParams.orEmpty()[key] ?: key
+            val headersRaw = headers?.vParamsRaw.orEmpty()[key]
+            val headerEvaluated = headers?.vParamsEvaluated.orEmpty()[key]
+            headerEvaluated ?: headersRaw ?: "{$key}"
         }
     }.onFailure {
-        logger.error("Error preparing vtoken!", it)
+        logger.error("Error preparing vToken!", it)
     }.getOrDefault(
         schemeToSubstitute
             .replace("{appCustomerDb}", headers?.symbol.orEmpty())
-            .replace("{appVersion}", headers?.appVersion.orEmpty()),
+            .replace("{appVersion}", headers?.appVersion.orEmpty())
+            .replace("{email}", headers?.email.orEmpty()),
     )
 
-    return vTokenEncoded.md5()
+    return vTokenEncoded.replace("{UUID}", uuid).md5()
 }

@@ -230,10 +230,17 @@ class Scrapper {
             vTokenSchemeMap = value
         }
 
+    var vParamsEvaluation: suspend () -> EvaluateHandler
+        get() = vParamsRun
+        set(value) {
+            vParamsRun = value
+        }
+
     internal companion object {
         var endpointsMap: Map<String, Map<String, Map<String, String>>> = ApiEndpointsMap
         var vTokenMap: Map<String, Map<String, Map<String, String>>> = ApiEndpointsVTokenMap
         var vTokenSchemeMap: Map<String, Map<String, String>> = ApiEndpointsVTokenSchemeMap
+        var vParamsRun: suspend () -> EvaluateHandler = { object : EvaluateHandler {} }
     }
 
     private val appInterceptors: MutableList<Pair<Interceptor, Boolean>> = mutableListOf()

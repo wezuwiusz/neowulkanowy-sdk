@@ -67,6 +67,7 @@ import io.github.wulkanowy.sdk.pojo.Subject
 import io.github.wulkanowy.sdk.pojo.Teacher
 import io.github.wulkanowy.sdk.pojo.Timetable
 import io.github.wulkanowy.sdk.pojo.Token
+import io.github.wulkanowy.sdk.scrapper.EvaluateHandler
 import io.github.wulkanowy.sdk.scrapper.Scrapper
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -251,6 +252,12 @@ class Sdk {
         get() = scrapper.vTokenSchemeMapping
         set(value) {
             scrapper.vTokenSchemeMapping = value
+        }
+
+    var vParamsEvaluation: suspend () -> EvaluateHandler
+        get() = scrapper.vParamsEvaluation
+        set(value) {
+            scrapper.vParamsEvaluation = value
         }
 
     var emptyCookieJarInterceptor: Boolean = false
