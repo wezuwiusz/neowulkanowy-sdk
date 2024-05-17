@@ -184,9 +184,8 @@ internal class RegisterRepository(
         val registerStudents = runCatching {
             when {
                 isEduOne -> {
-                    val (baseStudentPlus, homepage) = loginResult.getOrThrow()
+                    val (_, homepage) = loginResult.getOrThrow()
                     getEduOneDiaries(
-                        baseStudentPlus = baseStudentPlus.toString(),
                         homepage = homepage,
                     )
                 }
@@ -347,9 +346,9 @@ internal class RegisterRepository(
         return userCache?.isParent
     }
 
-    private suspend fun getEduOneDiaries(baseStudentPlus: String, homepage: Document): List<RegisterStudent> {
+    private suspend fun getEduOneDiaries(homepage: Document): List<RegisterStudent> {
         val moduleHeaders = getModuleHeadersFromDocument(homepage)
-
+        val baseStudentPlus = url.generate(UrlGenerator.Site.STUDENT_PLUS)
         val contextUrl = (baseStudentPlus + "api/Context").toHttpUrl()
         val contextVToken = contextUrl.getMatchedVToken(StudentPlusModuleHost, moduleHeaders)
         val mappedContextUrl = contextUrl.mapModuleUrl(StudentPlusModuleHost, moduleHeaders.appVersion)
@@ -377,29 +376,5 @@ internal class RegisterRepository(
 
                 contextStudent.mapToRegisterStudent(semesters)
             }
-    }
-
-    private suspend fun loginModule(site: UrlGenerator.Site): Pair<String, String> {
-        loginHelper.loginModule(site)
-
-        val baseStudentPlus = url.generate(site)
-        val studentPageUrl = baseStudentPlus + "LoginEndpoint.aspx"
-        val start = student.getStart(studentPageUrl)
-
-        val homepage = if ("Working" in Jsoup.parse(start).title()) {
-            val cert = certificateAdapter.fromHtml(start)
-            student.sendModuleCertificate(
-                referer = url.createReferer(site),
-                url = cert.action,
-                certificate = mapOf(
-                    "wa" to cert.wa,
-                    "wresult" to cert.wresult,
-                    "wctx" to cert.wctx,
-                ),
-            )
-        } else {
-            start
-        }
-        return baseStudentPlus to homepage
     }
 }
