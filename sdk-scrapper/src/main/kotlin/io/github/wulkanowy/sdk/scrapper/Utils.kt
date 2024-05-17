@@ -89,7 +89,7 @@ internal fun getApiKey(document: Document, fallback: String = ""): String {
         return fallback
     }
 
-    return "(\\d{7})".toRegex().findAll(script).lastOrNull().let { result ->
+    return "'([a-zA-Z0-9]{8,9})'".toRegex().findAll(script).lastOrNull().let { result ->
         if (null !== result) result.groupValues[1] else fallback
     }
 }
