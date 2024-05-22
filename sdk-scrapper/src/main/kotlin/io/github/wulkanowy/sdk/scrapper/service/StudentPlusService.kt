@@ -36,13 +36,13 @@ internal interface StudentPlusService {
 
     @GET
     suspend fun getContextByUrl(
-        @Header("V-Token") vToken: String?,
+        @Header("V-Apitoken") vToken: String?,
         @Url url: String,
     ): ContextResponse
 
     @GET
     suspend fun getSemestersByUrl(
-        @Header("V-Token") vToken: String?,
+        @Header("V-Apitoken") vToken: String?,
         @Url url: String,
         @Query("key") key: String,
         @Query("idDziennik") diaryId: Int,

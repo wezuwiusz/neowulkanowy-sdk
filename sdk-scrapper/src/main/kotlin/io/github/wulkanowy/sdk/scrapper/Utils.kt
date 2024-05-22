@@ -309,7 +309,7 @@ internal suspend fun getModuleHeadersFromDocument(document: Document): ModuleHea
 
 internal fun Request.Builder.attachVToken(moduleHost: String, url: HttpUrl, headers: ModuleHeaders?): Request.Builder {
     val vToken = url.getMatchedVToken(moduleHost, headers) ?: return this
-    addHeader("V-Token", vToken)
+    addHeader("V-Apitoken", vToken)
     return this
 }
 
@@ -331,7 +331,7 @@ private fun getVToken(uuid: String, headers: ModuleHeaders?, moduleHost: String)
 
     val schemeToSubstitute = Scrapper.vTokenSchemeMap[headers?.appVersion]
         ?.get(moduleHost)
-        ?: "{UUID}-{appCustomerDb}-{appVersion}-{apiKey}"
+        ?: "{UUID}-{appCustomerDb}-{appCustomerDbSig}-{appVersion}-{apiKey}"
 
     val vTokenEncoded = runCatching {
         vTokenSchemeKeysRegex.replace(schemeToSubstitute) {
@@ -349,5 +349,17 @@ private fun getVToken(uuid: String, headers: ModuleHeaders?, moduleHost: String)
             .replace("{email}", headers?.email.orEmpty()),
     )
 
-    return vTokenEncoded.replace("{UUID}", uuid).md5()
+    val symbolSig = getSymbolSig(headers?.vParamsEvaluated.orEmpty()["appCustomerDb"] ?: headers?.symbol.orEmpty())
+
+    val vToken = vTokenEncoded
+        .replace("{UUID}", uuid)
+        .replace("{appCustomerDbSig}", symbolSig)
+
+    val vTokenMd5 = vToken.md5()
+
+    return vTokenMd5
+}
+
+private fun getSymbolSig(symbol: String): String {
+    return "${symbol.first()}${symbol.length}"
 }
