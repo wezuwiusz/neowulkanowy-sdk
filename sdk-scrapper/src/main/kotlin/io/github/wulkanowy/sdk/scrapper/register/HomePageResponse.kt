@@ -8,7 +8,7 @@ internal class HomePageResponse {
     @Selector("a[href*=\"uonetplus-uczen\"]")
     var studentSchools: List<Element> = emptyList()
 
-    @Selector(".userdata, .userinfo")
+    @Selector(".userdata, .userinfo, .user-info")
     var userData: String = ""
 
     @Selector("html")
