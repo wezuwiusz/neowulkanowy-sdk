@@ -630,6 +630,27 @@ internal val ApiEndpointsVTokenMap = mapOf(
             "Usuniete" to "6fb7f517-7287-41c3-8d30-64e654f647a7",
             "UsunieteSkrzynka" to "937cd3ba-6fa9-4e44-bb99-e4fd282803c2",
         ),
+        "uonetplus-uczenplus" to mapOf(
+            "Context" to "cbdc1e7c-612f-4b7d-911d-c76701a0bd41",
+            "Frekwencja" to "04921511-8b5f-44fc-8d2c-d9c5157393d1",
+            "Usprawiedliwienia" to "0e579c35-e3e0-466c-ae2c-82b2b972097f",
+            "FrekwencjaStatystyki" to "39dccbf3-8a04-41b1-a48d-8c056dff702c",
+            "ZarejestrowaneUrzadzenia" to "06b04925-c003-4a53-8f9e-b720e368862a",
+            "Zebrania" to "968f86f2-92a0-4f6e-b22c-4791e3362554",
+            "RealizacjaZajec" to "3e1c3fb2-1b8a-4579-b7d8-ea2cfa263d42",
+            "SprawdzianyZadaniaDomowe" to "bf7d0726-7979-4aee-89e2-9b74bbe0820d",
+            "SprawdzianSzczegoly" to "3dcff009-c0ad-4b7f-95eb-18be7e3b9019",
+            "ZadanieDomoweSzczegoly" to "2d8b6288-1f13-4ca7-bb6f-334de9a663d0",
+            "PlanZajec" to "acd3f4c1-f366-41a4-b2a1-c3543d173ec7",
+            "DniWolne" to "f28b5242-c33a-4ef3-8c3d-e8fb4d39f801",
+            "Uwagi" to "1a0d8d8b-de01-4fe7-ae28-8fed2d68e9b5",
+            "Nauczyciele" to "ce89218b-4609-4e10-92aa-217521e5d99a",
+            "Informacje" to "984449a8-907b-4488-9f90-8f0c6e56c03c",
+            "DaneUcznia" to "64348eca-82d1-442a-acc3-4886ca5daa33",
+            "UczenZdjecie" to "4ed033b1-f8f4-4ca1-b277-60be0f80ab0f",
+            "OkresyKlasyfikacyjne" to "6ff9273a-fb69-417d-aca9-d60ecceaad26",
+            "Oceny" to "86f8dd7b-e144-42d9-a389-0648503a479d",
+        ),
     ),
     "24.04.0008.58830" to mapOf(
         "uonetplus-wiadomosciplus" to mapOf(
@@ -644,24 +665,38 @@ internal val ApiEndpointsVTokenMap = mapOf(
     ),
 )
 
-internal val ApiEndpointsVTokenSchemeMap = mapOf(
+internal val ApiEndpointsVHeaders = mapOf(
     "24.04.0003.58698" to mapOf(
-        "uonetplus-wiadomosciplus" to "{UUID}-{name}-{appCustomerDb}-{appVersion}",
+        "uonetplus-wiadomosciplus" to mapOf(
+            "V-Token" to "{UUID}-{name}-{appCustomerDb}-{appVersion}",
+        ),
     ),
     "24.04.0004.58722" to mapOf(
-        "uonetplus-wiadomosciplus" to "{UUID}-{appCustomerDb}-{appVersion}",
+        "uonetplus-wiadomosciplus" to mapOf(
+            "V-Token" to "{UUID}-{appCustomerDb}-{appVersion}",
+        ),
     ),
     "24.04.0005.58736" to mapOf(
-        "uonetplus-wiadomosciplus" to "{UUID}-{appCustomerDb}-{appVersion}-{apiKey}",
+        "uonetplus-wiadomosciplus" to mapOf(
+            "V-Token" to "{UUID}-{appCustomerDb}-{appVersion}-{apiKey}",
+        ),
     ),
     "24.04.0006.58753" to mapOf(
-        "uonetplus-wiadomosciplus" to "{UUID}-{appCustomerDb}-{appVersion}-{apiKey}",
+        "uonetplus-wiadomosciplus" to mapOf(
+            "V-Token" to "{UUID}-{appCustomerDb}-{appVersion}-{apiKey}",
+        ),
     ),
     "24.04.0007.58773" to mapOf(
-        "uonetplus-wiadomosciplus" to "{UUID}-{appCustomerDb}-{appVersion}-{apiKey}",
-        "uonetplus-uczenplus" to "{UUID}-{appCustomerDb}-{appVersion}-{apiKey}",
+        "uonetplus-wiadomosciplus" to mapOf(
+            "V-Token" to "{UUID}-{appCustomerDb}-{appVersion}-{apiKey}",
+        ),
+        "uonetplus-uczenplus" to mapOf(
+            "V-Token" to "{UUID}-{appCustomerDb}-{appVersion}-{apiKey}",
+        ),
     ),
     "24.04.0008.58830" to mapOf(
-        "uonetplus-wiadomosciplus" to "{UUID}-{appCustomerDb}-{appCustomerDbSig}-{appVersion}-{apiKey}",
+        "uonetplus-wiadomosciplus" to mapOf(
+            "V-Apitoken" to "{UUID}-{appCustomerDb}-{appCustomerDbSig}-{appVersion}-{apiKey}",
+        ),
     ),
 )

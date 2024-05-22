@@ -248,10 +248,10 @@ class Sdk {
             scrapper.vTokenMapping = value
         }
 
-    var vTokenSchemeMapping
-        get() = scrapper.vTokenSchemeMapping
+    var vHeaders
+        get() = scrapper.vHeaders
         set(value) {
-            scrapper.vTokenSchemeMapping = value
+            scrapper.vHeaders = value
         }
 
     var vParamsEvaluation: suspend () -> EvaluateHandler

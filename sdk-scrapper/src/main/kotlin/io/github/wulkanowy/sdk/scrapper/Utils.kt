@@ -15,7 +15,6 @@ import kotlinx.serialization.json.jsonObject
 import kotlinx.serialization.json.jsonPrimitive
 import okhttp3.HttpUrl
 import okhttp3.HttpUrl.Companion.toHttpUrl
-import okhttp3.Request
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import org.slf4j.LoggerFactory
@@ -307,13 +306,22 @@ internal suspend fun getModuleHeadersFromDocument(document: Document): ModuleHea
     )
 }
 
-internal fun Request.Builder.attachVToken(moduleHost: String, url: HttpUrl, headers: ModuleHeaders?): Request.Builder {
-    val vToken = url.getMatchedVToken(moduleHost, headers) ?: return this
-    addHeader("V-Apitoken", vToken)
-    return this
+internal fun getVHeaders(moduleHost: String, url: HttpUrl, headers: ModuleHeaders?): Map<String, String> {
+    val vHeaders = Scrapper.vHeadersMap[headers?.appVersion] ?: ApiEndpointsVHeaders[headers?.appVersion]
+
+    return vHeaders?.get(moduleHost).orEmpty().mapNotNull { (key, scheme) ->
+        val headerValue = url.getMatchedVHeader(
+            moduleHost = moduleHost,
+            domainSchema = scheme,
+            headers = headers,
+        )
+        if (headerValue != null) {
+            key to headerValue
+        } else null
+    }.toMap()
 }
 
-internal fun HttpUrl.getMatchedVToken(moduleHost: String, headers: ModuleHeaders?): String? {
+private fun HttpUrl.getMatchedVHeader(moduleHost: String, domainSchema: String?, headers: ModuleHeaders?): String? {
     val pathSegmentIndex = getPathIndexByModuleHost(moduleHost)
     val pathKey = pathSegments.getOrNull(pathSegmentIndex)
     val mappedUuid = (Scrapper.vTokenMap[headers?.appVersion] ?: ApiEndpointsVTokenMap[headers?.appVersion])
@@ -321,17 +329,19 @@ internal fun HttpUrl.getMatchedVToken(moduleHost: String, headers: ModuleHeaders
         ?.get(pathKey)
         ?: return null
 
-    return getVToken(mappedUuid, headers, moduleHost)
+    return getVToken(
+        uuid = mappedUuid,
+        headers = headers,
+        domainSchema = domainSchema,
+    )
 }
 
 private val vTokenSchemeKeysRegex = "\\{([^{}]+)\\}".toRegex()
 
-private fun getVToken(uuid: String, headers: ModuleHeaders?, moduleHost: String): String? {
+private fun getVToken(uuid: String, headers: ModuleHeaders?, domainSchema: String?): String? {
     if (uuid.isBlank()) return null
 
-    val schemeToSubstitute = (Scrapper.vTokenSchemeMap[headers?.appVersion] ?: ApiEndpointsVTokenSchemeMap[headers?.appVersion])
-        ?.get(moduleHost)
-        ?: "{UUID}-{appCustomerDb}-{appCustomerDbSig}-{appVersion}-{apiKey}"
+    val schemeToSubstitute = domainSchema ?: "{UUID}-{appCustomerDb}-{appCustomerDbSig}-{appVersion}-{apiKey}"
 
     val vTokenEncoded = runCatching {
         vTokenSchemeKeysRegex.replace(schemeToSubstitute) {

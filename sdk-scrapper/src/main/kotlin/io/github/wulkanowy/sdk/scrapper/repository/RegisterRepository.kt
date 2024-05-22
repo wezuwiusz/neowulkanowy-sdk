@@ -3,10 +3,10 @@ package io.github.wulkanowy.sdk.scrapper.repository
 import io.github.wulkanowy.sdk.scrapper.Scrapper
 import io.github.wulkanowy.sdk.scrapper.exception.ScrapperException
 import io.github.wulkanowy.sdk.scrapper.exception.StudentGraduateException
-import io.github.wulkanowy.sdk.scrapper.getMatchedVToken
 import io.github.wulkanowy.sdk.scrapper.getModuleHeadersFromDocument
 import io.github.wulkanowy.sdk.scrapper.getNormalizedSymbol
 import io.github.wulkanowy.sdk.scrapper.getScriptParam
+import io.github.wulkanowy.sdk.scrapper.getVHeaders
 import io.github.wulkanowy.sdk.scrapper.interceptor.StudentModuleHost
 import io.github.wulkanowy.sdk.scrapper.interceptor.StudentPlusModuleHost
 import io.github.wulkanowy.sdk.scrapper.interceptor.handleErrors
@@ -41,7 +41,6 @@ import org.jsoup.nodes.Element
 import org.jsoup.parser.Parser
 import org.jsoup.select.Elements
 import org.slf4j.LoggerFactory
-import pl.droidsonroids.jspoon.Jspoon
 import kotlin.io.encoding.ExperimentalEncodingApi
 
 @Suppress("UnnecessaryOptInAnnotation")
@@ -61,10 +60,6 @@ internal class RegisterRepository(
     private companion object {
         @JvmStatic
         private val logger = LoggerFactory.getLogger(this::class.java)
-    }
-
-    private val certificateAdapter by lazy {
-        Jspoon.create().adapter(CertificateResponse::class.java)
     }
 
     suspend fun getUserSubjects(): RegisterUser {
@@ -350,21 +345,21 @@ internal class RegisterRepository(
         val moduleHeaders = getModuleHeadersFromDocument(homepage)
         val baseStudentPlus = url.generate(UrlGenerator.Site.STUDENT_PLUS)
         val contextUrl = (baseStudentPlus + "api/Context").toHttpUrl()
-        val contextVToken = contextUrl.getMatchedVToken(StudentPlusModuleHost, moduleHeaders)
+        val contextVHeaders = getVHeaders(StudentPlusModuleHost, contextUrl, moduleHeaders)
         val mappedContextUrl = contextUrl.mapModuleUrl(StudentPlusModuleHost, moduleHeaders.appVersion)
 
         val semestersUrl = (baseStudentPlus + "api/OkresyKlasyfikacyjne").toHttpUrl()
-        val semestersVToken = semestersUrl.getMatchedVToken(StudentPlusModuleHost, moduleHeaders)
+        val semesterVHeaders = getVHeaders(StudentPlusModuleHost, semestersUrl, moduleHeaders)
         val mappedSemestersUrl = semestersUrl.mapModuleUrl(StudentPlusModuleHost, moduleHeaders.appVersion)
 
         return studentPlus
-            .getContextByUrl(vToken = contextVToken, url = mappedContextUrl.toString()).students
+            .getContextByUrl(vHeaders = contextVHeaders, url = mappedContextUrl.toString()).students
             .map { contextStudent ->
                 val semesters = runCatching {
                     when {
                         contextStudent.isAuthorizationRequired -> emptyList()
                         else -> studentPlus.getSemestersByUrl(
-                            vToken = semestersVToken,
+                            vHeaders = semesterVHeaders,
                             url = mappedSemestersUrl.toString(),
                             key = contextStudent.key,
                             diaryId = contextStudent.registerId,

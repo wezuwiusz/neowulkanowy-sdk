@@ -26,6 +26,7 @@ import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.Header
+import retrofit2.http.HeaderMap
 import retrofit2.http.POST
 import retrofit2.http.Query
 import retrofit2.http.Url
@@ -36,13 +37,13 @@ internal interface StudentPlusService {
 
     @GET
     suspend fun getContextByUrl(
-        @Header("V-Apitoken") vToken: String?,
+        @HeaderMap vHeaders: Map<String, String>,
         @Url url: String,
     ): ContextResponse
 
     @GET
     suspend fun getSemestersByUrl(
-        @Header("V-Apitoken") vToken: String?,
+        @HeaderMap vHeaders: Map<String, String>,
         @Url url: String,
         @Query("key") key: String,
         @Query("idDziennik") diaryId: Int,

@@ -9,10 +9,10 @@ import io.github.wulkanowy.sdk.scrapper.Scrapper.LoginType.ADFSLight
 import io.github.wulkanowy.sdk.scrapper.Scrapper.LoginType.ADFSLightCufs
 import io.github.wulkanowy.sdk.scrapper.Scrapper.LoginType.ADFSLightScoped
 import io.github.wulkanowy.sdk.scrapper.Scrapper.LoginType.STANDARD
-import io.github.wulkanowy.sdk.scrapper.attachVToken
 import io.github.wulkanowy.sdk.scrapper.exception.VulcanClientError
 import io.github.wulkanowy.sdk.scrapper.exception.VulcanServerError
 import io.github.wulkanowy.sdk.scrapper.getModuleHeadersFromDocument
+import io.github.wulkanowy.sdk.scrapper.getVHeaders
 import io.github.wulkanowy.sdk.scrapper.isAnyMappingAvailable
 import io.github.wulkanowy.sdk.scrapper.login.LoginModuleResult
 import io.github.wulkanowy.sdk.scrapper.login.LoginResult
@@ -176,7 +176,14 @@ internal class AutoLoginInterceptor(
                     addHeader("X-V-RequestVerificationToken", it.token)
                     addHeader("X-V-AppGuid", it.appGuid)
                     addHeader("X-V-AppVersion", it.appVersion)
-                    attachVToken(moduleHost, url, headers)
+
+                    getVHeaders(
+                        moduleHost = moduleHost,
+                        url = url,
+                        headers = headers,
+                    ).forEach { (key, headerValue) ->
+                        addHeader(key, headerValue)
+                    }
                 }
             }
             .url(mappedUrl)

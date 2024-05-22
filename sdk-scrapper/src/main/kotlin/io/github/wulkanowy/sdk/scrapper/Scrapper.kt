@@ -224,10 +224,10 @@ class Scrapper {
             vTokenMap = value
         }
 
-    var vTokenSchemeMapping: Map<String, Map<String, String>>
-        get() = vTokenSchemeMap
+    var vHeaders: Map<String, Map<String, Map<String, String>>>
+        get() = vHeadersMap
         set(value) {
-            vTokenSchemeMap = value
+            vHeadersMap = value
         }
 
     var vParamsEvaluation: suspend () -> EvaluateHandler
@@ -239,7 +239,7 @@ class Scrapper {
     internal companion object {
         var endpointsMap: Map<String, Map<String, Map<String, String>>> = ApiEndpointsMap
         var vTokenMap: Map<String, Map<String, Map<String, String>>> = ApiEndpointsVTokenMap
-        var vTokenSchemeMap: Map<String, Map<String, String>> = ApiEndpointsVTokenSchemeMap
+        var vHeadersMap: Map<String, Map<String, Map<String, String>>> = ApiEndpointsVHeaders
         var vParamsRun: suspend () -> EvaluateHandler = { object : EvaluateHandler {} }
     }
 
