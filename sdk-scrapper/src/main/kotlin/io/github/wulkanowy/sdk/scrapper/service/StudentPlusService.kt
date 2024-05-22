@@ -171,7 +171,7 @@ internal interface StudentPlusService {
         @Query("key") key: String,
     ): SchoolPlus
 
-    @GET("api/DaneUcznia}")
+    @GET("api/DaneUcznia")
     suspend fun getStudentInfo(
         @Query("key") key: String,
     ): StudentInfo

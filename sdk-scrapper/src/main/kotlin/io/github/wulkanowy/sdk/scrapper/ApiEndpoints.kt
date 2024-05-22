@@ -426,7 +426,7 @@ internal val ApiEndpointsMap = mapOf(
             "Uwagi" to "b195f96f-6073-4717-a3aa-11e57a30852d",
             "Nauczyciele" to "6483c887-3083-4d9d-be36-021c7bada7f8",
             "Informacje" to "f4cfc797-8feb-408c-a91a-5da9488d7224",
-            "DaneUcznia" to "4ed033b1-f8f4-4ca1-b277-60be0f80ab0f",
+            "DaneUcznia" to "5f7b5c3d-2dc1-4dcd-a4d2-9b362282907b",
             "UczenZdjecie" to "3286f68f-62ec-4c55-a41d-748ff29c41e8",
             "OkresyKlasyfikacyjne" to "58f3aceb-bc7c-485d-842a-6ea59f2b3fac",
             "Oceny" to "28ac65f4-61ab-401c-b651-946df4bd049c",
