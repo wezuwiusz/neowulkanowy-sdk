@@ -659,6 +659,7 @@ internal val ApiEndpointsVTokenSchemeMap = mapOf(
     ),
     "24.04.0007.58773" to mapOf(
         "uonetplus-wiadomosciplus" to "{UUID}-{appCustomerDb}-{appVersion}-{apiKey}",
+        "uonetplus-uczenplus" to "{UUID}-{appCustomerDb}-{appVersion}-{apiKey}",
     ),
     "24.04.0008.58830" to mapOf(
         "uonetplus-wiadomosciplus" to "{UUID}-{appCustomerDb}-{appCustomerDbSig}-{appVersion}-{apiKey}",

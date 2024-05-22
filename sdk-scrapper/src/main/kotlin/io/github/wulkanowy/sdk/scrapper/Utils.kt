@@ -224,7 +224,7 @@ internal fun String.md5(): String {
 internal fun HttpUrl.mapModuleUrl(moduleHost: String, appVersion: String?): HttpUrl {
     val pathSegmentIndex = getPathIndexByModuleHost(moduleHost)
     val pathKey = pathSegments.getOrNull(pathSegmentIndex)
-    val mappedPath = Scrapper.endpointsMap[appVersion]
+    val mappedPath = (Scrapper.endpointsMap[appVersion] ?: ApiEndpointsMap[appVersion])
         ?.get(moduleHost)
         ?.get(pathKey?.substringBefore(".mvc"))
 
@@ -316,7 +316,7 @@ internal fun Request.Builder.attachVToken(moduleHost: String, url: HttpUrl, head
 internal fun HttpUrl.getMatchedVToken(moduleHost: String, headers: ModuleHeaders?): String? {
     val pathSegmentIndex = getPathIndexByModuleHost(moduleHost)
     val pathKey = pathSegments.getOrNull(pathSegmentIndex)
-    val mappedUuid = Scrapper.vTokenMap[headers?.appVersion]
+    val mappedUuid = (Scrapper.vTokenMap[headers?.appVersion] ?: ApiEndpointsVTokenMap[headers?.appVersion])
         ?.get(moduleHost)
         ?.get(pathKey)
         ?: return null
@@ -329,7 +329,7 @@ private val vTokenSchemeKeysRegex = "\\{([^{}]+)\\}".toRegex()
 private fun getVToken(uuid: String, headers: ModuleHeaders?, moduleHost: String): String? {
     if (uuid.isBlank()) return null
 
-    val schemeToSubstitute = Scrapper.vTokenSchemeMap[headers?.appVersion]
+    val schemeToSubstitute = (Scrapper.vTokenSchemeMap[headers?.appVersion] ?: ApiEndpointsVTokenSchemeMap[headers?.appVersion])
         ?.get(moduleHost)
         ?: "{UUID}-{appCustomerDb}-{appCustomerDbSig}-{appVersion}-{apiKey}"
 
