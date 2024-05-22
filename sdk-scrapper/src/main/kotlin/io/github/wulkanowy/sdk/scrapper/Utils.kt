@@ -93,10 +93,9 @@ internal fun getApiKey(document: Document, fallback: String = ""): String {
     }
 }
 
-internal fun getScriptFlag(name: String, content: String, fallback: Boolean = false): Boolean {
-    return "$name: (false|true)".toRegex().find(content).let { result ->
-        if (null !== result) result.groupValues[1].toBoolean() else fallback
-    }
+private fun getSymbolSig(symbol: String): String {
+    if (symbol.isBlank()) return ""
+    return "${symbol.first()}${symbol.length}"
 }
 
 fun String.getNormalizedSymbol(): String = this
@@ -301,7 +300,10 @@ internal suspend fun getModuleHeadersFromDocument(document: Document): ModuleHea
             } else {
                 null to null
             }
-        } + mapOf("apiKey" to getApiKey(document)),
+        } + mapOf(
+            "apiKey" to getApiKey(document),
+            "appCustomerDbSig" to getSymbolSig(getScriptParam("appCustomerDb", htmlContent)),
+        ),
         vParamsEvaluated = evaluatedJs,
     )
 }
@@ -315,9 +317,10 @@ internal fun getVHeaders(moduleHost: String, url: HttpUrl, headers: ModuleHeader
             domainSchema = scheme,
             headers = headers,
         )
-        if (headerValue != null) {
-            key to headerValue
-        } else null
+        when {
+            headerValue != null -> key to headerValue
+            else -> null
+        }
     }.toMap()
 }
 
@@ -359,17 +362,5 @@ private fun getVToken(uuid: String, headers: ModuleHeaders?, domainSchema: Strin
             .replace("{email}", headers?.email.orEmpty()),
     )
 
-    val symbolSig = getSymbolSig(headers?.vParamsEvaluated.orEmpty()["appCustomerDb"] ?: headers?.symbol.orEmpty())
-
-    val vToken = vTokenEncoded
-        .replace("{UUID}", uuid)
-        .replace("{appCustomerDbSig}", symbolSig)
-
-    val vTokenMd5 = vToken.md5()
-
-    return vTokenMd5
-}
-
-private fun getSymbolSig(symbol: String): String {
-    return "${symbol.first()}${symbol.length}"
+    return vTokenEncoded.replace("{UUID}", uuid).md5()
 }
