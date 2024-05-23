@@ -41,6 +41,7 @@ internal class CookieJarCabinet {
 
     fun beforeUserLogIn() {
         clearUserCookieStore()
+        clearAdditionalCookieStore()
     }
 
     fun onLoginServiceError() {

@@ -247,7 +247,9 @@ internal fun HttpUrl.mapModuleUrl(moduleHost: String, appVersion: String?): Http
                 .setPathSegment(pathSegmentIndex, pathSplit[0])
                 .setPathSegment(pathSegmentIndex + 1, pathSplit[1])
                 .build()
-        } else this
+        } else {
+            this
+        }
     }
 }
 
