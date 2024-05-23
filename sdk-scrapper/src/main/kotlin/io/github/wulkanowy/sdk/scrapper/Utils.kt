@@ -235,7 +235,19 @@ internal fun HttpUrl.mapModuleUrl(moduleHost: String, appVersion: String?): Http
             },
         ).build()
     } else {
-        this
+        val pathKeySub = pathSegments.getOrNull(pathSegmentIndex + 1)
+        val pathConcatenated = "$pathKey/$pathKeySub"
+        val mappedPathWithSub = (Scrapper.endpointsMap[appVersion] ?: ApiEndpointsMap[appVersion])
+            ?.get(moduleHost)
+            ?.get(pathConcatenated)
+
+        if (mappedPathWithSub != null) {
+            val pathSplit = mappedPathWithSub.split("/")
+            newBuilder()
+                .setPathSegment(pathSegmentIndex, pathSplit[0])
+                .setPathSegment(pathSegmentIndex + 1, pathSplit[1])
+                .build()
+        } else this
     }
 }
 
