@@ -62,7 +62,7 @@ internal class CookieJarCabinet {
     private fun clearAdditionalCookieStore() {
         // if we clear additional cookie manager, user will need to go pass through
         // cloudflare captcha more often
-        additionalCookieManager?.cookieStore // ?.removeAll()
+        additionalCookieManager?.cookieStore?.removeAll() // todo
     }
 }
 
@@ -84,7 +84,7 @@ internal class MergeCookieManager(
         original.put(uri, responseHeaders)
         // if we add cookies to additional cookie manager we also need to clear it in some cases
         // like user change, etc
-        putCookie
+        putCookie(uri, responseHeaders) // todo
     }
 
     override fun setCookiePolicy(cookiePolicy: CookiePolicy?) {
