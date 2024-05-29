@@ -792,7 +792,7 @@ internal val ApiEndpointsVTokenMap = mapOf(
             "UczenCache.mvc" to "1BzK3",
             "Homework.mvc" to "bQFjG",
             "SzkolaINauczyciele.mvc" to "fWw8j4JOE",
-            "Ogloszenia.mvc" to "XKkaYNx"
+            "Ogloszenia.mvc" to "XKkaYNx",
         ),
     ),
 )

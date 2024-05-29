@@ -360,7 +360,9 @@ private fun HttpUrl.getMatchedVHeader(moduleHost: String, domainSchema: String?,
         (Scrapper.vTokenMap[headers?.appVersion] ?: ApiEndpointsVTokenMap[headers?.appVersion])
             ?.get(moduleHost)
             ?.get("$pathKey/$pathKeySub")
-    } else mappedSimpleUuid
+    } else {
+        mappedSimpleUuid
+    }
 
     return getVToken(
         uuid = mappedUuid ?: return null,
