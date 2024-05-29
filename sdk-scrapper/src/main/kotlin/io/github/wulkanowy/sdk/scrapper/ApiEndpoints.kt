@@ -568,6 +568,36 @@ internal val ApiEndpointsMap = mapOf(
             "Oceny" to "4f2f158b-29cf-48d3-8078-50c74ccb6c9c",
         ),
     ),
+    "24.04.0010.58863" to mapOf(
+        "uonetplus-uczen" to mapOf(
+//            "Autoryzacja" to "",
+            "EgzaminyZewnetrzne" to "fe6b40ba-8a2f-4ad3-a519-343226a66a23",
+            "Frekwencja" to "c8dc2e1f-41e6-40c0-b04f-f49e3d5966ea",
+            "FrekwencjaStatystyki" to "fcefe7af-4324-4e70-ae42-c63dbe988099",
+            "FrekwencjaStatystykiPrzedmioty" to "bb36d4b5-a481-43f7-aae6-89b004451911",
+            "Homework" to "250e6ac4-ab2c-4784-9110-112b6c7b0410",
+            "LekcjeZrealizowane.mvc/GetPrzedmioty" to "ca9358ca-bab9-4e35-85c9-2c8eb1691a6e.mvc/Get",
+            "LekcjeZrealizowane.mvc/GetZrealizowane" to "1a83b152-3160-43db-8683-0fd25c65b78a.mvc/Get",
+            "Oceny" to "837fd82d-3b34-4ef2-9b6c-bbb4032b6975",
+            "Ogloszenia" to "ff3e1b2d-9106-4842-91e1-8db7af1b7819",
+            "PlanZajec" to "dbef1773-0db6-4d08-9a5b-85146a06dfae",
+            "RejestracjaUrzadzeniaToken" to "e581158e-8ff5-4461-9c35-0d9389fbd651",
+            "RejestracjaUrzadzeniaTokenCertyfikat" to "afd176b2-d574-470c-b83e-77ab45dfa8a1",
+            "Sprawdziany" to "81037688-53b4-4f1e-ab43-bc5eabe72501",
+            "Statystyki.mvc/GetOcenyCzastkowe" to "c56368dc-3530-4960-94e2-2b5435732bae.mvc/Get",
+            "Statystyki.mvc/GetPunkty" to "387d3492-5d9d-44f5-b028-4948a16e3e42.mvc/Get",
+            "Statystyki.mvc/GetOcenyRoczne" to "462d4b6d-f1d2-4c4b-8ebc-1aee25c69354.mvc/Get",
+            "SzkolaINauczyciele" to "0e484bbe-bc2e-4f80-9bc8-7ee67097f426",
+            "Uczen" to "630cd54b-b952-43ee-aeb4-4438a2b21e75",
+            "UczenCache" to "333dce23-9766-4f2a-bc30-689bc04f0765",
+            "UczenDziennik" to "6a523e4e-28dd-4123-98e5-ee10604f9e0b",
+            "UczenZdjecie" to "f3e2de45-912f-4d47-943f-25667b3e8a7b",
+//            "Usprawiedliwienia" to "",
+            "UwagiIOsiagniecia" to "6ac1eafd-38c0-48ab-adce-75c5f901592c",
+            "ZarejestrowaneUrzadzenia" to "1d63088d-02da-4feb-8906-08172e5fea1c",
+            "Zebrania" to "2dd7a794-62d9-4711-b000-b73de88a7990",
+        ),
+    ),
 )
 
 internal val ApiEndpointsVTokenMap = mapOf(
@@ -725,6 +755,46 @@ internal val ApiEndpointsVTokenMap = mapOf(
             "Oceny" to "LN8LI6",
         ),
     ),
+    "24.04.0010.58863" to mapOf(
+        "uonetplus-uczen" to mapOf(
+            "Context.mvc" to "",
+            "Frekwencja.mvc" to "FFWp52i",
+            "Usprawiedliwienia.mvc" to "",
+            "ZarejestrowaneUrzadzenia.mvc" to "M6VmD",
+            "Zebrania.mvc" to "hkpEC",
+            "EgzaminyZewnetrzne.mvc" to "swrH0YR",
+            "FrekwencjaStatystyki.mvc" to "hIyXiyb84",
+            "FrekwencjaStatystykiPrzedmioty.mvc" to "jJ4WL",
+            "LekcjeZrealizowane.mvc/GetZrealizowane" to "0Zbt",
+            "Oceny.mvc" to "RY5yLKL",
+            "Statystyki.mvc/GetOcenyCzastkowe" to "tvZiHv5mwi",
+            "Statystyki.mvc/GetPunkty" to "2ukYOklF",
+            "Statystyki.mvc/GetOcenyRoczne" to "iPrK0ohLA",
+            "LekcjeZrealizowane.mvc/GetPrzedmioty" to "Rxc0Zje7",
+            "RealizacjaZajec.mvc" to "",
+            "Sprawdziany.mvc" to "LQXXXOMQD",
+            "SprawdzianyZadaniaDomowe.mvc" to "",
+            "SprawdzianSzczegoly.mvc" to "",
+            "ZadanieDomoweSzczegoly.mvc" to "",
+            "PlanZajec.mvc" to "dFsnz4Tpjx",
+            "RejestracjaUrzadzeniaToken.mvc" to "QiHSC",
+            "RejestracjaUrzadzeniaTokenCertyfikat" to "JO6TnIxMW",
+            "DniWolne.mvc" to "",
+            "Uwagi.mvc" to "",
+            "Nauczyciele.mvc" to "",
+            "Informacje.mvc" to "",
+            "DaneUcznia.mvc" to "",
+            "UczenZdjecie.mvc" to "gCglTHSh2",
+            "Uczen.mvc" to "Qmj4F",
+            "OkresyKlasyfikacyjne.mvc" to "",
+            "UczenDziennik.mvc" to "Uh6DV",
+            "UwagiIOsiagniecia.mvc" to "UcwhGmBp",
+            "UczenCache.mvc" to "1BzK3",
+            "Homework.mvc" to "bQFjG",
+            "SzkolaINauczyciele.mvc" to "fWw8j4JOE",
+            "Ogloszenia.mvc" to "XKkaYNx"
+        ),
+    ),
 )
 
 internal val ApiEndpointsVHeaders = mapOf(
@@ -770,6 +840,14 @@ internal val ApiEndpointsVHeaders = mapOf(
         // ),
         "uonetplus-uczenplus" to mapOf(
             "V-Apitoken" to "{UUID}-{appCustomerDb}-{appCustomerDbSig}-{appVersion}-{apiKey}",
+        ),
+    ),
+    "24.04.0010.58863" to mapOf(
+        // "uonetplus-wiadomosciplus" to mapOf(
+        //     "V-Apitoken" to "{UUID}-{appCustomerDb}-{appCustomerDbSig}-{appVersion}-{apiKey}",
+        // ),
+        "uonetplus-uczen" to mapOf(
+            "V-TokenApi" to "{%UUID%}-{%vTokenApiIndexed%}",
         ),
     ),
 )

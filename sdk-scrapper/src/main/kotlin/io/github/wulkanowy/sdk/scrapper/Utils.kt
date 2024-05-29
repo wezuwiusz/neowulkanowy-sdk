@@ -80,6 +80,15 @@ internal fun getScriptParam(name: String, content: String, fallback: String = ""
     }
 }
 
+internal fun getScriptParamTabValues(name: String, content: String): List<String> {
+    val tab = "var $name = \\[(.*?)\\];".toRegex(RegexOption.DOT_MATCHES_ALL).find(content).let { result ->
+        result?.groupValues?.firstOrNull()
+    }.orEmpty()
+    return "'([A-F0-9-]{36})'".toRegex().findAll(tab).toList().mapNotNull {
+        it.groupValues.lastOrNull()
+    }
+}
+
 internal fun getApiKey(document: Document, fallback: String = ""): String {
     val scripts = document.getElementsByTag("script").toList().map { it.html() }
     val script = scripts.lastOrNull { "VParam" in it }
@@ -319,6 +328,7 @@ internal suspend fun getModuleHeadersFromDocument(document: Document): ModuleHea
             "appCustomerDbSig" to getSymbolSig(getScriptParam("appCustomerDb", htmlContent)),
         ),
         vParamsEvaluated = evaluatedJs,
+        vApiTokens = getScriptParamTabValues("VApiKeys", htmlContent),
     )
 }
 
@@ -341,13 +351,19 @@ internal fun getVHeaders(moduleHost: String, url: HttpUrl, headers: ModuleHeader
 private fun HttpUrl.getMatchedVHeader(moduleHost: String, domainSchema: String?, headers: ModuleHeaders?): String? {
     val pathSegmentIndex = getPathIndexByModuleHost(moduleHost)
     val pathKey = pathSegments.getOrNull(pathSegmentIndex)
-    val mappedUuid = (Scrapper.vTokenMap[headers?.appVersion] ?: ApiEndpointsVTokenMap[headers?.appVersion])
+    val mappedSimpleUuid = (Scrapper.vTokenMap[headers?.appVersion] ?: ApiEndpointsVTokenMap[headers?.appVersion])
         ?.get(moduleHost)
         ?.get(pathKey)
-        ?: return null
+
+    val mappedUuid = if (mappedSimpleUuid == null) {
+        val pathKeySub = pathSegments.getOrNull(pathSegmentIndex + 1)
+        (Scrapper.vTokenMap[headers?.appVersion] ?: ApiEndpointsVTokenMap[headers?.appVersion])
+            ?.get(moduleHost)
+            ?.get("$pathKey/$pathKeySub")
+    } else mappedSimpleUuid
 
     return getVToken(
-        uuid = mappedUuid,
+        uuid = mappedUuid ?: return null,
         headers = headers,
         domainSchema = domainSchema,
     )
@@ -376,5 +392,18 @@ private fun getVToken(uuid: String, headers: ModuleHeaders?, domainSchema: Strin
             .replace("{email}", headers?.email.orEmpty()),
     )
 
-    return vTokenEncoded.replace("{UUID}", uuid).md5()
+    val withSubstitutions = vTokenEncoded.replace("{UUID}", uuid)
+
+    if (withSubstitutions == schemeToSubstitute) {
+        val lastVTokenDigitSum = headers?.vApiTokens?.lastOrNull().orEmpty().sumOf {
+            if (it.isDigit()) it.digitToInt() else 0
+        }
+        val vTokenIndex = lastVTokenDigitSum % ((headers?.vApiTokens?.size ?: 0) - 1)
+
+        return vTokenEncoded
+            .replace("{%UUID%}", uuid)
+            .replace("{%vTokenApiIndexed%}", headers?.vApiTokens?.get(vTokenIndex).orEmpty())
+    }
+
+    return withSubstitutions.md5()
 }
