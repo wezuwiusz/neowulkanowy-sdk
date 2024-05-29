@@ -42,6 +42,7 @@ import retrofit2.http.FieldMap
 import retrofit2.http.FormUrlEncoded
 import retrofit2.http.GET
 import retrofit2.http.Header
+import retrofit2.http.HeaderMap
 import retrofit2.http.POST
 import retrofit2.http.Url
 
@@ -81,7 +82,10 @@ internal interface StudentService {
     ): ApiResponse<AuthorizePermissionResponse>
 
     @POST
-    suspend fun getSchoolInfo(@Url url: String, @Body body: Any = Any()): ApiResponse<List<Diary>>
+    suspend fun getSchoolInfo(
+        @HeaderMap vHeaders: Map<String, String>,
+        @Url url: String, @Body body: Any = Any(),
+    ): ApiResponse<List<Diary>>
 
     @POST("UczenDziennik.mvc/Get")
     suspend fun getDiaries(

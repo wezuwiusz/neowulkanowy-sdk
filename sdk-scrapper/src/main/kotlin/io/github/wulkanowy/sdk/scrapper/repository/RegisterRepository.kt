@@ -245,15 +245,14 @@ internal class RegisterRepository(
     }
 
     private suspend fun getStudentDiaries(startPage: String): List<Diary> {
-        val appVersion = getScriptParam("version", startPage).ifBlank {
-            getScriptParam("appVersion", startPage)
-        }
-        val diaryUrl = (url.generate(UrlGenerator.Site.STUDENT) + "UczenDziennik.mvc/Get")
-            .toHttpUrl()
-            .mapModuleUrl(StudentModuleHost, appVersion)
+        val moduleHeaders = getModuleHeadersFromDocument(Jsoup.parse(startPage))
+        val baseStudent = url.generate(UrlGenerator.Site.STUDENT)
+        val diaryUrl = (baseStudent + "UczenDziennik.mvc/Get").toHttpUrl()
+        val vHeaders = getVHeaders(StudentModuleHost, diaryUrl, moduleHeaders)
+        val mappedDiaryUrl = diaryUrl.mapModuleUrl(StudentModuleHost, moduleHeaders.appVersion)
 
         return student
-            .getSchoolInfo(url = diaryUrl.toString())
+            .getSchoolInfo(vHeaders = vHeaders, url = mappedDiaryUrl.toString())
             .handleErrors()
             .data.orEmpty()
     }
