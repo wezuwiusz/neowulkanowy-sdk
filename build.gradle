@@ -18,7 +18,7 @@ ext {
     moshi = "1.13.0"
 }
 
-version = "2.6.13"
+version = "2.6.14-SNAPSHOT"
 group = "io.github.wulkanowy"
 
 nexusPublishing {
