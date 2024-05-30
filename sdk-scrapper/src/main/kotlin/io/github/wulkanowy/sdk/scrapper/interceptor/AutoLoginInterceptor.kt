@@ -227,13 +227,13 @@ internal class AutoLoginInterceptor(
             val contentType = response.body?.contentType()
             val body = mapResponseContent(
                 response = Json.decodeFromString<JsonElement>(it.readText()),
-                jsonMappings = jsonMappings,
+                jsonMappings = jsonMappings.orEmpty(),
             ).toString().toResponseBody(contentType)
             response.newBuilder().body(body).build()
         } ?: response
     }
 
-    private fun mapResponseContent(response: JsonElement, jsonMappings: Map<String, String>?): JsonElement {
+    private fun mapResponseContent(response: JsonElement, jsonMappings: Map<String, String>): JsonElement {
         return when (response) {
             is JsonArray -> JsonArray(
                 response.jsonArray.map {
@@ -250,13 +250,10 @@ internal class AutoLoginInterceptor(
         }
     }
 
-    private fun mapJsonObjectKeys(jsonObject: JsonObject, jsonMappings: Map<String, String>?): JsonObject {
-        val mapping = jsonMappings?.map { (key, value) ->
-            value to key
-        }.orEmpty().toMap()
+    private fun mapJsonObjectKeys(jsonObject: JsonObject, jsonMappings: Map<String, String>): JsonObject {
         return JsonObject(
             jsonObject.map {
-                (mapping[it.key] ?: it.key) to mapResponseContent(it.value, jsonMappings)
+                (jsonMappings[it.key] ?: it.key) to mapResponseContent(it.value, jsonMappings)
             }.toMap(),
         )
     }
