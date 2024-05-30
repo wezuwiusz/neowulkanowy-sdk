@@ -230,6 +230,12 @@ class Scrapper {
             vHeadersMap = value
         }
 
+    var responseMapping: Map<String, Map<String, Map<String, Map<String, String>>>>
+        get() = responseMap
+        set(value) {
+            responseMap = value
+        }
+
     var vParamsEvaluation: suspend () -> EvaluateHandler
         get() = vParamsRun
         set(value) {
@@ -240,6 +246,7 @@ class Scrapper {
         var endpointsMap: Map<String, Map<String, Map<String, String>>> = ApiEndpointsMap
         var vTokenMap: Map<String, Map<String, Map<String, String>>> = ApiEndpointsVTokenMap
         var vHeadersMap: Map<String, Map<String, Map<String, String>>> = ApiEndpointsVHeaders
+        var responseMap: Map<String, Map<String, Map<String, Map<String, String>>>> = ApiEndpointsResponseMapping
         var vParamsRun: suspend () -> EvaluateHandler = { object : EvaluateHandler {} }
     }
 

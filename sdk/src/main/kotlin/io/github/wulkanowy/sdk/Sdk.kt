@@ -254,6 +254,12 @@ class Sdk {
             scrapper.vHeaders = value
         }
 
+    var responseMapping
+        get() = scrapper.responseMapping
+        set(value) {
+            scrapper.responseMapping = value
+        }
+
     var vParamsEvaluation: suspend () -> EvaluateHandler
         get() = scrapper.vParamsEvaluation
         set(value) {

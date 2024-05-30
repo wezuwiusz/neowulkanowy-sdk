@@ -332,6 +332,15 @@ internal suspend fun getModuleHeadersFromDocument(document: Document): ModuleHea
     )
 }
 
+internal fun getModuleHost(url: HttpUrl): String {
+    return when {
+        MessagesModuleHost in url.host -> MessagesModuleHost
+        StudentPlusModuleHost in url.host -> StudentPlusModuleHost
+        StudentModuleHost in url.host -> StudentModuleHost
+        else -> ""
+    }
+}
+
 internal fun getVHeaders(moduleHost: String, url: HttpUrl, headers: ModuleHeaders?): Map<String, String> {
     val vHeaders = Scrapper.vHeadersMap[headers?.appVersion] ?: ApiEndpointsVHeaders[headers?.appVersion]
 

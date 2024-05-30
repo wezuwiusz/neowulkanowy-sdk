@@ -1,7 +1,9 @@
 package io.github.wulkanowy.sdk.scrapper.interceptor
 
+import io.github.wulkanowy.sdk.scrapper.ApiEndpointsResponseMapping
 import io.github.wulkanowy.sdk.scrapper.ApiResponse
 import io.github.wulkanowy.sdk.scrapper.CookieJarCabinet
+import io.github.wulkanowy.sdk.scrapper.Scrapper
 import io.github.wulkanowy.sdk.scrapper.Scrapper.LoginType
 import io.github.wulkanowy.sdk.scrapper.Scrapper.LoginType.ADFS
 import io.github.wulkanowy.sdk.scrapper.Scrapper.LoginType.ADFSCards
@@ -12,6 +14,8 @@ import io.github.wulkanowy.sdk.scrapper.Scrapper.LoginType.STANDARD
 import io.github.wulkanowy.sdk.scrapper.exception.VulcanClientError
 import io.github.wulkanowy.sdk.scrapper.exception.VulcanServerError
 import io.github.wulkanowy.sdk.scrapper.getModuleHeadersFromDocument
+import io.github.wulkanowy.sdk.scrapper.getModuleHost
+import io.github.wulkanowy.sdk.scrapper.getPathIndexByModuleHost
 import io.github.wulkanowy.sdk.scrapper.getVHeaders
 import io.github.wulkanowy.sdk.scrapper.isAnyMappingAvailable
 import io.github.wulkanowy.sdk.scrapper.login.LoginModuleResult
@@ -26,6 +30,11 @@ import io.github.wulkanowy.sdk.scrapper.repository.AccountRepository.Companion.S
 import io.github.wulkanowy.sdk.scrapper.repository.AccountRepository.Companion.SELECTOR_STANDARD
 import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.JsonArray
+import kotlinx.serialization.json.JsonElement
+import kotlinx.serialization.json.JsonObject
+import kotlinx.serialization.json.jsonArray
+import kotlinx.serialization.json.jsonObject
 import okhttp3.HttpUrl
 import okhttp3.Interceptor
 import okhttp3.MediaType
@@ -33,8 +42,10 @@ import okhttp3.Protocol
 import okhttp3.Request
 import okhttp3.Response
 import okhttp3.ResponseBody
+import okhttp3.ResponseBody.Companion.toResponseBody
 import okio.Buffer
 import okio.BufferedSource
+import okio.use
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import org.jsoup.select.Elements
@@ -72,19 +83,13 @@ internal class AutoLoginInterceptor(
             val request = chain.request()
             checkRequest()
             val response = try {
-                chain.proceed(request.attachModuleHeaders())
+                performRequest(chain, request)
             } catch (e: Throwable) {
                 when (e) {
                     is VulcanClientError -> checkHttpErrorResponse(e, url)
                     is VulcanServerError -> checkServerError(e, url)
                 }
                 throw e
-            }
-            if (response.body?.contentType()?.subtype != "json") {
-                val body = response.peekBody(Long.MAX_VALUE).byteStream()
-                val html = Jsoup.parse(body, null, url)
-                checkResponse(html, url, response)
-                saveModuleHeaders(html, uri)
             }
             response
         } catch (e: NotLoggedInException) {
@@ -109,7 +114,7 @@ internal class AutoLoginInterceptor(
                         StudentModuleHost in uri.host -> student.getOrThrow()
                         else -> logger.info("Resource don't need further login anyway")
                     }
-                    chain.proceed(chain.request().attachModuleHeaders())
+                    performRequest(chain, chain.request())
                 } catch (e: IOException) {
                     logger.debug("IO Error occurred on login")
                     throw e
@@ -131,7 +136,7 @@ internal class AutoLoginInterceptor(
                     logger.debug("User logged in. Retry after login...")
                 }
 
-                chain.proceed(chain.request().attachModuleHeaders())
+                performRequest(chain, chain.request())
             }
         }
     }
@@ -188,6 +193,69 @@ internal class AutoLoginInterceptor(
             }
             .url(mappedUrl)
             .build()
+    }
+
+    private fun performRequest(chain: Interceptor.Chain, request: Request): Response {
+        val response = chain.proceed(request.attachModuleHeaders())
+        val url = request.url.toString()
+        val uri = request.url
+
+        return if (response.body?.contentType()?.subtype != "json") {
+            val body = response.peekBody(Long.MAX_VALUE).byteStream()
+            val html = Jsoup.parse(body, null, url)
+            checkResponse(html, url, response)
+            saveModuleHeaders(html, uri)
+            response
+        } else {
+            handleResponseMapping(response, uri)
+        }
+    }
+
+    private fun handleResponseMapping(response: Response, uri: HttpUrl): Response {
+        val moduleHost = getModuleHost(uri)
+        val pathSegmentIndex = getPathIndexByModuleHost(moduleHost)
+        val pathKey = uri.pathSegments.getOrNull(pathSegmentIndex)
+
+        val headers = headersByHost[moduleHost]
+        val mappings = Scrapper.responseMap[headers?.appVersion]?.get(moduleHost)
+            ?: ApiEndpointsResponseMapping[headers?.appVersion]?.get(moduleHost)
+        if (mappings.isNullOrEmpty()) return response
+
+        val jsonMappings = mappings[pathKey] ?: mappings["__common__"]
+
+        return response.body?.byteStream()?.bufferedReader()?.use {
+            val contentType = response.body?.contentType()
+            val body = mapResponseContent(it.readText(), jsonMappings).toResponseBody(contentType)
+            response.newBuilder().body(body).build()
+        } ?: response
+    }
+
+    private fun mapResponseContent(input: String, jsonMappings: Map<String, String>?): String {
+        return when (val response = Json.decodeFromString<JsonElement>(input)) {
+            is JsonArray -> JsonArray(
+                response.jsonArray.map {
+                    when (it) {
+                        is JsonArray -> it.jsonArray
+                        is JsonObject -> mapJsonObjectKeys(it.jsonObject, jsonMappings)
+                        else -> it
+                    }
+                },
+            )
+
+            is JsonObject -> mapJsonObjectKeys(response.jsonObject, jsonMappings)
+            else -> response
+        }.toString()
+    }
+
+    private fun mapJsonObjectKeys(jsonObject: JsonObject, jsonMappings: Map<String, String>?): JsonObject {
+        val mapping = jsonMappings?.map { (key, value) ->
+            value to key
+        }.orEmpty().toMap()
+        return JsonObject(
+            jsonObject.mapKeys {
+                mapping[it.key] ?: it.key
+            },
+        )
     }
 
     private fun checkRequest() {

@@ -69,6 +69,7 @@ public final class io/github/wulkanowy/sdk/scrapper/Scrapper {
 	public static synthetic fun getReceivedMessages$default (Lio/github/wulkanowy/sdk/scrapper/Scrapper;Ljava/lang/String;IILkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
 	public final fun getRecipients (Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public final fun getRegisteredDevices (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public final fun getResponseMapping ()Ljava/util/Map;
 	public final fun getSchool (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public final fun getSchoolId ()Ljava/lang/String;
 	public final fun getSchoolYear ()I
@@ -116,6 +117,7 @@ public final class io/github/wulkanowy/sdk/scrapper/Scrapper {
 	public final fun setLogLevel (Lokhttp3/logging/HttpLoggingInterceptor$Level;)V
 	public final fun setLoginType (Lio/github/wulkanowy/sdk/scrapper/Scrapper$LoginType;)V
 	public final fun setPassword (Ljava/lang/String;)V
+	public final fun setResponseMapping (Ljava/util/Map;)V
 	public final fun setSchoolId (Ljava/lang/String;)V
 	public final fun setSchoolYear (I)V
 	public final fun setSsl (Z)V

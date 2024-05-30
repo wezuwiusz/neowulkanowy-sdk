@@ -62,6 +62,7 @@ public final class io/github/wulkanowy/sdk/Sdk {
 	public static synthetic fun getReceivedMessages$default (Lio/github/wulkanowy/sdk/Sdk;Ljava/lang/String;Lkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
 	public final fun getRecipients (Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public final fun getRegisteredDevices (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public final fun getResponseMapping ()Ljava/util/Map;
 	public final fun getSchool (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public final fun getSchoolSymbol ()Ljava/lang/String;
 	public final fun getSchoolYear ()I
@@ -116,6 +117,7 @@ public final class io/github/wulkanowy/sdk/Sdk {
 	public final fun setMode (Lio/github/wulkanowy/sdk/Sdk$Mode;)V
 	public final fun setPassword (Ljava/lang/String;)V
 	public final fun setPrivatePem (Ljava/lang/String;)V
+	public final fun setResponseMapping (Ljava/util/Map;)V
 	public final fun setSchoolSymbol (Ljava/lang/String;)V
 	public final fun setSchoolYear (I)V
 	public final fun setScrapperBaseUrl (Ljava/lang/String;)V
