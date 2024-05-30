@@ -583,6 +583,7 @@ internal val ApiEndpointsMap = mapOf(
             "Pracownicy" to "89c9a7c2-e062-4d68-a66b-fb8406712351",
             "MoveTrash" to "85be0a03-b0c0-4f2c-bd0c-660bb8ed7262",
             "RestoreTrash" to "8aec05e6-218e-4917-9f0b-8baed1560435",
+            "Delete" to "c2a7feca-f2f8-4c29-8182-ee60d8dc0f8f",
         ),
         "uonetplus-uczen" to mapOf(
             "Autoryzacja" to "325c0d1d-1b91-41e4-9bd9-7794ec90cca0",
