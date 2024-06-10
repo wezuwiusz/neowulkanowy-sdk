@@ -160,7 +160,7 @@ internal fun Recipient.toMailbox() = Mailbox(
 internal fun String.capitalise() = replaceFirstChar { if (it.isLowerCase()) it.titlecase() else it.toString() }
 
 internal val defaultUserAgentTemplate = buildString {
-    append("Mozilla/5.0 (Linux; Android %1\$s; %2\$s) ")
+    append("Mozilla/5.0 (Linux; Androidx %1\$s; %2\$s) ")
     append("AppleWebKit/%3\$s (KHTML, like Gecko) ")
     append("Chrome/%4\$s Mobile ")
     append("Safari/%5\$s")
@@ -171,7 +171,7 @@ internal fun getFormattedString(
     androidVersion: String,
     buildTag: String,
     webKitRev: String = "537.36",
-    chromeRev: String = "120.0.0.0",
+    chromeRev: String = "125.0.0.0",
 ): String {
     return String.format(template, androidVersion, buildTag, webKitRev, chromeRev, webKitRev)
 }
