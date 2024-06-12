@@ -615,7 +615,7 @@ internal val ApiEndpointsMap = mapOf(
         ),
         "uonetplus-uczenplus" to mapOf(
             "Context" to "99f04f67-d7f6-4f30-9d02-61cdd656612f",
-            // "AutoryzacjaPesel" to "",
+            "AutoryzacjaPesel" to "febb23ab-090b-45d0-9c86-b65f44c2baf0",
             "Frekwencja" to "604fd0c1-ce58-4b60-9603-6e219b473676",
             "Usprawiedliwienia" to "640531d3-f986-4c1d-a6dd-d57847ca9cd8",
             "FrekwencjaStatystyki" to "1d15fb9f-dda6-42e4-a571-e8e0c2ecad72",
@@ -684,7 +684,7 @@ internal val ApiEndpointsMap = mapOf(
         ),
         "uonetplus-uczenplus" to mapOf(
             "Context" to "99f04f67-d7f6-4f30-9d02-61cdd656612f",
-            // "AutoryzacjaPesel" to "",
+            "AutoryzacjaPesel" to "febb23ab-090b-45d0-9c86-b65f44c2baf0",
             "Frekwencja" to "604fd0c1-ce58-4b60-9603-6e219b473676",
             "Usprawiedliwienia" to "640531d3-f986-4c1d-a6dd-d57847ca9cd8",
             "FrekwencjaStatystyki" to "1d15fb9f-dda6-42e4-a571-e8e0c2ecad72",
@@ -1178,7 +1178,7 @@ internal val ApiEndpointsVHeaders = mapOf(
     ),
     "24.05.0000.59033" to mapOf(
         "uonetplus-wiadomosciplus" to mapOf(
-            "V-TokenApi" to "{UUID}-{appCustomerDb}-{appCustomerDbSig}-{appVersion}-{apiKey}",
+            "V-TokenApi" to "{UUID}-{appCustomerDb}-{appCustomerDbSig}-{apiKey}",
         ),
         "uonetplus-uczen" to mapOf(
             "V-TokenApi" to "{%UUID%}-{%vTokenApiIndexed%}",
