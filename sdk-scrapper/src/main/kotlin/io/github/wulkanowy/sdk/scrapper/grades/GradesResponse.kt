@@ -36,13 +36,13 @@ internal data class GradesResponse(
 internal data class GradesSettings(
 
     @SerialName("isSrednia")
-    val isAverage: Boolean,
+    val isAverage: Boolean = false,
 
     @SerialName("isPunkty")
-    val isPoints: Boolean,
+    val isPoints: Boolean = false,
 
     @SerialName("isDorosli")
-    val isForAdults: Boolean,
+    val isForAdults: Boolean = false,
 )
 
 @Serializable
