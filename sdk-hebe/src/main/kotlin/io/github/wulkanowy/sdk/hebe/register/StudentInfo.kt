@@ -39,9 +39,6 @@ class StudentInfo(
     @SerialName("Pupil")
     val pupil: Pupil,
 
-    @SerialName("SenderEntry")
-    val senderEntry: SenderEntry,
-
     @SerialName("TopLevelPartition")
     val topLevelPartition: String,
 
@@ -229,22 +226,6 @@ class StudentInfo(
 
         @SerialName("Sex")
         val sex: Boolean,
-    )
-
-    @Serializable
-    data class SenderEntry(
-
-        @SerialName("Address")
-        val address: String,
-
-        @SerialName("AddressHash")
-        val addressHash: String,
-
-        @SerialName("Initials")
-        val initials: String,
-
-        @SerialName("LoginId")
-        val loginId: Int,
     )
 
     @Serializable
