@@ -67,14 +67,20 @@ internal fun Triple<List<HebeGrade>, List<HebeGradeSummary>, List<HebeGradeAvera
         Grade(
             subject = grade.column.subject.name,
             entry = grade.content,
-            value = grade.value ?: 0.0,
+            // the Double type does not permit null, which is returned when a grade has no value, for example if
+            // it's a np, nb, a plus or a minus. We need to make it possible for the GPA calculator to know which
+            // grades have a null value, so they can be ignored. We cannot ignore all 0.0 values because 0.0, unlike 0.1,
+            // can be legally entered into the e-register. Therefore, we shall assume 0.1 as our null value.
+            value = grade.value ?: 0.1,
             modifier = 0.0,
             weight = String.format("%.2f", grade.column.weight),
             weightValue = grade.column.weight,
             comment = grade.comment,
             symbol = grade.column.code,
             description = grade.column.name,
-            color = grade.column.color.toString(16).uppercase(),
+            color = grade.column.color
+                .toString(16)
+                .uppercase(),
             teacher = "${grade.creator.name} ${grade.creator.surname}",
             date = LocalDate.parse(grade.dateCreated.date, DateTimeFormatter.ofPattern("yyyy-MM-dd")),
         )
@@ -82,8 +88,10 @@ internal fun Triple<List<HebeGrade>, List<HebeGradeSummary>, List<HebeGradeAvera
     summary = second.map { summary ->
         GradeSummary(
             name = summary.subject.name,
-            average = third.find { it.id == summary.id }
-                ?.average?.replace(",", ".")
+            average = third
+                .find { it.id == summary.id }
+                ?.average
+                ?.replace(",", ".")
                 ?.toDoubleOrNull() ?: .0,
             predicted = summary.entry1.orEmpty(),
             final = summary.entry2.orEmpty(),

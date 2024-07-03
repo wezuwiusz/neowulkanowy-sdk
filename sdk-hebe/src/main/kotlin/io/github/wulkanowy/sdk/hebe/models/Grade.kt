@@ -32,7 +32,7 @@ data class Grade(
     @SerialName("PupilId")
     val pupilId: Int,
     @SerialName("Value")
-    val value: Double? = null,
+    var value: Double? = null,
 ) {
     @Serializable
     data class Column(

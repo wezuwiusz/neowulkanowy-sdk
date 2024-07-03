@@ -92,17 +92,18 @@ class Hebe {
         this.keyId = publicHash
         this.privatePem = privatePem
 
-        val envelope = serviceManager.getRegisterRepository(
-            baseUrl = routes.getRouteByToken(token),
-            symbol = symbol,
-        ).register(
-            firebaseToken = firebaseToken,
-            token = token,
-            pin = pin,
-            certificatePem = publicPem,
-            certificateId = publicHash,
-            deviceModel = deviceModel,
-        )
+        val envelope = serviceManager
+            .getRegisterRepository(
+                baseUrl = routes.getRouteByToken(token),
+                symbol = symbol,
+            ).register(
+                firebaseToken = firebaseToken,
+                token = token,
+                pin = pin,
+                certificatePem = publicPem,
+                certificateId = publicHash,
+                deviceModel = deviceModel,
+            )
 
         return RegisterDevice(
             loginId = envelope.loginId,
@@ -114,38 +115,36 @@ class Hebe {
         )
     }
 
-    suspend fun getStudents(url: String): List<StudentInfo> {
-        return serviceManager
-            .getRegisterRepository(url)
-            .getStudentInfo()
-    }
+    suspend fun getStudents(url: String): List<StudentInfo> = serviceManager
+        .getRegisterRepository(url)
+        .getStudentInfo()
 
-    suspend fun getGrades(periodId: Int): List<Grade> {
-        return studentRepository.getGrades(
-            pupilId = pupilId,
-            periodId = periodId,
-        )
-    }
+    suspend fun getGrades(periodId: Int): List<Grade> = studentRepository.getGrades(
+        pupilId = pupilId,
+        periodId = periodId,
+    )
 
-    suspend fun getGradesSummary(periodId: Int): List<GradeSummary> {
-        return studentRepository.getGradesSummary(
-            pupilId = pupilId,
-            periodId = periodId,
-        )
-    }
+    suspend fun getGradesSummary(periodId: Int): List<GradeSummary> = studentRepository.getGradesSummary(
+        pupilId = pupilId,
+        periodId = periodId,
+    )
 
-    suspend fun getGradesAverage(periodId: Int): List<GradeAverage> {
-        return studentRepository.getGradesAverage(
-            pupilId = pupilId,
-            periodId = periodId,
-        )
-    }
+    suspend fun getGradesAverage(periodId: Int): List<GradeAverage> = studentRepository.getGradesAverage(
+        pupilId = pupilId,
+        periodId = periodId,
+    )
 
-    suspend fun getExams(startDate: LocalDate, endDate: LocalDate): List<Exam> {
-        return studentRepository.getExams(
-            pupilId = pupilId,
-            startDate = startDate,
-            endDate = endDate,
-        )
-    }
+    suspend fun getExams(startDate: LocalDate, endDate: LocalDate): List<Exam> = studentRepository.getExams(
+        pupilId = pupilId,
+        startDate = startDate,
+        endDate = endDate,
+    )
+
+    suspend fun getPeriods(
+        url: String,
+    ): List<StudentInfo.Period> = serviceManager
+        .getRegisterRepository(url)
+        .getStudentInfo()
+        .first()
+        .periods
 }

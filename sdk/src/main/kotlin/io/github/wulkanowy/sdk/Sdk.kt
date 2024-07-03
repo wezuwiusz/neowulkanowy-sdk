@@ -293,13 +293,11 @@ class Sdk {
     }
 
     @JvmOverloads
-    fun switchDiary(diaryId: Int, kindergartenDiaryId: Int, schoolYear: Int, unitId: Int = 0): Sdk {
-        return also {
-            it.diaryId = diaryId
-            it.kindergartenDiaryId = kindergartenDiaryId
-            it.schoolYear = schoolYear
-            it.unitId = unitId
-        }
+    fun switchDiary(diaryId: Int, kindergartenDiaryId: Int, schoolYear: Int, unitId: Int = 0): Sdk = also {
+        it.diaryId = diaryId
+        it.kindergartenDiaryId = kindergartenDiaryId
+        it.schoolYear = schoolYear
+        it.unitId = unitId
     }
 
     suspend fun isSymbolNotExist(symbol: String): Boolean = withContext(Dispatchers.IO) {
@@ -416,10 +414,23 @@ class Sdk {
         }
     }
 
-    suspend fun getSemesters(): List<Semester> = withContext(Dispatchers.IO) {
+    suspend fun getSemesters(
+        pin: String = "",
+        symbol: String = "",
+        token: String = "",
+    ): List<Semester> = withContext(Dispatchers.IO) {
         when (mode) {
             Mode.HYBRID, Mode.SCRAPPER -> scrapper.getSemesters().mapSemesters()
-            Mode.HEBE -> throw NotImplementedError("Not available in HEBE mode")
+            Mode.HEBE -> {
+                val registerDevice = hebe.register(
+                    firebaseToken = null,
+                    token = token,
+                    pin = pin,
+                    symbol = symbol,
+                )
+
+                hebe.getPeriods(registerDevice.restUrl).mapSemesters()
+            }
         }
     }
 

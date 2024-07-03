@@ -68,7 +68,8 @@ public final class io/github/wulkanowy/sdk/Sdk {
 	public final fun getSchoolYear ()I
 	public final fun getScrapperBaseUrl ()Ljava/lang/String;
 	public final fun getSelfGovernments (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
-	public final fun getSemesters (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public final fun getSemesters (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public static synthetic fun getSemesters$default (Lio/github/wulkanowy/sdk/Sdk;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
 	public final fun getSentMessages (Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public static synthetic fun getSentMessages$default (Lio/github/wulkanowy/sdk/Sdk;Ljava/lang/String;Lkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
 	public final fun getStudentId ()I

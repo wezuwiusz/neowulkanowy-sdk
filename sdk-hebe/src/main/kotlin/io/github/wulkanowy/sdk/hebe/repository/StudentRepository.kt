@@ -9,33 +9,36 @@ import io.github.wulkanowy.sdk.hebe.service.StudentService
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
-internal class StudentRepository(private val studentService: StudentService) {
+internal class StudentRepository(
+    private val studentService: StudentService,
+) {
 
-    suspend fun getGrades(pupilId: Int, periodId: Int): List<Grade> {
-        return studentService.getGrades(
+    suspend fun getGrades(pupilId: Int, periodId: Int): List<Grade> = studentService
+        .getGrades(
             createQueryMap(pupilId = pupilId, periodId = periodId),
-        ).getEnvelopeOrThrowError().orEmpty()
-    }
+        ).getEnvelopeOrThrowError()
+        .orEmpty()
 
-    suspend fun getGradesSummary(pupilId: Int, periodId: Int): List<GradeSummary> {
-        return studentService.getGradesSummary(
+    suspend fun getGradesSummary(pupilId: Int, periodId: Int): List<GradeSummary> = studentService
+        .getGradesSummary(
             createQueryMap(pupilId = pupilId, periodId = periodId),
-        ).getEnvelopeOrThrowError().orEmpty()
-    }
+        ).getEnvelopeOrThrowError()
+        .orEmpty()
 
-    suspend fun getGradesAverage(pupilId: Int, periodId: Int): List<GradeAverage> {
-        return studentService.getGradesAverage(
+    suspend fun getGradesAverage(pupilId: Int, periodId: Int): List<GradeAverage> = studentService
+        .getGradesAverage(
             createQueryMap(pupilId = pupilId, periodId = periodId),
-        ).getEnvelopeOrThrowError().orEmpty()
-    }
+        ).getEnvelopeOrThrowError()
+        .orEmpty()
 
-    suspend fun getExams(pupilId: Int, startDate: LocalDate, endDate: LocalDate): List<Exam> {
-        return studentService.getExams(
+    suspend fun getExams(pupilId: Int, startDate: LocalDate, endDate: LocalDate): List<Exam> = studentService
+        .getExams(
             createQueryMap(pupilId = pupilId, dateFrom = startDate),
-        ).getEnvelopeOrThrowError().orEmpty().filter {
+        ).getEnvelopeOrThrowError()
+        .orEmpty()
+        .filter {
             it.deadline.date in startDate..endDate
         }
-    }
 
     private fun createQueryMap(
         pupilId: Int,
