@@ -550,10 +550,10 @@ class Sdk {
         }
     }
 
-    suspend fun getTeachers(): List<Teacher> = withContext(Dispatchers.IO) {
+    suspend fun getTeachers(periodId: Int): List<Teacher> = withContext(Dispatchers.IO) {
         when (mode) {
-            Mode.HYBRID, Mode.SCRAPPER -> scrapper.getTeachers().mapTeachers()
-            Mode.HEBE -> throw NotImplementedError("Not available in HEBE mode")
+            Mode.SCRAPPER -> scrapper.getTeachers().mapTeachers()
+            Mode.HYBRID, Mode.HEBE -> hebe.getTeachers(periodId).mapTeachers()
         }
     }
 

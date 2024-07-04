@@ -83,7 +83,7 @@ public final class io/github/wulkanowy/sdk/Sdk {
 	public final fun getStudentsTrips (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public final fun getSubjects (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public final fun getSymbol ()Ljava/lang/String;
-	public final fun getTeachers (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public final fun getTeachers (ILkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public final fun getTimetable (Ljava/time/LocalDate;Ljava/time/LocalDate;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public final fun getToken (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public final fun getUnitId ()I

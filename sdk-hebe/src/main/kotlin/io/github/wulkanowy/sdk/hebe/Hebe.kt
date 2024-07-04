@@ -4,6 +4,7 @@ import io.github.wulkanowy.sdk.hebe.models.Exam
 import io.github.wulkanowy.sdk.hebe.models.Grade
 import io.github.wulkanowy.sdk.hebe.models.GradeAverage
 import io.github.wulkanowy.sdk.hebe.models.GradeSummary
+import io.github.wulkanowy.sdk.hebe.models.Teacher
 import io.github.wulkanowy.sdk.hebe.register.RegisterDevice
 import io.github.wulkanowy.sdk.hebe.register.StudentInfo
 import io.github.wulkanowy.sdk.hebe.repository.RepositoryManager
@@ -147,4 +148,9 @@ class Hebe {
         .getStudentInfo()
         .first()
         .periods
+
+    suspend fun getTeachers(periodId: Int): List<Teacher> = studentRepository.getTeachers(
+        pupilId = pupilId,
+        periodId = periodId,
+    )
 }

@@ -8,9 +8,9 @@ data class Teacher(
     @SerialName("Id")
     val id: Int,
     @SerialName("Name")
-    val name: String,
+    val name: String = "",
     @SerialName("Surname")
-    val surname: String,
+    val surname: String = "",
     @SerialName("DisplayName")
     val displayName: String,
     @SerialName("Position")

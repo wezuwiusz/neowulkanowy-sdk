@@ -40,6 +40,12 @@ internal class StudentRepository(
             it.deadline.date in startDate..endDate
         }
 
+    suspend fun getTeachers(pupilId: Int, periodId: Int) = studentService
+        .getTeachers(
+            createQueryMap(pupilId = pupilId, periodId = periodId),
+        ).getEnvelopeOrThrowError()
+        .orEmpty()
+
     private fun createQueryMap(
         pupilId: Int,
         periodId: Int? = null,
