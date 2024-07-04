@@ -19,6 +19,8 @@ data class Meeting(
     val additionalInfo: String?,
     @SerialName("Online")
     val online: String,
+    @SerialName("When")
+    val `when`: When,
 ) {
     @Serializable
     data class When(

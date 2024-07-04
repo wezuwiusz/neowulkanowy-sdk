@@ -19,6 +19,14 @@ data class Note(
     val content: String,
     @SerialName("Points")
     val points: Int?,
+    @SerialName("DateValid")
+    val dateValid: DateValid,
+    @SerialName("DateModify")
+    val dateModify: DateModify,
+    @SerialName("Creator")
+    val creator: Creator,
+    @SerialName("Category")
+    val category: Category,
 ) {
     @Serializable
     data class DateValid(
