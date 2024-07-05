@@ -7,26 +7,28 @@ import java.time.LocalDate
 
 @Serializable
 data class Exam(
+    @SerialName("Id")
+    val id: Int,
+    @SerialName("Key")
+    val key: String,
+    @SerialName("Type")
+    val type: String,
+    @SerialName("TypeId")
+    val typeId: Int,
     @SerialName("Content")
     val content: String,
-    @SerialName("Creator")
-    val creator: Creator,
     @SerialName("DateCreated")
     val dateCreated: DateCreated,
     @SerialName("DateModify")
     val dateModify: DateModify,
     @SerialName("Deadline")
     val deadline: Deadline,
-    @SerialName("Id")
-    val id: Int,
-    @SerialName("Key")
-    val key: String,
-    @SerialName("PupilId")
-    val pupilId: Int,
+    @SerialName("Creator")
+    val creator: Creator,
     @SerialName("Subject")
     val subject: Subject,
-    @SerialName("Type")
-    val type: String,
+    @SerialName("PupilId")
+    val pupilId: Int,
 ) {
     @Serializable
     data class Creator(
