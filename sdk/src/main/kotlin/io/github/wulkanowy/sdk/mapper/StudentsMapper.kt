@@ -49,11 +49,9 @@ internal fun ScrapperRegisterUnit.mapUnit(): RegisterUnit = RegisterUnit(
     subjects = subjects.map { it.mapSubject() },
 )
 
-internal fun ScrapperRegisterSubject.mapSubject(): RegisterSubject {
-    return when (this) {
-        is ScrapperRegisterStudent -> mapStudent()
-        is ScrapperRegisterEmploye -> mapEmployee()
-    }
+internal fun ScrapperRegisterSubject.mapSubject(): RegisterSubject = when (this) {
+    is ScrapperRegisterStudent -> mapStudent()
+    is ScrapperRegisterEmploye -> mapEmployee()
 }
 
 internal fun ScrapperRegisterEmploye.mapEmployee(): RegisterEmployee = RegisterEmployee(
@@ -123,11 +121,14 @@ private fun List<StudentInfo>.mapUnit(): List<RegisterUnit> {
                         isAuthorized = true,
                         isEduOne = false,
                         semesters = student.periods.map { period ->
+                            val schoolYear = period.start.timestamp
+                                .toLocalDate()
+                                .year
                             Semester(
                                 diaryId = student.journal.id,
                                 kindergartenDiaryId = 0,
                                 diaryName = student.classDisplay,
-                                schoolYear = period.start.timestamp.toLocalDate().year,
+                                schoolYear = if (period.number == 2) schoolYear - 1 else schoolYear,
                                 semesterId = period.id,
                                 semesterNumber = period.number,
                                 start = period.start.timestamp.toLocalDate(),

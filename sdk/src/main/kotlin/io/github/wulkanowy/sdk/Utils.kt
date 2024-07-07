@@ -11,12 +11,12 @@ private val registerTimeZone = ZoneId.of("Europe/Warsaw")
 fun String.toLocalDateTime(format: String): LocalDateTime = LocalDateTime.parse(this, ofPattern(format))
 
 fun Long.toLocalDate(): LocalDate = Instant
-    .ofEpochMilli(this * 1000L)
+    .ofEpochMilli(this)
     .atZone(registerTimeZone)
     .toLocalDate()
 
 fun Long.toLocalDateTime(): LocalDateTime = Instant
-    .ofEpochMilli(this * 1000L)
+    .ofEpochMilli(this)
     .atZone(registerTimeZone)
     .toLocalDateTime()
 
