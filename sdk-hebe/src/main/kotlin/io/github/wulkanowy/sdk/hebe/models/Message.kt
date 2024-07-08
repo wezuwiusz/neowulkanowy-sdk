@@ -20,7 +20,7 @@ data class Message(
     @SerialName("DateSent")
     val dateSent: DateSent,
     @SerialName("DateRead")
-    val dateRead: DateRead,
+    val dateRead: DateRead?,
     @SerialName("Status")
     val status: Int,
     @SerialName("Sender")

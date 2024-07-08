@@ -580,8 +580,8 @@ class Sdk {
 
     suspend fun getMailboxes(): List<Mailbox> = withContext(Dispatchers.IO) {
         when (mode) {
-            Mode.HYBRID, Mode.SCRAPPER -> scrapper.getMailboxes().mapMailboxes()
-            Mode.HEBE -> throw NotImplementedError("Not available in HEBE mode")
+            Mode.SCRAPPER -> scrapper.getMailboxes().mapMailboxes()
+            Mode.HYBRID, Mode.HEBE -> hebe.getMailboxes().mapMailboxes()
         }
     }
 
@@ -603,21 +603,21 @@ class Sdk {
     suspend fun getReceivedMessages(mailboxKey: String? = null): List<Message> = withContext(Dispatchers.IO) {
         when (mode) {
             Mode.HYBRID, Mode.SCRAPPER -> scrapper.getReceivedMessages(mailboxKey).mapMessages(registerTimeZone, Folder.RECEIVED)
-            Mode.HEBE -> throw NotImplementedError("Not available in HEBE mode")
+            Mode.HEBE -> hebe.getMessages(mailboxKey ?: "0", 1).mapMessages(registerTimeZone, Folder.RECEIVED)
         }
     }
 
     suspend fun getSentMessages(mailboxKey: String? = null): List<Message> = withContext(Dispatchers.IO) {
         when (mode) {
-            Mode.HYBRID, Mode.SCRAPPER -> scrapper.getSentMessages(mailboxKey).mapMessages(registerTimeZone, Folder.SENT)
-            Mode.HEBE -> throw NotImplementedError("Not available in HEBE mode")
+            Mode.SCRAPPER -> scrapper.getSentMessages(mailboxKey).mapMessages(registerTimeZone, Folder.SENT)
+            Mode.HYBRID, Mode.HEBE -> hebe.getMessages(mailboxKey ?: "0", 2).mapMessages(registerTimeZone, Folder.SENT)
         }
     }
 
     suspend fun getDeletedMessages(mailboxKey: String? = null): List<Message> = withContext(Dispatchers.IO) {
         when (mode) {
-            Mode.HYBRID, Mode.SCRAPPER -> scrapper.getDeletedMessages(mailboxKey).mapMessages(registerTimeZone, Folder.TRASHED)
-            Mode.HEBE -> throw NotImplementedError("Not available in HEBE mode")
+            Mode.SCRAPPER -> scrapper.getDeletedMessages(mailboxKey).mapMessages(registerTimeZone, Folder.TRASHED)
+            Mode.HYBRID, Mode.HEBE -> hebe.getMessages(mailboxKey ?: "0", 3).mapMessages(registerTimeZone, Folder.TRASHED)
         }
     }
 

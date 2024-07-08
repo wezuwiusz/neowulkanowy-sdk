@@ -5,6 +5,8 @@ import io.github.wulkanowy.sdk.hebe.models.Exam
 import io.github.wulkanowy.sdk.hebe.models.Grade
 import io.github.wulkanowy.sdk.hebe.models.GradeAverage
 import io.github.wulkanowy.sdk.hebe.models.GradeSummary
+import io.github.wulkanowy.sdk.hebe.models.Mailbox
+import io.github.wulkanowy.sdk.hebe.models.Message
 import io.github.wulkanowy.sdk.hebe.models.Teacher
 import retrofit2.http.GET
 import retrofit2.http.QueryMap
@@ -26,4 +28,10 @@ internal interface StudentService {
 
     @GET("api/mobile/teacher/byPeriod")
     suspend fun getTeachers(@QueryMap query: Map<String, Any?>): ApiResponse<List<Teacher>>
+
+    @GET("api/mobile/messages/byBox")
+    suspend fun getMessages(@QueryMap query: Map<String, Any?>): ApiResponse<List<Message>>
+
+    @GET("api/mobile/messagebox")
+    suspend fun getMailboxes(@QueryMap query: Map<String, Any?>): ApiResponse<List<Mailbox>>
 }

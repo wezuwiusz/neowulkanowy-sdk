@@ -46,6 +46,23 @@ internal class StudentRepository(
         ).getEnvelopeOrThrowError()
         .orEmpty()
 
+    suspend fun getMessages(messageBoxId: String, folder: Int) = studentService
+        .getMessages(
+            mapOf(
+                "box" to messageBoxId,
+                "folder" to folder,
+                "lastSyncDate" to "1970-01-01 01:00:00",
+                "lastId" to Int.MIN_VALUE,
+                "pageSize" to 500,
+            ),
+        ).getEnvelopeOrThrowError()
+        .orEmpty()
+
+    suspend fun getMailboxes() = studentService
+        .getMailboxes(mapOf())
+        .getEnvelopeOrThrowError()
+        .orEmpty()
+
     private fun createQueryMap(
         pupilId: Int,
         periodId: Int? = null,

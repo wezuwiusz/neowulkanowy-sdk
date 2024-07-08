@@ -4,6 +4,8 @@ import io.github.wulkanowy.sdk.hebe.models.Exam
 import io.github.wulkanowy.sdk.hebe.models.Grade
 import io.github.wulkanowy.sdk.hebe.models.GradeAverage
 import io.github.wulkanowy.sdk.hebe.models.GradeSummary
+import io.github.wulkanowy.sdk.hebe.models.Mailbox
+import io.github.wulkanowy.sdk.hebe.models.Message
 import io.github.wulkanowy.sdk.hebe.models.Teacher
 import io.github.wulkanowy.sdk.hebe.register.RegisterDevice
 import io.github.wulkanowy.sdk.hebe.register.StudentInfo
@@ -153,4 +155,8 @@ class Hebe {
         pupilId = pupilId,
         periodId = periodId,
     )
+
+    suspend fun getMessages(messageBoxId: String, folder: Int): List<Message> = studentRepository.getMessages(messageBoxId, folder)
+
+    suspend fun getMailboxes(): List<Mailbox> = studentRepository.getMailboxes()
 }
