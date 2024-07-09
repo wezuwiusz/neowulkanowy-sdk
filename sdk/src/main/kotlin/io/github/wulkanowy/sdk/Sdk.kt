@@ -653,7 +653,7 @@ class Sdk {
         when (mode) {
             Mode.SCRAPPER -> scrapper.deleteMessages(messages.first, removeForever)
             Mode.HYBRID, Mode.HEBE -> messages.first.forEachIndexed { index, it ->
-                hebe.setMessageStatus(pupilId, messages.second[index], it, 2)
+                hebe.setMessageStatus(pupilId, messages.second[index], it, if (removeForever) 3 else 2)
             }
         }
     }
