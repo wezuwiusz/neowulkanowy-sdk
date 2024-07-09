@@ -3,8 +3,8 @@ public final class io/github/wulkanowy/sdk/Sdk {
 	public final fun addInterceptor (Lokhttp3/Interceptor;Z)V
 	public static synthetic fun addInterceptor$default (Lio/github/wulkanowy/sdk/Sdk;Lokhttp3/Interceptor;ZILjava/lang/Object;)V
 	public final fun authorizePermission (Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
-	public final fun deleteMessages (Ljava/util/List;ZLkotlin/coroutines/Continuation;)Ljava/lang/Object;
-	public static synthetic fun deleteMessages$default (Lio/github/wulkanowy/sdk/Sdk;Ljava/util/List;ZLkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
+	public final fun deleteMessages (Lkotlin/Pair;Ljava/lang/Integer;ZLkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public static synthetic fun deleteMessages$default (Lio/github/wulkanowy/sdk/Sdk;Lkotlin/Pair;Ljava/lang/Integer;ZLkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
 	public final fun excuseForAbsence (Ljava/util/List;Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public static synthetic fun excuseForAbsence$default (Lio/github/wulkanowy/sdk/Sdk;Ljava/util/List;Ljava/lang/String;Lkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
 	public final fun getAndroidVersion ()Ljava/lang/String;

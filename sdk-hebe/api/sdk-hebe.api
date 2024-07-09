@@ -24,6 +24,7 @@ public final class io/github/wulkanowy/sdk/hebe/Hebe {
 	public final fun setDeviceModel (Ljava/lang/String;)V
 	public final fun setKeyId (Ljava/lang/String;)V
 	public final fun setLogLevel (Lokhttp3/logging/HttpLoggingInterceptor$Level;)V
+	public final fun setMessageStatus (Ljava/lang/Integer;Ljava/lang/String;Ljava/lang/String;ILkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public final fun setPrivatePem (Ljava/lang/String;)V
 	public final fun setPupilId (I)V
 	public final fun setSchoolId (Ljava/lang/String;)V
@@ -1715,6 +1716,40 @@ public final class io/github/wulkanowy/sdk/hebe/models/Note$DateValid$$serialize
 }
 
 public final class io/github/wulkanowy/sdk/hebe/models/Note$DateValid$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public final class io/github/wulkanowy/sdk/hebe/models/SetMessageStatusRequest {
+	public static final field Companion Lio/github/wulkanowy/sdk/hebe/models/SetMessageStatusRequest$Companion;
+	public fun <init> (Ljava/lang/Integer;Ljava/lang/String;Ljava/lang/String;I)V
+	public synthetic fun <init> (Ljava/lang/Integer;Ljava/lang/String;Ljava/lang/String;IILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ljava/lang/Integer;
+	public final fun component2 ()Ljava/lang/String;
+	public final fun component3 ()Ljava/lang/String;
+	public final fun component4 ()I
+	public final fun copy (Ljava/lang/Integer;Ljava/lang/String;Ljava/lang/String;I)Lio/github/wulkanowy/sdk/hebe/models/SetMessageStatusRequest;
+	public static synthetic fun copy$default (Lio/github/wulkanowy/sdk/hebe/models/SetMessageStatusRequest;Ljava/lang/Integer;Ljava/lang/String;Ljava/lang/String;IILjava/lang/Object;)Lio/github/wulkanowy/sdk/hebe/models/SetMessageStatusRequest;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getBoxKey ()Ljava/lang/String;
+	public final fun getMessageKey ()Ljava/lang/String;
+	public final fun getPupilId ()Ljava/lang/Integer;
+	public final fun getStatus ()I
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class io/github/wulkanowy/sdk/hebe/models/SetMessageStatusRequest$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+	public static final field INSTANCE Lio/github/wulkanowy/sdk/hebe/models/SetMessageStatusRequest$$serializer;
+	public fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lio/github/wulkanowy/sdk/hebe/models/SetMessageStatusRequest;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public fun serialize (Lkotlinx/serialization/encoding/Encoder;Lio/github/wulkanowy/sdk/hebe/models/SetMessageStatusRequest;)V
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+	public fun typeParametersSerializers ()[Lkotlinx/serialization/KSerializer;
+}
+
+public final class io/github/wulkanowy/sdk/hebe/models/SetMessageStatusRequest$Companion {
 	public final fun serializer ()Lkotlinx/serialization/KSerializer;
 }
 

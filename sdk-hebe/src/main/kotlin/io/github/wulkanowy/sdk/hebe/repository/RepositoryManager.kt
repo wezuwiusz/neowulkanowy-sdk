@@ -40,14 +40,12 @@ internal class RepositoryManager(
         }
     }
 
-    fun getRoutesRepository(): RoutingRulesRepository {
-        return RoutingRulesRepository(
-            getRetrofitBuilder(isJson = false, signInterceptor = false)
-                .baseUrl("https://komponenty.vulcan.net.pl")
-                .build()
-                .create(),
-        )
-    }
+    fun getRoutesRepository(): RoutingRulesRepository = RoutingRulesRepository(
+        getRetrofitBuilder(isJson = false, signInterceptor = false)
+            .baseUrl("https://komponenty.vulcan.net.pl")
+            .build()
+            .create(),
+    )
 
     fun getStudentRepository(baseUrl: String, schoolId: String): StudentRepository = StudentRepository(
         getRetrofitBuilder(isJson = true, signInterceptor = true)
@@ -67,28 +65,26 @@ internal class RepositoryManager(
             .create(),
     )
 
-    private fun getRetrofitBuilder(isJson: Boolean = true, signInterceptor: Boolean): Retrofit.Builder {
-        return Retrofit.Builder()
-            .apply {
-                when {
-                    isJson -> addConverterFactory(json.asConverterFactory("application/json".toMediaType()))
-                    else -> addConverterFactory(ScalarsConverterFactory.create())
-                }
+    private fun getRetrofitBuilder(isJson: Boolean = true, signInterceptor: Boolean): Retrofit.Builder = Retrofit
+        .Builder()
+        .apply {
+            when {
+                isJson -> addConverterFactory(json.asConverterFactory("application/json".toMediaType()))
+                else -> addConverterFactory(ScalarsConverterFactory.create())
             }
-            .client(
-                OkHttpClient().newBuilder()
-                    .apply {
-                        if (signInterceptor) {
-                            addInterceptor(SignInterceptor(keyId, privatePem, deviceModel))
-                        }
-                        interceptors.forEach {
-                            when {
-                                it.second -> addNetworkInterceptor(it.first)
-                                else -> addInterceptor(it.first)
-                            }
+        }.client(
+            OkHttpClient()
+                .newBuilder()
+                .apply {
+                    if (signInterceptor) {
+                        addInterceptor(SignInterceptor(keyId, privatePem, deviceModel))
+                    }
+                    interceptors.forEach {
+                        when {
+                            it.second -> addNetworkInterceptor(it.first)
+                            else -> addInterceptor(it.first)
                         }
                     }
-                    .build(),
-            )
-    }
+                }.build(),
+        )
 }

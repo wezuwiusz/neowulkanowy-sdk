@@ -20,13 +20,13 @@ internal data class ApiRequest<T>(
     val appVersion: String = "22.09.02 (G)",
 
     @SerialName("CertificateId")
-    val certificateId: String,
+    val certificateId: String = "",
 
     @SerialName("Envelope")
     val envelope: T,
 
     @SerialName("FirebaseToken")
-    val firebaseToken: String,
+    val firebaseToken: String = "",
 
     @SerialName("RequestId")
     val requestId: String = UUID.randomUUID().toString(),

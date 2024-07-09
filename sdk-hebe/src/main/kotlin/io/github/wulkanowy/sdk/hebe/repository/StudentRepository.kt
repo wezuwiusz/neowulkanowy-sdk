@@ -1,10 +1,12 @@
 package io.github.wulkanowy.sdk.hebe.repository
 
+import io.github.wulkanowy.sdk.hebe.ApiRequest
 import io.github.wulkanowy.sdk.hebe.getEnvelopeOrThrowError
 import io.github.wulkanowy.sdk.hebe.models.Exam
 import io.github.wulkanowy.sdk.hebe.models.Grade
 import io.github.wulkanowy.sdk.hebe.models.GradeAverage
 import io.github.wulkanowy.sdk.hebe.models.GradeSummary
+import io.github.wulkanowy.sdk.hebe.models.SetMessageStatusRequest
 import io.github.wulkanowy.sdk.hebe.service.StudentService
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
@@ -62,6 +64,20 @@ internal class StudentRepository(
         .getMailboxes(mapOf())
         .getEnvelopeOrThrowError()
         .orEmpty()
+
+    suspend fun setMessageStatus(pupilId: Int?, boxKey: String, messageKey: String, status: Int) = studentService
+        .setStatus(
+            ApiRequest(
+                envelope = listOf(
+                    SetMessageStatusRequest(
+                        pupilId = pupilId,
+                        boxKey = boxKey,
+                        messageKey = messageKey,
+                        status = status,
+                    ),
+                ),
+            ),
+        ).getEnvelopeOrThrowError()
 
     private fun createQueryMap(
         pupilId: Int,

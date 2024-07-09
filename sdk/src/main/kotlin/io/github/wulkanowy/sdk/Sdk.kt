@@ -649,10 +649,12 @@ class Sdk {
         }
     }
 
-    suspend fun deleteMessages(messages: List<String>, removeForever: Boolean = false) = withContext(Dispatchers.IO) {
+    suspend fun deleteMessages(messages: Pair<List<String>, List<String>>, pupilId: Int?, removeForever: Boolean = false) = withContext(Dispatchers.IO) {
         when (mode) {
-            Mode.HYBRID, Mode.SCRAPPER -> scrapper.deleteMessages(messages, removeForever)
-            Mode.HEBE -> throw NotImplementedError("Not available in HEBE mode")
+            Mode.SCRAPPER -> scrapper.deleteMessages(messages.first, removeForever)
+            Mode.HYBRID, Mode.HEBE -> messages.first.forEachIndexed { index, it ->
+                hebe.setMessageStatus(pupilId, messages.second[index], it, 2)
+            }
         }
     }
 
