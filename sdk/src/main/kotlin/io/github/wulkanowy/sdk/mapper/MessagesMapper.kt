@@ -10,6 +10,7 @@ import io.github.wulkanowy.sdk.pojo.Recipient
 import io.github.wulkanowy.sdk.toLocalDateTime
 import java.time.ZoneId
 import io.github.wulkanowy.sdk.hebe.models.Message as HebeMessage
+import io.github.wulkanowy.sdk.hebe.models.Message.Attachment as HebeAttachment
 import io.github.wulkanowy.sdk.scrapper.messages.MessageDetails as ScrapperDetailsMessage
 import io.github.wulkanowy.sdk.scrapper.messages.MessageMeta as ScrapperMessageMeta
 import io.github.wulkanowy.sdk.scrapper.messages.MessageReplayDetails as ScrapperReplayDetailsMessage
@@ -68,6 +69,13 @@ internal fun ScrapperReplayDetailsMessage.mapScrapperMessage() = MessageReplayDe
     },
 )
 
+internal fun Array<HebeAttachment>.mapAttachments() = map {
+    MessageAttachment(
+        filename = it.name,
+        url = it.link,
+    )
+}
+
 @JvmName("MapHebeMessages")
 internal fun List<HebeMessage>.mapMessages(zoneId: ZoneId, folderId: Folder) = map {
     val recipientInfo = it.receiver[0].name.split(" - ")
@@ -97,5 +105,6 @@ internal fun List<HebeMessage>.mapMessages(zoneId: ZoneId, folderId: Folder) = m
         unreadBy = 0,
         readBy = 0,
         hasAttachments = it.attachments.isNotEmpty(),
+        attachments = it.attachments.mapAttachments(),
     )
 }

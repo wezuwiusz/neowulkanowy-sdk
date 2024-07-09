@@ -16,4 +16,5 @@ data class Message(
     val readBy: Int?,
     val unreadBy: Int?,
     val hasAttachments: Boolean,
+    val attachments: List<MessageAttachment> = emptyList(),
 )
