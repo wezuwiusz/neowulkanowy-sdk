@@ -587,8 +587,8 @@ class Sdk {
 
     suspend fun getRecipients(mailboxKey: String): List<Recipient> = withContext(Dispatchers.IO) {
         when (mode) {
-            Mode.HYBRID, Mode.SCRAPPER -> scrapper.getRecipients(mailboxKey).mapRecipients()
-            Mode.HEBE -> throw NotImplementedError("Not available in HEBE mode")
+            Mode.SCRAPPER -> scrapper.getRecipients(mailboxKey).mapRecipients()
+            Mode.HYBRID, Mode.HEBE -> hebe.getRecipients(mailboxKey).mapRecipients()
         }
     }
 

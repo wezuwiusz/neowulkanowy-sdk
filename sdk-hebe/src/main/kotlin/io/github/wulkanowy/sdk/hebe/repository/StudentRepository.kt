@@ -65,6 +65,14 @@ internal class StudentRepository(
         .getEnvelopeOrThrowError()
         .orEmpty()
 
+    suspend fun getRecipients(mailboxKey: String) = studentService
+        .getRecipients(
+            mapOf(
+                "box" to mailboxKey,
+            ),
+        ).getEnvelopeOrThrowError()
+        .orEmpty()
+
     suspend fun setMessageStatus(pupilId: Int?, boxKey: String, messageKey: String, status: Int) = studentService
         .setStatus(
             ApiRequest(

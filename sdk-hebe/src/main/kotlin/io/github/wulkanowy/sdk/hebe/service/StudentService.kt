@@ -8,6 +8,7 @@ import io.github.wulkanowy.sdk.hebe.models.GradeAverage
 import io.github.wulkanowy.sdk.hebe.models.GradeSummary
 import io.github.wulkanowy.sdk.hebe.models.Mailbox
 import io.github.wulkanowy.sdk.hebe.models.Message
+import io.github.wulkanowy.sdk.hebe.models.Recipient
 import io.github.wulkanowy.sdk.hebe.models.SetMessageStatusRequest
 import io.github.wulkanowy.sdk.hebe.models.Teacher
 import retrofit2.http.Body
@@ -38,6 +39,9 @@ internal interface StudentService {
 
     @GET("api/mobile/messagebox")
     suspend fun getMailboxes(@QueryMap query: Map<String, Any?>): ApiResponse<List<Mailbox>>
+
+    @GET("api/mobile/addressbook")
+    suspend fun getRecipients(@QueryMap query: Map<String, Any?>): ApiResponse<List<Recipient>>
 
     @POST("api/mobile/messages/statuses")
     suspend fun setStatus(@Body request: ApiRequest<List<SetMessageStatusRequest>>): ApiResponse<Boolean>

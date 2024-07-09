@@ -160,6 +160,8 @@ class Hebe {
 
     suspend fun getMailboxes(): List<Mailbox> = studentRepository.getMailboxes()
 
+    suspend fun getRecipients(mailboxKey: String) = studentRepository.getRecipients(mailboxKey)
+
     suspend fun setMessageStatus(pupilId: Int?, boxKey: String, messageKey: String, status: Int): Boolean? = studentRepository.setMessageStatus(
         pupilId = pupilId,
         boxKey = boxKey,
