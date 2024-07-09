@@ -515,10 +515,10 @@ class Sdk {
         }
     }
 
-    suspend fun getConferences(): List<Conference> = withContext(Dispatchers.IO) {
+    suspend fun getConferences(pupilId: Int = 0, startDate: LocalDate = LocalDate.of(1970, 1, 1)): List<Conference> = withContext(Dispatchers.IO) {
         when (mode) {
-            Mode.HYBRID, Mode.SCRAPPER -> scrapper.getConferences().mapConferences(registerTimeZone)
-            Mode.HEBE -> throw NotImplementedError("Not available in HEBE mode")
+            Mode.SCRAPPER -> scrapper.getConferences().mapConferences(registerTimeZone)
+            Mode.HYBRID, Mode.HEBE -> hebe.getMeetings(pupilId, startDate).mapConferences(registerTimeZone)
         }
     }
 

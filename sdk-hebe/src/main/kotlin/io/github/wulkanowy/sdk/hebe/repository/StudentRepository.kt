@@ -73,6 +73,18 @@ internal class StudentRepository(
         ).getEnvelopeOrThrowError()
         .orEmpty()
 
+    suspend fun getMeetings(pupilId: Int, startDate: LocalDate) = studentService
+        .getMeetings(
+            mapOf(
+                "pupilId" to pupilId,
+                "lastSyncDate" to "1970-01-01 01:00:00",
+                "lastId" to Int.MIN_VALUE,
+                "pageSize" to 500,
+                "from" to startDate.format(DateTimeFormatter.ISO_DATE),
+            ),
+        ).getEnvelopeOrThrowError()
+        .orEmpty()
+
     suspend fun setMessageStatus(pupilId: Int?, boxKey: String, messageKey: String, status: Int) = studentService
         .setStatus(
             ApiRequest(

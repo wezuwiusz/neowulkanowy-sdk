@@ -5,6 +5,7 @@ import io.github.wulkanowy.sdk.hebe.models.Grade
 import io.github.wulkanowy.sdk.hebe.models.GradeAverage
 import io.github.wulkanowy.sdk.hebe.models.GradeSummary
 import io.github.wulkanowy.sdk.hebe.models.Mailbox
+import io.github.wulkanowy.sdk.hebe.models.Meeting
 import io.github.wulkanowy.sdk.hebe.models.Message
 import io.github.wulkanowy.sdk.hebe.models.Teacher
 import io.github.wulkanowy.sdk.hebe.register.RegisterDevice
@@ -161,6 +162,11 @@ class Hebe {
     suspend fun getMailboxes(): List<Mailbox> = studentRepository.getMailboxes()
 
     suspend fun getRecipients(mailboxKey: String) = studentRepository.getRecipients(mailboxKey)
+
+    suspend fun getMeetings(pupilId: Int, startDate: LocalDate): List<Meeting> = studentRepository.getMeetings(
+        pupilId = pupilId,
+        startDate = startDate,
+    )
 
     suspend fun setMessageStatus(pupilId: Int?, boxKey: String, messageKey: String, status: Int): Boolean? = studentRepository.setMessageStatus(
         pupilId = pupilId,

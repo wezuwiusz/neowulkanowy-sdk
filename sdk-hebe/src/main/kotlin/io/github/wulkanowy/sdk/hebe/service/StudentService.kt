@@ -7,6 +7,7 @@ import io.github.wulkanowy.sdk.hebe.models.Grade
 import io.github.wulkanowy.sdk.hebe.models.GradeAverage
 import io.github.wulkanowy.sdk.hebe.models.GradeSummary
 import io.github.wulkanowy.sdk.hebe.models.Mailbox
+import io.github.wulkanowy.sdk.hebe.models.Meeting
 import io.github.wulkanowy.sdk.hebe.models.Message
 import io.github.wulkanowy.sdk.hebe.models.Recipient
 import io.github.wulkanowy.sdk.hebe.models.SetMessageStatusRequest
@@ -42,6 +43,9 @@ internal interface StudentService {
 
     @GET("api/mobile/addressbook")
     suspend fun getRecipients(@QueryMap query: Map<String, Any?>): ApiResponse<List<Recipient>>
+
+    @GET("api/mobile/meetings/byPupil")
+    suspend fun getMeetings(@QueryMap query: Map<String, Any?>): ApiResponse<List<Meeting>>
 
     @POST("api/mobile/messages/statuses")
     suspend fun setStatus(@Body request: ApiRequest<List<SetMessageStatusRequest>>): ApiResponse<Boolean>
