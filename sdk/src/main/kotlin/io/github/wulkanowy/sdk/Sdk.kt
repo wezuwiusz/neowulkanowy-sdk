@@ -471,8 +471,8 @@ class Sdk {
 
     suspend fun getExams(start: LocalDate, end: LocalDate): List<Exam> = withContext(Dispatchers.IO) {
         when (mode) {
-            Mode.HYBRID, Mode.SCRAPPER -> scrapper.getExams(start, end).mapExams()
-            Mode.HEBE -> hebe.getExams(start, end).mapExams()
+            Mode.SCRAPPER -> scrapper.getExams(start, end).mapExams()
+            Mode.HYBRID, Mode.HEBE -> hebe.getExams(start, end).mapExams()
         }
     }
 
