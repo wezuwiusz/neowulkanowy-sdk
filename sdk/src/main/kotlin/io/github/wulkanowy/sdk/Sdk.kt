@@ -510,8 +510,8 @@ class Sdk {
 
     suspend fun getHomework(start: LocalDate, end: LocalDate): List<Homework> = withContext(Dispatchers.IO) {
         when (mode) {
-            Mode.HYBRID, Mode.SCRAPPER -> scrapper.getHomework(start, end).mapHomework()
-            Mode.HEBE -> throw NotImplementedError("Not available in HEBE mode")
+            Mode.SCRAPPER -> scrapper.getHomework(start, end).mapHomework()
+            Mode.HYBRID, Mode.HEBE -> hebe.getHomework(studentId, start, end).mapHomework()
         }
     }
 

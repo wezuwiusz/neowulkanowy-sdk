@@ -11,6 +11,7 @@ public final class io/github/wulkanowy/sdk/hebe/Hebe {
 	public final fun getGrades (ILkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public final fun getGradesAverage (ILkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public final fun getGradesSummary (ILkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public final fun getHomework (ILjava/time/LocalDate;Ljava/time/LocalDate;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public final fun getKeyId ()Ljava/lang/String;
 	public final fun getLogLevel ()Lokhttp3/logging/HttpLoggingInterceptor$Level;
 	public final fun getMailboxes (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;

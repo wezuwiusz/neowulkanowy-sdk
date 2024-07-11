@@ -7,6 +7,7 @@ import io.github.wulkanowy.sdk.hebe.models.Exam
 import io.github.wulkanowy.sdk.hebe.models.Grade
 import io.github.wulkanowy.sdk.hebe.models.GradeAverage
 import io.github.wulkanowy.sdk.hebe.models.GradeSummary
+import io.github.wulkanowy.sdk.hebe.models.Homework
 import io.github.wulkanowy.sdk.hebe.models.Lesson
 import io.github.wulkanowy.sdk.hebe.models.Mailbox
 import io.github.wulkanowy.sdk.hebe.models.Meeting
@@ -66,6 +67,9 @@ internal interface StudentService {
 
     @GET("api/mobile/note/byPupil")
     suspend fun getNotes(@QueryMap query: Map<String, Any?>): ApiResponse<List<Note>>
+
+    @GET("api/mobile/homework/byPupil")
+    suspend fun getHomework(@QueryMap query: Map<String, Any?>): ApiResponse<List<Homework>>
 
     @POST("api/mobile/messages/statuses")
     suspend fun setStatus(@Body request: ApiRequest<List<SetMessageStatusRequest>>): ApiResponse<Boolean>

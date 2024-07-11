@@ -134,6 +134,17 @@ internal class StudentRepository(
         ).getEnvelopeOrThrowError()
         .orEmpty()
 
+    suspend fun getHomework(pupilId: Int, startDate: LocalDate, endDate: LocalDate) = studentService
+        .getHomework(
+            createQueryMap(
+                pupilId = pupilId,
+            ),
+        ).getEnvelopeOrThrowError()
+        .orEmpty()
+        .filter {
+            it.deadline.date in startDate..endDate
+        }
+
     suspend fun setMessageStatus(pupilId: Int?, boxKey: String, messageKey: String, status: Int) = studentService
         .setStatus(
             ApiRequest(

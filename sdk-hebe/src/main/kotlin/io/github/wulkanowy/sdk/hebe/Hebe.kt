@@ -6,6 +6,7 @@ import io.github.wulkanowy.sdk.hebe.models.Exam
 import io.github.wulkanowy.sdk.hebe.models.Grade
 import io.github.wulkanowy.sdk.hebe.models.GradeAverage
 import io.github.wulkanowy.sdk.hebe.models.GradeSummary
+import io.github.wulkanowy.sdk.hebe.models.Homework
 import io.github.wulkanowy.sdk.hebe.models.Lesson
 import io.github.wulkanowy.sdk.hebe.models.Mailbox
 import io.github.wulkanowy.sdk.hebe.models.Meeting
@@ -301,6 +302,13 @@ class Hebe {
                 name = it.column.subject.name,
             )
         }.distinctBy { it.id }
+
+    suspend fun getHomework(pupilId: Int, startDate: LocalDate, endDate: LocalDate): List<Homework> = studentRepository
+        .getHomework(
+            pupilId = pupilId,
+            startDate = startDate,
+            endDate = endDate,
+        )
 
     suspend fun setMessageStatus(pupilId: Int?, boxKey: String, messageKey: String, status: Int): Boolean? = studentRepository.setMessageStatus(
         pupilId = pupilId,
