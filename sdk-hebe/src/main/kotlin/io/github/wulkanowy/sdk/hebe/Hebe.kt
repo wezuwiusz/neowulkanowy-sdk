@@ -10,6 +10,7 @@ import io.github.wulkanowy.sdk.hebe.models.Lesson
 import io.github.wulkanowy.sdk.hebe.models.Mailbox
 import io.github.wulkanowy.sdk.hebe.models.Meeting
 import io.github.wulkanowy.sdk.hebe.models.Message
+import io.github.wulkanowy.sdk.hebe.models.Subject
 import io.github.wulkanowy.sdk.hebe.models.Teacher
 import io.github.wulkanowy.sdk.hebe.models.TimetableFull
 import io.github.wulkanowy.sdk.hebe.models.TimetableHeader
@@ -221,8 +222,13 @@ class Hebe {
         )
     }
 
-    suspend fun getAttendanceSummary(pupilId: Int, startDate: LocalDate, endDate: LocalDate): AttendanceSummary {
-        val completedLessons = studentRepository.getCompletedLessons(pupilId, startDate, endDate)
+    suspend fun getAttendanceSummary(pupilId: Int, startDate: LocalDate, endDate: LocalDate, subjectId: Int): AttendanceSummary {
+        var completedLessons = studentRepository.getCompletedLessons(pupilId, startDate, endDate)
+        if (subjectId != -1) {
+            completedLessons = completedLessons.filter {
+                it.subject?.id == subjectId
+            }
+        }
         var presences = 0
         var absences = 0
         var legalAbsences = 0
@@ -257,7 +263,7 @@ class Hebe {
         )
     }
 
-    suspend fun getAttendanceSummaryForWholeYear(pupilId: Int, startDate: LocalDate, endDate: LocalDate): List<AttendanceSummary> {
+    suspend fun getAttendanceSummaryForWholeYear(pupilId: Int, startDate: LocalDate, endDate: LocalDate, subjectId: Int): List<AttendanceSummary> {
         val months = ChronoUnit.MONTHS.between(startDate, endDate)
         val summaries = arrayListOf<AttendanceSummary>()
 
@@ -267,6 +273,7 @@ class Hebe {
                     pupilId,
                     startDate.plusMonths(i).minusDays(startDate.dayOfMonth.toLong() - 1),
                     startDate.plusMonths(i + 1).minusDays(startDate.dayOfMonth.toLong() - 1),
+                    subjectId,
                 ),
             )
         }
@@ -283,6 +290,17 @@ class Hebe {
 
     suspend fun getNotes(pupilId: Int) = studentRepository
         .getNotes(pupilId = pupilId)
+
+    suspend fun getSubjects(pupilId: Int, periodId: Int): List<Subject> = studentRepository
+        .getGrades(
+            pupilId = pupilId,
+            periodId = periodId,
+        ).map {
+            Subject(
+                id = it.column.subject.id,
+                name = it.column.subject.name,
+            )
+        }.distinctBy { it.id }
 
     suspend fun setMessageStatus(pupilId: Int?, boxKey: String, messageKey: String, status: Int): Boolean? = studentRepository.setMessageStatus(
         pupilId = pupilId,

@@ -82,7 +82,7 @@ public final class io/github/wulkanowy/sdk/Sdk {
 	public final fun getStudentsHybrid (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public static synthetic fun getStudentsHybrid$default (Lio/github/wulkanowy/sdk/Sdk;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
 	public final fun getStudentsTrips (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
-	public final fun getSubjects (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public final fun getSubjects (ILkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public final fun getSymbol ()Ljava/lang/String;
 	public final fun getTeachers (ILkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public final fun getTimetable (Ljava/time/LocalDate;Ljava/time/LocalDate;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;

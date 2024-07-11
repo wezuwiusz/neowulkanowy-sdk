@@ -3,8 +3,8 @@ public final class io/github/wulkanowy/sdk/hebe/Hebe {
 	public final fun addInterceptor (Lokhttp3/Interceptor;Z)V
 	public static synthetic fun addInterceptor$default (Lio/github/wulkanowy/sdk/hebe/Hebe;Lokhttp3/Interceptor;ZILjava/lang/Object;)V
 	public final fun getAttendance (ILjava/time/LocalDate;Ljava/time/LocalDate;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
-	public final fun getAttendanceSummary (ILjava/time/LocalDate;Ljava/time/LocalDate;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
-	public final fun getAttendanceSummaryForWholeYear (ILjava/time/LocalDate;Ljava/time/LocalDate;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public final fun getAttendanceSummary (ILjava/time/LocalDate;Ljava/time/LocalDate;ILkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public final fun getAttendanceSummaryForWholeYear (ILjava/time/LocalDate;Ljava/time/LocalDate;ILkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public final fun getBaseUrl ()Ljava/lang/String;
 	public final fun getDeviceModel ()Ljava/lang/String;
 	public final fun getExams (Ljava/time/LocalDate;Ljava/time/LocalDate;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
@@ -24,6 +24,7 @@ public final class io/github/wulkanowy/sdk/hebe/Hebe {
 	public final fun getSchedule (ILjava/time/LocalDate;Ljava/time/LocalDate;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public final fun getSchoolId ()Ljava/lang/String;
 	public final fun getStudents (Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public final fun getSubjects (IILkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public final fun getTeachers (ILkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public final fun register (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public static synthetic fun register$default (Lio/github/wulkanowy/sdk/hebe/Hebe;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
@@ -2239,6 +2240,19 @@ public final class io/github/wulkanowy/sdk/hebe/models/SetMessageStatusRequest$$
 
 public final class io/github/wulkanowy/sdk/hebe/models/SetMessageStatusRequest$Companion {
 	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public final class io/github/wulkanowy/sdk/hebe/models/Subject {
+	public fun <init> (ILjava/lang/String;)V
+	public final fun component1 ()I
+	public final fun component2 ()Ljava/lang/String;
+	public final fun copy (ILjava/lang/String;)Lio/github/wulkanowy/sdk/hebe/models/Subject;
+	public static synthetic fun copy$default (Lio/github/wulkanowy/sdk/hebe/models/Subject;ILjava/lang/String;ILjava/lang/Object;)Lio/github/wulkanowy/sdk/hebe/models/Subject;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getId ()I
+	public final fun getName ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
 }
 
 public final class io/github/wulkanowy/sdk/hebe/models/Teacher {

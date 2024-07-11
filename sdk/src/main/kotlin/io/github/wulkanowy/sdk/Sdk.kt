@@ -450,6 +450,7 @@ class Sdk {
                         pupilId = studentId,
                         startDate = startDate,
                         endDate = endDate,
+                        subjectId = subjectId ?: -1,
                     ).mapAttendanceSummary()
         }
     }
@@ -461,10 +462,10 @@ class Sdk {
         }
     }
 
-    suspend fun getSubjects(): List<Subject> = withContext(Dispatchers.IO) {
+    suspend fun getSubjects(periodId: Int): List<Subject> = withContext(Dispatchers.IO) {
         when (mode) {
-            Mode.HYBRID, Mode.SCRAPPER -> scrapper.getSubjects().mapSubjects()
-            Mode.HEBE -> throw NotImplementedError("Not available in HEBE mode")
+            Mode.SCRAPPER -> scrapper.getSubjects().mapSubjects()
+            Mode.HYBRID, Mode.HEBE -> hebe.getSubjects(studentId, periodId).mapSubjects()
         }
     }
 
