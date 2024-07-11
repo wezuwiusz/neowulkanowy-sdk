@@ -2258,6 +2258,105 @@ public final class io/github/wulkanowy/sdk/hebe/models/TimetableHeader {
 	public fun toString ()Ljava/lang/String;
 }
 
+public final class io/github/wulkanowy/sdk/hebe/models/Vacation {
+	public static final field Companion Lio/github/wulkanowy/sdk/hebe/models/Vacation$Companion;
+	public fun <init> (ILjava/lang/String;Lio/github/wulkanowy/sdk/hebe/models/Vacation$DateFrom;Lio/github/wulkanowy/sdk/hebe/models/Vacation$DateTo;)V
+	public final fun component1 ()I
+	public final fun component2 ()Ljava/lang/String;
+	public final fun component3 ()Lio/github/wulkanowy/sdk/hebe/models/Vacation$DateFrom;
+	public final fun component4 ()Lio/github/wulkanowy/sdk/hebe/models/Vacation$DateTo;
+	public final fun copy (ILjava/lang/String;Lio/github/wulkanowy/sdk/hebe/models/Vacation$DateFrom;Lio/github/wulkanowy/sdk/hebe/models/Vacation$DateTo;)Lio/github/wulkanowy/sdk/hebe/models/Vacation;
+	public static synthetic fun copy$default (Lio/github/wulkanowy/sdk/hebe/models/Vacation;ILjava/lang/String;Lio/github/wulkanowy/sdk/hebe/models/Vacation$DateFrom;Lio/github/wulkanowy/sdk/hebe/models/Vacation$DateTo;ILjava/lang/Object;)Lio/github/wulkanowy/sdk/hebe/models/Vacation;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getDateFrom ()Lio/github/wulkanowy/sdk/hebe/models/Vacation$DateFrom;
+	public final fun getDateTo ()Lio/github/wulkanowy/sdk/hebe/models/Vacation$DateTo;
+	public final fun getId ()I
+	public final fun getName ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class io/github/wulkanowy/sdk/hebe/models/Vacation$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+	public static final field INSTANCE Lio/github/wulkanowy/sdk/hebe/models/Vacation$$serializer;
+	public fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lio/github/wulkanowy/sdk/hebe/models/Vacation;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public fun serialize (Lkotlinx/serialization/encoding/Encoder;Lio/github/wulkanowy/sdk/hebe/models/Vacation;)V
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+	public fun typeParametersSerializers ()[Lkotlinx/serialization/KSerializer;
+}
+
+public final class io/github/wulkanowy/sdk/hebe/models/Vacation$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public final class io/github/wulkanowy/sdk/hebe/models/Vacation$DateFrom {
+	public static final field Companion Lio/github/wulkanowy/sdk/hebe/models/Vacation$DateFrom$Companion;
+	public fun <init> (Ljava/time/LocalDate;Ljava/lang/String;Ljava/lang/String;J)V
+	public final fun component1 ()Ljava/time/LocalDate;
+	public final fun component2 ()Ljava/lang/String;
+	public final fun component3 ()Ljava/lang/String;
+	public final fun component4 ()J
+	public final fun copy (Ljava/time/LocalDate;Ljava/lang/String;Ljava/lang/String;J)Lio/github/wulkanowy/sdk/hebe/models/Vacation$DateFrom;
+	public static synthetic fun copy$default (Lio/github/wulkanowy/sdk/hebe/models/Vacation$DateFrom;Ljava/time/LocalDate;Ljava/lang/String;Ljava/lang/String;JILjava/lang/Object;)Lio/github/wulkanowy/sdk/hebe/models/Vacation$DateFrom;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getDate ()Ljava/time/LocalDate;
+	public final fun getDateDisplay ()Ljava/lang/String;
+	public final fun getTime ()Ljava/lang/String;
+	public final fun getTimestamp ()J
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class io/github/wulkanowy/sdk/hebe/models/Vacation$DateFrom$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+	public static final field INSTANCE Lio/github/wulkanowy/sdk/hebe/models/Vacation$DateFrom$$serializer;
+	public fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lio/github/wulkanowy/sdk/hebe/models/Vacation$DateFrom;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public fun serialize (Lkotlinx/serialization/encoding/Encoder;Lio/github/wulkanowy/sdk/hebe/models/Vacation$DateFrom;)V
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+	public fun typeParametersSerializers ()[Lkotlinx/serialization/KSerializer;
+}
+
+public final class io/github/wulkanowy/sdk/hebe/models/Vacation$DateFrom$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public final class io/github/wulkanowy/sdk/hebe/models/Vacation$DateTo {
+	public static final field Companion Lio/github/wulkanowy/sdk/hebe/models/Vacation$DateTo$Companion;
+	public fun <init> (Ljava/time/LocalDate;Ljava/lang/String;Ljava/lang/String;J)V
+	public final fun component1 ()Ljava/time/LocalDate;
+	public final fun component2 ()Ljava/lang/String;
+	public final fun component3 ()Ljava/lang/String;
+	public final fun component4 ()J
+	public final fun copy (Ljava/time/LocalDate;Ljava/lang/String;Ljava/lang/String;J)Lio/github/wulkanowy/sdk/hebe/models/Vacation$DateTo;
+	public static synthetic fun copy$default (Lio/github/wulkanowy/sdk/hebe/models/Vacation$DateTo;Ljava/time/LocalDate;Ljava/lang/String;Ljava/lang/String;JILjava/lang/Object;)Lio/github/wulkanowy/sdk/hebe/models/Vacation$DateTo;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getDate ()Ljava/time/LocalDate;
+	public final fun getDateDisplay ()Ljava/lang/String;
+	public final fun getTime ()Ljava/lang/String;
+	public final fun getTimestamp ()J
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class io/github/wulkanowy/sdk/hebe/models/Vacation$DateTo$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+	public static final field INSTANCE Lio/github/wulkanowy/sdk/hebe/models/Vacation$DateTo$$serializer;
+	public fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lio/github/wulkanowy/sdk/hebe/models/Vacation$DateTo;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public fun serialize (Lkotlinx/serialization/encoding/Encoder;Lio/github/wulkanowy/sdk/hebe/models/Vacation$DateTo;)V
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+	public fun typeParametersSerializers ()[Lkotlinx/serialization/KSerializer;
+}
+
+public final class io/github/wulkanowy/sdk/hebe/models/Vacation$DateTo$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
 public final class io/github/wulkanowy/sdk/hebe/register/RegisterDevice {
 	public fun <init> (ILjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
 	public final fun component1 ()I

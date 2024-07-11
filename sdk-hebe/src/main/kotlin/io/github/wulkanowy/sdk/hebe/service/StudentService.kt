@@ -14,6 +14,7 @@ import io.github.wulkanowy.sdk.hebe.models.Recipient
 import io.github.wulkanowy.sdk.hebe.models.SetMessageStatusRequest
 import io.github.wulkanowy.sdk.hebe.models.Teacher
 import io.github.wulkanowy.sdk.hebe.models.TimetableChange
+import io.github.wulkanowy.sdk.hebe.models.Vacation
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
@@ -54,6 +55,9 @@ internal interface StudentService {
 
     @GET("api/mobile/schedule/changes/byPupil")
     suspend fun getScheduleChanges(@QueryMap query: Map<String, Any?>): ApiResponse<List<TimetableChange>>
+
+    @GET("api/mobile/school/vacation")
+    suspend fun getVacations(@QueryMap query: Map<String, Any?>): ApiResponse<List<Vacation>>
 
     @POST("api/mobile/messages/statuses")
     suspend fun setStatus(@Body request: ApiRequest<List<SetMessageStatusRequest>>): ApiResponse<Boolean>

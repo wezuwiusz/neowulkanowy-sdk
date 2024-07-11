@@ -176,6 +176,12 @@ class Hebe {
         val lessons = arrayListOf<Lesson>()
         val headers = arrayListOf<TimetableHeader>()
         val days = Duration.between(startDate.atStartOfDay(), endDate.atStartOfDay()).toDays()
+        val vacations = studentRepository.getVacations(
+            pupilId = pupilId,
+            startDate = startDate,
+            endDate = endDate,
+        )
+
         for (i in 0..<days) {
             val currentDate = startDate.plusDays(i)
             studentRepository
@@ -188,9 +194,12 @@ class Hebe {
                     lessons.add(it)
                 }
 
+            val vacation = vacations.find {
+                currentDate >= it.dateFrom.date && currentDate <= it.dateTo.date
+            }
             headers.add(
                 TimetableHeader(
-                    content = "",
+                    content = vacation?.name ?: "",
                     date = startDate.plusDays(i),
                 ),
             )

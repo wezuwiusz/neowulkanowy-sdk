@@ -105,6 +105,16 @@ internal class StudentRepository(
         ).getEnvelopeOrThrowError()
         .orEmpty()
 
+    suspend fun getVacations(pupilId: Int, startDate: LocalDate, endDate: LocalDate) = studentService
+        .getVacations(
+            createQueryMap(
+                pupilId = pupilId,
+                dateFrom = startDate,
+                dateTo = endDate,
+            ),
+        ).getEnvelopeOrThrowError()
+        .orEmpty()
+
     suspend fun setMessageStatus(pupilId: Int?, boxKey: String, messageKey: String, status: Int) = studentService
         .setStatus(
             ApiRequest(
