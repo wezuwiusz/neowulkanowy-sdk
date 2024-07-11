@@ -115,6 +115,17 @@ internal class StudentRepository(
         ).getEnvelopeOrThrowError()
         .orEmpty()
 
+    suspend fun getCompletedLessons(pupilId: Int, startDate: LocalDate, endDate: LocalDate) = studentService
+        .getCompletedLessons(
+            createQueryMap(
+                pupilId = pupilId,
+                dateFrom = startDate,
+                dateTo = endDate,
+            ),
+        ).getEnvelopeOrThrowError()
+        .orEmpty()
+        .distinctBy { it.lessonId }
+
     suspend fun setMessageStatus(pupilId: Int?, boxKey: String, messageKey: String, status: Int) = studentService
         .setStatus(
             ApiRequest(

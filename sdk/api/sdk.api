@@ -9,8 +9,8 @@ public final class io/github/wulkanowy/sdk/Sdk {
 	public static synthetic fun excuseForAbsence$default (Lio/github/wulkanowy/sdk/Sdk;Ljava/util/List;Ljava/lang/String;Lkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
 	public final fun getAndroidVersion ()Ljava/lang/String;
 	public final fun getAttendance (Ljava/time/LocalDate;Ljava/time/LocalDate;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
-	public final fun getAttendanceSummary (Ljava/lang/Integer;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
-	public static synthetic fun getAttendanceSummary$default (Lio/github/wulkanowy/sdk/Sdk;Ljava/lang/Integer;Lkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
+	public final fun getAttendanceSummary (Ljava/lang/Integer;Ljava/time/LocalDate;Ljava/time/LocalDate;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public static synthetic fun getAttendanceSummary$default (Lio/github/wulkanowy/sdk/Sdk;Ljava/lang/Integer;Ljava/time/LocalDate;Ljava/time/LocalDate;Lkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
 	public final fun getBuildTag ()Ljava/lang/String;
 	public final fun getClassId ()I
 	public final fun getCompletedLessons (Ljava/time/LocalDate;Ljava/time/LocalDate;ILkotlin/coroutines/Continuation;)Ljava/lang/Object;

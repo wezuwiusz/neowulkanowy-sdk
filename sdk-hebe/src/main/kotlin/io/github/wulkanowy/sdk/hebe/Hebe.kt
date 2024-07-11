@@ -1,5 +1,7 @@
 package io.github.wulkanowy.sdk.hebe
 
+import io.github.wulkanowy.sdk.hebe.models.AttendanceSummary
+import io.github.wulkanowy.sdk.hebe.models.CompletedLesson
 import io.github.wulkanowy.sdk.hebe.models.Exam
 import io.github.wulkanowy.sdk.hebe.models.Grade
 import io.github.wulkanowy.sdk.hebe.models.GradeAverage
@@ -19,6 +21,7 @@ import okhttp3.Interceptor
 import okhttp3.logging.HttpLoggingInterceptor
 import java.time.Duration
 import java.time.LocalDate
+import java.time.temporal.ChronoUnit
 
 class Hebe {
 
@@ -217,6 +220,66 @@ class Hebe {
             changes = changes,
         )
     }
+
+    suspend fun getAttendanceSummary(pupilId: Int, startDate: LocalDate, endDate: LocalDate): AttendanceSummary {
+        val completedLessons = studentRepository.getCompletedLessons(pupilId, startDate, endDate)
+        var presences = 0
+        var absences = 0
+        var legalAbsences = 0
+        var latenesses = 0
+        var justifiedAbsences = 0
+        var exemptions = 0
+        var justifiedLatenesses = 0
+        completedLessons
+            .forEach { lesson ->
+                if (lesson.presenceType != null) {
+                    when (lesson.presenceType.categoryId) {
+                        1 -> presences++
+                        6 -> legalAbsences++
+                        7 -> exemptions++
+                        2 -> absences++
+                        3 -> justifiedAbsences++
+                        4 -> latenesses++
+                        5 -> justifiedLatenesses++
+                    }
+                }
+            }
+
+        return AttendanceSummary(
+            month = startDate.month,
+            presence = presences,
+            absence = absences,
+            absenceExcused = justifiedAbsences,
+            absenceForSchoolReasons = legalAbsences,
+            lateness = latenesses,
+            latenessExcused = justifiedLatenesses,
+            exemption = exemptions,
+        )
+    }
+
+    suspend fun getAttendanceSummaryForWholeYear(pupilId: Int, startDate: LocalDate, endDate: LocalDate): List<AttendanceSummary> {
+        val months = ChronoUnit.MONTHS.between(startDate, endDate)
+        val summaries = arrayListOf<AttendanceSummary>()
+
+        for (i in 0..<months) {
+            summaries.add(
+                getAttendanceSummary(
+                    pupilId,
+                    startDate.plusMonths(i).minusDays(startDate.dayOfMonth.toLong() - 1),
+                    startDate.plusMonths(i + 1).minusDays(startDate.dayOfMonth.toLong() - 1),
+                ),
+            )
+        }
+
+        return summaries
+    }
+
+    suspend fun getAttendance(pupilId: Int, startDate: LocalDate, endDate: LocalDate): List<CompletedLesson> = studentRepository
+        .getCompletedLessons(
+            pupilId = pupilId,
+            startDate = startDate,
+            endDate = endDate,
+        )
 
     suspend fun setMessageStatus(pupilId: Int?, boxKey: String, messageKey: String, status: Int): Boolean? = studentRepository.setMessageStatus(
         pupilId = pupilId,

@@ -2,6 +2,7 @@ package io.github.wulkanowy.sdk.hebe.service
 
 import io.github.wulkanowy.sdk.hebe.ApiRequest
 import io.github.wulkanowy.sdk.hebe.ApiResponse
+import io.github.wulkanowy.sdk.hebe.models.CompletedLesson
 import io.github.wulkanowy.sdk.hebe.models.Exam
 import io.github.wulkanowy.sdk.hebe.models.Grade
 import io.github.wulkanowy.sdk.hebe.models.GradeAverage
@@ -58,6 +59,9 @@ internal interface StudentService {
 
     @GET("api/mobile/school/vacation")
     suspend fun getVacations(@QueryMap query: Map<String, Any?>): ApiResponse<List<Vacation>>
+
+    @GET("api/mobile/lesson/byPupil")
+    suspend fun getCompletedLessons(@QueryMap query: Map<String, Any?>): ApiResponse<List<CompletedLesson>>
 
     @POST("api/mobile/messages/statuses")
     suspend fun setStatus(@Body request: ApiRequest<List<SetMessageStatusRequest>>): ApiResponse<Boolean>
