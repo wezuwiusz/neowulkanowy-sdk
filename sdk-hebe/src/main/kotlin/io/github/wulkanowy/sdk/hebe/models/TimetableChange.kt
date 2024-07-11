@@ -22,13 +22,13 @@ data class TimetableChange(
     @SerialName("Room")
     val room: Room?,
     @SerialName("Subject")
-    val subject: String?,
+    val subject: Subject?,
     @SerialName("TeacherPrimary")
     val teacherPrimary: Teacher?,
     @SerialName("TeacherAbsenceReasonId")
-    val teacherAbsenceReasonId: Int,
+    val teacherAbsenceReasonId: Int?,
     @SerialName("TeacherAbsenceEffectName")
-    val teacherAbsenceEffectName: String,
+    val teacherAbsenceEffectName: String?,
     @SerialName("TeacherSecondary")
     val teacherSecondary: Teacher?,
     @SerialName("TeacherSecondaryAbsenceReasonId")
@@ -46,7 +46,7 @@ data class TimetableChange(
     @SerialName("Clazz")
     val `class`: Class,
     @SerialName("Distribution")
-    val distribution: Distribution,
+    val distribution: Distribution?,
     @SerialName("ClassAbsence")
     val classAbsence: Boolean,
     @SerialName("NoRoom")

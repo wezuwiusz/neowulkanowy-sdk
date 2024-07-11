@@ -31,6 +31,10 @@ data class Lesson(
     val pupilAlias: String?,
     @SerialName("Visible")
     val visible: Boolean,
+    @SerialName("Distribution")
+    val distribution: Distribution?,
+    @SerialName("Change")
+    val change: Change?,
 ) {
     @Serializable
     data class Date(
@@ -103,5 +107,31 @@ data class Lesson(
         val displayName: String,
         @SerialName("Symbol")
         val symbol: String,
+    )
+
+    @Serializable
+    data class Distribution(
+        @SerialName("Id")
+        val id: Int,
+        @SerialName("Key")
+        val key: String,
+        @SerialName("Name")
+        val name: String,
+        @SerialName("Shortcut")
+        val shortcut: String,
+        @SerialName("PartType")
+        val partType: String,
+    )
+
+    @Serializable
+    data class Change(
+        @SerialName("Id")
+        val id: Int,
+        @SerialName("Type")
+        val type: Int,
+        @SerialName("IsMerge")
+        val isMerge: Boolean,
+        @SerialName("Separation")
+        val separation: Boolean,
     )
 }

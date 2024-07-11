@@ -660,8 +660,8 @@ class Sdk {
 
     suspend fun getTimetable(start: LocalDate, end: LocalDate): Timetable = withContext(Dispatchers.IO) {
         when (mode) {
-            Mode.HYBRID, Mode.SCRAPPER -> scrapper.getTimetable(start, end).mapTimetableFull(registerTimeZone)
-            Mode.HEBE -> throw NotImplementedError("Not available in HEBE mode")
+            Mode.SCRAPPER -> scrapper.getTimetable(start, end).mapTimetableFull(registerTimeZone)
+            Mode.HYBRID, Mode.HEBE -> hebe.getSchedule(studentId, start, end).mapTimetableFull(registerTimeZone)
         }
     }
 

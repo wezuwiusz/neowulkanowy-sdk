@@ -85,6 +85,26 @@ internal class StudentRepository(
         ).getEnvelopeOrThrowError()
         .orEmpty()
 
+    suspend fun getSchedule(pupilId: Int, startDate: LocalDate, endDate: LocalDate) = studentService
+        .getSchedule(
+            createQueryMap(
+                pupilId = pupilId,
+                dateFrom = startDate,
+                dateTo = endDate,
+            ),
+        ).getEnvelopeOrThrowError()
+        .orEmpty()
+
+    suspend fun getTimetableChanges(pupilId: Int, startDate: LocalDate, endDate: LocalDate) = studentService
+        .getScheduleChanges(
+            createQueryMap(
+                pupilId = pupilId,
+                dateFrom = startDate,
+                dateTo = endDate,
+            ),
+        ).getEnvelopeOrThrowError()
+        .orEmpty()
+
     suspend fun setMessageStatus(pupilId: Int?, boxKey: String, messageKey: String, status: Int) = studentService
         .setStatus(
             ApiRequest(

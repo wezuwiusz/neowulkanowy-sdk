@@ -4,16 +4,20 @@ import io.github.wulkanowy.sdk.hebe.models.Exam
 import io.github.wulkanowy.sdk.hebe.models.Grade
 import io.github.wulkanowy.sdk.hebe.models.GradeAverage
 import io.github.wulkanowy.sdk.hebe.models.GradeSummary
+import io.github.wulkanowy.sdk.hebe.models.Lesson
 import io.github.wulkanowy.sdk.hebe.models.Mailbox
 import io.github.wulkanowy.sdk.hebe.models.Meeting
 import io.github.wulkanowy.sdk.hebe.models.Message
 import io.github.wulkanowy.sdk.hebe.models.Teacher
+import io.github.wulkanowy.sdk.hebe.models.TimetableFull
+import io.github.wulkanowy.sdk.hebe.models.TimetableHeader
 import io.github.wulkanowy.sdk.hebe.register.RegisterDevice
 import io.github.wulkanowy.sdk.hebe.register.StudentInfo
 import io.github.wulkanowy.sdk.hebe.repository.RepositoryManager
 import io.github.wulkanowy.signer.hebe.generateKeyPair
 import okhttp3.Interceptor
 import okhttp3.logging.HttpLoggingInterceptor
+import java.time.Duration
 import java.time.LocalDate
 
 class Hebe {
@@ -167,6 +171,43 @@ class Hebe {
         pupilId = pupilId,
         startDate = startDate,
     )
+
+    suspend fun getSchedule(pupilId: Int, startDate: LocalDate, endDate: LocalDate): TimetableFull {
+        val lessons = arrayListOf<Lesson>()
+        val headers = arrayListOf<TimetableHeader>()
+        val days = Duration.between(startDate.atStartOfDay(), endDate.atStartOfDay()).toDays()
+        for (i in 0..<days) {
+            val currentDate = startDate.plusDays(i)
+            studentRepository
+                .getSchedule(
+                    pupilId = pupilId,
+                    startDate = currentDate,
+                    // the API ignores the endDate completely
+                    endDate = currentDate,
+                ).forEach {
+                    lessons.add(it)
+                }
+
+            headers.add(
+                TimetableHeader(
+                    content = "",
+                    date = startDate.plusDays(i),
+                ),
+            )
+        }
+
+        val changes = studentRepository.getTimetableChanges(
+            pupilId = pupilId,
+            startDate = startDate,
+            endDate = endDate,
+        )
+
+        return TimetableFull(
+            lessons = lessons.toList(),
+            headers = headers.toList(),
+            changes = changes,
+        )
+    }
 
     suspend fun setMessageStatus(pupilId: Int?, boxKey: String, messageKey: String, status: Int): Boolean? = studentRepository.setMessageStatus(
         pupilId = pupilId,

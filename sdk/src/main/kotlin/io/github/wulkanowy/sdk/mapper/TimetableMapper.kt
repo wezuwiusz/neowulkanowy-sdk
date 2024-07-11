@@ -5,19 +5,26 @@ import io.github.wulkanowy.sdk.pojo.Lesson
 import io.github.wulkanowy.sdk.pojo.LessonAdditional
 import io.github.wulkanowy.sdk.pojo.Timetable
 import io.github.wulkanowy.sdk.pojo.TimetableDayHeader
+import java.time.LocalDateTime
 import java.time.ZoneId
+import io.github.wulkanowy.sdk.hebe.models.Lesson as HebeLesson
+import io.github.wulkanowy.sdk.hebe.models.TimetableChange as HebeTimetableChange
+import io.github.wulkanowy.sdk.hebe.models.TimetableFull as HebeFullTimetable
+import io.github.wulkanowy.sdk.hebe.models.TimetableHeader as HebeTimetableHeader
 import io.github.wulkanowy.sdk.scrapper.timetable.CompletedLesson as ScrapperCompletedLesson
 import io.github.wulkanowy.sdk.scrapper.timetable.Lesson as ScrapperTimetable
 import io.github.wulkanowy.sdk.scrapper.timetable.LessonAdditional as ScrapperTimetableAdditional
 import io.github.wulkanowy.sdk.scrapper.timetable.Timetable as ScrapperTimetableFull
 import io.github.wulkanowy.sdk.scrapper.timetable.TimetableDayHeader as ScrapperTimetableDayHeader
 
+@JvmName("mapScrapperFullTimetable")
 internal fun ScrapperTimetableFull.mapTimetableFull(zoneId: ZoneId) = Timetable(
     headers = headers.mapTimetableDayHeaders(),
     lessons = lessons.mapTimetable(zoneId),
     additional = additional.mapTimetableAdditional(zoneId),
 )
 
+@JvmName("mapScrapperTimetable")
 internal fun List<ScrapperTimetable>.mapTimetable(zoneId: ZoneId) = map {
     Lesson(
         canceled = it.canceled,
@@ -38,6 +45,7 @@ internal fun List<ScrapperTimetable>.mapTimetable(zoneId: ZoneId) = map {
     )
 }
 
+@JvmName("mapScrapperTimetableHeader")
 internal fun List<ScrapperTimetableDayHeader>.mapTimetableDayHeaders() = map {
     TimetableDayHeader(
         date = it.date,
@@ -45,6 +53,7 @@ internal fun List<ScrapperTimetableDayHeader>.mapTimetableDayHeaders() = map {
     )
 }
 
+@JvmName("mapScrapperTimetableAdditional")
 internal fun List<ScrapperTimetableAdditional>.mapTimetableAdditional(zoneId: ZoneId) = map {
     LessonAdditional(
         subject = it.subject,
@@ -54,6 +63,7 @@ internal fun List<ScrapperTimetableAdditional>.mapTimetableAdditional(zoneId: Zo
     )
 }
 
+@JvmName("mapScrapperCompletedLesson")
 internal fun List<ScrapperCompletedLesson>.mapCompletedLessons() = map {
     CompletedLesson(
         date = it.date.toLocalDate(),
@@ -65,5 +75,59 @@ internal fun List<ScrapperCompletedLesson>.mapCompletedLessons() = map {
         substitution = it.substitution.orEmpty(),
         absence = it.absence.orEmpty(),
         resources = it.resources.orEmpty(),
+    )
+}
+
+@JvmName("mapHebeFullTimetable")
+internal fun HebeFullTimetable.mapTimetableFull(zoneId: ZoneId) = Timetable(
+    headers = headers.mapTimetableDayHeaders(),
+    lessons = lessons.mapTimetable(zoneId, changes),
+    additional = emptyList(),
+)
+
+@JvmName("mapHebeTimetable")
+internal fun List<HebeLesson>.mapTimetable(zoneId: ZoneId, changes: List<HebeTimetableChange>) = map {
+    val timeSlotStart = it.timeSlot.start.split(":")
+    val timeSlotEnd = it.timeSlot.end.split(":")
+    val change = changes.find { change -> it.change?.id == change.id }
+
+    Lesson(
+        canceled = change?.change?.type == 1,
+        changes = change != null && change.change.type != 1,
+        date = it.date.date,
+        start = LocalDateTime
+            .of(
+                it.date.date.year,
+                it.date.date.monthValue,
+                it.date.date.dayOfMonth,
+                timeSlotStart[0].toInt(),
+                timeSlotStart[1].toInt(),
+            ).atZone(zoneId),
+        end = LocalDateTime
+            .of(
+                it.date.date.year,
+                it.date.date.monthValue,
+                it.date.date.dayOfMonth,
+                timeSlotEnd[0].toInt(),
+                timeSlotEnd[1].toInt(),
+            ).atZone(zoneId),
+        group = it.distribution?.name ?: "",
+        info = change?.teacherAbsenceEffectName ?: "",
+        number = it.timeSlot.position,
+        room = change?.room?.code ?: it.room.code,
+        roomOld = if (change?.room != null) it.room.code else "",
+        subject = change?.subject?.name ?: it.subject.name,
+        subjectOld = if (change?.subject != null) it.subject.name else "",
+        studentPlan = it.visible,
+        teacher = change?.teacherPrimary?.displayName ?: it.teacherPrimary.displayName,
+        teacherOld = if (change?.teacherPrimary != null) it.teacherPrimary.displayName else "",
+    )
+}
+
+@JvmName("mapHebeTimetableHeader")
+internal fun List<HebeTimetableHeader>.mapTimetableDayHeaders() = map {
+    TimetableDayHeader(
+        date = it.date,
+        content = it.content,
     )
 }
