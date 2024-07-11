@@ -16,6 +16,7 @@ public final class io/github/wulkanowy/sdk/hebe/Hebe {
 	public final fun getMailboxes (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public final fun getMeetings (ILjava/time/LocalDate;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public final fun getMessages (Ljava/lang/String;ILkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public final fun getNotes (ILkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public final fun getPeriods (Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public final fun getPrivatePem ()Ljava/lang/String;
 	public final fun getPupilId ()I

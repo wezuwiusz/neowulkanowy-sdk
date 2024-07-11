@@ -126,6 +126,14 @@ internal class StudentRepository(
         .orEmpty()
         .distinctBy { it.lessonId }
 
+    suspend fun getNotes(pupilId: Int) = studentService
+        .getNotes(
+            createQueryMap(
+                pupilId = pupilId,
+            ),
+        ).getEnvelopeOrThrowError()
+        .orEmpty()
+
     suspend fun setMessageStatus(pupilId: Int?, boxKey: String, messageKey: String, status: Int) = studentService
         .setStatus(
             ApiRequest(

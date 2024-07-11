@@ -516,8 +516,8 @@ class Sdk {
 
     suspend fun getNotes(): List<Note> = withContext(Dispatchers.IO) {
         when (mode) {
-            Mode.HYBRID, Mode.SCRAPPER -> scrapper.getNotes().mapNotes()
-            Mode.HEBE -> throw NotImplementedError("Not available in HEBE mode")
+            Mode.SCRAPPER -> scrapper.getNotes().mapNotes()
+            Mode.HYBRID, Mode.HEBE -> hebe.getNotes(studentId).mapNotes()
         }
     }
 

@@ -11,6 +11,7 @@ import io.github.wulkanowy.sdk.hebe.models.Lesson
 import io.github.wulkanowy.sdk.hebe.models.Mailbox
 import io.github.wulkanowy.sdk.hebe.models.Meeting
 import io.github.wulkanowy.sdk.hebe.models.Message
+import io.github.wulkanowy.sdk.hebe.models.Note
 import io.github.wulkanowy.sdk.hebe.models.Recipient
 import io.github.wulkanowy.sdk.hebe.models.SetMessageStatusRequest
 import io.github.wulkanowy.sdk.hebe.models.Teacher
@@ -62,6 +63,9 @@ internal interface StudentService {
 
     @GET("api/mobile/lesson/byPupil")
     suspend fun getCompletedLessons(@QueryMap query: Map<String, Any?>): ApiResponse<List<CompletedLesson>>
+
+    @GET("api/mobile/note/byPupil")
+    suspend fun getNotes(@QueryMap query: Map<String, Any?>): ApiResponse<List<Note>>
 
     @POST("api/mobile/messages/statuses")
     suspend fun setStatus(@Body request: ApiRequest<List<SetMessageStatusRequest>>): ApiResponse<Boolean>

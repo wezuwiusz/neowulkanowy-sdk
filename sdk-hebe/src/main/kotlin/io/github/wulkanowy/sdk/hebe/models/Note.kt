@@ -26,7 +26,7 @@ data class Note(
     @SerialName("Creator")
     val creator: Creator,
     @SerialName("Category")
-    val category: Category,
+    val category: Category?,
 ) {
     @Serializable
     data class DateValid(

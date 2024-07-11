@@ -281,6 +281,9 @@ class Hebe {
             endDate = endDate,
         )
 
+    suspend fun getNotes(pupilId: Int) = studentRepository
+        .getNotes(pupilId = pupilId)
+
     suspend fun setMessageStatus(pupilId: Int?, boxKey: String, messageKey: String, status: Int): Boolean? = studentRepository.setMessageStatus(
         pupilId = pupilId,
         boxKey = boxKey,
