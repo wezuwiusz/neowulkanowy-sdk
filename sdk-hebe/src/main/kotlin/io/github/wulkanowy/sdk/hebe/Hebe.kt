@@ -224,12 +224,7 @@ class Hebe {
     }
 
     suspend fun getAttendanceSummary(pupilId: Int, startDate: LocalDate, endDate: LocalDate, subjectId: Int): AttendanceSummary {
-        var completedLessons = studentRepository.getCompletedLessons(pupilId, startDate, endDate)
-        if (subjectId != -1) {
-            completedLessons = completedLessons.filter {
-                it.subject?.id == subjectId
-            }
-        }
+        val completedLessons = getCompletedLessons(pupilId, startDate, endDate, subjectId)
         var presences = 0
         var absences = 0
         var legalAbsences = 0
@@ -282,12 +277,22 @@ class Hebe {
         return summaries
     }
 
-    suspend fun getAttendance(pupilId: Int, startDate: LocalDate, endDate: LocalDate): List<CompletedLesson> = studentRepository
-        .getCompletedLessons(
-            pupilId = pupilId,
-            startDate = startDate,
-            endDate = endDate,
-        )
+    suspend fun getCompletedLessons(pupilId: Int, startDate: LocalDate, endDate: LocalDate, subjectId: Int = -1): List<CompletedLesson> {
+        var completedLessons = studentRepository
+            .getCompletedLessons(
+                pupilId = pupilId,
+                startDate = startDate,
+                endDate = endDate,
+            )
+
+        if (subjectId != -1) {
+            completedLessons = completedLessons.filter {
+                it.subject?.id == subjectId
+            }
+        }
+
+        return completedLessons
+    }
 
     suspend fun getNotes(pupilId: Int) = studentRepository
         .getNotes(pupilId = pupilId)

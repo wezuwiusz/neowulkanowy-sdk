@@ -437,7 +437,7 @@ class Sdk {
     suspend fun getAttendance(startDate: LocalDate, endDate: LocalDate): List<Attendance> = withContext(Dispatchers.IO) {
         when (mode) {
             Mode.SCRAPPER -> scrapper.getAttendance(startDate, endDate).mapAttendance()
-            Mode.HYBRID, Mode.HEBE -> hebe.getAttendance(studentId, startDate, endDate).mapAttendance()
+            Mode.HYBRID, Mode.HEBE -> hebe.getCompletedLessons(studentId, startDate, endDate).mapAttendance()
         }
     }
 
@@ -672,10 +672,10 @@ class Sdk {
         }
     }
 
-    suspend fun getCompletedLessons(start: LocalDate, end: LocalDate? = null, subjectId: Int = -1): List<CompletedLesson> = withContext(Dispatchers.IO) {
+    suspend fun getCompletedLessons(start: LocalDate, end: LocalDate, subjectId: Int = -1): List<CompletedLesson> = withContext(Dispatchers.IO) {
         when (mode) {
-            Mode.HYBRID, Mode.SCRAPPER -> scrapper.getCompletedLessons(start, end, subjectId).mapCompletedLessons()
-            Mode.HEBE -> throw NotImplementedError("Not available in HEBE mode")
+            Mode.SCRAPPER -> scrapper.getCompletedLessons(start, end, subjectId).mapCompletedLessons()
+            Mode.HYBRID, Mode.HEBE -> hebe.getCompletedLessons(studentId, start, end, subjectId).mapCompletedLessons()
         }
     }
 

@@ -5,8 +5,10 @@ import io.github.wulkanowy.sdk.pojo.Lesson
 import io.github.wulkanowy.sdk.pojo.LessonAdditional
 import io.github.wulkanowy.sdk.pojo.Timetable
 import io.github.wulkanowy.sdk.pojo.TimetableDayHeader
+import io.github.wulkanowy.sdk.scrapper.attendance.AttendanceCategory
 import java.time.LocalDateTime
 import java.time.ZoneId
+import io.github.wulkanowy.sdk.hebe.models.CompletedLesson as HebeCompletedLesson
 import io.github.wulkanowy.sdk.hebe.models.Lesson as HebeLesson
 import io.github.wulkanowy.sdk.hebe.models.TimetableChange as HebeTimetableChange
 import io.github.wulkanowy.sdk.hebe.models.TimetableFull as HebeFullTimetable
@@ -129,5 +131,30 @@ internal fun List<HebeTimetableHeader>.mapTimetableDayHeaders() = map {
     TimetableDayHeader(
         date = it.date,
         content = it.content,
+    )
+}
+
+@JvmName("mapHebeCompletedLesson")
+internal fun List<HebeCompletedLesson>.mapCompletedLessons() = map {
+    val absence = AttendanceCategory.getCategoryById(it.presenceType?.categoryId ?: 0).title
+
+    CompletedLesson(
+        date = it.day.date,
+        number = it.timeSlot.position,
+        subject = it.subject?.name ?: "",
+        topic = it.topic.orEmpty(),
+        teacher = it.primaryTeacher?.displayName ?: "",
+        teacherSymbol = (
+            it.primaryTeacher
+                ?.name
+                ?.first()
+                .toString() + it.primaryTeacher
+                ?.surname
+                ?.first()
+                .toString()
+        ),
+        substitution = "",
+        absence = if (absence == "Obecność") "" else absence,
+        resources = "",
     )
 }
