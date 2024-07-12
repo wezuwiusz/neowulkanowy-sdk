@@ -679,8 +679,8 @@ class Sdk {
         }
     }
 
-    suspend fun getLuckyNumber(unitName: String = ""): LuckyNumber? = withContext(Dispatchers.IO) {
-        val numbers = getKidsLuckyNumbers()
+    suspend fun getLuckyNumber(unitName: String = "", constituentId: Int): LuckyNumber? = withContext(Dispatchers.IO) {
+        val numbers = getKidsLuckyNumbers(constituentId)
 
         // if lucky number unitName match unit name from student tile
         numbers.singleOrNull { number -> number.unitName == unitName }?.let {
@@ -750,10 +750,10 @@ class Sdk {
         }
     }
 
-    suspend fun getKidsLuckyNumbers(): List<LuckyNumber> = withContext(Dispatchers.IO) {
+    suspend fun getKidsLuckyNumbers(constituentId: Int): List<LuckyNumber> = withContext(Dispatchers.IO) {
         when (mode) {
-            Mode.HYBRID, Mode.SCRAPPER -> scrapper.getKidsLuckyNumbers().mapLuckyNumbers()
-            Mode.HEBE -> throw NotImplementedError("Not available in HEBE mode")
+            Mode.SCRAPPER -> scrapper.getKidsLuckyNumbers().mapLuckyNumbers()
+            Mode.HYBRID, Mode.HEBE -> hebe.getLuckyNumber(studentId, constituentId).mapLuckyNumbers()
         }
     }
 

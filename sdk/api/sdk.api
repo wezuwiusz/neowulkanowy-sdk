@@ -34,7 +34,7 @@ public final class io/github/wulkanowy/sdk/Sdk {
 	public final fun getGradesSemesterStatistics (ILkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public final fun getHomework (Ljava/time/LocalDate;Ljava/time/LocalDate;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public final fun getKeyId ()Ljava/lang/String;
-	public final fun getKidsLuckyNumbers (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public final fun getKidsLuckyNumbers (ILkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public final fun getKidsTimetable (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public final fun getKindergartenDiaryId ()I
 	public final fun getLastAnnouncements (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
@@ -44,8 +44,8 @@ public final class io/github/wulkanowy/sdk/Sdk {
 	public final fun getLastStudentLessons (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public final fun getLogLevel ()Lokhttp3/logging/HttpLoggingInterceptor$Level;
 	public final fun getLoginType ()Lio/github/wulkanowy/sdk/Sdk$ScrapperLoginType;
-	public final fun getLuckyNumber (Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
-	public static synthetic fun getLuckyNumber$default (Lio/github/wulkanowy/sdk/Sdk;Ljava/lang/String;Lkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
+	public final fun getLuckyNumber (Ljava/lang/String;ILkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public static synthetic fun getLuckyNumber$default (Lio/github/wulkanowy/sdk/Sdk;Ljava/lang/String;ILkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
 	public final fun getMailboxes (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public final fun getMenu (Ljava/time/LocalDate;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public final fun getMessageDetails (Ljava/lang/String;ZLkotlin/coroutines/Continuation;)Ljava/lang/Object;
@@ -1024,19 +1024,21 @@ public final class io/github/wulkanowy/sdk/pojo/RegisterSymbol {
 }
 
 public final class io/github/wulkanowy/sdk/pojo/RegisterUnit {
-	public fun <init> (ILjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/util/List;Ljava/util/List;Ljava/util/List;Ljava/lang/Throwable;Ljava/util/List;)V
+	public fun <init> (ILjava/lang/String;ILjava/lang/String;Ljava/lang/String;Ljava/util/List;Ljava/util/List;Ljava/util/List;Ljava/lang/Throwable;Ljava/util/List;)V
 	public final fun component1 ()I
+	public final fun component10 ()Ljava/util/List;
 	public final fun component2 ()Ljava/lang/String;
-	public final fun component3 ()Ljava/lang/String;
+	public final fun component3 ()I
 	public final fun component4 ()Ljava/lang/String;
-	public final fun component5 ()Ljava/util/List;
+	public final fun component5 ()Ljava/lang/String;
 	public final fun component6 ()Ljava/util/List;
 	public final fun component7 ()Ljava/util/List;
-	public final fun component8 ()Ljava/lang/Throwable;
-	public final fun component9 ()Ljava/util/List;
-	public final fun copy (ILjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/util/List;Ljava/util/List;Ljava/util/List;Ljava/lang/Throwable;Ljava/util/List;)Lio/github/wulkanowy/sdk/pojo/RegisterUnit;
-	public static synthetic fun copy$default (Lio/github/wulkanowy/sdk/pojo/RegisterUnit;ILjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/util/List;Ljava/util/List;Ljava/util/List;Ljava/lang/Throwable;Ljava/util/List;ILjava/lang/Object;)Lio/github/wulkanowy/sdk/pojo/RegisterUnit;
+	public final fun component8 ()Ljava/util/List;
+	public final fun component9 ()Ljava/lang/Throwable;
+	public final fun copy (ILjava/lang/String;ILjava/lang/String;Ljava/lang/String;Ljava/util/List;Ljava/util/List;Ljava/util/List;Ljava/lang/Throwable;Ljava/util/List;)Lio/github/wulkanowy/sdk/pojo/RegisterUnit;
+	public static synthetic fun copy$default (Lio/github/wulkanowy/sdk/pojo/RegisterUnit;ILjava/lang/String;ILjava/lang/String;Ljava/lang/String;Ljava/util/List;Ljava/util/List;Ljava/util/List;Ljava/lang/Throwable;Ljava/util/List;ILjava/lang/Object;)Lio/github/wulkanowy/sdk/pojo/RegisterUnit;
 	public fun equals (Ljava/lang/Object;)Z
+	public final fun getConstituentId ()I
 	public final fun getEmployeeIds ()Ljava/util/List;
 	public final fun getError ()Ljava/lang/Throwable;
 	public final fun getParentIds ()Ljava/util/List;

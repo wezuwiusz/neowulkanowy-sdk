@@ -9,6 +9,7 @@ import io.github.wulkanowy.sdk.hebe.models.GradeAverage
 import io.github.wulkanowy.sdk.hebe.models.GradeSummary
 import io.github.wulkanowy.sdk.hebe.models.Homework
 import io.github.wulkanowy.sdk.hebe.models.Lesson
+import io.github.wulkanowy.sdk.hebe.models.LuckyNumber
 import io.github.wulkanowy.sdk.hebe.models.Mailbox
 import io.github.wulkanowy.sdk.hebe.models.Meeting
 import io.github.wulkanowy.sdk.hebe.models.Message
@@ -70,6 +71,9 @@ internal interface StudentService {
 
     @GET("api/mobile/homework/byPupil")
     suspend fun getHomework(@QueryMap query: Map<String, Any?>): ApiResponse<List<Homework>>
+
+    @GET("api/mobile/school/lucky")
+    suspend fun getLuckyNumber(@QueryMap query: Map<String, Any?>): ApiResponse<LuckyNumber>
 
     @POST("api/mobile/messages/statuses")
     suspend fun setStatus(@Body request: ApiRequest<List<SetMessageStatusRequest>>): ApiResponse<Boolean>

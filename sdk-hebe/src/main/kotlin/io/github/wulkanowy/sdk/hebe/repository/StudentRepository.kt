@@ -6,6 +6,7 @@ import io.github.wulkanowy.sdk.hebe.models.Exam
 import io.github.wulkanowy.sdk.hebe.models.Grade
 import io.github.wulkanowy.sdk.hebe.models.GradeAverage
 import io.github.wulkanowy.sdk.hebe.models.GradeSummary
+import io.github.wulkanowy.sdk.hebe.models.LuckyNumber
 import io.github.wulkanowy.sdk.hebe.models.SetMessageStatusRequest
 import io.github.wulkanowy.sdk.hebe.service.StudentService
 import java.time.LocalDate
@@ -144,6 +145,16 @@ internal class StudentRepository(
         .filter {
             it.deadline.date in startDate..endDate
         }
+
+    suspend fun getLuckyNumber(pupilId: Int, constituentUnitId: Int, day: LocalDate) = studentService
+        .getLuckyNumber(
+            mapOf(
+                "pupilId" to pupilId,
+                "day" to day.format(DateTimeFormatter.ISO_DATE),
+                "constituentId" to constituentUnitId,
+            ),
+        ).getEnvelopeOrThrowError()
+        ?: LuckyNumber(0, day)
 
     suspend fun setMessageStatus(pupilId: Int?, boxKey: String, messageKey: String, status: Int) = studentService
         .setStatus(

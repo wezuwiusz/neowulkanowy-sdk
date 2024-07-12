@@ -8,6 +8,7 @@ import io.github.wulkanowy.sdk.hebe.models.GradeAverage
 import io.github.wulkanowy.sdk.hebe.models.GradeSummary
 import io.github.wulkanowy.sdk.hebe.models.Homework
 import io.github.wulkanowy.sdk.hebe.models.Lesson
+import io.github.wulkanowy.sdk.hebe.models.LuckyNumber
 import io.github.wulkanowy.sdk.hebe.models.Mailbox
 import io.github.wulkanowy.sdk.hebe.models.Meeting
 import io.github.wulkanowy.sdk.hebe.models.Message
@@ -314,6 +315,9 @@ class Hebe {
             startDate = startDate,
             endDate = endDate,
         )
+
+    suspend fun getLuckyNumber(pupilId: Int, constituentId: Int, day: LocalDate = LocalDate.now()): LuckyNumber = studentRepository
+        .getLuckyNumber(pupilId, constituentId, day)
 
     suspend fun setMessageStatus(pupilId: Int?, boxKey: String, messageKey: String, status: Int): Boolean? = studentRepository.setMessageStatus(
         pupilId = pupilId,

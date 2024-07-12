@@ -15,6 +15,8 @@ public final class io/github/wulkanowy/sdk/hebe/Hebe {
 	public final fun getHomework (ILjava/time/LocalDate;Ljava/time/LocalDate;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public final fun getKeyId ()Ljava/lang/String;
 	public final fun getLogLevel ()Lokhttp3/logging/HttpLoggingInterceptor$Level;
+	public final fun getLuckyNumber (IILjava/time/LocalDate;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public static synthetic fun getLuckyNumber$default (Lio/github/wulkanowy/sdk/hebe/Hebe;IILjava/time/LocalDate;Lkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
 	public final fun getMailboxes (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public final fun getMeetings (ILjava/time/LocalDate;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public final fun getMessages (Ljava/lang/String;ILkotlin/coroutines/Continuation;)Ljava/lang/Object;
@@ -1692,6 +1694,35 @@ public final class io/github/wulkanowy/sdk/hebe/models/Lesson$TimeSlot$$serializ
 }
 
 public final class io/github/wulkanowy/sdk/hebe/models/Lesson$TimeSlot$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public final class io/github/wulkanowy/sdk/hebe/models/LuckyNumber {
+	public static final field Companion Lio/github/wulkanowy/sdk/hebe/models/LuckyNumber$Companion;
+	public fun <init> (ILjava/time/LocalDate;)V
+	public final fun component1 ()I
+	public final fun component2 ()Ljava/time/LocalDate;
+	public final fun copy (ILjava/time/LocalDate;)Lio/github/wulkanowy/sdk/hebe/models/LuckyNumber;
+	public static synthetic fun copy$default (Lio/github/wulkanowy/sdk/hebe/models/LuckyNumber;ILjava/time/LocalDate;ILjava/lang/Object;)Lio/github/wulkanowy/sdk/hebe/models/LuckyNumber;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getDay ()Ljava/time/LocalDate;
+	public final fun getNumber ()I
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class io/github/wulkanowy/sdk/hebe/models/LuckyNumber$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+	public static final field INSTANCE Lio/github/wulkanowy/sdk/hebe/models/LuckyNumber$$serializer;
+	public fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lio/github/wulkanowy/sdk/hebe/models/LuckyNumber;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public fun serialize (Lkotlinx/serialization/encoding/Encoder;Lio/github/wulkanowy/sdk/hebe/models/LuckyNumber;)V
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+	public fun typeParametersSerializers ()[Lkotlinx/serialization/KSerializer;
+}
+
+public final class io/github/wulkanowy/sdk/hebe/models/LuckyNumber$Companion {
 	public final fun serializer ()Lkotlinx/serialization/KSerializer;
 }
 

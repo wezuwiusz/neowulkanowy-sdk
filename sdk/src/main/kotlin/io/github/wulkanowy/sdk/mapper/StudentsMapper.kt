@@ -46,6 +46,7 @@ internal fun ScrapperRegisterUnit.mapUnit(): RegisterUnit = RegisterUnit(
     studentIds = studentIds,
     employeeIds = employeeIds,
     error = error,
+    constituentId = 0,
     subjects = subjects.map { it.mapSubject() },
 )
 
@@ -103,6 +104,7 @@ private fun List<StudentInfo>.mapUnit(): List<RegisterUnit> {
             RegisterUnit(
                 userLoginId = firstStudent.login.id,
                 schoolId = schoolId,
+                constituentId = firstStudent.constituentUnit.id,
                 schoolName = firstStudent.constituentUnit.name,
                 schoolShortName = firstStudent.constituentUnit.short,
                 parentIds = listOf(),
