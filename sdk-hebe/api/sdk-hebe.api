@@ -2962,14 +2962,16 @@ public final class io/github/wulkanowy/sdk/hebe/register/StudentInfo$Educator$Ro
 
 public final class io/github/wulkanowy/sdk/hebe/register/StudentInfo$Journal {
 	public static final field Companion Lio/github/wulkanowy/sdk/hebe/register/StudentInfo$Journal$Companion;
-	public fun <init> (ILio/github/wulkanowy/sdk/hebe/register/StudentInfo$PeriodDate;Lio/github/wulkanowy/sdk/hebe/register/StudentInfo$PeriodDate;)V
+	public fun <init> (ILio/github/wulkanowy/sdk/hebe/register/StudentInfo$PeriodDate;Lio/github/wulkanowy/sdk/hebe/register/StudentInfo$PeriodDate;I)V
 	public final fun component1 ()I
 	public final fun component2 ()Lio/github/wulkanowy/sdk/hebe/register/StudentInfo$PeriodDate;
 	public final fun component3 ()Lio/github/wulkanowy/sdk/hebe/register/StudentInfo$PeriodDate;
-	public final fun copy (ILio/github/wulkanowy/sdk/hebe/register/StudentInfo$PeriodDate;Lio/github/wulkanowy/sdk/hebe/register/StudentInfo$PeriodDate;)Lio/github/wulkanowy/sdk/hebe/register/StudentInfo$Journal;
-	public static synthetic fun copy$default (Lio/github/wulkanowy/sdk/hebe/register/StudentInfo$Journal;ILio/github/wulkanowy/sdk/hebe/register/StudentInfo$PeriodDate;Lio/github/wulkanowy/sdk/hebe/register/StudentInfo$PeriodDate;ILjava/lang/Object;)Lio/github/wulkanowy/sdk/hebe/register/StudentInfo$Journal;
+	public final fun component4 ()I
+	public final fun copy (ILio/github/wulkanowy/sdk/hebe/register/StudentInfo$PeriodDate;Lio/github/wulkanowy/sdk/hebe/register/StudentInfo$PeriodDate;I)Lio/github/wulkanowy/sdk/hebe/register/StudentInfo$Journal;
+	public static synthetic fun copy$default (Lio/github/wulkanowy/sdk/hebe/register/StudentInfo$Journal;ILio/github/wulkanowy/sdk/hebe/register/StudentInfo$PeriodDate;Lio/github/wulkanowy/sdk/hebe/register/StudentInfo$PeriodDate;IILjava/lang/Object;)Lio/github/wulkanowy/sdk/hebe/register/StudentInfo$Journal;
 	public fun equals (Ljava/lang/Object;)Z
 	public final fun getId ()I
+	public final fun getPupilNumber ()I
 	public final fun getYearEnd ()Lio/github/wulkanowy/sdk/hebe/register/StudentInfo$PeriodDate;
 	public final fun getYearStart ()Lio/github/wulkanowy/sdk/hebe/register/StudentInfo$PeriodDate;
 	public fun hashCode ()I

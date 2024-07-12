@@ -61,6 +61,7 @@ internal fun ScrapperRegisterEmploye.mapEmployee(): RegisterEmployee = RegisterE
 )
 
 internal fun ScrapperRegisterStudent.mapStudent(): RegisterStudent = RegisterStudent(
+    diaryNumber = null,
     studentId = studentId,
     studentName = studentName,
     studentSecondName = studentSecondName,
@@ -113,6 +114,7 @@ private fun List<StudentInfo>.mapUnit(): List<RegisterUnit> {
                 error = null,
                 subjects = students.map { student ->
                     RegisterStudent(
+                        diaryNumber = student.journal.pupilNumber,
                         studentId = student.pupil.id,
                         studentName = student.pupil.let { pupil -> "${pupil.firstName} ${pupil.surname}" },
                         studentSecondName = student.pupil.secondName,

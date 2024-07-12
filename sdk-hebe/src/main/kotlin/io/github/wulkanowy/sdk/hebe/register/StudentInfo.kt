@@ -135,6 +135,9 @@ class StudentInfo(
 
         @SerialName("YearEnd")
         val yearEnd: PeriodDate,
+
+        @SerialName("PupilNumber")
+        val pupilNumber: Int,
     )
 
     @Serializable

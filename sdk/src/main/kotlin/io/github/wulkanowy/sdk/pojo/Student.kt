@@ -43,6 +43,7 @@ data class RegisterEmployee(
 ) : RegisterSubject
 
 data class RegisterStudent(
+    val diaryNumber: Int?,
     val studentId: Int,
     val studentName: String,
     val studentSecondName: String,
