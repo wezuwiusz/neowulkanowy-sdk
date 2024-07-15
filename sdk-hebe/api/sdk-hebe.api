@@ -2809,12 +2809,13 @@ public final class io/github/wulkanowy/sdk/hebe/register/RegisterDevice {
 
 public final class io/github/wulkanowy/sdk/hebe/register/StudentInfo {
 	public static final field Companion Lio/github/wulkanowy/sdk/hebe/register/StudentInfo$Companion;
-	public fun <init> (Ljava/util/List;Ljava/lang/String;Lio/github/wulkanowy/sdk/hebe/register/StudentInfo$ConstituentUnit;Ljava/util/List;ZLjava/lang/String;Lio/github/wulkanowy/sdk/hebe/register/StudentInfo$Journal;Lio/github/wulkanowy/sdk/hebe/register/StudentInfo$Login;Ljava/lang/String;Ljava/util/List;Lio/github/wulkanowy/sdk/hebe/register/StudentInfo$Pupil;Ljava/lang/String;Lio/github/wulkanowy/sdk/hebe/register/StudentInfo$Unit;)V
+	public fun <init> (Ljava/util/List;Ljava/lang/String;Lio/github/wulkanowy/sdk/hebe/register/StudentInfo$ConstituentUnit;Ljava/util/List;Ljava/lang/Boolean;Ljava/lang/String;Lio/github/wulkanowy/sdk/hebe/register/StudentInfo$Journal;Lio/github/wulkanowy/sdk/hebe/register/StudentInfo$Login;Ljava/lang/String;Ljava/util/List;Lio/github/wulkanowy/sdk/hebe/register/StudentInfo$Pupil;Ljava/lang/String;Lio/github/wulkanowy/sdk/hebe/register/StudentInfo$Unit;)V
+	public synthetic fun <init> (Ljava/util/List;Ljava/lang/String;Lio/github/wulkanowy/sdk/hebe/register/StudentInfo$ConstituentUnit;Ljava/util/List;Ljava/lang/Boolean;Ljava/lang/String;Lio/github/wulkanowy/sdk/hebe/register/StudentInfo$Journal;Lio/github/wulkanowy/sdk/hebe/register/StudentInfo$Login;Ljava/lang/String;Ljava/util/List;Lio/github/wulkanowy/sdk/hebe/register/StudentInfo$Pupil;Ljava/lang/String;Lio/github/wulkanowy/sdk/hebe/register/StudentInfo$Unit;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public final fun getCapabilities ()Ljava/util/List;
 	public final fun getClassDisplay ()Ljava/lang/String;
 	public final fun getConstituentUnit ()Lio/github/wulkanowy/sdk/hebe/register/StudentInfo$ConstituentUnit;
 	public final fun getEducators ()Ljava/util/List;
-	public final fun getFullSync ()Z
+	public final fun getFullSync ()Ljava/lang/Boolean;
 	public final fun getInfoDisplay ()Ljava/lang/String;
 	public final fun getJournal ()Lio/github/wulkanowy/sdk/hebe/register/StudentInfo$Journal;
 	public final fun getLogin ()Lio/github/wulkanowy/sdk/hebe/register/StudentInfo$Login;
@@ -2843,6 +2844,7 @@ public final class io/github/wulkanowy/sdk/hebe/register/StudentInfo$Companion {
 public final class io/github/wulkanowy/sdk/hebe/register/StudentInfo$ConstituentUnit {
 	public static final field Companion Lio/github/wulkanowy/sdk/hebe/register/StudentInfo$ConstituentUnit$Companion;
 	public fun <init> (Ljava/lang/String;ILjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+	public synthetic fun <init> (Ljava/lang/String;ILjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public final fun component1 ()Ljava/lang/String;
 	public final fun component2 ()I
 	public final fun component3 ()Ljava/lang/String;
@@ -3074,6 +3076,7 @@ public final class io/github/wulkanowy/sdk/hebe/register/StudentInfo$Period$Comp
 public final class io/github/wulkanowy/sdk/hebe/register/StudentInfo$PeriodDate {
 	public static final field Companion Lio/github/wulkanowy/sdk/hebe/register/StudentInfo$PeriodDate$Companion;
 	public fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;J)V
+	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;JILkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public final fun component1 ()Ljava/lang/String;
 	public final fun component2 ()Ljava/lang/String;
 	public final fun component3 ()Ljava/lang/String;
@@ -3147,6 +3150,7 @@ public final class io/github/wulkanowy/sdk/hebe/register/StudentInfo$Pupil$Compa
 public final class io/github/wulkanowy/sdk/hebe/register/StudentInfo$Unit {
 	public static final field Companion Lio/github/wulkanowy/sdk/hebe/register/StudentInfo$Unit$Companion;
 	public fun <init> (Ljava/lang/String;Ljava/lang/String;ILjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;ILjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public final fun component1 ()Ljava/lang/String;
 	public final fun component2 ()Ljava/lang/String;
 	public final fun component3 ()I

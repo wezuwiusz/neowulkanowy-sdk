@@ -7,7 +7,7 @@ import kotlinx.serialization.Serializable
 class StudentInfo(
 
     @SerialName("Capabilities")
-    val capabilities: List<String>,
+    val capabilities: List<String>? = null,
 
     @SerialName("ClassDisplay")
     val classDisplay: String,
@@ -16,19 +16,19 @@ class StudentInfo(
     val constituentUnit: ConstituentUnit,
 
     @SerialName("Educators")
-    val educators: List<Educator>,
+    val educators: List<Educator>? = null,
 
     @SerialName("FullSync")
-    val fullSync: Boolean,
+    val fullSync: Boolean? = null,
 
     @SerialName("InfoDisplay")
-    val infoDisplay: String,
+    val infoDisplay: String? = null,
 
     @SerialName("Journal")
-    val journal: Journal,
+    val journal: Journal? = null,
 
     @SerialName("Login")
-    val login: Login,
+    val login: Login? = null,
 
     @SerialName("Partition")
     val partition: String,
@@ -59,10 +59,10 @@ class StudentInfo(
         val name: String,
 
         @SerialName("Patron")
-        val patron: String,
+        val patron: String? = null,
 
         @SerialName("SchoolTopic")
-        val schoolTopic: String,
+        val schoolTopic: String? = null,
 
         @SerialName("Short")
         val short: String,
@@ -147,7 +147,7 @@ class StudentInfo(
         val date: String,
 
         @SerialName("DateDisplay")
-        val dateDisplay: String,
+        val dateDisplay: String? = null,
 
         @SerialName("Time")
         val time: String,
@@ -247,7 +247,7 @@ class StudentInfo(
         val name: String,
 
         @SerialName("Patron")
-        val patron: String,
+        val patron: String? = null,
 
         @SerialName("RestURL")
         val restUrl: String,

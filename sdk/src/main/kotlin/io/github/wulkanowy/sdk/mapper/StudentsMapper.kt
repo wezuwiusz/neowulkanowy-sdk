@@ -103,7 +103,7 @@ private fun List<StudentInfo>.mapUnit(): List<RegisterUnit> {
         .mapNotNull { (schoolId, students) ->
             val firstStudent = students.firstOrNull() ?: return@mapNotNull null
             RegisterUnit(
-                userLoginId = firstStudent.login.id,
+                userLoginId = firstStudent.login?.id ?: firstStudent.pupil.loginId,
                 schoolId = schoolId,
                 constituentId = firstStudent.constituentUnit.id,
                 schoolName = firstStudent.constituentUnit.name,
@@ -114,14 +114,14 @@ private fun List<StudentInfo>.mapUnit(): List<RegisterUnit> {
                 error = null,
                 subjects = students.map { student ->
                     RegisterStudent(
-                        diaryNumber = student.journal.pupilNumber,
+                        diaryNumber = student.journal?.pupilNumber,
                         studentId = student.pupil.id,
                         studentName = student.pupil.let { pupil -> "${pupil.firstName} ${pupil.surname}" },
                         studentSecondName = student.pupil.secondName,
                         studentSurname = student.pupil.surname,
                         className = student.classDisplay,
                         classId = -1, // todo
-                        isParent = student.login.loginRole != "Uczen",
+                        isParent = student.login?.loginRole != "Uczen",
                         isAuthorized = true,
                         isEduOne = false,
                         semesters = student.periods.map { period ->
@@ -129,7 +129,7 @@ private fun List<StudentInfo>.mapUnit(): List<RegisterUnit> {
                                 .toLocalDate()
                                 .year
                             Semester(
-                                diaryId = student.journal.id,
+                                diaryId = student.journal?.id ?: 0,
                                 kindergartenDiaryId = 0,
                                 diaryName = student.classDisplay,
                                 schoolYear = if (period.number == 2) schoolYear - 1 else schoolYear,
