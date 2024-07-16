@@ -1,6 +1,7 @@
 package io.github.wulkanowy.sdk
 
 import io.github.wulkanowy.sdk.hebe.Hebe
+import io.github.wulkanowy.sdk.hebe.models.MessageUser
 import io.github.wulkanowy.sdk.mapper.mapAttendance
 import io.github.wulkanowy.sdk.mapper.mapAttendanceSummary
 import io.github.wulkanowy.sdk.mapper.mapCompletedLessons
@@ -643,10 +644,27 @@ class Sdk {
         }
     }
 
-    suspend fun sendMessage(subject: String, content: String, recipients: List<Recipient>, mailboxId: String) = withContext(Dispatchers.IO) {
+    suspend fun sendMessage(subject: String, content: String, recipients: List<Recipient>, senderName: String, senderKey: String, partition: String) = withContext(
+        Dispatchers.IO,
+    ) {
         when (mode) {
-            Mode.HYBRID, Mode.SCRAPPER -> scrapper.sendMessage(subject, content, recipients.map { it.mailboxGlobalKey }, mailboxId)
-            Mode.HEBE -> throw NotImplementedError("Not available in HEBE mode")
+            Mode.SCRAPPER -> scrapper.sendMessage(subject, content, recipients.map { it.mailboxGlobalKey }, senderKey)
+            Mode.HYBRID, Mode.HEBE -> hebe.sendMessage(
+                subject,
+                content,
+                recipients.map {
+                    MessageUser(
+                        partition = partition,
+                        globalKey = it.mailboxGlobalKey,
+                        name = it.fullName,
+                    )
+                },
+                MessageUser(
+                    partition = partition,
+                    globalKey = senderKey,
+                    name = senderName,
+                ),
+            )
         }
     }
 

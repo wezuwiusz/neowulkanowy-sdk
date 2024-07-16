@@ -32,6 +32,7 @@ public final class io/github/wulkanowy/sdk/hebe/Hebe {
 	public final fun getTeachers (ILkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public final fun register (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public static synthetic fun register$default (Lio/github/wulkanowy/sdk/hebe/Hebe;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
+	public final fun sendMessage (Ljava/lang/String;Ljava/lang/String;Ljava/util/List;Lio/github/wulkanowy/sdk/hebe/models/MessageUser;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public final fun setBaseUrl (Ljava/lang/String;)V
 	public final fun setDeviceModel (Ljava/lang/String;)V
 	public final fun setKeyId (Ljava/lang/String;)V
@@ -2033,6 +2034,21 @@ public final class io/github/wulkanowy/sdk/hebe/models/Message$Sender$Companion 
 	public final fun serializer ()Lkotlinx/serialization/KSerializer;
 }
 
+public final class io/github/wulkanowy/sdk/hebe/models/MessageUser {
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Ljava/lang/String;
+	public final fun component3 ()Ljava/lang/String;
+	public final fun copy (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Lio/github/wulkanowy/sdk/hebe/models/MessageUser;
+	public static synthetic fun copy$default (Lio/github/wulkanowy/sdk/hebe/models/MessageUser;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Lio/github/wulkanowy/sdk/hebe/models/MessageUser;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getGlobalKey ()Ljava/lang/String;
+	public final fun getName ()Ljava/lang/String;
+	public final fun getPartition ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
 public final class io/github/wulkanowy/sdk/hebe/models/Note {
 	public static final field Companion Lio/github/wulkanowy/sdk/hebe/models/Note$Companion;
 	public fun <init> (ILjava/lang/String;IZLjava/lang/String;Ljava/lang/Integer;Lio/github/wulkanowy/sdk/hebe/models/Note$DateValid;Lio/github/wulkanowy/sdk/hebe/models/Note$DateModify;Lio/github/wulkanowy/sdk/hebe/models/Note$Creator;Lio/github/wulkanowy/sdk/hebe/models/Note$Category;)V
@@ -2238,6 +2254,269 @@ public final class io/github/wulkanowy/sdk/hebe/models/Recipient$$serializer : k
 }
 
 public final class io/github/wulkanowy/sdk/hebe/models/Recipient$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public final class io/github/wulkanowy/sdk/hebe/models/SendMessageRequest {
+	public static final field Companion Lio/github/wulkanowy/sdk/hebe/models/SendMessageRequest$Companion;
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ILjava/lang/String;Lio/github/wulkanowy/sdk/hebe/models/SendMessageRequest$DateSent;Lio/github/wulkanowy/sdk/hebe/models/SendMessageRequest$DateRead;Lio/github/wulkanowy/sdk/hebe/models/SendMessageRequest$Sender;Ljava/util/List;Ljava/util/List;IZ)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component10 ()Lio/github/wulkanowy/sdk/hebe/models/SendMessageRequest$DateRead;
+	public final fun component11 ()Lio/github/wulkanowy/sdk/hebe/models/SendMessageRequest$Sender;
+	public final fun component12 ()Ljava/util/List;
+	public final fun component13 ()Ljava/util/List;
+	public final fun component14 ()I
+	public final fun component15 ()Z
+	public final fun component2 ()Ljava/lang/String;
+	public final fun component3 ()Ljava/lang/String;
+	public final fun component4 ()Ljava/lang/String;
+	public final fun component5 ()Ljava/lang/String;
+	public final fun component6 ()Ljava/lang/String;
+	public final fun component7 ()I
+	public final fun component8 ()Ljava/lang/String;
+	public final fun component9 ()Lio/github/wulkanowy/sdk/hebe/models/SendMessageRequest$DateSent;
+	public final fun copy (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ILjava/lang/String;Lio/github/wulkanowy/sdk/hebe/models/SendMessageRequest$DateSent;Lio/github/wulkanowy/sdk/hebe/models/SendMessageRequest$DateRead;Lio/github/wulkanowy/sdk/hebe/models/SendMessageRequest$Sender;Ljava/util/List;Ljava/util/List;IZ)Lio/github/wulkanowy/sdk/hebe/models/SendMessageRequest;
+	public static synthetic fun copy$default (Lio/github/wulkanowy/sdk/hebe/models/SendMessageRequest;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ILjava/lang/String;Lio/github/wulkanowy/sdk/hebe/models/SendMessageRequest$DateSent;Lio/github/wulkanowy/sdk/hebe/models/SendMessageRequest$DateRead;Lio/github/wulkanowy/sdk/hebe/models/SendMessageRequest$Sender;Ljava/util/List;Ljava/util/List;IZILjava/lang/Object;)Lio/github/wulkanowy/sdk/hebe/models/SendMessageRequest;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getAttachments ()Ljava/util/List;
+	public final fun getContent ()Ljava/lang/String;
+	public final fun getDateRead ()Lio/github/wulkanowy/sdk/hebe/models/SendMessageRequest$DateRead;
+	public final fun getDateSent ()Lio/github/wulkanowy/sdk/hebe/models/SendMessageRequest$DateSent;
+	public final fun getGlobalKey ()Ljava/lang/String;
+	public final fun getId ()Ljava/lang/String;
+	public final fun getImportance ()I
+	public final fun getOwner ()Ljava/lang/String;
+	public final fun getPartition ()Ljava/lang/String;
+	public final fun getReceiver ()Ljava/util/List;
+	public final fun getSender ()Lio/github/wulkanowy/sdk/hebe/models/SendMessageRequest$Sender;
+	public final fun getStatus ()I
+	public final fun getSubject ()Ljava/lang/String;
+	public final fun getThreadKey ()Ljava/lang/String;
+	public final fun getWithdrawn ()Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class io/github/wulkanowy/sdk/hebe/models/SendMessageRequest$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+	public static final field INSTANCE Lio/github/wulkanowy/sdk/hebe/models/SendMessageRequest$$serializer;
+	public fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lio/github/wulkanowy/sdk/hebe/models/SendMessageRequest;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public fun serialize (Lkotlinx/serialization/encoding/Encoder;Lio/github/wulkanowy/sdk/hebe/models/SendMessageRequest;)V
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+	public fun typeParametersSerializers ()[Lkotlinx/serialization/KSerializer;
+}
+
+public final class io/github/wulkanowy/sdk/hebe/models/SendMessageRequest$Attachment {
+	public static final field Companion Lio/github/wulkanowy/sdk/hebe/models/SendMessageRequest$Attachment$Companion;
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Ljava/lang/String;
+	public final fun copy (Ljava/lang/String;Ljava/lang/String;)Lio/github/wulkanowy/sdk/hebe/models/SendMessageRequest$Attachment;
+	public static synthetic fun copy$default (Lio/github/wulkanowy/sdk/hebe/models/SendMessageRequest$Attachment;Ljava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Lio/github/wulkanowy/sdk/hebe/models/SendMessageRequest$Attachment;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getLink ()Ljava/lang/String;
+	public final fun getName ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class io/github/wulkanowy/sdk/hebe/models/SendMessageRequest$Attachment$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+	public static final field INSTANCE Lio/github/wulkanowy/sdk/hebe/models/SendMessageRequest$Attachment$$serializer;
+	public fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lio/github/wulkanowy/sdk/hebe/models/SendMessageRequest$Attachment;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public fun serialize (Lkotlinx/serialization/encoding/Encoder;Lio/github/wulkanowy/sdk/hebe/models/SendMessageRequest$Attachment;)V
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+	public fun typeParametersSerializers ()[Lkotlinx/serialization/KSerializer;
+}
+
+public final class io/github/wulkanowy/sdk/hebe/models/SendMessageRequest$Attachment$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public final class io/github/wulkanowy/sdk/hebe/models/SendMessageRequest$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public final class io/github/wulkanowy/sdk/hebe/models/SendMessageRequest$DateRead {
+	public static final field Companion Lio/github/wulkanowy/sdk/hebe/models/SendMessageRequest$DateRead$Companion;
+	public fun <init> (Ljava/time/LocalDate;Ljava/lang/String;Ljava/lang/String;J)V
+	public final fun component1 ()Ljava/time/LocalDate;
+	public final fun component2 ()Ljava/lang/String;
+	public final fun component3 ()Ljava/lang/String;
+	public final fun component4 ()J
+	public final fun copy (Ljava/time/LocalDate;Ljava/lang/String;Ljava/lang/String;J)Lio/github/wulkanowy/sdk/hebe/models/SendMessageRequest$DateRead;
+	public static synthetic fun copy$default (Lio/github/wulkanowy/sdk/hebe/models/SendMessageRequest$DateRead;Ljava/time/LocalDate;Ljava/lang/String;Ljava/lang/String;JILjava/lang/Object;)Lio/github/wulkanowy/sdk/hebe/models/SendMessageRequest$DateRead;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getDate ()Ljava/time/LocalDate;
+	public final fun getDateDisplay ()Ljava/lang/String;
+	public final fun getTime ()Ljava/lang/String;
+	public final fun getTimestamp ()J
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class io/github/wulkanowy/sdk/hebe/models/SendMessageRequest$DateRead$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+	public static final field INSTANCE Lio/github/wulkanowy/sdk/hebe/models/SendMessageRequest$DateRead$$serializer;
+	public fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lio/github/wulkanowy/sdk/hebe/models/SendMessageRequest$DateRead;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public fun serialize (Lkotlinx/serialization/encoding/Encoder;Lio/github/wulkanowy/sdk/hebe/models/SendMessageRequest$DateRead;)V
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+	public fun typeParametersSerializers ()[Lkotlinx/serialization/KSerializer;
+}
+
+public final class io/github/wulkanowy/sdk/hebe/models/SendMessageRequest$DateRead$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public final class io/github/wulkanowy/sdk/hebe/models/SendMessageRequest$DateSent {
+	public static final field Companion Lio/github/wulkanowy/sdk/hebe/models/SendMessageRequest$DateSent$Companion;
+	public fun <init> (Ljava/time/LocalDate;Ljava/lang/String;Ljava/lang/String;J)V
+	public final fun component1 ()Ljava/time/LocalDate;
+	public final fun component2 ()Ljava/lang/String;
+	public final fun component3 ()Ljava/lang/String;
+	public final fun component4 ()J
+	public final fun copy (Ljava/time/LocalDate;Ljava/lang/String;Ljava/lang/String;J)Lio/github/wulkanowy/sdk/hebe/models/SendMessageRequest$DateSent;
+	public static synthetic fun copy$default (Lio/github/wulkanowy/sdk/hebe/models/SendMessageRequest$DateSent;Ljava/time/LocalDate;Ljava/lang/String;Ljava/lang/String;JILjava/lang/Object;)Lio/github/wulkanowy/sdk/hebe/models/SendMessageRequest$DateSent;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getDate ()Ljava/time/LocalDate;
+	public final fun getDateDisplay ()Ljava/lang/String;
+	public final fun getTime ()Ljava/lang/String;
+	public final fun getTimestamp ()J
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class io/github/wulkanowy/sdk/hebe/models/SendMessageRequest$DateSent$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+	public static final field INSTANCE Lio/github/wulkanowy/sdk/hebe/models/SendMessageRequest$DateSent$$serializer;
+	public fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lio/github/wulkanowy/sdk/hebe/models/SendMessageRequest$DateSent;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public fun serialize (Lkotlinx/serialization/encoding/Encoder;Lio/github/wulkanowy/sdk/hebe/models/SendMessageRequest$DateSent;)V
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+	public fun typeParametersSerializers ()[Lkotlinx/serialization/KSerializer;
+}
+
+public final class io/github/wulkanowy/sdk/hebe/models/SendMessageRequest$DateSent$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public final class io/github/wulkanowy/sdk/hebe/models/SendMessageRequest$DisplayedClass {
+	public static final field Companion Lio/github/wulkanowy/sdk/hebe/models/SendMessageRequest$DisplayedClass$Companion;
+	public fun <init> (Ljava/lang/String;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun copy (Ljava/lang/String;)Lio/github/wulkanowy/sdk/hebe/models/SendMessageRequest$DisplayedClass;
+	public static synthetic fun copy$default (Lio/github/wulkanowy/sdk/hebe/models/SendMessageRequest$DisplayedClass;Ljava/lang/String;ILjava/lang/Object;)Lio/github/wulkanowy/sdk/hebe/models/SendMessageRequest$DisplayedClass;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getDisplayedClass ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class io/github/wulkanowy/sdk/hebe/models/SendMessageRequest$DisplayedClass$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+	public static final field INSTANCE Lio/github/wulkanowy/sdk/hebe/models/SendMessageRequest$DisplayedClass$$serializer;
+	public fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lio/github/wulkanowy/sdk/hebe/models/SendMessageRequest$DisplayedClass;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public fun serialize (Lkotlinx/serialization/encoding/Encoder;Lio/github/wulkanowy/sdk/hebe/models/SendMessageRequest$DisplayedClass;)V
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+	public fun typeParametersSerializers ()[Lkotlinx/serialization/KSerializer;
+}
+
+public final class io/github/wulkanowy/sdk/hebe/models/SendMessageRequest$DisplayedClass$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public final class io/github/wulkanowy/sdk/hebe/models/SendMessageRequest$Receiver {
+	public static final field Companion Lio/github/wulkanowy/sdk/hebe/models/SendMessageRequest$Receiver$Companion;
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ILio/github/wulkanowy/sdk/hebe/models/SendMessageRequest$DisplayedClass;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Ljava/lang/String;
+	public final fun component3 ()Ljava/lang/String;
+	public final fun component4 ()Ljava/lang/String;
+	public final fun component5 ()Ljava/lang/String;
+	public final fun component6 ()Ljava/lang/String;
+	public final fun component7 ()Ljava/lang/String;
+	public final fun component8 ()I
+	public final fun component9 ()Lio/github/wulkanowy/sdk/hebe/models/SendMessageRequest$DisplayedClass;
+	public final fun copy (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ILio/github/wulkanowy/sdk/hebe/models/SendMessageRequest$DisplayedClass;)Lio/github/wulkanowy/sdk/hebe/models/SendMessageRequest$Receiver;
+	public static synthetic fun copy$default (Lio/github/wulkanowy/sdk/hebe/models/SendMessageRequest$Receiver;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ILio/github/wulkanowy/sdk/hebe/models/SendMessageRequest$DisplayedClass;ILjava/lang/Object;)Lio/github/wulkanowy/sdk/hebe/models/SendMessageRequest$Receiver;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getDisplayedClass ()Lio/github/wulkanowy/sdk/hebe/models/SendMessageRequest$DisplayedClass;
+	public final fun getGlobalKey ()Ljava/lang/String;
+	public final fun getGroup ()Ljava/lang/String;
+	public final fun getHasRead ()I
+	public final fun getId ()Ljava/lang/String;
+	public final fun getInitials ()Ljava/lang/String;
+	public final fun getName ()Ljava/lang/String;
+	public final fun getOwner ()Ljava/lang/String;
+	public final fun getPartition ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class io/github/wulkanowy/sdk/hebe/models/SendMessageRequest$Receiver$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+	public static final field INSTANCE Lio/github/wulkanowy/sdk/hebe/models/SendMessageRequest$Receiver$$serializer;
+	public fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lio/github/wulkanowy/sdk/hebe/models/SendMessageRequest$Receiver;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public fun serialize (Lkotlinx/serialization/encoding/Encoder;Lio/github/wulkanowy/sdk/hebe/models/SendMessageRequest$Receiver;)V
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+	public fun typeParametersSerializers ()[Lkotlinx/serialization/KSerializer;
+}
+
+public final class io/github/wulkanowy/sdk/hebe/models/SendMessageRequest$Receiver$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public final class io/github/wulkanowy/sdk/hebe/models/SendMessageRequest$Sender {
+	public static final field Companion Lio/github/wulkanowy/sdk/hebe/models/SendMessageRequest$Sender$Companion;
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ILio/github/wulkanowy/sdk/hebe/models/SendMessageRequest$DisplayedClass;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Ljava/lang/String;
+	public final fun component3 ()Ljava/lang/String;
+	public final fun component4 ()Ljava/lang/String;
+	public final fun component5 ()Ljava/lang/String;
+	public final fun component6 ()Ljava/lang/String;
+	public final fun component7 ()Ljava/lang/String;
+	public final fun component8 ()I
+	public final fun component9 ()Lio/github/wulkanowy/sdk/hebe/models/SendMessageRequest$DisplayedClass;
+	public final fun copy (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ILio/github/wulkanowy/sdk/hebe/models/SendMessageRequest$DisplayedClass;)Lio/github/wulkanowy/sdk/hebe/models/SendMessageRequest$Sender;
+	public static synthetic fun copy$default (Lio/github/wulkanowy/sdk/hebe/models/SendMessageRequest$Sender;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ILio/github/wulkanowy/sdk/hebe/models/SendMessageRequest$DisplayedClass;ILjava/lang/Object;)Lio/github/wulkanowy/sdk/hebe/models/SendMessageRequest$Sender;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getDisplayedClass ()Lio/github/wulkanowy/sdk/hebe/models/SendMessageRequest$DisplayedClass;
+	public final fun getGlobalKey ()Ljava/lang/String;
+	public final fun getGroup ()Ljava/lang/String;
+	public final fun getHasRead ()I
+	public final fun getId ()Ljava/lang/String;
+	public final fun getInitials ()Ljava/lang/String;
+	public final fun getName ()Ljava/lang/String;
+	public final fun getOwner ()Ljava/lang/String;
+	public final fun getPartition ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class io/github/wulkanowy/sdk/hebe/models/SendMessageRequest$Sender$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+	public static final field INSTANCE Lio/github/wulkanowy/sdk/hebe/models/SendMessageRequest$Sender$$serializer;
+	public fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lio/github/wulkanowy/sdk/hebe/models/SendMessageRequest$Sender;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public fun serialize (Lkotlinx/serialization/encoding/Encoder;Lio/github/wulkanowy/sdk/hebe/models/SendMessageRequest$Sender;)V
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+	public fun typeParametersSerializers ()[Lkotlinx/serialization/KSerializer;
+}
+
+public final class io/github/wulkanowy/sdk/hebe/models/SendMessageRequest$Sender$Companion {
 	public final fun serializer ()Lkotlinx/serialization/KSerializer;
 }
 

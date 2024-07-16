@@ -7,10 +7,17 @@ import io.github.wulkanowy.sdk.hebe.models.Grade
 import io.github.wulkanowy.sdk.hebe.models.GradeAverage
 import io.github.wulkanowy.sdk.hebe.models.GradeSummary
 import io.github.wulkanowy.sdk.hebe.models.LuckyNumber
+import io.github.wulkanowy.sdk.hebe.models.Message
+import io.github.wulkanowy.sdk.hebe.models.MessageUser
+import io.github.wulkanowy.sdk.hebe.models.SendMessageRequest
 import io.github.wulkanowy.sdk.hebe.models.SetMessageStatusRequest
 import io.github.wulkanowy.sdk.hebe.service.StudentService
 import java.time.LocalDate
+import java.time.LocalTime
+import java.time.ZoneId
+import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
+import java.util.UUID
 
 internal class StudentRepository(
     private val studentService: StudentService,
@@ -169,6 +176,65 @@ internal class StudentRepository(
                 ),
             ),
         ).getEnvelopeOrThrowError()
+
+    suspend fun sendMessage(subject: String, content: String, recipients: List<MessageUser>, sender: MessageUser): Message? {
+        val threadKey = UUID.randomUUID().toString()
+        val senderInitials = sender.name.split(" ")
+        return studentService
+            .sendMessage(
+                ApiRequest(
+                    envelope =
+                        SendMessageRequest(
+                            subject = subject,
+                            content = content,
+                            status = 1,
+                            owner = sender.globalKey,
+                            id = UUID.randomUUID().toString(),
+                            globalKey = threadKey,
+                            threadKey = threadKey,
+                            importance = 0,
+                            withdrawn = false,
+                            attachments = emptyList(),
+                            partition = sender.partition,
+                            sender = SendMessageRequest.Sender(
+                                id = "0",
+                                partition = sender.partition,
+                                owner = sender.globalKey,
+                                globalKey = sender.globalKey,
+                                name = sender.name,
+                                group = "",
+                                initials = senderInitials[1].first().toString() + senderInitials[0].first().toString(),
+                                hasRead = 0,
+                                displayedClass = null,
+                            ),
+                            receiver = recipients.map {
+                                val nameSplit = it.name.split(" - ")
+                                val receiverInitials = nameSplit[0].split(" ")
+                                SendMessageRequest.Receiver(
+                                    id = sender.globalKey + "-" + it.globalKey,
+                                    partition = it.partition,
+                                    owner = sender.globalKey,
+                                    globalKey = it.globalKey,
+                                    name = it.name,
+                                    group = nameSplit[1],
+                                    initials = receiverInitials[1].first().toString() + receiverInitials[0].first().toString(),
+                                    hasRead = 0,
+                                    displayedClass = SendMessageRequest.DisplayedClass(
+                                        displayedClass = null,
+                                    ),
+                                )
+                            },
+                            dateSent = SendMessageRequest.DateSent(
+                                date = LocalDate.now(),
+                                dateDisplay = LocalDate.now().toString().replace("-", "."),
+                                time = LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss")),
+                                timestamp = ZonedDateTime.now(ZoneId.of("GMT")).toInstant().toEpochMilli(),
+                            ),
+                            dateRead = null,
+                        ),
+                ),
+            ).getEnvelopeOrThrowError()
+    }
 
     private fun createQueryMap(
         pupilId: Int,

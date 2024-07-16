@@ -15,6 +15,7 @@ import io.github.wulkanowy.sdk.hebe.models.Meeting
 import io.github.wulkanowy.sdk.hebe.models.Message
 import io.github.wulkanowy.sdk.hebe.models.Note
 import io.github.wulkanowy.sdk.hebe.models.Recipient
+import io.github.wulkanowy.sdk.hebe.models.SendMessageRequest
 import io.github.wulkanowy.sdk.hebe.models.SetMessageStatusRequest
 import io.github.wulkanowy.sdk.hebe.models.Teacher
 import io.github.wulkanowy.sdk.hebe.models.TimetableChange
@@ -77,4 +78,7 @@ internal interface StudentService {
 
     @POST("api/mobile/messages/statuses")
     suspend fun setStatus(@Body request: ApiRequest<List<SetMessageStatusRequest>>): ApiResponse<Boolean>
+
+    @POST("api/mobile/messages")
+    suspend fun sendMessage(@Body request: ApiRequest<SendMessageRequest>): ApiResponse<Message>
 }

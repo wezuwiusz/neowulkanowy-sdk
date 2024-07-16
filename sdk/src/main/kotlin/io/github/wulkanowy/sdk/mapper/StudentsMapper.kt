@@ -72,6 +72,7 @@ internal fun ScrapperRegisterStudent.mapStudent(): RegisterStudent = RegisterStu
     semesters = semesters.mapSemesters(),
     isAuthorized = isAuthorized,
     isEduOne = isEduOne,
+    partition = null,
 )
 
 fun List<StudentInfo>.mapHebeUser(
@@ -124,6 +125,7 @@ private fun List<StudentInfo>.mapUnit(): List<RegisterUnit> {
                         isParent = student.login?.loginRole != "Uczen",
                         isAuthorized = true,
                         isEduOne = false,
+                        partition = student.partition,
                         semesters = student.periods.map { period ->
                             val schoolYear = period.start.timestamp
                                 .toLocalDate()

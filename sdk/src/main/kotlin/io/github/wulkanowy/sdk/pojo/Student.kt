@@ -54,4 +54,5 @@ data class RegisterStudent(
     val semesters: List<Semester>,
     val isAuthorized: Boolean,
     val isEduOne: Boolean,
+    val partition: String?,
 ) : RegisterSubject

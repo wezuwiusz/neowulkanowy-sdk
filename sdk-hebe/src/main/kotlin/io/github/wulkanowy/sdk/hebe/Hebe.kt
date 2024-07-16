@@ -12,6 +12,7 @@ import io.github.wulkanowy.sdk.hebe.models.LuckyNumber
 import io.github.wulkanowy.sdk.hebe.models.Mailbox
 import io.github.wulkanowy.sdk.hebe.models.Meeting
 import io.github.wulkanowy.sdk.hebe.models.Message
+import io.github.wulkanowy.sdk.hebe.models.MessageUser
 import io.github.wulkanowy.sdk.hebe.models.Subject
 import io.github.wulkanowy.sdk.hebe.models.Teacher
 import io.github.wulkanowy.sdk.hebe.models.TimetableFull
@@ -319,10 +320,19 @@ class Hebe {
     suspend fun getLuckyNumber(pupilId: Int, constituentId: Int, day: LocalDate = LocalDate.now()): LuckyNumber = studentRepository
         .getLuckyNumber(pupilId, constituentId, day)
 
-    suspend fun setMessageStatus(pupilId: Int?, boxKey: String, messageKey: String, status: Int): Boolean? = studentRepository.setMessageStatus(
-        pupilId = pupilId,
-        boxKey = boxKey,
-        messageKey = messageKey,
-        status = status,
-    )
+    suspend fun setMessageStatus(pupilId: Int?, boxKey: String, messageKey: String, status: Int): Boolean? = studentRepository
+        .setMessageStatus(
+            pupilId = pupilId,
+            boxKey = boxKey,
+            messageKey = messageKey,
+            status = status,
+        )
+
+    suspend fun sendMessage(subject: String, content: String, recipients: List<MessageUser>, sender: MessageUser) = studentRepository
+        .sendMessage(
+            subject = subject,
+            content = content,
+            recipients = recipients,
+            sender = sender,
+        )
 }
