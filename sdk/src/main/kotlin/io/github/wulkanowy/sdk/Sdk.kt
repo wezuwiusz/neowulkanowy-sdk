@@ -101,7 +101,7 @@ class Sdk {
 
     private val registerTimeZone = ZoneId.of("Europe/Warsaw")
 
-    var mode = Mode.SCRAPPER
+    var mode = Mode.HYBRID
 
     var mobileBaseUrl = ""
         set(value) {
@@ -367,36 +367,37 @@ class Sdk {
         firebaseToken: String? = null,
     ): RegisterUser = withContext(Dispatchers.IO) {
         val scrapperUser = getUserSubjectsFromScrapper(email, password, scrapperBaseUrl, startSymbol)
-        scrapperUser.copy(
+        scrapperUser.symbols
+            .mapNotNull { symbol ->
+                val school = symbol.schools.firstOrNull {
+                    it.subjects.filterIsInstance<RegisterStudent>().isNotEmpty()
+                } ?: return@mapNotNull null
+                val student = school.subjects
+                    .firstOrNull() as? RegisterStudent ?: return@mapNotNull null
+                scrapper.also {
+                    it.symbol = symbol.symbol
+                    it.schoolId = school.schoolId
+                    it.studentId = student.studentId
+                    it.diaryId = -1
+                    it.classId = student.classId
+                    it.loginType = Scrapper.LoginType.valueOf(scrapperUser.loginType!!.name)
+                }
+            }
+
+        val token = scrapper.getToken()
+        val hebeUser = getStudentsFromHebe(
+            token = token.token,
+            pin = token.pin,
+            symbol = token.symbol,
+            firebaseToken = firebaseToken,
+        )
+
+        hebeUser.copy(
             loginMode = Mode.HYBRID,
-            symbols = scrapperUser.symbols
-                .mapNotNull { symbol ->
-                    val school = symbol.schools.firstOrNull {
-                        it.subjects.filterIsInstance<RegisterStudent>().isNotEmpty()
-                    } ?: return@mapNotNull null
-                    val student = school.subjects
-                        .firstOrNull() as? RegisterStudent ?: return@mapNotNull null
-                    scrapper.also {
-                        it.symbol = symbol.symbol
-                        it.schoolId = school.schoolId
-                        it.studentId = student.studentId
-                        it.diaryId = -1
-                        it.classId = student.classId
-                        it.loginType = Scrapper.LoginType.valueOf(scrapperUser.loginType!!.name)
-                    }
-                    val token = scrapper.getToken()
-                    val hebeUser = getStudentsFromHebe(
-                        token = token.token,
-                        pin = token.pin,
-                        symbol = token.symbol,
-                        firebaseToken = firebaseToken,
-                    )
-                    symbol.copy(
-                        keyId = hebeUser.symbols.first().keyId,
-                        privatePem = hebeUser.symbols.first().privatePem,
-                        hebeBaseUrl = hebeUser.symbols.first().hebeBaseUrl,
-                    )
-                },
+            login = scrapperUser.login,
+            email = scrapperUser.email,
+            loginType = Scrapper.LoginType.valueOf(scrapperUser.loginType!!.name),
+            scrapperBaseUrl = scrapperUser.scrapperBaseUrl,
         )
     }
 
@@ -609,8 +610,8 @@ class Sdk {
 
     suspend fun getReceivedMessages(mailboxKey: String? = null): List<Message> = withContext(Dispatchers.IO) {
         when (mode) {
-            Mode.HYBRID, Mode.SCRAPPER -> scrapper.getReceivedMessages(mailboxKey).mapMessages(registerTimeZone, Folder.RECEIVED)
-            Mode.HEBE -> hebe.getMessages(mailboxKey ?: "0", 1).mapMessages(registerTimeZone, Folder.RECEIVED)
+            Mode.SCRAPPER -> scrapper.getReceivedMessages(mailboxKey).mapMessages(registerTimeZone, Folder.RECEIVED)
+            Mode.HYBRID, Mode.HEBE -> hebe.getMessages(mailboxKey ?: "0", 1).mapMessages(registerTimeZone, Folder.RECEIVED)
         }
     }
 
