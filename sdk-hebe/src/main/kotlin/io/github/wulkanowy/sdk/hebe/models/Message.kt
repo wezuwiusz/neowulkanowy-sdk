@@ -18,9 +18,9 @@ data class Message(
     @SerialName("Content")
     val content: String,
     @SerialName("DateSent")
-    val dateSent: DateSent,
+    val dateSent: Date,
     @SerialName("DateRead")
-    val dateRead: DateRead?,
+    val dateRead: Date?,
     @SerialName("Status")
     val status: Int,
     @SerialName("Sender")
@@ -35,20 +35,7 @@ data class Message(
     val withdrawn: Boolean,
 ) {
     @Serializable
-    data class DateSent(
-        @SerialName("Date")
-        @Serializable(with = CustomDateAdapter::class)
-        val date: LocalDate,
-        @SerialName("DateDisplay")
-        val dateDisplay: String,
-        @SerialName("Time")
-        val time: String,
-        @SerialName("Timestamp")
-        val timestamp: Long,
-    )
-
-    @Serializable
-    data class DateRead(
+    data class Date(
         @SerialName("Date")
         @Serializable(with = CustomDateAdapter::class)
         val date: LocalDate,

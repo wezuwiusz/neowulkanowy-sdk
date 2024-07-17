@@ -24,13 +24,13 @@ data class SendMessageRequest(
     @SerialName("Owner")
     val owner: String,
     @SerialName("DateSent")
-    val dateSent: DateSent,
+    val dateSent: Date,
     @SerialName("DateRead")
-    val dateRead: DateRead?,
+    val dateRead: Date?,
     @SerialName("Sender")
-    val sender: Sender,
+    val sender: Correspondent,
     @SerialName("Receiver")
-    val receiver: List<Receiver>,
+    val receiver: List<Correspondent>,
     @SerialName("Attachments")
     val attachments: List<Attachment>,
     @SerialName("Importance")
@@ -39,7 +39,7 @@ data class SendMessageRequest(
     val withdrawn: Boolean,
 ) {
     @Serializable
-    data class DateSent(
+    data class Date(
         @SerialName("Date")
         @Serializable(with = CustomDateAdapter::class)
         val date: LocalDate,
@@ -52,42 +52,7 @@ data class SendMessageRequest(
     )
 
     @Serializable
-    data class DateRead(
-        @SerialName("Date")
-        @Serializable(with = CustomDateAdapter::class)
-        val date: LocalDate,
-        @SerialName("DateDisplay")
-        val dateDisplay: String,
-        @SerialName("Time")
-        val time: String,
-        @SerialName("Timestamp")
-        val timestamp: Long,
-    )
-
-    @Serializable
-    data class Sender(
-        @SerialName("Id")
-        val id: String,
-        @SerialName("Partition")
-        val partition: String,
-        @SerialName("Owner")
-        val owner: String,
-        @SerialName("GlobalKey")
-        val globalKey: String,
-        @SerialName("Name")
-        val name: String,
-        @SerialName("Group")
-        val group: String,
-        @SerialName("Initials")
-        val initials: String,
-        @SerialName("HasRead")
-        val hasRead: Int,
-        @SerialName("DisplayedClass")
-        val displayedClass: DisplayedClass?,
-    )
-
-    @Serializable
-    data class Receiver(
+    data class Correspondent(
         @SerialName("Id")
         val id: String,
         @SerialName("Partition")

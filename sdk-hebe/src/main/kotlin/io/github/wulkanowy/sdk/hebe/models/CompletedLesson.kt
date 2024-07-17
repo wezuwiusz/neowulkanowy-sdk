@@ -16,7 +16,7 @@ data class CompletedLesson(
     @SerialName("LessonClassId")
     val lessonClassId: Int,
     @SerialName("Day")
-    val day: Day,
+    val day: Date,
     @SerialName("CalculatePresence")
     val calculatePresence: Boolean,
     @SerialName("GroupDefinition")
@@ -24,7 +24,7 @@ data class CompletedLesson(
     @SerialName("Replacement")
     val replacement: Boolean,
     @SerialName("DateModify")
-    val dateModify: DateModify,
+    val dateModify: Date,
     @SerialName("GlobalKey")
     val globalKey: String,
     @SerialName("Note")
@@ -79,20 +79,7 @@ data class CompletedLesson(
     )
 
     @Serializable
-    data class Day(
-        @SerialName("Date")
-        @Serializable(with = CustomDateAdapter::class)
-        val date: LocalDate,
-        @SerialName("DateDisplay")
-        val dateDisplay: String,
-        @SerialName("Time")
-        val time: String,
-        @SerialName("Timestamp")
-        val timestamp: Long,
-    )
-
-    @Serializable
-    data class DateModify(
+    data class Date(
         @SerialName("Date")
         @Serializable(with = CustomDateAdapter::class)
         val date: LocalDate,

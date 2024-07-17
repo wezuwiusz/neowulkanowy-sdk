@@ -12,25 +12,12 @@ data class Vacation(
     @SerialName("Name")
     val name: String,
     @SerialName("DateFrom")
-    val dateFrom: DateFrom,
+    val dateFrom: Date,
     @SerialName("DateTo")
-    val dateTo: DateTo,
+    val dateTo: Date,
 ) {
     @Serializable
-    data class DateFrom(
-        @SerialName("Date")
-        @Serializable(with = CustomDateAdapter::class)
-        val date: LocalDate,
-        @SerialName("DateDisplay")
-        val dateDisplay: String,
-        @SerialName("Time")
-        val time: String,
-        @SerialName("Timestamp")
-        val timestamp: Long,
-    )
-
-    @Serializable
-    data class DateTo(
+    data class Date(
         @SerialName("Date")
         @Serializable(with = CustomDateAdapter::class)
         val date: LocalDate,

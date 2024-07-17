@@ -14,9 +14,9 @@ data class TimetableChange(
     @SerialName("ScheduleId")
     val scheduleId: Int,
     @SerialName("LessonDate")
-    val lessonDate: LessonDate,
+    val lessonDate: Date,
     @SerialName("ChangeDate")
-    val changeDate: ChangeDate?,
+    val changeDate: Date?,
     @SerialName("Reason")
     val reason: String?,
     @SerialName("Room")
@@ -53,20 +53,7 @@ data class TimetableChange(
     val noRoom: Boolean,
 ) {
     @Serializable
-    data class LessonDate(
-        @SerialName("Date")
-        @Serializable(with = CustomDateAdapter::class)
-        val date: LocalDate,
-        @SerialName("DateDisplay")
-        val dateDisplay: String,
-        @SerialName("Time")
-        val time: String,
-        @SerialName("Timestamp")
-        val timestamp: Long,
-    )
-
-    @Serializable
-    data class ChangeDate(
+    data class Date(
         @SerialName("Date")
         @Serializable(with = CustomDateAdapter::class)
         val date: LocalDate,

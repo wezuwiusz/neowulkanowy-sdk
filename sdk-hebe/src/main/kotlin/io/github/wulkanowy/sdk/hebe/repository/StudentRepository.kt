@@ -196,7 +196,7 @@ internal class StudentRepository(
                             withdrawn = false,
                             attachments = emptyList(),
                             partition = sender.partition,
-                            sender = SendMessageRequest.Sender(
+                            sender = SendMessageRequest.Correspondent(
                                 id = "0",
                                 partition = sender.partition,
                                 owner = sender.globalKey,
@@ -210,7 +210,7 @@ internal class StudentRepository(
                             receiver = recipients.map {
                                 val nameSplit = it.name.split(" - ")
                                 val receiverInitials = nameSplit[0].split(" ")
-                                SendMessageRequest.Receiver(
+                                SendMessageRequest.Correspondent(
                                     id = sender.globalKey + "-" + it.globalKey,
                                     partition = it.partition,
                                     owner = sender.globalKey,
@@ -224,7 +224,7 @@ internal class StudentRepository(
                                     ),
                                 )
                             },
-                            dateSent = SendMessageRequest.DateSent(
+                            dateSent = SendMessageRequest.Date(
                                 date = LocalDate.now(),
                                 dateDisplay = LocalDate.now().toString().replace("-", "."),
                                 time = LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss")),

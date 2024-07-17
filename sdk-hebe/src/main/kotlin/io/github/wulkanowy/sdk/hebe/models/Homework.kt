@@ -20,13 +20,13 @@ data class Homework(
     @SerialName("IsAnswerRequired")
     val isAnswerRequired: Boolean,
     @SerialName("DateCreated")
-    val dateCreated: DateCreated,
+    val dateCreated: Date,
     @SerialName("Date")
     val date: Date,
     @SerialName("AnswerDate")
-    val answerDate: AnswerDate?,
+    val answerDate: Date?,
     @SerialName("Deadline")
-    val deadline: Deadline,
+    val deadline: Date,
     @SerialName("Creator")
     val creator: Creator,
     @SerialName("Subject")
@@ -36,46 +36,7 @@ data class Homework(
      */
 ) {
     @Serializable
-    data class DateCreated(
-        @SerialName("Date")
-        @Serializable(with = CustomDateAdapter::class)
-        val date: LocalDate,
-        @SerialName("DateDisplay")
-        val dateDisplay: String,
-        @SerialName("Time")
-        val time: String,
-        @SerialName("Timestamp")
-        val timestamp: Long,
-    )
-
-    @Serializable
     data class Date(
-        @SerialName("Date")
-        @Serializable(with = CustomDateAdapter::class)
-        val date: LocalDate,
-        @SerialName("DateDisplay")
-        val dateDisplay: String,
-        @SerialName("Time")
-        val time: String,
-        @SerialName("Timestamp")
-        val timestamp: Long,
-    )
-
-    @Serializable
-    data class AnswerDate(
-        @SerialName("Date")
-        @Serializable(with = CustomDateAdapter::class)
-        val date: LocalDate,
-        @SerialName("DateDisplay")
-        val dateDisplay: String,
-        @SerialName("Time")
-        val time: String,
-        @SerialName("Timestamp")
-        val timestamp: Long,
-    )
-
-    @Serializable
-    data class Deadline(
         @SerialName("Date")
         @Serializable(with = CustomDateAdapter::class)
         val date: LocalDate,
