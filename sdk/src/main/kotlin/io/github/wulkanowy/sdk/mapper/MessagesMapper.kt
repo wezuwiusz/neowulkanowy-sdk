@@ -101,7 +101,7 @@ internal fun List<HebeMessage>.mapMessages(zoneId: ZoneId, folderId: Folder) = m
             ),
         ),
         correspondents = it.sender.name,
-        unread = false,
+        unread = it.dateRead == null,
         unreadBy = 0,
         readBy = 0,
         hasAttachments = it.attachments.isNotEmpty(),
