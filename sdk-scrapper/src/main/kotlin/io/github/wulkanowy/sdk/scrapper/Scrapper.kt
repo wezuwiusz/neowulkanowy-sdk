@@ -592,6 +592,8 @@ class Scrapper {
 
     suspend fun getMessageDetails(globalKey: String, markAsRead: Boolean): MessageDetails = messages.getMessageDetails(globalKey, markAsRead)
 
+    suspend fun markMessageRead(globalKey: String) = messages.markMessageRead(globalKey)
+
     suspend fun sendMessage(subject: String, content: String, recipients: List<String>, senderMailboxId: String) =
         messages.sendMessage(subject, content, recipients, senderMailboxId)
 

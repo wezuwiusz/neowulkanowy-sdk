@@ -7,6 +7,7 @@ import io.github.wulkanowy.sdk.hebe.models.Grade
 import io.github.wulkanowy.sdk.hebe.models.GradeAverage
 import io.github.wulkanowy.sdk.hebe.models.GradeSummary
 import io.github.wulkanowy.sdk.hebe.models.LuckyNumber
+import io.github.wulkanowy.sdk.hebe.models.MarkMessageReadRequest
 import io.github.wulkanowy.sdk.hebe.models.Message
 import io.github.wulkanowy.sdk.hebe.models.MessageUser
 import io.github.wulkanowy.sdk.hebe.models.SendMessageRequest
@@ -175,6 +176,19 @@ internal class StudentRepository(
                     ),
                 ),
             ),
+        ).getEnvelopeOrThrowError()
+
+    suspend fun markMessageRead(pupilId: Int?, boxKey: String, messageKey: String) = studentService
+        .markMessageRead(
+            ApiRequest(
+                envelope = listOf(
+                    MarkMessageReadRequest(
+                        pupilId = pupilId,
+                        boxKey = boxKey,
+                        messageKey = messageKey
+                    )
+                )
+            )
         ).getEnvelopeOrThrowError()
 
     suspend fun sendMessage(subject: String, content: String, recipients: List<MessageUser>, sender: MessageUser): Message? {

@@ -644,6 +644,13 @@ class Sdk {
         }
     }
 
+    suspend fun markMessageRead(boxKey: String, messageKey: String) {
+        when (mode) {
+            Mode.SCRAPPER -> scrapper.markMessageRead(messageKey)
+            Mode.HYBRID, Mode.HEBE -> hebe.markMessageRead(hebe.pupilId, boxKey, messageKey)
+        }
+    }
+
     suspend fun sendMessage(subject: String, content: String, recipients: List<Recipient>, senderName: String, senderKey: String, partition: String) = withContext(
         Dispatchers.IO,
     ) {
