@@ -1,7 +1,9 @@
 package io.github.wulkanowy.sdk.mapper
 
+import io.github.wulkanowy.sdk.extractNameFromRecipient
+import io.github.wulkanowy.sdk.extractSchoolShortFromRecipient
+import io.github.wulkanowy.sdk.extractTypeFromRecipient
 import io.github.wulkanowy.sdk.pojo.Folder
-import io.github.wulkanowy.sdk.pojo.MailboxType
 import io.github.wulkanowy.sdk.pojo.Message
 import io.github.wulkanowy.sdk.pojo.MessageAttachment
 import io.github.wulkanowy.sdk.pojo.MessageDetails
@@ -78,7 +80,7 @@ internal fun Array<HebeAttachment>.mapAttachments() = map {
 
 @JvmName("MapHebeMessages")
 internal fun List<HebeMessage>.mapMessages(zoneId: ZoneId, folderId: Folder) = map {
-    val recipientInfo = it.receiver[0].name.split(" - ")
+    val isReceived = it.receiver[0].hasRead == null
 
     Message(
         globalKey = it.id,
@@ -90,20 +92,38 @@ internal fun List<HebeMessage>.mapMessages(zoneId: ZoneId, folderId: Folder) = m
             .atZone(zoneId),
         content = it.content,
         folderId = folderId.id,
-        recipients = listOf(
+        recipients = it.receiver.map { recipient ->
             Recipient(
-                fullName = recipientInfo[0],
-                userName = recipientInfo[0],
-                studentName = recipientInfo[0],
-                schoolNameShort = recipientInfo[2],
-                type = MailboxType.fromLetter(recipientInfo[1]),
-                mailboxGlobalKey = it.globalKey,
-            ),
-        ),
+                fullName = recipient.name,
+                userName = recipient.name,
+                studentName = recipient.name.extractNameFromRecipient(),
+                schoolNameShort = recipient.name.extractSchoolShortFromRecipient(),
+                type = recipient.name.extractTypeFromRecipient(),
+                mailboxGlobalKey = it.globalKey
+            )
+        },
         correspondents = it.sender.name,
-        unread = it.dateRead == null,
-        unreadBy = 0,
-        readBy = 0,
+        unread = (it.dateRead == null) && isReceived,
+        unreadBy = when(isReceived) {
+            true -> null
+            false -> {
+                var count = 0
+                for(recipient in it.receiver) {
+                    if(recipient.hasRead == 0) count++
+                }
+                count
+            }
+        },
+        readBy = when(isReceived) {
+            true -> null
+            false -> {
+                var count = 0
+                for(recipient in it.receiver) {
+                    if(recipient.hasRead == 1) count++
+                }
+                count
+            }
+        },
         hasAttachments = it.attachments.isNotEmpty(),
         attachments = it.attachments.mapAttachments(),
     )

@@ -1,5 +1,6 @@
 package io.github.wulkanowy.sdk
 
+import io.github.wulkanowy.sdk.pojo.MailboxType
 import java.time.Instant
 import java.time.LocalDate
 import java.time.LocalDateTime
@@ -24,3 +25,19 @@ fun String.normalizeRecipient() = substringBeforeLast("-")
     .substringBefore(" [")
     .substringBeforeLast(" (")
     .trim()
+
+fun String.extractNameFromRecipient(): String  = substringBeforeLast(" - ")
+        .substringBeforeLast(" - ")
+        .trim()
+
+fun String.extractSchoolShortFromRecipient(): String  = substringAfterLast(" - ")
+    .replace("(", "")
+    .replace(")", "")
+    .trim()
+
+fun String.extractTypeFromRecipient(): MailboxType = MailboxType
+    .fromLetter(
+        substringBeforeLast(" - ")
+        .substringAfterLast(" - ")
+        .trim()
+    )

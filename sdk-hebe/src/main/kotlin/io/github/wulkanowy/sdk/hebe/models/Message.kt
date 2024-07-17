@@ -61,6 +61,8 @@ data class Message(
         val globalKey: String,
         @SerialName("Name")
         val name: String,
+        @SerialName("HasRead")
+        val hasRead: Int? = null
     )
 
     @Serializable
