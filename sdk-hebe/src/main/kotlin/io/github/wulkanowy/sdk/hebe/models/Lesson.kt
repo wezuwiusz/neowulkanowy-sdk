@@ -14,7 +14,7 @@ data class Lesson(
     @SerialName("Date")
     val date: Date,
     @SerialName("Room")
-    val room: Room,
+    val room: Room? = null,
     @SerialName("TimeSlot")
     val timeSlot: TimeSlot,
     @SerialName("Subject")
