@@ -181,12 +181,10 @@ internal class StudentRepository(
     suspend fun markMessageRead(pupilId: Int?, boxKey: String, messageKey: String) = studentService
         .markMessageRead(
             ApiRequest(
-                envelope = listOf(
-                    MarkMessageReadRequest(
-                        pupilId = pupilId,
-                        boxKey = boxKey,
-                        messageKey = messageKey
-                    )
+                envelope = MarkMessageReadRequest(
+                    pupilId = pupilId,
+                    boxKey = boxKey,
+                    messageKey = messageKey
                 )
             )
         ).getEnvelopeOrThrowError()

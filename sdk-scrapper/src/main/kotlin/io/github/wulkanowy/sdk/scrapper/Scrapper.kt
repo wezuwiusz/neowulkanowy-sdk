@@ -590,7 +590,7 @@ class Scrapper {
 
     suspend fun getMessageReplayDetails(globalKey: String): MessageReplayDetails = messages.getMessageReplayDetails(globalKey)
 
-    suspend fun getMessageDetails(globalKey: String, markAsRead: Boolean): MessageDetails = messages.getMessageDetails(globalKey, markAsRead)
+    suspend fun getMessageDetails(globalKey: String): MessageDetails = messages.getMessageDetails(globalKey)
 
     suspend fun markMessageRead(globalKey: String) = messages.markMessageRead(globalKey)
 

@@ -95,12 +95,8 @@ internal class MessagesRepository(
         }
     }
 
-    suspend fun getMessageDetails(globalKey: String, markAsRead: Boolean): MessageDetails {
-        val details = api.getMessageDetails(globalKey) ?: error("Message not exist")
-        if (markAsRead) {
-            markMessageRead(globalKey)
-        }
-        return details
+    suspend fun getMessageDetails(globalKey: String): MessageDetails {
+        return api.getMessageDetails(globalKey) ?: error("Message not exist")
     }
 
     suspend fun markMessageRead(globalKey: String) {

@@ -81,7 +81,7 @@ internal interface StudentService {
     suspend fun setStatus(@Body request: ApiRequest<List<SetMessageStatusRequest>>): ApiResponse<Boolean>
 
     @POST("api/mobile/messages/status")
-    suspend fun markMessageRead(@Body request: ApiRequest<List<MarkMessageReadRequest>>): ApiResponse<Boolean>
+    suspend fun markMessageRead(@Body request: ApiRequest<MarkMessageReadRequest>): ApiResponse<Boolean>
 
     @POST("api/mobile/messages")
     suspend fun sendMessage(@Body request: ApiRequest<SendMessageRequest>): ApiResponse<Message>
