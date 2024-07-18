@@ -637,10 +637,17 @@ class Sdk {
         }
     }
 
-    suspend fun getMessageDetails(messageKey: String, markAsRead: Boolean = true): MessageDetails = withContext(Dispatchers.IO) {
+    suspend fun getMessageDetails(messageKey: String): MessageDetails = withContext(Dispatchers.IO) {
         when (mode) {
-            Mode.HYBRID, Mode.SCRAPPER -> scrapper.getMessageDetails(messageKey, markAsRead).mapScrapperMessage()
+            Mode.HYBRID, Mode.SCRAPPER -> scrapper.getMessageDetails(messageKey).mapScrapperMessage()
             Mode.HEBE -> throw NotImplementedError("Not available in HEBE mode")
+        }
+    }
+
+    suspend fun markMessageRead(boxKey: String, messageKey: String) {
+        when (mode) {
+            Mode.SCRAPPER -> scrapper.markMessageRead(messageKey)
+            Mode.HYBRID, Mode.HEBE -> hebe.markMessageRead(hebe.pupilId, boxKey, messageKey)
         }
     }
 

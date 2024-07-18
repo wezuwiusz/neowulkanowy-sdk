@@ -11,6 +11,7 @@ import io.github.wulkanowy.sdk.hebe.models.Homework
 import io.github.wulkanowy.sdk.hebe.models.Lesson
 import io.github.wulkanowy.sdk.hebe.models.LuckyNumber
 import io.github.wulkanowy.sdk.hebe.models.Mailbox
+import io.github.wulkanowy.sdk.hebe.models.MarkMessageReadRequest
 import io.github.wulkanowy.sdk.hebe.models.Meeting
 import io.github.wulkanowy.sdk.hebe.models.Message
 import io.github.wulkanowy.sdk.hebe.models.Note
@@ -78,6 +79,9 @@ internal interface StudentService {
 
     @POST("api/mobile/messages/statuses")
     suspend fun setStatus(@Body request: ApiRequest<List<SetMessageStatusRequest>>): ApiResponse<Boolean>
+
+    @POST("api/mobile/messages/status")
+    suspend fun markMessageRead(@Body request: ApiRequest<MarkMessageReadRequest>): ApiResponse<Boolean>
 
     @POST("api/mobile/messages")
     suspend fun sendMessage(@Body request: ApiRequest<SendMessageRequest>): ApiResponse<Message>

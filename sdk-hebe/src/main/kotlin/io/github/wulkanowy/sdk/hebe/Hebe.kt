@@ -328,6 +328,13 @@ class Hebe {
             status = status,
         )
 
+    suspend fun markMessageRead(pupilId: Int?, boxKey: String, messageKey: String): Boolean? = studentRepository
+        .markMessageRead(
+            pupilId = pupilId,
+            boxKey = boxKey,
+            messageKey = messageKey
+        )
+
     suspend fun sendMessage(subject: String, content: String, recipients: List<MessageUser>, sender: MessageUser) = studentRepository
         .sendMessage(
             subject = subject,

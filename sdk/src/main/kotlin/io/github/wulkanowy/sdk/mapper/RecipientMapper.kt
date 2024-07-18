@@ -1,5 +1,8 @@
 package io.github.wulkanowy.sdk.mapper
 
+import io.github.wulkanowy.sdk.extractNameFromRecipient
+import io.github.wulkanowy.sdk.extractSchoolShortFromRecipient
+import io.github.wulkanowy.sdk.extractTypeFromRecipient
 import io.github.wulkanowy.sdk.pojo.MailboxType
 import io.github.wulkanowy.sdk.pojo.Recipient
 import io.github.wulkanowy.sdk.hebe.models.Recipient as HebeRecipient
@@ -30,11 +33,7 @@ internal fun HebeRecipient.mapToRecipient() = Recipient(
     mailboxGlobalKey = globalKey,
     fullName = name,
     userName = name,
-    studentName = name.split(" - ")[0],
-    schoolNameShort = name
-        .split(" - ")
-        .last()
-        .replace("(", "")
-        .replace(")", ""),
-    type = MailboxType.fromLetter(group),
+    studentName = name.extractNameFromRecipient(),
+    schoolNameShort = name.extractSchoolShortFromRecipient(),
+    type = name.extractTypeFromRecipient(),
 )
