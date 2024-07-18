@@ -62,7 +62,7 @@ data class Message(
         @SerialName("Name")
         val name: String,
         @SerialName("HasRead")
-        val hasRead: Int? = null
+        val hasRead: Int? = null,
     )
 
     @Serializable

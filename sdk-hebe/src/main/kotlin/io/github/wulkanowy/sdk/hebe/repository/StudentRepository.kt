@@ -184,9 +184,9 @@ internal class StudentRepository(
                 envelope = MarkMessageReadRequest(
                     pupilId = pupilId,
                     boxKey = boxKey,
-                    messageKey = messageKey
-                )
-            )
+                    messageKey = messageKey,
+                ),
+            ),
         ).getEnvelopeOrThrowError()
 
     suspend fun sendMessage(subject: String, content: String, recipients: List<MessageUser>, sender: MessageUser): Message? {

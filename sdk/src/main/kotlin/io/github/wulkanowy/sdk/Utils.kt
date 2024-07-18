@@ -26,11 +26,11 @@ fun String.normalizeRecipient() = substringBeforeLast("-")
     .substringBeforeLast(" (")
     .trim()
 
-fun String.extractNameFromRecipient(): String  = substringBeforeLast(" - ")
-        .substringBeforeLast(" - ")
-        .trim()
+fun String.extractNameFromRecipient(): String = substringBeforeLast(" - ")
+    .substringBeforeLast(" - ")
+    .trim()
 
-fun String.extractSchoolShortFromRecipient(): String  = substringAfterLast(" - ")
+fun String.extractSchoolShortFromRecipient(): String = substringAfterLast(" - ")
     .replace("(", "")
     .replace(")", "")
     .trim()
@@ -38,6 +38,6 @@ fun String.extractSchoolShortFromRecipient(): String  = substringAfterLast(" - "
 fun String.extractTypeFromRecipient(): MailboxType = MailboxType
     .fromLetter(
         substringBeforeLast(" - ")
-        .substringAfterLast(" - ")
-        .trim()
+            .substringAfterLast(" - ")
+            .trim(),
     )

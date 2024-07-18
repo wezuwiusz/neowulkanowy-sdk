@@ -99,27 +99,27 @@ internal fun List<HebeMessage>.mapMessages(zoneId: ZoneId, folderId: Folder) = m
                 studentName = recipient.name.extractNameFromRecipient(),
                 schoolNameShort = recipient.name.extractSchoolShortFromRecipient(),
                 type = recipient.name.extractTypeFromRecipient(),
-                mailboxGlobalKey = it.globalKey
+                mailboxGlobalKey = it.globalKey,
             )
         },
         correspondents = it.sender.name,
         unread = (it.dateRead == null) && isReceived,
-        unreadBy = when(isReceived) {
+        unreadBy = when (isReceived) {
             true -> null
             false -> {
                 var count = 0
-                for(recipient in it.receiver) {
-                    if(recipient.hasRead == 0) count++
+                for (recipient in it.receiver) {
+                    if (recipient.hasRead == 0) count++
                 }
                 count
             }
         },
-        readBy = when(isReceived) {
+        readBy = when (isReceived) {
             true -> null
             false -> {
                 var count = 0
-                for(recipient in it.receiver) {
-                    if(recipient.hasRead == 1) count++
+                for (recipient in it.receiver) {
+                    if (recipient.hasRead == 1) count++
                 }
                 count
             }

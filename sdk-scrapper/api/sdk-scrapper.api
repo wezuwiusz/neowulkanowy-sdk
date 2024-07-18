@@ -58,7 +58,7 @@ public final class io/github/wulkanowy/sdk/scrapper/Scrapper {
 	public final fun getLoginType ()Lio/github/wulkanowy/sdk/scrapper/Scrapper$LoginType;
 	public final fun getMailboxes (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public final fun getMenu (Ljava/time/LocalDate;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
-	public final fun getMessageDetails (Ljava/lang/String;ZLkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public final fun getMessageDetails (Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public final fun getMessageReplayDetails (Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public final fun getMessages (Lio/github/wulkanowy/sdk/scrapper/messages/Folder;Ljava/lang/String;IILkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public static synthetic fun getMessages$default (Lio/github/wulkanowy/sdk/scrapper/Scrapper;Lio/github/wulkanowy/sdk/scrapper/messages/Folder;Ljava/lang/String;IILkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
@@ -98,6 +98,7 @@ public final class io/github/wulkanowy/sdk/scrapper/Scrapper {
 	public final fun getVTokenMapping ()Ljava/util/Map;
 	public final fun isEduOne ()Z
 	public final fun isSymbolNotExist (Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public final fun markMessageRead (Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public final fun restoreMessages (Ljava/util/List;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public final fun sendMessage (Ljava/lang/String;Ljava/lang/String;Ljava/util/List;Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public final fun sendPasswordResetRequest (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;

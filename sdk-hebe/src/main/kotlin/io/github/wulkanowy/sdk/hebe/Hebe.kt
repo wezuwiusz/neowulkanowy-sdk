@@ -332,7 +332,7 @@ class Hebe {
         .markMessageRead(
             pupilId = pupilId,
             boxKey = boxKey,
-            messageKey = messageKey
+            messageKey = messageKey,
         )
 
     suspend fun sendMessage(subject: String, content: String, recipients: List<MessageUser>, sender: MessageUser) = studentRepository
