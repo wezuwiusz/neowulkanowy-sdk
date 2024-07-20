@@ -10,7 +10,7 @@ data class Lesson(
     @SerialName("Id")
     val id: Int,
     @SerialName("MergeChangeId")
-    val mergeChangeId: Int?,
+    val mergeChangeId: Int? = null,
     @SerialName("Date")
     val date: Date,
     @SerialName("Room")
@@ -18,15 +18,15 @@ data class Lesson(
     @SerialName("TimeSlot")
     val timeSlot: TimeSlot,
     @SerialName("Subject")
-    val subject: Subject,
+    val subject: Subject? = null,
     @SerialName("TeacherPrimary")
-    val teacherPrimary: Teacher,
+    val teacherPrimary: Teacher? = null,
     @SerialName("TeacherSecondary")
     val teacherSecondary: Teacher?,
     @SerialName("TeacherSecondary2")
     val teacherTertiary: Teacher?,
     @SerialName("Clazz")
-    val `class`: Class,
+    val `class`: Class? = null,
     @SerialName("PupilAlias")
     val pupilAlias: String?,
     @SerialName("Visible")
