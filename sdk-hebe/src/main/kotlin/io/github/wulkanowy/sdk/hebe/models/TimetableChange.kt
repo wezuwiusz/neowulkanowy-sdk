@@ -18,39 +18,39 @@ data class TimetableChange(
     @SerialName("ChangeDate")
     val changeDate: Date?,
     @SerialName("Reason")
-    val reason: String?,
+    val reason: String? = null,
     @SerialName("Room")
-    val room: Room?,
+    val room: Room? = null,
     @SerialName("Subject")
-    val subject: Subject?,
+    val subject: Subject? = null,
     @SerialName("TeacherPrimary")
-    val teacherPrimary: Teacher?,
+    val teacherPrimary: Teacher? = null,
     @SerialName("TeacherAbsenceReasonId")
-    val teacherAbsenceReasonId: Int?,
+    val teacherAbsenceReasonId: Int? = null,
     @SerialName("TeacherAbsenceEffectName")
-    val teacherAbsenceEffectName: String?,
+    val teacherAbsenceEffectName: String? = null,
     @SerialName("TeacherSecondary")
-    val teacherSecondary: Teacher?,
+    val teacherSecondary: Teacher? = null,
     @SerialName("TeacherSecondaryAbsenceReasonId")
-    val teacherSecondaryAbsenceReasonId: Int?,
+    val teacherSecondaryAbsenceReasonId: Int? = null,
     @SerialName("TeacherSecondaryAbsenceEffectName")
-    val teacherSecondaryAbsenceEffectName: String?,
+    val teacherSecondaryAbsenceEffectName: String? = null,
     @SerialName("TeacherSecondary2")
-    val teacherTertiary: Teacher?,
+    val teacherTertiary: Teacher? = null,
     @SerialName("TeacherSecondary2AbsenceReasonId")
-    val teacherSecondary2AbsenceReasonId: Int?,
+    val teacherSecondary2AbsenceReasonId: Int? = null,
     @SerialName("TeacherSecondary2AbsenceEffectName")
-    val teacherSecondary2AbsenceEffectName: String?,
+    val teacherSecondary2AbsenceEffectName: String? = null,
     @SerialName("Change")
     val change: Change,
     @SerialName("Clazz")
     val `class`: Class,
     @SerialName("Distribution")
-    val distribution: Distribution?,
+    val distribution: Distribution? = null,
     @SerialName("ClassAbsence")
-    val classAbsence: Boolean,
+    val classAbsence: Boolean? = null,
     @SerialName("NoRoom")
-    val noRoom: Boolean,
+    val noRoom: Boolean? = null,
 ) {
     @Serializable
     data class Date(

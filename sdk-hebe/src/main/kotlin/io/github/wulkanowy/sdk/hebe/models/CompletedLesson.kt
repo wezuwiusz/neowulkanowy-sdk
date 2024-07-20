@@ -10,7 +10,7 @@ data class CompletedLesson(
     @SerialName("LessonId")
     val lessonId: Int,
     @SerialName("PresenceType")
-    val presenceType: PresenceType?,
+    val presenceType: PresenceType? = null,
     @SerialName("Id")
     val id: Int,
     @SerialName("LessonClassId")
@@ -18,35 +18,35 @@ data class CompletedLesson(
     @SerialName("Day")
     val day: Date,
     @SerialName("CalculatePresence")
-    val calculatePresence: Boolean,
+    val calculatePresence: Boolean? = null,
     @SerialName("GroupDefinition")
     val groupDefinition: String,
     @SerialName("Replacement")
-    val replacement: Boolean,
+    val replacement: Boolean? = null,
     @SerialName("DateModify")
     val dateModify: Date,
     @SerialName("GlobalKey")
     val globalKey: String,
     @SerialName("Note")
-    val note: String?,
+    val note: String? = null,
     @SerialName("Topic")
-    val topic: String,
+    val topic: String? = null,
     @SerialName("LessonNumber")
-    val lessonNumber: Int,
+    val lessonNumber: Int? = null,
     @SerialName("LessonClassGlobalKey")
-    val lessonClassGlobalKey: String,
+    val lessonClassGlobalKey: String? = null,
     @SerialName("TimeSlot")
     val timeSlot: TimeSlot,
     @SerialName("Subject")
-    val subject: Subject?,
+    val subject: Subject? = null,
     @SerialName("TeacherPrimary")
-    val primaryTeacher: Teacher?,
+    val primaryTeacher: Teacher? = null,
     @SerialName("TeacherSecondary")
-    val secondaryTeacher: Teacher?,
+    val secondaryTeacher: Teacher? = null,
     @SerialName("Clazz")
     val `class`: Class,
     @SerialName("Distribution")
-    val distribution: Distribution?,
+    val distribution: Distribution? = null,
     @SerialName("Visible")
     val visible: Boolean,
 ) {

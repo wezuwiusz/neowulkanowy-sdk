@@ -18,7 +18,7 @@ data class Note(
     @SerialName("Content")
     val content: String,
     @SerialName("Points")
-    val points: Int?,
+    val points: Int? = null,
     @SerialName("DateValid")
     val dateValid: Date,
     @SerialName("DateModify")
@@ -26,7 +26,7 @@ data class Note(
     @SerialName("Creator")
     val creator: Creator,
     @SerialName("Category")
-    val category: Category?,
+    val category: Category? = null,
 ) {
     @Serializable
     data class Date(

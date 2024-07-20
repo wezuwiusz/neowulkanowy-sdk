@@ -22,9 +22,9 @@ internal fun List<ScrapperConference>.mapConferences(zoneId: ZoneId) = map {
 @JvmName("HebeConferenceMapper")
 internal fun List<HebeConference>.mapConferences(zoneId: ZoneId) = map {
     Conference(
-        place = it.where,
-        topic = it.why,
-        agenda = it.agenda,
+        place = it.where ?: "",
+        topic = it.why ?: "",
+        agenda = it.agenda ?: "",
         presentOnConference = "",
         online = it.online,
         date = it.`when`.timestamp

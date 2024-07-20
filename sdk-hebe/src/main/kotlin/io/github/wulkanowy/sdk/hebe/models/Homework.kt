@@ -24,7 +24,7 @@ data class Homework(
     @SerialName("Date")
     val date: Date,
     @SerialName("AnswerDate")
-    val answerDate: Date?,
+    val answerDate: Date? = null,
     @SerialName("Deadline")
     val deadline: Date,
     @SerialName("Creator")

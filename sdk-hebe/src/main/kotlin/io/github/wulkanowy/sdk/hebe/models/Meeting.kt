@@ -10,15 +10,15 @@ data class Meeting(
     @SerialName("Id")
     val id: Int,
     @SerialName("Where")
-    val where: String,
+    val where: String? = null,
     @SerialName("Why")
-    val why: String,
+    val why: String? = null,
     @SerialName("Agenda")
-    val agenda: String,
+    val agenda: String? = null,
     @SerialName("AdditionalInfo")
-    val additionalInfo: String?,
+    val additionalInfo: String? = null,
     @SerialName("Online")
-    val online: String,
+    val online: String? = null,
     @SerialName("When")
     val `when`: When,
 ) {
