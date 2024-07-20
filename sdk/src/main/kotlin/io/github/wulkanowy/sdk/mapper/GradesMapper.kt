@@ -75,7 +75,7 @@ internal fun Triple<List<HebeGrade>, List<HebeGradeSummary>, List<HebeGradeAvera
             modifier = 0.0,
             weight = String.format("%.2f", grade.column.weight),
             weightValue = grade.column.weight,
-            comment = grade.comment,
+            comment = grade.comment ?: "",
             symbol = grade.column.code,
             description = grade.column.name,
             color = grade.column.color

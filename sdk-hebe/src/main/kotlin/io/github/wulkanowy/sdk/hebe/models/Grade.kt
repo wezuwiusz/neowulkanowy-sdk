@@ -8,7 +8,7 @@ data class Grade(
     @SerialName("Column")
     val column: Column,
     @SerialName("Comment")
-    val comment: String,
+    val comment: String? = null,
     @SerialName("Content")
     val content: String,
     @SerialName("ContentRaw")
