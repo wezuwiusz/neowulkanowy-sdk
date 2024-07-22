@@ -94,8 +94,8 @@ internal fun List<HebeLesson>.mapTimetable(zoneId: ZoneId, changes: List<HebeTim
     val change = changes.find { change -> it.change?.id == change.id }
 
     Lesson(
-        canceled = change?.change?.type == 1,
-        changes = change != null && change.change.type != 1,
+        canceled = change?.change?.type == 1 || change?.change?.type == 4,
+        changes = change != null && change.change.type != 1 && change.change.type != 4,
         date = it.date.date,
         start = LocalDateTime
             .of(
@@ -114,7 +114,7 @@ internal fun List<HebeLesson>.mapTimetable(zoneId: ZoneId, changes: List<HebeTim
                 timeSlotEnd[1].toInt(),
             ).atZone(zoneId),
         group = it.distribution?.name ?: "",
-        info = change?.teacherAbsenceEffectName ?: "",
+        info = if (change?.change?.type == 4) change.reason ?: "" else change?.teacherAbsenceEffectName ?: "",
         number = it.timeSlot.position,
         room = change?.room?.code ?: it.room?.code ?: "",
         roomOld = if (change?.room != null) it.room?.code ?: "" else "",
