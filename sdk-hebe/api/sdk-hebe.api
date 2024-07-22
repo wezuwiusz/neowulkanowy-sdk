@@ -791,18 +791,21 @@ public final class io/github/wulkanowy/sdk/hebe/models/Grade$Person$Companion {
 
 public final class io/github/wulkanowy/sdk/hebe/models/GradeAverage {
 	public static final field Companion Lio/github/wulkanowy/sdk/hebe/models/GradeAverage$Companion;
-	public fun <init> (Ljava/lang/String;IIILio/github/wulkanowy/sdk/hebe/models/GradeAverage$Subject;)V
+	public fun <init> (Ljava/lang/String;IILjava/lang/String;ILio/github/wulkanowy/sdk/hebe/models/GradeAverage$Subject;)V
+	public synthetic fun <init> (Ljava/lang/String;IILjava/lang/String;ILio/github/wulkanowy/sdk/hebe/models/GradeAverage$Subject;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public final fun component1 ()Ljava/lang/String;
 	public final fun component2 ()I
 	public final fun component3 ()I
-	public final fun component4 ()I
-	public final fun component5 ()Lio/github/wulkanowy/sdk/hebe/models/GradeAverage$Subject;
-	public final fun copy (Ljava/lang/String;IIILio/github/wulkanowy/sdk/hebe/models/GradeAverage$Subject;)Lio/github/wulkanowy/sdk/hebe/models/GradeAverage;
-	public static synthetic fun copy$default (Lio/github/wulkanowy/sdk/hebe/models/GradeAverage;Ljava/lang/String;IIILio/github/wulkanowy/sdk/hebe/models/GradeAverage$Subject;ILjava/lang/Object;)Lio/github/wulkanowy/sdk/hebe/models/GradeAverage;
+	public final fun component4 ()Ljava/lang/String;
+	public final fun component5 ()I
+	public final fun component6 ()Lio/github/wulkanowy/sdk/hebe/models/GradeAverage$Subject;
+	public final fun copy (Ljava/lang/String;IILjava/lang/String;ILio/github/wulkanowy/sdk/hebe/models/GradeAverage$Subject;)Lio/github/wulkanowy/sdk/hebe/models/GradeAverage;
+	public static synthetic fun copy$default (Lio/github/wulkanowy/sdk/hebe/models/GradeAverage;Ljava/lang/String;IILjava/lang/String;ILio/github/wulkanowy/sdk/hebe/models/GradeAverage$Subject;ILjava/lang/Object;)Lio/github/wulkanowy/sdk/hebe/models/GradeAverage;
 	public fun equals (Ljava/lang/Object;)Z
 	public final fun getAverage ()Ljava/lang/String;
 	public final fun getId ()I
 	public final fun getPeriodId ()I
+	public final fun getPoints ()Ljava/lang/String;
 	public final fun getPupilId ()I
 	public final fun getSubject ()Lio/github/wulkanowy/sdk/hebe/models/GradeAverage$Subject;
 	public fun hashCode ()I
