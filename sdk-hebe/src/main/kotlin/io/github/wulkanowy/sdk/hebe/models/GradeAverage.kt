@@ -6,13 +6,13 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class GradeAverage(
     @SerialName("Average")
-    val average: String,
+    val average: String? = null,
     @SerialName("Id")
     val id: Int,
     @SerialName("PeriodId")
     val periodId: Int,
-    // @SerialName("Points")
-    // val points: Any?,
+    @SerialName("Points")
+    val points: String? = null,
     @SerialName("PupilId")
     val pupilId: Int,
     @SerialName("Subject")
