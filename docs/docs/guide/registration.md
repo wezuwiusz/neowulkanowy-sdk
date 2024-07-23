@@ -45,8 +45,9 @@ val registerUser: RegisterUser = sdk.getUserSubjectsFromScrapper(
 Hebe, dzięki swojej koncepcji wspiera i póki będzie istnieć, to będzie wspierać wszystkie odmiany dziennika.
 Z tego powodu wygrywa z trybem SCRAPPER pod względem stabilności i odporności na możliwe zmiany.
 
-!!! warning
-    Obsługa trybu HEBE jest w tej chwili mocno wybrakowana.
+!!! note
+    Ten tryb wspiera zdecydowaną większość funkcji. Zalecamy z niego korzystać, chyba że potrzebujesz niedostępnych funkcji,
+    takich jak np. uczeń na tle klasy.
 
 By zdobyć token, pin i symbol musisz ręcznie [zarejestrować urządzenie](https://wulkanowy.github.io/czesto-zadawane-pytania/co-to-jest-symbol).
 

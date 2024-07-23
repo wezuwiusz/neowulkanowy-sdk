@@ -1,3 +1,6 @@
+### 3.0-dev (?)
+- Dodano wsparcie dla wszystkich endpointów w HEBE z wyjątkiem ogłoszeń szkolnych, zaplanowych i dodatkowych lekcji oraz stołówki szkolnej.
+
 ### 2.0.6 (2023.05.23)
 
 * dodanie rozpoznawania strony błędu z aktualizacją bazy danych
