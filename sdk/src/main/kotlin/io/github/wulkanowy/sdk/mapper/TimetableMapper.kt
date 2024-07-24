@@ -118,7 +118,7 @@ internal fun List<HebeLesson>.mapTimetable(zoneId: ZoneId, changes: List<HebeTim
         number = it.timeSlot.position,
         room = change?.room?.code ?: it.room?.code ?: "",
         roomOld = if (change?.room != null) it.room?.code ?: "" else "",
-        subject = change?.subject?.name ?: it.subject?.name ?: "",
+        subject = change?.subject?.name ?: it.subject?.name ?: it.event ?: "",
         subjectOld = if (change?.subject != null) it.subject?.name ?: "" else "",
         studentPlan = it.visible,
         teacher = change?.teacherPrimary?.displayName ?: it.teacherPrimary?.displayName ?: "",

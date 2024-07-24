@@ -11,6 +11,8 @@ data class Lesson(
     val id: Int,
     @SerialName("MergeChangeId")
     val mergeChangeId: Int? = null,
+    @SerialName("Event")
+    val event: String? = null,
     @SerialName("Date")
     val date: Date,
     @SerialName("Room")
