@@ -2665,11 +2665,12 @@ public final class io/github/wulkanowy/sdk/hebe/register/RegisterDevice {
 
 public final class io/github/wulkanowy/sdk/hebe/register/StudentInfo {
 	public static final field Companion Lio/github/wulkanowy/sdk/hebe/register/StudentInfo$Companion;
-	public fun <init> (Ljava/util/List;Ljava/lang/String;Lio/github/wulkanowy/sdk/hebe/register/StudentInfo$ConstituentUnit;Ljava/util/List;Ljava/lang/Boolean;Ljava/lang/String;Lio/github/wulkanowy/sdk/hebe/register/StudentInfo$Journal;Lio/github/wulkanowy/sdk/hebe/register/StudentInfo$Login;Ljava/lang/String;Ljava/util/List;Lio/github/wulkanowy/sdk/hebe/register/StudentInfo$Pupil;Ljava/lang/String;Lio/github/wulkanowy/sdk/hebe/register/StudentInfo$Unit;)V
-	public synthetic fun <init> (Ljava/util/List;Ljava/lang/String;Lio/github/wulkanowy/sdk/hebe/register/StudentInfo$ConstituentUnit;Ljava/util/List;Ljava/lang/Boolean;Ljava/lang/String;Lio/github/wulkanowy/sdk/hebe/register/StudentInfo$Journal;Lio/github/wulkanowy/sdk/hebe/register/StudentInfo$Login;Ljava/lang/String;Ljava/util/List;Lio/github/wulkanowy/sdk/hebe/register/StudentInfo$Pupil;Ljava/lang/String;Lio/github/wulkanowy/sdk/hebe/register/StudentInfo$Unit;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun <init> (Ljava/util/List;Ljava/lang/String;Lio/github/wulkanowy/sdk/hebe/register/StudentInfo$ConstituentUnit;Ljava/util/List;Ljava/lang/Boolean;Ljava/lang/String;Lio/github/wulkanowy/sdk/hebe/register/StudentInfo$Journal;Ljava/lang/String;Lio/github/wulkanowy/sdk/hebe/register/StudentInfo$Login;Ljava/lang/String;Ljava/util/List;Lio/github/wulkanowy/sdk/hebe/register/StudentInfo$Pupil;Ljava/lang/String;Lio/github/wulkanowy/sdk/hebe/register/StudentInfo$Unit;)V
+	public synthetic fun <init> (Ljava/util/List;Ljava/lang/String;Lio/github/wulkanowy/sdk/hebe/register/StudentInfo$ConstituentUnit;Ljava/util/List;Ljava/lang/Boolean;Ljava/lang/String;Lio/github/wulkanowy/sdk/hebe/register/StudentInfo$Journal;Ljava/lang/String;Lio/github/wulkanowy/sdk/hebe/register/StudentInfo$Login;Ljava/lang/String;Ljava/util/List;Lio/github/wulkanowy/sdk/hebe/register/StudentInfo$Pupil;Ljava/lang/String;Lio/github/wulkanowy/sdk/hebe/register/StudentInfo$Unit;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public final fun getCapabilities ()Ljava/util/List;
 	public final fun getClassDisplay ()Ljava/lang/String;
 	public final fun getConstituentUnit ()Lio/github/wulkanowy/sdk/hebe/register/StudentInfo$ConstituentUnit;
+	public final fun getContext ()Ljava/lang/String;
 	public final fun getEducators ()Ljava/util/List;
 	public final fun getFullSync ()Ljava/lang/Boolean;
 	public final fun getInfoDisplay ()Ljava/lang/String;

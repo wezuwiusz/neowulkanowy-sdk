@@ -45,6 +45,7 @@ data class RegisterEmployee(
 data class RegisterStudent(
     val diaryNumber: Int?,
     val studentId: Int,
+    val vContext: String?,
     val studentName: String,
     val studentSecondName: String,
     val studentSurname: String,

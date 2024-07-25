@@ -12,7 +12,7 @@ class StudentInfo(
     @SerialName("ClassDisplay")
     val classDisplay: String,
 
-    @SerialName("ConstituentUnit")
+    @SerialName("Const`ituentUnit")
     val constituentUnit: ConstituentUnit,
 
     @SerialName("Educators")
@@ -26,6 +26,9 @@ class StudentInfo(
 
     @SerialName("Journal")
     val journal: Journal? = null,
+
+    @SerialName("Context")
+    val context: String? = null,
 
     @SerialName("Login")
     val login: Login? = null,

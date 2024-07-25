@@ -16,7 +16,6 @@ import retrofit2.create
 internal class RepositoryManager(
     private val keyId: String,
     private val privatePem: String,
-    private val deviceModel: String,
     logLevel: HttpLoggingInterceptor.Level,
 ) {
 
@@ -77,7 +76,7 @@ internal class RepositoryManager(
                 .newBuilder()
                 .apply {
                     if (signInterceptor) {
-                        addInterceptor(SignInterceptor(keyId, privatePem, deviceModel))
+                        addInterceptor(SignInterceptor(keyId, privatePem))
                     }
                     interceptors.forEach {
                         when {

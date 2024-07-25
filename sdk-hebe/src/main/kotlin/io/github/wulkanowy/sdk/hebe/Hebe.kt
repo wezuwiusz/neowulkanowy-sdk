@@ -84,7 +84,6 @@ class Hebe {
             logLevel = logLevel,
             keyId = keyId,
             privatePem = privatePem,
-            deviceModel = deviceModel,
         ).apply {
             appInterceptors.forEach { (interceptor, isNetwork) ->
                 setInterceptor(interceptor, isNetwork)
