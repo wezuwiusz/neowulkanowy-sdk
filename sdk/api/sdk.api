@@ -163,6 +163,7 @@ public final class io/github/wulkanowy/sdk/UtilsKt {
 	public static final fun extractNameFromRecipient (Ljava/lang/String;)Ljava/lang/String;
 	public static final fun extractSchoolShortFromRecipient (Ljava/lang/String;)Ljava/lang/String;
 	public static final fun extractTypeFromRecipient (Ljava/lang/String;)Lio/github/wulkanowy/sdk/pojo/MailboxType;
+	public static final fun getInitialsFromDisplayName (Ljava/lang/String;)Ljava/lang/String;
 	public static final fun normalizeRecipient (Ljava/lang/String;)Ljava/lang/String;
 	public static final fun toLocalDate (J)Ljava/time/LocalDate;
 	public static final fun toLocalDateTime (J)Ljava/time/LocalDateTime;
