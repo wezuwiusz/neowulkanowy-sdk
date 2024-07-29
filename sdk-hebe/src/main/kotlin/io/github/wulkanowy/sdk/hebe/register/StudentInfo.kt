@@ -12,7 +12,7 @@ class StudentInfo(
     @SerialName("ClassDisplay")
     val classDisplay: String,
 
-    @SerialName("Const`ituentUnit")
+    @SerialName("ConstituentUnit")
     val constituentUnit: ConstituentUnit,
 
     @SerialName("Educators")
