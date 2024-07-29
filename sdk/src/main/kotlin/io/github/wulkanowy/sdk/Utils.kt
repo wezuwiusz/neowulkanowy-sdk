@@ -41,3 +41,8 @@ fun String.extractTypeFromRecipient(): MailboxType = MailboxType
             .substringAfterLast(" - ")
             .trim(),
     )
+
+fun String.getInitialsFromDisplayName(): String {
+    val splitName = this.split(" ")
+    return splitName[0].first().toString() + splitName[1].first().toString()
+}
