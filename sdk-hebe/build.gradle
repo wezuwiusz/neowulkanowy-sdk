@@ -16,5 +16,5 @@ dependencies {
     implementation libs.retrofit.scalars
     implementation libs.retrofit.serialization
 
-    testImplementation "io.mockk:mockk-jvm:1.13.11"
+    testImplementation "io.mockk:mockk-jvm:1.13.12"
 }
