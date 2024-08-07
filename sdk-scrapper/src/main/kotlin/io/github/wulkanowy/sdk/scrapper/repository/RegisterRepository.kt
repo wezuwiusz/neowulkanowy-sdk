@@ -142,7 +142,9 @@ internal class RegisterRepository(
     }
 
     private suspend fun getRegisterUnits(homeResponse: HomePageResponse?): List<RegisterUnit> {
-        val studentModules = homeResponse?.studentSchools.orEmpty()
+        val studentModules = homeResponse
+            ?.studentSchools
+            .orEmpty()
             .map { it.text() to it.attr("href") }
 
         return studentModules.flatMap { (name, url) ->
@@ -194,34 +196,36 @@ internal class RegisterRepository(
 
         val students = registerStudents.getOrNull().orEmpty()
 
-        return students.groupBy { it.unitId }.map { (_, students) ->
-            val firstStudentFromUnit = students.firstOrNull()
-            RegisterUnit(
-                userLoginId = -1,
-                schoolId = extractedSchoolId,
-                schoolName = firstStudentFromUnit?.schoolName ?: "Nieznana pełna nazwa szkoły",
-                schoolShortName = firstStudentFromUnit?.schoolNameShort ?: originalSchoolShortName.orEmpty(),
-                error = registerStudents.exceptionOrNull(),
-                employeeIds = emptyList(),
-                studentIds = emptyList(),
-                parentIds = emptyList(),
-                subjects = students,
-            )
-        }.ifEmpty {
-            listOf(
+        return students
+            .groupBy { it.unitId }
+            .map { (_, students) ->
+                val firstStudentFromUnit = students.firstOrNull()
                 RegisterUnit(
                     userLoginId = -1,
                     schoolId = extractedSchoolId,
-                    schoolName = "Nieznana pełna nazwa szkoły",
-                    schoolShortName = originalSchoolShortName.orEmpty(),
+                    schoolName = firstStudentFromUnit?.schoolName ?: "Nieznana pełna nazwa szkoły",
+                    schoolShortName = firstStudentFromUnit?.schoolNameShort ?: originalSchoolShortName.orEmpty(),
                     error = registerStudents.exceptionOrNull(),
                     employeeIds = emptyList(),
                     studentIds = emptyList(),
                     parentIds = emptyList(),
-                    subjects = registerStudents.getOrDefault(emptyList()),
-                ),
-            )
-        }
+                    subjects = students,
+                )
+            }.ifEmpty {
+                listOf(
+                    RegisterUnit(
+                        userLoginId = -1,
+                        schoolId = extractedSchoolId,
+                        schoolName = "Nieznana pełna nazwa szkoły",
+                        schoolShortName = originalSchoolShortName.orEmpty(),
+                        error = registerStudents.exceptionOrNull(),
+                        employeeIds = emptyList(),
+                        studentIds = emptyList(),
+                        parentIds = emptyList(),
+                        subjects = registerStudents.getOrDefault(emptyList()),
+                    ),
+                )
+            }
     }
 
     private suspend fun getStudentsFromOldModule(
@@ -231,30 +235,32 @@ internal class RegisterRepository(
         val (_, startPage) = loginResult
         val isParent = isStudentFromParentAccount(startPage.toString())
         val diaries = getStudentDiaries(startPage.toString())
-        return diaries.getStudentsFromDiaries(
-            isParent = isParent,
-            isEduOne = false,
-            unitId = unitId
-                ?: diaries.firstOrNull()?.componentUnitId
-                ?: error("Can't find componentUnitId in student diaries"),
-        ).map {
-            it.copy(
-                schoolName = getScriptParam("organizationName", startPage.toString()),
-            )
-        }
+        return diaries
+            .getStudentsFromDiaries(
+                isParent = isParent,
+                isEduOne = false,
+                unitId = unitId
+                    ?: diaries.firstOrNull()?.componentUnitId
+                    ?: error("Can't find componentUnitId in student diaries"),
+            ).map {
+                it.copy(
+                    schoolName = getScriptParam("organizationName", startPage.toString()),
+                )
+            }
     }
 
     private suspend fun getStudentDiaries(startPage: String): List<Diary> {
         val moduleHeaders = getModuleHeadersFromDocument(Jsoup.parse(startPage))
         val baseStudent = url.generate(UrlGenerator.Site.STUDENT)
         val diaryUrl = (baseStudent + "UczenDziennik.mvc/Get").toHttpUrl()
-        val vHeaders = getVHeaders(StudentModuleHost, diaryUrl, moduleHeaders)
+        // val vHeaders = getVHeaders(StudentModuleHost, diaryUrl, moduleHeaders)
         val mappedDiaryUrl = diaryUrl.mapModuleUrl(StudentModuleHost, moduleHeaders.appVersion)
 
         return student
-            .getSchoolInfo(vHeaders = vHeaders, url = mappedDiaryUrl.toString())
+            .getSchoolInfo(url = mappedDiaryUrl.toString())
             .handleErrors()
-            .data.orEmpty()
+            .data
+            .orEmpty()
     }
 
     private suspend fun getLoginType(symbol: String): Scrapper.LoginType {
@@ -330,12 +336,13 @@ internal class RegisterRepository(
             .toHttpUrl()
             .mapModuleUrl(StudentModuleHost, appVersion)
 
-        val userCache = student.getUserCache(
-            url = cacheUrl.toString(),
-            token = getScriptParam("antiForgeryToken", startPage),
-            appGuid = getScriptParam("appGuid", startPage),
-            appVersion = getScriptParam("version", startPage),
-        ).data
+        val userCache = student
+            .getUserCache(
+                url = cacheUrl.toString(),
+                token = getScriptParam("antiForgeryToken", startPage),
+                appGuid = getScriptParam("appGuid", startPage),
+                appVersion = getScriptParam("version", startPage),
+            ).data
 
         return userCache?.isParent
     }
@@ -352,7 +359,8 @@ internal class RegisterRepository(
         val mappedSemestersUrl = semestersUrl.mapModuleUrl(StudentPlusModuleHost, moduleHeaders.appVersion)
 
         return studentPlus
-            .getContextByUrl(vHeaders = contextVHeaders, url = mappedContextUrl.toString()).students
+            .getContextByUrl(vHeaders = contextVHeaders, url = mappedContextUrl.toString())
+            .students
             .map { contextStudent ->
                 val semesters = runCatching {
                     when {
@@ -366,7 +374,8 @@ internal class RegisterRepository(
                     }
                 }.onFailure {
                     logger.error("Can't fetch semesters", it)
-                }.getOrNull().orEmpty()
+                }.getOrNull()
+                    .orEmpty()
 
                 contextStudent.mapToRegisterStudent(semesters)
             }

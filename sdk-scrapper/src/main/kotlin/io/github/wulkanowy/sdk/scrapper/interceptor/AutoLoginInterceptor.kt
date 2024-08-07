@@ -16,7 +16,6 @@ import io.github.wulkanowy.sdk.scrapper.exception.VulcanServerError
 import io.github.wulkanowy.sdk.scrapper.getModuleHeadersFromDocument
 import io.github.wulkanowy.sdk.scrapper.getModuleHost
 import io.github.wulkanowy.sdk.scrapper.getPathIndexByModuleHost
-import io.github.wulkanowy.sdk.scrapper.getVHeaders
 import io.github.wulkanowy.sdk.scrapper.isAnyMappingAvailable
 import io.github.wulkanowy.sdk.scrapper.login.LoginModuleResult
 import io.github.wulkanowy.sdk.scrapper.login.LoginResult
@@ -141,11 +140,9 @@ internal class AutoLoginInterceptor(
         }
     }
 
-    private fun getModuleCookies(site: UrlGenerator.Site): Result<LoginModuleResult> {
-        return runCatching { fetchModuleCookies(site) }
-            .onFailure { logger.error("Error in $site login", it) }
-            .onSuccess { (url, doc) -> saveModuleHeaders(doc, url) }
-    }
+    private fun getModuleCookies(site: UrlGenerator.Site): Result<LoginModuleResult> = runCatching { fetchModuleCookies(site) }
+        .onFailure { logger.error("Error in $site login", it) }
+        .onSuccess { (url, doc) -> saveModuleHeaders(doc, url) }
 
     private fun saveModuleHeaders(doc: Document, url: HttpUrl) {
         val moduleHeaders = runBlocking { getModuleHeadersFromDocument(doc) }
@@ -181,17 +178,8 @@ internal class AutoLoginInterceptor(
                     addHeader("X-V-RequestVerificationToken", it.token)
                     addHeader("X-V-AppGuid", it.appGuid)
                     addHeader("X-V-AppVersion", it.appVersion)
-
-                    getVHeaders(
-                        moduleHost = moduleHost,
-                        url = url,
-                        headers = headers,
-                    ).forEach { (key, headerValue) ->
-                        addHeader(key, headerValue)
-                    }
                 }
-            }
-            .url(mappedUrl)
+            }.url(mappedUrl)
             .build()
     }
 
@@ -233,30 +221,27 @@ internal class AutoLoginInterceptor(
         } ?: response
     }
 
-    private fun mapResponseContent(response: JsonElement, jsonMappings: Map<String, String>): JsonElement {
-        return when (response) {
-            is JsonArray -> JsonArray(
-                response.jsonArray.map {
-                    when (it) {
-                        is JsonArray -> it.jsonArray
-                        is JsonObject -> mapJsonObjectKeys(it.jsonObject, jsonMappings)
-                        else -> it
-                    }
-                },
-            )
+    private fun mapResponseContent(response: JsonElement, jsonMappings: Map<String, String>): JsonElement = when (response) {
+        is JsonArray -> JsonArray(
+            response.jsonArray.map {
+                when (it) {
+                    is JsonArray -> it.jsonArray
+                    is JsonObject -> mapJsonObjectKeys(it.jsonObject, jsonMappings)
+                    else -> it
+                }
+            },
+        )
 
-            is JsonObject -> mapJsonObjectKeys(response.jsonObject, jsonMappings)
-            else -> response
-        }
+        is JsonObject -> mapJsonObjectKeys(response.jsonObject, jsonMappings)
+        else -> response
     }
 
-    private fun mapJsonObjectKeys(jsonObject: JsonObject, jsonMappings: Map<String, String>): JsonObject {
-        return JsonObject(
-            jsonObject.map {
+    private fun mapJsonObjectKeys(jsonObject: JsonObject, jsonMappings: Map<String, String>): JsonObject = JsonObject(
+        jsonObject
+            .map {
                 (jsonMappings[it.key] ?: it.key) to mapResponseContent(it.value, jsonMappings)
             }.toMap(),
-        )
-    }
+    )
 
     private fun checkRequest() {
         if (emptyCookieJarIntercept && !cookieJarCabinet.isUserCookiesExist()) {
@@ -337,7 +322,8 @@ internal class AutoLoginInterceptor(
     /**
      * @see [https://github.com/square/retrofit/issues/3110#issuecomment-536248102]
      */
-    private fun HttpException.toOkHttpResponse(request: Request) = Response.Builder()
+    private fun HttpException.toOkHttpResponse(request: Request) = Response
+        .Builder()
         .code(code())
         .message(message())
         .request(request)
@@ -350,6 +336,5 @@ internal class AutoLoginInterceptor(
 
                 override fun source(): BufferedSource = Buffer()
             },
-        )
-        .build()
+        ).build()
 }

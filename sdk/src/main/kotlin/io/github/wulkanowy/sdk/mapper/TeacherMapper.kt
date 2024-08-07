@@ -18,9 +18,9 @@ internal fun List<ScrapperTeacher>.mapTeachers() = map {
 internal fun List<HebeTeacher>.mapTeachers() = map {
     Teacher(
         name = it.displayName,
-        short = when(it.displayName) {
+        short = when (it.displayName) {
             "" -> ""
-            else ->it.displayName.getInitialsFromDisplayName()
+            else -> it.displayName.getInitialsFromDisplayName()
         },
         subject = it.description,
     )

@@ -11,7 +11,7 @@ import retrofit2.http.POST
 
 internal interface RegisterService {
 
-    @POST("new")
+    @POST("token")
     suspend fun registerDevice(@Body request: ApiRequest<RegisterRequest>): ApiResponse<RegisterResponse>
 
     @GET("hebe")

@@ -55,7 +55,16 @@ internal class ErrorInterceptor(
 
         doc.select(".app-error-container").takeIf { it.isNotEmpty() }?.let {
             if (it.select("h2").text() == "Informacja") {
-                logger.warn("ServiceUnavailableException", ServiceUnavailableException(it.select("span").firstOrNull()?.text().orEmpty()))
+                logger.warn(
+                    "ServiceUnavailableException",
+                    ServiceUnavailableException(
+                        it
+                            .select("span")
+                            .firstOrNull()
+                            ?.text()
+                            .orEmpty(),
+                    ),
+                )
             }
         }
 
@@ -96,8 +105,17 @@ internal class ErrorInterceptor(
             "Błąd strony" -> throw VulcanException(doc.select(".errorMessage").text(), httpCode)
             "Logowanie" -> throw AccountPermissionException(
                 buildString {
-                    val newMessage = doc.select(".info-error-message-text").first()?.ownText().orEmpty()
-                    val oldMessage = doc.select("div").last()?.ownText().orEmpty().split(" Jeśli")[0]
+                    val newMessage = doc
+                        .select(".info-error-message-text")
+                        .first()
+                        ?.ownText()
+                        .orEmpty()
+                    val oldMessage = doc
+                        .select("div")
+                        .last()
+                        ?.ownText()
+                        .orEmpty()
+                        .split(" Jeśli")[0]
                     append(newMessage.ifBlank { oldMessage })
                 },
             )

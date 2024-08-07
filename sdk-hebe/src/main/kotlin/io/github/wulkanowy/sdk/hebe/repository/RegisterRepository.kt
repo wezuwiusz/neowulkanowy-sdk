@@ -11,7 +11,9 @@ import io.github.wulkanowy.sdk.hebe.service.RegisterService
 import retrofit2.HttpException
 import java.net.HttpURLConnection.HTTP_INTERNAL_ERROR
 
-internal class RegisterRepository(private val service: RegisterService) {
+internal class RegisterRepository(
+    private val service: RegisterService,
+) {
 
     suspend fun register(
         token: String,
@@ -52,13 +54,16 @@ internal class RegisterRepository(private val service: RegisterService) {
         )
     }.onFailure {
         if (it is HttpException && it.code() == HTTP_INTERNAL_ERROR) {
-            if ("ArgumentException" in it.response()?.errorBody()?.string().orEmpty()) {
+            if ("ArgumentException" in it
+                    .response()
+                    ?.errorBody()
+                    ?.string()
+                    .orEmpty()
+            ) {
                 throw InvalidSymbolException()
             }
         }
     }.getOrThrow()
 
-    suspend fun getStudentInfo(): List<StudentInfo> {
-        return service.getStudentsInfo().envelope!!
-    }
+    suspend fun getStudentInfo(): List<StudentInfo> = service.getStudentsInfo().envelope!!
 }
