@@ -19,16 +19,16 @@ data class Grade(
     val dateCreated: Date,
     @SerialName("DateModify")
     val dateModify: Date,
-    // @SerialName("Denominator")
-    // val denominator: Any?,
+    @SerialName("Denominator")
+    val denominator: Double? = null,
+    @SerialName("Numerator")
+    val numerator: Double? = null,
     @SerialName("Id")
     val id: Int,
     @SerialName("Key")
     val key: String,
     @SerialName("Modifier")
     val modifier: Person,
-    // @SerialName("Numerator")
-    // val numerator: Any?,
     @SerialName("PupilId")
     val pupilId: Int,
     @SerialName("Value")
