@@ -48,23 +48,19 @@ internal fun LocalDateTime.toFormat(format: String): String = format(ofPattern(f
 
 internal fun LocalDate.getSchoolYear(): Int = if (month.value > 8) year else year - 1
 
-internal fun getGradeShortValue(value: String?): String {
-    return when (value?.trim()) {
-        "celujący" -> "6"
-        "bardzo dobry" -> "5"
-        "dobry" -> "4"
-        "dostateczny" -> "3"
-        "dopuszczający" -> "2"
-        "niedostateczny" -> "1"
-        else -> value.orEmpty().trim()
-    }
+internal fun getGradeShortValue(value: String?): String = when (value?.trim()) {
+    "celujący" -> "6"
+    "bardzo dobry" -> "5"
+    "dobry" -> "4"
+    "dostateczny" -> "3"
+    "dopuszczający" -> "2"
+    "niedostateczny" -> "1"
+    else -> value.orEmpty().trim()
 }
 
-internal fun String.getEmptyIfDash(): String {
-    return when {
-        this == "-" -> ""
-        else -> this
-    }
+internal fun String.getEmptyIfDash(): String = when {
+    this == "-" -> ""
+    else -> this
 }
 
 internal fun String.getGradePointPercent(): String {
@@ -74,16 +70,17 @@ internal fun String.getGradePointPercent(): String {
     }
 }
 
-internal fun getScriptParam(name: String, content: String, fallback: String = ""): String {
-    return "$name: '(.)*'".toRegex().find(content).let { result ->
-        if (null !== result) Jsoup.parse(result.groupValues[0].substringAfter("'").substringBefore("'")).text() else fallback
-    }
+internal fun getScriptParam(name: String, content: String, fallback: String = ""): String = "$name: '(.)*'".toRegex().find(content).let { result ->
+    if (null !== result) Jsoup.parse(result.groupValues[0].substringAfter("'").substringBefore("'")).text() else fallback
 }
 
 internal fun getScriptParamTabValues(name: String, content: String): List<String> {
-    val tab = "var $name = \\[(.*?)\\];".toRegex(RegexOption.DOT_MATCHES_ALL).find(content).let { result ->
-        result?.groupValues?.firstOrNull()
-    }.orEmpty()
+    val tab = "var $name = \\[(.*?)\\];"
+        .toRegex(RegexOption.DOT_MATCHES_ALL)
+        .find(content)
+        .let { result ->
+            result?.groupValues?.firstOrNull()
+        }.orEmpty()
     return "'([A-F0-9-]{36})'".toRegex().findAll(tab).toList().mapNotNull {
         it.groupValues.lastOrNull()
     }
@@ -108,14 +105,14 @@ private fun getSymbolSig(symbol: String): String {
 }
 
 fun String.getNormalizedSymbol(): String = this
-    .trim().lowercase()
+    .trim()
+    .lowercase()
     .replace("default", "")
     .run {
         Normalizer.normalize(this, Normalizer.Form.NFD).run {
             "\\p{InCombiningDiacriticalMarks}+".toRegex().replace(this, "")
         }
-    }
-    .replace("ł", "l")
+    }.replace("ł", "l")
     .replace("[^a-z0-9]".toRegex(), "")
     .ifBlank { "Default" }
 
@@ -172,23 +169,17 @@ internal fun getFormattedString(
     buildTag: String,
     webKitRev: String = "537.36",
     chromeRev: String = "125.0.0.0",
-): String {
-    return String.format(template, androidVersion, buildTag, webKitRev, chromeRev, webKitRev)
-}
+): String = String.format(template, androidVersion, buildTag, webKitRev, chromeRev, webKitRev)
 
-internal fun isCurrentLoginHasEduOne(studentModuleUrls: List<String>, urlGenerator: UrlGenerator): Boolean {
-    return studentModuleUrls.any {
-        it.startsWith(
-            prefix = urlGenerator.generate(UrlGenerator.Site.STUDENT_PLUS),
-            ignoreCase = true,
-        )
-    }
+internal fun isCurrentLoginHasEduOne(studentModuleUrls: List<String>, urlGenerator: UrlGenerator): Boolean = studentModuleUrls.any {
+    it.startsWith(
+        prefix = urlGenerator.generate(UrlGenerator.Site.STUDENT_PLUS),
+        ignoreCase = true,
+    )
 }
 
 @OptIn(ExperimentalEncodingApi::class)
-internal fun getEncodedKey(studentId: Int, diaryId: Int, unitId: Int): String {
-    return Base64.encode("$studentId-$diaryId-1-$unitId".toByteArray())
-}
+internal fun getEncodedKey(studentId: Int, diaryId: Int, unitId: Int): String = Base64.encode("$studentId-$diaryId-1-$unitId".toByteArray())
 
 @OptIn(ExperimentalEncodingApi::class)
 internal fun getDecodedKey(key: String): StudentKey {
@@ -231,23 +222,30 @@ internal fun String.md5(): String {
 internal fun HttpUrl.mapModuleUrl(moduleHost: String, appVersion: String?): HttpUrl {
     val pathSegmentIndex = getPathIndexByModuleHost(moduleHost)
     val pathKey = pathSegments.getOrNull(pathSegmentIndex)
-    val mappedPath = (Scrapper.endpointsMap[appVersion] ?: ApiEndpointsMap[appVersion])
-        ?.get(moduleHost)
+    val mappedPath = (
+        Scrapper.endpointsMap[appVersion]
+            ?: ApiEndpointsMap[appVersion]
+            ?: Scrapper.endpointsMap[getLatestUonetVersionFromMap(Scrapper.endpointsMap)]
+    )?.get(moduleHost)
         ?.get(pathKey?.substringBefore(".mvc"))
 
     return if (mappedPath != null) {
-        newBuilder().setPathSegment(
-            index = pathSegmentIndex,
-            pathSegment = when {
-                ".mvc" in pathKey.orEmpty() -> "$mappedPath.mvc"
-                else -> mappedPath
-            },
-        ).build()
+        newBuilder()
+            .setPathSegment(
+                index = pathSegmentIndex,
+                pathSegment = when {
+                    ".mvc" in pathKey.orEmpty() -> "$mappedPath.mvc"
+                    else -> mappedPath
+                },
+            ).build()
     } else {
         val pathKeySub = pathSegments.getOrNull(pathSegmentIndex + 1)
         val pathConcatenated = "$pathKey/$pathKeySub"
-        val mappedPathWithSub = (Scrapper.endpointsMap[appVersion] ?: ApiEndpointsMap[appVersion])
-            ?.get(moduleHost)
+        val mappedPathWithSub = (
+            Scrapper.endpointsMap[appVersion]
+                ?: ApiEndpointsMap[appVersion]
+                ?: Scrapper.endpointsMap[getLatestUonetVersionFromMap(Scrapper.endpointsMap)]
+        )?.get(moduleHost)
             ?.get(pathConcatenated)
 
         if (mappedPathWithSub != null) {
@@ -288,7 +286,9 @@ internal suspend fun getModuleHeadersFromDocument(document: Document): ModuleHea
     val htmlContent = document.select("script").html()
     val matches = vParamsRegex.findAll(htmlContent)
 
-    val scripts = document.select("script").toList()
+    val scripts = document
+        .select("script")
+        .toList()
         .filter { it.attr("src").isNullOrBlank() }
         .map { it.html() }
 
@@ -297,11 +297,16 @@ internal suspend fun getModuleHeadersFromDocument(document: Document): ModuleHea
             scripts.map {
                 runCatching {
                     val result = handler.evaluate("var window = this; $it; JSON.stringify(VParam)")
-                    result?.let { Json.parseToJsonElement(it) }?.jsonObject?.toMap().orEmpty()
+                    result
+                        ?.let { Json.parseToJsonElement(it) }
+                        ?.jsonObject
+                        ?.toMap()
+                        .orEmpty()
                 }.getOrDefault(emptyMap())
             }
         }
-    }.flatMap { it.toList() }.toMap()
+    }.flatMap { it.toList() }
+        .toMap()
         .mapValues {
             when (it.value) {
                 is JsonPrimitive -> it.value.jsonPrimitive.content
@@ -332,42 +337,52 @@ internal suspend fun getModuleHeadersFromDocument(document: Document): ModuleHea
     )
 }
 
-internal fun getModuleHost(url: HttpUrl): String {
-    return when {
-        MessagesModuleHost in url.host -> MessagesModuleHost
-        StudentPlusModuleHost in url.host -> StudentPlusModuleHost
-        StudentModuleHost in url.host -> StudentModuleHost
-        else -> ""
-    }
+internal fun getModuleHost(url: HttpUrl): String = when {
+    MessagesModuleHost in url.host -> MessagesModuleHost
+    StudentPlusModuleHost in url.host -> StudentPlusModuleHost
+    StudentModuleHost in url.host -> StudentModuleHost
+    else -> ""
 }
 
 internal fun getVHeaders(moduleHost: String, url: HttpUrl, headers: ModuleHeaders?): Map<String, String> {
-    val vHeaders = Scrapper.vHeadersMap[headers?.appVersion] ?: ApiEndpointsVHeaders[headers?.appVersion]
+    val vHeaders =
+        Scrapper.vHeadersMap[headers?.appVersion]
+            ?: ApiEndpointsVHeaders[headers?.appVersion]
+            ?: Scrapper.vHeadersMap[getLatestUonetVersionFromMap(Scrapper.vHeadersMap)]
 
-    return vHeaders?.get(moduleHost).orEmpty().mapNotNull { (key, scheme) ->
-        val headerValue = url.getMatchedVHeader(
-            moduleHost = moduleHost,
-            domainSchema = scheme,
-            headers = headers,
-        )
-        when {
-            headerValue != null -> key to headerValue
-            else -> null
-        }
-    }.toMap()
+    return vHeaders
+        ?.get(moduleHost)
+        .orEmpty()
+        .mapNotNull { (key, scheme) ->
+            val headerValue = url.getMatchedVHeader(
+                moduleHost = moduleHost,
+                domainSchema = scheme,
+                headers = headers,
+            )
+            when {
+                headerValue != null -> key to headerValue
+                else -> null
+            }
+        }.toMap()
 }
 
 private fun HttpUrl.getMatchedVHeader(moduleHost: String, domainSchema: String?, headers: ModuleHeaders?): String? {
     val pathSegmentIndex = getPathIndexByModuleHost(moduleHost)
     val pathKey = pathSegments.getOrNull(pathSegmentIndex)
-    val mappedSimpleUuid = (Scrapper.vTokenMap[headers?.appVersion] ?: ApiEndpointsVTokenMap[headers?.appVersion])
-        ?.get(moduleHost)
+    val mappedSimpleUuid = (
+        Scrapper.vTokenMap[headers?.appVersion]
+            ?: ApiEndpointsVTokenMap[headers?.appVersion]
+            ?: Scrapper.vTokenMap[getLatestUonetVersionFromMap(Scrapper.vTokenMap)]
+    )?.get(moduleHost)
         ?.get(pathKey)
 
     val mappedUuid = if (mappedSimpleUuid == null) {
         val pathKeySub = pathSegments.getOrNull(pathSegmentIndex + 1)
-        (Scrapper.vTokenMap[headers?.appVersion] ?: ApiEndpointsVTokenMap[headers?.appVersion])
-            ?.get(moduleHost)
+        (
+            Scrapper.vTokenMap[headers?.appVersion]
+                ?: ApiEndpointsVTokenMap[headers?.appVersion]
+                ?: Scrapper.vTokenMap[getLatestUonetVersionFromMap(Scrapper.vTokenMap)]
+        )?.get(moduleHost)
             ?.get("$pathKey/$pathKeySub")
     } else {
         mappedSimpleUuid
@@ -418,3 +433,9 @@ private fun getVToken(uuid: String, headers: ModuleHeaders?, domainSchema: Strin
 
     return withSubstitutions.md5()
 }
+
+private fun getLatestUonetVersionFromMap(mappingsMap: Map<String, Any>): String = mappingsMap.keys
+    .toList()
+    .maxByOrNull {
+        it.replace(".", "").toBigInteger()
+    }!!
