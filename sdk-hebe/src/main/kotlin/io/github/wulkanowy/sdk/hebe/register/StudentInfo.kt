@@ -53,7 +53,7 @@ class StudentInfo(
     data class ConstituentUnit(
 
         @SerialName("Address")
-        val address: String,
+        val address: String? = null,
 
         @SerialName("Id")
         val id: Int,
