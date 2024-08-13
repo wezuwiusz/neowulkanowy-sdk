@@ -1,0 +1,28 @@
+plugins {
+    id 'org.jetbrains.kotlin.jvm'
+}
+
+group = 'io.github.wulkanowy'
+version = '2.7.0'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation "org.jsoup:jsoup:$jsoup"
+    implementation libs.retrofit.core
+    implementation libs.retrofit.scalars
+    implementation "pl.droidsonroids.retrofit2:converter-jspoon:$jspoon"
+    implementation libs.retrofit.serialization
+    implementation "com.squareup.retrofit2:converter-kotlinx-serialization"
+    implementation "com.squareup.okhttp3:okhttp-urlconnection"
+    testImplementation 'org.jetbrains.kotlin:kotlin-test'
+}
+
+test {
+    useJUnitPlatform()
+}
+kotlin {
+    jvmToolchain(17)
+}
