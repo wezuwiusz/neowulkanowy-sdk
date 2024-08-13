@@ -8,7 +8,7 @@ internal class InfoRepository(
     private val infoService: InfoService,
 ) {
     suspend fun getAccountInfo(): AccountInfo {
-        val toyota = Jsoup.parse(infoService.getAccountInfo()).select(".user-data-row")
+        val document = Jsoup.parse(infoService.getAccountInfo()).select(".user-data-row")
         var accountUUID = ""
         var login = ""
         var accountType = ""
@@ -16,7 +16,7 @@ internal class InfoRepository(
         var surname = ""
         var email = ""
 
-        toyota.forEach { element ->
+        document.forEach { element ->
             element.select(".user-data-label").text().let {
                 val labelContents = element.select(".user-data-personal").text()
                 when (it) {
