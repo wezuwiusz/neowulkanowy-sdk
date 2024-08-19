@@ -68,7 +68,7 @@ class StudentInfo(
         val schoolTopic: String? = null,
 
         @SerialName("Short")
-        val short: String,
+        val short: String? = null,
     )
 
     @Serializable
@@ -238,7 +238,7 @@ class StudentInfo(
     data class Unit(
 
         @SerialName("Address")
-        val address: String,
+        val address: String? = null,
 
         @SerialName("DisplayName")
         val displayName: String,
@@ -256,7 +256,7 @@ class StudentInfo(
         val restUrl: String,
 
         @SerialName("Short")
-        val short: String,
+        val short: String? = null,
 
         @SerialName("Symbol")
         val symbol: String,
