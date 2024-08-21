@@ -6,11 +6,14 @@ plugins {
 }
 
 repositories {
-    maven { url "https://oss.sonatype.org/content/repositories/snapshots" }
+    maven {
+        url "https://oss.sonatype.org/content/repositories/snapshots"
+    }
+    maven { url "https://jitpack.io" }
 }
 
 dependencies {
-    implementation 'io.github.wulkanowy.signer:hebe-jvm:0.1.0-SNAPSHOT'
+    implementation "com.github.wezuwiusz:uonet-request-signer:master"
 
     implementation libs.retrofit.core
     implementation libs.retrofit.scalars
