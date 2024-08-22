@@ -109,7 +109,7 @@ private fun List<StudentInfo>.mapUnit(): List<RegisterUnit> {
                 schoolId = schoolId,
                 constituentId = firstStudent.constituentUnit.id,
                 schoolName = firstStudent.constituentUnit.name,
-                schoolShortName = firstStudent.constituentUnit.short,
+                schoolShortName = firstStudent.constituentUnit.short ?: firstStudent.constituentUnit.name,
                 parentIds = listOf(),
                 studentIds = listOf(),
                 employeeIds = listOf(),
