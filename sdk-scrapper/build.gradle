@@ -16,7 +16,7 @@ dependencies {
 
     implementation "com.squareup.okhttp3:okhttp-urlconnection"
 
-    testImplementation "io.mockk:mockk-jvm:1.13.11"
+    testImplementation "io.mockk:mockk-jvm:1.13.12"
 }
 
 tasks.withType(Test).configureEach {
